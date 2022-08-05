@@ -1,4 +1,4 @@
-#include "WindowApp.h"
+#include "WindowsLayer.h"
 
 int CALLBACK WinMain(
     HINSTANCE instance,
@@ -6,10 +6,11 @@ int CALLBACK WinMain(
     LPSTR commandLine,
     int showCode
 ) {
-    WindowApp* windowApp = WindowApp::InitWindowApp(800, 600, "DirectXLearning");
+    WindowsLayer* windowsLayer = WindowsLayer::InitWindowsLayer(800, 600, "DirectXLearning");
 
     MSG msg;
-    while (windowApp->running_) {
+    while (!windowsLayer->closed_) {
+        windowsLayer->ClearPressedAndReleasedKeys();
         if (GetMessage(&msg, nullptr, 0, 0) > 0) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);

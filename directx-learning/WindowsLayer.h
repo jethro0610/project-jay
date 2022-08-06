@@ -39,11 +39,11 @@ public:
     LRESULT HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lParam);
 
     static WindowsLayer* InitWindowsLayer(int width, int height, const char* name);
-    static WindowsLayer* GetWindowsLayer();
 
 private:
     void OnKeyDown(uint16_t key);
     void OnKeyUp(uint16_t key);
     void OnMouseMove(int x, int y);
+    static WindowsLayer* GetWindowsLayer();
 };
 

@@ -1,5 +1,5 @@
 #include "WindowsLayer.h"
-
+#include <sstream>
 int CALLBACK WinMain(
     HINSTANCE instance,
     HINSTANCE prevInstance,
@@ -11,6 +11,8 @@ int CALLBACK WinMain(
     MSG msg;
     while (!windowsLayer->closed_) {
         windowsLayer->ClearPressedAndReleasedKeys();
+        windowsLayer->ClearMouseMovement();
+
         if (GetMessage(&msg, nullptr, 0, 0) > 0) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -18,6 +20,7 @@ int CALLBACK WinMain(
         else {
             break; // This shouldn't happen, log here
         }
+        windowsLayer->UpdateMouseMovement();
     }
 
     return 0;

@@ -2,8 +2,9 @@
 
 #ifdef WINDOWS
 #include "WindowsLayer.h"
-#include "XInputHandler.h"
 #endif
+
+#include "Gamepad.h"
 
 class App {
 public:
@@ -15,11 +16,13 @@ public:
     float forwardInput_;
     float sideInput_;
 
+    Gamepad gamepad;
+
 private:
     #ifdef WINDOWS
     WindowsLayer* windowsLayer_;
-    XInputHandler inputHandler;
     #endif
 
     void UpdateInputs();
+    void PollGamepadInputs();
 };

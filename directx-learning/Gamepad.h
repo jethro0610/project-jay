@@ -1,6 +1,4 @@
 #pragma once
-#include <Windows.h>
-#include <Xinput.h>
 #include <bitset>
 
 #define GAMEPAD_A 0
@@ -20,9 +18,9 @@
 #define GAMEPAD_START 14
 #define GAMEPAD_SELECT 15
 
-class XInputHandler {
+class Gamepad {
 public:
-    XInputHandler();
+    Gamepad();
 
     float leftStickX_;
     float leftStickY_;
@@ -33,14 +31,11 @@ public:
     float leftTrigger_;
     float rightTrigger_;
     float triggerLimit_;
-    void Poll();
 
-    
     std::bitset<16> heldButtons_;
     std::bitset<16> pressedButtons_;
     std::bitset<16> releasedButtons_;
 
-private:
     void SetButtonHeld(uint8_t btn, bool held);
 };
 

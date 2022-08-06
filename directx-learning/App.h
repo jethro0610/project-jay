@@ -5,6 +5,7 @@
 #endif
 
 #include "Gamepad.h"
+#include "Rendering.h"
 
 class App {
 public:
@@ -16,9 +17,13 @@ public:
     float forwardInput_;
     float sideInput_;
 
+    int resolutionWidth;
+    int resolutionHeight;
+
     Gamepad gamepad;
 
 private:
+    Rendering* renderer;
     #ifdef WINDOWS
     WindowsLayer* windowsLayer_;
     #endif

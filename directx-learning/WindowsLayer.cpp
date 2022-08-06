@@ -25,26 +25,27 @@ WindowsLayer::WindowsLayer(int width, int height, const char* name) {
     windowClass.style = CS_OWNDC;
     RegisterClass(&windowClass);
 
+    DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+
     // Calculate the window size
-    RECT wRect = {};
-    wRect.right = width;
-    wRect.bottom = height;
-    AdjustWindowRect(&wRect, WS_CAPTION | WS_MINIMIZEBOX, FALSE);
+    RECT wRect = {0, 0, width, height};
+    AdjustWindowRect(&wRect, windowStyle, FALSE);
 
     // Create the window and its handle
     windowHandle_ = CreateWindow(
         className_,
         name,
-        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+        windowStyle,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
-        wRect.right,
-        wRect.bottom,
+        wRect.right - wRect.left,
+        wRect.bottom - wRect.top,
         nullptr,
         nullptr,
         classInstance_,
         this
     );
+    ShowWindow(windowHandle_, SW_SHOW);
 
     // Setup raw input
     rawInputDevice_[0].usUsagePage = HID_USAGE_PAGE_GENERIC;
@@ -70,6 +71,7 @@ LRESULT WindowsLayer::HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lPa
         closed_ = true;
         return 0;
     }
+
     case WM_KEYDOWN: {
         OnKeyDown(wParam);
     } break;

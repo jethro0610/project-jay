@@ -7,11 +7,14 @@ App::App() {
     windowsLayer_ = nullptr;
     forwardInput_ = 0;
     sideInput_ = 0;
+    resolutionWidth = 1280;
+    resolutionHeight = 720;
 }
 
 void App::Run() {
     running_ = true;
-    windowsLayer_ = WindowsLayer::InitWindowsLayer(800, 600, "DirectXLearning");
+    windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth, resolutionHeight, "DirectXLearning");
+    renderer = new Rendering(windowsLayer_->windowHandle_, resolutionWidth, resolutionHeight);
     MSG msg;
     while (!windowsLayer_->closed_ && running_) {
         windowsLayer_->ClearPressedAndReleasedKeys();
@@ -24,6 +27,8 @@ void App::Run() {
         windowsLayer_->UpdateMouseMovement();
         PollGamepadInputs();
         UpdateInputs();
+
+        renderer->Draw();
     }
 }
 
@@ -88,8 +93,4 @@ void App::UpdateInputs() {
 
     forwardInput_ += gamepad.leftStickY_;
     sideInput_ += gamepad.leftStickX_;
-
-    std::stringstream ss;
-    ss << "Forward: " << forwardInput_ << " Side: " << sideInput_;
-    SetWindowText(windowsLayer_->windowHandle_, ss.str().c_str());
 }

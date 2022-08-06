@@ -13,12 +13,9 @@ int CALLBACK WinMain(
         windowsLayer->ClearPressedAndReleasedKeys();
         windowsLayer->ClearMouseMovement();
 
-        if (GetMessage(&msg, nullptr, 0, 0) > 0) {
+        while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
-        }
-        else {
-            break; // This shouldn't happen, log here
         }
         windowsLayer->UpdateMouseMovement();
     }

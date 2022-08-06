@@ -67,7 +67,10 @@ LRESULT WindowsLayer::HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lPa
         closed_ = true;
         return 0;
     }
-
+    case WM_QUIT: {
+        closed_ = true;
+        return 0;
+    }
     case WM_KEYDOWN: {
         OnKeyDown(wParam);
     } break;
@@ -108,8 +111,8 @@ LRESULT WindowsLayer::HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lPa
         RAWINPUT* raw = (RAWINPUT*)lpb;
 
         if (raw->header.dwType == RIM_TYPEMOUSE) {
-            deltaMouseX_ = raw->data.mouse.lLastX;
-            deltaMouseY_ = raw->data.mouse.lLastY;
+            deltaMouseX_ += raw->data.mouse.lLastX;
+            deltaMouseY_ += raw->data.mouse.lLastY;
         }
     } break;
 

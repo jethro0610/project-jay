@@ -2,14 +2,15 @@
 #include <sstream>
 
 App::App() {
-    running_ = true;
+    running_ = false;
     windowsLayer_ = nullptr;
     forwardInput_ = 0;
     sideInput_ = 0;
 }
 
 void App::Run() {
-    windowsLayer_ = WindowsLayer::InitWindowsLayer(800, 600, "DirectX Learning");
+    running_ = true;
+    windowsLayer_ = WindowsLayer::InitWindowsLayer(800, 600, "DirectXLearning");
     MSG msg;
     while (!windowsLayer_->closed_ && running_) {
         windowsLayer_->ClearPressedAndReleasedKeys();
@@ -20,6 +21,7 @@ void App::Run() {
             DispatchMessage(&msg);
         }
         windowsLayer_->UpdateMouseMovement();
+        inputHandler.Poll();
         UpdateInputs();
     }
 }
@@ -39,4 +41,11 @@ void App::UpdateInputs() {
 
     if (windowsLayer_->heldKeys_['A'])
         sideInput_ -= 1.0f;
+
+    forwardInput_ += inputHandler.leftStickY_;
+    sideInput_ += inputHandler.leftStickX_;
+
+    std::stringstream ss;
+    ss << "Forward: " << forwardInput_ << " Side: " << sideInput_;
+    SetWindowText(windowsLayer_->windowHandle_, ss.str().c_str());
 }

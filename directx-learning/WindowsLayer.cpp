@@ -1,7 +1,6 @@
 #include "WindowsLayer.h"
-#include <stdexcept>
 #include <assert.h>  
-#include <sstream>
+
 WindowsLayer* WindowsLayer::windowsLayer_ = nullptr;
 
 WindowsLayer::WindowsLayer(int width, int height, const char* name) {

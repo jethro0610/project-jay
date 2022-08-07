@@ -79,8 +79,8 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
 
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
-
     HRASSERT(device_->CreateInputLayout(
         inputElementDesc,
         ARRAYSIZE(inputElementDesc),
@@ -89,13 +89,13 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
         &inputLayout_
     ));
 
-    float vertexArray[] = {
-       0.0f,  0.5f,  0.0f,
-       0.5f, -0.5f,  0.0f,
-      -0.5f, -0.5f,  0.0f
+    ColorVertex vertexArray[] = {
+        {{0.0f,  0.5f,  0.0f},      {1.0f,  0.0f,  0.0f}},
+        {{0.5f,  -0.755f,  0.0f},   {0.0f,  1.0f,  0.0f}},
+        {{-0.5f,  -0.5f,  0.0f},    {0.0f,  0.0f,  1.0f}}
     };
 
-    vertexStride_ = 3 * sizeof(float);
+    vertexStride_ = sizeof(ColorVertex);
     vertexOffset_ = 0;
     vertexCount_ = 3;
 
@@ -119,8 +119,8 @@ void Rendering::Draw() {
     D3D11_VIEWPORT viewport = {
       0.0f,
       0.0f,
-      renderWidth_,
-      renderHeight_,
+      (float)renderWidth_,
+      (float)renderHeight_,
       0.0f,
       1.0f };
     context_->RSSetViewports(1, &viewport);

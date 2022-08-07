@@ -1,7 +1,8 @@
 #include "VertexTypes.hlsl"
 
-vertexOut main(vertexIn input) {
-    vertexOut output = (vertexOut)0;
-    output.positionClip = float4(input.positionLocal, 1.0);
+VertOut main(VertIn inVert) {
+    VertOut output;
+    output.pos = float4(inVert.pos, 1.0);
+    output.col = float4(inVert.col.r, inVert.col.g, inVert.col.b, 1.0);
     return output;
 }

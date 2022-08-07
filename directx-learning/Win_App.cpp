@@ -7,19 +7,24 @@ App::App() {
     windowsLayer_ = nullptr;
     forwardInput_ = 0;
     sideInput_ = 0;
-    resolutionWidth = 1280;
-    resolutionHeight = 720;
+    resolutionWidth_ = 1280;
+    resolutionHeight_  = 720;
 }
 
 App::~App() {
-    delete renderer;
+    delete dxLayer;
+    delete renderer_;
     delete windowsLayer_;
 }
 
-void App::Run() {
+void App::PlatformInit() {
     running_ = true;
-    windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth, resolutionHeight, "DirectXLearning");
-    renderer = new Rendering(windowsLayer_->windowHandle_, resolutionWidth, resolutionHeight);
+    windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth_, resolutionHeight_, "DirectXLearning");
+    dxLayer = new DirectXLayer(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
+    renderer_ = new Renderer(dxLayer);
+
+    Init();
+
     MSG msg;
     while (!windowsLayer_->closed_ && running_) {
         windowsLayer_->ClearPressedAndReleasedKeys();
@@ -32,8 +37,7 @@ void App::Run() {
         windowsLayer_->UpdateMouseMovement();
         PollGamepadInputs();
         UpdateInputs();
-
-        renderer->Draw();
+        Update();
     }
 }
 

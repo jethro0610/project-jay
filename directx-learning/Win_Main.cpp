@@ -7,5 +7,5 @@ int CALLBACK WinMain(
     int showCode
 ) {
     App app;
-    app.Run();
+    app.PlatformInit();
 }

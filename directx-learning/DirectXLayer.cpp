@@ -1,4 +1,4 @@
-#include "Rendering.h"
+#include "DirectXLayer.h"
 #include <assert.h>
 
 #ifdef _DEBUG
@@ -9,7 +9,7 @@
 #define HRASSERT(hResult) hResult;
 #endif
 
-Rendering::Rendering(HWND windowHandle, int width, int height) {
+DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     renderWidth_ = width;
     renderHeight_ = height;
 
@@ -59,24 +59,32 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
 #ifdef _DEBUG
     flags |= D3DCOMPILE_DEBUG;
 #endif
+}
 
-    HRASSERT(D3DReadFileToBlob(L"VertexShader.cso", &vertexShaderBlob_));
-    HRASSERT(D3DReadFileToBlob(L"PixelShader.cso", &pixelShaderBlob_));
+DirectXLayer::~DirectXLayer() {
+    device_->Release();
+    swapChain_->Release();
+    context_->Release();
+    renderTarget_->Release();
+}
 
+void DirectXLayer::LoadVertexShader(std::string fileName) {
+    assert(vertexShaders_.count(fileName) == 0);
+    std::string extentionName = fileName + ".cso";
+    std::wstring wString(extentionName.begin(), extentionName.end());
+
+    ID3DBlob* vertexShaderBlob;
+    HRASSERT(D3DReadFileToBlob(wString.c_str(), &vertexShaderBlob));
+
+    ID3D11VertexShader* vertexShader;
     HRASSERT(device_->CreateVertexShader(
-        vertexShaderBlob_->GetBufferPointer(),
-        vertexShaderBlob_->GetBufferSize(),
+        vertexShaderBlob->GetBufferPointer(),
+        vertexShaderBlob->GetBufferSize(),
         nullptr,
-        &vertexShader_
-    ));
-    
-    HRASSERT(device_->CreatePixelShader(
-        pixelShaderBlob_->GetBufferPointer(),
-        pixelShaderBlob_->GetBufferSize(),
-        nullptr,
-        &pixelShader_
+        &vertexShader
     ));
 
+    ID3D11InputLayout* inputLayout;
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"COL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0}
@@ -84,10 +92,38 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
     HRASSERT(device_->CreateInputLayout(
         inputElementDesc,
         ARRAYSIZE(inputElementDesc),
-        vertexShaderBlob_->GetBufferPointer(),
-        vertexShaderBlob_->GetBufferSize(),
-        &inputLayout_
+        vertexShaderBlob->GetBufferPointer(),
+        vertexShaderBlob->GetBufferSize(),
+        &inputLayout
     ));
+
+    vertexShaderBlobs_[fileName] = vertexShaderBlob;
+    vertexShaders_[fileName] = vertexShader;
+    inputLayouts_[fileName] = inputLayout;
+}
+
+void DirectXLayer::LoadPixelShader(std::string fileName) {
+    assert(pixelShaders_.count(fileName) == 0);
+    std::string extentionName = fileName + ".cso";
+    std::wstring wString(extentionName.begin(), extentionName.end());
+
+    ID3DBlob* pixelShaderBlob;
+    HRASSERT(D3DReadFileToBlob(wString.c_str(), &pixelShaderBlob));
+
+    ID3D11PixelShader* pixelShader;
+    HRASSERT(device_->CreatePixelShader(
+        pixelShaderBlob->GetBufferPointer(),
+        pixelShaderBlob->GetBufferSize(),
+        nullptr,
+        &pixelShader
+    ));
+
+    pixelShaderBlobs_[fileName] = pixelShaderBlob;
+    pixelShaders_[fileName] = pixelShader;
+}
+
+void DirectXLayer::LoadModel(std::string bufferName) {
+    assert(vertexBuffers_.count(bufferName) == 0);
 
     ColorVertex vertexArray[] = {
         {{0.0f,  0.5f,  0.0f},      {1.0f,  1.0f,  0.0f}},
@@ -95,36 +131,25 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
         {{-0.5f,  -0.5f,  0.0f},    {0.0f,  0.0f,  1.0f}}
     };
 
-    vertexStride_ = sizeof(ColorVertex);
-    vertexOffset_ = 0;
-    vertexCount_ = 3;
-
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.ByteWidth = sizeof(vertexArray);
     bufferDesc.Usage = D3D11_USAGE_DEFAULT;
     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA srData = {};
     srData.pSysMem = vertexArray;
+
+    ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
         &bufferDesc,
         &srData,
-        &vertexBuffer_
+        &vertexBuffer
     ));
+
+    vertexBuffers_[bufferName] = vertexBuffer;
+    vertexCounts_[bufferName] = 3;
 }
 
-Rendering::~Rendering() {
-    device_->Release();
-    swapChain_->Release();
-    context_->Release();
-    renderTarget_->Release();
-    inputLayout_->Release();
-    vertexShaderBlob_->Release();
-    vertexShader_->Release();
-    pixelShaderBlob_->Release();
-    pixelShader_->Release();
-    vertexBuffer_->Release();
-}
-
+/*
 void Rendering::Draw() {
     float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
     context_->ClearRenderTargetView(renderTarget_, background_colour);
@@ -150,3 +175,4 @@ void Rendering::Draw() {
 
     swapChain_->Present(1, 0);
 }
+*/

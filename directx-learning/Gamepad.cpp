@@ -12,6 +12,10 @@ Gamepad::Gamepad() {
     float triggerLimit_ = 0.5f;
 }
 
+Gamepad::~Gamepad() {
+
+}
+
 void Gamepad::SetButtonHeld(uint8_t btn, bool held) {
     if (heldButtons_[btn] == false && held == true) {
         pressedButtons_[btn] = true;

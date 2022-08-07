@@ -13,6 +13,7 @@ private:
     WindowsLayer(int width, int height, const char* name);
 
 public:
+    ~WindowsLayer();
     const char* className_ = "WindowAppClass";
     HINSTANCE classInstance_;
 

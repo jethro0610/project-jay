@@ -11,6 +11,11 @@ App::App() {
     resolutionHeight = 720;
 }
 
+App::~App() {
+    delete renderer;
+    delete windowsLayer_;
+}
+
 void App::Run() {
     running_ = true;
     windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth, resolutionHeight, "DirectXLearning");

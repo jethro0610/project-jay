@@ -51,7 +51,7 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
     HRASSERT(device_->CreateRenderTargetView(
         backBuffer,
         nullptr,
-        &backBufferTarget_
+        &renderTarget_
     ));
     backBuffer->Release();
     
@@ -90,7 +90,7 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
     ));
 
     ColorVertex vertexArray[] = {
-        {{0.0f,  0.5f,  0.0f},      {1.0f,  0.0f,  0.0f}},
+        {{0.0f,  0.5f,  0.0f},      {1.0f,  1.0f,  0.0f}},
         {{0.5f,  -0.755f,  0.0f},   {0.0f,  1.0f,  0.0f}},
         {{-0.5f,  -0.5f,  0.0f},    {0.0f,  0.0f,  1.0f}}
     };
@@ -112,9 +112,22 @@ Rendering::Rendering(HWND windowHandle, int width, int height) {
     ));
 }
 
+Rendering::~Rendering() {
+    device_->Release();
+    swapChain_->Release();
+    context_->Release();
+    renderTarget_->Release();
+    inputLayout_->Release();
+    vertexShaderBlob_->Release();
+    vertexShader_->Release();
+    pixelShaderBlob_->Release();
+    pixelShader_->Release();
+    vertexBuffer_->Release();
+}
+
 void Rendering::Draw() {
     float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
-    context_->ClearRenderTargetView(backBufferTarget_, background_colour);
+    context_->ClearRenderTargetView(renderTarget_, background_colour);
 
     D3D11_VIEWPORT viewport = {
       0.0f,
@@ -125,7 +138,7 @@ void Rendering::Draw() {
       1.0f };
     context_->RSSetViewports(1, &viewport);
 
-    context_->OMSetRenderTargets(1, &backBufferTarget_, nullptr);
+    context_->OMSetRenderTargets(1, &renderTarget_, nullptr);
 
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context_->IASetInputLayout(inputLayout_);

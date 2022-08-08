@@ -14,7 +14,7 @@ private:
 
 public:
     ~WindowsLayer();
-    const char* className_ = "WindowAppClass";
+    const char* className_ = "WindowGameClass";
     HINSTANCE classInstance_;
 
     HWND windowHandle_;

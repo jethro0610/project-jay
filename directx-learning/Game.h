@@ -8,10 +8,10 @@
 #include "Gamepad.h"
 #include "Renderer.h"
 
-class App {
+class Game {
 public:
-    App();
-    ~App();
+    Game();
+    ~Game();
     void PlatformInit();
     void Init();
 
@@ -30,7 +30,7 @@ private:
     Renderer* renderer_;
     #ifdef WINDOWS
     WindowsLayer* windowsLayer_;
-    DirectXLayer* dxLayer;
+    DirectXLayer* dxLayer_;
     #endif
 
     void UpdateInputs();

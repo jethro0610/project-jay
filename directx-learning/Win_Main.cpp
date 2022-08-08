@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Game.h"
 
 int CALLBACK WinMain(
     HINSTANCE instance,
@@ -6,6 +6,6 @@ int CALLBACK WinMain(
     LPSTR commandLine,
     int showCode
 ) {
-    App app;
+    Game app;
     app.PlatformInit();
 }

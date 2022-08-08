@@ -1,8 +1,8 @@
-#include "App.h"
+#include "Game.h"
 #include <Xinput.h>
 #include <sstream>
 
-App::App() {
+Game::Game() {
     running_ = false;
     windowsLayer_ = nullptr;
     forwardInput_ = 0;
@@ -11,17 +11,17 @@ App::App() {
     resolutionHeight_  = 720;
 }
 
-App::~App() {
-    delete dxLayer;
+Game::~Game() {
+    delete dxLayer_;
     delete renderer_;
     delete windowsLayer_;
 }
 
-void App::PlatformInit() {
+void Game::PlatformInit() {
     running_ = true;
     windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth_, resolutionHeight_, "DirectXLearning");
-    dxLayer = new DirectXLayer(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
-    renderer_ = new Renderer(dxLayer);
+    dxLayer_ = new DirectXLayer(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
+    renderer_ = new Renderer(dxLayer_);
 
     Init();
 
@@ -41,7 +41,7 @@ void App::PlatformInit() {
     }
 }
 
-void App::PollGamepadInputs() {
+void Game::PollGamepadInputs() {
     XINPUT_STATE state;
 
     gamepad.pressedButtons_.reset();
@@ -84,7 +84,7 @@ void App::PollGamepadInputs() {
     }
 }
 
-void App::UpdateInputs() {
+void Game::UpdateInputs() {
     forwardInput_ = 0.0f;
     sideInput_ = 0.0f;
 

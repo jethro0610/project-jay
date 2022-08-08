@@ -1,5 +1,6 @@
 #include "DirectXLayer.h"
 #include <assert.h>
+#include "RenderTypes.h"
 
 #ifdef _DEBUG
 #define D3D_FEATURE_LEVEL D3D11_CREATE_DEVICE_DEBUG
@@ -68,9 +69,9 @@ DirectXLayer::~DirectXLayer() {
     renderTarget_->Release();
 }
 
-void DirectXLayer::LoadVertexShader(std::string fileName) {
-    assert(vertexShaders_.count(fileName) == 0);
-    std::string extentionName = fileName + ".cso";
+void DirectXLayer::LoadVertexShader(std::string shaderName) {
+    assert(vertexShaders_.count(shaderName) == 0);
+    std::string extentionName = shaderName + ".cso";
     std::wstring wString(extentionName.begin(), extentionName.end());
 
     ID3DBlob* vertexShaderBlob;
@@ -97,14 +98,14 @@ void DirectXLayer::LoadVertexShader(std::string fileName) {
         &inputLayout
     ));
 
-    vertexShaderBlobs_[fileName] = vertexShaderBlob;
-    vertexShaders_[fileName] = vertexShader;
-    inputLayouts_[fileName] = inputLayout;
+    vertexShaderBlobs_[shaderName] = vertexShaderBlob;
+    vertexShaders_[shaderName] = vertexShader;
+    inputLayouts_[shaderName] = inputLayout;
 }
 
-void DirectXLayer::LoadPixelShader(std::string fileName) {
-    assert(pixelShaders_.count(fileName) == 0);
-    std::string extentionName = fileName + ".cso";
+void DirectXLayer::LoadPixelShader(std::string shaderName) {
+    assert(pixelShaders_.count(shaderName) == 0);
+    std::string extentionName = shaderName + ".cso";
     std::wstring wString(extentionName.begin(), extentionName.end());
 
     ID3DBlob* pixelShaderBlob;
@@ -118,61 +119,57 @@ void DirectXLayer::LoadPixelShader(std::string fileName) {
         &pixelShader
     ));
 
-    pixelShaderBlobs_[fileName] = pixelShaderBlob;
-    pixelShaders_[fileName] = pixelShader;
+    pixelShaderBlobs_[shaderName] = pixelShaderBlob;
+    pixelShaders_[shaderName] = pixelShader;
 }
 
-void DirectXLayer::LoadModel(std::string bufferName) {
-    assert(vertexBuffers_.count(bufferName) == 0);
+void DirectXLayer::LoadMesh(std::string meshName) {
+    assert(vertexBuffers_.count(meshName) == 0);
 
     ColorVertex vertexArray[] = {
-        {{0.0f,  0.5f,  0.0f},      {1.0f,  1.0f,  0.0f}},
-        {{0.5f,  -0.755f,  0.0f},   {0.0f,  1.0f,  0.0f}},
-        {{-0.5f,  -0.5f,  0.0f},    {0.0f,  0.0f,  1.0f}}
+        {{-0.5f,  -0.5f,  0.5f},      {1.0f,  1.0f,  0.0f}},
+        {{-0.5f,  0.5f,  0.5f},   {0.0f,  1.0f,  0.0f}},
+        {{0.5f,  0.5f,  0.5f},    {0.0f,  0.0f,  1.0f}},
+        {{0.5f,  -0.5f,  0.5f},    {0.0f,  1.0f,  1.0f}}
     };
 
-    D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.ByteWidth = sizeof(vertexArray);
-    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    D3D11_SUBRESOURCE_DATA srData = {};
-    srData.pSysMem = vertexArray;
+    D3D11_BUFFER_DESC vBufferDesc = {};
+    vBufferDesc.ByteWidth = sizeof(vertexArray);
+    vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    D3D11_SUBRESOURCE_DATA vSrData = {};
+    vSrData.pSysMem = vertexArray;
 
     ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
-        &bufferDesc,
-        &srData,
+        &vBufferDesc,
+        &vSrData,
         &vertexBuffer
     ));
 
-    vertexBuffers_[bufferName] = vertexBuffer;
-    vertexCounts_[bufferName] = 3;
+    DWORD indices[] = {
+        0, 1, 2,
+        0, 2, 3
+    };
+
+    D3D11_BUFFER_DESC iBufferDesc = {};
+    iBufferDesc.ByteWidth = sizeof(indices);
+    iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    iBufferDesc.CPUAccessFlags = 0;
+    iBufferDesc.MiscFlags = 0;
+    D3D11_SUBRESOURCE_DATA iSrData = {};
+    iSrData.pSysMem = indices;
+
+    ID3D11Buffer* indexBuffer;
+    HRASSERT(device_->CreateBuffer(
+        &iBufferDesc,
+        &iSrData,
+        &indexBuffer
+    ));
+
+    vertexBuffers_[meshName] = vertexBuffer;
+    indexBuffers_[meshName] = indexBuffer;
+    vertexCounts_[meshName] = 4;
+    indexCounts_[meshName] = 6;
 }
-
-/*
-void Rendering::Draw() {
-    float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
-    context_->ClearRenderTargetView(renderTarget_, background_colour);
-
-    D3D11_VIEWPORT viewport = {
-      0.0f,
-      0.0f,
-      (float)renderWidth_,
-      (float)renderHeight_,
-      0.0f,
-      1.0f };
-    context_->RSSetViewports(1, &viewport);
-
-    context_->OMSetRenderTargets(1, &renderTarget_, nullptr);
-
-    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context_->IASetInputLayout(inputLayout_);
-    context_->IASetVertexBuffers(0, 1, &vertexBuffer_, &vertexStride_, &vertexOffset_);
-
-    context_->VSSetShader(vertexShader_, nullptr, 0);
-    context_->PSSetShader(pixelShader_, nullptr, 0);
-    context_->Draw(vertexCount_, 0);
-
-    swapChain_->Present(1, 0);
-}
-*/

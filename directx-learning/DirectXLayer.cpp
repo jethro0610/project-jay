@@ -140,10 +140,10 @@ void DirectXLayer::LoadMesh(std::string meshName) {
     assert(vertexBuffers_.count(meshName) == 0);
 
     ColorVertex planeVertices[] = {
-        {{-0.5f, -0.5f, 0.5f},{1.0f, 1.0f, 0.0f}},
-        {{-0.5f, 0.5f, 0.5f},{0.0f, 1.0f, 0.0f}},
-        {{0.5f, 0.5f, 0.5f},{0.0f, 0.0f, 1.0f}},
-        {{0.5f, -0.5f, 0.5f},{0.0f, 1.0f, 1.0f}},
+        {{-1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 0.0f}},
+        {{-1.0f, 1.0f, 0.0f},{0.0f, 1.0f, 0.0f}},
+        {{1.0f, 1.0f, 0.0f},{0.0f, 0.0f, 1.0f}},
+        {{1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 1.0f}},
     };
 
 

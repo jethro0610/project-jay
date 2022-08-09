@@ -26,7 +26,9 @@ public:
     glm::mat4 projMatrix_;
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
-    glm::mat4 GetModelViewProjection();
+    glm::mat4 GetWorldViewProjection();
+
+    float testRot;
 
     void Render();
     void PlatformRender();

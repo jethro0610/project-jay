@@ -2,7 +2,7 @@
 #include <glm.hpp>
 
 struct PerObjectData {
-    glm::mat4 modelViewProj;
+    glm::mat4 worldViewProj;
 };
 
 struct ColorVertex {

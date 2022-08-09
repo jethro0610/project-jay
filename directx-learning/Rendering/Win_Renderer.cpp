@@ -44,7 +44,7 @@ void Renderer::PlatformRender() {
 
     // Get the vertex and index variables
     MeshResource meshResource = dxLayer_->meshResources_["TestMesh"];
-    UINT vertexStride = sizeof(ColorVertex);
+    UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 
     // Get the vertex shader
@@ -57,7 +57,7 @@ void Renderer::PlatformRender() {
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);
     context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     // Set the vertex shader and update its constant buffers
     context->VSSetShader(vsResource.shader, nullptr, 0);

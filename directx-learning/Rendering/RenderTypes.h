@@ -5,7 +5,6 @@ struct PerObjectData {
     mat4 worldViewProj;
 };
 
-struct ColorVertex {
+struct Vertex {
     vec3 pos;
-    vec3 col;
 };

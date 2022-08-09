@@ -1,6 +1,13 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_NOEXCEPTION
+
 #include "DirectXLayer.h"
 #include <assert.h>
 #include "RenderTypes.h"
+#include <tiny_gltf.h>
 
 #ifdef _DEBUG
 #define D3D_FEATURE_LEVEL D3D11_CREATE_DEVICE_DEBUG
@@ -9,6 +16,8 @@
 #define D3D_FEATURE_LEVEL 0
 #define HRASSERT(hResult) hResult;
 #endif
+
+using namespace tinygltf;
 
 DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     width_ = width;
@@ -101,7 +110,7 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
     ID3D11InputLayout* inputLayout;
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(vec3), D3D11_INPUT_PER_VERTEX_DATA, 0}
+        //{"COL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(vec3), D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
     HRASSERT(device_->CreateInputLayout(
         inputElementDesc,
@@ -143,19 +152,33 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
 void DirectXLayer::LoadMesh(std::string meshName) {
     assert(meshResources_.count(meshName) == 0);
 
-    ColorVertex planeVertices[] = {
-        {{-1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 0.0f}},
-        {{-1.0f, 1.0f, 0.0f},{0.0f, 1.0f, 0.0f}},
-        {{1.0f, 1.0f, 0.0f},{0.0f, 0.0f, 1.0f}},
-        {{1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 1.0f}},
-    };
+    Model model;
+    TinyGLTF loader;
+    std::string err;
+    std::string warn;
+
+    bool foundModel = loader.LoadBinaryFromFile(&model, &err, &warn, "TestModel.glb");
+    assert(foundModel);
+
+    Mesh gltfMesh = model.meshes[0];
+
+    Accessor vertexAccessor = model.accessors[gltfMesh.primitives[0].attributes.at("POSITION")];
+    BufferView vertexBufferView = model.bufferViews[vertexAccessor.bufferView];
+    Buffer gVertexBuffer = model.buffers[vertexBufferView.buffer];
+    size_t vertexBufferStart = vertexBufferView.byteOffset + vertexAccessor.byteOffset;
+
+    Accessor indexAccessor = model.accessors[gltfMesh.primitives[0].indices];
+    BufferView indexBufferView = model.bufferViews[indexAccessor.bufferView];
+    Buffer gIndexBuffer = model.buffers[indexBufferView.buffer];
+    size_t indexBufferStart = indexBufferView.byteOffset + indexAccessor.byteOffset;
+
 
     D3D11_BUFFER_DESC vBufferDesc = {};
-    vBufferDesc.ByteWidth = sizeof(planeVertices);
+    vBufferDesc.ByteWidth = sizeof(float) * vertexAccessor.count * 3;
     vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA vSrData = {};
-    vSrData.pSysMem = planeVertices;
+    vSrData.pSysMem = &gVertexBuffer.data[vertexBufferStart];
 
     ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -164,19 +187,14 @@ void DirectXLayer::LoadMesh(std::string meshName) {
         &vertexBuffer
     ));
 
-    DWORD cubeIndices[] = {
-        0, 1, 2,
-        0, 2, 3
-    };
-
     D3D11_BUFFER_DESC iBufferDesc = {};
-    iBufferDesc.ByteWidth = sizeof(cubeIndices);
+    iBufferDesc.ByteWidth = sizeof(uint16_t) * indexAccessor.count;
     iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     iBufferDesc.CPUAccessFlags = 0;
     iBufferDesc.MiscFlags = 0;
     D3D11_SUBRESOURCE_DATA iSrData = {};
-    iSrData.pSysMem = cubeIndices;
+    iSrData.pSysMem = &gIndexBuffer.data[indexBufferStart];
 
     ID3D11Buffer* indexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -187,9 +205,9 @@ void DirectXLayer::LoadMesh(std::string meshName) {
 
     MeshResource meshResource = {};
     meshResource.vertexBuffer = vertexBuffer;
-    meshResource.vertexCount = 4;
+    meshResource.vertexCount = vertexAccessor.count;
     meshResource.indexBuffer = indexBuffer;
-    meshResource.indexCount = 6;
+    meshResource.indexCount = indexAccessor.count;
 
     meshResources_[meshName] = meshResource;
 }

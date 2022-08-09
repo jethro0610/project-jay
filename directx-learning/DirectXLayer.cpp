@@ -60,6 +60,19 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
 #ifdef _DEBUG
     flags |= D3DCOMPILE_DEBUG;
 #endif
+
+    D3D11_BUFFER_DESC perObjectDesc = {};
+    perObjectDesc.Usage = D3D11_USAGE_DEFAULT;
+    perObjectDesc.ByteWidth = sizeof(PerObjectData);
+    perObjectDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    perObjectDesc.CPUAccessFlags = 0;
+    perObjectDesc.MiscFlags = 0;
+
+    HRASSERT(device_->CreateBuffer(
+        &perObjectDesc,
+        nullptr,
+        &perObjectCBuffer_
+    ));
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -126,19 +139,20 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
 void DirectXLayer::LoadMesh(std::string meshName) {
     assert(vertexBuffers_.count(meshName) == 0);
 
-    ColorVertex vertexArray[] = {
-        {{-0.5f,  -0.5f,  0.5f},      {1.0f,  1.0f,  0.0f}},
-        {{-0.5f,  0.5f,  0.5f},   {0.0f,  1.0f,  0.0f}},
-        {{0.5f,  0.5f,  0.5f},    {0.0f,  0.0f,  1.0f}},
-        {{0.5f,  -0.5f,  0.5f},    {0.0f,  1.0f,  1.0f}}
+    ColorVertex planeVertices[] = {
+        {{-0.5f, -0.5f, 0.5f},{1.0f, 1.0f, 0.0f}},
+        {{-0.5f, 0.5f, 0.5f},{0.0f, 1.0f, 0.0f}},
+        {{0.5f, 0.5f, 0.5f},{0.0f, 0.0f, 1.0f}},
+        {{0.5f, -0.5f, 0.5f},{0.0f, 1.0f, 1.0f}},
     };
 
+
     D3D11_BUFFER_DESC vBufferDesc = {};
-    vBufferDesc.ByteWidth = sizeof(vertexArray);
+    vBufferDesc.ByteWidth = sizeof(planeVertices);
     vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA vSrData = {};
-    vSrData.pSysMem = vertexArray;
+    vSrData.pSysMem = planeVertices;
 
     ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -147,19 +161,19 @@ void DirectXLayer::LoadMesh(std::string meshName) {
         &vertexBuffer
     ));
 
-    DWORD indices[] = {
+    DWORD cubeIndices[] = {
         0, 1, 2,
         0, 2, 3
     };
 
     D3D11_BUFFER_DESC iBufferDesc = {};
-    iBufferDesc.ByteWidth = sizeof(indices);
+    iBufferDesc.ByteWidth = sizeof(cubeIndices);
     iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     iBufferDesc.CPUAccessFlags = 0;
     iBufferDesc.MiscFlags = 0;
     D3D11_SUBRESOURCE_DATA iSrData = {};
-    iSrData.pSysMem = indices;
+    iSrData.pSysMem = cubeIndices;
 
     ID3D11Buffer* indexBuffer;
     HRASSERT(device_->CreateBuffer(

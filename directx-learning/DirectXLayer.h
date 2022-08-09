@@ -31,6 +31,8 @@ public:
     ID3D11DeviceContext* context_;
     ID3D11RenderTargetView* renderTarget_;
 
+    ID3D11Buffer* perObjectCBuffer_;
+
     int renderWidth_;
     int renderHeight_;
 };

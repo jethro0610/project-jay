@@ -5,10 +5,10 @@ Renderer::Renderer(DirectXLayer* dxLayer){
 
     dxLayer_->LoadVertexShader("VertexShader");
     dxLayer_->LoadPixelShader("PixelShader");
-    dxLayer_->LoadMesh("TestBuffer");
+    dxLayer_->LoadMesh("TestMesh");
 
-    width_ = dxLayer_->renderWidth_;
-    height_ = dxLayer_->renderHeight_;
+    width_ = dxLayer->width_;
+    height_ = dxLayer->height_;
 
     Init();
 }
@@ -34,8 +34,8 @@ void Renderer::PlatformRender() {
     D3D11_VIEWPORT viewport = {
         0.0f,
         0.0f,
-        (float)dxLayer_->renderWidth_,
-        (float)dxLayer_->renderHeight_,
+        (float)width_,
+        (float)height_,
         0.0f,
         1.0f 
     };
@@ -43,35 +43,31 @@ void Renderer::PlatformRender() {
     context->OMSetRenderTargets(1, &dxLayer_->renderTarget_, nullptr);
 
     // Get the vertex and index variables
-    ID3D11Buffer* vertexBuffer = dxLayer_->vertexBuffers_["TestBuffer"];
-    UINT vertexCount = dxLayer_->vertexCounts_["TestBuffer"];
+    MeshResource meshResource = dxLayer_->meshResources_["TestMesh"];
     UINT vertexStride = sizeof(ColorVertex);
     UINT vertexOffset = 0;
-    ID3D11Buffer* indexBuffer = dxLayer_->indexBuffers_["TestBuffer"];
-    UINT indexCount = dxLayer_->indexCounts_["TestBuffer"];
 
     // Get the vertex shader
-    ID3D11VertexShader* vertexShader = dxLayer_->vertexShaders_["VertexShader"];
-    ID3D11InputLayout* inputLayout = dxLayer_->inputLayouts_["VertexShader"];
+    VSResource vsResource = dxLayer_->vsResources_["VertexShader"];
 
     // Get the pixel shader
-    ID3D11PixelShader* pixelShader = dxLayer_->pixelShaders_["PixelShader"];
+    PSResource psResource = dxLayer_->psResources_["PixelShader"];
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IASetInputLayout(inputLayout);
-    context->IASetVertexBuffers(0, 1, &vertexBuffer, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    context->IASetInputLayout(vsResource.layout);
+    context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
+    context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the vertex shader and update its constant buffers
-    context->VSSetShader(vertexShader, nullptr, 0);
+    context->VSSetShader(vsResource.shader, nullptr, 0);
     context->VSSetConstantBuffers(0, 1, &dxLayer_->perObjectCBuffer_);
 
     // Set the pixel shader
-    context->PSSetShader(pixelShader, nullptr, 0);
+    context->PSSetShader(psResource.shader, nullptr, 0);
 
     // Draw the mesh
-    context->DrawIndexed(indexCount, 0, 0);
+    context->DrawIndexed(meshResource.indexCount, 0, 0);
 
     // Present the frame
     dxLayer_->swapChain_->Present(1, 0);

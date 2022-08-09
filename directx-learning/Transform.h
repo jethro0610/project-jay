@@ -4,7 +4,8 @@
 
 using namespace glm;
 
-struct Transform {
+class Transform {
+public:
     Transform();
     vec3 position_;
     quat rotation_;

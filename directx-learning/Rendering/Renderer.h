@@ -4,7 +4,7 @@
 #include "DirectXLayer.h"
 #endif
 
-#include "Transform.h"
+#include "../Transform.h"
 #include "RenderTypes.h"
 
 class Renderer {
@@ -25,7 +25,9 @@ public:
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
     mat4 GetWorldViewProjection();
 
-    float testRot;
+    float testRot_;
+
+    Transform cameraTransform_;
 
     void Render();
     void PlatformRender();

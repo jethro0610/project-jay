@@ -11,8 +11,8 @@
 #endif
 
 DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
-    renderWidth_ = width;
-    renderHeight_ = height;
+    width_ = width;
+    height_ = height;
 
     DXGI_SWAP_CHAIN_DESC swapDesc = {};
     swapDesc.BufferDesc.Width = width;
@@ -83,7 +83,7 @@ DirectXLayer::~DirectXLayer() {
 }
 
 void DirectXLayer::LoadVertexShader(std::string shaderName) {
-    assert(vertexShaders_.count(shaderName) == 0);
+    assert(vsResources_.count(shaderName) == 0);
     std::string extentionName = shaderName + ".cso";
     std::wstring wString(extentionName.begin(), extentionName.end());
 
@@ -111,13 +111,15 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
         &inputLayout
     ));
 
-    vertexShaderBlobs_[shaderName] = vertexShaderBlob;
-    vertexShaders_[shaderName] = vertexShader;
-    inputLayouts_[shaderName] = inputLayout;
+    VSResource vsResource = {};
+    vsResource.shader = vertexShader;
+    vsResource.layout = inputLayout;
+    vsResource.blob = vertexShaderBlob;
+    vsResources_[shaderName] = vsResource;
 }
 
 void DirectXLayer::LoadPixelShader(std::string shaderName) {
-    assert(pixelShaders_.count(shaderName) == 0);
+    assert(psResources_.count(shaderName) == 0);
     std::string extentionName = shaderName + ".cso";
     std::wstring wString(extentionName.begin(), extentionName.end());
 
@@ -132,12 +134,14 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
         &pixelShader
     ));
 
-    pixelShaderBlobs_[shaderName] = pixelShaderBlob;
-    pixelShaders_[shaderName] = pixelShader;
+    PSResource psResource = {};
+    psResource.shader = pixelShader;
+    psResource.blob = pixelShaderBlob;
+    psResources_[shaderName] = psResource;
 }
 
 void DirectXLayer::LoadMesh(std::string meshName) {
-    assert(vertexBuffers_.count(meshName) == 0);
+    assert(meshResources_.count(meshName) == 0);
 
     ColorVertex planeVertices[] = {
         {{-1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 0.0f}},
@@ -145,7 +149,6 @@ void DirectXLayer::LoadMesh(std::string meshName) {
         {{1.0f, 1.0f, 0.0f},{0.0f, 0.0f, 1.0f}},
         {{1.0f, -1.0f, 0.0f},{1.0f, 0.0f, 1.0f}},
     };
-
 
     D3D11_BUFFER_DESC vBufferDesc = {};
     vBufferDesc.ByteWidth = sizeof(planeVertices);
@@ -182,8 +185,11 @@ void DirectXLayer::LoadMesh(std::string meshName) {
         &indexBuffer
     ));
 
-    vertexBuffers_[meshName] = vertexBuffer;
-    indexBuffers_[meshName] = indexBuffer;
-    vertexCounts_[meshName] = 4;
-    indexCounts_[meshName] = 6;
+    MeshResource meshResource = {};
+    meshResource.vertexBuffer = vertexBuffer;
+    meshResource.vertexCount = 4;
+    meshResource.indexBuffer = indexBuffer;
+    meshResource.indexCount = 6;
+
+    meshResources_[meshName] = meshResource;
 }

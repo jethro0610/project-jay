@@ -6,6 +6,7 @@
 #endif
 
 #include "Gamepad.h"
+#include "Transform.h"
 #include "Rendering/Renderer.h"
 
 class Game {
@@ -25,6 +26,8 @@ public:
     int resolutionHeight_;
 
     Gamepad gamepad;
+
+    Transform cameraTransform_;
 
 private:
     Renderer* renderer_;

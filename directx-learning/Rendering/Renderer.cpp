@@ -1,16 +1,23 @@
 #pragma once
 #include "Renderer.h"
-#include "Transform.h"
+
 void Renderer::Init() {
-    UpdateProjMatrix(45.0f, 0.1f, 1000.0f);
-    testRot = 0.0f;
+    UpdateProjMatrix(70.0f, 0.1f, 1000.0f);
+    cameraTransform_.position_ = vec3(0.0f, 0.0f, -10.0f);
+    testRot_ = 0.0f;
 }
 
 void Renderer::UpdateViewMatrix() {
+    vec3 forward = vec3(0.0f, 0.0f, 1.0f);
+    forward = rotate(cameraTransform_.rotation_, forward);
+
+    vec3 up = vec3(0.0f, 1.0f, 0.0f);
+    up = rotate(cameraTransform_.rotation_, up);
+
     viewMatrix_ = lookAtLH(
-        vec3(0.0f, 0.0f, -10.0f),
-        vec3(0.0f, 0.0f, -9.0f),
-        vec3(0.0f, 1.0f, 0.0f)
+        cameraTransform_.position_,
+        cameraTransform_.position_ + forward,
+        up
     );
 }
 
@@ -19,10 +26,10 @@ void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {
 }
 
 mat4 Renderer::GetWorldViewProjection() {
-    testRot += 0.05f;
+    testRot_ += 0.05f;
     Transform testTransform;
-    float sinRot = sin(testRot);
-    float cosRot = cos(testRot);
+    float sinRot = sin(testRot_);
+    float cosRot = cos(testRot_);
     testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
     testTransform.rotation_ = quat(vec3((cosRot / 60.0f) * 90.0f, 0.0f, 0.0f));
     mat4 worldMatrix = testTransform.GetWorldMatrix();

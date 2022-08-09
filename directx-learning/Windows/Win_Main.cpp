@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "../Game.h"
 
 int CALLBACK WinMain(
     HINSTANCE instance,

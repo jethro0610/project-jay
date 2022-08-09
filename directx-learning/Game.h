@@ -1,12 +1,12 @@
 #pragma once
 
 #ifdef WINDOWS
-#include "WindowsLayer.h"
-#include "DirectXLayer.h"
+#include "Windows/WindowsLayer.h"
+#include "Rendering/DirectXLayer.h"
 #endif
 
 #include "Gamepad.h"
-#include "Renderer.h"
+#include "Rendering/Renderer.h"
 
 class Game {
 public:

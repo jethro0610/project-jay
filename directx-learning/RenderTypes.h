@@ -1,11 +1,11 @@
 #pragma once
-#include <glm.hpp>
+#include "Transform.h"
 
 struct PerObjectData {
-    glm::mat4 worldViewProj;
+    mat4 worldViewProj;
 };
 
 struct ColorVertex {
-    glm::vec3 pos;
-    glm::vec3 col;
+    vec3 pos;
+    vec3 col;
 };

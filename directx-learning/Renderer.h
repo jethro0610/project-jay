@@ -4,10 +4,7 @@
 #include "DirectXLayer.h"
 #endif
 
-#include <string>
-#include <vector>
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
+#include "Transform.h"
 #include "RenderTypes.h"
 
 class Renderer {
@@ -22,11 +19,11 @@ public:
     int width_;
     int height_;
 
-    glm::mat4 viewMatrix_;
-    glm::mat4 projMatrix_;
+    mat4 viewMatrix_;
+    mat4 projMatrix_;
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
-    glm::mat4 GetWorldViewProjection();
+    mat4 GetWorldViewProjection();
 
     float testRot;
 

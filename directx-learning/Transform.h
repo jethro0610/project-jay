@@ -2,12 +2,14 @@
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>
 
+using namespace glm;
+
 struct Transform {
     Transform();
-    glm::vec3 position_;
-    glm::quat rotation_;
-    glm::vec3 scale_;
+    vec3 position_;
+    quat rotation_;
+    vec3 scale_;
 
-    glm::mat4 GetWorldMatrix() const;
+    mat4 GetWorldMatrix() const;
 };
 

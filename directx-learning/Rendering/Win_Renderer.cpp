@@ -5,7 +5,7 @@ Renderer::Renderer(DirectXLayer* dxLayer){
 
     dxLayer_->LoadVertexShader("VertexShader");
     dxLayer_->LoadPixelShader("PixelShader");
-    dxLayer_->LoadMesh("m_cube");
+    dxLayer_->LoadModel("m_cube");
 
     width_ = dxLayer->width_;
     height_ = dxLayer->height_;
@@ -43,7 +43,7 @@ void Renderer::PlatformRender() {
     context->OMSetRenderTargets(1, &dxLayer_->renderTarget_, nullptr);
 
     // Get the vertex and index variables
-    MeshResource meshResource = dxLayer_->meshResources_["m_cube"];
+    MeshResource meshResource = dxLayer_->meshResources_["m_cube_0"];
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 

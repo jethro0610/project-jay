@@ -4,6 +4,7 @@
 #include <d3dcompiler.h>
 #include <unordered_map>
 #include <string>
+#include "../RawModel.h"
 
 struct VSResource {
     ID3D11VertexShader* shader;
@@ -44,7 +45,8 @@ public:
 
     void LoadVertexShader(std::string shaderName);
     void LoadPixelShader(std::string shaderName);
-    void LoadMesh(std::string meshName);
+    void LoadModel(std::string modelName);
 
-    // TODO: Unload functions
+private:
+    void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex);
 };

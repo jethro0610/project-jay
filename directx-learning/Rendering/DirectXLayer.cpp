@@ -1,7 +1,6 @@
 #include "DirectXLayer.h"
 #include <assert.h>
 #include "RenderTypes.h"
-#include "../RawMesh.h"
 
 #ifdef _DEBUG
 #define D3D_FEATURE_LEVEL D3D11_CREATE_DEVICE_DEBUG
@@ -140,17 +139,24 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
     psResources_[shaderName] = psResource;
 }
 
-void DirectXLayer::LoadMesh(std::string meshName) {
+void DirectXLayer::LoadModel(std::string modelName) {
+    RawModel rawModel((modelName + ".jmd").c_str());
+
+    for (int i = 0; i < rawModel.meshes_.size(); i++) {
+        LoadMesh(modelName, rawModel.meshes_[i], i);
+    }
+}
+
+void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) {
+    std::string meshName = modelName + "_" + std::to_string(meshIndex);
     assert(meshResources_.count(meshName) == 0);
 
-    RawMesh rawMesh((meshName + ".jmd").c_str());
-    
     D3D11_BUFFER_DESC vBufferDesc = {};
-    vBufferDesc.ByteWidth = rawMesh.sections_[0].GetVertexByteWidth();
+    vBufferDesc.ByteWidth = mesh.GetVertexByteWidth();
     vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA vSrData = {};
-    vSrData.pSysMem = rawMesh.sections_[0].vertexBuffer_;
+    vSrData.pSysMem = mesh.vertexBuffer_;
 
     ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -160,13 +166,13 @@ void DirectXLayer::LoadMesh(std::string meshName) {
     ));
 
     D3D11_BUFFER_DESC iBufferDesc = {};
-    iBufferDesc.ByteWidth = rawMesh.sections_[0].GetIndexByteWidth();
+    iBufferDesc.ByteWidth = mesh.GetIndexByteWidth();
     iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     iBufferDesc.CPUAccessFlags = 0;
     iBufferDesc.MiscFlags = 0;
     D3D11_SUBRESOURCE_DATA iSrData = {};
-    iSrData.pSysMem = rawMesh.sections_[0].indexBuffer_;
+    iSrData.pSysMem = mesh.indexBuffer_;
 
     ID3D11Buffer* indexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -177,9 +183,9 @@ void DirectXLayer::LoadMesh(std::string meshName) {
 
     MeshResource meshResource = {};
     meshResource.vertexBuffer = vertexBuffer;
-    meshResource.vertexCount = rawMesh.sections_[0].vertexCount_;
+    meshResource.vertexCount = mesh.vertexCount_;
     meshResource.indexBuffer = indexBuffer;
-    meshResource.indexCount = rawMesh.sections_[0].indexCount_;
+    meshResource.indexCount = mesh.indexCount_;
 
     meshResources_[meshName] = meshResource;
 }

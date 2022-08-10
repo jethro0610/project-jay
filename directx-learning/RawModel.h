@@ -2,9 +2,9 @@
 #include <vector>
 
 #define MODEL_HEADER_SIZE sizeof(uint8_t)
-#define SECTION_HEADER_SIZE 2 * sizeof(uint16_t)
+#define MESH_HEADER_SIZE 2 * sizeof(uint16_t)
 
-class RawMeshSection {
+class RawMesh {
 public:
     uint16_t vertexCount_;
     void* vertexBuffer_;
@@ -16,10 +16,10 @@ public:
     int GetIndexByteWidth();
 };
 
-class RawMesh {
+class RawModel {
 public:
-    RawMesh(const char* meshName);
+    RawModel(const char* modelName);
     std::vector<unsigned char> rawBytes;
-    std::vector<RawMeshSection> sections_;
+    std::vector<RawMesh> meshes_;
 };
 

@@ -1,18 +1,25 @@
 #pragma once
 #include <vector>
 
-class RawMesh {
+#define MODEL_HEADER_SIZE sizeof(uint8_t)
+#define SECTION_HEADER_SIZE 2 * sizeof(uint16_t)
+
+class RawMeshSection {
 public:
-    RawMesh(const char* meshName);
-    std::vector<unsigned char> rawBytes;
-
-    uint8_t vertexCount_;
-    uint8_t indexCount_;
-
+    uint16_t vertexCount_;
     void* vertexBuffer_;
+
+    uint16_t indexCount_;
     void* indexBuffer_;
 
     int GetVertexByteWidth();
     int GetIndexByteWidth();
+};
+
+class RawMesh {
+public:
+    RawMesh(const char* meshName);
+    std::vector<unsigned char> rawBytes;
+    std::vector<RawMeshSection> sections_;
 };
 

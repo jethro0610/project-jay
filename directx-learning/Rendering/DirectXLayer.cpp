@@ -143,14 +143,14 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
 void DirectXLayer::LoadMesh(std::string meshName) {
     assert(meshResources_.count(meshName) == 0);
 
-    RawMesh rawMesh((meshName + ".bin").c_str());
-
+    RawMesh rawMesh((meshName + ".jmd").c_str());
+    
     D3D11_BUFFER_DESC vBufferDesc = {};
-    vBufferDesc.ByteWidth = rawMesh.GetVertexByteWidth();
+    vBufferDesc.ByteWidth = rawMesh.sections_[0].GetVertexByteWidth();
     vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     D3D11_SUBRESOURCE_DATA vSrData = {};
-    vSrData.pSysMem = rawMesh.vertexBuffer_;
+    vSrData.pSysMem = rawMesh.sections_[0].vertexBuffer_;
 
     ID3D11Buffer* vertexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -160,13 +160,13 @@ void DirectXLayer::LoadMesh(std::string meshName) {
     ));
 
     D3D11_BUFFER_DESC iBufferDesc = {};
-    iBufferDesc.ByteWidth = rawMesh.GetIndexByteWidth();
+    iBufferDesc.ByteWidth = rawMesh.sections_[0].GetIndexByteWidth();
     iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     iBufferDesc.CPUAccessFlags = 0;
     iBufferDesc.MiscFlags = 0;
     D3D11_SUBRESOURCE_DATA iSrData = {};
-    iSrData.pSysMem = rawMesh.indexBuffer_;
+    iSrData.pSysMem = rawMesh.sections_[0].indexBuffer_;
 
     ID3D11Buffer* indexBuffer;
     HRASSERT(device_->CreateBuffer(
@@ -177,9 +177,9 @@ void DirectXLayer::LoadMesh(std::string meshName) {
 
     MeshResource meshResource = {};
     meshResource.vertexBuffer = vertexBuffer;
-    meshResource.vertexCount = rawMesh.vertexCount_;
+    meshResource.vertexCount = rawMesh.sections_[0].vertexCount_;
     meshResource.indexBuffer = indexBuffer;
-    meshResource.indexCount = rawMesh.indexCount_;
+    meshResource.indexCount = rawMesh.sections_[0].indexCount_;
 
     meshResources_[meshName] = meshResource;
 }

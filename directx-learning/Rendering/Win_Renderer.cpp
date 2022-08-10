@@ -42,8 +42,10 @@ void Renderer::PlatformRender() {
     context->RSSetViewports(1, &viewport);
     context->OMSetRenderTargets(1, &dxLayer_->renderTarget_, nullptr);
 
+
     // Get the vertex and index variables
     MeshResource meshResource = dxLayer_->meshResources_["m_cube_0"];
+
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 
@@ -68,6 +70,7 @@ void Renderer::PlatformRender() {
 
     // Draw the mesh
     context->DrawIndexed(meshResource.indexCount, 0, 0);
+    //context->DrawIndexed(meshResource2.indexCount, 0, 0);
 
     // Present the frame
     dxLayer_->swapChain_->Present(1, 0);

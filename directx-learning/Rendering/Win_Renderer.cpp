@@ -44,7 +44,8 @@ void Renderer::PlatformRender() {
 
 
     // Get the vertex and index variables
-    MeshResource meshResource = dxLayer_->meshResources_["m_cube_0"];
+    MeshResource meshResource0 = dxLayer_->meshResources_["m_cube_0"];
+    MeshResource meshResource1 = dxLayer_->meshResources_["m_cube_1"];
 
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
@@ -55,12 +56,6 @@ void Renderer::PlatformRender() {
     // Get the pixel shader
     PSResource psResource = dxLayer_->psResources_["PixelShader"];
 
-    // Set the vertex and index buffers to be drawn
-    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IASetInputLayout(vsResource.layout);
-    context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
     // Set the vertex shader and update its constant buffers
     context->VSSetShader(vsResource.shader, nullptr, 0);
     context->VSSetConstantBuffers(0, 1, &dxLayer_->perObjectCBuffer_);
@@ -68,9 +63,20 @@ void Renderer::PlatformRender() {
     // Set the pixel shader
     context->PSSetShader(psResource.shader, nullptr, 0);
 
-    // Draw the mesh
-    context->DrawIndexed(meshResource.indexCount, 0, 0);
-    //context->DrawIndexed(meshResource2.indexCount, 0, 0);
+
+    // Set the vertex and index buffers to be drawn
+    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->IASetInputLayout(vsResource.layout);
+    context->IASetVertexBuffers(0, 1, &meshResource0.vertexBuffer, &vertexStride, &vertexOffset);
+    context->IASetIndexBuffer(meshResource0.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    context->DrawIndexed(meshResource0.indexCount, 0, 0);
+    
+    // Set the vertex and index buffers to be drawn
+    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->IASetInputLayout(vsResource.layout);
+    context->IASetVertexBuffers(0, 1, &meshResource1.vertexBuffer, &vertexStride, &vertexOffset);
+    context->IASetIndexBuffer(meshResource1.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    context->DrawIndexed(meshResource1.indexCount, 0, 0);
 
     // Present the frame
     dxLayer_->swapChain_->Present(1, 0);

@@ -10,6 +10,8 @@
 #define HRASSERT(hResult) hResult;
 #endif
 
+using namespace DirectX;
+
 DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     width_ = width;
     height_ = height;
@@ -55,11 +57,6 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
         &renderTarget_
     ));
     backBuffer->Release();
-    
-    UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
-    flags |= D3DCOMPILE_DEBUG;
-#endif
 
     D3D11_BUFFER_DESC perObjectDesc = {};
     perObjectDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -73,6 +70,17 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
         nullptr,
         &perObjectCBuffer_
     ));
+
+    D3D11_SAMPLER_DESC tSampDesc = {};
+    tSampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    tSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    tSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    tSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    tSampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    tSampDesc.MinLOD = 0;
+    tSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    HRASSERT(device_->CreateSamplerState(&tSampDesc, &textureSampler_));
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -84,8 +92,8 @@ DirectXLayer::~DirectXLayer() {
 
 void DirectXLayer::LoadVertexShader(std::string shaderName) {
     assert(vsResources_.count(shaderName) == 0);
-    std::string extentionName = shaderName + ".cso";
-    std::wstring wString(extentionName.begin(), extentionName.end());
+    std::string extensionName = shaderName + ".cso";
+    std::wstring wString(extensionName.begin(), extensionName.end());
 
     ID3DBlob* vertexShaderBlob;
     HRASSERT(D3DReadFileToBlob(wString.c_str(), &vertexShaderBlob));
@@ -101,7 +109,9 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
     ID3D11InputLayout* inputLayout;
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
+
     HRASSERT(device_->CreateInputLayout(
         inputElementDesc,
         ARRAYSIZE(inputElementDesc),
@@ -119,8 +129,8 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
 
 void DirectXLayer::LoadPixelShader(std::string shaderName) {
     assert(psResources_.count(shaderName) == 0);
-    std::string extentionName = shaderName + ".cso";
-    std::wstring wString(extentionName.begin(), extentionName.end());
+    std::string extensionName = shaderName + ".cso";
+    std::wstring wString(extensionName.begin(), extensionName.end());
 
     ID3DBlob* pixelShaderBlob;
     HRASSERT(D3DReadFileToBlob(wString.c_str(), &pixelShaderBlob));
@@ -188,4 +198,14 @@ void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) 
     meshResource.indexCount = mesh.indexCount_;
 
     meshResources_[meshName] = meshResource;
+}
+
+void DirectXLayer::LoadTexture(std::string textureName) {
+    std::string extensionName = textureName + ".png";
+    std::wstring wString(extensionName.begin(), extensionName.end());
+    TextureResource textureResource;
+
+    HRASSERT(CreateWICTextureFromFile(device_, wString.c_str(), &textureResource.texture, &textureResource.view));
+
+    textureResources_[textureName] = textureResource;
 }

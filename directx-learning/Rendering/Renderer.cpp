@@ -26,13 +26,13 @@ void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {
 }
 
 mat4 Renderer::GetWorldViewProjection() {
-    testRot_ += 0.05f;
+    testRot_ += 0.005f;
     Transform testTransform;
     
     float sinRot = sin(testRot_);
     float cosRot = cos(testRot_);
     testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
-    testTransform.rotation_ = quat(vec3( radians(sinRot * 45.0f), 0.0f, 0.0f));
+    testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
     
     mat4 worldMatrix = testTransform.GetWorldMatrix();
     mat4 worldViewProj = projMatrix_ * viewMatrix_ * worldMatrix;

@@ -14,8 +14,6 @@ RawModel::RawModel(const char* modelName) {
     rawBytes.reserve(bytesSize);
     infile.seekg(0, std::ios::beg);
     std::copy((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>(), std::back_inserter(rawBytes));
-    
-    
     infile.close();
 
     int meshCount = (uint8_t)rawBytes.data()[0];
@@ -37,7 +35,7 @@ RawModel::RawModel(const char* modelName) {
 }
 
 int RawMesh::GetVertexByteWidth() {
-    return vertexCount_ * 3 * sizeof(float);
+    return vertexCount_ * 5 * sizeof(float) ;
 }
 
 int RawMesh::GetIndexByteWidth() {

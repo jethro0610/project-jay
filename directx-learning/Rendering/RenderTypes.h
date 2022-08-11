@@ -7,4 +7,5 @@ struct PerObjectData {
 
 struct Vertex {
     vec3 pos;
+    vec2 uv;
 };

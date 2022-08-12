@@ -2,6 +2,8 @@
 #include <assert.h>
 #include "RenderTypes.h"
 
+#include "../Logger.h"
+
 #ifdef _DEBUG
 #define D3D_FEATURE_LEVEL D3D11_CREATE_DEVICE_DEBUG
 #define HRASSERT(hResult) assert(SUCCEEDED(hResult)); 
@@ -94,9 +96,9 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     dsDesc.CPUAccessFlags = 0;
     dsDesc.MiscFlags = 0;
-
-    HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilBuffer_));
-    HRASSERT(device_->CreateDepthStencilView(depthStencilBuffer_, nullptr, &depthStencilView_));
+    ID3D11Texture2D* depthStencilResource;
+    HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilResource));
+    HRASSERT(device_->CreateDepthStencilView(depthStencilResource, nullptr, &depthStencilBuffer_));
 
     // Set the viewport and output merger
     D3D11_VIEWPORT viewport = {
@@ -108,7 +110,7 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
         1.0f
     };
     context_->RSSetViewports(1, &viewport);
-    context_->OMSetRenderTargets(1, &renderTarget_, depthStencilView_);
+    context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_);
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -118,7 +120,6 @@ DirectXLayer::~DirectXLayer() {
     renderTarget_->Release();
     perObjectCBuffer_->Release();
     textureSampler_->Release();
-    depthStencilView_->Release();
     depthStencilBuffer_->Release();
 }
 
@@ -151,11 +152,11 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
         vertexShaderBlob->GetBufferSize(),
         &inputLayout
     ));
+    vertexShaderBlob->Release();
 
     VSResource vsResource = {};
     vsResource.shader = vertexShader;
     vsResource.layout = inputLayout;
-    vsResource.blob = vertexShaderBlob;
     vsResources_[shaderName] = vsResource;
 }
 
@@ -177,7 +178,6 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
 
     PSResource psResource = {};
     psResource.shader = pixelShader;
-    psResource.blob = pixelShaderBlob;
     psResources_[shaderName] = psResource;
 }
 
@@ -237,7 +237,9 @@ void DirectXLayer::LoadTexture(std::string textureName) {
     std::wstring wString(extensionName.begin(), extensionName.end());
     TextureResource textureResource;
 
-    HRASSERT(CreateWICTextureFromFile(device_, wString.c_str(), &textureResource.texture, &textureResource.view));
+    ID3D11Resource* texturePtr;
+    HRASSERT(CreateWICTextureFromFile(device_, wString.c_str(), &texturePtr, &textureResource.texture));
+    texturePtr->Release();
 
     textureResources_[textureName] = textureResource;
 }

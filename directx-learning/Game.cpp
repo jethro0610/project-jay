@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "Logger.h"
 
 void Game::Init() {
-
+    
 }
 
 void Game::Update() {

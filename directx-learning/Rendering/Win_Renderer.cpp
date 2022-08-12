@@ -30,7 +30,7 @@ void Renderer::PlatformRender() {
     // Clear the render target and depth stencil buffer
     float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
     context->ClearRenderTargetView(dxLayer_->renderTarget_, background_colour);
-    context->ClearDepthStencilView(dxLayer_->depthStencilView_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
+    context->ClearDepthStencilView(dxLayer_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
     MeshResource meshResource = dxLayer_->meshResources_["m_cube_0"];
@@ -52,7 +52,7 @@ void Renderer::PlatformRender() {
     context->PSSetShader(psResource.shader, nullptr, 0);
 
     // Set the texture and texture sampler
-    context->PSSetShaderResources(0, 1, &dxLayer_->textureResources_["testTex"].view);
+    context->PSSetShaderResources(0, 1, &dxLayer_->textureResources_["testTex"].texture);
     context->PSSetSamplers(0, 1, &dxLayer_->textureSampler_);
 
     

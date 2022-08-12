@@ -10,12 +10,10 @@
 struct VSResource {
     ID3D11VertexShader* shader;
     ID3D11InputLayout* layout;
-    ID3DBlob* blob;
 };
 
 struct PSResource {
     ID3D11PixelShader* shader;
-    ID3DBlob* blob;
 };
 
 struct MeshResource {
@@ -26,8 +24,7 @@ struct MeshResource {
 };
 
 struct TextureResource {
-    ID3D11Resource* texture;
-    ID3D11ShaderResourceView* view;
+    ID3D11ShaderResourceView* texture;
 };
 
 class DirectXLayer {
@@ -46,9 +43,7 @@ public:
     ID3D11RenderTargetView* renderTarget_;
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11SamplerState* textureSampler_;
-
-    ID3D11DepthStencilView* depthStencilView_;
-    ID3D11Texture2D* depthStencilBuffer_;
+    ID3D11DepthStencilView* depthStencilBuffer_;
 
     int width_;
     int height_;

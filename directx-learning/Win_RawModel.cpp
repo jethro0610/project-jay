@@ -35,7 +35,7 @@ RawModel::RawModel(const char* modelName) {
 }
 
 int RawMesh::GetVertexByteWidth() {
-    return vertexCount_ * 5 * sizeof(float) ;
+    return vertexCount_ * 8 * sizeof(float) ;
 }
 
 int RawMesh::GetIndexByteWidth() {

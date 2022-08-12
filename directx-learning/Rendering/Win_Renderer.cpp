@@ -22,8 +22,10 @@ void Renderer::PlatformRender() {
     ID3D11DeviceContext* context = dxLayer_->context_;
 
     PerObjectData objectData = {};
-    objectData.worldViewProj = GetWorldViewProjection();
-
+    mat4 worldMat;
+    Temp_GetWorldAndNormalMatrix(worldMat, objectData.normalMat);
+    objectData.worldViewProj = GetWorldViewProjection(worldMat);
+    
     // Update the per frame constant buffer
     context->UpdateSubresource(dxLayer_->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 

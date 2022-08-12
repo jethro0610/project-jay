@@ -6,11 +6,11 @@ Transform::Transform() {
     scale_ = vec3(1.0f, 1.0f, 1.0f);
 }
 
-mat4 Transform::GetWorldMatrix() const {
-    mat4 worldMat = mat4(1.0f);
-    worldMat = translate(worldMat, position_);
-    worldMat *= toMat4(rotation_);
-    worldMat= scale(worldMat, scale_);
-
-    return worldMat;
+void Transform::GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const {
+    outWorld = mat4(1.0f);
+    outWorld = translate(outWorld, position_);
+    outWorld *= toMat4(rotation_);
+    outWorld = scale(outWorld, scale_);
+    outNormal = transpose(inverse(mat3(outWorld)));
+    //outNormal = mat4(1.0f);
 }

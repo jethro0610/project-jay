@@ -2,7 +2,7 @@
 #include "Renderer.h"
 
 void Renderer::Init() {
-    UpdateProjMatrix(70.0f, 0.1f, 1000.0f);
+    UpdateProjMatrix(70.0f, 1.0f, 1000.0f);
     cameraTransform_.position_ = vec3(0.0f, 0.0f, -10.0f);
     testRot_ = 0.0f;
 }
@@ -25,18 +25,20 @@ void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {
     projMatrix_ = perspectiveFovLH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
 }
 
-mat4 Renderer::GetWorldViewProjection() {
+void Renderer::Temp_GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) {
     testRot_ += 0.005f;
     Transform testTransform;
-    
+
     float sinRot = sin(testRot_);
     float cosRot = cos(testRot_);
-    //testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
-    //testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
-    
-    mat4 worldMatrix = testTransform.GetWorldMatrix();
-    mat4 worldViewProj = projMatrix_ * viewMatrix_ * worldMatrix;
-    return worldViewProj;
+    testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
+    testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
+
+    testTransform.GetWorldAndNormalMatrix(outWorld, outNormal);
+}
+
+mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
+    return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
 void Renderer::Render() {

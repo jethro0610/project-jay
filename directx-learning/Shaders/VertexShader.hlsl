@@ -3,7 +3,8 @@
 
 VertOut main(VertIn inVert) {
     VertOut output;
-    output.pos = mul(worldViewProj, float4(inVert.pos, 1.0));
+    output.position = mul(worldViewProj, float4(inVert.position, 1.0));
+    output.normal = mul(normalMat, inVert.normal);
     output.uv = inVert.uv;
     return output;
 }

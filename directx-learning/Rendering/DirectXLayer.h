@@ -7,6 +7,8 @@
 #include <string>
 #include "../RawModel.h"
 
+// Keep shader and layout together since they're accessed at the same time
+// Redundant resource structs with single elements are used for consistency with the maps
 struct VSResource {
     ID3D11VertexShader* shader;
     ID3D11InputLayout* layout;

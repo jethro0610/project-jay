@@ -11,6 +11,6 @@ public:
     quat rotation_;
     vec3 scale_;
 
-    mat4 GetWorldMatrix() const;
+    void GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const;
 };
 

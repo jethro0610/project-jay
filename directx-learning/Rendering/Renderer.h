@@ -23,7 +23,9 @@ public:
     mat4 projMatrix_;
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
-    mat4 GetWorldViewProjection();
+
+    void Temp_GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal);
+    mat4 GetWorldViewProjection(mat4 worldMatrix);
 
     float testRot_;
 

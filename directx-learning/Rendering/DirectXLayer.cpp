@@ -99,6 +99,7 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     ID3D11Texture2D* depthStencilResource;
     HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilResource));
     HRASSERT(device_->CreateDepthStencilView(depthStencilResource, nullptr, &depthStencilBuffer_));
+    depthStencilResource->Release();
 
     // Set the viewport and output merger
     D3D11_VIEWPORT viewport = {
@@ -142,7 +143,8 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
     ID3D11InputLayout* inputLayout;
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
     HRASSERT(device_->CreateInputLayout(

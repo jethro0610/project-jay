@@ -31,8 +31,8 @@ mat4 Renderer::GetWorldViewProjection() {
     
     float sinRot = sin(testRot_);
     float cosRot = cos(testRot_);
-    testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
-    testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
+    //testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
+    //testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
     
     mat4 worldMatrix = testTransform.GetWorldMatrix();
     mat4 worldViewProj = projMatrix_ * viewMatrix_ * worldMatrix;

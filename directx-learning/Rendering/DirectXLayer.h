@@ -47,6 +47,9 @@ public:
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11SamplerState* textureSampler_;
 
+    ID3D11DepthStencilView* depthStencilView_;
+    ID3D11Texture2D* depthStencilBuffer_;
+
     int width_;
     int height_;
 

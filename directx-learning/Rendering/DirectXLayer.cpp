@@ -16,6 +16,7 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     width_ = width;
     height_ = height;
 
+    // Make the swap chain
     DXGI_SWAP_CHAIN_DESC swapDesc = {};
     swapDesc.BufferDesc.Width = width;
     swapDesc.BufferDesc.Height = height;
@@ -32,7 +33,6 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     swapDesc.Windowed = TRUE;
     swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     swapDesc.Flags = 0;
-
     HRASSERT(D3D11CreateDeviceAndSwapChain(
         nullptr,
         D3D_DRIVER_TYPE_HARDWARE,
@@ -58,19 +58,20 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     ));
     backBuffer->Release();
 
+    // Create the per object cbuffer
     D3D11_BUFFER_DESC perObjectDesc = {};
     perObjectDesc.Usage = D3D11_USAGE_DEFAULT;
     perObjectDesc.ByteWidth = sizeof(PerObjectData);
     perObjectDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     perObjectDesc.CPUAccessFlags = 0;
     perObjectDesc.MiscFlags = 0;
-
     HRASSERT(device_->CreateBuffer(
         &perObjectDesc,
         nullptr,
         &perObjectCBuffer_
     ));
 
+    // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};
     tSampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
     tSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
@@ -79,8 +80,35 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     tSampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     tSampDesc.MinLOD = 0;
     tSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-
     HRASSERT(device_->CreateSamplerState(&tSampDesc, &textureSampler_));
+
+    D3D11_TEXTURE2D_DESC dsDesc;
+    dsDesc.Width = width;
+    dsDesc.Height = height;
+    dsDesc.MipLevels = 1;
+    dsDesc.ArraySize = 1;
+    dsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    dsDesc.SampleDesc.Count = 1;
+    dsDesc.SampleDesc.Quality = 0;
+    dsDesc.Usage = D3D11_USAGE_DEFAULT;
+    dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    dsDesc.CPUAccessFlags = 0;
+    dsDesc.MiscFlags = 0;
+
+    HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilBuffer_));
+    HRASSERT(device_->CreateDepthStencilView(depthStencilBuffer_, nullptr, &depthStencilView_));
+
+    // Set the viewport and output merger
+    D3D11_VIEWPORT viewport = {
+        0.0f,
+        0.0f,
+        (float)width_,
+        (float)height_,
+        0.0f,
+        1.0f
+    };
+    context_->RSSetViewports(1, &viewport);
+    context_->OMSetRenderTargets(1, &renderTarget_, depthStencilView_);
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -88,6 +116,10 @@ DirectXLayer::~DirectXLayer() {
     swapChain_->Release();
     context_->Release();
     renderTarget_->Release();
+    perObjectCBuffer_->Release();
+    textureSampler_->Release();
+    depthStencilView_->Release();
+    depthStencilBuffer_->Release();
 }
 
 void DirectXLayer::LoadVertexShader(std::string shaderName) {

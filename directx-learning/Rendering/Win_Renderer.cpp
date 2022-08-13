@@ -7,6 +7,7 @@ Renderer::Renderer(DirectXLayer* dxLayer){
     dxLayer_->LoadPixelShader("PixelShader");
     dxLayer_->LoadModel("m_cube");
     dxLayer_->LoadTexture("testTex");
+    dxLayer_->LoadTexture("testNorm");
 
     width_ = dxLayer->width_;
     height_ = dxLayer->height_;
@@ -54,7 +55,10 @@ void Renderer::PlatformRender() {
     context->PSSetShader(psResource.shader, nullptr, 0);
 
     // Set the texture and texture sampler
-    context->PSSetShaderResources(0, 1, &dxLayer_->textureResources_["testTex"].texture);
+    ID3D11ShaderResourceView* resources[2];
+    resources[0] = dxLayer_->textureResources_["testTex"].texture;
+    resources[1] = dxLayer_->textureResources_["testNorm"].texture;
+    context->PSSetShaderResources(0, 2, resources);
     context->PSSetSamplers(0, 1, &dxLayer_->textureSampler_);
 
     

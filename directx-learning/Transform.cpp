@@ -12,5 +12,4 @@ void Transform::GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const {
     outWorld *= toMat4(rotation_);
     outWorld = scale(outWorld, scale_);
     outNormal = transpose(inverse(mat3(outWorld)));
-    //outNormal = mat4(1.0f);
 }

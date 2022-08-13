@@ -33,7 +33,7 @@ void Renderer::Temp_GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) {
     float cosRot = cos(testRot_);
     testTransform.position_ = vec3(sinRot * 0.0f, 0.0f, 0.0f);
     testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
-    testTransform.scale_ = vec3(1.0f, 2.0f, 1.0f);
+    //testTransform.scale_ = vec3(1.0f, 2.0f, 1.0f);
     testTransform.GetWorldAndNormalMatrix(outWorld, outNormal);
 }
 

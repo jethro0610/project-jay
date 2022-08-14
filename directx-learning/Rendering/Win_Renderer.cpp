@@ -5,7 +5,7 @@ Renderer::Renderer(DirectXLayer* dxLayer){
 
     dxLayer_->LoadVertexShader("VertexShader");
     dxLayer_->LoadPixelShader("PixelShader");
-    dxLayer_->LoadModel("m_sphere");
+    dxLayer_->LoadModel("st_toruscone");
     dxLayer_->LoadTexture("testTex");
     dxLayer_->LoadTexture("testNorm");
 
@@ -36,8 +36,8 @@ void Renderer::PlatformRender() {
     context->ClearDepthStencilView(dxLayer_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    MeshResource meshResource = dxLayer_->meshResources_["m_sphere_0"];
-    MeshResource meshResource1 = dxLayer_->meshResources_["m_sphere_1"];
+    MeshResource meshResource0 = dxLayer_->meshResources_["st_toruscone_0"];
+    MeshResource meshResource1 = dxLayer_->meshResources_["st_toruscone_1"];
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 
@@ -65,10 +65,10 @@ void Renderer::PlatformRender() {
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);
-    context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    context->DrawIndexed(meshResource.indexCount, 0, 0);
-    
+    context->IASetVertexBuffers(0, 1, &meshResource0.vertexBuffer, &vertexStride, &vertexOffset);
+    context->IASetIndexBuffer(meshResource0.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    context->DrawIndexed(meshResource0.indexCount, 0, 0);
+
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);

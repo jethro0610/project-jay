@@ -5,10 +5,10 @@
 #include "../Logger.h"
 
 #ifdef _DEBUG
-#define D3D_FEATURE_LEVEL D3D11_CREATE_DEVICE_DEBUG
+#define D3D_FLAGS D3D11_CREATE_DEVICE_DEBUG
 #define HRASSERT(hResult) assert(SUCCEEDED(hResult)); 
 #else
-#define D3D_FEATURE_LEVEL 0
+#define D3D_FLAGS 0
 #define HRASSERT(hResult) hResult;
 #endif
 
@@ -39,7 +39,7 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
         nullptr,
         D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
-        D3D_FEATURE_LEVEL,
+        D3D_FLAGS,
         nullptr,
         0,
         D3D11_SDK_VERSION,
@@ -75,7 +75,7 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
 
     // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};
-    tSampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    tSampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
     tSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     tSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     tSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -241,9 +241,7 @@ void DirectXLayer::LoadTexture(std::string textureName) {
     std::wstring wString(extensionName.begin(), extensionName.end());
     TextureResource textureResource;
 
-    ID3D11Resource* texturePtr;
-    HRASSERT(CreateWICTextureFromFile(device_, wString.c_str(), &texturePtr, &textureResource.texture));
-    texturePtr->Release();
-
+    // To disable mip generation, remove the context from the function
+    HRASSERT(CreateWICTextureFromFile(device_, context_, wString.c_str(), nullptr, &textureResource.texture, 0));
     textureResources_[textureName] = textureResource;
 }

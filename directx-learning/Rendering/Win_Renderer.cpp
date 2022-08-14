@@ -5,7 +5,7 @@ Renderer::Renderer(DirectXLayer* dxLayer){
 
     dxLayer_->LoadVertexShader("VertexShader");
     dxLayer_->LoadPixelShader("PixelShader");
-    dxLayer_->LoadModel("m_cube");
+    dxLayer_->LoadModel("m_sphere");
     dxLayer_->LoadTexture("testTex");
     dxLayer_->LoadTexture("testNorm");
 
@@ -36,8 +36,8 @@ void Renderer::PlatformRender() {
     context->ClearDepthStencilView(dxLayer_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    MeshResource meshResource = dxLayer_->meshResources_["m_cube_0"];
-    MeshResource meshResource1 = dxLayer_->meshResources_["m_cube_1"];
+    MeshResource meshResource = dxLayer_->meshResources_["m_sphere_0"];
+    MeshResource meshResource1 = dxLayer_->meshResources_["m_sphere_1"];
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 

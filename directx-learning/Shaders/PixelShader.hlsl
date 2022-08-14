@@ -4,12 +4,11 @@ Texture2D textures[2];
 SamplerState texSampler;
 
 float4 main(VertOut outVert) : SV_TARGET{
-    float4 pixelColor = textures[0].Sample(texSampler, outVert.uv);
+    float4 pixelColor = textures[0].Sample(texSampler, outVert.uv * 5.0f);
 
-    float3 normal = textures[1].Sample(texSampler, outVert.uv);
+    float3 normal = textures[1].Sample(texSampler, outVert.uv * 5.0f);
     normal = normalize(normal * 2.0f - 1.0f);
-    float3 bitangent = cross(outVert.normal, outVert.tangent);
-    float3x3 textureMat = float3x3(outVert.tangent, bitangent, outVert.normal);
+    float3x3 textureMat = float3x3(outVert.tangent, outVert.bitangent, outVert.normal);
     normal = normalize(mul(normal, textureMat));
 
     float3 lightDir = float3(1.0f, -1.0f, 0.0f);

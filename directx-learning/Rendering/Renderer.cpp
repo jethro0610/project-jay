@@ -2,7 +2,7 @@
 #include "Renderer.h"
 
 void Renderer::Init() {
-    UpdateProjMatrix(70.0f, 1.0f, 1000.0f);
+    UpdateProjMatrix(70.0f, 0.5f, 1000.0f);
     cameraTransform_.position_ = vec3(0.0f, 0.0f, -10.0f);
     testRot_ = 0.0f;
 }

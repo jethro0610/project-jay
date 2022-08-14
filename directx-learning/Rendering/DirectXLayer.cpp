@@ -76,9 +76,9 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};
     tSampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    tSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-    tSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-    tSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    tSampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    tSampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    tSampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     tSampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     tSampDesc.MinLOD = 0;
     tSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
@@ -145,7 +145,8 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
         {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BITAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
     HRASSERT(device_->CreateInputLayout(

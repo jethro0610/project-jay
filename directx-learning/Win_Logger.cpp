@@ -29,6 +29,6 @@ void Logger::InitLogger() {
 }
 
 void Logger::Out(std::string text) {
-    *logger_->outfile_ << "Log: " << text << '\n';
+    *logger_->outfile_ << text << '\n';
 }
 #endif

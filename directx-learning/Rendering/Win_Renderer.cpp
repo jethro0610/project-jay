@@ -21,7 +21,6 @@ Renderer::~Renderer() {
 
 void Renderer::PlatformRender() {
     ID3D11DeviceContext* context = dxLayer_->context_;
-
     PerObjectData objectData = {};
     mat4 worldMat;
     Temp_GetWorldAndNormalMatrix(worldMat, objectData.normalMat);
@@ -76,5 +75,6 @@ void Renderer::PlatformRender() {
     context->IASetIndexBuffer(meshResource1.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
     context->DrawIndexed(meshResource1.indexCount, 0, 0);
 
+    // Set the first parameter to 0 to disable VSync
     dxLayer_->swapChain_->Present(1, 0);
 }

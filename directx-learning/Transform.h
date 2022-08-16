@@ -1,6 +1,7 @@
 #pragma once
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>
+#include <string>
 
 using namespace glm;
 
@@ -12,5 +13,6 @@ public:
     vec3 scale_;
 
     void GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const;
+    std::string ToString() const;
 };
 

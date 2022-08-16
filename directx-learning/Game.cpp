@@ -1,8 +1,8 @@
 #include "Game.h"
-#include "Logger.h"
+#include "Skeleton.h"
 
 void Game::Init() {
-    
+    Skeleton testSkeleton = Skeleton("sk_test.jmd");
 }
 
 void Game::Update() {

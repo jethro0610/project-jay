@@ -25,8 +25,10 @@ Skeleton::Skeleton(std::string skeletonName) {
         Joint joint = {};
         joint = jointDataStart[i];
 
-        if (i == 2)
-            joint.localTransform_.position_.z += 1.0f;
+        if (i == 2) {
+            joint.localTransform_.rotation_ *= quat(vec3(0.0f, 0.0f, radians(20.0f)));
+            //joint.localTransform_.position_.y -= quat(vec3(0.0f, 0.0f, radians(90.0f)));
+        }
 
         joints_.push_back(joint);
     }
@@ -39,6 +41,7 @@ void Skeleton::CalculateGlobalJointTransforms(mat4* outputJointTransforms) {
 
 void Skeleton::CalculateGlobalJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms) {
     mat4 parentTransform = outputJointTransforms[currentJointIndex];
+
     for (int i = 0; i < MAX_JOINT_CHILDREN; i++) {
         int childIndex = joints_[currentJointIndex].childIndices_[i];
         if (childIndex == -1)

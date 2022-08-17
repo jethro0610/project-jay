@@ -2,8 +2,8 @@
 #include <fstream>
 #include <assert.h>
 
-RawModel::RawModel(const char* modelName, bool isSkeletal):
-    isSkeletal_(isSkeletal)
+RawModel::RawModel(const char* modelName, bool skeletal):
+    skeletal_(skeletal)
 {
     std::ifstream infile;
     infile.open(modelName, std::ios::in | std::ios::binary);
@@ -22,7 +22,7 @@ RawModel::RawModel(const char* modelName, bool isSkeletal):
     int currentBufferLocation = MODEL_HEADER_SIZE + meshCount * MESH_HEADER_SIZE;
     for (int i = 0; i < meshCount; i++) {
         RawMesh mesh = {};
-        mesh.isSkeletal_ = false;
+        mesh.skeletal_ = skeletal_;
         uint16_t* meshHeader = (uint16_t*)&rawBytes.data()[MODEL_HEADER_SIZE + i * MESH_HEADER_SIZE];
         mesh.vertexCount_ = meshHeader[0];
         mesh.indexCount_ = meshHeader[1];
@@ -37,7 +37,7 @@ RawModel::RawModel(const char* modelName, bool isSkeletal):
 }
 
 int RawMesh::GetVertexByteWidth() {
-    if (isSkeletal_)
+    if (skeletal_)
         return vertexCount_ * (STATIC_VERTEX_SIZE + SKELETAL_VERTEX_INFO_SIZE);
     else
         return vertexCount_ * STATIC_VERTEX_SIZE;

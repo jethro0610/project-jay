@@ -112,6 +112,16 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
     };
     context_->RSSetViewports(1, &viewport);
     context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_);
+
+    // Create vertex descriptions
+    skeletalVertexDescription_[0] = staticVertexDescription_[0] = {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
+    skeletalVertexDescription_[1] = staticVertexDescription_[1] = {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0};
+    skeletalVertexDescription_[2] = staticVertexDescription_[2] = {"TAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0};
+    skeletalVertexDescription_[3] = staticVertexDescription_[3] = {"BITAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0};
+    skeletalVertexDescription_[4] = staticVertexDescription_[4] = {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0};
+
+    skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
+    skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -124,7 +134,7 @@ DirectXLayer::~DirectXLayer() {
     depthStencilBuffer_->Release();
 }
 
-void DirectXLayer::LoadVertexShader(std::string shaderName) {
+void DirectXLayer::LoadVertexShader(std::string shaderName, bool skeletal) {
     assert(vsResources_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
@@ -141,21 +151,24 @@ void DirectXLayer::LoadVertexShader(std::string shaderName) {
     ));
 
     ID3D11InputLayout* inputLayout;
-    D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = {
-        {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"BITAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-
-    HRASSERT(device_->CreateInputLayout(
-        inputElementDesc,
-        ARRAYSIZE(inputElementDesc),
-        vertexShaderBlob->GetBufferPointer(),
-        vertexShaderBlob->GetBufferSize(),
-        &inputLayout
-    ));
+    if (skeletal) {
+        HRASSERT(device_->CreateInputLayout(
+            skeletalVertexDescription_,
+            ARRAYSIZE(skeletalVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+    }
+    else {
+        HRASSERT(device_->CreateInputLayout(
+            staticVertexDescription_,
+            ARRAYSIZE(staticVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+    }
     vertexShaderBlob->Release();
 
     VSResource vsResource = {};
@@ -185,15 +198,15 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
     psResources_[shaderName] = psResource;
 }
 
-void DirectXLayer::LoadModel(std::string modelName) {
-    RawModel rawModel((modelName + ".jmd").c_str());
+void DirectXLayer::LoadModel(std::string modelName, bool skeletal) {
+    RawModel rawModel((modelName + ".jmd").c_str(), skeletal);
 
     for (int i = 0; i < rawModel.meshes_.size(); i++) {
-        LoadMesh(modelName, rawModel.meshes_[i], i);
+        LoadMesh(modelName, rawModel.meshes_[i], i, skeletal);
     }
 }
 
-void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) {
+void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal) {
     std::string meshName = modelName + "_" + std::to_string(meshIndex);
     assert(staticMeshResources_.count(meshName) == 0);
 
@@ -233,7 +246,12 @@ void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) 
     meshResource.indexBuffer = indexBuffer;
     meshResource.indexCount = mesh.indexCount_;
 
-    staticMeshResources_[meshName] = meshResource;
+    if (skeletal)
+        skeletalMeshResources_[meshName] = meshResource;
+    else
+        staticMeshResources_[meshName] = meshResource;
+
+    DEBUGLOG(std::to_string(meshResource.indexCount));
 }
 
 void DirectXLayer::LoadTexture(std::string textureName) {

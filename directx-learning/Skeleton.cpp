@@ -7,7 +7,7 @@ Skeleton::Skeleton(std::string skeletonName) {
     std::vector<unsigned char> rawBytes;
     std::ifstream infile;
 
-    infile.open(skeletonName, std::ios::in | std::ios::binary);
+    infile.open(skeletonName + ".jsk", std::ios::in | std::ios::binary);
     assert(infile.is_open());
 
     // Convert the file stream to a byte vector

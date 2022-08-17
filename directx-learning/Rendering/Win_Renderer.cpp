@@ -1,11 +1,13 @@
 #include "Renderer.h"
-
+#include "../Logger.h"
 Renderer::Renderer(DirectXLayer* dxLayer){
     dxLayer_ = dxLayer;
 
-    dxLayer_->LoadVertexShader("StaticVertexShader");
+    dxLayer_->LoadVertexShader("StaticVertexShader", false);
+    dxLayer_->LoadVertexShader("SkeletalVertexShader", true);
     dxLayer_->LoadPixelShader("PixelShader");
     dxLayer_->LoadModel("st_toruscone");
+    dxLayer_->LoadModel("sk_test", true);
     dxLayer_->LoadTexture("testTex");
     dxLayer_->LoadTexture("testNorm");
 
@@ -35,13 +37,12 @@ void Renderer::PlatformRender() {
     context->ClearDepthStencilView(dxLayer_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    MeshResource meshResource0 = dxLayer_->staticMeshResources_["st_toruscone_0"];
-    MeshResource meshResource1 = dxLayer_->staticMeshResources_["st_toruscone_1"];
-    UINT vertexStride = sizeof(Vertex);
+    MeshResource meshResource0 = dxLayer_->skeletalMeshResources_["sk_test_0"];
+    UINT vertexStride = sizeof(SkeletalVertex);
     UINT vertexOffset = 0;
 
     // Get the vertex shader
-    VSResource vsResource = dxLayer_->vsResources_["StaticVertexShader"];
+    VSResource vsResource = dxLayer_->vsResources_["SkeletalVertexShader"];
 
     // Get the pixel shader
     PSResource psResource = dxLayer_->psResources_["PixelShader"];
@@ -60,20 +61,12 @@ void Renderer::PlatformRender() {
     context->PSSetShaderResources(0, 2, resources);
     context->PSSetSamplers(0, 1, &dxLayer_->textureSampler_);
 
-    
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);
     context->IASetVertexBuffers(0, 1, &meshResource0.vertexBuffer, &vertexStride, &vertexOffset);
     context->IASetIndexBuffer(meshResource0.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
     context->DrawIndexed(meshResource0.indexCount, 0, 0);
-
-    // Set the vertex and index buffers to be drawn
-    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IASetInputLayout(vsResource.layout);
-    context->IASetVertexBuffers(0, 1, &meshResource1.vertexBuffer, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(meshResource1.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    context->DrawIndexed(meshResource1.indexCount, 0, 0);
 
     // Set the first parameter to 0 to disable VSync
     dxLayer_->swapChain_->Present(1, 0);

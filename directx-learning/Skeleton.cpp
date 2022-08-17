@@ -25,12 +25,5 @@ Skeleton::Skeleton(std::string skeletonName) {
         Joint joint = {};
         joint = jointDataStart[i];
         joints_.push_back(joint);
-
-        std::stringstream childStream;
-        for (int c = 0; c < MAX_JOINT_CHILDREN; c++) {
-            if (joint.childIndices_[c] != -1)
-                childStream << "Child: " << std::to_string(joint.childIndices_[c]) << '\n';
-        }
-        DEBUGLOG("Joint " + std::to_string(i) + ": \n" + joint.localTransform_.ToString() + childStream.str());
     }
 }

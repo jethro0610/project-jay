@@ -1,11 +1,17 @@
 #pragma once
 #include <vector>
+#include <glm.hpp>
+using namespace glm;
 
 #define MODEL_HEADER_SIZE sizeof(uint8_t)
 #define MESH_HEADER_SIZE 2 * sizeof(uint16_t)
 
+#define STATIC_VERTEX_SIZE (4 * sizeof(vec3) + sizeof(vec2))
+#define SKELETAL_VERTEX_INFO_SIZE (sizeof(ivec3) + sizeof(vec3))
+
 class RawMesh {
 public:
+    bool isSkeletal_;
     uint16_t vertexCount_;
     void* vertexBuffer_;
 
@@ -18,7 +24,9 @@ public:
 
 class RawModel {
 public:
-    RawModel(const char* modelName);
+    RawModel(const char* modelName, bool isSkeletal = false);
+
+    bool isSkeletal_;
     std::vector<unsigned char> rawBytes;
     std::vector<RawMesh> meshes_;
 };

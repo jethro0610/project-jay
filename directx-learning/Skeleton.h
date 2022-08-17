@@ -5,7 +5,7 @@
 #include "Transform.h"
 
 #define MAX_JOINT_CHILDREN 8
-#define SKELETON_HEADER_SIZE sizeof(uint8_t) * 2
+#define SKELETON_HEADER_SIZE sizeof(uint8_t)
 class Joint {
 public:
     Transform localTransform_;

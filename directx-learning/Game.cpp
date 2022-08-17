@@ -2,7 +2,7 @@
 #include "Skeleton.h"
 
 void Game::Init() {
-    Skeleton testSkeleton = Skeleton("sk_test.jmd");
+    Skeleton testSkeleton = Skeleton("sk_test.jsk");
 }
 
 void Game::Update() {

@@ -47,6 +47,7 @@ public:
     ID3D11DeviceContext* context_;
     ID3D11RenderTargetView* renderTarget_;
     ID3D11Buffer* perObjectCBuffer_;
+    ID3D11Buffer* perSkeletonCBuffer_;
     ID3D11SamplerState* textureSampler_;
     ID3D11DepthStencilView* depthStencilBuffer_;
 
@@ -60,6 +61,8 @@ public:
     void LoadPixelShader(std::string shaderName);
     void LoadModel(std::string modelName, bool skeletal = false);
     void LoadTexture(std::string textureName);
+
+    Skeleton* testSkeleton_;
 
 private:
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);

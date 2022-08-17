@@ -73,6 +73,22 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
         &perObjectCBuffer_
     ));
 
+    // Create the per skeleton cbuffer
+    D3D11_BUFFER_DESC perSkeletonDesc = {};
+    perSkeletonDesc.Usage = D3D11_USAGE_DEFAULT;
+    perSkeletonDesc.ByteWidth = sizeof(PerSkeletonData);
+    perSkeletonDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    perSkeletonDesc.CPUAccessFlags = 0;
+    perSkeletonDesc.MiscFlags = 0;
+    HRASSERT(device_->CreateBuffer(
+        &perSkeletonDesc,
+        nullptr,
+        &perSkeletonCBuffer_
+    ));
+
+    ID3D11Buffer* cbuffers[2] = { perObjectCBuffer_, perSkeletonCBuffer_ };
+    context_->VSSetConstantBuffers(0, 2, cbuffers);
+
     // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};
     tSampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -122,6 +138,8 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
 
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
+
+    testSkeleton_ = new Skeleton("sk_test");
 }
 
 DirectXLayer::~DirectXLayer() {
@@ -250,8 +268,6 @@ void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, 
         skeletalMeshResources_[meshName] = meshResource;
     else
         staticMeshResources_[meshName] = meshResource;
-
-    DEBUGLOG(std::to_string(meshResource.indexCount));
 }
 
 void DirectXLayer::LoadTexture(std::string textureName) {

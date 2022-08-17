@@ -8,11 +8,18 @@ Transform::Transform() {
 }
 
 void Transform::GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const {
+    outWorld = GetWorldMatrix();
+    outNormal = transpose(inverse(mat3(outWorld)));
+}
+
+mat4 Transform::GetWorldMatrix() const {
+    mat4 outWorld;
     outWorld = mat4(1.0f);
     outWorld = translate(outWorld, position_);
     outWorld *= toMat4(rotation_);
     outWorld = scale(outWorld, scale_);
-    outNormal = transpose(inverse(mat3(outWorld)));
+
+    return outWorld;
 }
 
 std::string Transform::ToString() const{

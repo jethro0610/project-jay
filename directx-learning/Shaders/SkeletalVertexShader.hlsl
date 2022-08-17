@@ -4,7 +4,14 @@
 
 VertOut main(SkeletalVertIn inVert) {
     VertOut output;
-    output.position = mul(worldViewProj, float4(inVert.position, 1.0));
+
+    float4x4 skinMatrix =
+        inVert.weights.x * jointMatrices[inVert.joints.x] +
+        inVert.weights.y * jointMatrices[inVert.joints.y] +
+        inVert.weights.z * jointMatrices[inVert.joints.z] +
+        inVert.weights.w * jointMatrices[inVert.joints.w];
+
+    output.position = mul(worldViewProj, mul(skinMatrix, float4(inVert.position, 1.0)));
     output.normal = normalize(mul(normalMat, inVert.normal));
     output.tangent = normalize(mul(normalMat, inVert.tangent));
     output.bitangent = normalize(mul(normalMat, inVert.bitangent));

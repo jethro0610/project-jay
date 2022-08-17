@@ -17,5 +17,10 @@ class Skeleton {
 public:
     Skeleton(std::string skeletonName);
     std::vector<Joint> joints_;
+
+    void CalculateGlobalJointTransforms(mat4* outputJointTransforms);
+
+private:
+    void CalculateGlobalJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms);
 };
 

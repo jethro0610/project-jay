@@ -31,6 +31,16 @@ void Renderer::PlatformRender() {
     // Update the per frame constant buffer
     context->UpdateSubresource(dxLayer_->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
+    // Update the per skeleton constant buffer
+    PerSkeletonData skeletonData = {};
+    mat4 globalJointTransforms[32];
+    dxLayer_->testSkeleton_->CalculateGlobalJointTransforms(globalJointTransforms);
+
+    for (int i = 0; i < dxLayer_->testSkeleton_->joints_.size(); i++) {
+        skeletonData.jointMatrices[i] = globalJointTransforms[i] * dxLayer_->testSkeleton_->joints_[i].inverseBindMatrix_;
+    }
+    context->UpdateSubresource(dxLayer_->perSkeletonCBuffer_, 0, nullptr, &skeletonData, 0, 0);
+
     // Clear the render target and depth stencil buffer
     float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
     context->ClearRenderTargetView(dxLayer_->renderTarget_, background_colour);
@@ -49,7 +59,6 @@ void Renderer::PlatformRender() {
 
     // Set the vertex shader and update its constant buffers
     context->VSSetShader(vsResource.shader, nullptr, 0);
-    context->VSSetConstantBuffers(0, 1, &dxLayer_->perObjectCBuffer_);
 
     // Set the pixel shader
     context->PSSetShader(psResource.shader, nullptr, 0);

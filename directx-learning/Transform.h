@@ -13,6 +13,7 @@ public:
     vec3 scale_;
 
     void GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const;
+    mat4 GetWorldMatrix() const;
     std::string ToString() const;
 };
 

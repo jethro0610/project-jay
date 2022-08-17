@@ -24,6 +24,28 @@ Skeleton::Skeleton(std::string skeletonName) {
     for (int i = 0; i < jointCount; i++) {
         Joint joint = {};
         joint = jointDataStart[i];
+
+        if (i == 2)
+            joint.localTransform_.position_.z += 1.0f;
+
         joints_.push_back(joint);
+    }
+}
+
+void Skeleton::CalculateGlobalJointTransforms(mat4* outputJointTransforms) {
+    outputJointTransforms[0] = joints_[0].localTransform_.GetWorldMatrix();
+    CalculateGlobalJointTransforms_Recursive(0, outputJointTransforms);
+}
+
+void Skeleton::CalculateGlobalJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms) {
+    mat4 parentTransform = outputJointTransforms[currentJointIndex];
+    for (int i = 0; i < MAX_JOINT_CHILDREN; i++) {
+        int childIndex = joints_[currentJointIndex].childIndices_[i];
+        if (childIndex == -1)
+            continue;
+
+        mat4 childJointTransform = joints_[childIndex].localTransform_.GetWorldMatrix();
+        outputJointTransforms[childIndex] = parentTransform * childJointTransform;
+        CalculateGlobalJointTransforms_Recursive(childIndex, outputJointTransforms);
     }
 }

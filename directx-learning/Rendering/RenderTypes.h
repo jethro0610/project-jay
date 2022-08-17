@@ -13,6 +13,10 @@ struct PerObjectData {
     mat4 normalMat;
 };
 
+struct PerSkeletonData {
+    mat4 jointMatrices[32];
+};
+
 struct StaticVertex {
     vec3 position;
     vec3 normal;

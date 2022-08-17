@@ -3,7 +3,7 @@
 Renderer::Renderer(DirectXLayer* dxLayer){
     dxLayer_ = dxLayer;
 
-    dxLayer_->LoadVertexShader("VertexShader");
+    dxLayer_->LoadVertexShader("StaticVertexShader");
     dxLayer_->LoadPixelShader("PixelShader");
     dxLayer_->LoadModel("st_toruscone");
     dxLayer_->LoadTexture("testTex");
@@ -35,13 +35,13 @@ void Renderer::PlatformRender() {
     context->ClearDepthStencilView(dxLayer_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    MeshResource meshResource0 = dxLayer_->meshResources_["st_toruscone_0"];
-    MeshResource meshResource1 = dxLayer_->meshResources_["st_toruscone_1"];
+    MeshResource meshResource0 = dxLayer_->staticMeshResources_["st_toruscone_0"];
+    MeshResource meshResource1 = dxLayer_->staticMeshResources_["st_toruscone_1"];
     UINT vertexStride = sizeof(Vertex);
     UINT vertexOffset = 0;
 
     // Get the vertex shader
-    VSResource vsResource = dxLayer_->vsResources_["VertexShader"];
+    VSResource vsResource = dxLayer_->vsResources_["StaticVertexShader"];
 
     // Get the pixel shader
     PSResource psResource = dxLayer_->psResources_["PixelShader"];

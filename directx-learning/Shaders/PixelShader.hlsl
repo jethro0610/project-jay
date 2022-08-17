@@ -1,4 +1,4 @@
-#include "VertexTypes.hlsl"
+#include "VertexOutput.hlsl"
 
 Texture2D textures[2];
 SamplerState texSampler;

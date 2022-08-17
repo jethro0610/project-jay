@@ -1,7 +1,8 @@
-#include "VertexTypes.hlsl"
+#include "SkeletalVertexInput.hlsl"
+#include "VertexOutput.hlsl"
 #include "ConstantBuffers.hlsl"
 
-VertOut main(VertIn inVert) {
+VertOut main(SkeletalVertIn inVert) {
     VertOut output;
     output.position = mul(worldViewProj, float4(inVert.position, 1.0));
     output.normal = normalize(mul(normalMat, inVert.normal));

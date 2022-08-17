@@ -195,7 +195,7 @@ void DirectXLayer::LoadModel(std::string modelName) {
 
 void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) {
     std::string meshName = modelName + "_" + std::to_string(meshIndex);
-    assert(meshResources_.count(meshName) == 0);
+    assert(staticMeshResources_.count(meshName) == 0);
 
     D3D11_BUFFER_DESC vBufferDesc = {};
     vBufferDesc.ByteWidth = mesh.GetVertexByteWidth();
@@ -233,7 +233,7 @@ void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex) 
     meshResource.indexBuffer = indexBuffer;
     meshResource.indexCount = mesh.indexCount_;
 
-    meshResources_[meshName] = meshResource;
+    staticMeshResources_[meshName] = meshResource;
 }
 
 void DirectXLayer::LoadTexture(std::string textureName) {

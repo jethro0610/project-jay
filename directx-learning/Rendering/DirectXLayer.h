@@ -36,7 +36,8 @@ public:
 
     std::unordered_map<std::string, VSResource> vsResources_;
     std::unordered_map<std::string, PSResource> psResources_;
-    std::unordered_map<std::string, MeshResource> meshResources_;
+    std::unordered_map<std::string, MeshResource> staticMeshResources_;
+    std::unordered_map<std::string, MeshResource> skeletalMeshResources_;
     std::unordered_map<std::string, TextureResource> textureResources_;
 
     ID3D11Device* device_;

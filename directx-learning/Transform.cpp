@@ -24,8 +24,9 @@ mat4 Transform::GetWorldMatrix() const {
 
 std::string Transform::ToString() const{
     std::stringstream sstrream;
+    
     sstrream << "Position: X: " << position_.x << " Y: " << position_.y << " Z: " << position_.z << '\n';
-    sstrream << "Rotation: X: " << rotation_.x << " Y: " << rotation_.y << " Z: " << rotation_.z << " W: " << rotation_.w << '\n';
+    sstrream << "Rotation: X: " << degrees(eulerAngles(rotation_).x) << " Y: " << degrees(eulerAngles(rotation_).y) << " Z: " << degrees(eulerAngles(rotation_).z) << '\n';
     sstrream << "Scale: X: " << scale_.x << " Y: " << scale_.y << " Z: " << scale_.z << '\n';
     return sstrream.str();
 }

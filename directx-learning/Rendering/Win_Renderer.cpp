@@ -22,6 +22,8 @@ Renderer::~Renderer() {
 }
 
 void Renderer::PlatformRender() {
+    dxLayer_->testSkeleton_->testTime_ += 0.005f;
+
     ID3D11DeviceContext* context = dxLayer_->context_;
     PerObjectData objectData = {};
     mat4 worldMat;

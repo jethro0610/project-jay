@@ -25,17 +25,16 @@ Skeleton::Skeleton(std::string skeletonName) {
         Joint joint = {};
         joint = jointDataStart[i];
 
-        if (i == 2) {
-            joint.localTransform_.rotation_ *= quat(vec3(0.0f, 0.0f, radians(20.0f)));
-            //joint.localTransform_.position_.y -= quat(vec3(0.0f, 0.0f, radians(90.0f)));
-        }
-
         joints_.push_back(joint);
     }
+
+    testAnim_ = new Animation("sk_test_anim_TestAction");
+    testTime_ = 0.0f;
 }
 
 void Skeleton::CalculateGlobalJointTransforms(mat4* outputJointTransforms) {
-    outputJointTransforms[0] = joints_[0].localTransform_.GetWorldMatrix();
+    //outputJointTransforms[0] =  joints_[0].localTransform_.GetWorldMatrix();
+    outputJointTransforms[0] = testAnim_->GetJointTransformAtTime(0, testTime_).GetWorldMatrix();
     CalculateGlobalJointTransforms_Recursive(0, outputJointTransforms);
 }
 
@@ -47,7 +46,8 @@ void Skeleton::CalculateGlobalJointTransforms_Recursive(int currentJointIndex, m
         if (childIndex == -1)
             continue;
 
-        mat4 childJointTransform = joints_[childIndex].localTransform_.GetWorldMatrix();
+        //mat4 childJointTransform = joints_[childIndex].localTransform_.GetWorldMatrix();
+        mat4 childJointTransform = testAnim_->GetJointTransformAtTime(childIndex, testTime_).GetWorldMatrix();
         outputJointTransforms[childIndex] = parentTransform * childJointTransform;
         CalculateGlobalJointTransforms_Recursive(childIndex, outputJointTransforms);
     }

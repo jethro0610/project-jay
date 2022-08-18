@@ -102,4 +102,11 @@ void Game::UpdateInputs_P() {
 
     forwardInput_ += gamepad.leftStickY_;
     sideInput_ += gamepad.leftStickX_;
+
+    deltaLookX_ = 0.0f;
+    deltaLookY_ = 0.0f;
+    deltaLookX_ += windowsLayer_->deltaMouseX_;
+    deltaLookY_ += windowsLayer_->deltaMouseY_;
+    deltaLookX_ += gamepad.rightStickX_;
+    deltaLookY_ += gamepad.rightStickY_;
 }

@@ -21,13 +21,16 @@ public:
 
     float forwardInput_;
     float sideInput_;
+    float deltaLookX_;
+    float deltaLookY_;
+    float lookX_;
+    float lookY_;
 
     int resolutionWidth_;
     int resolutionHeight_;
 
     Gamepad gamepad;
-
-    Transform cameraTransform_;
+    void UpdateCameraTransform();
 
 private:
     Renderer* renderer_;

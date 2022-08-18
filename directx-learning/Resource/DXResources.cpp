@@ -149,7 +149,7 @@ DXResources::~DXResources() {
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
-    assert(vsResources_.count(shaderName) == 0);
+    assert(vertexShaders_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
 
@@ -188,11 +188,11 @@ void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
     VSResource vsResource = {};
     vsResource.shader = vertexShader;
     vsResource.layout = inputLayout;
-    vsResources_[shaderName] = vsResource;
+    vertexShaders_[shaderName] = vsResource;
 }
 
 void DXResources::LoadPixelShader(std::string shaderName) {
-    assert(psResources_.count(shaderName) == 0);
+    assert(pixelShaders_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
 
@@ -209,7 +209,7 @@ void DXResources::LoadPixelShader(std::string shaderName) {
 
     PSResource psResource = {};
     psResource.shader = pixelShader;
-    psResources_[shaderName] = psResource;
+    pixelShaders_[shaderName] = psResource;
 }
 
 void DXResources::LoadModel(std::string modelName, bool skeletal) {
@@ -222,7 +222,7 @@ void DXResources::LoadModel(std::string modelName, bool skeletal) {
 
 void DXResources::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal) {
     std::string meshName = modelName + "_" + std::to_string(meshIndex);
-    assert(staticMeshResources_.count(meshName) == 0);
+    assert(staticMeshes_.count(meshName) == 0);
 
     D3D11_BUFFER_DESC vBufferDesc = {};
     vBufferDesc.ByteWidth = mesh.GetVertexByteWidth();
@@ -261,9 +261,9 @@ void DXResources::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, b
     meshResource.indexCount = mesh.indexCount_;
 
     if (skeletal)
-        skeletalMeshResources_[meshName] = meshResource;
+        skeletalMeshes_[meshName] = meshResource;
     else
-        staticMeshResources_[meshName] = meshResource;
+        staticMeshes_[meshName] = meshResource;
 }
 
 void DXResources::LoadTexture(std::string textureName) {
@@ -273,5 +273,5 @@ void DXResources::LoadTexture(std::string textureName) {
 
     // To disable mip generation, remove the context from the function
     HRASSERT(CreateWICTextureFromFile(device_, context_, wString.c_str(), nullptr, &textureResource.texture, 0));
-    textureResources_[textureName] = textureResource;
+    textures_[textureName] = textureResource;
 }

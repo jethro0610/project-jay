@@ -34,11 +34,11 @@ public:
     DXResources(HWND windowHandle, int width, int height);
     ~DXResources();
 
-    std::unordered_map<std::string, VSResource> vsResources_;
-    std::unordered_map<std::string, PSResource> psResources_;
-    std::unordered_map<std::string, MeshResource> staticMeshResources_;
-    std::unordered_map<std::string, MeshResource> skeletalMeshResources_;
-    std::unordered_map<std::string, TextureResource> textureResources_;
+    std::unordered_map<std::string, VSResource> vertexShaders_;
+    std::unordered_map<std::string, PSResource> pixelShaders_;
+    std::unordered_map<std::string, MeshResource> staticMeshes_;
+    std::unordered_map<std::string, MeshResource> skeletalMeshes_;
+    std::unordered_map<std::string, TextureResource> textures_;
 
     ID3D11Device* device_;
     IDXGISwapChain* swapChain_;

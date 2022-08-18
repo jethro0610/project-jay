@@ -36,16 +36,16 @@ void Renderer::Render_P() {
     context->ClearDepthStencilView(dxResources_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    MeshResource meshResource0 = dxResources_->staticMeshResources_["st_toruscone_0"];
-    MeshResource meshResource1 = dxResources_->staticMeshResources_["st_toruscone_1"];
+    MeshResource meshResource0 = dxResources_->staticMeshes_["st_toruscone_0"];
+    MeshResource meshResource1 = dxResources_->staticMeshes_["st_toruscone_1"];
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
     // Get the vertex shader
-    VSResource vsResource = dxResources_->vsResources_["StaticVertexShader"];
+    VSResource vsResource = dxResources_->vertexShaders_["StaticVertexShader"];
 
     // Get the pixel shader
-    PSResource psResource = dxResources_->psResources_["PixelShader"];
+    PSResource psResource = dxResources_->pixelShaders_["PixelShader"];
 
     // Set the vertex shader and update its constant buffers
     context->VSSetShader(vsResource.shader, nullptr, 0);
@@ -55,8 +55,8 @@ void Renderer::Render_P() {
 
     // Set the texture and texture sampler
     ID3D11ShaderResourceView* resources[2];
-    resources[0] = dxResources_->textureResources_["testTex"].texture;
-    resources[1] = dxResources_->textureResources_["testNorm"].texture;
+    resources[0] = dxResources_->textures_["testTex"].texture;
+    resources[1] = dxResources_->textures_["testNorm"].texture;
     context->PSSetShaderResources(0, 2, resources);
     context->PSSetSamplers(0, 1, &dxResources_->textureSampler_);
 

@@ -7,7 +7,7 @@ WindowsLayer::WindowsLayer(int width, int height, const char* name) {
     windowsLayer_ = this;
     closed_ = false;
 
-    rawMouse_ = false;
+    rawMouse_ = true;
     mouseX_ = 0;
     mouseY_ = 0;
     lastMouseX_ = 0;

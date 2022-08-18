@@ -23,11 +23,6 @@ Logger::~Logger() {
     delete outfile_;
 }
 
-void Logger::InitLogger() {
-    assert(logger_ == nullptr);
-    logger_ = new Logger();
-}
-
 void Logger::Out_P(std::string text) {
     *logger_->outfile_ << text << '\n';
 }

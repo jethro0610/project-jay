@@ -15,5 +15,9 @@ public:
     void GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const;
     mat4 GetWorldMatrix() const;
     std::string ToString() const;
+
+    static vec3 forward;
+    static vec3 right;
+    static vec3 up;
 };
 

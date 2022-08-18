@@ -28,8 +28,6 @@ Animation::Animation(std::string animationName) {
         Transform* keyframeBuffer = (Transform*)&rawBytes.data()[ANIMATION_HEADER_SIZE + KEYFRAME_SIZE * i * keyframeCount];
         for (int k = 0; k < keyframeCount; k++) {
             jointChannel->keyframes[k] = keyframeBuffer[k];
-
-            DEBUGLOG("Joint " + std::to_string(i) + "\nKeyframe " + std::to_string(k) + "\n" + jointChannel->keyframes[k].ToString());
         }
     }
 }

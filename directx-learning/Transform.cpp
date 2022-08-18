@@ -1,6 +1,10 @@
 #include "Transform.h"
 #include <sstream>
 
+vec3 Transform::forward = vec3(0.0f, 0.0f, -1.0f);
+vec3 Transform::right = vec3(1.0f, 0.0f, 0.0f);
+vec3 Transform::up = vec3(0.0f, 1.0f, 0.0f);
+
 Transform::Transform() {
     position_ = vec3(0.0f, 0.0f, 0.0f);
     rotation_ = quat(vec3(0.0f, 0.0f, 0.0f));

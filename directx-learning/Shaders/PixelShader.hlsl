@@ -11,7 +11,7 @@ float4 main(VertOut outVert) : SV_TARGET{
     float3x3 textureMat = float3x3(outVert.tangent, outVert.bitangent, outVert.normal);
     normal = normalize(mul(normal, textureMat));
 
-    float3 lightDir = float3(0.0, -1.0f, 1.0f);
+    float3 lightDir = float3(0.0, -1.0f, -1.0f);
     float ambient = 0.2f;
     lightDir = normalize(lightDir);
 

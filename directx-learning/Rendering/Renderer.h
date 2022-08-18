@@ -1,17 +1,17 @@
 #pragma once
 
 #ifdef WINDOWS
-#include "DirectXLayer.h"
+#include "../Resource/DXResources.h"
 #endif
 
-#include "../Transform.h"
+#include "../Types/Transform.h"
 #include "RenderTypes.h"
 
 class Renderer {
 public:
     #ifdef WINDOWS
-    Renderer(DirectXLayer* dxLayer);
-    DirectXLayer* dxLayer_;
+    Renderer(DXResources* dxLayer);
+    DXResources* dxResources_;
     #endif
     void Init();
     ~Renderer();
@@ -32,6 +32,6 @@ public:
     Transform cameraTransform_;
 
     void Render();
-    void PlatformRender();
+    void Render_P();
 };
 

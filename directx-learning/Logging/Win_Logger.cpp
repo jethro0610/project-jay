@@ -28,7 +28,7 @@ void Logger::InitLogger() {
     logger_ = new Logger();
 }
 
-void Logger::Out(std::string text) {
+void Logger::Out_P(std::string text) {
     *logger_->outfile_ << text << '\n';
 }
 #endif

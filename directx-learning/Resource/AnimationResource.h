@@ -1,5 +1,5 @@
 #pragma once
-#include "Transform.h"
+#include "../Types/Transform.h"
 #include <vector>
 
 #define ANIMATION_HEADER_SIZE (sizeof(uint8_t) + sizeof(uint16_t))
@@ -10,9 +10,9 @@ struct JointChannel {
     std::vector<Transform> keyframes;
 };
 
-class Animation {
+class AnimationResource {
 public:
-    Animation(std::string animationName);
+    AnimationResource(std::string animationName);
     std::vector<JointChannel> jointChannels_;
     int numOfKeyframes_;
 

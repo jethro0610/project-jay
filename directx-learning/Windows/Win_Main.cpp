@@ -1,5 +1,5 @@
-#include "../Game.h"
-#include "../Logger.h"
+#include "../Game/Game.h"
+#include "../Logging/Logger.h"
 
 int CALLBACK WinMain(
     HINSTANCE instance,
@@ -11,5 +11,5 @@ int CALLBACK WinMain(
     Logger::InitLogger();
 #endif
     Game app;
-    app.PlatformInit();
+    app.Init_P();
 }

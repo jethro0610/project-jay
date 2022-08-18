@@ -38,5 +38,5 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 
 void Renderer::Render() {
     UpdateViewMatrix();
-    PlatformRender();
+    Render_P();
 }

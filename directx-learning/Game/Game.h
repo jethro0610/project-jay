@@ -1,20 +1,20 @@
 #pragma once
 
 #ifdef WINDOWS
-#include "Windows/WindowsLayer.h"
-#include "Rendering/DirectXLayer.h"
+#include "../Windows/WindowsLayer.h"
+#include "../Resource/DXResources.h"
 #endif
 
-#include "Gamepad.h"
-#include "Transform.h"
-#include "Rendering/Renderer.h"
+#include "../Types/Gamepad.h"
+#include "../Types/Transform.h"
+#include "../Rendering/Renderer.h"
 
 class Game {
 public:
     Game();
     ~Game();
-    void PlatformInit();
     void Init();
+    void Init_P();
 
     bool running_;
     void Update();
@@ -33,9 +33,9 @@ private:
     Renderer* renderer_;
     #ifdef WINDOWS
     WindowsLayer* windowsLayer_;
-    DirectXLayer* dxLayer_;
+    DXResources* dxResources_;
     #endif
 
-    void UpdateInputs();
-    void PollGamepadInputs();
+    void UpdateInputs_P();
+    void PollGamepadInputs_P();
 };

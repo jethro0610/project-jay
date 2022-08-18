@@ -23,7 +23,7 @@ private:
 
 public:
     static void InitLogger();
-    static void Out(std::string text);
+    static void Out_P(std::string text);
 };
 #endif
 

@@ -5,8 +5,7 @@
 #include <WICTextureLoader.h>
 #include <unordered_map>
 #include <string>
-#include "../Skeleton.h"
-#include "../RawModel.h"
+#include "../Resource/RawModel.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -30,16 +29,15 @@ struct TextureResource {
     ID3D11ShaderResourceView* texture;
 };
 
-class DirectXLayer {
+class DXResources {
 public:
-    DirectXLayer(HWND windowHandle, int width, int height);
-    ~DirectXLayer();
+    DXResources(HWND windowHandle, int width, int height);
+    ~DXResources();
 
     std::unordered_map<std::string, VSResource> vsResources_;
     std::unordered_map<std::string, PSResource> psResources_;
     std::unordered_map<std::string, MeshResource> staticMeshResources_;
     std::unordered_map<std::string, MeshResource> skeletalMeshResources_;
-    std::unordered_map<std::string, Skeleton> skeletons_;
     std::unordered_map<std::string, TextureResource> textureResources_;
 
     ID3D11Device* device_;
@@ -61,8 +59,6 @@ public:
     void LoadPixelShader(std::string shaderName);
     void LoadModel(std::string modelName, bool skeletal = false);
     void LoadTexture(std::string textureName);
-
-    Skeleton* testSkeleton_;
 
 private:
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Transform.h"
+#include "../Types/Transform.h"
 
 struct DirectionalLight {
     vec4 ambient;

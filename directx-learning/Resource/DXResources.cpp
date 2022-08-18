@@ -1,8 +1,6 @@
-#include "DirectXLayer.h"
+#include "DXResources.h"
 #include <assert.h>
-#include "RenderTypes.h"
-
-#include "../Logger.h"
+#include "../Rendering/RenderTypes.h"
 
 #ifdef _DEBUG
 #define D3D_FLAGS D3D11_CREATE_DEVICE_DEBUG
@@ -14,7 +12,7 @@
 
 using namespace DirectX;
 
-DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
+DXResources::DXResources(HWND windowHandle, int width, int height) {
     width_ = width;
     height_ = height;
 
@@ -138,11 +136,9 @@ DirectXLayer::DirectXLayer(HWND windowHandle, int width, int height) {
 
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
-
-    testSkeleton_ = new Skeleton("sk_test");
 }
 
-DirectXLayer::~DirectXLayer() {
+DXResources::~DXResources() {
     device_->Release();
     swapChain_->Release();
     context_->Release();
@@ -152,7 +148,7 @@ DirectXLayer::~DirectXLayer() {
     depthStencilBuffer_->Release();
 }
 
-void DirectXLayer::LoadVertexShader(std::string shaderName, bool skeletal) {
+void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
     assert(vsResources_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
@@ -195,7 +191,7 @@ void DirectXLayer::LoadVertexShader(std::string shaderName, bool skeletal) {
     vsResources_[shaderName] = vsResource;
 }
 
-void DirectXLayer::LoadPixelShader(std::string shaderName) {
+void DXResources::LoadPixelShader(std::string shaderName) {
     assert(psResources_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
@@ -216,7 +212,7 @@ void DirectXLayer::LoadPixelShader(std::string shaderName) {
     psResources_[shaderName] = psResource;
 }
 
-void DirectXLayer::LoadModel(std::string modelName, bool skeletal) {
+void DXResources::LoadModel(std::string modelName, bool skeletal) {
     RawModel rawModel((modelName + ".jmd").c_str(), skeletal);
 
     for (int i = 0; i < rawModel.meshes_.size(); i++) {
@@ -224,7 +220,7 @@ void DirectXLayer::LoadModel(std::string modelName, bool skeletal) {
     }
 }
 
-void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal) {
+void DXResources::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal) {
     std::string meshName = modelName + "_" + std::to_string(meshIndex);
     assert(staticMeshResources_.count(meshName) == 0);
 
@@ -270,7 +266,7 @@ void DirectXLayer::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, 
         staticMeshResources_[meshName] = meshResource;
 }
 
-void DirectXLayer::LoadTexture(std::string textureName) {
+void DXResources::LoadTexture(std::string textureName) {
     std::string extensionName = textureName + ".png";
     std::wstring wString(extensionName.begin(), extensionName.end());
     TextureResource textureResource;

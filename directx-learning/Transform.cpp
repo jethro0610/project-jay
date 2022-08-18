@@ -34,3 +34,12 @@ std::string Transform::ToString() const{
     sstrream << "Scale: X: " << scale_.x << " Y: " << scale_.y << " Z: " << scale_.z << '\n';
     return sstrream.str();
 }
+
+Transform Transform::Lerp(const Transform& a, const Transform& b, float t) {
+    Transform lerpTransform;
+    lerpTransform.position_ = lerp(a.position_, b.position_, t);
+    lerpTransform.rotation_ = slerp(a.rotation_, b.rotation_, t);
+    lerpTransform.scale_ = lerp(a.scale_, b.scale_, t);
+
+    return lerpTransform;
+}

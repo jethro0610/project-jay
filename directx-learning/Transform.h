@@ -1,6 +1,7 @@
 #pragma once
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>
+#include <gtx/compatibility.hpp>
 #include <string>
 
 using namespace glm;
@@ -15,6 +16,7 @@ public:
     void GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const;
     mat4 GetWorldMatrix() const;
     std::string ToString() const;
+    static Transform Lerp(const Transform& a, const Transform& b, float t);
 
     static vec3 forward;
     static vec3 right;

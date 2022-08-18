@@ -33,7 +33,9 @@ Skeleton::Skeleton(std::string skeletonName) {
 }
 
 void Skeleton::CalculateGlobalJointTransforms(mat4* outputJointTransforms) {
-    //outputJointTransforms[0] =  joints_[0].localTransform_.GetWorldMatrix();
+    if (testTime_ >= testAnim_->GetTotalTime())
+        testTime_ = 0.0f;
+
     outputJointTransforms[0] = testAnim_->GetJointTransformAtTime(0, testTime_).GetWorldMatrix();
     CalculateGlobalJointTransforms_Recursive(0, outputJointTransforms);
 }
@@ -46,7 +48,6 @@ void Skeleton::CalculateGlobalJointTransforms_Recursive(int currentJointIndex, m
         if (childIndex == -1)
             continue;
 
-        //mat4 childJointTransform = joints_[childIndex].localTransform_.GetWorldMatrix();
         mat4 childJointTransform = testAnim_->GetJointTransformAtTime(childIndex, testTime_).GetWorldMatrix();
         outputJointTransforms[childIndex] = parentTransform * childJointTransform;
         CalculateGlobalJointTransforms_Recursive(childIndex, outputJointTransforms);

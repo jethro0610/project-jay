@@ -22,7 +22,7 @@ Renderer::~Renderer() {
 }
 
 void Renderer::PlatformRender() {
-    dxLayer_->testSkeleton_->testTime_ += 0.005f;
+    dxLayer_->testSkeleton_->testTime_ += 1/144.0f * 0.1f;
 
     ID3D11DeviceContext* context = dxLayer_->context_;
     PerObjectData objectData = {};

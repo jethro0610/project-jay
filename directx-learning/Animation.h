@@ -14,7 +14,9 @@ class Animation {
 public:
     Animation(std::string animationName);
     std::vector<JointChannel> jointChannels_;
+    int numOfKeyframes_;
 
-    Transform GetJointTransformAtTime(int jointIndex, float time);
+    Transform GetJointTransformAtTime(int jointIndex, float time) const;
+    float GetTotalTime() const;
 };
 

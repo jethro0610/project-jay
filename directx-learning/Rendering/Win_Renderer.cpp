@@ -37,7 +37,7 @@ void Renderer::Render_P() {
     context->ClearDepthStencilView(dxResources_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
     // Get the vertex and index variables
-    UINT vertexStride = sizeof(vec3);
+    UINT vertexStride = sizeof(WorldVertex);
     UINT vertexOffset = 0;
 
     // Get the vertex shader

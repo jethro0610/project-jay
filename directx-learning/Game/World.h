@@ -1,5 +1,6 @@
 #pragma once
 #include "../Types/Transform.h"
+#include "../Rendering/RenderTypes.h"
 #include <vector>
 
 #define WORLD_RESOLUTION 32
@@ -51,11 +52,8 @@ public:
     int indicesDataBuffer_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
 
     void Temp_FillDistanceField();
-    void Temp_Generate(std::vector<vec3>& outVertices, std::vector<uint16_t>& outIndices);
-    void Temp_GenerateVertices(std::vector<vec3>& outVertices);
-
+    void Temp_Generate(std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
+    void Temp_GenerateVertices(std::vector<WorldVertex>& outVertices);
+    vec3 Temp_GetNormal(int x, int y, int z);
     void Temp_GenerateIndices(std::vector<uint16_t>& outInidices);
-
-    // The buffer needs to be held here since it would use too much stack data
-    // For threading in the future, multiple buffers can be created to transfer the data
 };

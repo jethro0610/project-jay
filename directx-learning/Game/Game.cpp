@@ -5,7 +5,7 @@ void Game::Init() {
 
 
     world_->Temp_FillDistanceField();
-    std::vector<vec3> vertices;
+    std::vector<WorldVertex> vertices;
     std::vector<uint16_t> indices;
     world_->Temp_Generate(vertices, indices);
     dxResources_->Temp_UpdateWorld(vertices, indices);

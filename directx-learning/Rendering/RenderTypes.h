@@ -34,3 +34,8 @@ struct SkeletalVertex {
     ivec4 joints;
     vec4 weights;
 };
+
+struct WorldVertex {
+    vec3 position;
+    vec3 normal;
+};

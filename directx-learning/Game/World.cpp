@@ -16,12 +16,30 @@ void World::Temp_FillDistanceField() {
     }
 }
 
-void World::Temp_Generate(std::vector<vec3>& outVertices, std::vector<uint16_t>& outIndices) {
-    Temp_GenerateVertices(outVertices);
-    Temp_GenerateIndices(outIndices);
+vec3 World::Temp_GetNormal(int x, int y, int z) {
+    float distances[8];
+    ivec3 voxelPosition(x, y, z);
+
+    for (int i = 0; i < 8; i++) {
+        ivec3 cornerPosition = voxelPosition + cornerTable[i];
+        distances[i] = distanceField_[cornerPosition.x][cornerPosition.y][cornerPosition.z];
+    }
+
+    float nX = (distances[1] - distances[0]) + (distances[2] - distances[3]) + (distances[5] - distances[4]) + (distances[6] - distances[7]);
+    float nY = (distances[3] - distances[0]) + (distances[2] - distances[1]) + (distances[7] - distances[4]) + (distances[6] - distances[5]);
+    float nZ = (distances[4] - distances[0]) + (distances[5] - distances[1]) + (distances[6] - distances[2]) + (distances[7] - distances[3]);
+
+    return normalize(vec3(nX, nY, nZ));
 }
 
-void World::Temp_GenerateVertices (std::vector<vec3>& outVertices) {
+void World::Temp_Generate(std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
+    Temp_GenerateVertices(outVertices);
+    Temp_GenerateIndices(outIndices);
+
+    DEBUGLOG("Generated " + std::to_string(outVertices.size()));
+}
+
+void World::Temp_GenerateVertices (std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
@@ -56,9 +74,12 @@ void World::Temp_GenerateVertices (std::vector<vec3>& outVertices) {
         }
         else {
             indicesDataBuffer_[x][y][z] = currentIndex;
-            outVertices.push_back(sumOfIntersections / (float)totalIntersections);
-            //outVertices.push_back(voxelPosition); This create unsmoothed, cubic vertices. May want to experiment with it later
+            WorldVertex vertex;
+            vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
+            vertex.normal = Temp_GetNormal(x, y, z);
+            outVertices.push_back(vertex);
             currentIndex++;
+            DEBUGLOG("Counted " + std::to_string(currentIndex));
         }
     }
 }

@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include "../Resource/RawModel.h"
+#include "../Rendering/RenderTypes.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -55,7 +56,7 @@ public:
     ID3D11SamplerState* textureSampler_;
     ID3D11DepthStencilView* depthStencilBuffer_;
 
-    D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[1];
+    D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
@@ -64,7 +65,7 @@ public:
     ID3D11Buffer* temp_worldIndexBuffer_;
     int temp_worldIndexCount_;
 
-    void Temp_UpdateWorld(const std::vector<vec3>& vertices, const std::vector<uint16_t>& indices);
+    void Temp_UpdateWorld(const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
     int width_;
     int height_;

@@ -18,8 +18,12 @@ public:
     std::string ToString() const;
     static Transform Lerp(const Transform& a, const Transform& b, float t);
 
-    static vec3 forward;
-    static vec3 right;
-    static vec3 up;
+    vec3 GetForwardVector() const;
+    vec3 GetRightVector() const;
+    vec3 GetUpVector() const;
+
+    static vec3 worldForward;
+    static vec3 worldRight;
+    static vec3 worldUp;
 };
 

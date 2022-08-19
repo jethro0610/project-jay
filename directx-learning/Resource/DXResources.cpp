@@ -2,6 +2,8 @@
 #include <assert.h>
 #include "../Rendering/RenderTypes.h"
 
+#include "../Logging/Logger.h"
+
 #ifdef _DEBUG
 #define D3D_FLAGS D3D11_CREATE_DEVICE_DEBUG
 #define HRASSERT(hResult) assert(SUCCEEDED(hResult)); 
@@ -128,14 +130,55 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_);
 
     // Create vertex descriptions
-    skeletalVertexDescription_[0] = staticVertexDescription_[0] = {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
+    worldVertexDescription_[0] = skeletalVertexDescription_[0] = staticVertexDescription_[0] = {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[1] = staticVertexDescription_[1] = {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[2] = staticVertexDescription_[2] = {"TAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[3] = staticVertexDescription_[3] = {"BITAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[4] = staticVertexDescription_[4] = {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0};
-
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
+
+    vec3 fillVec[16384];
+    D3D11_BUFFER_DESC worldVBufferDesc = {};
+    worldVBufferDesc.ByteWidth = sizeof(vec3) * 16384;
+    worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    D3D11_SUBRESOURCE_DATA worldVSrData = {};
+    worldVSrData.pSysMem = &fillVec;
+    HRASSERT(device_->CreateBuffer(
+        &worldVBufferDesc,
+        &worldVSrData,
+        &temp_worldVertexBuffer_
+    ));
+
+    uint16_t fillIndices[16384];
+    D3D11_BUFFER_DESC worldIBufferDesc = {};
+    worldIBufferDesc.ByteWidth = sizeof(uint16_t) * 16384;
+    worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    D3D11_SUBRESOURCE_DATA worldISrData = {};
+    worldISrData.pSysMem = &fillIndices;
+    HRASSERT(device_->CreateBuffer(
+        &worldIBufferDesc,
+        &worldISrData,
+        &temp_worldIndexBuffer_
+    ));
+}
+
+void DXResources::Temp_UpdateWorld(const std::vector<vec3>& vertices, const std::vector<uint16_t>& indices) {
+    D3D11_MAPPED_SUBRESOURCE vertexResource;
+    context_->Map(temp_worldVertexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
+    memcpy(vertexResource.pData, vertices.data(), sizeof(vec3) * vertices.size());
+    context_->Unmap(temp_worldVertexBuffer_, 0);
+    temp_worldVertexCount_ = vertices.size();
+
+    D3D11_MAPPED_SUBRESOURCE indexResource;
+    context_->Map(temp_worldIndexBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource);
+    memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
+    context_->Unmap(temp_worldIndexBuffer_, 0);
+    temp_worldIndexCount_ = indices.size();
 }
 
 DXResources::~DXResources() {
@@ -148,7 +191,7 @@ DXResources::~DXResources() {
     depthStencilBuffer_->Release();
 }
 
-void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
+void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {
     assert(vertexShaders_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";
     std::wstring wString(extensionName.begin(), extensionName.end());
@@ -164,17 +207,9 @@ void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
         &vertexShader
     ));
 
-    ID3D11InputLayout* inputLayout;
-    if (skeletal) {
-        HRASSERT(device_->CreateInputLayout(
-            skeletalVertexDescription_,
-            ARRAYSIZE(skeletalVertexDescription_),
-            vertexShaderBlob->GetBufferPointer(),
-            vertexShaderBlob->GetBufferSize(),
-            &inputLayout
-        ));
-    }
-    else {
+    ID3D11InputLayout* inputLayout = nullptr;
+    switch (shaderType) {
+    case VertexShaderType::STATIC:
         HRASSERT(device_->CreateInputLayout(
             staticVertexDescription_,
             ARRAYSIZE(staticVertexDescription_),
@@ -182,6 +217,31 @@ void DXResources::LoadVertexShader(std::string shaderName, bool skeletal) {
             vertexShaderBlob->GetBufferSize(),
             &inputLayout
         ));
+        break;
+
+    case VertexShaderType::SKELETAL:
+        HRASSERT(device_->CreateInputLayout(
+            skeletalVertexDescription_,
+            ARRAYSIZE(skeletalVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+        break;
+
+    case VertexShaderType::WORLD:
+        HRASSERT(device_->CreateInputLayout(
+            worldVertexDescription_,
+            ARRAYSIZE(worldVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+        break;
+
+    default:
+        assert(true); // Should never default
+        break;
     }
     vertexShaderBlob->Release();
 

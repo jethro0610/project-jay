@@ -5,7 +5,7 @@
 #endif
 
 #ifdef _DEBUG
-#define DEBUGLOG(text) Logger::Out(text)
+#define DEBUGLOG(text) Logger::Out_P(text)
 #else
 #define DEBUGLOG(text)
 #endif

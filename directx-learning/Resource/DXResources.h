@@ -29,6 +29,12 @@ struct TextureResource {
     ID3D11ShaderResourceView* texture;
 };
 
+enum VertexShaderType {
+    STATIC,
+    SKELETAL,
+    WORLD
+};
+
 class DXResources {
 public:
     DXResources(HWND windowHandle, int width, int height);
@@ -49,13 +55,21 @@ public:
     ID3D11SamplerState* textureSampler_;
     ID3D11DepthStencilView* depthStencilBuffer_;
 
+    D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[1];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
+
+    ID3D11Buffer* temp_worldVertexBuffer_;
+    int temp_worldVertexCount_;
+    ID3D11Buffer* temp_worldIndexBuffer_;
+    int temp_worldIndexCount_;
+
+    void Temp_UpdateWorld(const std::vector<vec3>& vertices, const std::vector<uint16_t>& indices);
 
     int width_;
     int height_;
 
-    void LoadVertexShader(std::string shaderName, bool skeletal = false);
+    void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadModel(std::string modelName, bool skeletal = false);
     void LoadTexture(std::string textureName);

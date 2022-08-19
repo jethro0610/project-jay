@@ -17,5 +17,6 @@ float4 main(VertOut outVert) : SV_TARGET{
 
     float diffuse = max(-dot(normal, lightDir), 0.0f);
 
+    return float4(0.5f, 0.25f, 0.15f, 1.0f);
     return pixelColor * (diffuse + ambient);
 }

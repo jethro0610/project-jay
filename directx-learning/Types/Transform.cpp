@@ -1,9 +1,9 @@
 #include "Transform.h"
 #include <sstream>
 
-vec3 Transform::forward = vec3(0.0f, 0.0f, -1.0f);
-vec3 Transform::right = vec3(1.0f, 0.0f, 0.0f);
-vec3 Transform::up = vec3(0.0f, 1.0f, 0.0f);
+vec3 Transform::worldForward = vec3(0.0f, 0.0f, -1.0f);
+vec3 Transform::worldRight = vec3(1.0f, 0.0f, 0.0f);
+vec3 Transform::worldUp = vec3(0.0f, 1.0f, 0.0f);
 
 Transform::Transform() {
     position_ = vec3(0.0f, 0.0f, 0.0f);
@@ -42,4 +42,16 @@ Transform Transform::Lerp(const Transform& a, const Transform& b, float t) {
     lerpTransform.scale_ = lerp(a.scale_, b.scale_, t);
 
     return lerpTransform;
+}
+
+vec3 Transform::GetForwardVector() const {
+    return rotation_ * worldForward;
+}
+
+vec3 Transform::GetRightVector() const {
+    return rotation_ * worldRight;
+}
+
+vec3 Transform::GetUpVector() const {
+    return rotation_ * worldUp;
 }

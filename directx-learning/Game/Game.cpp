@@ -1,7 +1,14 @@
 #include "Game.h"
 
 void Game::Init() {
+    world_ = new World();
 
+
+    world_->Temp_FillDistanceField();
+    std::vector<vec3> vertices;
+    std::vector<uint16_t> indices;
+    world_->Temp_Generate(vertices, indices);
+    dxResources_->Temp_UpdateWorld(vertices, indices);
 }
 
 void Game::Update() {
@@ -10,12 +17,12 @@ void Game::Update() {
 }
 
 void Game::UpdateCameraTransform() {
-    lookX_ -= deltaLookX_ / 240.0f;
-    lookY_ -= deltaLookY_ / 240.0f;
+    lookX_ += deltaLookX_;
+    lookY_ += deltaLookY_;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(80.0f));
 
     renderer_->cameraTransform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
-    vec3 forwardMovement = renderer_->cameraTransform_.rotation_ * Transform::forward * forwardInput_ * 0.1f;
-    vec3 rightMovement = renderer_->cameraTransform_.rotation_ * Transform::right * sideInput_ * 0.1f;
+    vec3 forwardMovement = renderer_->cameraTransform_.GetForwardVector() * forwardInput_ * 0.1f;
+    vec3 rightMovement = renderer_->cameraTransform_.GetRightVector() * sideInput_ * 0.1f;
     renderer_->cameraTransform_.position_ += forwardMovement + rightMovement;
 }

@@ -5,6 +5,7 @@
 #include "../Resource/DXResources.h"
 #endif
 
+#include "World.h"
 #include "../Types/Gamepad.h"
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
@@ -19,6 +20,7 @@ public:
     bool running_;
     void Update();
 
+    // TODO: convert these to vec2
     float forwardInput_;
     float sideInput_;
     float deltaLookX_;
@@ -29,8 +31,10 @@ public:
     int resolutionWidth_;
     int resolutionHeight_;
 
-    Gamepad gamepad;
+    Gamepad gamepad_;
     void UpdateCameraTransform();
+
+    World* world_;
 
 private:
     Renderer* renderer_;

@@ -8,8 +8,8 @@ void Renderer::Init() {
 }
 
 void Renderer::UpdateViewMatrix() {
-    vec3 forward = rotate(cameraTransform_.rotation_, Transform::forward);
-    vec3 up = rotate(cameraTransform_.rotation_, Transform::up);
+    vec3 forward = rotate(cameraTransform_.rotation_, Transform::worldForward);
+    vec3 up = rotate(cameraTransform_.rotation_, Transform::worldUp);
 
     viewMatrix_ = lookAtRH(
         cameraTransform_.position_,

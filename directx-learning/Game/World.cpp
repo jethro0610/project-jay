@@ -1,28 +1,24 @@
 #include "World.h"
+#include <FastNoiseLite.h>
 #include "../Types/Transform.h"
 
 #include "../Logging/Logger.h"
 
 void World::Temp_FillDistanceField() {
-    vec3 sphereCenter(WORLD_RESOLUTION * 0.5f, WORLD_RESOLUTION * 0.5f, WORLD_RESOLUTION * 0.5f);
-    float sphereRadius = 8.0f;
+    FastNoiseLite fastNoise;
 
     for (int x = 0; x < DISTANCE_FIELD_SIZE; x++)
     for (int y = 0; y < DISTANCE_FIELD_SIZE; y++)
     for (int z = 0; z < DISTANCE_FIELD_SIZE; z++) {
         vec3 position(x, y, z);
-        float distanceFromCenter = distance(position, sphereCenter);
-        distanceField_[x][y][z] = distanceFromCenter - sphereRadius;
-        //distanceField_[x][y][z] = y - 2.0f;
+        float height = fastNoise.GetNoise<float>(x * 5.0f, z * 5.0f) * 3.0f + 8.0f;
+        distanceField_[x][y][z] = y - height;
     }
 }
 
 void World::Temp_Generate(std::vector<vec3>& outVertices, std::vector<uint16_t>& outIndices) {
     Temp_GenerateVertices(outVertices);
     Temp_GenerateIndices(outIndices);
-
-    DEBUGLOG("Generated " + std::to_string(outVertices.size()) + " total vertices");
-    DEBUGLOG("Generated " + std::to_string(outIndices.size()) + " total indices");
 }
 
 void World::Temp_GenerateVertices (std::vector<vec3>& outVertices) {
@@ -61,6 +57,7 @@ void World::Temp_GenerateVertices (std::vector<vec3>& outVertices) {
         else {
             indicesDataBuffer_[x][y][z] = currentIndex;
             outVertices.push_back(sumOfIntersections / (float)totalIntersections);
+            //outVertices.push_back(voxelPosition); This create unsmoothed, cubic vertices. May want to experiment with it later
             currentIndex++;
         }
     }

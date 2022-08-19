@@ -40,7 +40,7 @@ const ivec3 triangleEdgeTable[3] = {
 };
 
 const ivec3 triangulationTable[3][4] = {
-    {{ 0,  0,  0}, { 0, -1,  0}, { 0, -1,  1}, { 0,  0,  1}},   // X
+    {{ 0,  0,  0}, { 0,  0, -1}, { 0, -1, -1}, { 0, -1,  0}},   // X; Why is this LHS and backwards tf.
     {{ 0,  0,  0}, {-1,  0,  0}, {-1,  0, -1}, { 0,  0, -1}},   // Y
     {{ 0,  0,  0}, { 0, -1,  0}, {-1, -1,  0}, {-1,  0,  0}},   // Z
 };
@@ -48,6 +48,7 @@ const ivec3 triangulationTable[3][4] = {
 class World {
 public:
     float distanceField_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
+    int indicesDataBuffer_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
 
     void Temp_FillDistanceField();
     void Temp_Generate(std::vector<vec3>& outVertices, std::vector<uint16_t>& outIndices);
@@ -57,5 +58,4 @@ public:
 
     // The buffer needs to be held here since it would use too much stack data
     // For threading in the future, multiple buffers can be created to transfer the data
-    int indicesDataBuffer_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
 };

@@ -4,6 +4,14 @@
 
 #include "../Logging/Logger.h"
 
+World::World() {
+    for (int x = 0; x < MAX_X_COORDINATES; x++)
+    for (int y = 0; y < MAX_Y_COORDINATES; y++)
+    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
+        dirtyCoordinates[x][y][z] = true;
+    }
+}
+
 float World::GetDistance(vec3 position) const {
     FastNoiseLite fastNoise;
     float height = fastNoise.GetNoise<float>(position.x * 5.0f, position.z * 5.0f) * 3.0f + 8.0f;
@@ -21,17 +29,22 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
     return normalize(vec3(gradX, gradY, gradZ));
 }
 
-void World::Temp_Generate(std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    Temp_GenerateVertices(outVertices);
-    Temp_GenerateIndices(outIndices);
+void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
+    assert(coordinates.x < MAX_X_COORDINATES);
+    assert(coordinates.y < MAX_Y_COORDINATES);
+    assert(coordinates.z < MAX_Z_COORDINATES);
+
+    GetMeshVertices(coordinates, outVertices);
+    GetMeshIndices(coordinates, outIndices);
 }
 
-void World::Temp_GenerateVertices (std::vector<WorldVertex>& outVertices) {
+void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
-    for (int x = 0; x < WORLD_RESOLUTION; x++)
-    for (int y = 0; y < WORLD_RESOLUTION; y++)
-    for (int z = 0; z < WORLD_RESOLUTION; z++) {
-        vec3 voxelPosition(x, y, z);
+    for (int x = 0; x < MESH_ITERATION_SIZE; x++)
+    for (int y = 0; y < MESH_ITERATION_SIZE; y++)
+    for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
+        vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+        vec3 voxelPosition = vec3(x, y, z) + coordinateOffset;
         vec3 sumOfIntersections(0.0f, 0.0f, 0.0f);
         int totalIntersections = 0;
 
@@ -70,11 +83,13 @@ void World::Temp_GenerateVertices (std::vector<WorldVertex>& outVertices) {
     }
 }
 
-void World::Temp_GenerateIndices(std::vector<uint16_t>& outIndices) {
-    for (int x = 0; x < WORLD_RESOLUTION; x++)
-    for (int y = 0; y < WORLD_RESOLUTION; y++)
-    for (int z = 0; z < WORLD_RESOLUTION; z++) {
-        vec3 voxelPosition(x, y, z);
+void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
+    for (int x = 0; x < MESH_ITERATION_SIZE; x++)
+    for (int y = 0; y < MESH_ITERATION_SIZE; y++)
+    for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
+        vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+        vec3 voxelPosition = vec3(x, y, z) + coordinateOffset;
+
         float edgeStartDistance = GetDistance(voxelPosition);
         if (edgeStartDistance == 0.0f)
             edgeStartDistance = 1.0f;
@@ -97,9 +112,9 @@ void World::Temp_GenerateIndices(std::vector<uint16_t>& outIndices) {
                         break;
                     }
 
-                    if (indexPosition.x >= WORLD_RESOLUTION ||
-                        indexPosition.y >= WORLD_RESOLUTION ||
-                        indexPosition.z >= WORLD_RESOLUTION) {
+                    if (indexPosition.x >= MESH_ITERATION_SIZE ||
+                        indexPosition.y >= MESH_ITERATION_SIZE ||
+                        indexPosition.z >= MESH_ITERATION_SIZE) {
                         break;
                     }
 

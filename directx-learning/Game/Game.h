@@ -35,6 +35,7 @@ public:
     void UpdateCameraTransform();
 
     World* world_;
+    void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
 
 private:
     Renderer* renderer_;

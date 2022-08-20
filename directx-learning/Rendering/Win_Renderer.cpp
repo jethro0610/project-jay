@@ -36,10 +36,6 @@ void Renderer::Render_P() {
     context->ClearRenderTargetView(dxResources_->renderTarget_, background_colour);
     context->ClearDepthStencilView(dxResources_->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 
-    // Get the vertex and index variables
-    UINT vertexStride = sizeof(WorldVertex);
-    UINT vertexOffset = 0;
-
     // Get the vertex shader
     VSResource vsResource = dxResources_->vertexShaders_["WorldVertexShader"];
     context->VSSetShader(vsResource.shader, nullptr, 0);
@@ -56,10 +52,16 @@ void Renderer::Render_P() {
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);
-    context->IASetVertexBuffers(0, 1, &dxResources_->temp_worldVertexBuffer_, &vertexStride, &vertexOffset);
-    context->IASetIndexBuffer(dxResources_->temp_worldIndexBuffer_, DXGI_FORMAT_R16_UINT, 0);
-    context->DrawIndexed(dxResources_->temp_worldIndexCount_, 0, 0);
-
+    UINT vertexStride = sizeof(WorldVertex);
+    UINT vertexOffset = 0;
+    for (int x = 0; x < MAX_X_COORDINATES; x++)
+    for (int y = 0; y < MAX_Y_COORDINATES; y++)
+    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
+        MeshResource worldMeshResource = dxResources_->worldMeshes_[x][y][z];
+        context->IASetVertexBuffers(0, 1, &worldMeshResource.vertexBuffer, &vertexStride, &vertexOffset);
+        context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
+    }
 
     // Set the first parameter to 0 to disable VSync
     dxResources_->swapChain_->Present(1, 0);

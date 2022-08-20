@@ -3,10 +3,15 @@
 void Game::Init() {
     world_ = new World();
 
-    std::vector<WorldVertex> vertices;
-    std::vector<uint16_t> indices;
-    world_->Temp_Generate(vertices, indices);
-    dxResources_->Temp_UpdateWorld(vertices, indices);
+    for (int x = 0; x < MAX_X_COORDINATES; x++)
+    for (int y = 0; y < MAX_Y_COORDINATES; y++)
+    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
+        ivec3 coordinates(x, y, z);
+        std::vector<WorldVertex> vertices;
+        std::vector<uint16_t> indices;
+        world_->GetMesh(coordinates, vertices, indices);
+        SendWorldMeshToGPU_P(coordinates, vertices, indices);
+    }
 }
 
 void Game::Update() {

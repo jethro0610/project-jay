@@ -112,3 +112,7 @@ void Game::UpdateInputs_P() {
     deltaLookX_ -= gamepad_.rightStickX_ / 60.0f;
     deltaLookY_ += gamepad_.rightStickY_ / 60.0f;
 }
+
+void Game::SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {
+    dxResources_->WriteWorldMesh(coordinates, vertices, indices);
+}

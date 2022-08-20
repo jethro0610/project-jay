@@ -7,6 +7,7 @@
 #include <string>
 #include "../Resource/RawModel.h"
 #include "../Rendering/RenderTypes.h"
+#include "../Game/WorldConstants.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -30,7 +31,7 @@ struct TextureResource {
     ID3D11ShaderResourceView* texture;
 };
 
-enum VertexShaderType {
+enum class VertexShaderType {
     STATIC,
     SKELETAL,
     WORLD
@@ -60,12 +61,8 @@ public:
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
-    ID3D11Buffer* temp_worldVertexBuffer_;
-    int temp_worldVertexCount_;
-    ID3D11Buffer* temp_worldIndexBuffer_;
-    int temp_worldIndexCount_;
-
-    void Temp_UpdateWorld(const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
+    MeshResource worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
+    void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
     int width_;
     int height_;
@@ -77,4 +74,5 @@ public:
 
 private:
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
+    void CreateWorldMeshes();
 };

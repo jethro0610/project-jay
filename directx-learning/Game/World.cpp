@@ -11,10 +11,11 @@ World::~World() {
 
 void World::FillLocalDistanceCache(ivec3 coordinates) {
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
-    for (int x = 0; x < MESH_ITERATION_SIZE + 1; x++)
-    for (int y = 0; y < MESH_ITERATION_SIZE + 1; y++)
-    for (int z = 0; z < MESH_ITERATION_SIZE + 1; z++) {
-        localDistanceCache_[x][y][z] = GetDistance(vec3(x, y, z) + coordinateOffset);
+    for (int x = 0; x < WORLD_RESOLUTION + 1; x++)
+    for (int y = 0; y < WORLD_RESOLUTION + 1; y++)
+    for (int z = 0; z < WORLD_RESOLUTION + 1; z++) {
+        vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
+        localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
     }
 }
 
@@ -50,10 +51,9 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
 void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
-    for (int x = 0; x < MESH_ITERATION_SIZE; x++)
-    for (int y = 0; y < MESH_ITERATION_SIZE; y++)
-    for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
-        vec3 voxelPosition = vec3(x, y, z) + coordinateOffset;
+    for (int x = 0; x < WORLD_RESOLUTION; x++)
+    for (int y = 0; y < WORLD_RESOLUTION; y++)
+    for (int z = 0; z < WORLD_RESOLUTION; z++) {
         ivec3 localVoxelPosition(x, y, z);
         vec3 sumOfIntersections(0.0f, 0.0f, 0.0f);
         int totalIntersections = 0;
@@ -86,6 +86,7 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
             indicesDataChannel_[x][y][z] = currentIndex;
             WorldVertex vertex;
             vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
+            vertex.position *= VOXEL_SIZE;
             vertex.position += coordinateOffset;
             vertex.normal = GetNormal(vertex.position, 2.0f);
             outVertices.push_back(vertex);
@@ -96,9 +97,9 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
 
 void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
-    for (int x = 0; x < MESH_ITERATION_SIZE; x++)
-    for (int y = 0; y < MESH_ITERATION_SIZE; y++)
-    for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
+    for (int x = 0; x < WORLD_RESOLUTION; x++)
+    for (int y = 0; y < WORLD_RESOLUTION; y++)
+    for (int z = 0; z < WORLD_RESOLUTION; z++) {
         ivec3 localVoxelPosition = vec3(x, y, z);
 
         float edgeStartDistance = localDistanceCache_[localVoxelPosition.x][localVoxelPosition.y][localVoxelPosition.z];
@@ -123,9 +124,9 @@ void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices)
                         break;
                     }
 
-                    if (indexPosition.x >= MESH_ITERATION_SIZE ||
-                        indexPosition.y >= MESH_ITERATION_SIZE ||
-                        indexPosition.z >= MESH_ITERATION_SIZE) {
+                    if (indexPosition.x >= WORLD_RESOLUTION ||
+                        indexPosition.y >= WORLD_RESOLUTION ||
+                        indexPosition.z >= WORLD_RESOLUTION) {
                         break;
                     }
 

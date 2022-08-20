@@ -49,8 +49,8 @@ public:
     FastNoiseLite* noise_;
 
     // This data channel is necessary because it would otherwise be too big to work in the stack
-    int indicesDataChannel_[MESH_ITERATION_SIZE][MESH_ITERATION_SIZE][MESH_ITERATION_SIZE];
-    float localDistanceCache_[MESH_ITERATION_SIZE + 1][MESH_ITERATION_SIZE + 1][MESH_ITERATION_SIZE + 1];
+    int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
+    float localDistanceCache_[WORLD_RESOLUTION + 1][WORLD_RESOLUTION + 1][WORLD_RESOLUTION + 1];
 
     float GetDistance(vec3 position) const;
     // Higher epsilon = smoother

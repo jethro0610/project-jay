@@ -3,6 +3,7 @@
 #include "../Rendering/RenderTypes.h"
 #include <vector>
 #include "WorldConstants.h"
+#include <FastNoiseLite.h>
 
 const ivec3 cornerTable[8] = {
     {0, 0, 0},
@@ -44,12 +45,14 @@ const ivec3 triangulationTable[3][4] = {
 class World {
 public:
     World();
+    ~World();
+    FastNoiseLite* noise_;
+
     // This data channel is necessary because it would otherwise be too big to work in the stack
     int indicesDataChannel_[MESH_ITERATION_SIZE][MESH_ITERATION_SIZE][MESH_ITERATION_SIZE];
 
-    bool dirtyCoordinates[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
-
     float GetDistance(vec3 position) const;
+    // Higher epsilon = smoother
     vec3 GetNormal(vec3 position, float epsilon = 1.0f) const;
     void GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 

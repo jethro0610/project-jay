@@ -74,5 +74,7 @@ public:
 
 private:
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
-    void CreateWorldMeshes();
+    void InitWorldMeshes();
+    WorldVertex coordinateFillVertices_[MAX_COORDINATE_VERTICES];
+    uint16_t coordinateFillIndices_[MAX_COORDINATE_INDICES];
 };

@@ -138,7 +138,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
 
-    CreateWorldMeshes();
+    InitWorldMeshes();
 }
 
 void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
@@ -314,32 +314,29 @@ void DXResources::LoadTexture(std::string textureName) {
     textures_[textureName] = textureResource;
 }
 
-void DXResources::CreateWorldMeshes() {
+void DXResources::InitWorldMeshes() {
     for (int x = 0; x < MAX_X_COORDINATES; x++)
     for (int y = 0; y < MAX_Y_COORDINATES; y++)
     for (int z = 0; z < MAX_Z_COORDINATES; z++) {
-        WorldVertex fillVec[4096];
         D3D11_BUFFER_DESC worldVBufferDesc = {};
-        worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * 4096;
+        worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_COORDINATE_VERTICES;
         worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         D3D11_SUBRESOURCE_DATA worldVSrData = {};
-        worldVSrData.pSysMem = &fillVec;
+        worldVSrData.pSysMem = &coordinateFillVertices_;
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,
             &worldMeshes_[x][y][z].vertexBuffer
         ));
-
-        uint16_t fillIndices[16384];
         D3D11_BUFFER_DESC worldIBufferDesc = {};
-        worldIBufferDesc.ByteWidth = sizeof(uint16_t) * 16384;
+        worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_COORDINATE_INDICES;
         worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         D3D11_SUBRESOURCE_DATA worldISrData = {};
-        worldISrData.pSysMem = &fillIndices;
+        worldISrData.pSysMem = &coordinateFillIndices_;
         HRASSERT(device_->CreateBuffer(
             &worldIBufferDesc,
             &worldISrData,

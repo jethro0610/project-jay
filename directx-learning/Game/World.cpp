@@ -1,20 +1,16 @@
 #include "World.h"
-#include <FastNoiseLite.h>
 #include "../Types/Transform.h"
 
-#include "../Logging/Logger.h"
-
 World::World() {
-    for (int x = 0; x < MAX_X_COORDINATES; x++)
-    for (int y = 0; y < MAX_Y_COORDINATES; y++)
-    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
-        dirtyCoordinates[x][y][z] = true;
-    }
+    noise_ = new FastNoiseLite();
+}
+
+World::~World() {
+    delete noise_;
 }
 
 float World::GetDistance(vec3 position) const {
-    FastNoiseLite fastNoise;
-    float height = fastNoise.GetNoise<float>(position.x * 5.0f, position.z * 5.0f) * 3.0f + 8.0f;
+    float height = noise_->GetNoise<float>(position.x * 5.0f, position.z * 5.0f) * 3.0f + 8.0f;
     return position.y - height;
 }
 
@@ -36,6 +32,9 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
 
     GetMeshVertices(coordinates, outVertices);
     GetMeshIndices(coordinates, outIndices);
+
+    assert(outVertices.size() <= MAX_COORDINATE_VERTICES);
+    assert(outIndices.size() <= MAX_COORDINATE_INDICES);
 }
 
 void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {

@@ -4,7 +4,6 @@
 #include <vector>
 
 #define WORLD_RESOLUTION 32
-#define DISTANCE_FIELD_SIZE (WORLD_RESOLUTION + 1)
 
 const ivec3 cornerTable[8] = {
     {0, 0, 0},
@@ -48,12 +47,13 @@ const ivec3 triangulationTable[3][4] = {
 
 class World {
 public:
-    float distanceField_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
-    int indicesDataBuffer_[DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE][DISTANCE_FIELD_SIZE];
+    int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
 
-    void Temp_FillDistanceField();
+
+    float GetDistance(vec3 position) const;
+    vec3 GetNormal(vec3 position, float epsilon = 1.0f) const;
+
     void Temp_Generate(std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
     void Temp_GenerateVertices(std::vector<WorldVertex>& outVertices);
-    vec3 Temp_GetNormal(int x, int y, int z);
     void Temp_GenerateIndices(std::vector<uint16_t>& outInidices);
 };

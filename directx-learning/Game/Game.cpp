@@ -3,8 +3,6 @@
 void Game::Init() {
     world_ = new World();
 
-
-    world_->Temp_FillDistanceField();
     std::vector<WorldVertex> vertices;
     std::vector<uint16_t> indices;
     world_->Temp_Generate(vertices, indices);

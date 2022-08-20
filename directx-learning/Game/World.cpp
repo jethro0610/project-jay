@@ -9,6 +9,15 @@ World::~World() {
     delete noise_;
 }
 
+void World::FillLocalDistanceCache(ivec3 coordinates) {
+    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+    for (int x = 0; x < MESH_ITERATION_SIZE + 1; x++)
+    for (int y = 0; y < MESH_ITERATION_SIZE + 1; y++)
+    for (int z = 0; z < MESH_ITERATION_SIZE + 1; z++) {
+        localDistanceCache_[x][y][z] = GetDistance(vec3(x, y, z) + coordinateOffset);
+    }
+}
+
 float World::GetDistance(vec3 position) const {
     float height = noise_->GetNoise<float>(position.x * 5.0f, position.z * 5.0f) * 3.0f + 8.0f;
     return position.y - height;
@@ -30,6 +39,7 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
     assert(coordinates.y < MAX_Y_COORDINATES);
     assert(coordinates.z < MAX_Z_COORDINATES);
 
+    FillLocalDistanceCache(coordinates);
     GetMeshVertices(coordinates, outVertices);
     GetMeshIndices(coordinates, outIndices);
 
@@ -39,19 +49,20 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
 
 void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
+    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     for (int x = 0; x < MESH_ITERATION_SIZE; x++)
     for (int y = 0; y < MESH_ITERATION_SIZE; y++)
     for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
-        vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
         vec3 voxelPosition = vec3(x, y, z) + coordinateOffset;
+        ivec3 localVoxelPosition(x, y, z);
         vec3 sumOfIntersections(0.0f, 0.0f, 0.0f);
         int totalIntersections = 0;
 
         for (int e = 0; e < 12; e++) {
-            vec3 edgeStartPosition = voxelPosition + vec3(cornerTable[edgeTable[e][0]]);
-            vec3 edgeEndPosition = voxelPosition + vec3(cornerTable[edgeTable[e][1]]);
-            float edgeStartDistance = GetDistance(edgeStartPosition);
-            float edgeEndDistance = GetDistance(edgeEndPosition);
+            ivec3 localEdgeStart = localVoxelPosition + cornerTable[edgeTable[e][0]];
+            ivec3 localEdgeEnd = localVoxelPosition + cornerTable[edgeTable[e][1]];
+            float edgeStartDistance = localDistanceCache_[localEdgeStart.x][localEdgeStart.y][localEdgeStart.z];
+            float edgeEndDistance = localDistanceCache_[localEdgeEnd.x][localEdgeEnd.y][localEdgeEnd.z];
 
             // If the value is negative, it implies the two signs are different, 
             // so there must be an intersection on this edge
@@ -60,9 +71,9 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
                 vec3 intersection(0.0f, 0.0f, 0.0f);
 
                 if (edgeStartDistance - edgeEndDistance == 0.0f)
-                    intersection = (vec3(edgeStartPosition) + vec3(edgeEndPosition)) / 2.0f;
+                    intersection = (vec3(localEdgeStart) + vec3(localEdgeEnd)) / 2.0f;
                 else
-                    intersection = (1.0f - differenceRatio) * vec3(edgeStartPosition) + differenceRatio * vec3(edgeEndPosition);
+                    intersection = (1.0f - differenceRatio) * vec3(localEdgeStart) + differenceRatio * vec3(localEdgeEnd);
 
                 sumOfIntersections += intersection;
                 totalIntersections++;
@@ -75,6 +86,7 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
             indicesDataChannel_[x][y][z] = currentIndex;
             WorldVertex vertex;
             vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
+            vertex.position += coordinateOffset;
             vertex.normal = GetNormal(vertex.position, 2.0f);
             outVertices.push_back(vertex);
             currentIndex++;
@@ -83,19 +95,19 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
 }
 
 void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
+    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     for (int x = 0; x < MESH_ITERATION_SIZE; x++)
     for (int y = 0; y < MESH_ITERATION_SIZE; y++)
     for (int z = 0; z < MESH_ITERATION_SIZE; z++) {
-        vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
-        vec3 voxelPosition = vec3(x, y, z) + coordinateOffset;
+        ivec3 localVoxelPosition = vec3(x, y, z);
 
-        float edgeStartDistance = GetDistance(voxelPosition);
+        float edgeStartDistance = localDistanceCache_[localVoxelPosition.x][localVoxelPosition.y][localVoxelPosition.z];
         if (edgeStartDistance == 0.0f)
             edgeStartDistance = 1.0f;
 
         for (int e = 0; e < 3; e++) {
-            vec3 edgeEndPosition = voxelPosition + vec3(triangleEdgeTable[e]);
-            float edgeEndDistance = GetDistance(edgeEndPosition);
+            ivec3 localEdgeEnd = localVoxelPosition + triangleEdgeTable[e];
+            float edgeEndDistance = localDistanceCache_[localEdgeEnd.x][localEdgeEnd.y][localEdgeEnd.z];
             if (edgeEndDistance == 0.0f)
                 edgeEndDistance = 1.0f;
 

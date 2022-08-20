@@ -50,6 +50,7 @@ public:
 
     // This data channel is necessary because it would otherwise be too big to work in the stack
     int indicesDataChannel_[MESH_ITERATION_SIZE][MESH_ITERATION_SIZE][MESH_ITERATION_SIZE];
+    float localDistanceCache_[MESH_ITERATION_SIZE + 1][MESH_ITERATION_SIZE + 1][MESH_ITERATION_SIZE + 1];
 
     float GetDistance(vec3 position) const;
     // Higher epsilon = smoother
@@ -57,6 +58,7 @@ public:
     void GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
 private:
+    void FillLocalDistanceCache(ivec3 coordinates);
     void GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices);
     void GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outInidices);
 };

@@ -5,6 +5,7 @@ using namespace std::chrono;
 Game::Game() {
     resolutionWidth_ = 1280;
     resolutionHeight_ = 720;
+    camera_ = new Camera(&transformC_, 10.0f);
 }
 
 void Game::Init() {
@@ -27,20 +28,22 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 
-    for (int x = 0; x < 20; x++)
-    for (int y = 0; y < 20; y++) {
+    for (int x = 0; x < 6; x++)
+    for (int y = 0; y < 6; y++) {
         Transform spawnTransform;
         spawnTransform.position_ = vec3(10.0f * (x + 1), 50.0f, 10.0f * (y + 1));
         spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
-        activeEntityC_.active[x + y * 20] = true;
-        transformC_.transform[x + y * 20] = spawnTransform;
-        colliderC_.radius[x + y * 20] = 1.25f;
-        staticModelC_.model[x + y * 20] = "st_sphere";
+        activeEntityC_.active[x + y * 6] = true;
+        transformC_.transform[x + y * 6] = spawnTransform;
+        colliderC_.radius[x + y * 6] = 1.25f;
+        staticModelC_.model[x + y * 6] = "st_sphere";
     }
+
+    camera_->trackEntity_ = 0;
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
-    UpdateCameraTransform(deltaTime);
+    camera_->Update(deltaTime, forwardInput_, sideInput_, deltaLookX_, deltaLookY_);
     CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, deltaTime_);
 
     RenderComponents renderComponents {
@@ -49,17 +52,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
         &transformC_
     };
     renderer_->Render(deltaTime, elapsedTime, renderComponents);
-}
-
-void Game::UpdateCameraTransform(float deltaTime) {
-    lookX_ += deltaLookX_;
-    lookY_ += deltaLookY_;
-    lookY_ = clamp(lookY_, radians(-80.0f), radians(80.0f));
-
-    renderer_->cameraTransform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
-    vec3 forwardMovement = renderer_->cameraTransform_.GetForwardVector() * forwardInput_ * 10.0f * deltaTime;
-    vec3 rightMovement = renderer_->cameraTransform_.GetRightVector() * sideInput_ * 10.0f * deltaTime;
-    renderer_->cameraTransform_.position_ += forwardMovement + rightMovement;
 }
 
 void Game::UpdateTime() {

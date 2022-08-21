@@ -7,6 +7,7 @@
 #include "../Game/Components/ActiveEntityComponents.h"
 #include "../Game/Components/StaticModelComponents.h"
 #include "../Game/Components/TransformComponents.h"
+#include "../Game/Camera.h"
 
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
@@ -18,9 +19,10 @@ struct RenderComponents {
 
 class Renderer {
 public:
-    Renderer(ResourceManager* resourceManager);
+    Renderer(Camera* camera, ResourceManager* resourceManager);
     void Init_P();
 
+    Camera* camera_;
     ResourceManager* resourceManager_;
 
     int width_;
@@ -32,9 +34,6 @@ public:
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
 
     mat4 GetWorldViewProjection(mat4 worldMatrix);
-
-    Transform cameraTransform_;
-
 
     void BuildStaticModelRenderList (
         RenderComponents renderComponents,

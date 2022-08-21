@@ -1,3 +1,3 @@
 #pragma once
 #include <algorithm>
-#define MAX_ENTITIES 400
+#define MAX_ENTITIES 36

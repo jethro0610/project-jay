@@ -31,12 +31,11 @@ public:
     void Update(float deltaTime, float elapsedTime);
 
     // TODO: convert these to vec2
+    Gamepad gamepad_;
     float forwardInput_;
     float sideInput_;
     float deltaLookX_;
     float deltaLookY_;
-    float lookX_;
-    float lookY_;
 
     int resolutionWidth_;
     int resolutionHeight_;
@@ -51,8 +50,7 @@ public:
     ColliderComponents colliderC_;
     StaticModelComponents staticModelC_;
 
-    Gamepad gamepad_;
-    void UpdateCameraTransform(float deltaTime);
+    Camera* camera_;
 
     World* world_;
     void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);

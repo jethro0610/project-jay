@@ -1,21 +1,14 @@
 #pragma once
 #include "Renderer.h"
 
-Renderer::Renderer(ResourceManager* resourceManager) {
+Renderer::Renderer(Camera* camera, ResourceManager* resourceManager) {
     resourceManager_ = resourceManager;
-    cameraTransform_.position_ = vec3(0.0f, 0.0f, 10.0f);
+    camera_ = camera;
     Init_P();
 }
 
 void Renderer::UpdateViewMatrix() {
-    vec3 forward = rotate(cameraTransform_.rotation_, Transform::worldForward);
-    vec3 up = rotate(cameraTransform_.rotation_, Transform::worldUp);
-
-    viewMatrix_ = lookAtRH(
-        cameraTransform_.position_,
-        cameraTransform_.position_ + forward,
-        up
-    );
+    viewMatrix_ = camera_->GetViewMatrix();
 }
 
 void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {

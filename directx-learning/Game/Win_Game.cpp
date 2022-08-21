@@ -2,16 +2,10 @@
 #include <Xinput.h>
 #include <sstream>
 
-Game::Game() {
-    running_ = false;
-    windowsLayer_ = nullptr;
-    forwardInput_ = 0;
-    sideInput_ = 0;
-    resolutionWidth_ = 1280;
-    resolutionHeight_  = 720;
-}
+using namespace std::chrono;
 
 Game::~Game() {
+    delete resourceManager_;
     delete dxResources_;
     delete renderer_;
     delete windowsLayer_;
@@ -23,11 +17,12 @@ void Game::Init_P() {
     dxResources_ = new DXResources(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
     resourceManager_ = new ResourceManager(dxResources_);
     renderer_ = new Renderer(resourceManager_);
-
     Init();
 
     MSG msg;
     while (!windowsLayer_->closed_ && running_) {
+        UpdateTime();
+
         windowsLayer_->ClearPressedAndReleasedKeys();
         windowsLayer_->ClearMouseMovement();
 
@@ -37,8 +32,8 @@ void Game::Init_P() {
         }
         windowsLayer_->UpdateMouseMovement();
         PollGamepadInputs_P();
-        UpdateInputs_P();
-        Update();
+        UpdateInputs_P(deltaTime_);
+        Update(deltaTime_, elapsedTime_);
     }
 }
 
@@ -85,7 +80,7 @@ void Game::PollGamepadInputs_P() {
     }
 }
 
-void Game::UpdateInputs_P() {
+void Game::UpdateInputs_P(float deltaTime) {
     forwardInput_ = 0.0f;
     sideInput_ = 0.0f;
 
@@ -108,10 +103,10 @@ void Game::UpdateInputs_P() {
     // TODO: scale these by delta time and clamp the values
     deltaLookX_ = 0.0f;
     deltaLookY_ = 0.0f;
-    deltaLookX_ -= windowsLayer_->deltaMouseX_ / 180.0f;
-    deltaLookY_ -= windowsLayer_->deltaMouseY_ / 180.0f;
-    deltaLookX_ -= gamepad_.rightStickX_ / 60.0f;
-    deltaLookY_ += gamepad_.rightStickY_ / 60.0f;
+    deltaLookX_ -= windowsLayer_->deltaMouseX_ * 0.005f;
+    deltaLookY_ -= windowsLayer_->deltaMouseY_ * 0.005f;
+    deltaLookX_ -= gamepad_.rightStickX_ * deltaTime * 2.0f;
+    deltaLookY_ += gamepad_.rightStickY_ * deltaTime * 2.0f;
 }
 
 void Game::SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {

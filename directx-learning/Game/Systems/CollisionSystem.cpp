@@ -4,7 +4,8 @@ void CollisionSystem::Execute(
     World* world,
     ActiveEntityComponents& activeComponents,
     TransformComponents& transformComponents,
-    ColliderComponents& colliderComponents
+    ColliderComponents& colliderComponents,
+    float deltaTime
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!activeComponents.active[i])
@@ -15,11 +16,11 @@ void CollisionSystem::Execute(
             continue;
 
         // Move downwards for testing
-        transformComponents.transform[i].position_.y -= 0.1f;
+        transformComponents.transform[i].position_.y -= 2.0f * deltaTime;
 
         // Raymarch towards the nearest point on the surface
         vec3 position = transformComponents.transform[i].position_;
-        vec3 directionToSurface = -world->GetNormal(position, 1.0f);
+        vec3 directionToSurface = -world->GetNormal(position, 2.0f);
         float distance = 0;
         for (int d = 0; d < 8; d++) {
             float distanceSample = world->GetDistance(position + directionToSurface * distance);

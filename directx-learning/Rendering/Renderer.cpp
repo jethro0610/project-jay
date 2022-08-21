@@ -4,7 +4,6 @@
 Renderer::Renderer(ResourceManager* resourceManager) {
     resourceManager_ = resourceManager;
     cameraTransform_.position_ = vec3(0.0f, 0.0f, 10.0f);
-    testRot_ = 0.0f;
     Init_P();
 }
 
@@ -27,18 +26,18 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
-void Renderer::Render(FrameInfo frameInfo) {
+void Renderer::Render(float deltaTime, float elapsedTime, RenderComponents renderComponents) {
     UpdateViewMatrix();
     Clear_P();
     RenderWorld_P();
     StaticModelRenderList staticModelRenderList;
-    BuildStaticModelRenderList(frameInfo, staticModelRenderList);
-    RenderStaticMeshes_P(frameInfo, staticModelRenderList);
+    BuildStaticModelRenderList(renderComponents, staticModelRenderList);
+    RenderStaticMeshes_P(renderComponents, staticModelRenderList);
     Present_P();
 }
 
 void Renderer::BuildStaticModelRenderList(
-    FrameInfo frameInfo,
+    RenderComponents frameInfo,
     StaticModelRenderList& outStaticModelRenderList
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {

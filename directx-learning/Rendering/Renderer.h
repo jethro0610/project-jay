@@ -10,7 +10,7 @@
 
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
-struct FrameInfo {
+struct RenderComponents {
     ActiveEntityComponents* activeEntityComponents;
     StaticModelComponents* staticMeshComponents;
     TransformComponents* transformComponents;
@@ -33,21 +33,19 @@ public:
 
     mat4 GetWorldViewProjection(mat4 worldMatrix);
 
-    float testRot_;
-
     Transform cameraTransform_;
 
 
     void BuildStaticModelRenderList (
-        FrameInfo frameInfo,
+        RenderComponents renderComponents,
         StaticModelRenderList& outStaticMeshRenderList
     );
-    void Render(FrameInfo frameInfo);
+    void Render(float deltaTime, float elapsedTime, RenderComponents renderComponents);
 
 private:
     void Clear_P();
     void RenderWorld_P();
-    void RenderStaticMeshes_P(FrameInfo frameInfo, const StaticModelRenderList& staticModelRenderList);
+    void RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList);
     void Present_P();
 };
 

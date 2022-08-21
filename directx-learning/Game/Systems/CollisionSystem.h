@@ -9,7 +9,8 @@ namespace CollisionSystem {
         World* world,
         ActiveEntityComponents& activeComponents,
         TransformComponents& transformComponents,
-        ColliderComponents& colliderComponents
+        ColliderComponents& colliderComponents,
+        float deltaTime
     );
 }
 

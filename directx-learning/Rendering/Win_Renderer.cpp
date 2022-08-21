@@ -24,6 +24,8 @@ void Renderer::RenderWorld_P() {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
 
+    // OPTIMIZATION: Updating with subresource may be slower than using map
+    // likely changing this later
     PerObjectData objectData = {};
     Transform defaultTransform;
     mat4 worldMatrix;
@@ -59,7 +61,7 @@ void Renderer::RenderWorld_P() {
     }
 }
 
-void Renderer::RenderStaticMeshes_P(FrameInfo frameInfo, const StaticModelRenderList& staticModelRenderList) {
+void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList) {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
 
@@ -99,13 +101,14 @@ void Renderer::RenderStaticMeshes_P(FrameInfo frameInfo, const StaticModelRender
             for (auto entityItr = modelItr->second.begin(); entityItr != modelItr->second.end(); entityItr++) {
                 PerObjectData objectData;
                 mat4 worldMatrix;
-                frameInfo.transformComponents->transform[*entityItr].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
+                renderComponents.transformComponents->transform[*entityItr].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
                 objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
                 context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
                 context->DrawIndexed(meshResource.indexCount, 0, 0);
             }
         }
     }
+    // OPTIMIZATION: Need to test whether setting the vertex/index buffers or updating subresources takes more time
 }
 
 void Renderer::Clear_P() {

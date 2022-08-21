@@ -1,6 +1,18 @@
 #include "Game.h"
 
+using namespace std::chrono;
+
+Game::Game() {
+    resolutionWidth_ = 1280;
+    resolutionHeight_ = 720;
+}
+
 void Game::Init() {
+    // Initialize the time
+    currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+    lastTimeUSec_ = currentTimeUSec_;
+    elapsedTime_ = 0.0f;
+
     resourceManager_->LoadStaticModel("st_sphere");
     resourceManager_->LoadStaticModel("st_toruscone");
 
@@ -22,30 +34,38 @@ void Game::Init() {
         spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
         activeEntityC_.active[x + y * 20] = true;
         transformC_.transform[x + y * 20] = spawnTransform;
-        colliderC_.radius[x + y * 20] = 1.5f;
+        colliderC_.radius[x + y * 20] = 1.25f;
         staticModelC_.model[x + y * 20] = "st_sphere";
     }
 }
 
-void Game::Update() {
-    UpdateCameraTransform();
-    CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_);
+void Game::Update(float deltaTime, float elapsedTime) {
+    UpdateCameraTransform(deltaTime);
+    CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, deltaTime_);
 
-    FrameInfo frameInfo{
+    RenderComponents renderComponents {
         &activeEntityC_,
         &staticModelC_,
         &transformC_
     };
-    renderer_->Render(frameInfo);
+    renderer_->Render(deltaTime, elapsedTime, renderComponents);
 }
 
-void Game::UpdateCameraTransform() {
+void Game::UpdateCameraTransform(float deltaTime) {
     lookX_ += deltaLookX_;
     lookY_ += deltaLookY_;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(80.0f));
 
     renderer_->cameraTransform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
-    vec3 forwardMovement = renderer_->cameraTransform_.GetForwardVector() * forwardInput_ * 0.1f;
-    vec3 rightMovement = renderer_->cameraTransform_.GetRightVector() * sideInput_ * 0.1f;
+    vec3 forwardMovement = renderer_->cameraTransform_.GetForwardVector() * forwardInput_ * 10.0f * deltaTime;
+    vec3 rightMovement = renderer_->cameraTransform_.GetRightVector() * sideInput_ * 10.0f * deltaTime;
     renderer_->cameraTransform_.position_ += forwardMovement + rightMovement;
+}
+
+void Game::UpdateTime() {
+    lastTimeUSec_ = currentTimeUSec_;
+    currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
+    deltaTime_ = (currentTimeUSec_ - lastTimeUSec_) * 0.000001f;
+    elapsedTime_ += deltaTime_;
+    deltaTime_ = min<float>(MAX_DELTA_TIME, deltaTime_);
 }

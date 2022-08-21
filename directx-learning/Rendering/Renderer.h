@@ -7,6 +7,10 @@
 #include "../Types/Transform.h"
 #include "RenderTypes.h"
 
+#include "../Game/Components/ActiveEntityComponents.h"
+#include "../Game/Components/StaticMeshComponents.h"
+#include "../Game/Components/TransformComponents.h"
+
 class Renderer {
 public:
     #ifdef WINDOWS
@@ -31,7 +35,15 @@ public:
 
     Transform cameraTransform_;
 
+    void BuildStaticMeshRenderList (
+        ActiveEntityComponents& activeEntityComponents,
+        StaticMeshComponents& staticMeshComponents,
+        TransformComponents& transformComponents
+    );
     void Render();
     void Render_P();
+
+private:
+    void RenderWorld_P();
 };
 

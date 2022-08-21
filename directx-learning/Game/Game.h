@@ -10,6 +10,9 @@
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
 
+#include "Components/Components.h"
+#include "Systems/Systems.h"
+
 class Game {
 public:
     Game();
@@ -30,6 +33,11 @@ public:
 
     int resolutionWidth_;
     int resolutionHeight_;
+
+    ActiveEntityComponents activeEntityC_;
+    TransformComponents transformC_;
+    ColliderComponents colliderC_;
+    StaticMeshComponents staticMeshC_;
 
     Gamepad gamepad_;
     void UpdateCameraTransform();

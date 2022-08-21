@@ -11,10 +11,18 @@ void Game::Init() {
         world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
+
+    Transform spawnTransform;
+    spawnTransform.position_ = vec3(5.0f, 5.0f, 5.0f);
+    activeEntityC_.active[0] = true;
+    transformC_.transform[0] = spawnTransform;
+    colliderC_.radius[0] = 1.0f;
+    staticMeshC_.mesh[0] = "st_sphere";
 }
 
 void Game::Update() {
     UpdateCameraTransform();
+    CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_);
     renderer_->Render();
 }
 

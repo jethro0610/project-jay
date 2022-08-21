@@ -36,6 +36,20 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
+void Renderer::BuildStaticMeshRenderList(
+    ActiveEntityComponents& activeEntityComponents,
+    StaticMeshComponents& staticMeshComponents,
+    TransformComponents& transformComponents
+) {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (activeEntityComponents.active[i] == false)
+            continue;
+
+        if (staticMeshComponents.mesh[i] == NO_MESH)
+            continue;
+    }
+}
+
 void Renderer::Render() {
     UpdateViewMatrix();
     Render_P();

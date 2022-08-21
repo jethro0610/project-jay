@@ -16,17 +16,17 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
     context->CSSetShaderResources(0, 1, &dxResources->distanceCacheView_);
     context->CSSetUnorderedAccessViews(0, 1, &dxResources->computeVertexView_, nullptr);
 
-    context->Dispatch(1, 1, 1);
+    context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
 
     context->CopyResource(dxResources->computeVertexOutput_, dxResources->computeVertexBuffer_);
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
     context->Map(dxResources->computeVertexOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
     
     vec3* vertices = reinterpret_cast<vec3*>(computeVertexOutputResource.pData);
-    for (int x = 0; x < COMPUTE_VERTICES_GROUP_SIZE; x++)
-    for (int y = 0; y < COMPUTE_VERTICES_GROUP_SIZE; y++)
-    for (int z = 0; z < COMPUTE_VERTICES_GROUP_SIZE; z++) {
-        int index = (z) + (y * COMPUTE_VERTICES_GROUP_SIZE) + (x * COMPUTE_VERTICES_GROUP_SIZE * COMPUTE_VERTICES_GROUP_SIZE);
+    for (int x = 0; x < WORLD_RESOLUTION; x++)
+    for (int y = 0; y < WORLD_RESOLUTION; y++)
+    for (int z = 0; z < WORLD_RESOLUTION; z++) {
+        int index = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
         if (vertices[index].x == -1.0f) {
             indicesDataChannel_[x][y][z] = -1;
             continue;

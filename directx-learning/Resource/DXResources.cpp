@@ -147,7 +147,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     );
     CreateOutputStructuredBufferAndView(
         sizeof(vec3),
-        VOXELS_PER_COMPUTE,
+        WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
         &computeVertexBuffer_,
         &computeVertexView_,
         &computeVertexOutput_

@@ -24,11 +24,12 @@ static int2 edgeTable[12] = {
     { 2, 6 },
 };
 
-static int COMPUTE_VERTICES_GROUP_SIZE = 8;
-static int WORLD_RESOLUTION = 8;
-static int DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
-static float COORDINATE_SIZE = 16.0f;
-static float VOXEL_SIZE = (COORDINATE_SIZE / (WORLD_RESOLUTION - 1));
+#define WORLD_RESOLUTION 24
+#define WORLD_COMPUTE_GROUPS (WORLD_RESOLUTION / 8)
+#define DISTANCE_CACHE_SIZE (WORLD_RESOLUTION + 1)
+#define COORDINATE_SIZE 16.0f
+#define VOXEL_SIZE (COORDINATE_SIZE / (WORLD_RESOLUTION - 1))
+#define GROUP_OFFSET (WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS)
 
 StructuredBuffer<float> distanceCache : register(t0);
 RWStructuredBuffer<float3> computeVertices : register(u0);
@@ -38,11 +39,11 @@ float GetDistance(int3 localPosition) {
     return distanceCache[index];
 }
 
-[numthreads(COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE)]
-void main(uint3 id : SV_DispatchThreadID) {
-    int index = (id.z) + (id.y * COMPUTE_VERTICES_GROUP_SIZE) + (id.x * COMPUTE_VERTICES_GROUP_SIZE * COMPUTE_VERTICES_GROUP_SIZE);
+[numthreads(8, 8, 8)]
+void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
+    int3 localVoxelPosition = groupId * GROUP_OFFSET + threadId;
+    int index = (localVoxelPosition.z) + (localVoxelPosition.y * WORLD_RESOLUTION) + (localVoxelPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
     
-    int3 localVoxelPosition = id;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
     int totalIntersections = 0;
     

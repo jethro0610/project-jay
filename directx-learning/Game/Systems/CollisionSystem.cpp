@@ -19,11 +19,11 @@ void CollisionSystem::Execute(
 
         // Raymarch towards the nearest point on the surface
         vec3 position = transformComponents.transform[i].position_;
-        vec3 directionToSurface = -world->GetNormal(position, 0.005f);
+        vec3 directionToSurface = -world->GetNormal(position, 1.0f);
         float distance = 0;
         for (int d = 0; d < 8; d++) {
             float distanceSample = world->GetDistance(position + directionToSurface * distance);
-            if (distanceSample < 0.0001f)
+            if (distanceSample < 0.001f)
                 break;
 
             distance += distanceSample;

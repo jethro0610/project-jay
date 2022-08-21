@@ -64,5 +64,5 @@ void Renderer::Render_P() {
     }
 
     // Set the first parameter to 0 to disable VSync
-    dxResources_->swapChain_->Present(1, 0);
+    dxResources_->swapChain_->Present(0, 0);
 }

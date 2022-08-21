@@ -24,34 +24,25 @@ static int2 edgeTable[12] = {
     { 2, 6 },
 };
 
-struct DistanceCacheData {
-    float distance;
-};
-
-struct ComputeVertexData{
-    float3 localPosition;
-};
-
 static int COMPUTE_VERTICES_GROUP_SIZE = 8;
 static int WORLD_RESOLUTION = 8;
 static int DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
 static float COORDINATE_SIZE = 16.0f;
 static float VOXEL_SIZE = (COORDINATE_SIZE / (WORLD_RESOLUTION - 1));
 
-StructuredBuffer<DistanceCacheData> distanceCache : register(t0);
-RWStructuredBuffer<ComputeVertexData> computeVertices : register(u0);
+StructuredBuffer<float> distanceCache : register(t0);
+RWStructuredBuffer<float3> computeVertices : register(u0);
 
 float GetDistance(int3 localPosition) {
-    int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) +   (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
-    return distanceCache[index].distance;
+    int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) + (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
+    return distanceCache[index];
 }
 
 [numthreads(COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE)]
 void main(uint3 id : SV_DispatchThreadID) {
-    int index = (id.z) +            (id.y * COMPUTE_VERTICES_GROUP_SIZE) +      (id.x * COMPUTE_VERTICES_GROUP_SIZE * COMPUTE_VERTICES_GROUP_SIZE);
-    ComputeVertexData computeVertex;
+    int index = (id.z) + (id.y * COMPUTE_VERTICES_GROUP_SIZE) + (id.x * COMPUTE_VERTICES_GROUP_SIZE * COMPUTE_VERTICES_GROUP_SIZE);
     
-    int3 localVoxelPosition = int3(id.x, id.y, id.z);
+    int3 localVoxelPosition = id;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
     int totalIntersections = 0;
     
@@ -79,13 +70,11 @@ void main(uint3 id : SV_DispatchThreadID) {
         }
     }
     if (totalIntersections == 0) {
-        computeVertex.localPosition = float3(-1.0f, 0.0f, 0.0f); // X = 1.0f indicated the vertex is non-existant
+        computeVertices[index] = float3(-1.0f, 0.0f, 0.0f); // X = 1.0f indicated the vertex is non-existant
     }
     else {      
         float3 outPosition = sumOfIntersections / (float) totalIntersections;
         outPosition *= VOXEL_SIZE;
-        computeVertex.localPosition = outPosition;
+        computeVertices[index] = outPosition;
     }
-    
-    computeVertices[index] = computeVertex;
 }

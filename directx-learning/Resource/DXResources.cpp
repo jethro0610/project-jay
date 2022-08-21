@@ -139,41 +139,19 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
 
-
-    D3D11_BUFFER_DESC dCacheDesc = {};
-    dCacheDesc.Usage = D3D11_USAGE_DYNAMIC;
-    dCacheDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    dCacheDesc.ByteWidth = sizeof(DistanceCacheData) * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE;
-    dCacheDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-    dCacheDesc.StructureByteStride = sizeof(DistanceCacheData);
-    dCacheDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    HRASSERT(device_->CreateBuffer(&dCacheDesc, nullptr, &distanceCacheBuffer_));
-    
-    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
-    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
-    viewDesc.BufferEx.FirstElement = 0;
-    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
-    viewDesc.BufferEx.NumElements = DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE;
-    HRASSERT(device_->CreateShaderResourceView(distanceCacheBuffer_, &viewDesc, &distanceCacheView_));
-
-    D3D11_BUFFER_DESC vCacheDesc = {};
-    vCacheDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
-    vCacheDesc.ByteWidth = sizeof(ComputeVertexData) * VOXELS_PER_COMPUTE;
-    vCacheDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-    vCacheDesc.StructureByteStride = sizeof(ComputeVertexData);
-    HRASSERT(device_->CreateBuffer(&vCacheDesc, nullptr, &computeVertexBuffer_));
-
-    D3D11_UNORDERED_ACCESS_VIEW_DESC uViewDesc = {};
-    uViewDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
-    uViewDesc.Buffer.FirstElement = 0;
-    uViewDesc.Format = DXGI_FORMAT_UNKNOWN;
-    uViewDesc.Buffer.NumElements = VOXELS_PER_COMPUTE;
-    HRASSERT(device_->CreateUnorderedAccessView(computeVertexBuffer_, &uViewDesc, &computeVertexView_));
-
-    vCacheDesc.Usage = D3D11_USAGE_STAGING;
-    vCacheDesc.BindFlags = 0;
-    vCacheDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    HRASSERT(device_->CreateBuffer(&vCacheDesc, 0, &computeVertexOutput_));
+    CreateInputStructuredBufferAndView(
+        sizeof(float), 
+        DISTANCE_CACHE_SIZE* DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE, 
+        &distanceCacheBuffer_, 
+        &distanceCacheView_
+    );
+    CreateOutputStructuredBufferAndView(
+        sizeof(vec3),
+        VOXELS_PER_COMPUTE,
+        &computeVertexBuffer_,
+        &computeVertexView_,
+        &computeVertexOutput_
+    );
 
     ID3DBlob* computeVertexShaderBlob;
     HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeVertexShaderBlob));
@@ -185,6 +163,47 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     ));
 
     InitWorldMeshes();
+}
+
+void DXResources::CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView) {
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    bufferDesc.ByteWidth = elementSize * numberOfElements;
+    bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    bufferDesc.StructureByteStride = elementSize;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    HRASSERT(device_->CreateBuffer(&bufferDesc, nullptr, outBuffer));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
+    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+    viewDesc.BufferEx.FirstElement = 0;
+    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+    viewDesc.BufferEx.NumElements = numberOfElements;
+    HRASSERT(device_->CreateShaderResourceView(*outBuffer, &viewDesc, outView));
+}
+
+void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11UnorderedAccessView** outView, ID3D11Buffer** outStagingBuffer) {
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+    bufferDesc.ByteWidth = elementSize * numberOfElements;
+    bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    bufferDesc.StructureByteStride = elementSize;
+    HRASSERT(device_->CreateBuffer(&bufferDesc, nullptr, outBuffer));
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC viewDesc = {};
+    viewDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    viewDesc.Buffer.FirstElement = 0;
+    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+    viewDesc.Buffer.NumElements = numberOfElements;
+    HRASSERT(device_->CreateUnorderedAccessView(*outBuffer, &viewDesc, outView));
+
+    if (outStagingBuffer != nullptr) {
+        bufferDesc.Usage = D3D11_USAGE_STAGING;
+        bufferDesc.BindFlags = 0;
+        bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        HRASSERT(device_->CreateBuffer(&bufferDesc, 0, outStagingBuffer));
+    }
 }
 
 void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {

@@ -8,7 +8,6 @@
 #include "../Resource/RawModel.h"
 #include "../Rendering/RenderTypes.h"
 #include "../Game/WorldConstants.h"
-#include "../Game/WorldTypes.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -67,8 +66,10 @@ public:
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
     ID3D11ComputeShader* computeVertexShader_;
+
     ID3D11Buffer* distanceCacheBuffer_;
     ID3D11ShaderResourceView* distanceCacheView_;
+
     ID3D11Buffer* computeVertexBuffer_;
     ID3D11UnorderedAccessView* computeVertexView_;
     ID3D11Buffer* computeVertexOutput_;
@@ -80,6 +81,9 @@ public:
     void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
 private:
+    void CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView);
+    void CreateOutputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11UnorderedAccessView** outView, ID3D11Buffer** outStagingBuffer);
+
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
     void InitWorldMeshes();
     WorldVertex coordinateFillVertices_[MAX_COORDINATE_VERTICES];

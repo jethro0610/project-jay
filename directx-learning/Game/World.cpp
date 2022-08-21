@@ -1,6 +1,5 @@
 #include "World.h"
 #include "../Types/Transform.h"
-#include "../Logging/Logger.h"
 
 World::World() {
     noise_ = new FastNoiseLite();
@@ -17,8 +16,6 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
     for (int z = 0; z < DISTANCE_CACHE_SIZE; z++) {
         vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
         localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
-        //std::string out = "CPU distance at :  " + std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z) + " " + std::to_string(localDistanceCache_[x][y][z]);
-        //DEBUGLOG(out);
     }
 }
 
@@ -109,8 +106,6 @@ void World::GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outV
             currentIndex++;
         }
     }
-
-    DEBUGLOG("CPU verts added:  " + std::to_string(outVertices.size()));
 }
 
 void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
@@ -178,5 +173,4 @@ void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices)
             }
         }
     }
-    DEBUGLOG("Indices: " + std::to_string(outIndices.size()));
 }

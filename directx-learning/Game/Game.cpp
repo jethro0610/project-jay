@@ -2,10 +2,6 @@
 
 void Game::Init() {
     world_ = new World();
-}
-
-void Game::Update() {
-    UpdateCameraTransform();
     for (int x = 0; x < MAX_X_COORDINATES; x++)
     for (int y = 0; y < MAX_Y_COORDINATES; y++)
     for (int z = 0; z < MAX_Z_COORDINATES; z++) {
@@ -13,9 +9,12 @@ void Game::Update() {
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
         world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
-        //world_->GetMesh(coordinates, vertices, indices);
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
+}
+
+void Game::Update() {
+    UpdateCameraTransform();
     renderer_->Render();
 }
 

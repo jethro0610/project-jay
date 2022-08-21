@@ -6,9 +6,11 @@
 #endif
 
 #include "World.h"
+#include "../Resource/ResourceManager.h"
 #include "../Types/Gamepad.h"
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
+
 
 #include "Components/Components.h"
 #include "Systems/Systems.h"
@@ -37,7 +39,7 @@ public:
     ActiveEntityComponents activeEntityC_;
     TransformComponents transformC_;
     ColliderComponents colliderC_;
-    StaticMeshComponents staticMeshC_;
+    StaticModelComponents staticModelC_;
 
     Gamepad gamepad_;
     void UpdateCameraTransform();
@@ -47,6 +49,8 @@ public:
 
 private:
     Renderer* renderer_;
+    ResourceManager* resourceManager_;
+
     #ifdef WINDOWS
     WindowsLayer* windowsLayer_;
     DXResources* dxResources_;

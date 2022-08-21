@@ -21,7 +21,8 @@ void Game::Init_P() {
     running_ = true;
     windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth_, resolutionHeight_, "DirectXLearning");
     dxResources_ = new DXResources(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
-    renderer_ = new Renderer(dxResources_);
+    resourceManager_ = new ResourceManager(dxResources_);
+    renderer_ = new Renderer(resourceManager_);
 
     Init();
 

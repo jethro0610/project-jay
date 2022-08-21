@@ -1,6 +1,9 @@
 #include "Game.h"
 
 void Game::Init() {
+    resourceManager_->LoadStaticModel("st_sphere");
+    resourceManager_->LoadStaticModel("st_toruscone");
+
     world_ = new World();
     for (int x = 0; x < MAX_X_COORDINATES; x++)
     for (int y = 0; y < MAX_Y_COORDINATES; y++)
@@ -12,18 +15,28 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 
-    Transform spawnTransform;
-    spawnTransform.position_ = vec3(5.0f, 5.0f, 5.0f);
-    activeEntityC_.active[0] = true;
-    transformC_.transform[0] = spawnTransform;
-    colliderC_.radius[0] = 1.0f;
-    staticMeshC_.mesh[0] = "st_sphere";
+    for (int x = 0; x < 20; x++)
+    for (int y = 0; y < 20; y++) {
+        Transform spawnTransform;
+        spawnTransform.position_ = vec3(10.0f * (x + 1), 50.0f, 10.0f * (y + 1));
+        spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
+        activeEntityC_.active[x + y * 20] = true;
+        transformC_.transform[x + y * 20] = spawnTransform;
+        colliderC_.radius[x + y * 20] = 1.5f;
+        staticModelC_.model[x + y * 20] = "st_sphere";
+    }
 }
 
 void Game::Update() {
     UpdateCameraTransform();
     CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_);
-    renderer_->Render();
+
+    FrameInfo frameInfo{
+        &activeEntityC_,
+        &staticModelC_,
+        &transformC_
+    };
+    renderer_->Render(frameInfo);
 }
 
 void Game::UpdateCameraTransform() {

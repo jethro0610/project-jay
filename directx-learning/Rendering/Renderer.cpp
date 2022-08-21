@@ -1,10 +1,11 @@
 #pragma once
 #include "Renderer.h"
 
-void Renderer::Init() {
-    UpdateProjMatrix(70.0f, 0.5f, 1000.0f);
+Renderer::Renderer(ResourceManager* resourceManager) {
+    resourceManager_ = resourceManager;
     cameraTransform_.position_ = vec3(0.0f, 0.0f, 10.0f);
     testRot_ = 0.0f;
+    Init_P();
 }
 
 void Renderer::UpdateViewMatrix() {
@@ -22,35 +23,37 @@ void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {
     projMatrix_ = perspectiveFovRH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
 }
 
-void Renderer::Temp_GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) {
-    testRot_ += 0.005f;
-    Transform testTransform;
-
-    float sinRot = sin(testRot_);
-    float cosRot = cos(testRot_);
-    //testTransform.rotation_ = quat(vec3(testRot_ / 3.0f, testRot_, 0.0f));
-    testTransform.GetWorldAndNormalMatrix(outWorld, outNormal);
-}
-
 mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
-void Renderer::BuildStaticMeshRenderList(
-    ActiveEntityComponents& activeEntityComponents,
-    StaticMeshComponents& staticMeshComponents,
-    TransformComponents& transformComponents
-) {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (activeEntityComponents.active[i] == false)
-            continue;
-
-        if (staticMeshComponents.mesh[i] == NO_MESH)
-            continue;
-    }
+void Renderer::Render(FrameInfo frameInfo) {
+    UpdateViewMatrix();
+    Clear_P();
+    RenderWorld_P();
+    StaticModelRenderList staticModelRenderList;
+    BuildStaticModelRenderList(frameInfo, staticModelRenderList);
+    RenderStaticMeshes_P(frameInfo, staticModelRenderList);
+    Present_P();
 }
 
-void Renderer::Render() {
-    UpdateViewMatrix();
-    Render_P();
+void Renderer::BuildStaticModelRenderList(
+    FrameInfo frameInfo,
+    StaticModelRenderList& outStaticModelRenderList
+) {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (frameInfo.activeEntityComponents->active[i] == false)
+            continue;
+
+        std::string model = frameInfo.staticMeshComponents->model[i];
+        if (frameInfo.staticMeshComponents->model[i] == NO_MODEL)
+            continue;
+
+        assert(resourceManager_->loadedStaticModels_.count(model) != 0);
+
+        if (outStaticModelRenderList.count(model) == 0)
+            outStaticModelRenderList[model] = std::vector<int>();
+
+        outStaticModelRenderList[model].push_back(i);
+    }
 }

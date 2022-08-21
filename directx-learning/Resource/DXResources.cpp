@@ -307,9 +307,7 @@ void DXResources::LoadPixelShader(std::string shaderName) {
     pixelShaders_[shaderName] = psResource;
 }
 
-void DXResources::LoadModel(std::string modelName, bool skeletal) {
-    RawModel rawModel((modelName + ".jmd").c_str(), skeletal);
-
+void DXResources::LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal) {
     for (int i = 0; i < rawModel.meshes_.size(); i++) {
         LoadMesh(modelName, rawModel.meshes_[i], i, skeletal);
     }

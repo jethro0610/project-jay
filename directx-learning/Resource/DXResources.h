@@ -75,9 +75,11 @@ public:
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
-    void LoadModel(std::string modelName, bool skeletal = false);
     void LoadTexture(std::string textureName);
     void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
+
+    // Should only be calling this from ResourceManager
+    void LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal = false);
 
 private:
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);

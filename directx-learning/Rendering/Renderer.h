@@ -1,24 +1,27 @@
 #pragma once
 
-#ifdef WINDOWS
-#include "../Resource/DXResources.h"
-#endif
-
+#include "../Resource/ResourceManager.h"
 #include "../Types/Transform.h"
 #include "RenderTypes.h"
 
 #include "../Game/Components/ActiveEntityComponents.h"
-#include "../Game/Components/StaticMeshComponents.h"
+#include "../Game/Components/StaticModelComponents.h"
 #include "../Game/Components/TransformComponents.h"
+
+typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
+
+struct FrameInfo {
+    ActiveEntityComponents* activeEntityComponents;
+    StaticModelComponents* staticMeshComponents;
+    TransformComponents* transformComponents;
+};
 
 class Renderer {
 public:
-    #ifdef WINDOWS
-    Renderer(DXResources* dxLayer);
-    DXResources* dxResources_;
-    #endif
-    void Init();
-    ~Renderer();
+    Renderer(ResourceManager* resourceManager);
+    void Init_P();
+
+    ResourceManager* resourceManager_;
 
     int width_;
     int height_;
@@ -28,22 +31,23 @@ public:
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
 
-    void Temp_GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal);
     mat4 GetWorldViewProjection(mat4 worldMatrix);
 
     float testRot_;
 
     Transform cameraTransform_;
 
-    void BuildStaticMeshRenderList (
-        ActiveEntityComponents& activeEntityComponents,
-        StaticMeshComponents& staticMeshComponents,
-        TransformComponents& transformComponents
+
+    void BuildStaticModelRenderList (
+        FrameInfo frameInfo,
+        StaticModelRenderList& outStaticMeshRenderList
     );
-    void Render();
-    void Render_P();
+    void Render(FrameInfo frameInfo);
 
 private:
+    void Clear_P();
     void RenderWorld_P();
+    void RenderStaticMeshes_P(FrameInfo frameInfo, const StaticModelRenderList& staticModelRenderList);
+    void Present_P();
 };
 

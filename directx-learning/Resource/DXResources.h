@@ -45,6 +45,13 @@ public:
     int width_;
     int height_;
 
+    ID3D11Device* device_;
+    IDXGISwapChain* swapChain_;
+    ID3D11DeviceContext* context_;
+    ID3D11RenderTargetView* renderTarget_;
+    ID3D11SamplerState* textureSampler_;
+    ID3D11DepthStencilView* depthStencilBuffer_;
+
     std::unordered_map<std::string, VSResource> vertexShaders_;
     std::unordered_map<std::string, PSResource> pixelShaders_;
     std::unordered_map<std::string, MeshResource> staticMeshes_;
@@ -52,27 +59,19 @@ public:
     std::unordered_map<std::string, TextureResource> textures_;
     MeshResource worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
 
-    ID3D11Device* device_;
-    IDXGISwapChain* swapChain_;
-    ID3D11DeviceContext* context_;
-    ID3D11RenderTargetView* renderTarget_;
-    ID3D11Buffer* perObjectCBuffer_;
-    ID3D11Buffer* perSkeletonCBuffer_;
-    ID3D11SamplerState* textureSampler_;
-    ID3D11DepthStencilView* depthStencilBuffer_;
-
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
-    ID3D11ComputeShader* computeVertexShader_;
+    ID3D11Buffer* perObjectCBuffer_;
+    ID3D11Buffer* perSkeletonCBuffer_;
 
+    ID3D11ComputeShader* computeWVertsShader_;
+    ID3D11Buffer* computeWVertsBuffer_;
+    ID3D11UnorderedAccessView* computeWVertsView_;
+    ID3D11Buffer* computeWVertsOutput_;
     ID3D11Buffer* distanceCacheBuffer_;
     ID3D11ShaderResourceView* distanceCacheView_;
-
-    ID3D11Buffer* computeVertexBuffer_;
-    ID3D11UnorderedAccessView* computeVertexView_;
-    ID3D11Buffer* computeVertexOutput_;
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
@@ -81,6 +80,7 @@ public:
     void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
 private:
+    void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
     void CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView);
     void CreateOutputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11UnorderedAccessView** outView, ID3D11Buffer** outStagingBuffer);
 

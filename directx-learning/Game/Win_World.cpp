@@ -10,15 +10,15 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
     memcpy(distanceCacheResource.pData, localDistanceCache_, sizeof(float) * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
     context->Unmap(dxResources->distanceCacheBuffer_, 0);
 
-    context->CSSetShader(dxResources->computeVertexShader_, nullptr, 0);
+    context->CSSetShader(dxResources->computeWVertsShader_, nullptr, 0);
     context->CSSetShaderResources(0, 1, &dxResources->distanceCacheView_);
-    context->CSSetUnorderedAccessViews(0, 1, &dxResources->computeVertexView_, nullptr);
+    context->CSSetUnorderedAccessViews(0, 1, &dxResources->computeWVertsView_, nullptr);
 
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
 
-    context->CopyResource(dxResources->computeVertexOutput_, dxResources->computeVertexBuffer_);
+    context->CopyResource(dxResources->computeWVertsOutput_, dxResources->computeWVertsBuffer_);
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
-    context->Map(dxResources->computeVertexOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
+    context->Map(dxResources->computeWVertsOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
     
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     vec3* vertices = reinterpret_cast<vec3*>(computeVertexOutputResource.pData);
@@ -37,5 +37,5 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
         indicesDataChannel_[x][y][z] = outVertices.size();
         outVertices.push_back(worldVertex);
     }
-    context->Unmap(dxResources->computeVertexOutput_, 0);
+    context->Unmap(dxResources->computeWVertsOutput_, 0);
 }

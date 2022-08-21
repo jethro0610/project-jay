@@ -61,31 +61,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     backBuffer->Release();
 
     // Create the per object cbuffer
-    D3D11_BUFFER_DESC perObjectDesc = {};
-    perObjectDesc.Usage = D3D11_USAGE_DEFAULT;
-    perObjectDesc.ByteWidth = sizeof(PerObjectData);
-    perObjectDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    perObjectDesc.CPUAccessFlags = 0;
-    perObjectDesc.MiscFlags = 0;
-    HRASSERT(device_->CreateBuffer(
-        &perObjectDesc,
-        nullptr,
-        &perObjectCBuffer_
-    ));
-
-    // Create the per skeleton cbuffer
-    D3D11_BUFFER_DESC perSkeletonDesc = {};
-    perSkeletonDesc.Usage = D3D11_USAGE_DEFAULT;
-    perSkeletonDesc.ByteWidth = sizeof(PerSkeletonData);
-    perSkeletonDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    perSkeletonDesc.CPUAccessFlags = 0;
-    perSkeletonDesc.MiscFlags = 0;
-    HRASSERT(device_->CreateBuffer(
-        &perSkeletonDesc,
-        nullptr,
-        &perSkeletonCBuffer_
-    ));
-
+    CreateConstantBuffer(sizeof(PerObjectData), &perObjectCBuffer_);
+    CreateConstantBuffer(sizeof(PerSkeletonData), &perSkeletonCBuffer_);
     ID3D11Buffer* cbuffers[2] = { perObjectCBuffer_, perSkeletonCBuffer_ };
     context_->VSSetConstantBuffers(0, 2, cbuffers);
 
@@ -148,21 +125,36 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     CreateOutputStructuredBufferAndView(
         sizeof(vec3),
         WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
-        &computeVertexBuffer_,
-        &computeVertexView_,
-        &computeVertexOutput_
+        &computeWVertsBuffer_,
+        &computeWVertsView_,
+        &computeWVertsOutput_
     );
-
-    ID3DBlob* computeVertexShaderBlob;
-    HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeVertexShaderBlob));
+    ID3DBlob* computeWVertsBlob;
+    HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeWVertsBlob));
     HRASSERT(device_->CreateComputeShader(
-        computeVertexShaderBlob->GetBufferPointer(),
-        computeVertexShaderBlob->GetBufferSize(),
+        computeWVertsBlob->GetBufferPointer(),
+        computeWVertsBlob->GetBufferSize(),
         nullptr,
-        &computeVertexShader_
+        &computeWVertsShader_
     ));
+    computeWVertsBlob->Release();
 
     InitWorldMeshes();
+}
+
+void DXResources::CreateConstantBuffer(int size, ID3D11Buffer** outBuffer) {
+    // Create the per object cbuffer
+    D3D11_BUFFER_DESC desc = {};
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.ByteWidth = size;
+    desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = 0;
+    HRASSERT(device_->CreateBuffer(
+        &desc,
+        nullptr,
+        outBuffer
+    ));
 }
 
 void DXResources::CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView) {
@@ -380,28 +372,30 @@ void DXResources::LoadTexture(std::string textureName) {
 }
 
 void DXResources::InitWorldMeshes() {
+    D3D11_BUFFER_DESC worldVBufferDesc = {};
+    worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_COORDINATE_VERTICES;
+    worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    D3D11_SUBRESOURCE_DATA worldVSrData = {};
+
+    D3D11_BUFFER_DESC worldIBufferDesc = {};
+    worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_COORDINATE_INDICES;
+    worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    D3D11_SUBRESOURCE_DATA worldISrData = {};
+    worldISrData.pSysMem = &coordinateFillIndices_;
+
     for (int x = 0; x < MAX_X_COORDINATES; x++)
     for (int y = 0; y < MAX_Y_COORDINATES; y++)
     for (int z = 0; z < MAX_Z_COORDINATES; z++) {
-        D3D11_BUFFER_DESC worldVBufferDesc = {};
-        worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_COORDINATE_VERTICES;
-        worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        D3D11_SUBRESOURCE_DATA worldVSrData = {};
         worldVSrData.pSysMem = &coordinateFillVertices_;
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,
             &worldMeshes_[x][y][z].vertexBuffer
         ));
-        D3D11_BUFFER_DESC worldIBufferDesc = {};
-        worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_COORDINATE_INDICES;
-        worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-        worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-        worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        D3D11_SUBRESOURCE_DATA worldISrData = {};
-        worldISrData.pSysMem = &coordinateFillIndices_;
         HRASSERT(device_->CreateBuffer(
             &worldIBufferDesc,
             &worldISrData,

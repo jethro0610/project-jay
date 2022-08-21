@@ -30,7 +30,17 @@ public:
     bool running_;
     void Update(float deltaTime, float elapsedTime);
 
-    // TODO: convert these to vec2
+private:
+#ifdef WINDOWS
+    WindowsLayer* windowsLayer_;
+    DXResources* dxResources_;
+#endif
+
+    Renderer* renderer_;
+    ResourceManager* resourceManager_;
+    Camera* camera_;
+    World* world_;
+
     Gamepad gamepad_;
     float forwardInput_;
     float sideInput_;
@@ -50,20 +60,7 @@ public:
     ColliderComponents colliderC_;
     StaticModelComponents staticModelC_;
 
-    Camera* camera_;
-
-    World* world_;
     void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
-
-private:
-    Renderer* renderer_;
-    ResourceManager* resourceManager_;
-
-    #ifdef WINDOWS
-    WindowsLayer* windowsLayer_;
-    DXResources* dxResources_;
-    #endif
-
     void UpdateInputs_P(float deltaTime);
     void PollGamepadInputs_P();
     void UpdateTime();

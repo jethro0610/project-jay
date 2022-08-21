@@ -22,9 +22,6 @@ public:
     Renderer(Camera* camera, ResourceManager* resourceManager);
     void Init_P();
 
-    Camera* camera_;
-    ResourceManager* resourceManager_;
-
     int width_;
     int height_;
 
@@ -42,6 +39,9 @@ public:
     void Render(float deltaTime, float elapsedTime, RenderComponents renderComponents);
 
 private:
+    Camera* camera_;
+    ResourceManager* resourceManager_;
+
     void Clear_P();
     void RenderWorld_P();
     void RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList);

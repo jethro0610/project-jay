@@ -46,18 +46,20 @@ class World {
 public:
     World();
     ~World();
-    FastNoiseLite* noise_;
-
-    // This data channel is necessary because it would otherwise be too big to work in the stack
-    int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
-    float localDistanceCache_[DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE];
 
     float GetDistance(vec3 position) const;
     // Higher epsilon = smoother
     vec3 GetNormal(vec3 position, float epsilon = 1.0f) const;
     void GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
     void GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
+
 private:
+    FastNoiseLite* noise_;
+
+    // This data channel is necessary because it would otherwise be too big to work in the stack
+    int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
+    float localDistanceCache_[DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE];
+
     void FillLocalDistanceCache(ivec3 coordinates);
     void GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outVertices);
     void GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices);

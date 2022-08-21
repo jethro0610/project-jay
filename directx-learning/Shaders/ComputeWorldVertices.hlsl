@@ -1,0 +1,91 @@
+static int3 cornerTable[8] = {
+    { 0, 0, 0 },
+    { 1, 0, 0 },
+    { 1, 1, 0 },
+    { 0, 1, 0 },
+    { 0, 0, 1 },
+    { 1, 0, 1 },
+    { 1, 1, 1 },
+    { 0, 1, 1 },
+};
+
+static int2 edgeTable[12] = {
+    { 0, 1 },
+    { 3, 2 },
+    { 4, 5 },
+    { 7, 6 },
+    { 0, 3 },
+    { 1, 2 },
+    { 4, 7 },
+    { 5, 6 },
+    { 0, 4 },
+    { 3, 7 },
+    { 1, 5 },
+    { 2, 6 },
+};
+
+struct DistanceCacheData {
+    float distance;
+};
+
+struct ComputeVertexData{
+    float3 localPosition;
+};
+
+static int COMPUTE_VERTICES_GROUP_SIZE = 8;
+static int WORLD_RESOLUTION = 8;
+static int DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
+static float COORDINATE_SIZE = 16.0f;
+static float VOXEL_SIZE = (COORDINATE_SIZE / (WORLD_RESOLUTION - 1));
+
+StructuredBuffer<DistanceCacheData> distanceCache : register(t0);
+RWStructuredBuffer<ComputeVertexData> computeVertices : register(u0);
+
+float GetDistance(int3 localPosition) {
+    int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) +   (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
+    return distanceCache[index].distance;
+}
+
+[numthreads(COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE, COMPUTE_VERTICES_GROUP_SIZE)]
+void main(uint3 id : SV_DispatchThreadID) {
+    int index = (id.z) +            (id.y * COMPUTE_VERTICES_GROUP_SIZE) +      (id.x * COMPUTE_VERTICES_GROUP_SIZE * COMPUTE_VERTICES_GROUP_SIZE);
+    ComputeVertexData computeVertex;
+    
+    int3 localVoxelPosition = int3(id.x, id.y, id.z);
+    float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
+    int totalIntersections = 0;
+    
+    for (int e = 0; e < 12; e++) {
+        int3 localEdgeStart = localVoxelPosition + cornerTable[edgeTable[e][0]];
+        int3 localEdgeEnd = localVoxelPosition + cornerTable[edgeTable[e][1]];
+        
+        float edgeStartDistance = GetDistance(localEdgeStart);
+        float edgeEndDistance = GetDistance(localEdgeEnd);
+        
+        // If the value is negative, it implies the two signs are different, 
+        // so there must be an intersection on this edge
+        if (edgeStartDistance * edgeEndDistance <= 0.0f) {
+            
+            float differenceRatio = edgeStartDistance / (edgeStartDistance - edgeEndDistance);
+            float3 intersection = float3(0.0f, 0.0f, 0.0f);
+
+            if (edgeStartDistance - edgeEndDistance == 0.0f)
+                intersection = (float3(localEdgeStart) + float3(localEdgeEnd)) / 2.0f;
+            else
+                intersection = (1.0f - differenceRatio) * float3(localEdgeStart) + differenceRatio * float3(localEdgeEnd);
+
+            sumOfIntersections += intersection;
+            totalIntersections++;
+        }
+    }
+    if (totalIntersections == 0) {
+        computeVertex.localPosition = float3(-1.0f, 0.0f, 0.0f); // X = 1.0f indicated the vertex is non-existant
+    }
+    else {      
+        float3 outPosition = sumOfIntersections / (float) totalIntersections;
+        outPosition *= VOXEL_SIZE;
+        computeVertex.localPosition = outPosition;
+    }
+    
+    computeVertices[index] = computeVertex;
+}

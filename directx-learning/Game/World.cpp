@@ -1,5 +1,6 @@
 #include "World.h"
 #include "../Types/Transform.h"
+#include "../Logging/Logger.h"
 
 World::World() {
     noise_ = new FastNoiseLite();
@@ -11,11 +12,13 @@ World::~World() {
 
 void World::FillLocalDistanceCache(ivec3 coordinates) {
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
-    for (int x = 0; x < WORLD_RESOLUTION + 1; x++)
-    for (int y = 0; y < WORLD_RESOLUTION + 1; y++)
-    for (int z = 0; z < WORLD_RESOLUTION + 1; z++) {
+    for (int x = 0; x < DISTANCE_CACHE_SIZE; x++)
+    for (int y = 0; y < DISTANCE_CACHE_SIZE; y++)
+    for (int z = 0; z < DISTANCE_CACHE_SIZE; z++) {
         vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
         localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
+        //std::string out = "CPU distance at :  " + std::to_string(x) + " " + std::to_string(y) + " " + std::to_string(z) + " " + std::to_string(localDistanceCache_[x][y][z]);
+        //DEBUGLOG(out);
     }
 }
 
@@ -41,14 +44,27 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
     assert(coordinates.z < MAX_Z_COORDINATES);
 
     FillLocalDistanceCache(coordinates);
-    GetMeshVertices(coordinates, outVertices);
+    GetMeshVerticesCPU(coordinates, outVertices);
     GetMeshIndices(coordinates, outIndices);
 
     assert(outVertices.size() <= MAX_COORDINATE_VERTICES);
     assert(outIndices.size() <= MAX_COORDINATE_INDICES);
 }
 
-void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
+void World::GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
+    assert(coordinates.x < MAX_X_COORDINATES);
+    assert(coordinates.y < MAX_Y_COORDINATES);
+    assert(coordinates.z < MAX_Z_COORDINATES);
+
+    FillLocalDistanceCache(coordinates);
+    GetMeshVerticesGPU_P(graphicsResources, coordinates, outVertices);
+    GetMeshIndices(coordinates, outIndices);
+
+    assert(outVertices.size() <= MAX_COORDINATE_VERTICES);
+    assert(outIndices.size() <= MAX_COORDINATE_INDICES);
+}
+
+void World::GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     for (int x = 0; x < WORLD_RESOLUTION; x++)
@@ -93,6 +109,8 @@ void World::GetMeshVertices(ivec3 coordinates, std::vector<WorldVertex>& outVert
             currentIndex++;
         }
     }
+
+    DEBUGLOG("CPU verts added:  " + std::to_string(outVertices.size()));
 }
 
 void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
@@ -160,4 +178,5 @@ void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices)
             }
         }
     }
+    DEBUGLOG("Indices: " + std::to_string(outIndices.size()));
 }

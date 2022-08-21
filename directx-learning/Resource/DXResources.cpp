@@ -100,6 +100,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     tSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
     HRASSERT(device_->CreateSamplerState(&tSampDesc, &textureSampler_));
 
+    // Create the depth stencil buffer
     D3D11_TEXTURE2D_DESC dsDesc;
     dsDesc.Width = width;
     dsDesc.Height = height;
@@ -137,6 +138,51 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     skeletalVertexDescription_[4] = staticVertexDescription_[4] = {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
     skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
+
+
+    D3D11_BUFFER_DESC dCacheDesc = {};
+    dCacheDesc.Usage = D3D11_USAGE_DYNAMIC;
+    dCacheDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    dCacheDesc.ByteWidth = sizeof(DistanceCacheData) * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE;
+    dCacheDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    dCacheDesc.StructureByteStride = sizeof(DistanceCacheData);
+    dCacheDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    HRASSERT(device_->CreateBuffer(&dCacheDesc, nullptr, &distanceCacheBuffer_));
+    
+    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
+    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+    viewDesc.BufferEx.FirstElement = 0;
+    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+    viewDesc.BufferEx.NumElements = DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE;
+    HRASSERT(device_->CreateShaderResourceView(distanceCacheBuffer_, &viewDesc, &distanceCacheView_));
+
+    D3D11_BUFFER_DESC vCacheDesc = {};
+    vCacheDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+    vCacheDesc.ByteWidth = sizeof(ComputeVertexData) * VOXELS_PER_COMPUTE;
+    vCacheDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    vCacheDesc.StructureByteStride = sizeof(ComputeVertexData);
+    HRASSERT(device_->CreateBuffer(&vCacheDesc, nullptr, &computeVertexBuffer_));
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uViewDesc = {};
+    uViewDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    uViewDesc.Buffer.FirstElement = 0;
+    uViewDesc.Format = DXGI_FORMAT_UNKNOWN;
+    uViewDesc.Buffer.NumElements = VOXELS_PER_COMPUTE;
+    HRASSERT(device_->CreateUnorderedAccessView(computeVertexBuffer_, &uViewDesc, &computeVertexView_));
+
+    vCacheDesc.Usage = D3D11_USAGE_STAGING;
+    vCacheDesc.BindFlags = 0;
+    vCacheDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    HRASSERT(device_->CreateBuffer(&vCacheDesc, 0, &computeVertexOutput_));
+
+    ID3DBlob* computeVertexShaderBlob;
+    HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeVertexShaderBlob));
+    HRASSERT(device_->CreateComputeShader(
+        computeVertexShaderBlob->GetBufferPointer(),
+        computeVertexShaderBlob->GetBufferSize(),
+        nullptr,
+        &computeVertexShader_
+    ));
 
     InitWorldMeshes();
 }

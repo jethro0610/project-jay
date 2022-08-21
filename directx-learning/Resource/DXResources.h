@@ -8,6 +8,7 @@
 #include "../Resource/RawModel.h"
 #include "../Rendering/RenderTypes.h"
 #include "../Game/WorldConstants.h"
+#include "../Game/WorldTypes.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -42,11 +43,15 @@ public:
     DXResources(HWND windowHandle, int width, int height);
     ~DXResources();
 
+    int width_;
+    int height_;
+
     std::unordered_map<std::string, VSResource> vertexShaders_;
     std::unordered_map<std::string, PSResource> pixelShaders_;
     std::unordered_map<std::string, MeshResource> staticMeshes_;
     std::unordered_map<std::string, MeshResource> skeletalMeshes_;
     std::unordered_map<std::string, TextureResource> textures_;
+    MeshResource worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
 
     ID3D11Device* device_;
     IDXGISwapChain* swapChain_;
@@ -61,16 +66,18 @@ public:
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
-    MeshResource worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
-    void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
-
-    int width_;
-    int height_;
+    ID3D11ComputeShader* computeVertexShader_;
+    ID3D11Buffer* distanceCacheBuffer_;
+    ID3D11ShaderResourceView* distanceCacheView_;
+    ID3D11Buffer* computeVertexBuffer_;
+    ID3D11UnorderedAccessView* computeVertexView_;
+    ID3D11Buffer* computeVertexOutput_;
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadModel(std::string modelName, bool skeletal = false);
     void LoadTexture(std::string textureName);
+    void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
 private:
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);

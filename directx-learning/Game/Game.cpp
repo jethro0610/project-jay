@@ -9,7 +9,8 @@ void Game::Init() {
         ivec3 coordinates(x, y, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
-        world_->GetMesh(coordinates, vertices, indices);
+        world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
+        //world_->GetMesh(coordinates, vertices, indices);
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 }

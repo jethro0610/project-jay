@@ -1,5 +1,4 @@
 #pragma once
-#define GLM_FORCE_SWIZZLE
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>
 #include <gtx/compatibility.hpp>

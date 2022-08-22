@@ -1,4 +1,5 @@
 #include "MovementSystem.h"
+
 void MovementSystem::Execute(
     DesiredMovementComponents& desiredMovementComponents,
     GroundTraceComponents& groundTraceComponents,
@@ -15,8 +16,10 @@ void MovementSystem::Execute(
 
         if (onGround) {
             velocity.y = 0.0f;
-            velocity.xz = velocity.xz + desiredMovementComponents.desiredMovement[i].xz * ACCELERATION;
-            velocity.xz = velocity.xz * SPEED_DECAY;
+            velocity.x += desiredMovementComponents.desiredMovement[i].x * ACCELERATION;
+            velocity.z += desiredMovementComponents.desiredMovement[i].z * ACCELERATION;
+            velocity.x *= SPEED_DECAY;
+            velocity.z *= SPEED_DECAY;
         }
         else {
             velocity.y -= GRAVITY_ACCELERATION;
@@ -24,7 +27,7 @@ void MovementSystem::Execute(
         }
 
         // Apply the velocity
-        transformComponents.transform[i].position_ += velocity;
+        transformComponents.transform[i].position_ += velocity * TIMESTEP;
         velocityComponents.velocity[i] = velocity;
 
         // Stick the entity to the ground after movement is executed

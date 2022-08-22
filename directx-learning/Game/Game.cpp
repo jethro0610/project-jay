@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../Logging/Logger.h"
 
 using namespace std::chrono;
 
@@ -6,6 +7,7 @@ Game::Game() {
     resolutionWidth_ = 1280;
     resolutionHeight_ = 720;
     camera_ = new Camera(&transformC_, 10.0f);
+    timeAccumlulator_ = 0.0f;
 }
 
 void Game::Init() {
@@ -43,10 +45,15 @@ void Game::Init() {
 void Game::Update(float deltaTime, float elapsedTime) {
     camera_->Update(deltaTime, inputs_);
 
-    PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
-    GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
-    MovementSystem::Execute(deltaTime, desiredMovementC_, groundTraceC_, transformC_, velocityC_, colliderC_);
-    CollisionSystem::Execute(deltaTime_, world_, activeEntityC_, transformC_, colliderC_, groundTraceC_);
+    timeAccumlulator_ += deltaTime;
+    while (timeAccumlulator_ >= TIMESTEP) {
+        PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
+        GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
+        MovementSystem::Execute(desiredMovementC_, groundTraceC_, transformC_, velocityC_, colliderC_);
+        CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, groundTraceC_);
+        timeAccumlulator_ -= TIMESTEP;
+    }
+
 
     RenderComponents renderComponents {
         &activeEntityC_,

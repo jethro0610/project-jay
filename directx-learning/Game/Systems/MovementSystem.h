@@ -4,9 +4,18 @@
 #include "../Components/TransformComponents.h"
 #include "../Components/VelocityComponents.h"
 #include "../Components/ColliderComponents.h"
+#include "../TimeConstants.h"
+
+#define MAX_SPEED (12.0f * TIMESTEP)
+#define FRICTION 0.1f
+#define SPEED_DECAY (1.0f - FRICTION)
+#define ACCELERATION ((MAX_SPEED / SPEED_DECAY) - MAX_SPEED)
+
+#define GRAVITY_ACCELERATION (1.0f * TIMESTEP)
+#define MAX_GRAVITY 50.0f
+
 namespace MovementSystem {
     void Execute(
-        float deltaTime,
         DesiredMovementComponents& desiredMovementComponents,
         GroundTraceComponents& groundTraceComponents,
         TransformComponents& transformComponents,

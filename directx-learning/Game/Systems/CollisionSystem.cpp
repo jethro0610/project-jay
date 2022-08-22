@@ -1,7 +1,6 @@
 #include "CollisionSystem.h"
 
 void CollisionSystem::Execute(
-    float deltaTime,
     World* world,
     ActiveEntityComponents& activeComponents,
     TransformComponents& transformComponents,

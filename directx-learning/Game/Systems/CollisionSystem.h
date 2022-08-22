@@ -9,7 +9,6 @@
 
 namespace CollisionSystem {
     void Execute(
-        float deltaTime,
         World* world,
         ActiveEntityComponents& activeComponents,
         TransformComponents& transformComponents,

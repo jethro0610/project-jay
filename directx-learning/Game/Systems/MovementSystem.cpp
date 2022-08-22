@@ -1,7 +1,5 @@
 #include "MovementSystem.h"
-
 void MovementSystem::Execute(
-    float deltaTime,
     DesiredMovementComponents& desiredMovementComponents,
     GroundTraceComponents& groundTraceComponents,
     TransformComponents& transformComponents,
@@ -13,15 +11,23 @@ void MovementSystem::Execute(
             continue;
 
         bool onGround = groundTraceComponents.onGround[i];
-
         vec3 velocity = velocityComponents.velocity[i];
-        velocity += desiredMovementComponents.desiredMovement[i] * 10.0f * deltaTime;
+
+        if (onGround) {
+            velocity.y = 0.0f;
+            velocity.xz = velocity.xz + desiredMovementComponents.desiredMovement[i].xz * ACCELERATION;
+            velocity.xz = velocity.xz * SPEED_DECAY;
+        }
+        else {
+            velocity.y -= GRAVITY_ACCELERATION;
+            velocity.y = -min(-velocity.y, MAX_GRAVITY);
+        }
 
         // Apply the velocity
-        transformComponents.transform[i].position_ += velocity * deltaTime;
+        transformComponents.transform[i].position_ += velocity;
         velocityComponents.velocity[i] = velocity;
 
-        // Stick the entity to the ground
+        // Stick the entity to the ground after movement is executed
         if (onGround)
             transformComponents.transform[i].position_.y = groundTraceComponents.groundPosition[i].y + colliderComponents.radius[i];
     }

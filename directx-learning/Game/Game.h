@@ -1,13 +1,11 @@
 #pragma once
-
-#define MAX_DELTA_TIME 1.0f/15.0f
-
 #ifdef WINDOWS
 #include "../Windows/WindowsLayer.h"
 #include "../Resource/DXResources.h"
 #endif
 
 #include <chrono>
+#include "TimeConstants.h"
 #include "World.h"
 #include "../Resource/ResourceManager.h"
 #include "../Types/Gamepad.h"
@@ -52,6 +50,7 @@ private:
     long long currentTimeUSec_;
     float deltaTime_;
     float elapsedTime_;
+    float timeAccumlulator_;
 
     ActiveEntityComponents activeEntityC_;
     TransformComponents transformC_;

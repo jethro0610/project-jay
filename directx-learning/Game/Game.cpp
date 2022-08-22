@@ -30,12 +30,11 @@ void Game::Init() {
 
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
-    spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
     activeEntityC_.active[PLAYER_ENTITY] = true;
     transformC_.transform[PLAYER_ENTITY] = spawnTransform;
-    colliderC_.radius[PLAYER_ENTITY] = 1.25f;
+    colliderC_.radius[PLAYER_ENTITY] = 1.0f;
     staticModelC_.model[PLAYER_ENTITY] = "st_sphere";
-    groundTraceC_.distance[PLAYER_ENTITY] = 2.0f;
+    groundTraceC_.distance[PLAYER_ENTITY] = 1.25f;
     desiredMovementC_.recievesFrom[PLAYER_ENTITY] = RECIEVE_MOVEMENT_PLAYER;
 
     camera_->trackEntity_ = 0;
@@ -46,8 +45,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
 
     PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
     GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
-    MovementSystem::Execute(deltaTime, desiredMovementC_, groundTraceC_, transformC_, velocityC_);
-    CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, deltaTime_);
+    MovementSystem::Execute(deltaTime, desiredMovementC_, groundTraceC_, transformC_, velocityC_, colliderC_);
+    CollisionSystem::Execute(deltaTime_, world_, activeEntityC_, transformC_, colliderC_, groundTraceC_);
 
     RenderComponents renderComponents {
         &activeEntityC_,

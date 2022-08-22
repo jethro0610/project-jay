@@ -39,5 +39,16 @@ void GroundTraceSystem::Execute(
         else {
             groundTraceComponents.onGround[i] = false;
         }
+
+        // Check if the entity entered/exited the ground on this frame
+        if (!groundTraceComponents.onGroundLastFrame[i] && groundTraceComponents.onGround[i])
+            groundTraceComponents.enteredGround[i] = true;
+        else
+            groundTraceComponents.enteredGround[i] = false;
+
+        if (groundTraceComponents.onGroundLastFrame[i] && !groundTraceComponents.onGround[i])
+            groundTraceComponents.exitedGround[i] = true;
+        else
+            groundTraceComponents.exitedGround[i] = false;
     }
 }

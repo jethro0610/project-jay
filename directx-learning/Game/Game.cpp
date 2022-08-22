@@ -28,22 +28,25 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 
-    for (int x = 0; x < 6; x++)
-    for (int y = 0; y < 6; y++) {
-        Transform spawnTransform;
-        spawnTransform.position_ = vec3(10.0f * (x + 1), 50.0f, 10.0f * (y + 1));
-        spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
-        activeEntityC_.active[x + y * 6] = true;
-        transformC_.transform[x + y * 6] = spawnTransform;
-        colliderC_.radius[x + y * 6] = 1.25f;
-        staticModelC_.model[x + y * 6] = "st_sphere";
-    }
+    Transform spawnTransform;
+    spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
+    spawnTransform.scale_ = vec3(1.0f, 1.0f, 1.0f);
+    activeEntityC_.active[PLAYER_ENTITY] = true;
+    transformC_.transform[PLAYER_ENTITY] = spawnTransform;
+    colliderC_.radius[PLAYER_ENTITY] = 1.25f;
+    staticModelC_.model[PLAYER_ENTITY] = "st_sphere";
+    groundTraceC_.distance[PLAYER_ENTITY] = 2.0f;
+    desiredMovementC_.recievesFrom[PLAYER_ENTITY] = RECIEVE_MOVEMENT_PLAYER;
 
     camera_->trackEntity_ = 0;
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
-    camera_->Update(deltaTime, forwardInput_, sideInput_, deltaLookX_, deltaLookY_);
+    camera_->Update(deltaTime, inputs_);
+
+    PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
+    GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
+    MovementSystem::Execute(deltaTime, desiredMovementC_, groundTraceC_, transformC_, velocityC_);
     CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, deltaTime_);
 
     RenderComponents renderComponents {

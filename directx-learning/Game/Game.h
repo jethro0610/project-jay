@@ -15,6 +15,7 @@
 #include "../Rendering/Renderer.h"
 #include "Components/Components.h"
 #include "Systems/Systems.h"
+#include "../Types/Inputs.h"
 
 class Game {
 public:
@@ -42,10 +43,7 @@ private:
     World* world_;
 
     Gamepad gamepad_;
-    float forwardInput_;
-    float sideInput_;
-    float deltaLookX_;
-    float deltaLookY_;
+    Inputs inputs_;
 
     int resolutionWidth_;
     int resolutionHeight_;
@@ -59,6 +57,9 @@ private:
     TransformComponents transformC_;
     ColliderComponents colliderC_;
     StaticModelComponents staticModelC_;
+    GroundTraceComponents groundTraceC_;
+    VelocityComponents velocityC_;
+    DesiredMovementComponents desiredMovementC_;
 
     void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
     void UpdateInputs_P(float deltaTime);

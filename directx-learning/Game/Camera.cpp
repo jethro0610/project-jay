@@ -43,16 +43,16 @@ mat4 Camera::GetViewMatrix() {
     }
 }
 
-void Camera::Update(float deltaTime, float forwardInput, float sideInput, float deltaLookX, float deltaLookY) {
-    lookX_ += deltaLookX;
-    lookY_ += deltaLookY;
+void Camera::Update(float deltaTime, Inputs inputs) {
+    lookX_ += inputs.deltaLookX;
+    lookY_ += inputs.deltaLookY;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(80.0f));
 
     if (trackEntity_ == NO_TRACK) {
         // Move and use first person look when there is no entity to track
         firstPersonTransform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
-        vec3 forwardMovement = firstPersonTransform_.GetForwardVector() * forwardInput * 10.0f * deltaTime;
-        vec3 rightMovement = firstPersonTransform_.GetRightVector() * sideInput * 10.0f * deltaTime;
+        vec3 forwardMovement = firstPersonTransform_.GetForwardVector() * inputs.forwardInput * 10.0f * deltaTime;
+        vec3 rightMovement = firstPersonTransform_.GetRightVector() * inputs.sideInput * 10.0f * deltaTime;
         firstPersonTransform_.position_ += forwardMovement + rightMovement;
     }
 }

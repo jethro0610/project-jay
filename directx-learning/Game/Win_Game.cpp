@@ -81,32 +81,32 @@ void Game::PollGamepadInputs_P() {
 }
 
 void Game::UpdateInputs_P(float deltaTime) {
-    forwardInput_ = 0.0f;
-    sideInput_ = 0.0f;
+    inputs_.forwardInput = 0.0f;
+    inputs_.sideInput = 0.0f;
 
     // TODO: clamp the values to total size 1
     if (windowsLayer_->heldKeys_['W'])
-        forwardInput_ += 1.0f;
+        inputs_.forwardInput += 1.0f;
 
     if (windowsLayer_->heldKeys_['S'])
-        forwardInput_ -= 1.0f;
+        inputs_.forwardInput -= 1.0f;
 
     if (windowsLayer_->heldKeys_['D'])
-        sideInput_ += 1.0f;
+        inputs_.sideInput += 1.0f;
 
     if (windowsLayer_->heldKeys_['A'])
-        sideInput_ -= 1.0f;
+        inputs_.sideInput -= 1.0f;
 
-    forwardInput_ += gamepad_.leftStickY_;
-    sideInput_ += gamepad_.leftStickX_;
+    inputs_.forwardInput += gamepad_.leftStickY_;
+    inputs_.sideInput += gamepad_.leftStickX_;
 
     // TODO: scale these by delta time and clamp the values
-    deltaLookX_ = 0.0f;
-    deltaLookY_ = 0.0f;
-    deltaLookX_ -= windowsLayer_->deltaMouseX_ * 0.005f;
-    deltaLookY_ -= windowsLayer_->deltaMouseY_ * 0.005f;
-    deltaLookX_ -= gamepad_.rightStickX_ * deltaTime * 2.0f;
-    deltaLookY_ += gamepad_.rightStickY_ * deltaTime * 2.0f;
+    inputs_.deltaLookX = 0.0f;
+    inputs_.deltaLookY = 0.0f;
+    inputs_.deltaLookX -= windowsLayer_->deltaMouseX_ * 0.005f;
+    inputs_.deltaLookY -= windowsLayer_->deltaMouseY_ * 0.005f;
+    inputs_.deltaLookX -= gamepad_.rightStickX_ * deltaTime * 2.0f;
+    inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
 }
 
 void Game::SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {

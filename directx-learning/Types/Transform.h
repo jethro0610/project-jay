@@ -2,6 +2,7 @@
 #include <glm.hpp>
 #include <gtx/quaternion.hpp>
 #include <gtx/compatibility.hpp>
+#include <gtx/string_cast.hpp>
 #include <string>
 
 using namespace glm;

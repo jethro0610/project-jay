@@ -1,5 +1,6 @@
 #pragma once
 #include "../Types/Transform.h"
+#include "../Types/Inputs.h"
 #include "Components/TransformComponents.h"
 
 #define NO_TRACK -1
@@ -16,7 +17,7 @@ public:
     int trackEntity_;
     float trackDistance_;
 
-    void Update(float deltaTime, float forwardInput, float sideInput, float deltaLookX, float deltaLookY);
+    void Update(float deltaTime, Inputs inputs);
     mat4 GetViewMatrix();
 
 private:

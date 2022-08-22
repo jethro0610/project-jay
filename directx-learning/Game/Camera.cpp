@@ -29,7 +29,7 @@ mat4 Camera::GetViewMatrix() {
         );
     }
     else {
-        vec3 trackPosition = transformComponents_->transform[trackEntity_].position_;
+        vec3 trackPosition = transformComponents_->renderTransform[trackEntity_].position_;
         quat lookRotation = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forward = lookRotation * Transform::worldForward;
         vec3 up = lookRotation * Transform::worldUp;

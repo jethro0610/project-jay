@@ -34,6 +34,7 @@ void Game::Init() {
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
     activeEntityC_.active[PLAYER_ENTITY] = true;
     transformC_.transform[PLAYER_ENTITY] = spawnTransform;
+    transformC_.interpolate[PLAYER_ENTITY] = true;
     colliderC_.radius[PLAYER_ENTITY] = 1.0f;
     staticModelC_.model[PLAYER_ENTITY] = "st_sphere";
     groundTraceC_.distance[PLAYER_ENTITY] = 1.25f;
@@ -47,13 +48,14 @@ void Game::Update(float deltaTime, float elapsedTime) {
 
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
+        TransformSystem::UpdateLastTransforms(activeEntityC_, transformC_);
         PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
         GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
         MovementSystem::Execute(desiredMovementC_, groundTraceC_, transformC_, velocityC_, colliderC_);
         CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, groundTraceC_);
         timeAccumlulator_ -= TIMESTEP;
     }
-
+    TransformSystem::UpdateRenderTransforms(timeAccumlulator_, activeEntityC_, transformC_);
 
     RenderComponents renderComponents {
         &activeEntityC_,

@@ -18,7 +18,7 @@ public:
     float trackDistance_;
 
     void Update(float deltaTime, Inputs inputs);
-    mat4 GetViewMatrix();
+    mat4 GetViewMatrix() const;
 
 private:
     TransformComponents* transformComponents_;

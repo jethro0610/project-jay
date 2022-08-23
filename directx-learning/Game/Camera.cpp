@@ -17,7 +17,7 @@ Camera::Camera(TransformComponents* transformComponents, float trackDistance, in
     trackDistance_ = trackDistance;
 }
 
-mat4 Camera::GetViewMatrix() {
+mat4 Camera::GetViewMatrix() const {
     if (trackEntity_ == NO_TRACK) {
         vec3 forward = rotate(firstPersonTransform_.rotation_, Transform::worldForward);
         vec3 up = rotate(firstPersonTransform_.rotation_, Transform::worldUp);

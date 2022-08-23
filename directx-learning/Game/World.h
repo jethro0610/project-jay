@@ -49,6 +49,8 @@ public:
     float GetDistance(vec3 position) const;
     // Higher epsilon = smoother
     vec3 GetNormal(vec3 position, float epsilon = 1.0f) const;
+
+    // NOTE: These functions fill the local distance cache based on the coordinate
     void GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
     void GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
@@ -60,7 +62,10 @@ private:
     float localDistanceCache_[DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE];
 
     void FillLocalDistanceCache(ivec3 coordinates);
+
+    // NOTE: These functions write to the indices data channell
     void GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outVertices);
     void GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices);
+
     void GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outInidices);
 };

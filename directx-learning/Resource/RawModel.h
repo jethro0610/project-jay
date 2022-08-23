@@ -18,8 +18,8 @@ public:
     uint16_t indexCount_;
     void* indexBuffer_;
 
-    int GetVertexByteWidth();
-    int GetIndexByteWidth();
+    int GetVertexByteWidth() const;
+    int GetIndexByteWidth() const;
 };
 
 class RawModel {

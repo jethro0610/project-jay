@@ -16,9 +16,9 @@ class SkeletonResource {
 public:
     SkeletonResource(std::string skeletonName);
     std::vector<Joint> joints_;
-    void CalculateBasePoseJointTransforms(mat4* outputJointTransforms);
+    void CalculateBasePoseJointTransforms(mat4* outputJointTransforms) const;
 
 private:
-    void CalculateBasePoseJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms);
+    void CalculateBasePoseJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms) const;
 };
 

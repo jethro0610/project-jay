@@ -101,7 +101,7 @@ void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const Sta
             for (auto entityItr = modelItr->second.begin(); entityItr != modelItr->second.end(); entityItr++) {
                 PerObjectData objectData;
                 mat4 worldMatrix;
-                renderComponents.transformComponents->renderTransform[*entityItr].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
+                renderComponents.transformComponents.renderTransform[*entityItr].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
                 objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
                 context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
                 context->DrawIndexed(meshResource.indexCount, 0, 0);

@@ -12,9 +12,9 @@
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
 struct RenderComponents {
-    ActiveEntityComponents* activeEntityComponents;
-    StaticModelComponents* staticMeshComponents;
-    TransformComponents* transformComponents;
+    ActiveEntityComponents& activeEntityComponents;
+    StaticModelComponents& staticMeshComponents;
+    TransformComponents& transformComponents;
 };
 
 class Renderer {

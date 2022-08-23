@@ -20,7 +20,7 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
 }
 
 float World::GetDistance(vec3 position) const {
-    float height = noise_->GetNoise<float>(position.x * 5.0f, position.z * 5.0f) * 3.0f + 8.0f;
+    float height = noise_->GetNoise<float>(position.x * 1.0f, position.z * 1.0f) * 6.0f + 8.0f;
     return position.y - height;
 }
 

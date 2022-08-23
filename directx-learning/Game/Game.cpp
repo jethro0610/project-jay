@@ -40,7 +40,7 @@ void Game::Init() {
     groundTraceC_.distance[PLAYER_ENTITY] = 1.25f;
     desiredMovementC_.recievesFrom[PLAYER_ENTITY] = RECIEVE_MOVEMENT_PLAYER;
 
-    camera_->trackEntity_ = 0;
+    camera_->trackEntity_ = PLAYER_ENTITY;
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
@@ -58,9 +58,9 @@ void Game::Update(float deltaTime, float elapsedTime) {
     TransformSystem::UpdateRenderTransforms(timeAccumlulator_, activeEntityC_, transformC_);
 
     RenderComponents renderComponents {
-        &activeEntityC_,
-        &staticModelC_,
-        &transformC_
+        activeEntityC_,
+        staticModelC_,
+        transformC_
     };
     renderer_->Render(deltaTime, elapsedTime, renderComponents);
 }

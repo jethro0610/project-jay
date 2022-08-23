@@ -34,11 +34,11 @@ void Renderer::BuildStaticModelRenderList(
     StaticModelRenderList& outStaticModelRenderList
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (frameInfo.activeEntityComponents->active[i] == false)
+        if (frameInfo.activeEntityComponents.active[i] == false)
             continue;
 
-        std::string model = frameInfo.staticMeshComponents->model[i];
-        if (frameInfo.staticMeshComponents->model[i] == NO_MODEL)
+        std::string model = frameInfo.staticMeshComponents.model[i];
+        if (frameInfo.staticMeshComponents.model[i] == NO_MODEL)
             continue;
 
         assert(resourceManager_->loadedStaticModels_.count(model) != 0);

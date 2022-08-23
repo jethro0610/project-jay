@@ -18,7 +18,6 @@
 class Game {
 public:
     Game();
-    ~Game();
 
     // Called during Init_P right before the game loop starts
     void Init();

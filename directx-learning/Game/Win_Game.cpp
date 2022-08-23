@@ -4,19 +4,12 @@
 
 using namespace std::chrono;
 
-Game::~Game() {
-    delete resourceManager_;
-    delete dxResources_;
-    delete renderer_;
-    delete windowsLayer_;
-}
-
 void Game::Init_P() {
     running_ = true;
     windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth_, resolutionHeight_, "DirectXLearning");
     dxResources_ = new DXResources(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
     resourceManager_ = new ResourceManager(dxResources_);
-    renderer_ = new Renderer(camera_, resourceManager_);
+    renderer_ = new Renderer(resourceManager_);
     Init();
 
     MSG msg;

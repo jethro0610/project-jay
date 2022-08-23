@@ -19,7 +19,8 @@ struct RenderComponents {
 
 class Renderer {
 public:
-    Renderer(Camera* camera, ResourceManager* resourceManager);
+    Renderer(ResourceManager* resourceManager);
+    Camera* camera_;
     void Init_P();
 
     int width_;
@@ -39,7 +40,6 @@ public:
     void Render(float deltaTime, float elapsedTime, RenderComponents renderComponents);
 
 private:
-    Camera* camera_;
     ResourceManager* resourceManager_;
 
     void Clear_P();

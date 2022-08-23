@@ -40,7 +40,6 @@ enum class VertexShaderType {
 class DXResources {
 public:
     DXResources(HWND windowHandle, int width, int height);
-    ~DXResources();
 
     int width_;
     int height_;

@@ -45,7 +45,6 @@ const ivec3 triangulationTable[3][4] = {
 class World {
 public:
     World();
-    ~World();
 
     float GetDistance(vec3 position) const;
     // Higher epsilon = smoother

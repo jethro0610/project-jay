@@ -5,10 +5,6 @@ World::World() {
     noise_ = new FastNoiseLite();
 }
 
-World::~World() {
-    delete noise_;
-}
-
 void World::FillLocalDistanceCache(ivec3 coordinates) {
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     for (int x = 0; x < DISTANCE_CACHE_SIZE; x++)

@@ -1,13 +1,14 @@
 #pragma once
 #include "Renderer.h"
 
-Renderer::Renderer(Camera* camera, ResourceManager* resourceManager) {
+Renderer::Renderer(ResourceManager* resourceManager) {
+    camera_ = nullptr;
     resourceManager_ = resourceManager;
-    camera_ = camera;
     Init_P();
 }
 
 void Renderer::UpdateViewMatrix() {
+    assert(camera_ != nullptr);
     viewMatrix_ = camera_->GetViewMatrix();
 }
 

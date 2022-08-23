@@ -57,10 +57,6 @@ WindowsLayer::WindowsLayer(int width, int height, const char* name) {
     ShowWindow(windowHandle_, SW_SHOWDEFAULT);
 }
 
-WindowsLayer::~WindowsLayer() {
-
-}
-
 LRESULT CALLBACK WindowsLayer::HandleMsgThunk(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lParam) {
     return GetWindowsLayer()->HandleMsg(winHdl, msg, wParam, lParam);
 }

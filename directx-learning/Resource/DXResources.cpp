@@ -216,16 +216,6 @@ void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVerte
     worldMeshes_[coordinates.x][coordinates.y][coordinates.z].indexCount = indices.size();
 }
 
-DXResources::~DXResources() {
-    device_->Release();
-    swapChain_->Release();
-    context_->Release();
-    renderTarget_->Release();
-    perObjectCBuffer_->Release();
-    textureSampler_->Release();
-    depthStencilBuffer_->Release();
-}
-
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {
     assert(vertexShaders_.count(shaderName) == 0);
     std::string extensionName = shaderName + ".cso";

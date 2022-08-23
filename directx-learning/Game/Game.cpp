@@ -6,8 +6,6 @@ using namespace std::chrono;
 Game::Game() {
     resolutionWidth_ = 1280;
     resolutionHeight_ = 720;
-    camera_ = new Camera(&transformC_, 10.0f);
-    timeAccumlulator_ = 0.0f;
 }
 
 void Game::Init() {
@@ -15,6 +13,10 @@ void Game::Init() {
     currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
     lastTimeUSec_ = currentTimeUSec_;
     elapsedTime_ = 0.0f;
+
+    // Create the camera and assign it to the renderer
+    camera_ = new Camera(&transformC_, 10.0f);
+    renderer_->camera_ = camera_;
 
     resourceManager_->LoadStaticModel("st_sphere");
     resourceManager_->LoadStaticModel("st_toruscone");

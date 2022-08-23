@@ -21,7 +21,6 @@
 class Gamepad {
 public:
     Gamepad();
-    ~Gamepad();
 
     float leftStickX_;
     float leftStickY_;

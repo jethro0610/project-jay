@@ -28,11 +28,11 @@ public:
 private:
 
     std::tuple<
-        TransformComponents,
-        ColliderComponents,
-        StaticModelComponents,
-        GroundTraceComponents,
-        VelocityComponents,
-        DesiredMovementComponents
+        TransformComponent,
+        ColliderComponent,
+        StaticModelComponent,
+        GroundTraceComponent,
+        VelocityComponent,
+        DesiredMovementComponent
     > components_;
 };

@@ -2,32 +2,32 @@
 
 void MovementSystem::Execute(
     Entity* entities,
-    DesiredMovementComponents& desiredMovementComponents,
-    GroundTraceComponents& groundTraceComponents,
-    TransformComponents& transformComponents,
-    VelocityComponents& velocityComponents,
-    ColliderComponents& colliderComponents
+    DesiredMovementComponent& desiredMovementComponent,
+    GroundTraceComponent& groundTraceComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent,
+    ColliderComponent& colliderComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
 
         if (!entity.HasComponents
             <
-            DesiredMovementComponents,
-            GroundTraceComponents,
-            TransformComponents,
-            VelocityComponents,
-            ColliderComponents
+            DesiredMovementComponent,
+            GroundTraceComponent,
+            TransformComponent,
+            VelocityComponent,
+            ColliderComponent
             > 
         ()) continue;
 
-        bool onGround = groundTraceComponents.onGround[i];
-        vec3 velocity = velocityComponents.velocity[i];
+        bool onGround = groundTraceComponent.onGround[i];
+        vec3 velocity = velocityComponent.velocity[i];
 
         if (onGround) {
             velocity.y = 0.0f;
-            velocity.x += desiredMovementComponents.desiredMovement[i].x * ACCELERATION;
-            velocity.z += desiredMovementComponents.desiredMovement[i].z * ACCELERATION;
+            velocity.x += desiredMovementComponent.desiredMovement[i].x * ACCELERATION;
+            velocity.z += desiredMovementComponent.desiredMovement[i].z * ACCELERATION;
             velocity.x *= SPEED_DECAY;
             velocity.z *= SPEED_DECAY;
         }
@@ -37,12 +37,12 @@ void MovementSystem::Execute(
         }
 
         // Apply the velocity
-        transformComponents.transform[i].position_ += velocity * TIMESTEP;
-        velocityComponents.velocity[i] = velocity;
+        transformComponent.transform[i].position_ += velocity * TIMESTEP;
+        velocityComponent.velocity[i] = velocity;
 
         // Stick the entity to the ground after movement is executed
         if (onGround)
-            transformComponents.transform[i].position_.y = groundTraceComponents.groundPosition[i].y + colliderComponents.radius[i];
+            transformComponent.transform[i].position_.y = groundTraceComponent.groundPosition[i].y + colliderComponent.radius[i];
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.

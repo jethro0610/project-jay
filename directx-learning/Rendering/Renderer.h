@@ -4,15 +4,15 @@
 #include "../Types/Transform.h"
 #include "RenderTypes.h"
 
-#include "../Game/Components/StaticModelComponents.h"
-#include "../Game/Components/TransformComponents.h"
+#include "../Game/Components/StaticModelComponent.h"
+#include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
 
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
 struct RenderComponents {
-    StaticModelComponents& staticMeshComponents;
-    TransformComponents& transformComponents;
+    StaticModelComponent& staticMeshComponents;
+    TransformComponent& transformComponents;
 };
 
 class Renderer {

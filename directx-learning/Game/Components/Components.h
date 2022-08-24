@@ -1,7 +1,7 @@
 #pragma once
-#include "ColliderComponents.h"
-#include "TransformComponents.h"
-#include "StaticModelComponents.h"
-#include "DesiredMovementComponents.h"
-#include "GroundTraceComponents.h"
-#include "VelocityComponents.h"
+#include "ColliderComponent.h"
+#include "TransformComponent.h"
+#include "StaticModelComponent.h"
+#include "DesiredMovementComponent.h"
+#include "GroundTraceComponent.h"
+#include "VelocityComponent.h"

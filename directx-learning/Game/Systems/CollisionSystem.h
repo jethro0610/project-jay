@@ -1,9 +1,9 @@
 #pragma once
 #include "../World.h"
 #include "../Entity/Entity.h"
-#include "../Components/TransformComponents.h"
-#include "../Components/ColliderComponents.h"
-#include "../Components/GroundTraceComponents.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/ColliderComponent.h"
+#include "../Components/GroundTraceComponent.h"
 
 #define GROUND_CUTOFF_SCALE 0.25f
 
@@ -11,9 +11,9 @@ namespace CollisionSystem {
     void Execute(
         World* world,
         Entity* entities,
-        TransformComponents& transformComponents,
-        ColliderComponents& colliderComponents,
-        GroundTraceComponents& groundTraceComponents
+        TransformComponent& transformComponent,
+        ColliderComponent& colliderComponent,
+        GroundTraceComponent& groundTraceComponent
     );
 }
 

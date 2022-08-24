@@ -1,5 +1,5 @@
 #pragma once
-#include "EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../../Types/Transform.h"
 #include <algorithm>
 
@@ -7,14 +7,14 @@ struct VelocityCProperties {
     vec3& velocity;
 };
 
-struct VelocityComponents {
+struct VelocityComponent {
     vec3 velocity[MAX_ENTITIES];
 
-    VelocityComponents() {
+    VelocityComponent() {
         std::fill_n(velocity, MAX_ENTITIES, vec3(0.0f, 0.0f, 0.0f));
     };
-    VelocityComponents(const VelocityComponents&) = delete;
-    VelocityComponents& operator=(const VelocityComponents&) = delete;
+    VelocityComponent(const VelocityComponent&) = delete;
+    VelocityComponent& operator=(const VelocityComponent&) = delete;
 
     VelocityCProperties operator[](int index) {
         return VelocityCProperties{

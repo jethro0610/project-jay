@@ -1,7 +1,7 @@
 #include "Camera.h"
 
-Camera::Camera(TransformComponents* transformComponents, float trackDistance, vec3 startPosition) {
-    transformComponents_ = transformComponents;
+Camera::Camera(TransformComponent* transformComponent, float trackDistance, vec3 startPosition) {
+    transformComponent_ = transformComponent;
     firstPersonTransform_.position_ = startPosition;
     trackEntity_ = -1;
     lookX_ = 0.0f;
@@ -9,8 +9,8 @@ Camera::Camera(TransformComponents* transformComponents, float trackDistance, ve
     trackDistance_ = trackDistance;
 }
 
-Camera::Camera(TransformComponents* transformComponents, float trackDistance, int trackEntity) {
-    transformComponents_ = transformComponents;
+Camera::Camera(TransformComponent* transformComponent, float trackDistance, int trackEntity) {
+    transformComponent_ = transformComponent;
     trackEntity_ = trackEntity;
     lookX_ = 0.0f;
     lookY_ = 0.0f;
@@ -29,7 +29,7 @@ mat4 Camera::GetViewMatrix() const {
         );
     }
     else {
-        vec3 trackPosition = transformComponents_->renderTransform[trackEntity_].position_;
+        vec3 trackPosition = transformComponent_->renderTransform[trackEntity_].position_;
         quat lookRotation = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forward = lookRotation * Transform::worldForward;
         vec3 up = lookRotation * Transform::worldUp;

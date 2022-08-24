@@ -3,19 +3,19 @@
 void GroundTraceSystem::Execute(
     World* world,
     Entity* entities,
-    TransformComponents& transformComponents,
-    GroundTraceComponents& groundTraceComponents
+    TransformComponent& transformComponent,
+    GroundTraceComponent& groundTraceComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.HasComponents<TransformComponents, GroundTraceComponents>())
+        if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
             continue;
 
-        groundTraceComponents.onGroundLastFrame[i] = groundTraceComponents.onGround[i];
-        float traceDistance = groundTraceComponents.distance[i];
+        groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
+        float traceDistance = groundTraceComponent.distance[i];
 
         // Raymarch towards the ground
-        vec3 position = transformComponents.transform[i].position_;
+        vec3 position = transformComponent.transform[i].position_;
         float distanceToSurface = 0;
         for (int d = 0; d < 8; d++) {
             float distanceSample = world->GetDistance(position - Transform::worldUp * distanceToSurface);
@@ -32,25 +32,25 @@ void GroundTraceSystem::Execute(
 
         // Hit solving
         if (distanceToSurface < traceDistance) {
-            groundTraceComponents.onGround[i] = true;
+            groundTraceComponent.onGround[i] = true;
             vec3 groundPosition = position - Transform::worldUp * distanceToSurface;
             vec3 groundNormal = world->GetNormal(groundPosition);
-            groundTraceComponents.groundPosition[i] = groundPosition;
-            groundTraceComponents.groundNormal[i] = groundNormal;
+            groundTraceComponent.groundPosition[i] = groundPosition;
+            groundTraceComponent.groundNormal[i] = groundNormal;
         }
         else {
-            groundTraceComponents.onGround[i] = false;
+            groundTraceComponent.onGround[i] = false;
         }
 
         // Check if the entity entered/exited the ground on this frame
-        if (!groundTraceComponents.onGroundLastFrame[i] && groundTraceComponents.onGround[i])
-            groundTraceComponents.enteredGround[i] = true;
+        if (!groundTraceComponent.onGroundLastFrame[i] && groundTraceComponent.onGround[i])
+            groundTraceComponent.enteredGround[i] = true;
         else
-            groundTraceComponents.enteredGround[i] = false;
+            groundTraceComponent.enteredGround[i] = false;
 
-        if (groundTraceComponents.onGroundLastFrame[i] && !groundTraceComponents.onGround[i])
-            groundTraceComponents.exitedGround[i] = true;
+        if (groundTraceComponent.onGroundLastFrame[i] && !groundTraceComponent.onGround[i])
+            groundTraceComponent.exitedGround[i] = true;
         else
-            groundTraceComponents.exitedGround[i] = false;
+            groundTraceComponent.exitedGround[i] = false;
     }
 }

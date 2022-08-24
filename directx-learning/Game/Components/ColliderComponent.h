@@ -1,22 +1,22 @@
 #pragma once
-#include "EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../../Types/Transform.h"
 
 struct ColliderCProperties {
     float& radius;
 };
 
-struct ColliderComponents {
+struct ColliderComponent {
     float radius[MAX_ENTITIES];
     vec3 hitNormal[MAX_ENTITIES];
     bool hit[MAX_ENTITIES];
-    ColliderComponents() {
+    ColliderComponent() {
         std::fill_n(radius, MAX_ENTITIES, -1.0f);
         std::fill_n(hitNormal, MAX_ENTITIES, vec3(0.0f, 0.0f, 0.0f));
         std::fill_n(hit, MAX_ENTITIES, false);
     };
-    ColliderComponents(const ColliderComponents&) = delete;
-    ColliderComponents& operator=(const ColliderComponents&) = delete;
+    ColliderComponent(const ColliderComponent&) = delete;
+    ColliderComponent& operator=(const ColliderComponent&) = delete;
 
     ColliderCProperties operator[](int index) {
         return ColliderCProperties{

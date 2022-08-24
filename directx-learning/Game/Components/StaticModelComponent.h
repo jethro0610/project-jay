@@ -1,19 +1,19 @@
 #pragma once
-#include "EntityConstants.h"
+#include "../Entity/Entity.h"
 #include <string>
 
 struct StaticModelCProperties {
     std::string& model;
 };
 
-struct StaticModelComponents {
+struct StaticModelComponent {
     std::string model[MAX_ENTITIES];
 
-    StaticModelComponents() {
+    StaticModelComponent() {
         std::fill_n(model, MAX_ENTITIES, "");
     };
-    StaticModelComponents(const StaticModelComponents&) = delete;
-    StaticModelComponents& operator=(const StaticModelComponents&) = delete;
+    StaticModelComponent(const StaticModelComponent&) = delete;
+    StaticModelComponent& operator=(const StaticModelComponent&) = delete;
 
     StaticModelCProperties operator[](int index) {
         return StaticModelCProperties {

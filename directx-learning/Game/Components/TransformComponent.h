@@ -1,5 +1,5 @@
 #pragma once
-#include "EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../../Types/Transform.h"
 #include <algorithm>
 
@@ -8,17 +8,17 @@ struct TransformCProperties {
     bool& interpolate;
 };
 
-struct TransformComponents {
+struct TransformComponent {
     Transform transform[MAX_ENTITIES];
     Transform transformLastUpdate[MAX_ENTITIES];
     Transform renderTransform[MAX_ENTITIES];
     bool interpolate[MAX_ENTITIES];
 
-    TransformComponents() {
+    TransformComponent() {
         std::fill_n(interpolate, MAX_ENTITIES, false);
     };
-    TransformComponents(const TransformComponents&) = delete;
-    TransformComponents& operator=(const TransformComponents&) = delete;
+    TransformComponent(const TransformComponent&) = delete;
+    TransformComponent& operator=(const TransformComponent&) = delete;
 
     TransformCProperties operator[](int index) {
         return TransformCProperties {

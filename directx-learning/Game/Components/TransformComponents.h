@@ -26,4 +26,6 @@ struct TransformComponents {
             interpolate[index]
         };
     }
+
+    static int ID;
 };

@@ -5,10 +5,3 @@
 #include "DesiredMovementComponents.h"
 #include "GroundTraceComponents.h"
 #include "VelocityComponents.h"
-
-extern int componentCounter;
-template <class T>
-int GetComponentID() {
-    static int componentId = componentCounter++;
-    return componentId;
-}

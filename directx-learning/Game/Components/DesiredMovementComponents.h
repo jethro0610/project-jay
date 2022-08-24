@@ -25,4 +25,6 @@ struct DesiredMovementComponents {
             recievesFrom[index]
         };
     }
+
+    static int ID;
 };

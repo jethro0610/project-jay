@@ -10,16 +10,16 @@ void MovementSystem::Execute(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.HasComponent<DesiredMovementComponents>())
-            continue;
-        if (!entity.HasComponent<GroundTraceComponents>())
-            continue;
-        if (!entity.HasComponent<TransformComponents>())
-            continue;
-        if (!entity.HasComponent<VelocityComponents>())
-            continue;
-        if (!entity.HasComponent<ColliderComponents>())
-            continue;
+
+        if (!entity.HasComponents
+            <
+            DesiredMovementComponents,
+            GroundTraceComponents,
+            TransformComponents,
+            VelocityComponents,
+            ColliderComponents
+            > 
+        ()) continue;
 
         bool onGround = groundTraceComponents.onGround[i];
         vec3 velocity = velocityComponents.velocity[i];

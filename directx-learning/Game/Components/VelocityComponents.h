@@ -21,4 +21,6 @@ struct VelocityComponents {
             velocity[index]
         };
     }
+
+    static int ID;
 };

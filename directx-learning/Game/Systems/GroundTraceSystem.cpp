@@ -8,9 +8,7 @@ void GroundTraceSystem::Execute(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.HasComponent<TransformComponents>())
-            continue;
-        if (!entity.HasComponent<GroundTraceComponents>())
+        if (!entity.HasComponents<TransformComponents, GroundTraceComponents>())
             continue;
 
         groundTraceComponents.onGroundLastFrame[i] = groundTraceComponents.onGround[i];

@@ -33,4 +33,6 @@ struct GroundTraceComponents {
             distance[index]
         };
     }
+
+    static int ID;
 };

@@ -50,7 +50,9 @@ void Game::Init() {
     groundTraceProperties.distance = 1.25f;
 
     auto desiredMovementProperties = entityManager_.RegisterComponent<DesiredMovementComponent>(PLAYER_ENTITY);
-    desiredMovementProperties.recievesFrom = RECIEVE_MOVEMENT_PLAYER;
+    desiredMovementProperties.recievesFrom = RecieveMovementFrom::Player;
+    desiredMovementProperties.supportedMoveModes.set(MoveMode::Default);
+    desiredMovementProperties.supportedMoveModes.set(MoveMode::Ski);
     
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 

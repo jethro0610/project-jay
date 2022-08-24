@@ -21,15 +21,24 @@ void MovementSystem::Execute(
             > 
         ()) continue;
 
-        bool onGround = groundTraceComponent.onGround[i];
         vec3 velocity = velocityComponent.velocity[i];
+        const float maxSpeed = desiredMovementComponent.maxSpeed[i];
+        const bool onGround = groundTraceComponent.onGround[i];
+        const vec3 desiredMovement = desiredMovementComponent.desiredMovement[i];
+        const MoveMode moveMode = desiredMovementComponent.moveMode[i];
 
         if (onGround) {
             velocity.y = 0.0f;
-            velocity.x += desiredMovementComponent.desiredMovement[i].x * ACCELERATION;
-            velocity.z += desiredMovementComponent.desiredMovement[i].z * ACCELERATION;
-            velocity.x *= SPEED_DECAY;
-            velocity.z *= SPEED_DECAY;
+            if (moveMode == MoveMode::Default) {
+                velocity.x += desiredMovement.x * ACCELERATION;
+                velocity.z += desiredMovement.z * ACCELERATION;
+                velocity.x *= SPEED_DECAY;
+                velocity.z *= SPEED_DECAY;
+            }
+            else if (moveMode == MoveMode::Ski) {
+                velocity.x = desiredMovement.x * maxSpeed * 2.0f;
+                velocity.z = desiredMovement.z * maxSpeed * 2.0f;
+            }
         }
         else {
             velocity.y -= GRAVITY_ACCELERATION;

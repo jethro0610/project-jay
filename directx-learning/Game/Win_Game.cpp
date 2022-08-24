@@ -77,6 +77,8 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
+    inputs_.ski = (windowsLayer_->heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.rightTrigger_);
+
     // TODO: clamp the values to total size 1
     if (windowsLayer_->heldKeys_['W'])
         inputs_.forwardInput += 1.0f;

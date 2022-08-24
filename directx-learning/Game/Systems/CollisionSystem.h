@@ -1,6 +1,6 @@
 #pragma once
 #include "../World.h"
-#include "../Components/ActiveEntityComponents.h"
+#include "../EntityConstants.h"
 #include "../Components/TransformComponents.h"
 #include "../Components/ColliderComponents.h"
 #include "../Components/GroundTraceComponents.h"
@@ -10,7 +10,7 @@
 namespace CollisionSystem {
     void Execute(
         World* world,
-        ActiveEntityComponents& activeComponents,
+        Entity* entities,
         TransformComponents& transformComponents,
         ColliderComponents& colliderComponents,
         GroundTraceComponents& groundTraceComponents

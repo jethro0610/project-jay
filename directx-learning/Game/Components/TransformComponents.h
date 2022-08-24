@@ -3,6 +3,11 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
+struct TransformCProperties {
+    Transform& transform;
+    bool& interpolate;
+};
+
 struct TransformComponents {
     Transform transform[MAX_ENTITIES];
     Transform transformLastUpdate[MAX_ENTITIES];
@@ -14,4 +19,13 @@ struct TransformComponents {
     };
     TransformComponents(const TransformComponents&) = delete;
     TransformComponents& operator=(const TransformComponents&) = delete;
+
+    TransformCProperties operator[](int index) {
+        return TransformCProperties {
+            transform[index],
+            interpolate[index]
+        };
+    }
+
+    static int ID;
 };

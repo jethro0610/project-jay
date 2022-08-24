@@ -4,7 +4,6 @@
 #include "../Types/Transform.h"
 #include "RenderTypes.h"
 
-#include "../Game/Components/ActiveEntityComponents.h"
 #include "../Game/Components/StaticModelComponents.h"
 #include "../Game/Components/TransformComponents.h"
 #include "../Game/Camera.h"
@@ -12,7 +11,6 @@
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
 struct RenderComponents {
-    ActiveEntityComponents& activeEntityComponents;
     StaticModelComponents& staticMeshComponents;
     TransformComponents& transformComponents;
 };

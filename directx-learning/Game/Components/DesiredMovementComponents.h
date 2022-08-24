@@ -3,8 +3,11 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
-#define RECIEVE_MOVEMENT_NONE -1
 #define RECIEVE_MOVEMENT_PLAYER 0
+
+struct DesiredMovementCProperties {
+    int& recievesFrom;
+};
 
 struct DesiredMovementComponents {
     vec3 desiredMovement[MAX_ENTITIES];
@@ -12,8 +15,16 @@ struct DesiredMovementComponents {
 
     DesiredMovementComponents() {
         std::fill_n(desiredMovement, MAX_ENTITIES, vec3(0.0f, 0.0f, 0.0f));
-        std::fill_n(recievesFrom, MAX_ENTITIES, RECIEVE_MOVEMENT_NONE);
+        std::fill_n(recievesFrom, MAX_ENTITIES, -1);
     };
     DesiredMovementComponents(const DesiredMovementComponents&) = delete;
     DesiredMovementComponents& operator=(const DesiredMovementComponents&) = delete;
+
+    DesiredMovementCProperties operator[](int index) {
+        return DesiredMovementCProperties{
+            recievesFrom[index]
+        };
+    }
+
+    static int ID;
 };

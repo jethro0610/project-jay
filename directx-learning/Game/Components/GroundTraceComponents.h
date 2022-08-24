@@ -3,7 +3,9 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
-#define NO_GROUND_TRACE -1.0f
+struct GroundTraceCProperties {
+    float& distance;
+};
 
 struct GroundTraceComponents {
     float distance[MAX_ENTITIES];
@@ -15,7 +17,7 @@ struct GroundTraceComponents {
     vec3 groundNormal[MAX_ENTITIES];
 
     GroundTraceComponents() {
-        std::fill_n(distance, MAX_ENTITIES, NO_GROUND_TRACE);
+        std::fill_n(distance, MAX_ENTITIES, 0.0f);
         std::fill_n(onGround, MAX_ENTITIES, false);
         std::fill_n(enteredGround, MAX_ENTITIES, false);
         std::fill_n(exitedGround, MAX_ENTITIES, false);
@@ -25,4 +27,12 @@ struct GroundTraceComponents {
     };
     GroundTraceComponents(const GroundTraceComponents&) = delete;
     GroundTraceComponents& operator=(const GroundTraceComponents&) = delete;
+
+    GroundTraceCProperties operator[](int index) {
+        return GroundTraceCProperties {
+            distance[index]
+        };
+    }
+
+    static int ID;
 };

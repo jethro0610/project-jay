@@ -3,6 +3,10 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
+struct VelocityCProperties {
+    vec3& velocity;
+};
+
 struct VelocityComponents {
     vec3 velocity[MAX_ENTITIES];
 
@@ -11,4 +15,12 @@ struct VelocityComponents {
     };
     VelocityComponents(const VelocityComponents&) = delete;
     VelocityComponents& operator=(const VelocityComponents&) = delete;
+
+    VelocityCProperties operator[](int index) {
+        return VelocityCProperties{
+            velocity[index]
+        };
+    }
+
+    static int ID;
 };

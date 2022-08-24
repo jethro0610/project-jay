@@ -1,6 +1,7 @@
 #include "MovementSystem.h"
 
 void MovementSystem::Execute(
+    Entity* entities,
     DesiredMovementComponents& desiredMovementComponents,
     GroundTraceComponents& groundTraceComponents,
     TransformComponents& transformComponents,
@@ -8,7 +9,15 @@ void MovementSystem::Execute(
     ColliderComponents& colliderComponents
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (desiredMovementComponents.recievesFrom[i] == RECIEVE_MOVEMENT_NONE)
+        if (!entities[i].componentMask.test(DesiredMovementComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(GroundTraceComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(TransformComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(VelocityComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(ColliderComponents::ID))
             continue;
 
         bool onGround = groundTraceComponents.onGround[i];

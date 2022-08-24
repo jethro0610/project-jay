@@ -2,18 +2,20 @@
 
 void CollisionSystem::Execute(
     World* world,
-    ActiveEntityComponents& activeComponents,
+    Entity* entities,
     TransformComponents& transformComponents,
     ColliderComponents& colliderComponents,
     GroundTraceComponents& groundTraceComponents
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!activeComponents.active[i])
+        if (!entities[i].componentMask.test(TransformComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(ColliderComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(GroundTraceComponents::ID))
             continue;
 
         float radius = colliderComponents.radius[i];
-        if (colliderComponents.radius[i] == -1.0f)
-            continue;
 
         // Raymarch towards the nearest point on the surface
         vec3 position = transformComponents.transform[i].position_;
@@ -38,7 +40,7 @@ void CollisionSystem::Execute(
         // pushed by the surface and moves in a straight line.
         // The shape is similar to a half sphere
         bool hitGroundCutoff = false;
-        if (groundTraceComponents.distance[i] != NO_GROUND_TRACE && groundTraceComponents.onGround[i]) {
+        if (groundTraceComponents.onGround[i]) {
             float groundCutoff = position.y - radius * GROUND_CUTOFF_SCALE;
             if (hitPosition.y < groundCutoff)
                 hitGroundCutoff = true;
@@ -48,10 +50,11 @@ void CollisionSystem::Execute(
         if (distance < radius && !hitGroundCutoff) {
             vec3 hitNormal = world->GetNormal(hitPosition);
             colliderComponents.hitNormal[i] = hitNormal;
+            colliderComponents.hit[i] = true;
             transformComponents.transform[i].position_ += hitNormal * (radius - distance);
         }
         else {
-            colliderComponents.hitNormal[i] = NO_HIT_NORMAL;
+            colliderComponents.hit[i] = false;
         }
     }
 }

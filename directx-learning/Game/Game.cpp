@@ -15,7 +15,7 @@ void Game::Init() {
     elapsedTime_ = 0.0f;
 
     // Create the camera and assign it to the renderer
-    camera_ = new Camera(&transformC_, 10.0f);
+    camera_ = new Camera(&entityManager_.GetComponent<TransformComponents>(), 10.0f);
     renderer_->camera_ = camera_;
 
     resourceManager_->LoadStaticModel("st_sphere");
@@ -34,13 +34,25 @@ void Game::Init() {
 
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
-    activeEntityC_.active[PLAYER_ENTITY] = true;
-    transformC_.transform[PLAYER_ENTITY] = spawnTransform;
-    transformC_.interpolate[PLAYER_ENTITY] = true;
-    colliderC_.radius[PLAYER_ENTITY] = 1.0f;
-    staticModelC_.model[PLAYER_ENTITY] = "st_sphere";
-    groundTraceC_.distance[PLAYER_ENTITY] = 1.25f;
-    desiredMovementC_.recievesFrom[PLAYER_ENTITY] = RECIEVE_MOVEMENT_PLAYER;
+    entityManager_.CreateEntity();
+
+    auto transformProperties = entityManager_.RegisterComponent<TransformComponents>(PLAYER_ENTITY);
+    transformProperties.transform = spawnTransform;
+    transformProperties.interpolate = true;
+
+    auto colliderProperties = entityManager_.RegisterComponent<ColliderComponents>(PLAYER_ENTITY);
+    colliderProperties.radius = 1.0f;
+
+    auto modelProperties = entityManager_.RegisterComponent<StaticModelComponents>(PLAYER_ENTITY);
+    modelProperties.model = "st_sphere";
+
+    auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponents>(PLAYER_ENTITY);
+    groundTraceProperties.distance = 1.25f;
+
+    auto desiredMovementProperties = entityManager_.RegisterComponent<DesiredMovementComponents>(PLAYER_ENTITY);
+    desiredMovementProperties.recievesFrom = RECIEVE_MOVEMENT_PLAYER;
+    
+    entityManager_.RegisterComponent<VelocityComponents>(PLAYER_ENTITY);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
 }
@@ -50,19 +62,48 @@ void Game::Update(float deltaTime, float elapsedTime) {
 
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
-        TransformSystem::UpdateLastTransforms(activeEntityC_, transformC_);
-        PlayerInputSystem::Execute(inputs_, camera_, desiredMovementC_);
-        GroundTraceSystem::Execute(world_, transformC_, groundTraceC_);
-        MovementSystem::Execute(desiredMovementC_, groundTraceC_, transformC_, velocityC_, colliderC_);
-        CollisionSystem::Execute(world_, activeEntityC_, transformC_, colliderC_, groundTraceC_);
+        TransformSystem::UpdateLastTransforms(
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponents>()
+        );
+        PlayerInputSystem::Execute(
+            inputs_, 
+            camera_, 
+            entityManager_.entities_,
+            entityManager_.GetComponent<DesiredMovementComponents>()
+        );
+        GroundTraceSystem::Execute(
+            world_, 
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponents>(),
+            entityManager_.GetComponent<GroundTraceComponents>()
+        );
+        MovementSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.GetComponent<DesiredMovementComponents>(),
+            entityManager_.GetComponent<GroundTraceComponents>(),
+            entityManager_.GetComponent<TransformComponents>(), 
+            entityManager_.GetComponent<VelocityComponents>(),
+            entityManager_.GetComponent<ColliderComponents>()
+        );
+        CollisionSystem::Execute(
+            world_, 
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponents>(),
+            entityManager_.GetComponent<ColliderComponents>(),
+            entityManager_.GetComponent<GroundTraceComponents>()
+        );
         timeAccumlulator_ -= TIMESTEP;
     }
-    TransformSystem::UpdateRenderTransforms(timeAccumlulator_, activeEntityC_, transformC_);
+    TransformSystem::UpdateRenderTransforms(
+        timeAccumlulator_, 
+        entityManager_.entities_,
+        entityManager_.GetComponent<TransformComponents>()
+    );
 
     RenderComponents renderComponents {
-        activeEntityC_,
-        staticModelC_,
-        transformC_
+        entityManager_.GetComponent<StaticModelComponents>(),
+        entityManager_.GetComponent<TransformComponents>()
     };
     renderer_->Render(deltaTime, elapsedTime, renderComponents);
 }

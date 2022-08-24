@@ -1,10 +1,11 @@
 #pragma once
+#include "../EntityConstants.h"
+#include "../TimeConstants.h"
 #include "../Components/DesiredMovementComponents.h"
 #include "../Components/GroundTraceComponents.h"
 #include "../Components/TransformComponents.h"
 #include "../Components/VelocityComponents.h"
 #include "../Components/ColliderComponents.h"
-#include "../TimeConstants.h"
 
 #define MAX_SPEED 15.0f
 #define FRICTION 0.1f
@@ -16,6 +17,7 @@
 
 namespace MovementSystem {
     void Execute(
+        Entity* entities,
         DesiredMovementComponents& desiredMovementComponents,
         GroundTraceComponents& groundTraceComponents,
         TransformComponents& transformComponents,

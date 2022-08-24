@@ -2,15 +2,18 @@
 
 void GroundTraceSystem::Execute(
     World* world,
+    Entity* entities,
     TransformComponents& transformComponents,
     GroundTraceComponents& groundTraceComponents
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        float traceDistance = groundTraceComponents.distance[i];
-        if (groundTraceComponents.distance[i] == NO_GROUND_TRACE)
+        if (!entities[i].componentMask.test(TransformComponents::ID))
+            continue;
+        if (!entities[i].componentMask.test(GroundTraceComponents::ID))
             continue;
 
         groundTraceComponents.onGroundLastFrame[i] = groundTraceComponents.onGround[i];
+        float traceDistance = groundTraceComponents.distance[i];
 
         // Raymarch towards the ground
         vec3 position = transformComponents.transform[i].position_;

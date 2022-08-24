@@ -2,14 +2,24 @@
 #include "EntityConstants.h"
 #include <string>
 
-#define NO_MODEL ""
+struct StaticModelCProperties {
+    std::string& model;
+};
 
 struct StaticModelComponents {
     std::string model[MAX_ENTITIES];
 
     StaticModelComponents() {
-        std::fill_n(model, MAX_ENTITIES, NO_MODEL);
+        std::fill_n(model, MAX_ENTITIES, "");
     };
     StaticModelComponents(const StaticModelComponents&) = delete;
     StaticModelComponents& operator=(const StaticModelComponents&) = delete;
+
+    StaticModelCProperties operator[](int index) {
+        return StaticModelCProperties {
+            model[index]
+        };
+    }
+
+    static int ID;
 };

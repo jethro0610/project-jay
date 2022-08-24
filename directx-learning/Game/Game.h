@@ -14,6 +14,7 @@
 #include "Components/Components.h"
 #include "Systems/Systems.h"
 #include "../Types/Inputs.h"
+#include "EntityManager.h"
 
 class Game {
 public:
@@ -51,13 +52,7 @@ private:
     float elapsedTime_;
     float timeAccumlulator_;
 
-    ActiveEntityComponents activeEntityC_;
-    TransformComponents transformC_;
-    ColliderComponents colliderC_;
-    StaticModelComponents staticModelC_;
-    GroundTraceComponents groundTraceC_;
-    VelocityComponents velocityC_;
-    DesiredMovementComponents desiredMovementC_;
+    EntityManager entityManager_;
 
     void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
     void UpdateInputs_P(float deltaTime);

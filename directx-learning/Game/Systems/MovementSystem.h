@@ -7,11 +7,6 @@
 #include "../Components/VelocityComponent.h"
 #include "../Components/ColliderComponent.h"
 
-#define MAX_SPEED 15.0f
-#define FRICTION 0.1f
-#define SPEED_DECAY (1.0f - FRICTION)
-#define ACCELERATION ((MAX_SPEED / SPEED_DECAY) - MAX_SPEED)
-
 #define GRAVITY_ACCELERATION 1.0f
 #define MAX_GRAVITY 60.0f
 

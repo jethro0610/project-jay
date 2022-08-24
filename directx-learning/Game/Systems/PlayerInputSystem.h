@@ -1,5 +1,5 @@
 #pragma once
-#include "../EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../Components/DesiredMovementComponents.h"
 #include "../Camera.h"
 #include "../../Types/Inputs.h"

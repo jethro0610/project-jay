@@ -1,6 +1,6 @@
 #pragma once
-#include "Components/Components.h"
-#include "EntityConstants.h"
+#include "Entity.h"
+#include "../Components/Components.h"
 #include <bitset>
 #include <tuple>
 #include <unordered_map>
@@ -10,14 +10,13 @@ public:
     Entity entities_[MAX_ENTITIES];
 
     int CreateEntity();
-    //void RegisterComponent(int targetEntity, int componentId);
 
     template<class T>
     auto RegisterComponent(int targetEntity) {
-        assert(entities_[targetEntity].alive);
-        assert(!entities_[targetEntity].componentMask.test(T::ID));
+        assert(entities_[targetEntity].alive_);
+        assert(!entities_[targetEntity].componentMask_.test(GetComponentID<T>()));
 
-        entities_[targetEntity].componentMask.set(T::ID);
+        entities_[targetEntity].componentMask_.set(GetComponentID<T>());
         return std::get<T>(components_)[targetEntity];
     }
 

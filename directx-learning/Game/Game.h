@@ -14,7 +14,7 @@
 #include "Components/Components.h"
 #include "Systems/Systems.h"
 #include "../Types/Inputs.h"
-#include "EntityManager.h"
+#include "Entity/EntityManager.h"
 
 class Game {
 public:

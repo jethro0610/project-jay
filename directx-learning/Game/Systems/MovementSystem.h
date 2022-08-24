@@ -1,5 +1,5 @@
 #pragma once
-#include "../EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../TimeConstants.h"
 #include "../Components/DesiredMovementComponents.h"
 #include "../Components/GroundTraceComponents.h"

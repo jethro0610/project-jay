@@ -1,6 +1,6 @@
 #pragma once
 #include "../World.h"
-#include "../EntityConstants.h"
+#include "../Entity/Entity.h"
 #include "../Components/TransformComponents.h"
 #include "../Components/ColliderComponents.h"
 #include "../Components/GroundTraceComponents.h"

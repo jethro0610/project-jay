@@ -2,7 +2,8 @@
 
 void TransformSystem::UpdateLastTransforms(Entity* entities, TransformComponents& transformComponents) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].componentMask.test(TransformComponents::ID))
+        const Entity& entity = entities[i];
+        if (!entity.HasComponent<TransformComponents>())
             continue;
 
         transformComponents.transformLastUpdate[i] = transformComponents.transform[i];
@@ -13,7 +14,8 @@ void TransformSystem::UpdateRenderTransforms(float interpTime, Entity* entities,
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].componentMask.test(TransformComponents::ID))
+        const Entity& entity = entities[i];
+        if (!entity.HasComponent<TransformComponents>())
             continue;
 
         if (transformComponents.interpolate[i]) {

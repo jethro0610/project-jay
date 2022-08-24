@@ -23,6 +23,4 @@ struct ColliderComponents {
             radius[index]
         };
     }
-
-    static int ID;
 };

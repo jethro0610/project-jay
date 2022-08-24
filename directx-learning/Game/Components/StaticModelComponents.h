@@ -20,6 +20,4 @@ struct StaticModelComponents {
             model[index]
         };
     }
-
-    static int ID;
 };

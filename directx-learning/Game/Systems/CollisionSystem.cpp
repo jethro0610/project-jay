@@ -8,11 +8,12 @@ void CollisionSystem::Execute(
     GroundTraceComponents& groundTraceComponents
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].componentMask.test(TransformComponents::ID))
+        const Entity& entity = entities[i];
+        if (!entity.HasComponent<TransformComponents>())
             continue;
-        if (!entities[i].componentMask.test(ColliderComponents::ID))
+        if (!entity.HasComponent<ColliderComponents>())
             continue;
-        if (!entities[i].componentMask.test(GroundTraceComponents::ID))
+        if (!entity.HasComponent<GroundTraceComponents>())
             continue;
 
         float radius = colliderComponents.radius[i];

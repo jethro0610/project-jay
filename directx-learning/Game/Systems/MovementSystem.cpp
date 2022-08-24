@@ -9,15 +9,16 @@ void MovementSystem::Execute(
     ColliderComponents& colliderComponents
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].componentMask.test(DesiredMovementComponents::ID))
+        const Entity& entity = entities[i];
+        if (!entity.HasComponent<DesiredMovementComponents>())
             continue;
-        if (!entities[i].componentMask.test(GroundTraceComponents::ID))
+        if (!entity.HasComponent<GroundTraceComponents>())
             continue;
-        if (!entities[i].componentMask.test(TransformComponents::ID))
+        if (!entity.HasComponent<TransformComponents>())
             continue;
-        if (!entities[i].componentMask.test(VelocityComponents::ID))
+        if (!entity.HasComponent<VelocityComponents>())
             continue;
-        if (!entities[i].componentMask.test(ColliderComponents::ID))
+        if (!entity.HasComponent<ColliderComponents>())
             continue;
 
         bool onGround = groundTraceComponents.onGround[i];

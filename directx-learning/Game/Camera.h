@@ -9,7 +9,7 @@ class Camera {
 public:
     Camera(TransformComponent* transformComponent, float trackDistance, vec3 startPosition = vec3(0.0f, 0.0f, 0.0f));
     Camera(TransformComponent* transformComponent, float trackDistance, int trackEntity);
-    Transform firstPersonTransform_;
+    Transform transform_;
     
     float lookX_;
     float lookY_;

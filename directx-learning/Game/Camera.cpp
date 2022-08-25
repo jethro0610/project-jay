@@ -2,7 +2,7 @@
 
 Camera::Camera(TransformComponent* transformComponent, float trackDistance, vec3 startPosition) {
     transformComponent_ = transformComponent;
-    firstPersonTransform_.position_ = startPosition;
+    transform_.position_ = startPosition;
     trackEntity_ = -1;
     lookX_ = 0.0f;
     lookY_ = 0.0f;
@@ -19,17 +19,17 @@ Camera::Camera(TransformComponent* transformComponent, float trackDistance, int 
 
 mat4 Camera::GetViewMatrix() const {
     if (trackEntity_ == NO_TRACK) {
-        vec3 forward = rotate(firstPersonTransform_.rotation_, Transform::worldForward);
-        vec3 up = rotate(firstPersonTransform_.rotation_, Transform::worldUp);
+        vec3 forward = rotate(transform_.rotation_, Transform::worldForward);
+        vec3 up = rotate(transform_.rotation_, Transform::worldUp);
 
         return lookAtRH(
-            firstPersonTransform_.position_,
-            firstPersonTransform_.position_ + forward,
+            transform_.position_,
+            transform_.position_ + forward,
             up
         );
     }
     else {
-        vec3 trackPosition = transformComponent_->renderTransform[trackEntity_].position_;
+        vec3 trackPosition = transform_.position_;
         quat lookRotation = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forward = lookRotation * Transform::worldForward;
         vec3 up = lookRotation * Transform::worldUp;
@@ -50,9 +50,19 @@ void Camera::Update(float deltaTime, Inputs inputs) {
 
     if (trackEntity_ == NO_TRACK) {
         // Move and use first person look when there is no entity to track
-        firstPersonTransform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
-        vec3 forwardMovement = firstPersonTransform_.GetForwardVector() * inputs.forwardInput * 15.0f * deltaTime;
-        vec3 rightMovement = firstPersonTransform_.GetRightVector() * inputs.sideInput * 15.0f * deltaTime;
-        firstPersonTransform_.position_ += forwardMovement + rightMovement;
+        transform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
+        vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 15.0f * deltaTime;
+        vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 15.0f * deltaTime;
+        transform_.position_ += forwardMovement + rightMovement;
+    }
+    else {
+        vec3 targetPosition = transformComponent_[trackEntity_].renderTransform->position_;
+        vec3 lerpPosition = lerp(transform_.position_, targetPosition, 1 - powf(0.00000015f, deltaTime));
+        if (distance(targetPosition, lerpPosition) > 3.0f) {
+            vec3 delta = normalize(lerpPosition - targetPosition) * 3.0f;
+            lerpPosition = targetPosition + delta;
+        }
+
+        transform_.position_ = lerpPosition;
     }
 }

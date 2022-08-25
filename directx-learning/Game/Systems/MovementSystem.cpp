@@ -35,15 +35,20 @@ void MovementSystem::Execute(
         const vec3 desiredMovement = movementComponent.desiredMovement[i];
         const MoveMode moveMode = movementComponent.moveMode[i];
         const float acceleration = ((speed / speedDecay) - speed);
+        const vec3 groundNormal = groundTraceComponent.groundNormal[i];
 
-        speed = length(vec2(velocity.x, velocity.z));
+        float planarVelocitySize = length(vec2(velocity.x, velocity.z));
+        speed = min(maxSpeed, planarVelocitySize); // Instant speed cancel
+        //if (planarVelocitySize >= speed)
+            //speed = min(maxSpeed, planarVelocitySize);
+
         switch (moveMode) {
         case MoveMode::Default:
-            CalculateDefaultMovement(desiredMovement, acceleration, speedDecay, momentumDecay, speed, velocity, rotation);
+            CalculateDefaultMovement(desiredMovement, acceleration, speedDecay, momentumDecay, minSpeed, maxSpeed, speed, velocity, rotation);
             break;
 
         case MoveMode::Ski:
-            CalculateSkiMovement(desiredMovement, speed, velocity, rotation);
+            CalculateSkiMovement(desiredMovement, groundNormal, minSpeed, maxSpeed, speed, velocity, rotation);
             break;
 
         default:
@@ -55,10 +60,11 @@ void MovementSystem::Execute(
             velocity.y -= GRAVITY_ACCELERATION;
             velocity.y = -min(-velocity.y, MAX_GRAVITY);
         }
-        speed = clamp(speed, minSpeed, maxSpeed);
-        const float frictionLerp = 1.0f - (speed - minSpeed) / (maxSpeed - minSpeed);
+        const float frictionCapSpeed = maxSpeed * 0.25f;
+        const float frictionLerp = 1.0f - (min(speed, frictionCapSpeed) - minSpeed) / (frictionCapSpeed - minSpeed);
         friction = lerp(minFriction, maxFriction, frictionLerp);
-
+        DEBUGLOG(std::to_string(friction));
+        DEBUGLOG(std::to_string(speed) + '\n');
         // Apply the velocity
         transformComponent.transform[i].position_ += velocity * TIMESTEP;
         transformComponent.transform[i].rotation_ = rotation;
@@ -75,6 +81,10 @@ void MovementSystem::Execute(
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.
     // To have slope slideoffs, it's necessary to get the velocity along the normal of the surface.
     // Maybe a projection would work?
+
+    // NOTE: One way to remedy instant speed cancelling is to rotate the velocity by the desired movement
+    // then set the friction to a low value. Another may be to have state for stopping and pivoting, 
+    // so the entity can carry its momentum in said state
 }
 
 void MovementSystem::CalculateDefaultMovement(
@@ -82,6 +92,8 @@ void MovementSystem::CalculateDefaultMovement(
     const float& acceleration,
     const float& speedDecay,
     const float& momentumDecay,
+    const float& minSpeed,
+    const float& maxSpeed,
     float& speed,
     vec3& velocity,
     quat& rotation
@@ -94,30 +106,44 @@ void MovementSystem::CalculateDefaultMovement(
         quat desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
         rotation = slerp(rotation, desiredRotation, 0.25f);
     }
+
     speed -= momentumDecay;
+    speed = max(speed, minSpeed);
 }
 
 void MovementSystem::CalculateSkiMovement(
     const vec3& desiredMovement, 
+    const vec3& groundNormal,
+    const float& minSpeed,
+    const float& maxSpeed,
     float &speed, 
     vec3& velocity, 
     quat& rotation
 ) {
-    speed += 0.15f;
-    rotation = quatLookAtRH(normalize(velocity), Transform::worldUp);
-
-    quat skiDirection;
+    quat skiRotation;
     if (length(desiredMovement) > 0.001f) {
-        skiDirection = quatLookAtRH(normalize(vec3(velocity.x, 0.0f, velocity.z)), Transform::worldUp);
-        quat desiredSkiDirection = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-        skiDirection = slerp(skiDirection, desiredSkiDirection, 0.025f);
-        rotation = skiDirection;
+        skiRotation = quatLookAtRH(normalize(vec3(velocity.x, 0.0f, velocity.z)), Transform::worldUp);
+        quat desiredSkiRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+        skiRotation = slerp(skiRotation, desiredSkiRotation, 0.02f);
+        rotation = slerp(rotation, skiRotation, 0.02f);
     }
-    else {
-        skiDirection = rotation;
-    }
-    vec3 skiVector = skiDirection * Transform::worldForward;
+    else 
+        skiRotation = rotation;
 
-    velocity.x = skiVector.x * speed;
-    velocity.z = skiVector.z * speed;
+    vec3 skiDirection = skiRotation * Transform::worldForward;
+    float skiBoost = 3.0f * dot(skiDirection, groundNormal) * (speed/ maxSpeed);
+    float skiMultiplier = 1.0f;
+    if (skiBoost >= 0.0f) {
+        skiMultiplier = (maxSpeed - min(speed, maxSpeed)) / maxSpeed;
+        skiMultiplier = max(skiMultiplier, 0.45f);
+        skiBoost *= skiMultiplier;
+    }
+    else
+        skiMultiplier = 1.25f;
+
+    speed += skiBoost * skiMultiplier;
+    speed = clamp(speed, 0.0f, maxSpeed);
+
+    velocity.x = skiDirection.x * speed;
+    velocity.z = skiDirection.z * speed;
 }

@@ -25,12 +25,17 @@ namespace MovementSystem {
         const float& acceleration, 
         const float& speedDecay, 
         const float& momentumDecay,
+        const float& minSpeed,
+        const float& maxSpeed,
         float& speed, 
         vec3& velocity, 
         quat& rotation
     );
     void CalculateSkiMovement(
         const vec3& desiredMovement, 
+        const vec3& groundNormal,
+        const float& minSpeed,
+        const float& maxSpeed,
         float& speed, 
         vec3& velocity, 
         quat& rotation

@@ -3,11 +3,11 @@
 #include <bitset>
 #include <algorithm>
 
-#define DEFAULT_MIN_SPEED 15.0f
-#define DEFAULT_MAX_SPEED 50.0f
-#define DEFAULT_MIN_FRICTION 0.025f
+#define DEFAULT_MIN_SPEED 10.0f
+#define DEFAULT_MAX_SPEED 80.0f
+#define DEFAULT_MIN_FRICTION 0.015f
 #define DEFAULT_MAX_FRICTION 0.1f
-#define DEFAULT_MOMENTUM_DECAY 0.005f
+#define DEFAULT_MOMENTUM_DECAY 0.15f
 
 enum RecieveMovementFrom {
     Player

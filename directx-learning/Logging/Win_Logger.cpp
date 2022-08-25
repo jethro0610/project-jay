@@ -1,6 +1,7 @@
 #ifdef _DEBUG
 #include "Logger.h"
 #include <assert.h>
+#include <Windows.h>
 #include <ctime>
 
 Logger* Logger::logger_ = nullptr;
@@ -25,5 +26,6 @@ Logger::~Logger() {
 
 void Logger::Out_P(std::string text) {
     *logger_->outfile_ << text << '\n';
+    OutputDebugString((text + '\n').c_str());
 }
 #endif

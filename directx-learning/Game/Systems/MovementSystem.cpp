@@ -39,9 +39,7 @@ void MovementSystem::Execute(
         const vec3 groundNormal = groundTraceComponent.groundNormal[i];
 
         float planarVelocitySize = length(vec2(velocity.x, velocity.z));
-        speed = min(maxSpeed, planarVelocitySize); // Instant speed cancel
-        //if (planarVelocitySize >= speed)
-            //speed = min(maxSpeed, planarVelocitySize);
+        speed = min(maxSpeed, planarVelocitySize);
 
         switch (moveMode) {
         case MoveMode::Default:
@@ -130,12 +128,11 @@ void MovementSystem::CalculateSkiMovement(
         skiRotation = rotation;
 
     vec3 skiDirection = skiRotation * Transform::worldForward;
-    float skiBoost = SKI_ACCELERATION * dot(skiDirection, groundNormal) * (speed/ maxSpeed);
+    float skiBoost = SKI_ACCELERATION * dot(skiDirection, groundNormal) * (speed / maxSpeed);
     float skiMultiplier = 1.0f;
     if (skiBoost >= 0.0f) {
         skiMultiplier = (maxSpeed - min(speed, maxSpeed)) / maxSpeed;
         skiMultiplier = max(skiMultiplier, MINIMUM_SKI_ACCELERATION_SCALING);
-        skiBoost *= skiMultiplier;
     }
     else
         skiMultiplier = SKI_UPSLOPE_SCALING;

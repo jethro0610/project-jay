@@ -3,7 +3,7 @@
 #include <bitset>
 #include <algorithm>
 
-#define DEFAULT_MIN_SPEED 10.0f
+#define DEFAULT_MIN_SPEED 12.0f
 #define DEFAULT_MAX_SPEED 80.0f
 #define DEFAULT_MIN_FRICTION 0.015f
 #define DEFAULT_MAX_FRICTION 0.1f
@@ -11,10 +11,10 @@
 #define FRICTION_SPEED_CAP_PERCENT 0.35f
 #define DEFAULT_ROTATION_SPEED 0.25f
 
-#define SKI_ACCELERATION 3.0f
+#define SKI_ACCELERATION 2.5f
 #define SKI_ROTATION_SPEED 0.02f
 #define SKI_UPSLOPE_SCALING 1.5f
-#define MINIMUM_SKI_ACCELERATION_SCALING 0.45f
+#define MINIMUM_SKI_ACCELERATION_SCALING 0.25f
 
 enum RecieveMovementFrom {
     Player

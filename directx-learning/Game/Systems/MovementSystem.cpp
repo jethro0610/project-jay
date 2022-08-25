@@ -29,6 +29,7 @@ void MovementSystem::Execute(
         const float maxSpeed = movementComponent.maxSpeed[i];
         const float minFriction = movementComponent.minFriction[i];
         const float maxFriction = movementComponent.maxFriction[i];
+        const float frictionCapSpeed = maxSpeed * FRICTION_SPEED_CAP_PERCENT;
         const float momentumDecay = movementComponent.momentumDecay[i];
         const float speedDecay = 1.0f - friction;
         const bool onGround = groundTraceComponent.onGround[i];
@@ -60,11 +61,9 @@ void MovementSystem::Execute(
             velocity.y -= GRAVITY_ACCELERATION;
             velocity.y = -min(-velocity.y, MAX_GRAVITY);
         }
-        const float frictionCapSpeed = maxSpeed * 0.25f;
         const float frictionLerp = 1.0f - (min(speed, frictionCapSpeed) - minSpeed) / (frictionCapSpeed - minSpeed);
         friction = lerp(minFriction, maxFriction, frictionLerp);
-        DEBUGLOG(std::to_string(friction));
-        DEBUGLOG(std::to_string(speed) + '\n');
+
         // Apply the velocity
         transformComponent.transform[i].position_ += velocity * TIMESTEP;
         transformComponent.transform[i].rotation_ = rotation;
@@ -104,7 +103,7 @@ void MovementSystem::CalculateDefaultMovement(
     velocity.z *= speedDecay;
     if (length(desiredMovement) > 0.001f) {
         quat desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-        rotation = slerp(rotation, desiredRotation, 0.25f);
+        rotation = slerp(rotation, desiredRotation, DEFAULT_ROTATION_SPEED);
     }
 
     speed -= momentumDecay;
@@ -124,22 +123,22 @@ void MovementSystem::CalculateSkiMovement(
     if (length(desiredMovement) > 0.001f) {
         skiRotation = quatLookAtRH(normalize(vec3(velocity.x, 0.0f, velocity.z)), Transform::worldUp);
         quat desiredSkiRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-        skiRotation = slerp(skiRotation, desiredSkiRotation, 0.02f);
-        rotation = slerp(rotation, skiRotation, 0.02f);
+        skiRotation = slerp(skiRotation, desiredSkiRotation, SKI_ROTATION_SPEED);
+        rotation = slerp(rotation, skiRotation, DEFAULT_ROTATION_SPEED);
     }
     else 
         skiRotation = rotation;
 
     vec3 skiDirection = skiRotation * Transform::worldForward;
-    float skiBoost = 3.0f * dot(skiDirection, groundNormal) * (speed/ maxSpeed);
+    float skiBoost = SKI_ACCELERATION * dot(skiDirection, groundNormal) * (speed/ maxSpeed);
     float skiMultiplier = 1.0f;
     if (skiBoost >= 0.0f) {
         skiMultiplier = (maxSpeed - min(speed, maxSpeed)) / maxSpeed;
-        skiMultiplier = max(skiMultiplier, 0.45f);
+        skiMultiplier = max(skiMultiplier, MINIMUM_SKI_ACCELERATION_SCALING);
         skiBoost *= skiMultiplier;
     }
     else
-        skiMultiplier = 1.25f;
+        skiMultiplier = SKI_UPSLOPE_SCALING;
 
     speed += skiBoost * skiMultiplier;
     speed = clamp(speed, 0.0f, maxSpeed);

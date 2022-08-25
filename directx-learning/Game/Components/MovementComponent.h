@@ -5,9 +5,9 @@
 
 #define DEFAULT_MIN_SPEED 15.0f
 #define DEFAULT_MAX_SPEED 50.0f
-#define DEFAULT_MIN_FRICTION 0.001f
+#define DEFAULT_MIN_FRICTION 0.025f
 #define DEFAULT_MAX_FRICTION 0.1f
-#define DEFAULT_MOMENTUM_DECAY 0.05f
+#define DEFAULT_MOMENTUM_DECAY 0.005f
 
 enum RecieveMovementFrom {
     Player
@@ -19,7 +19,7 @@ enum MoveMode {
     NumberOfModes
 };
 
-struct DesiredMovementCProperties {
+struct MovementCProperties {
     RecieveMovementFrom& recievesFrom;
     std::bitset<MoveMode::NumberOfModes>& supportedMoveModes;
     float& speed;
@@ -31,7 +31,7 @@ struct DesiredMovementCProperties {
     float& momentumDecay;
 };
 
-struct DesiredMovementComponent {
+struct MovementComponent {
     vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
     std::bitset<MoveMode::NumberOfModes> supportedMoveModes[MAX_ENTITIES];
@@ -44,7 +44,7 @@ struct DesiredMovementComponent {
     float momentumDecay[MAX_ENTITIES];
     RecieveMovementFrom recievesFrom[MAX_ENTITIES];
 
-    DesiredMovementComponent() {
+    MovementComponent() {
         std::fill_n(desiredMovement, MAX_ENTITIES, vec3(0.0f, 0.0f, 0.0f));
         std::fill_n(moveMode, MAX_ENTITIES, MoveMode::Default);
         std::fill_n(speed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
@@ -56,11 +56,11 @@ struct DesiredMovementComponent {
         std::fill_n(momentumDecay, MAX_ENTITIES, DEFAULT_MOMENTUM_DECAY);
         std::fill_n(recievesFrom, MAX_ENTITIES, RecieveMovementFrom::Player);
     };
-    DesiredMovementComponent(const DesiredMovementComponent&) = delete;
-    DesiredMovementComponent& operator=(const DesiredMovementComponent&) = delete;
+    MovementComponent(const MovementComponent&) = delete;
+    MovementComponent& operator=(const MovementComponent&) = delete;
 
-    DesiredMovementCProperties operator[](int index) {
-        return DesiredMovementCProperties {
+    MovementCProperties operator[](int index) {
+        return MovementCProperties {
             recievesFrom[index],
             supportedMoveModes[index],
             speed[index],

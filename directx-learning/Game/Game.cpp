@@ -15,7 +15,7 @@ void Game::Init() {
     elapsedTime_ = 0.0f;
 
     // Create the camera and assign it to the renderer
-    camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 10.0f);
+    camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
     renderer_->camera_ = camera_;
 
     resourceManager_->LoadStaticModel("st_sphere");
@@ -44,15 +44,15 @@ void Game::Init() {
     colliderProperties.radius = 1.0f;
 
     auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
-    modelProperties.model = "st_sphere";
+    modelProperties.model = "st_toruscone";
 
     auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
-    groundTraceProperties.distance = 1.25f;
+    groundTraceProperties.distance = 2.0f;
 
-    auto desiredMovementProperties = entityManager_.RegisterComponent<DesiredMovementComponent>(PLAYER_ENTITY);
-    desiredMovementProperties.recievesFrom = RecieveMovementFrom::Player;
-    desiredMovementProperties.supportedMoveModes.set(MoveMode::Default);
-    desiredMovementProperties.supportedMoveModes.set(MoveMode::Ski);
+    auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
+    movementProperties.recievesFrom = RecieveMovementFrom::Player;
+    movementProperties.supportedMoveModes.set(MoveMode::Default);
+    movementProperties.supportedMoveModes.set(MoveMode::Ski);
     
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
@@ -72,21 +72,21 @@ void Game::Update(float deltaTime, float elapsedTime) {
             inputs_, 
             camera_, 
             entityManager_.entities_,
-            entityManager_.GetComponent<DesiredMovementComponent>()
+            entityManager_.GetComponent<MovementComponent>()
+        );
+        MovementSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.GetComponent<MovementComponent>(),
+            entityManager_.GetComponent<GroundTraceComponent>(),
+            entityManager_.GetComponent<TransformComponent>(), 
+            entityManager_.GetComponent<VelocityComponent>(),
+            entityManager_.GetComponent<ColliderComponent>()
         );
         GroundTraceSystem::Execute(
             world_, 
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
-        );
-        MovementSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.GetComponent<DesiredMovementComponent>(),
-            entityManager_.GetComponent<GroundTraceComponent>(),
-            entityManager_.GetComponent<TransformComponent>(), 
-            entityManager_.GetComponent<VelocityComponent>(),
-            entityManager_.GetComponent<ColliderComponent>()
         );
         CollisionSystem::Execute(
             world_, 

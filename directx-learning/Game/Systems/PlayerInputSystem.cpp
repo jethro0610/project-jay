@@ -1,7 +1,7 @@
 #include "PlayerInputSystem.h"
 
-void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities, DesiredMovementComponent& desiredMovementComponent) {
-    assert(desiredMovementComponent.recievesFrom[PLAYER_ENTITY] == RecieveMovementFrom::Player);
+void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities, MovementComponent& movementComponent) {
+    assert(movementComponent.recievesFrom[PLAYER_ENTITY] == RecieveMovementFrom::Player);
 
     quat cameraPlanarRotation = quat(vec3(0.0f, camera->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
@@ -11,12 +11,12 @@ void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities,
     if (length(desiredMovement) > 1.0f)
         desiredMovement = normalize(desiredMovement);
 
-    desiredMovementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
+    movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
 
     if (inputs.ski) {
-        desiredMovementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
     }
     else {
-        desiredMovementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     }
 }

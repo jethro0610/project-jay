@@ -3,7 +3,7 @@
 static int componentCounter = 0;
 
 ASSIGN_COMPONENT_ID(ColliderComponent);
-ASSIGN_COMPONENT_ID(DesiredMovementComponent);
+ASSIGN_COMPONENT_ID(MovementComponent);
 ASSIGN_COMPONENT_ID(GroundTraceComponent);
 ASSIGN_COMPONENT_ID(StaticModelComponent);
 ASSIGN_COMPONENT_ID(TransformComponent);

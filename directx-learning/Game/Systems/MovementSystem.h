@@ -1,7 +1,7 @@
 #pragma once
 #include "../Entity/Entity.h"
 #include "../TimeConstants.h"
-#include "../Components/DesiredMovementComponent.h"
+#include "../Components/MovementComponent.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
@@ -13,10 +13,26 @@
 namespace MovementSystem {
     void Execute(
         Entity* entities,
-        DesiredMovementComponent& desiredMovementComponent,
+        MovementComponent& movementComponent,
         GroundTraceComponent& groundTraceComponent,
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent,
         ColliderComponent& colliderComponent
+    );
+
+    void CalculateDefaultMovement(
+        const vec3& desiredMovement, 
+        const float& acceleration, 
+        const float& speedDecay, 
+        const float& momentumDecay,
+        float& speed, 
+        vec3& velocity, 
+        quat& rotation
+    );
+    void CalculateSkiMovement(
+        const vec3& desiredMovement, 
+        float& speed, 
+        vec3& velocity, 
+        quat& rotation
     );
 }

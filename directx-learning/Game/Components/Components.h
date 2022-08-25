@@ -2,6 +2,6 @@
 #include "ColliderComponent.h"
 #include "TransformComponent.h"
 #include "StaticModelComponent.h"
-#include "DesiredMovementComponent.h"
+#include "MovementComponent.h"
 #include "GroundTraceComponent.h"
 #include "VelocityComponent.h"

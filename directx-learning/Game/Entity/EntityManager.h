@@ -33,6 +33,6 @@ private:
         StaticModelComponent,
         GroundTraceComponent,
         VelocityComponent,
-        DesiredMovementComponent
+        MovementComponent
     > components_;
 };

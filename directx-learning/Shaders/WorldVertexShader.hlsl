@@ -1,6 +1,6 @@
-#include "WorldVertexInput.hlsl"
-#include "VertexOutput.hlsl"
-#include "ConstantBuffers.hlsl"
+#include "WorldVertexInput.hlsli"
+#include "VertexOutput.hlsli"
+#include "ConstantBuffers.hlsli"
 
 VertOut main(WorldVertIn inVert) {
     VertOut output;

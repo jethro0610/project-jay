@@ -1,6 +1,6 @@
-#include "StaticVertexInput.hlsl"
-#include "VertexOutput.hlsl"
-#include "ConstantBuffers.hlsl"
+#include "StaticVertexInput.hlsli"
+#include "VertexOutput.hlsli"
+#include "ConstantBuffers.hlsli"
 
 VertOut main(StaticVertIn inVert) {
     VertOut output;

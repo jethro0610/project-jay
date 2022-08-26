@@ -1,6 +1,6 @@
-#include "SkeletalVertexInput.hlsl"
-#include "VertexOutput.hlsl"
-#include "ConstantBuffers.hlsl"
+#include "SkeletalVertexInput.hlsli"
+#include "VertexOutput.hlsli"
+#include "ConstantBuffers.hlsli"
 
 VertOut main(SkeletalVertIn inVert) {
     VertOut output;

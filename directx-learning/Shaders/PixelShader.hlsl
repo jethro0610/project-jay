@@ -1,8 +1,8 @@
 Texture2D textures[2];
 SamplerState texSampler;
 
-#include "VertexOutput.hlsl"
-#include "TriPlanar.hlsl"
+#include "VertexOutput.hlsli"
+#include "TriPlanar.hlsli"
 
 float4 main(VertOut outVert) : SV_TARGET {
     //float4 pixelColor = textures[0].Sample(texSampler, outVert.uv * 3.0f);

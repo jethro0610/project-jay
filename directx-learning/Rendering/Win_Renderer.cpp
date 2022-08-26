@@ -16,8 +16,7 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
     dxResources->LoadPixelShader("PixelShader");
-    dxResources->LoadTexture("testTex");
-    dxResources->LoadTexture("testNorm");
+    dxResources->LoadTexture("gridTex");
 }
 
 void Renderer::RenderWorld_P() {
@@ -39,12 +38,11 @@ void Renderer::RenderWorld_P() {
 
     // Get the pixel shader
     PSResource psResource = dxResources->pixelShaders_["PixelShader"];
-
-    // Set the vertex shader and update its constant buffers
-    context->VSSetShader(vsResource.shader, nullptr, 0);
-
-    // Set the pixel shader
     context->PSSetShader(psResource.shader, nullptr, 0);
+
+    TextureResource texture = dxResources->textures_["gridTex"];
+    context->PSSetShaderResources(0, 1, &texture.texture);
+    context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -71,12 +69,11 @@ void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const Sta
 
     // Get the pixel shader
     PSResource psResource = dxResources->pixelShaders_["PixelShader"];
-
-    // Set the vertex shader and update its constant buffers
-    context->VSSetShader(vsResource.shader, nullptr, 0);
-
-    // Set the pixel shader
     context->PSSetShader(psResource.shader, nullptr, 0);
+
+    TextureResource texture = dxResources->textures_["gridTex"];
+    context->PSSetShaderResources(0, 1, &texture.texture);
+    context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

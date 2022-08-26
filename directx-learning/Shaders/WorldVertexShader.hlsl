@@ -5,6 +5,7 @@
 VertOut main(WorldVertIn inVert) {
     VertOut output;
     output.position = mul(worldViewProj, float4(inVert.position, 1.0));
+    output.worldPosition = inVert.position;
     output.normal = inVert.normal;
     output.tangent = float3(0.0f, 0.0f, 0.0f);
     output.bitangent = float3(0.0f, 0.0f, 0.0f);

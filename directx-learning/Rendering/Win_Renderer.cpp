@@ -17,6 +17,7 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
     dxResources->LoadPixelShader("PixelShader");
     dxResources->LoadTexture("grass_c");
+    dxResources->LoadTexture("grass_n");
     dxResources->LoadTexture("marble_c");
     dxResources->LoadTexture("grid_c");
 }
@@ -43,10 +44,11 @@ void Renderer::RenderWorld_P() {
     context->PSSetShader(psResource.shader, nullptr, 0);
 
     TextureResource grass = dxResources->textures_["grass_c"];
+    TextureResource grassNormal = dxResources->textures_["grass_n"];
     TextureResource macro = dxResources->textures_["marble_c"];
 	
-    ID3D11ShaderResourceView* textures[2] = {grass.texture, macro.texture};
-	context->PSSetShaderResources(0, 2, textures);
+    ID3D11ShaderResourceView* textures[3] = {grass.texture, grassNormal.texture, macro.texture};
+    context->PSSetShaderResources(0, 3, textures);
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 	
     // Set the vertex and index buffers to be drawn

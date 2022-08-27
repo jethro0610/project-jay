@@ -16,7 +16,9 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
     dxResources->LoadPixelShader("PixelShader");
-    dxResources->LoadTexture("gridTex");
+    dxResources->LoadTexture("grass_c");
+    dxResources->LoadTexture("marble_c");
+    dxResources->LoadTexture("grid_c");
 }
 
 void Renderer::RenderWorld_P() {
@@ -40,10 +42,13 @@ void Renderer::RenderWorld_P() {
     PSResource psResource = dxResources->pixelShaders_["PixelShader"];
     context->PSSetShader(psResource.shader, nullptr, 0);
 
-    TextureResource texture = dxResources->textures_["gridTex"];
-    context->PSSetShaderResources(0, 1, &texture.texture);
+    TextureResource grass = dxResources->textures_["grass_c"];
+    TextureResource macro = dxResources->textures_["marble_c"];
+	
+    ID3D11ShaderResourceView* textures[2] = {grass.texture, macro.texture};
+	context->PSSetShaderResources(0, 2, textures);
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
-
+	
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->IASetInputLayout(vsResource.layout);
@@ -71,8 +76,8 @@ void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const Sta
     PSResource psResource = dxResources->pixelShaders_["PixelShader"];
     context->PSSetShader(psResource.shader, nullptr, 0);
 
-    TextureResource texture = dxResources->textures_["gridTex"];
-    context->PSSetShaderResources(0, 1, &texture.texture);
+    TextureResource grid = dxResources->textures_["grid_c"];
+    context->PSSetShaderResources(0, 1, &grid.texture);
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 
     // Set the vertex and index buffers to be drawn

@@ -1,0 +1,12 @@
+-   Assets are being linked using their actual filenames. It'll probably be better to use indexes per level 
+    to link the assets. Either that or just use mapped IDs.
+    -   The main thing with per level indexing is keeping loaded assets between levels and keeping their index
+
+-   TextureArrays per level can be implemented instead of switching resources every render
+
+-   Sparse Arrays for the ECS is likely necessary to safe on memory and prevent updating unused components
+    -   Tracking the active entity indices would be helpful in preventing unecessary updates as well if Sparse Arrays 
+        will not be used
+
+-   Removing the template on the EntityManager and Entity may also be beneficial for the sake of program 
+    simplicty. Furthermore, a loop is used to determine what components the Entity has, but using Component::ID is simpler

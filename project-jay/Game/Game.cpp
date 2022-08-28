@@ -18,8 +18,7 @@ void Game::Init() {
     camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
     renderer_->camera_ = camera_;
 
-    resourceManager_->LoadStaticModel("st_sphere");
-    resourceManager_->LoadStaticModel("st_toruscone");
+    resourceManager_->LoadStaticModel("st_capsule");
 
     world_ = new World();
     for (int x = 0; x < MAX_X_COORDINATES; x++)
@@ -44,7 +43,8 @@ void Game::Init() {
     colliderProperties.radius = 1.0f;
 
     auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
-    modelProperties.model = "st_toruscone";
+    modelProperties.model = "st_capsule";
+    modelProperties.materials[0] = "playerMaterial";
 
     auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
     groundTraceProperties.distance = 2.0f;
@@ -107,7 +107,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.GetComponent<StaticModelComponent>(),
         entityManager_.GetComponent<TransformComponent>()
     };
-    renderer_->Render(deltaTime, elapsedTime, renderComponents);
+    renderer_->Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents);
 }
 
 void Game::UpdateTime() {

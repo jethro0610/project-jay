@@ -18,3 +18,13 @@
 -   Camera needs to collide with world
 
 -   Material system
+
+-   Specular highlights. Cel shading
+
+-   Kuwahara filter
+
+-   Camera interpolation fix
+
+-   Asset building
+
+-   Remove new calls on Game member classes, creat Init functions instead

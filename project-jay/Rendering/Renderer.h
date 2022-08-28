@@ -4,6 +4,7 @@
 #include "../Types/Transform.h"
 #include "RenderTypes.h"
 
+#include "../Game/Entity/Entity.h"
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
@@ -30,19 +31,14 @@ public:
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
 
     mat4 GetWorldViewProjection(mat4 worldMatrix);
-
-    void BuildStaticModelRenderList (
-        RenderComponents renderComponents,
-        StaticModelRenderList& outStaticMeshRenderList
-    );
-    void Render(float deltaTime, float elapsedTime, RenderComponents renderComponents);
+    void Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents);
 private:
     ResourceManager* resourceManager_;
 
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P();
-    void RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList);
+    void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
     void Present_P();
 };
 

@@ -20,6 +20,8 @@ void Renderer::Init_P() {
 
     dxResources->LoadTexture("grass_c");
     dxResources->LoadTexture("grass_n");
+    dxResources->LoadTexture("bricks_c");
+    dxResources->LoadTexture("bricks_n");
     dxResources->LoadTexture("marble_c");
     dxResources->LoadTexture("grid_c");
 
@@ -29,15 +31,16 @@ void Renderer::Init_P() {
     worldMaterialDesc.textures[0] = "grass_c";
     worldMaterialDesc.textures[1] = "grass_n";
     worldMaterialDesc.textures[2] = "marble_c";
-    worldMaterialDesc.textures[3] = "";
+    worldMaterialDesc.numOfTextures = 3;
     resourceManager_->materials_["worldMaterial"] = worldMaterialDesc;
 
     MaterialDesc playerMaterial;
-    worldMaterialDesc.vertexShader = "StaticVertexShader";
-    worldMaterialDesc.pixelShader = "DefaultPS";
-    worldMaterialDesc.textures[0] = "grid_c";
-    worldMaterialDesc.textures[1] = "grid_c";
-    resourceManager_->materials_["playerMaterial"] = worldMaterialDesc;
+    playerMaterial.vertexShader = "StaticVertexShader";
+    playerMaterial.pixelShader = "DefaultPS";
+    playerMaterial.textures[0] = "bricks_c";
+    playerMaterial.textures[1] = "bricks_n";
+    playerMaterial.numOfTextures = 2;
+    resourceManager_->materials_["playerMaterial"] = playerMaterial;
 }
 
 void Renderer::RenderWorld_P() {
@@ -69,39 +72,38 @@ void Renderer::RenderWorld_P() {
     }
 }
 
-void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList) {
+void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderComponents) {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
-
-    SetMaterial_P("playerMaterial");
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
-    // Iterate through every model assert in the list
-    for (auto modelItr = staticModelRenderList.begin(); modelItr != staticModelRenderList.end(); modelItr++) {
-        std::string model = modelItr->first;
-        StaticModelDesc description = resourceManager_->staticModels_[model];
 
-        // Iterate through every mesh of the model
-        for (int i = 0; i < description.meshCount; i++) {
-            std::string meshName = model + "_" + std::to_string(i);
-            DXMesh meshResource = dxResources->staticMeshes_[meshName];
+    for (int e = 0; e < MAX_ENTITIES; e++) {
+        const Entity& entity = entities[e];
+        if (!entities->HasComponents<TransformComponent, StaticModelComponent>())
+            continue;
 
-            context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
-            context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        PerObjectData objectData;
+        mat4 worldMatrix;
+        renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
+        objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
+        context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
-            // Draw every entity with the model
-            for (auto entityItr = modelItr->second.begin(); entityItr != modelItr->second.end(); entityItr++) {
-                PerObjectData objectData;
-                mat4 worldMatrix;
-                renderComponents.transformComponents.renderTransform[*entityItr].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
-                objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
-                context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-                context->DrawIndexed(meshResource.indexCount, 0, 0);
-            }
+        std::string model = renderComponents.staticMeshComponents.model[e];
+        StaticModelDesc modelDesc = resourceManager_->staticModels_[model];
+        for (int m = 0; m < modelDesc.meshCount; m++) {
+            std::string material = renderComponents.staticMeshComponents.materials[e][m];
+            SetMaterial_P(material);
+            std::string mesh = model + "_" + std::to_string(m);
+            DXMesh dxMesh = dxResources->staticMeshes_[mesh];
+
+            context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
+            context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+            context->DrawIndexed(dxMesh.indexCount, 0, 0);
         }
     }
     // OPTIMIZATION: Need to test whether setting the vertex/index buffers or updating subresources takes more time
@@ -134,13 +136,10 @@ void Renderer::SetMaterial_P(std::string materialName) {
     ID3D11PixelShader* pixelShader = dxResources->pixelShaders_[material.pixelShader];
     context->PSSetShader(pixelShader, nullptr, 0);
 
-    std::vector<ID3D11ShaderResourceView*> textures;
-    for (int i = 0; i  < 4; i++) {
-        if (material.textures[i] == "")
-            break;
-        textures.push_back(dxResources->textures_[material.textures[i]]);
-    }
+    ID3D11ShaderResourceView* textures[MAX_MATERIAL_TEXTURES];
+    for (int i = 0; i < material.numOfTextures; i++)
+        textures[i] = dxResources->textures_[material.textures[i]];
 
-    context->PSSetShaderResources(0, textures.size(), textures.data());
+    context->PSSetShaderResources(0, material.numOfTextures, textures);
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 }

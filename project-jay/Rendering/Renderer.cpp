@@ -20,30 +20,11 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
-void Renderer::Render(float deltaTime, float elapsedTime, RenderComponents renderComponents) {
+void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents) {
     UpdateViewMatrix();
     Clear_P();
     RenderWorld_P();
     StaticModelRenderList staticModelRenderList;
-    BuildStaticModelRenderList(renderComponents, staticModelRenderList);
-    RenderStaticMeshes_P(renderComponents, staticModelRenderList);
+    RenderEntities_P(entities, renderComponents);
     Present_P();
-}
-
-void Renderer::BuildStaticModelRenderList(
-    RenderComponents frameInfo,
-    StaticModelRenderList& outStaticModelRenderList
-) {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        std::string model = frameInfo.staticMeshComponents.model[i];
-        if (frameInfo.staticMeshComponents.model[i] == "") // TODO: change this to use entity
-            continue;
-
-        assert(resourceManager_->staticModels_.count(model) != 0);
-
-        if (outStaticModelRenderList.count(model) == 0)
-            outStaticModelRenderList[model] = std::vector<int>();
-
-        outStaticModelRenderList[model].push_back(i);
-    }
 }

@@ -81,7 +81,6 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
-
     for (int e = 0; e < MAX_ENTITIES; e++) {
         const Entity& entity = entities[e];
         if (!entities->HasComponents<TransformComponent, StaticModelComponent>())

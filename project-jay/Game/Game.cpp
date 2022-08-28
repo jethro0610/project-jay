@@ -60,8 +60,6 @@ void Game::Init() {
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
-    camera_->Update(deltaTime, inputs_);
-
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
         TransformSystem::UpdateLastTransforms(
@@ -102,7 +100,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.entities_,
         entityManager_.GetComponent<TransformComponent>()
     );
-
+    camera_->Update(deltaTime, inputs_);
     RenderComponents renderComponents {
         entityManager_.GetComponent<StaticModelComponent>(),
         entityManager_.GetComponent<TransformComponent>()

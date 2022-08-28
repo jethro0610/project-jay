@@ -39,7 +39,7 @@ void Renderer::BuildStaticModelRenderList(
         if (frameInfo.staticMeshComponents.model[i] == "") // TODO: change this to use entity
             continue;
 
-        assert(resourceManager_->loadedStaticModels_.count(model) != 0);
+        assert(resourceManager_->staticModels_.count(model) != 0);
 
         if (outStaticModelRenderList.count(model) == 0)
             outStaticModelRenderList[model] = std::vector<int>();

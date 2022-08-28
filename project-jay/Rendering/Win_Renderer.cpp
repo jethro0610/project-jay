@@ -15,21 +15,29 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("StaticVertexShader", VertexShaderType::STATIC);
     dxResources->LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
-    dxResources->LoadPixelShader("PixelShader");
+    dxResources->LoadPixelShader("DefaultPS");
+    dxResources->LoadPixelShader("WorldGrassPS");
 
     dxResources->LoadTexture("grass_c");
     dxResources->LoadTexture("grass_n");
     dxResources->LoadTexture("marble_c");
     dxResources->LoadTexture("grid_c");
 
-    Material worldMaterial;
-    worldMaterial.vertexShaderName = "WorldVertexShader";
-    worldMaterial.pixelShaderName = "PixelShader";
-    worldMaterial.textureNames[0] = "grass_c";
-    worldMaterial.textureNames[1] = "grass_n";
-    worldMaterial.textureNames[2] = "marble_c";
-    worldMaterial.textureNames[3] = "";
-    resourceManager_->materials_["worldMaterial"] = worldMaterial;
+    MaterialDesc worldMaterialDesc;
+    worldMaterialDesc.vertexShader = "WorldVertexShader";
+    worldMaterialDesc.pixelShader = "WorldGrassPS";
+    worldMaterialDesc.textures[0] = "grass_c";
+    worldMaterialDesc.textures[1] = "grass_n";
+    worldMaterialDesc.textures[2] = "marble_c";
+    worldMaterialDesc.textures[3] = "";
+    resourceManager_->materials_["worldMaterial"] = worldMaterialDesc;
+
+    MaterialDesc playerMaterial;
+    worldMaterialDesc.vertexShader = "StaticVertexShader";
+    worldMaterialDesc.pixelShader = "DefaultPS";
+    worldMaterialDesc.textures[0] = "grid_c";
+    worldMaterialDesc.textures[1] = "grid_c";
+    resourceManager_->materials_["playerMaterial"] = worldMaterialDesc;
 }
 
 void Renderer::RenderWorld_P() {
@@ -45,7 +53,7 @@ void Renderer::RenderWorld_P() {
     objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
     context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
-    LoadMaterial_P("worldMaterial");
+    SetMaterial_P("worldMaterial");
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -54,7 +62,7 @@ void Renderer::RenderWorld_P() {
     for (int x = 0; x < MAX_X_COORDINATES; x++)
     for (int y = 0; y < MAX_Y_COORDINATES; y++)
     for (int z = 0; z < MAX_Z_COORDINATES; z++) {
-        MeshResource worldMeshResource = dxResources->worldMeshes_[x][y][z];
+        DXMesh worldMeshResource = dxResources->worldMeshes_[x][y][z];
         context->IASetVertexBuffers(0, 1, &worldMeshResource.vertexBuffer, &vertexStride, &vertexOffset);
         context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
         context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
@@ -65,33 +73,22 @@ void Renderer::RenderStaticMeshes_P(RenderComponents renderComponents, const Sta
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
 
-    // Get the vertex shader
-    VSResource vsResource = dxResources->vertexShaders_["StaticVertexShader"];
-    context->VSSetShader(vsResource.shader, nullptr, 0);
-
-    // Get the pixel shader
-    PSResource psResource = dxResources->pixelShaders_["PixelShader"];
-    context->PSSetShader(psResource.shader, nullptr, 0);
-
-    TextureResource grid = dxResources->textures_["grid_c"];
-    context->PSSetShaderResources(0, 1, &grid.texture);
-    context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
+    SetMaterial_P("playerMaterial");
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IASetInputLayout(vsResource.layout);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
     // Iterate through every model assert in the list
     for (auto modelItr = staticModelRenderList.begin(); modelItr != staticModelRenderList.end(); modelItr++) {
         std::string model = modelItr->first;
-        StaticModelDescription description = resourceManager_->loadedStaticModels_[model];
+        StaticModelDesc description = resourceManager_->staticModels_[model];
 
         // Iterate through every mesh of the model
         for (int i = 0; i < description.meshCount; i++) {
             std::string meshName = model + "_" + std::to_string(i);
-            MeshResource meshResource = dxResources->staticMeshes_[meshName];
+            DXMesh meshResource = dxResources->staticMeshes_[meshName];
 
             context->IASetVertexBuffers(0, 1, &meshResource.vertexBuffer, &vertexStride, &vertexOffset);
             context->IASetIndexBuffer(meshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
@@ -125,28 +122,25 @@ void Renderer::Present_P() {
     resourceManager_->dxResources_->swapChain_->Present(0, 0);
 }
 
-void Renderer::LoadMaterial_P(std::string materialName) {
+void Renderer::SetMaterial_P(std::string materialName) {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
-    Material material = resourceManager_->materials_[materialName];
+    MaterialDesc material = resourceManager_->materials_[materialName];
 
-    // Get the vertex shader
-    VSResource vsResource = dxResources->vertexShaders_[material.vertexShaderName];
-    context->VSSetShader(vsResource.shader, nullptr, 0);
+    VSLayout vsLayout = dxResources->vertexShaders_[material.vertexShader];
+    context->VSSetShader(vsLayout.shader, nullptr, 0);
+    context->IASetInputLayout(vsLayout.layout);
 
-    // Get the pixel shader
-    PSResource psResource = dxResources->pixelShaders_[material.pixelShaderName];
-    context->PSSetShader(psResource.shader, nullptr, 0);
+    ID3D11PixelShader* pixelShader = dxResources->pixelShaders_[material.pixelShader];
+    context->PSSetShader(pixelShader, nullptr, 0);
 
     std::vector<ID3D11ShaderResourceView*> textures;
     for (int i = 0; i  < 4; i++) {
-        if (material.textureNames[i] == "")
+        if (material.textures[i] == "")
             break;
-        TextureResource texture = dxResources->textures_[material.textureNames[i]];
-        textures.push_back(texture.texture);
+        textures.push_back(dxResources->textures_[material.textures[i]]);
     }
 
-    context->IASetInputLayout(vsResource.layout);
     context->PSSetShaderResources(0, textures.size(), textures.data());
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 }

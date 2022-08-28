@@ -1,13 +1,19 @@
 #pragma once
 #include <unordered_map>
-#include "../Material.h"
 
 #ifdef WINDOWS
 #include "DXResources.h"
 #endif
 
-struct StaticModelDescription {
+struct StaticModelDesc {
     int meshCount;
+};
+
+struct MaterialDesc {
+    std::string vertexShader;
+    std::string pixelShader;
+    std::string textures[4];
+    int numOfTextures;
 };
 
 class ResourceManager {
@@ -16,9 +22,8 @@ public:
     ResourceManager(DXResources* dxResources);
     DXResources* dxResources_;
 #endif
-
-    std::unordered_map<std::string, StaticModelDescription> loadedStaticModels_;
-    std::unordered_map<std::string, Material> materials_;
+    std::unordered_map<std::string, StaticModelDesc> staticModels_;
+    std::unordered_map<std::string, MaterialDesc> materials_;
 
     void LoadStaticModel(std::string modelName);
 private:

@@ -5,6 +5,6 @@ ResourceManager::ResourceManager(DXResources* dxResources) {
 }
 
 void ResourceManager::GPULoadStaticModel_P(RawModel& rawModel, std::string modelName) {
-    assert(loadedStaticModels_.count(modelName) == 0);
+    assert(staticModels_.count(modelName) == 0);
     dxResources_->LoadRawModel(rawModel, modelName, false);
 }

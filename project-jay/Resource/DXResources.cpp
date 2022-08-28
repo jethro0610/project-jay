@@ -199,17 +199,17 @@ void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numbe
 }
 
 void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
-    MeshResource worldMeshResource = worldMeshes_[coordinates.x][coordinates.y][coordinates.z];
+    DXMesh worldMesh = worldMeshes_[coordinates.x][coordinates.y][coordinates.z];
 
     D3D11_MAPPED_SUBRESOURCE vertexResource;
-    context_->Map(worldMeshResource.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
+    context_->Map(worldMesh.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
     memcpy(vertexResource.pData, vertices.data(), sizeof(WorldVertex) * vertices.size());
-    context_->Unmap(worldMeshResource.vertexBuffer, 0);
+    context_->Unmap(worldMesh.vertexBuffer, 0);
 
     D3D11_MAPPED_SUBRESOURCE indexResource;
-    context_->Map(worldMeshResource.indexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource);
+    context_->Map(worldMesh.indexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource);
     memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
-    context_->Unmap(worldMeshResource.indexBuffer, 0);
+    context_->Unmap(worldMesh.indexBuffer, 0);
 
 
     worldMeshes_[coordinates.x][coordinates.y][coordinates.z].vertexCount = vertices.size();
@@ -270,10 +270,10 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
     }
     vertexShaderBlob->Release();
 
-    VSResource vsResource = {};
-    vsResource.shader = vertexShader;
-    vsResource.layout = inputLayout;
-    vertexShaders_[shaderName] = vsResource;
+    VSLayout vsLayout = {};
+    vsLayout.shader = vertexShader;
+    vsLayout.layout = inputLayout;
+    vertexShaders_[shaderName] = vsLayout;
 }
 
 void DXResources::LoadPixelShader(std::string shaderName) {
@@ -292,9 +292,7 @@ void DXResources::LoadPixelShader(std::string shaderName) {
         &pixelShader
     ));
 
-    PSResource psResource = {};
-    psResource.shader = pixelShader;
-    pixelShaders_[shaderName] = psResource;
+    pixelShaders_[shaderName] = pixelShader;
 }
 
 void DXResources::LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal) {
@@ -305,7 +303,10 @@ void DXResources::LoadRawModel(RawModel& rawModel, std::string modelName, bool s
 
 void DXResources::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal) {
     std::string meshName = modelName + "_" + std::to_string(meshIndex);
-    assert(staticMeshes_.count(meshName) == 0);
+    if (skeletal)
+        assert(skeletalMeshes_.count(meshName) == 0);
+    else
+        assert(staticMeshes_.count(meshName) == 0);
 
     D3D11_BUFFER_DESC vBufferDesc = {};
     vBufferDesc.ByteWidth = mesh.GetVertexByteWidth();
@@ -337,26 +338,25 @@ void DXResources::LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, b
         &indexBuffer
     ));
 
-    MeshResource meshResource = {};
-    meshResource.vertexBuffer = vertexBuffer;
-    meshResource.vertexCount = mesh.vertexCount_;
-    meshResource.indexBuffer = indexBuffer;
-    meshResource.indexCount = mesh.indexCount_;
+    DXMesh dxMesh = {};
+    dxMesh.vertexBuffer = vertexBuffer;
+    dxMesh.vertexCount = mesh.vertexCount_;
+    dxMesh.indexBuffer = indexBuffer;
+    dxMesh.indexCount = mesh.indexCount_;
 
     if (skeletal)
-        skeletalMeshes_[meshName] = meshResource;
+        skeletalMeshes_[meshName] = dxMesh;
     else
-        staticMeshes_[meshName] = meshResource;
+        staticMeshes_[meshName] = dxMesh;
 }
 
 void DXResources::LoadTexture(std::string textureName) {
     std::string extensionName = textureName + ".png";
     std::wstring wString(extensionName.begin(), extensionName.end());
-    TextureResource textureResource;
-
+    ID3D11ShaderResourceView* texture;
     // To disable mip generation, remove the context from the function
-    HRASSERT(CreateWICTextureFromFile(device_, context_, wString.c_str(), nullptr, &textureResource.texture, 0));
-    textures_[textureName] = textureResource;
+    HRASSERT(CreateWICTextureFromFile(device_, context_, wString.c_str(), nullptr, &texture, 0));
+    textures_[textureName] = texture;
 }
 
 void DXResources::InitWorldMeshes() {

@@ -40,7 +40,7 @@ private:
     ResourceManager* resourceManager_;
 
     void Clear_P();
-    void LoadMaterial_P(std::string materialName);
+    void SetMaterial_P(std::string materialName);
     void RenderWorld_P();
     void RenderStaticMeshes_P(RenderComponents renderComponents, const StaticModelRenderList& staticModelRenderList);
     void Present_P();

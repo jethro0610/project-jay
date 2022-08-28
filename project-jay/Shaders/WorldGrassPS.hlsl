@@ -6,11 +6,6 @@ SamplerState texSampler;
 #include "ClampedBrighten.hlsli"
 
 float4 main(VertOut outVert) : SV_TARGET {
-    //float3 normal = textures[1].Sample(texSampler, outVert.uv * 3.0f);
-    //normal = normalize(normal * 2.0f - 1.0f);
-    //float3x3 textureMat = float3x3(outVert.tangent, outVert.bitangent, outVert.normal);
-    //normal = normalize(mul(normal, textureMat));
-    
     const float TEXTURE_SIZE = 0.075f;
     const float MACRO_SIZE = 0.001f;
     const float MICRO_SIZE = 0.0075f;

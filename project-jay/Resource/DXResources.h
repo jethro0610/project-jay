@@ -11,24 +11,16 @@
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
-struct VSResource {
+struct VSLayout {
     ID3D11VertexShader* shader;
     ID3D11InputLayout* layout;
 };
 
-struct PSResource {
-    ID3D11PixelShader* shader;
-};
-
-struct MeshResource {
+struct DXMesh {
     ID3D11Buffer* vertexBuffer;
     ID3D11Buffer* indexBuffer;
     UINT vertexCount;
     UINT indexCount;
-};
-
-struct TextureResource {
-    ID3D11ShaderResourceView* texture;
 };
 
 enum class VertexShaderType {
@@ -51,12 +43,12 @@ public:
     ID3D11SamplerState* textureSampler_;
     ID3D11DepthStencilView* depthStencilBuffer_;
 
-    std::unordered_map<std::string, VSResource> vertexShaders_;
-    std::unordered_map<std::string, PSResource> pixelShaders_;
-    std::unordered_map<std::string, MeshResource> staticMeshes_;
-    std::unordered_map<std::string, MeshResource> skeletalMeshes_;
-    std::unordered_map<std::string, TextureResource> textures_;
-    MeshResource worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
+    std::unordered_map<std::string, VSLayout> vertexShaders_;
+    std::unordered_map<std::string, ID3D11PixelShader*> pixelShaders_;
+    std::unordered_map<std::string, DXMesh> staticMeshes_;
+    std::unordered_map<std::string, DXMesh> skeletalMeshes_;
+    std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
+    DXMesh worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
 
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];

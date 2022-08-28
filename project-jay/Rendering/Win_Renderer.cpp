@@ -16,10 +16,20 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
     dxResources->LoadPixelShader("PixelShader");
+
     dxResources->LoadTexture("grass_c");
     dxResources->LoadTexture("grass_n");
     dxResources->LoadTexture("marble_c");
     dxResources->LoadTexture("grid_c");
+
+    Material worldMaterial;
+    worldMaterial.vertexShaderName = "WorldVertexShader";
+    worldMaterial.pixelShaderName = "PixelShader";
+    worldMaterial.textureNames[0] = "grass_c";
+    worldMaterial.textureNames[1] = "grass_n";
+    worldMaterial.textureNames[2] = "marble_c";
+    worldMaterial.textureNames[3] = "";
+    resourceManager_->materials_["worldMaterial"] = worldMaterial;
 }
 
 void Renderer::RenderWorld_P() {
@@ -35,25 +45,10 @@ void Renderer::RenderWorld_P() {
     objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
     context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
-    // Get the vertex shader
-    VSResource vsResource = dxResources->vertexShaders_["WorldVertexShader"];
-    context->VSSetShader(vsResource.shader, nullptr, 0);
+    LoadMaterial_P("worldMaterial");
 
-    // Get the pixel shader
-    PSResource psResource = dxResources->pixelShaders_["PixelShader"];
-    context->PSSetShader(psResource.shader, nullptr, 0);
-
-    TextureResource grass = dxResources->textures_["grass_c"];
-    TextureResource grassNormal = dxResources->textures_["grass_n"];
-    TextureResource macro = dxResources->textures_["marble_c"];
-	
-    ID3D11ShaderResourceView* textures[3] = {grass.texture, grassNormal.texture, macro.texture};
-    context->PSSetShaderResources(0, 3, textures);
-    context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
-	
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->IASetInputLayout(vsResource.layout);
     UINT vertexStride = sizeof(WorldVertex);
     UINT vertexOffset = 0;
     for (int x = 0; x < MAX_X_COORDINATES; x++)
@@ -128,4 +123,30 @@ void Renderer::Clear_P() {
 void Renderer::Present_P() {
     // Set the first parameter to 0 to disable VSync
     resourceManager_->dxResources_->swapChain_->Present(0, 0);
+}
+
+void Renderer::LoadMaterial_P(std::string materialName) {
+    DXResources* dxResources = resourceManager_->dxResources_;
+    ID3D11DeviceContext* context = dxResources->context_;
+    Material material = resourceManager_->materials_[materialName];
+
+    // Get the vertex shader
+    VSResource vsResource = dxResources->vertexShaders_[material.vertexShaderName];
+    context->VSSetShader(vsResource.shader, nullptr, 0);
+
+    // Get the pixel shader
+    PSResource psResource = dxResources->pixelShaders_[material.pixelShaderName];
+    context->PSSetShader(psResource.shader, nullptr, 0);
+
+    std::vector<ID3D11ShaderResourceView*> textures;
+    for (int i = 0; i  < 4; i++) {
+        if (material.textureNames[i] == "")
+            break;
+        TextureResource texture = dxResources->textures_[material.textureNames[i]];
+        textures.push_back(texture.texture);
+    }
+
+    context->IASetInputLayout(vsResource.layout);
+    context->PSSetShaderResources(0, textures.size(), textures.data());
+    context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 }

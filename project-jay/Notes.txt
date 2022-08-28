@@ -10,3 +10,7 @@
 
 -   Removing the template on the EntityManager and Entity may also be beneficial for the sake of program 
     simplicty. Furthermore, a loop is used to determine what components the Entity has, but using Component::ID is simpler
+
+-   Camera needs to collide with world
+
+-   Material system

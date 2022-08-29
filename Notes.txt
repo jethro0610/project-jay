@@ -28,3 +28,5 @@
 -   Asset building
 
 -   Remove new calls on Game member classes, creat Init functions instead
+
+-	Right now every shader get compiled by the compiler script, need someway to log the last compile time and recompile when necessary

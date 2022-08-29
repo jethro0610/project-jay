@@ -1,0 +1,28 @@
+{
+	"shaders": [
+		{
+			"name": "ComputeWorldVertices",
+			"type": "cs"
+		},
+		{
+			"name": "DefaultPS",
+			"type": "ps"
+		},
+		{
+			"name": "SkeletalVertexShader",
+			"type": "vs"
+		},
+		{
+			"name": "StaticVertexShader",
+			"type": "vs"
+		},
+		{
+			"name": "WorldGrassPS",
+			"type": "ps"
+		},
+		{
+			"name": "WorldVertexShader",
+			"type": "vs"
+		}
+	]
+}

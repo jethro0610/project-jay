@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef WINDOWS
+#ifdef _WINDOWS
 #include <fstream>
 #endif
 
@@ -17,7 +17,7 @@ private:
     ~Logger();
     static Logger* logger_;
 
-#ifdef WINDOWS
+#ifdef _WINDOWS
     std::ofstream* outfile_;
 #endif
 

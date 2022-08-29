@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 
-#ifdef WINDOWS
+#ifdef _WINDOWS
 #include "DXResources.h"
 #endif
 
@@ -19,7 +19,7 @@ struct MaterialDesc {
 
 class ResourceManager {
 public:
-#ifdef WINDOWS
+#ifdef _WINDOWS
     ResourceManager(DXResources* dxResources);
     DXResources* dxResources_;
 #endif

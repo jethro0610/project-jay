@@ -1,5 +1,5 @@
 #pragma once
-#ifdef WINDOWS
+#ifdef _WINDOWS
 #include "../Windows/WindowsLayer.h"
 #include "../Resource/DXResources.h"
 #endif
@@ -30,7 +30,7 @@ public:
     void Update(float deltaTime, float elapsedTime);
 
 private:
-#ifdef WINDOWS
+#ifdef _WINDOWS
     WindowsLayer* windowsLayer_;
     DXResources* dxResources_;
 #endif

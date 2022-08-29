@@ -407,3 +407,5 @@ FodyWeavers.xsd
 *.filters
 *.sln
 *.swp
+Build/
+Libraries/

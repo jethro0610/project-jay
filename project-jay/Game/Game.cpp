@@ -6,6 +6,7 @@ using namespace std::chrono;
 Game::Game() {
     resolutionWidth_ = 1600;
     resolutionHeight_ = 900;
+    timeAccumlulator_ = 0.0f;
 }
 
 void Game::Init() {

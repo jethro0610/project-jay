@@ -4,44 +4,44 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 project(ProjectJay)
 
 file(GLOB SOURCES
-	project-jay/Game/Components/Components.cpp
+	Source/Game/Components/Components.cpp
 
-	project-jay/Game/Entity/Entity.cpp
-	project-jay/Game/Entity/EntityManager.cpp
+	Source/Game/Entity/Entity.cpp
+	Source/Game/Entity/EntityManager.cpp
 
-	project-jay/Game/Systems/CollisionSystem.cpp
-	project-jay/Game/Systems/GroundTraceSystem.cpp
-	project-jay/Game/Systems/MovementSystem.cpp
-	project-jay/Game/Systems/PlayerInputSystem.cpp
-	project-jay/Game/Systems/TransformSystem.cpp
+	Source/Game/Systems/CollisionSystem.cpp
+	Source/Game/Systems/GroundTraceSystem.cpp
+	Source/Game/Systems/MovementSystem.cpp
+	Source/Game/Systems/PlayerInputSystem.cpp
+	Source/Game/Systems/TransformSystem.cpp
 
-	project-jay/Game/Camera.cpp
-	project-jay/Game/Game.cpp
-	project-jay/Game/Win_Game.cpp
-	project-jay/Game/World.cpp
-	project-jay/Game/Win_World.cpp
+	Source/Game/Camera.cpp
+	Source/Game/Game.cpp
+	Source/Game/Win_Game.cpp
+	Source/Game/World.cpp
+	Source/Game/Win_World.cpp
 
-	project-jay/Logging/Logger.cpp
-	project-jay/Logging/Win_Logger.cpp
+	Source/Logging/Logger.cpp
+	Source/Logging/Win_Logger.cpp
 
-	project-jay/Rendering/Renderer.cpp
-	project-jay/Rendering/Win_Renderer.cpp
+	Source/Rendering/Renderer.cpp
+	Source/Rendering/Win_Renderer.cpp
 
-	project-jay/Resource/AnimationResource.cpp
-	project-jay/Resource/Win_AnimationResource.cpp
-	project-jay/Resource/DXResources.cpp
-	project-jay/Resource/RawModel.cpp
-	project-jay/Resource/Win_RawModel.cpp
-	project-jay/Resource/ResourceManager.cpp
-	project-jay/Resource/Win_ResourceManager.cpp
-	project-jay/Resource/SkeletonResource.cpp
-	project-jay/Resource/Win_SkeletonResource.cpp
+	Source/Resource/AnimationResource.cpp
+	Source/Resource/Win_AnimationResource.cpp
+	Source/Resource/DXResources.cpp
+	Source/Resource/RawModel.cpp
+	Source/Resource/Win_RawModel.cpp
+	Source/Resource/ResourceManager.cpp
+	Source/Resource/Win_ResourceManager.cpp
+	Source/Resource/SkeletonResource.cpp
+	Source/Resource/Win_SkeletonResource.cpp
 
-	project-jay/Types/Gamepad.cpp
-	project-jay/Types/Transform.cpp
+	Source/Types/Gamepad.cpp
+	Source/Types/Transform.cpp
 
-	project-jay/Windows/Win_Main.cpp
-	project-jay/Windows/WindowsLayer.cpp
+	Source/Windows/Win_Main.cpp
+	Source/Windows/WindowsLayer.cpp
 )
 
 include_directories("Libraries/glm")

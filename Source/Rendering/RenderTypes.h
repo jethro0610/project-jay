@@ -1,11 +1,9 @@
 #pragma once
 #include "../Types/Transform.h"
 
-struct DirectionalLight {
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
-    vec3 direction;
+struct PerFrameData {
+	vec3 cameraPos;
+	float time;
 };
 
 struct PerObjectData {

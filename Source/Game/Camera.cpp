@@ -18,29 +18,14 @@ Camera::Camera(TransformComponent* transformComponent, float trackDistance, int 
 }
 
 mat4 Camera::GetViewMatrix() const {
-    if (trackEntity_ == NO_TRACK) {
-        vec3 forward = rotate(transform_.rotation_, Transform::worldForward);
-        vec3 up = rotate(transform_.rotation_, Transform::worldUp);
+    vec3 forward = rotate(transform_.rotation_, Transform::worldForward);
+    vec3 up = rotate(transform_.rotation_, Transform::worldUp);
 
-        return lookAtRH(
-            transform_.position_,
-            transform_.position_ + forward,
-            up
-        );
-    }
-    else {
-        vec3 trackPosition = transform_.position_;
-        quat lookRotation = quat(vec3(lookY_, lookX_, 0.0f));
-        vec3 forward = lookRotation * Transform::worldForward;
-        vec3 up = lookRotation * Transform::worldUp;
-
-        vec3 cameraPosition = trackPosition - forward * trackDistance_;
-        return lookAtRH(
-            cameraPosition,
-            cameraPosition + forward,
-            up
-        );
-    }
+    return lookAtRH(
+        transform_.position_,
+        transform_.position_ + forward,
+        up
+    );
 }
 
 void Camera::Update(float deltaTime, Inputs inputs) {
@@ -56,13 +41,18 @@ void Camera::Update(float deltaTime, Inputs inputs) {
         transform_.position_ += forwardMovement + rightMovement;
     }
     else {
-        vec3 targetPosition = transformComponent_[trackEntity_].renderTransform->position_;
-        vec3 lerpPosition = lerp(transform_.position_, targetPosition, 1 - powf(0.00000015f, deltaTime));
-        if (distance(targetPosition, lerpPosition) > 3.0f) {
-            vec3 delta = normalize(lerpPosition - targetPosition) * 3.0f;
-            lerpPosition = targetPosition + delta;
+        vec3 trackPosition = transformComponent_[trackEntity_].renderTransform->position_;
+        smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
+        if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
+            vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;
+            smoothTrackPosition_ = trackPosition + delta;
         }
 
-        transform_.position_ = lerpPosition;
+        quat lookRotation = quat(vec3(lookY_, lookX_, 0.0f));
+        vec3 forward = lookRotation * Transform::worldForward;
+        vec3 up = lookRotation * Transform::worldUp;
+
+        transform_.position_ = smoothTrackPosition_ - forward * trackDistance_;
+        transform_.rotation_ = lookRotation;
     }
 }

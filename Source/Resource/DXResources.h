@@ -54,6 +54,7 @@ public:
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
 
+    ID3D11Buffer* perFrameCBuffer_;
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11Buffer* perSkeletonCBuffer_;
 

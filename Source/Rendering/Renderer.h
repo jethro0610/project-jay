@@ -34,7 +34,8 @@ public:
     void Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents);
 private:
     ResourceManager* resourceManager_;
-
+	
+    void SetFrameData_P();
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P();

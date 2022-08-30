@@ -61,10 +61,11 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     backBuffer->Release();
 
     // Create the per object cbuffer
+    CreateConstantBuffer(sizeof(PerFrameData), &perFrameCBuffer_);
     CreateConstantBuffer(sizeof(PerObjectData), &perObjectCBuffer_);
     CreateConstantBuffer(sizeof(PerSkeletonData), &perSkeletonCBuffer_);
-    ID3D11Buffer* cbuffers[2] = { perObjectCBuffer_, perSkeletonCBuffer_ };
-    context_->VSSetConstantBuffers(0, 2, cbuffers);
+    ID3D11Buffer* cbuffers[3] = { perFrameCBuffer_, perObjectCBuffer_, perSkeletonCBuffer_ };
+    context_->VSSetConstantBuffers(0, 3, cbuffers);
 
     // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};

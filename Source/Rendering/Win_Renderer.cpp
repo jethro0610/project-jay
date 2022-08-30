@@ -142,3 +142,13 @@ void Renderer::SetMaterial_P(std::string materialName) {
     context->PSSetShaderResources(0, material.numOfTextures, textures);
     context->PSSetSamplers(0, 1, &dxResources->textureSampler_);
 }
+
+void Renderer::SetFrameData_P() {
+    DXResources* dxResources = resourceManager_->dxResources_;
+    ID3D11DeviceContext* context = dxResources->context_;
+
+    PerFrameData frameData = {};
+    frameData.cameraPos = camera_->transform_.position_;
+    frameData.time = 0.0f; // TODO: Set the time with a function input
+	//context->UpdateSubresource(dxResources->perFrameCBuffer_, 0, nullptr, &frameData, 0, 0); 
+}

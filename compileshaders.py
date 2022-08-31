@@ -91,6 +91,10 @@ for shader_desc in shader_dict["shaders"]:
     else:
         compile_times["shaders"][shader_name]["success"] = False 
         print(colored("Failed to compile %s." % shader_name, "red")) 
+        print()
+        print()
+        sys.exit(1)
+
     print()
     print()
 

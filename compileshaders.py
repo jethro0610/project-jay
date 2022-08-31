@@ -30,6 +30,7 @@ for shader_desc in shader_dict["shaders"]:
     if shader_name not in compile_times["shaders"]:
         compile_times["shaders"][shader_name] = dict()
         compile_times["shaders"][shader_name]["success"] = False
+        compile_times["shaders"][shader_name]["time"] = 0
     compile_times["shaders"][shader_name]["headers"] = []
 
     with open(shader_input) as file:

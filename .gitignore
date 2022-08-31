@@ -409,3 +409,4 @@ FodyWeavers.xsd
 *.swp
 Build/
 Libraries/
+lastcompiletimes.json

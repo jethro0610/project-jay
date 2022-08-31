@@ -33,7 +33,5 @@ float3 TriPlanarNormal(in Texture2D normTex, in SamplerState normSampler, in flo
     y = float3(y.xy + normal.xz, normal.y);
     z = float3(x.xy + normal.xy, normal.z);
     
-    /* return normal; */
-    /* return GetNormalFromTexture(normTex, normSampler, tbn, position.xz * scale); */
     return normalize(x.zyx * blending.x + y.xzy * blending.y + z.xyz * blending.z);
 }

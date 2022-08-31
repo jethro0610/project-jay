@@ -19,7 +19,7 @@ void Game::Init() {
     camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
     renderer_->camera_ = camera_;
 
-    resourceManager_->LoadStaticModel("st_capsule");
+    resourceManager_->LoadStaticModel("st_sphere");
 
     world_ = new World();
     for (int x = 0; x < MAX_X_COORDINATES; x++)
@@ -44,7 +44,7 @@ void Game::Init() {
     colliderProperties.radius = 1.0f;
 
     auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
-    modelProperties.model = "st_capsule";
+    modelProperties.model = "st_sphere";
     modelProperties.materials[0] = "playerMaterial";
 
     auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
@@ -57,7 +57,7 @@ void Game::Init() {
     
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
-    /* camera_->trackEntity_ = PLAYER_ENTITY; */
+    camera_->trackEntity_ = PLAYER_ENTITY;
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {

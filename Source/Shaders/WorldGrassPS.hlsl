@@ -8,7 +8,7 @@ SamplerState texSampler;
 #include "Specular.hlsli"
 
 float4 main(VertOut outVert) : SV_TARGET {
-    const float TEXTURE_SIZE = 0.075f;
+    const float TEXTURE_SIZE = 0.095f;
     const float MACRO_SIZE = 0.001f;
     const float MICRO_SIZE = 0.0075f;
     
@@ -19,12 +19,14 @@ float4 main(VertOut outVert) : SV_TARGET {
     float macroStrength = TriPlanarColor(textures[2], texSampler, outVert.worldPosition.xyz, worldNormal, MACRO_SIZE).r;
     float microStrength = TriPlanarColor(textures[2], texSampler, outVert.worldPosition.xyz, worldNormal, MICRO_SIZE).r;
     float3 normal = TriPlanarNormal(textures[1], texSampler, tbn, outVert.worldPosition.xyz, worldNormal, TEXTURE_SIZE);
+    /* float3 normal = worldNormal; */
 
     /* microStrength = ClampedBrighten(microStrength, 1.0f); */
     float variationStrength = lerp(0.25f, 1.0f, (microStrength * macroStrength) + 0.5f);
     /* variationStrength = ClampedBrighten(variationStrength, 0.5f); */
     
     pixelColor *= variationStrength;
+    pixelColor *= 2.0f;
     /* pixelColor = ClampedBrighten(pixelColor, 0.5f); */
 
     float3 lightDir = float3(1.0, -1.0f, -1.0f); // TODO: Put light direction into cbuffer
@@ -33,7 +35,10 @@ float4 main(VertOut outVert) : SV_TARGET {
 
     float diffuse = max(-dot(normal, lightDir), 0.0f);
     float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal);  
+    specular *= 0.25f;
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
-    /* return pixelColor; */
-    return pixelColor * (diffuse + ambient + specular + fresnel);
+    fresnel *= 0.15f;
+    float4 fresnelColor = float4(0.7, 0.9, 1.0f, 0.0f); 
+    pixelColor = lerp(pixelColor, fresnelColor, fresnel);
+    return pixelColor * (ambient + diffuse + specular);
 }

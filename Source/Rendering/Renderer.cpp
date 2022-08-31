@@ -23,6 +23,7 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents) {
     UpdateViewMatrix();
     Clear_P();
+    SetFrameData_P();
     RenderWorld_P();
     StaticModelRenderList staticModelRenderList;
     RenderEntities_P(entities, renderComponents);

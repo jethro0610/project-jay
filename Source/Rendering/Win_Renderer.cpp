@@ -150,5 +150,5 @@ void Renderer::SetFrameData_P() {
     PerFrameData frameData = {};
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input
-	//context->UpdateSubresource(dxResources->perFrameCBuffer_, 0, nullptr, &frameData, 0, 0); 
+	context->UpdateSubresource(dxResources->perFrameCBuffer_, 0, nullptr, &frameData, 0, 0); 
 }

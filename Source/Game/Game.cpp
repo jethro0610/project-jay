@@ -57,7 +57,7 @@ void Game::Init() {
     
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
-    camera_->trackEntity_ = PLAYER_ENTITY;
+    /* camera_->trackEntity_ = PLAYER_ENTITY; */
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {

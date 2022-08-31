@@ -66,6 +66,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     CreateConstantBuffer(sizeof(PerSkeletonData), &perSkeletonCBuffer_);
     ID3D11Buffer* cbuffers[3] = { perFrameCBuffer_, perObjectCBuffer_, perSkeletonCBuffer_ };
     context_->VSSetConstantBuffers(0, 3, cbuffers);
+    context_->PSSetConstantBuffers(0, 3, cbuffers); // TODO: Seperate the buffers to only whats needed for PS and VS
 
     // Create texture sampler
     D3D11_SAMPLER_DESC tSampDesc = {};

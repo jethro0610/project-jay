@@ -7,6 +7,7 @@ struct PerFrameData {
 };
 
 struct PerObjectData {
+    mat4 worldMat;
     mat4 worldViewProj;
     mat4 normalMat;
 };

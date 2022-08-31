@@ -51,9 +51,8 @@ void Renderer::RenderWorld_P() {
     // likely changing this later
     PerObjectData objectData = {};
     Transform defaultTransform;
-    mat4 worldMatrix;
-    defaultTransform.GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
-    objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
+    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
     context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
     SetMaterial_P("worldMaterial");
@@ -87,9 +86,8 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
             continue;
 
         PerObjectData objectData;
-        mat4 worldMatrix;
-        renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(worldMatrix, objectData.normalMat);
-        objectData.worldViewProj = GetWorldViewProjection(worldMatrix);
+        renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+        objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
         context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
 
         std::string model = renderComponents.staticMeshComponents.model[e];

@@ -11,7 +11,8 @@ VertOut main(SkeletalVertIn inVert) {
         inVert.weights.z * jointMatrices[inVert.joints.z] +
         inVert.weights.w * jointMatrices[inVert.joints.w];
 
-    output.position = mul(worldViewProj, mul(skinMatrix, float4(inVert.position, 1.0)));
+    output.position = mul(worldViewProj, mul(skinMatrix, float4(inVert.position, 1.0f)));
+    output.worldPosition = mul(worldMat, mul(skinMatrix, float4(inVert.position, 1.0f)));
     output.normal = normalize(mul(normalMat, mul(skinMatrix,inVert.normal)));
     output.tangent = normalize(mul(normalMat, mul(skinMatrix, inVert.tangent)));
     output.bitangent = normalize(mul(normalMat, mul(skinMatrix, inVert.bitangent)));

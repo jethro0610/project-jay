@@ -4,6 +4,7 @@ cbuffer perFrameData : register(b0) {
 }
 
 cbuffer perObjectData : register(b1){
+    float4x4 worldMat;
     float4x4 worldViewProj;
     float4x4 normalMat;
 };

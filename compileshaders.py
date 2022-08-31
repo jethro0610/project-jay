@@ -60,13 +60,10 @@ for shader_desc in shader_dict["shaders"]:
     shader_output = output_path + shader_name + ".cso"
     last_shader_write = os.path.getmtime(shader_input)
 
-    last_compile_time = 0
+    last_compile_time = compile_times["shaders"][shader_name]["time"] 
     try:
-        if sys.argv[1] == "--skip":
-            try:
-                last_compile_time = compile_times["shaders"][shader_name]["time"]
-            except:
-                pass
+        if sys.argv[1] == "--all":
+            last_compile_time = 0            
     except:
         pass
     

@@ -24,8 +24,8 @@ float4 main(VertOut outVert) : SV_TARGET {
     float variationStrength = microStrength * macroStrength;
     variationStrength = ClampedBrighten(variationStrength, 0.5f);
 
-    pixelColor *= variationStrength;
-    pixelColor *= 2.75f;
+    /* pixelColor *= variationStrength; */
+    /* pixelColor = ClampedBrighten(pixelColor, 0.5f); */
 
     float3 lightDir = float3(1.0, -1.0f, -1.0f); // TODO: Put light direction into cbuffer
     float ambient = 0.2f;
@@ -33,6 +33,7 @@ float4 main(VertOut outVert) : SV_TARGET {
 
     float diffuse = max(-dot(normal, lightDir), 0.0f);
     float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal);  
-
-    return pixelColor * (diffuse + ambient + specular);
+    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
+    /* return pixelColor; */
+    return pixelColor * (diffuse + ambient + specular + fresnel);
 }

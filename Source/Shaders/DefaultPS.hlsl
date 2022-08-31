@@ -17,6 +17,8 @@ float4 main(VertOut outVert) : SV_TARGET {
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDir), 0.0f);
     float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
-
-    return pixelColor * (diffuse + ambient + specular);
+    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
+    
+    /* return pixelColor; */
+    return pixelColor * (diffuse + ambient + specular + fresnel);
 }

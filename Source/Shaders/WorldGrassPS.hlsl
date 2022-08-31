@@ -20,11 +20,11 @@ float4 main(VertOut outVert) : SV_TARGET {
     float microStrength = TriPlanarColor(textures[2], texSampler, outVert.worldPosition.xyz, worldNormal, MICRO_SIZE).r;
     float3 normal = TriPlanarNormal(textures[1], texSampler, tbn, outVert.worldPosition.xyz, worldNormal, TEXTURE_SIZE);
 
-    microStrength = ClampedBrighten(microStrength, 1.0f);
-    float variationStrength = microStrength * macroStrength;
-    variationStrength = ClampedBrighten(variationStrength, 0.5f);
-
-    /* pixelColor *= variationStrength; */
+    /* microStrength = ClampedBrighten(microStrength, 1.0f); */
+    float variationStrength = lerp(0.25f, 1.0f, (microStrength * macroStrength) + 0.5f);
+    /* variationStrength = ClampedBrighten(variationStrength, 0.5f); */
+    
+    pixelColor *= variationStrength;
     /* pixelColor = ClampedBrighten(pixelColor, 0.5f); */
 
     float3 lightDir = float3(1.0, -1.0f, -1.0f); // TODO: Put light direction into cbuffer

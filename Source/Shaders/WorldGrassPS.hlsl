@@ -26,13 +26,14 @@ float4 main(VertOut outVert) : SV_TARGET {
     float3 lightDir = float3(1.0, -1.0f, -1.0f); // TODO: Put light direction into cbuffer
     float ambient = 0.2f;
     lightDir = normalize(lightDir);
-
     float diffuse = max(-dot(normal, lightDir), 0.0f);
-    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 0.0f, 1.0f, 16.0f);
-    fresnel *= 0.3f;
     float brightness = ambient + diffuse;
-    
+
+    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);
+    fresnel = min(fresnel, 1.0f);
+    fresnel *= 0.3f;     
     float4 fresnelColor = float4(0.85, 0.9, 1.0f, 0.0f); 
     pixelColor = lerp(pixelColor, fresnelColor, fresnel);
+
     return pixelColor * (brightness);
 }

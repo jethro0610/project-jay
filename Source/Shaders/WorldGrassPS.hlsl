@@ -16,21 +16,27 @@ float4 main(VertOut outVert) : SV_TARGET {
     float3x3 tbn = float3x3(outVert.tangent, outVert.bitangent, outVert.normal);
 
     float4 pixelColor = TriPlanarColor(textures[0], texSampler, outVert.worldPosition.xyz, worldNormal, TEXTURE_SIZE);
-    /* float4 pixelColor = float4(0.0f, 1.0f, 0.0f, 1.0f); */
     float macroStrength = TriPlanarColor(textures[2], texSampler, outVert.worldPosition.xyz, worldNormal, MACRO_SIZE).r + 0.5f;
     float microStrength = TriPlanarColor(textures[2], texSampler, outVert.worldPosition.xyz, worldNormal, MICRO_SIZE).r + 0.5f;
     float3 normal = TriPlanarNormal(textures[1], texSampler, tbn, outVert.worldPosition.xyz, worldNormal, TEXTURE_SIZE);
-    /* float3 normal = worldNormal; */
     float variationStrength = lerp(0.05f, 1.0f, (microStrength * macroStrength) + 0.35f);    
     pixelColor *= variationStrength;
-    /* pixelColor *= 2.5f; */
-    /* pixelColor += 0.05f; */
 
     float3 lightDir = float3(1.0, -1.0f, -1.0f); // TODO: Put light direction into cbuffer
     float ambient = 0.2f;
     lightDir = normalize(lightDir);
     float diffuse = max(-dot(normal, lightDir), 0.0f);
-    float brightness = ambient + diffuse;
+    float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 2.0f);
+    specular *= 0.15f;
+    float brightness = ambient + diffuse + specular;
+
+    // Skew brightness towards the given focus for harder shadows
+    float focus = 0.6f;
+    float distToFocus = abs(focus - brightness);
+    distToFocus = pow(distToFocus, 3.0f);
+    distToFocus *= 512.0f;
+    distToFocus = saturate(distToFocus);
+    brightness = lerp(focus, brightness, distToFocus);
 
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);
     fresnel = min(fresnel, 1.0f);
@@ -38,5 +44,5 @@ float4 main(VertOut outVert) : SV_TARGET {
     float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     pixelColor = lerp(pixelColor, fresnelColor, fresnel);
 
-    return pixelColor * (brightness);
+    return pixelColor * brightness; 
 }

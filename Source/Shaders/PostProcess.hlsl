@@ -29,7 +29,6 @@ float2 CalcSobelGradient(float2 coord) {
 }
 
 float4 main(ScreenQuadOut screen) : SV_TARGET {
-    /* return screenTex.Sample(screenSampler, screen.coord); */
     float2 texelSize = float2(1.0f / 1600.0f, 1.0f / 900.0f);
     int2 radius = int2(2, 2);
 
@@ -65,7 +64,6 @@ float4 main(ScreenQuadOut screen) : SV_TARGET {
         for (int j = kernelRanges[i].x; j <= kernelRanges[i].y; j++) {
             for (int k = kernelRanges[i].z; k <= kernelRanges[i].w; k++) {
                 float2 offset = mul(float2(j, k) * texelSize, rotMat);
-                /* float2 offset = float2(j, k) * texelSize; */
                 float3 color = screenTex.Sample(screenSampler, screen.coord + offset); 
                 kernelMean[i] += color;
                 kernelVariance[i] += color * color;
@@ -87,6 +85,5 @@ float4 main(ScreenQuadOut screen) : SV_TARGET {
             pixelColor = kernelMean[i];
         }
     }
-
     return float4(pixelColor, 1.0f); 
 }

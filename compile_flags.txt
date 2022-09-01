@@ -1,0 +1,4 @@
+-xc++
+-I./Libraries/glm
+-I./Libraries/FastNoise
+-I./Libraries/DirectxTK

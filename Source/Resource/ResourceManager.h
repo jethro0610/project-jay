@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include "RawModel.h"
 
 #ifdef _WINDOWS
 #include "DXResources.h"

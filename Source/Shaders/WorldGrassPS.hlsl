@@ -32,7 +32,7 @@ float4 main(VertOut outVert) : SV_TARGET {
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);
     fresnel = min(fresnel, 1.0f);
     fresnel *= 0.3f;     
-    float4 fresnelColor = float4(0.85, 0.9, 1.0f, 0.0f); 
+    float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     pixelColor = lerp(pixelColor, fresnelColor, fresnel);
 
     return pixelColor * (brightness);

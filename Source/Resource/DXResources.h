@@ -43,6 +43,12 @@ public:
     ID3D11SamplerState* textureSampler_;
     ID3D11DepthStencilView* depthStencilBuffer_;
 
+    ID3D11Texture2D* pRenderTexture_;
+    ID3D11RenderTargetView* pRenderTarget_;
+    ID3D11ShaderResourceView* pRenderTextureResource_;
+    ID3D11VertexShader* screenQuadVS_;
+    ID3D11PixelShader* postProcess_;
+
     std::unordered_map<std::string, VSLayout> vertexShaders_;
     std::unordered_map<std::string, ID3D11PixelShader*> pixelShaders_;
     std::unordered_map<std::string, DXMesh> staticMeshes_;

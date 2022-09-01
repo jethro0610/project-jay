@@ -53,6 +53,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     // Create a render target to the back buffer
     ID3D11Resource* backBuffer = nullptr;
     swapChain_->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer));
+
     HRASSERT(device_->CreateRenderTargetView(
         backBuffer,
         nullptr,
@@ -107,7 +108,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         1.0f
     };
     context_->RSSetViewports(1, &viewport);
-    context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_);
+    /* context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_); */
 
     // Create vertex descriptions
     worldVertexDescription_[0] = skeletalVertexDescription_[0] = staticVertexDescription_[0] = {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
@@ -140,6 +141,52 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
+
+    D3D11_TEXTURE2D_DESC rtDesc = {};
+    rtDesc.Width = width_;
+    rtDesc.Height = height_;
+    rtDesc.MipLevels = 1;
+    rtDesc.ArraySize = 1;
+    rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    rtDesc.SampleDesc.Count = 1;
+    rtDesc.Usage = D3D11_USAGE_DEFAULT;
+    rtDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    rtDesc.CPUAccessFlags = 0;
+    rtDesc.MiscFlags = 0;
+    device_->CreateTexture2D(&rtDesc, nullptr, &pRenderTexture_);
+
+    D3D11_RENDER_TARGET_VIEW_DESC rtViewDesc = {};
+    rtViewDesc.Format = rtDesc.Format;
+    rtViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    rtViewDesc.Texture2D.MipSlice = 0;
+    device_->CreateRenderTargetView(pRenderTexture_, &rtViewDesc, &pRenderTarget_);
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC rtResourceViewDesc = {};
+    rtResourceViewDesc.Format = rtDesc.Format;
+    rtResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    rtResourceViewDesc.Texture2D.MostDetailedMip = 0;
+    rtResourceViewDesc.Texture2D.MipLevels= 1;
+    device_->CreateShaderResourceView(pRenderTexture_, &rtResourceViewDesc, &pRenderTextureResource_);
+    
+    ID3DBlob* screenQuadVSBlob;
+    HRASSERT(D3DReadFileToBlob(L"ScreenQuad.cso", &screenQuadVSBlob));
+ 
+    HRASSERT(device_->CreateVertexShader(
+        screenQuadVSBlob->GetBufferPointer(),
+        screenQuadVSBlob->GetBufferSize(),
+        nullptr,
+        &screenQuadVS_
+    ));
+    
+    ID3DBlob* postProcessBlob;
+    HRASSERT(D3DReadFileToBlob(L"PostProcess.cso", &postProcessBlob));
+
+    HRASSERT(device_->CreatePixelShader(
+        postProcessBlob->GetBufferPointer(),
+        postProcessBlob->GetBufferSize(),
+        nullptr,
+        &postProcess_
+    ));
 
     InitWorldMeshes();
 }

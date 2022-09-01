@@ -112,13 +112,23 @@ void Renderer::Clear_P() {
 
     // Clear the render target and depth stencil buffer
     float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
-    context->ClearRenderTargetView(dxResources->renderTarget_, background_colour);
+    context->ClearRenderTargetView(dxResources->pRenderTarget_, background_colour);
     context->ClearDepthStencilView(dxResources->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 }
 
 void Renderer::Present_P() {
+    DXResources* dxResources = resourceManager_->dxResources_;
+    ID3D11DeviceContext* context = dxResources->context_;
+
+    context->OMSetRenderTargets(1, &dxResources->renderTarget_, nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources->screenQuadVS_, nullptr, 0);
+    context->PSSetShader(dxResources->postProcess_, nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources->pRenderTextureResource_);
+
+    context->Draw(4, 0);
     // Set the first parameter to 0 to disable VSync
-    resourceManager_->dxResources_->swapChain_->Present(0, 0);
+    dxResources->swapChain_->Present(0, 0);
 }
 
 void Renderer::SetMaterial_P(std::string materialName) {
@@ -144,7 +154,8 @@ void Renderer::SetMaterial_P(std::string materialName) {
 void Renderer::SetFrameData_P() {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
-
+    
+    context->OMSetRenderTargets(1, &dxResources->pRenderTarget_, dxResources->depthStencilBuffer_);
     PerFrameData frameData = {};
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input

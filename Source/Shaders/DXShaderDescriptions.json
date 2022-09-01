@@ -23,6 +23,14 @@
 		{
 			"name": "WorldVertexShader",
 			"type": "vs"
-		}
+		},
+        {
+            "name": "ScreenQuad",
+            "type": "vs"
+        },
+        {
+            "name": "PostProcess",
+            "type": "ps"
+        }
 	]
 }

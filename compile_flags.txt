@@ -1,4 +1,5 @@
 -xc++
 -I./Libraries/glm
 -I./Libraries/FastNoise
--I./Libraries/DirectxTK
+-I./Libraries/DirectXTK/Inc
+-D_WINDOWS=

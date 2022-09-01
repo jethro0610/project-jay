@@ -1,5 +1,6 @@
 #pragma once
-#include "../Types/Transform.h"
+#include <glm.hpp>
+using namespace glm;
 
 struct PerFrameData {
 	vec3 cameraPos;

@@ -111,7 +111,7 @@ void Renderer::Clear_P() {
     ID3D11DeviceContext* context = dxResources->context_;
 
     // Clear the render target and depth stencil buffer
-    float background_colour[4] = { 0x64 / 255.0f, 0x95 / 255.0f, 0xED / 255.0f, 1.0f };
+    float background_colour[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(dxResources->pRenderTarget_, background_colour);
     context->ClearDepthStencilView(dxResources->depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 }

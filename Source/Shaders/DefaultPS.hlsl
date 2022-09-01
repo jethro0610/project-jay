@@ -16,9 +16,19 @@ float4 main(VertOut outVert) : SV_TARGET {
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDir), 0.0f);
-    float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
-    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal);
+    float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 32.0f);
+    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 0.0f, 1.0f, 2.0f);
+    float brightness = diffuse + ambient + specular;
     
-    /* return pixelColor; */
-    return pixelColor * (diffuse + ambient + specular + fresnel);
+    // ==CEL SHADING==
+    if (brightness <= 0.25f)
+        brightness = 0.25f;
+    else if (brightness <= 0.75f)
+        brightness = 0.75f;
+    else
+        brightness = 0.85f;
+    if (specular >= 0.5f)
+        brightness = 1.5f;
+
+    return pixelColor * (brightness + fresnel);
 }

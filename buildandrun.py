@@ -1,6 +1,8 @@
 import subprocess
 import os
 
+subprocess.run("python copyassets.py")
+
 shader_success = subprocess.run("python compileshaders.py")
 if shader_success.returncode != 0:
     exit()

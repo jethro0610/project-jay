@@ -2,4 +2,5 @@
 -I./Libraries/glm
 -I./Libraries/FastNoise
 -I./Libraries/DirectXTK/Inc
--D_WINDOWS=
+-D_WINDOWS
+-D_DEBUG

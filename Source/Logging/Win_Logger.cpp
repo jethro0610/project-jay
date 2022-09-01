@@ -1,7 +1,7 @@
 #ifdef _DEBUG
 #include "Logger.h"
 #include <assert.h>
-#include <Windows.h>
+#include "../Windows/WindowsInc.h"
 #include <ctime>
 
 Logger* Logger::logger_ = nullptr;

@@ -1,4 +1,5 @@
 #include "Camera.h"
+using namespace glm;
 
 Camera::Camera(TransformComponent* transformComponent, float trackDistance, vec3 startPosition) {
     transformComponent_ = transformComponent;

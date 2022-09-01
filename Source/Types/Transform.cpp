@@ -1,5 +1,6 @@
 #include "Transform.h"
 #include <sstream>
+using namespace glm;
 
 vec3 Transform::worldForward = vec3(0.0f, 0.0f, -1.0f);
 vec3 Transform::worldRight = vec3(1.0f, 0.0f, 0.0f);

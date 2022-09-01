@@ -1,4 +1,5 @@
 #include "MovementSystem.h"
+using namespace glm;
 
 void MovementSystem::Execute(
     Entity* entities,

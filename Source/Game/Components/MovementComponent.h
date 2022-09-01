@@ -1,5 +1,6 @@
 #pragma once
 #include "../../Types/Transform.h"
+#include "../Entity/Entity.h"
 #include <bitset>
 #include <algorithm>
 
@@ -39,7 +40,7 @@ struct MovementCProperties {
 };
 
 struct MovementComponent {
-    vec3 desiredMovement[MAX_ENTITIES];
+    glm::vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
     std::bitset<MoveMode::NumberOfModes> supportedMoveModes[MAX_ENTITIES];
     float speed[MAX_ENTITIES];
@@ -52,7 +53,7 @@ struct MovementComponent {
     RecieveMovementFrom recievesFrom[MAX_ENTITIES];
 
     MovementComponent() {
-        std::fill_n(desiredMovement, MAX_ENTITIES, vec3(0.0f, 0.0f, 0.0f));
+        std::fill_n(desiredMovement, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f));
         std::fill_n(moveMode, MAX_ENTITIES, MoveMode::Default);
         std::fill_n(speed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
         std::fill_n(minSpeed, MAX_ENTITIES, DEFAULT_MIN_SPEED);

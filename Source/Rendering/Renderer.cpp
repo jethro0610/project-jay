@@ -1,4 +1,3 @@
-#pragma once
 #include "Renderer.h"
 
 Renderer::Renderer(ResourceManager* resourceManager) {

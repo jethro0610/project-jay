@@ -1,41 +1,40 @@
 #pragma once
 #include <glm.hpp>
-using namespace glm;
 
 struct PerFrameData {
-	vec3 cameraPos;
+    glm::vec3 cameraPos;
 	float time;
 };
 
 struct PerObjectData {
-    mat4 worldMat;
-    mat4 worldViewProj;
-    mat4 normalMat;
+    glm::mat4 worldMat;
+    glm::mat4 worldViewProj;
+    glm::mat4 normalMat;
 };
 
 struct PerSkeletonData {
-    mat4 jointMatrices[32];
+    glm::mat4 jointMatrices[32];
 };
 
 struct StaticVertex {
-    vec3 position;
-    vec3 normal;
-    vec3 tangent;
-    vec3 bitangent;
-    vec2 uv;
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
+    glm::vec2 uv;
 };
 
 struct SkeletalVertex {
-    vec3 position;
-    vec3 normal;
-    vec3 tangent;
-    vec3 bitangent;
-    vec2 uv;
-    ivec4 joints;
-    vec4 weights;
+    glm::vec3 position;
+    glm::vec3 normal;
+    glm::vec3 tangent;
+    glm::vec3 bitangent;
+    glm::vec2 uv;
+    glm::ivec4 joints;
+    glm::vec4 weights;
 };
 
 struct WorldVertex {
-    vec3 position;
-    vec3 normal;
+    glm::vec3 position;
+    glm::vec3 normal;
 };

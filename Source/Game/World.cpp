@@ -1,5 +1,5 @@
 #include "World.h"
-#include "../Types/Transform.h"
+using namespace glm;
 
 World::World() {
     noise_ = new FastNoiseLite();

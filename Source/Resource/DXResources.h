@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "../Windows/WindowsInc.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <WICTextureLoader.h>

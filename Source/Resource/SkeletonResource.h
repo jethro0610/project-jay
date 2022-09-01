@@ -8,7 +8,7 @@
 class Joint {
 public:
     Transform localTransform_;
-    mat4 inverseBindMatrix_;
+    glm::mat4 inverseBindMatrix_;
     int8_t childIndices_[MAX_JOINT_CHILDREN];
 };
 
@@ -16,9 +16,9 @@ class SkeletonResource {
 public:
     SkeletonResource(std::string skeletonName);
     std::vector<Joint> joints_;
-    void CalculateBasePoseJointTransforms(mat4* outputJointTransforms) const;
+    void CalculateBasePoseJointTransforms(glm::mat4* outputJointTransforms) const;
 
 private:
-    void CalculateBasePoseJointTransforms_Recursive(int currentJointIndex, mat4* outputJointTransforms) const;
+    void CalculateBasePoseJointTransforms_Recursive(int currentJointIndex, glm::mat4* outputJointTransforms) const;
 };
 

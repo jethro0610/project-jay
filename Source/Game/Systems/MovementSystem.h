@@ -21,23 +21,23 @@ namespace MovementSystem {
     );
 
     void CalculateDefaultMovement(
-        const vec3& desiredMovement, 
+        const glm::vec3& desiredMovement, 
         const float& acceleration, 
         const float& speedDecay, 
         const float& momentumDecay,
         const float& minSpeed,
         const float& maxSpeed,
         float& speed, 
-        vec3& velocity, 
-        quat& rotation
+        glm::vec3& velocity, 
+        glm::quat& rotation
     );
     void CalculateSkiMovement(
-        const vec3& desiredMovement, 
-        const vec3& groundNormal,
+        const glm::vec3& desiredMovement, 
+        const glm::vec3& groundNormal,
         const float& minSpeed,
         const float& maxSpeed,
         float& speed, 
-        vec3& velocity, 
-        quat& rotation
+        glm::vec3& velocity, 
+        glm::quat& rotation
     );
 }

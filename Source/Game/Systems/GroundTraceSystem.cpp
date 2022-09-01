@@ -1,4 +1,5 @@
 #include "GroundTraceSystem.h"
+using namespace glm;
 
 void GroundTraceSystem::Execute(
     World* world,

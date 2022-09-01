@@ -1,4 +1,5 @@
 #include "SkeletonResource.h"
+using namespace glm;
 
 void SkeletonResource::CalculateBasePoseJointTransforms(mat4* outputJointTransforms) const {
     outputJointTransforms[0] = joints_[0].localTransform_.GetWorldMatrix();

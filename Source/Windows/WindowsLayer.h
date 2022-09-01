@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+#include "WindowsInc.h"
 #include <bitset>
 #include <hidusage.h>
 

@@ -1,4 +1,5 @@
 #include "CollisionSystem.h"
+using namespace glm;
 
 void CollisionSystem::Execute(
     World* world,

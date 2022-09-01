@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Resource/ResourceManager.h"
-#include "../Types/Transform.h"
 #include "RenderTypes.h"
 
 #include "../Game/Entity/Entity.h"

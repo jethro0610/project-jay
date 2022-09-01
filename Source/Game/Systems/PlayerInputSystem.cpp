@@ -1,4 +1,5 @@
 #include "PlayerInputSystem.h"
+using namespace glm;
 
 void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities, MovementComponent& movementComponent) {
     assert(movementComponent.recievesFrom[PLAYER_ENTITY] == RecieveMovementFrom::Player);

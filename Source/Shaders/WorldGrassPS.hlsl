@@ -30,17 +30,18 @@ float4 main(VertOut outVert) : SV_TARGET {
     specular *= 0.15f;
     float brightness = ambient + diffuse + specular;
 
+    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);
+    fresnel = min(fresnel, 1.0f);
+    fresnel *= 0.3f;     
+
     // Skew brightness towards the given focus for harder shadows
     float focus = 0.6f;
-    float distToFocus = abs(focus - brightness);
+    float distToFocus = abs(focus - brightness - fresnel);
     distToFocus = pow(distToFocus, 3.0f);
     distToFocus *= 512.0f;
     distToFocus = saturate(distToFocus);
     brightness = lerp(focus, brightness, distToFocus);
 
-    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);
-    fresnel = min(fresnel, 1.0f);
-    fresnel *= 0.3f;     
     float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     pixelColor = lerp(pixelColor, fresnelColor, fresnel);
 

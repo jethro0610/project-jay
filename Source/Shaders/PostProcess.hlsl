@@ -30,7 +30,7 @@ float2 CalcSobelGradient(float2 coord) {
 
 float4 main(ScreenQuadOut screen) : SV_TARGET {
     float2 texelSize = float2(1.0f / 1600.0f, 1.0f / 900.0f);
-    int2 radius = int2(2, 2);
+    int2 radius = int2(3, 3);
 
     float2 gradient = CalcSobelGradient(screen.coord);
     float angle = 0.0f;

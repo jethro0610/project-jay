@@ -5,6 +5,9 @@ from termcolor import colored
 asset_dir = "Assets"
 output_dir = "Build/Debug"
 
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
 files = os.listdir(asset_dir)
 
 for fname in files:

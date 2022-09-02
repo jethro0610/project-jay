@@ -4,8 +4,8 @@
 using namespace std::chrono;
 
 Game::Game() {
-    resolutionWidth_ = 1600;
-    resolutionHeight_ = 900;
+    resolutionWidth_ = 1280;
+    resolutionHeight_ = 720;
     timeAccumlulator_ = 0.0f;
 }
 

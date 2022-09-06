@@ -32,9 +32,9 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
 }
 
 void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    assert(coordinates.x < MAX_X_COORDINATES);
-    assert(coordinates.y < MAX_Y_COORDINATES);
-    assert(coordinates.z < MAX_Z_COORDINATES);
+    /* assert(coordinates.x < MAX_X_COORDINATES); */
+    /* assert(coordinates.y < MAX_Y_COORDINATES); */
+    /* assert(coordinates.z < MAX_Z_COORDINATES); */
 
     FillLocalDistanceCache(coordinates);
     GetMeshVerticesCPU(coordinates, outVertices);
@@ -45,9 +45,9 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
 }
 
 void World::GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    assert(coordinates.x < MAX_X_COORDINATES);
-    assert(coordinates.y < MAX_Y_COORDINATES);
-    assert(coordinates.z < MAX_Z_COORDINATES);
+    /* assert(coordinates.x < MAX_X_COORDINATES); */
+    /* assert(coordinates.y < MAX_Y_COORDINATES); */
+    /* assert(coordinates.z < MAX_Z_COORDINATES); */
 
     FillLocalDistanceCache(coordinates);
     GetMeshVerticesGPU_P(graphicsResources, coordinates, outVertices);

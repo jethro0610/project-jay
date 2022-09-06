@@ -20,6 +20,9 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
     context->Map(dxResources->computeWVertsOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
     
+    coordinates.x -= MAX_X_COORDINATES / 2;
+    coordinates.y -= MAX_Y_COORDINATES / 2;
+    coordinates.z -= MAX_Z_COORDINATES / 2;
     vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
     vec3* vertices = reinterpret_cast<vec3*>(computeVertexOutputResource.pData);
     for (int x = 0; x < WORLD_RESOLUTION; x++)
@@ -27,7 +30,6 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
         int index = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
         if (vertices[index].x == -1.0f) {
-            indicesDataChannel_[x][y][z] = -1;
             continue;
         }
 

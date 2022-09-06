@@ -248,7 +248,16 @@ void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numbe
 }
 
 void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
-    DXMesh worldMesh = worldMeshes_[coordinates.x][coordinates.y][coordinates.z];
+    ivec3 normalizedCoords = coordinates;
+    normalizedCoords.x += MAX_X_COORDINATES / 2;
+    normalizedCoords.y += MAX_Y_COORDINATES / 2;
+    normalizedCoords.z += MAX_Z_COORDINATES / 2;
+
+    assert(normalizedCoords.x >= 0);
+    assert(normalizedCoords.y >= 0);
+    assert(normalizedCoords.z >= 0);
+
+    DXMesh worldMesh = worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z];
 
     D3D11_MAPPED_SUBRESOURCE vertexResource;
     context_->Map(worldMesh.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
@@ -260,9 +269,8 @@ void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVerte
     memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
     context_->Unmap(worldMesh.indexBuffer, 0);
 
-
-    worldMeshes_[coordinates.x][coordinates.y][coordinates.z].vertexCount = vertices.size();
-    worldMeshes_[coordinates.x][coordinates.y][coordinates.z].indexCount = indices.size();
+    worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z].vertexCount = vertices.size();
+    worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z].indexCount = indices.size();
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {

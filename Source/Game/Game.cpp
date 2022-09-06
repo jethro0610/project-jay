@@ -21,16 +21,29 @@ void Game::Init() {
 
     resourceManager_->LoadStaticModel("st_sphere");
 
+    DEBUGLOG("Generating world");
+    DEBUGLOG(std::to_string(-MAX_Y_COORDINATES / 2));
     world_ = new World();
-    for (int x = 0; x < MAX_X_COORDINATES; x++)
-    for (int y = 0; y < MAX_Y_COORDINATES; y++)
-    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
+    for (int x = -MAX_X_COORDINATES / 2; x < MAX_X_COORDINATES / 2; x++)
+    for (int y = -MAX_Y_COORDINATES / 2; y < MAX_Y_COORDINATES / 2; y++)
+    for (int z = -MAX_Z_COORDINATES / 2; z < MAX_Z_COORDINATES / 2; z++) {
         ivec3 coordinates(x, y, z);
+        DEBUGLOG(glm::to_string(coordinates));
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
         world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
+
+    /* for (int x = 0; x < MAX_X_COORDINATES; x++) */
+    /* for (int y = 0; y < MAX_Y_COORDINATES; y++) */
+    /* for (int z = 0; z < MAX_Z_COORDINATES; z++) { */
+    /*     ivec3 coordinates(x, y, z); */
+    /*     std::vector<WorldVertex> vertices; */
+    /*     std::vector<uint16_t> indices; */
+    /*     world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices); */
+    /*     SendWorldMeshToGPU_P(coordinates, vertices, indices); */
+    /* } */
 
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);

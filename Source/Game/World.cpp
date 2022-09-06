@@ -19,17 +19,11 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
 float World::GetDistance(vec3 position) const {
     /* float height = noise_->GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f; */
     /* return position.y - height; */
-
     float radius = 128.0f;
     float height = 32.0f;
 
-    /* float terrainHeight = noise_->GetNoise<float>(position.x, position.y, position.z) * 8.0f + 8.0f; */
-    float distanceToCenter = distance(position, vec3(0.0f, 0.0f, 0.0f)); 
-    float planarDistanceToCenter = distance(vec2(position.x, position.z), vec2(0.0f, 0.0f));
-
-    float lerpFactor = clamp(90.0f - planarDistanceToCenter, 0.0f, 90.0f) / 90.0f;
-    float minDistance = Lerp(radius, height, lerpFactor);
-    return distanceToCenter - minDistance; 
+    vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
+    return length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 }
 
 vec3 World::GetNormal(vec3 position, float epsilon) const {

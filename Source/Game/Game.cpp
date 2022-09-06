@@ -35,16 +35,6 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 
-    /* for (int x = 0; x < MAX_X_COORDINATES; x++) */
-    /* for (int y = 0; y < MAX_Y_COORDINATES; y++) */
-    /* for (int z = 0; z < MAX_Z_COORDINATES; z++) { */
-    /*     ivec3 coordinates(x, y, z); */
-    /*     std::vector<WorldVertex> vertices; */
-    /*     std::vector<uint16_t> indices; */
-    /*     world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices); */
-    /*     SendWorldMeshToGPU_P(coordinates, vertices, indices); */
-    /* } */
-
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
     entityManager_.CreateEntity();

@@ -253,10 +253,6 @@ void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVerte
     normalizedCoords.y += MAX_Y_COORDINATES / 2;
     normalizedCoords.z += MAX_Z_COORDINATES / 2;
 
-    assert(normalizedCoords.x >= 0);
-    assert(normalizedCoords.y >= 0);
-    assert(normalizedCoords.z >= 0);
-
     DXMesh worldMesh = worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z];
 
     D3D11_MAPPED_SUBRESOURCE vertexResource;

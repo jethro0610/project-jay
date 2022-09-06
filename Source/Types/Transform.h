@@ -16,7 +16,7 @@ public:
     glm::mat4 GetWorldMatrix() const;
     std::string ToString() const;
     static Transform Lerp(const Transform& a, const Transform& b, float t);
-
+    
     glm::vec3 GetForwardVector() const;
     glm::vec3 GetRightVector() const;
     glm::vec3 GetUpVector() const;

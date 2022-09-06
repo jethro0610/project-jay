@@ -54,6 +54,7 @@ public:
     void GetMesh(glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
     void GetMeshGPUCompute(void* graphicsResources, glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
+    static float Lerp(float a, float b, float t);
 private:
     FastNoiseLite* noise_;
 

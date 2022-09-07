@@ -17,18 +17,17 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
 }
 
 float World::GetDistance(vec3 position) const {
-    /* float height = noise_->GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f; */
-    /* return position.y - height; */
+    // Sample perlin noise in a circle following the position to form a blob
     vec2 noiseDir = normalize(vec2(position.x, position.z)) * 64.0f;
     float blobRadius = 0.0f;
-
     if (length(noiseDir) > 0.0f)
         blobRadius = noise_->GetNoise<float>(noiseDir.x, noiseDir.y) * 32.0f;
 
     float radius = 128.0f + blobRadius;
-    float height = 32.0f;
 
-    /* return distance(vec2(position.x, position.z), vec2(0.0f, 0.0f)) - radius; */
+    float noiseHeight = noise_->GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f;
+    float height = 32.0f + noiseHeight;
+
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
     return length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 }
@@ -45,10 +44,6 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
 }
 
 void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    /* assert(coordinates.x < MAX_X_COORDINATES); */
-    /* assert(coordinates.y < MAX_Y_COORDINATES); */
-    /* assert(coordinates.z < MAX_Z_COORDINATES); */
-
     FillLocalDistanceCache(coordinates);
     GetMeshVerticesCPU(coordinates, outVertices);
     GetMeshIndices(coordinates, outIndices);
@@ -58,10 +53,6 @@ void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, st
 }
 
 void World::GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    /* assert(coordinates.x < MAX_X_COORDINATES); */
-    /* assert(coordinates.y < MAX_Y_COORDINATES); */
-    /* assert(coordinates.z < MAX_Z_COORDINATES); */
-
     FillLocalDistanceCache(coordinates);
     GetMeshVerticesGPU_P(graphicsResources, coordinates, outVertices);
     GetMeshIndices(coordinates, outIndices);

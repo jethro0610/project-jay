@@ -24,7 +24,7 @@ static int2 edgeTable[12] = {
     { 2, 6 },
 };
 
-#define WORLD_RESOLUTION 24
+#define WORLD_RESOLUTION 16
 #define WORLD_COMPUTE_GROUPS (WORLD_RESOLUTION / 8)
 #define DISTANCE_CACHE_SIZE (WORLD_RESOLUTION + 1)
 #define COORDINATE_SIZE 32.0f

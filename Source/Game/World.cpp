@@ -23,7 +23,7 @@ float World::GetDistance(vec3 position) const {
     if (length(noiseDir) > 0.0f)
         blobRadius = noise_->GetNoise<float>(noiseDir.x, noiseDir.y) * 32.0f;
 
-    float radius = 128.0f + blobRadius;
+    float radius = 160.0f + blobRadius;
 
     float noiseHeight = noise_->GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f;
     float height = 32.0f + noiseHeight;

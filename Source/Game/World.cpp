@@ -19,9 +19,16 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
 float World::GetDistance(vec3 position) const {
     /* float height = noise_->GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f; */
     /* return position.y - height; */
-    float radius = 128.0f;
+    vec2 noiseDir = normalize(vec2(position.x, position.z)) * 64.0f;
+    float blobRadius = 0.0f;
+
+    if (length(noiseDir) > 0.0f)
+        blobRadius = noise_->GetNoise<float>(noiseDir.x, noiseDir.y) * 32.0f;
+
+    float radius = 128.0f + blobRadius;
     float height = 32.0f;
 
+    /* return distance(vec2(position.x, position.z), vec2(0.0f, 0.0f)) - radius; */
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
     return length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 }

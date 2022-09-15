@@ -1,9 +1,12 @@
 #include "World.h"
 #include <cmath>
+#include "../Logging/Logger.h"
+#include <gtx/string_cast.hpp>
 using namespace glm;
 
-World::World(TerrainModComponent* terrainModComponent) {
+World::World(Entity* entities, TerrainModComponent* terrainModComponent) {
     noise_ = new FastNoiseLite();
+    entities_ = entities;
     terrainModComponent_ = terrainModComponent;
 }
 
@@ -32,7 +35,16 @@ float World::GetDistance(vec3 position) const {
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
     float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 
-    return blobDist;
+    float modDist = INFINITY;
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities_[i].HasComponent<TerrainModComponent>())
+            continue;
+
+        float dist = distance(terrainModComponent_->position[i], position) - terrainModComponent_->radius[i]; 
+        modDist = min(dist, modDist);
+    }
+
+    return min(blobDist, modDist);
 }
 
 vec3 World::GetNormal(vec3 position, float epsilon) const {

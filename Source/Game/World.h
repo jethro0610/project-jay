@@ -46,7 +46,8 @@ const glm::ivec3 triangulationTable[3][4] = {
 
 class World {
 public:
-    World(TerrainModComponent* terrainModComponent);
+    World(Entity* entities, TerrainModComponent* terrainModComponent);
+    Entity* entities_;
     TerrainModComponent* terrainModComponent_;
 
     float GetDistance(glm::vec3 position) const;

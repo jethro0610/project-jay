@@ -4,6 +4,7 @@ using namespace glm;
 
 World::World() {
     noise_ = new FastNoiseLite();
+    InitHills();
 }
 
 void World::FillLocalDistanceCache(ivec3 coordinates) {
@@ -14,6 +15,10 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
         vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
         localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
     }
+}
+
+void World::InitHills() {
+    hills_[0] = vec3(0.0f, 0.0f, 0.0f);
 }
 
 float World::GetDistance(vec3 position) const {
@@ -29,7 +34,14 @@ float World::GetDistance(vec3 position) const {
     float height = 32.0f + noiseHeight;
 
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
-    return length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
+    float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
+
+    float hillDist = INFINITY;
+    for (int i = 0; i < 1; i++) {
+        float curHillDist = distance(hills_[i], position) - 64.0f; 
+        hillDist = curHillDist;
+    }
+    return min(hillDist, blobDist);
 }
 
 vec3 World::GetNormal(vec3 position, float epsilon) const {

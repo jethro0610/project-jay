@@ -46,6 +46,9 @@ class World {
 public:
     World();
 
+    glm::vec3 hills_[8];
+    void InitHills();
+
     float GetDistance(glm::vec3 position) const;
     // Higher epsilon = smoother
     glm::vec3 GetNormal(glm::vec3 position, float epsilon = 1.0f) const;

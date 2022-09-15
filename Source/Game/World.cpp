@@ -2,9 +2,9 @@
 #include <cmath>
 using namespace glm;
 
-World::World() {
+World::World(TerrainModComponent* terrainModComponent) {
     noise_ = new FastNoiseLite();
-    InitHills();
+    terrainModComponent_ = terrainModComponent;
 }
 
 void World::FillLocalDistanceCache(ivec3 coordinates) {
@@ -15,10 +15,6 @@ void World::FillLocalDistanceCache(ivec3 coordinates) {
         vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
         localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
     }
-}
-
-void World::InitHills() {
-    hills_[0] = vec3(0.0f, 0.0f, 0.0f);
 }
 
 float World::GetDistance(vec3 position) const {
@@ -36,12 +32,7 @@ float World::GetDistance(vec3 position) const {
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
     float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 
-    float hillDist = INFINITY;
-    for (int i = 0; i < 1; i++) {
-        float curHillDist = distance(hills_[i], position) - 64.0f; 
-        hillDist = curHillDist;
-    }
-    return min(hillDist, blobDist);
+    return blobDist;
 }
 
 vec3 World::GetNormal(vec3 position, float epsilon) const {
@@ -189,4 +180,14 @@ void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices)
 
 float World::Lerp(float a, float b, float t) {
     return a + t * (b - a);
+}
+
+void World::MarkCoordinateDirty(ivec3 coordinate) {
+    float index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
+    dirtyCoordinates_[index] = true;
+}
+
+bool World::CoordinateIsDirty(ivec3 coordinate) const {
+    float index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
+    return dirtyCoordinates_[index];
 }

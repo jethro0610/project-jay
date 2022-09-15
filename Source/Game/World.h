@@ -4,6 +4,8 @@
 #include <vector>
 #include "WorldConstants.h"
 #include <FastNoiseLite.h>
+#include <bitset>
+#include "Components/TerrainModComponent.h"
 
 const glm::ivec3 cornerTable[8] = {
     {0, 0, 0},
@@ -44,10 +46,8 @@ const glm::ivec3 triangulationTable[3][4] = {
 
 class World {
 public:
-    World();
-
-    glm::vec3 hills_[8];
-    void InitHills();
+    World(TerrainModComponent* terrainModComponent);
+    TerrainModComponent* terrainModComponent_;
 
     float GetDistance(glm::vec3 position) const;
     // Higher epsilon = smoother
@@ -58,6 +58,11 @@ public:
     void GetMeshGPUCompute(void* graphicsResources, glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
     static float Lerp(float a, float b, float t);
+
+    std::bitset<MAX_X_COORDINATES * MAX_Y_COORDINATES * MAX_Z_COORDINATES> dirtyCoordinates_;
+    void MarkCoordinateDirty(glm::ivec3 coordinates);
+    bool CoordinateIsDirty(glm::ivec3 coordinate) const;
+
 private:
     FastNoiseLite* noise_;
 

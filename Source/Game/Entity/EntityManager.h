@@ -33,6 +33,7 @@ private:
         StaticModelComponent,
         GroundTraceComponent,
         VelocityComponent,
-        MovementComponent
+        MovementComponent,
+        TerrainModComponent
     > components_;
 };

@@ -5,3 +5,4 @@
 #include "MovementComponent.h"
 #include "GroundTraceComponent.h"
 #include "VelocityComponent.h"
+#include "TerrainModComponent.h"

@@ -23,7 +23,7 @@ void Game::Init() {
 
     DEBUGLOG("Generating world");
     DEBUGLOG(std::to_string(-MAX_Y_COORDINATES / 2));
-    world_ = new World();
+    world_ = new World(&entityManager_.GetComponent<TerrainModComponent>());
     for (int x = -MAX_X_COORDINATES / 2; x < MAX_X_COORDINATES / 2; x++)
     for (int y = -MAX_Y_COORDINATES / 2; y < MAX_Y_COORDINATES / 2; y++)
     for (int z = -MAX_Z_COORDINATES / 2; z < MAX_Z_COORDINATES / 2; z++) {

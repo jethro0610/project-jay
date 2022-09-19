@@ -23,6 +23,7 @@ file(GLOB HEADERS
 	Source/Game/Systems/PlayerInputSystem.h
 	Source/Game/Systems/TransformSystem.h
 	Source/Game/Systems/Systems.h
+    Source/Game/Systems/TerrainModSystem.h
 
 	Source/Game/Camera.h
 	Source/Game/Game.h
@@ -58,6 +59,7 @@ file(GLOB SOURCES
 	Source/Game/Systems/MovementSystem.cpp
 	Source/Game/Systems/PlayerInputSystem.cpp
 	Source/Game/Systems/TransformSystem.cpp
+    Source/Game/Systems/TerrainModSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

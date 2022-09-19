@@ -5,5 +5,7 @@ void TerrainModSystem::Execute(Entity* entities, TerrainModComponent& terrainMod
         const Entity& entity = entities[i];
         if (!entity.HasComponent<TerrainModComponent>())
             continue;
+
+        terrainModComponent.radius[i] += 0.1f;
     }
 }

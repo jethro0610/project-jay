@@ -53,7 +53,7 @@ void Game::Init() {
     int terrainModEntity = entityManager_.CreateEntity();
     auto terrainModProps = entityManager_.RegisterComponent<TerrainModComponent>(terrainModEntity);
     terrainModProps.position = vec3(0.0f);
-    terrainModProps.radius = 64.0f;
+    terrainModProps.radius = 16.0f;
 
     world_ = new World(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>());
     for (int x = -MAX_X_COORDINATES / 2; x < MAX_X_COORDINATES / 2; x++)
@@ -69,7 +69,18 @@ void Game::Init() {
 
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
+
+    // Update the 0 world chunk for testing
+    std::vector<WorldVertex> vertices;
+    std::vector<uint16_t> indices;        
+    world_->GetMeshGPUCompute(dxResources_, ivec3(0, 1, 0), vertices, indices);
+    SendWorldMeshToGPU_P(ivec3(0, 1, 0), vertices, indices);
+
     while (timeAccumlulator_ >= TIMESTEP) {
+        TerrainModSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.GetComponent<TerrainModComponent>()
+        );
         TransformSystem::UpdateLastTransforms(
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>()

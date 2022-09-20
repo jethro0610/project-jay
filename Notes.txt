@@ -19,17 +19,11 @@
 
 -   Material system
 
--   Specular highlights. Cel shading
-
--   Kuwahara filter
-
 -   Camera interpolation fix
 
 -   Asset building
 
 -   Remove new calls on Game member classes, creat Init functions instead
-
--	Right now every shader get compiled by the compiler script, need someway to log the last compile time and recompile when necessary
 
 -   The parameters below create a streaking effect on the terrain. Could be a cool visual later on.
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f);
@@ -38,3 +32,5 @@
 
 -   Player and other chars are blurry due to the paint filter. Skipping them in the filter may look better. This could be done with the
     stencil buffer.
+
+-   Keep track of what chunks need to be updated

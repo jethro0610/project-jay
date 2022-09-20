@@ -73,7 +73,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
     // Update the 0 world chunk for testing
     for (int x = -1; x < 1; x++)
     for (int z = -1; z < 1; z++) {
-        ivec3 coordinate = ivec3(x, 1, z);
+        ivec3 coordinate = ivec3(x, 0, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;        
         world_->GetMeshGPUCompute(dxResources_, coordinate, vertices, indices);

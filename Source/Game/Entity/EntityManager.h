@@ -14,9 +14,9 @@ public:
     template<class T>
     auto RegisterComponent(int targetEntity) {
         assert(entities_[targetEntity].alive_);
-        assert(!entities_[targetEntity].componentMask_.test(T::ID));
+        assert(!entities_[targetEntity].componentMask_[T::ID]);
 
-        entities_[targetEntity].componentMask_.set(T::ID);
+        entities_[targetEntity].componentMask_[T::ID] = true;
         return std::get<T>(components_)[targetEntity];
     }
 

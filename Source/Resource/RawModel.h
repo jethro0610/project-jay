@@ -3,11 +3,11 @@
 #include <glm.hpp>
 using namespace glm;
 
-#define MODEL_HEADER_SIZE sizeof(uint8_t)
-#define MESH_HEADER_SIZE 2 * sizeof(uint16_t)
+const uint8_t MODEL_HEADER_SIZE = sizeof(uint8_t);
+const uint8_t MESH_HEADER_SIZE = 2 * sizeof(uint16_t);
 
-#define STATIC_VERTEX_SIZE (4 * sizeof(vec3) + sizeof(vec2))
-#define SKELETAL_VERTEX_INFO_SIZE (sizeof(ivec4) + sizeof(vec4))
+const uint8_t STATIC_VERTEX_SIZE = 4 * sizeof(vec3) + sizeof(vec2);
+const uint8_t SKELETAL_VERTEX_INFO_SIZE = sizeof(ivec4) + sizeof(vec4);
 
 class RawMesh {
 public:

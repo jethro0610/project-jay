@@ -4,18 +4,18 @@
 #include <bitset>
 #include <algorithm>
 
-#define DEFAULT_MIN_SPEED 12.0f
-#define DEFAULT_MAX_SPEED 120.0f
-#define DEFAULT_MIN_FRICTION 0.015f
-#define DEFAULT_MAX_FRICTION 0.1f
-#define DEFAULT_MOMENTUM_DECAY 0.1f
-#define FRICTION_SPEED_CAP_PERCENT 0.35f
-#define DEFAULT_ROTATION_SPEED 0.25f
+const float DEFAULT_MIN_SPEED = 12.0f;
+const float DEFAULT_MAX_SPEED = 120.0f;
+const float DEFAULT_MIN_FRICTION = 0.015f;
+const float DEFAULT_MAX_FRICTION = 0.1f;
+const float DEFAULT_MOMENTUM_DECAY = 0.1f;
+const float FRICTION_SPEED_CAP_PERCENT = 0.35f;
+const float DEFAULT_ROTATION_SPEED = 0.25f;
 
-#define SKI_ACCELERATION 4.0f
-#define SKI_ROTATION_SPEED 0.02f
-#define SKI_UPSLOPE_SCALING 1.5f
-#define MINIMUM_SKI_ACCELERATION_SCALING 0.15f
+const float SKI_ACCELERATION = 4.0f;
+const float SKI_ROTATION_SPEED = 0.02f;
+const float SKI_UPSLOPE_SCALING = 1.5f;
+const float MINIMUM_SKI_ACCELERATION_SCALING = 0.15f;
 
 enum RecieveMovementFrom {
     Player

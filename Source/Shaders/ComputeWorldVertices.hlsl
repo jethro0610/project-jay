@@ -24,12 +24,12 @@ static int2 edgeTable[12] = {
     { 2, 6 },
 };
 
-#define WORLD_RESOLUTION 16
-#define WORLD_COMPUTE_GROUPS (WORLD_RESOLUTION / 8)
-#define DISTANCE_CACHE_SIZE (WORLD_RESOLUTION + 1)
-#define COORDINATE_SIZE 32.0f
-#define VOXEL_SIZE (COORDINATE_SIZE / (WORLD_RESOLUTION - 1))
-#define GROUP_OFFSET (WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS)
+const uint WORLD_RESOLUTION = 16;
+const uint WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
+const uint DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
+const float COORDINATE_SIZE = 32.0f;
+const float VOXEL_SIZE = COORDINATE_SIZE / (WORLD_RESOLUTION - 1);
+const float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
 StructuredBuffer<float> distanceCache : register(t0);
 RWStructuredBuffer<float3> computeVertices : register(u0);

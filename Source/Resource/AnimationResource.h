@@ -2,9 +2,9 @@
 #include "../Types/Transform.h"
 #include <vector>
 
-#define ANIMATION_HEADER_SIZE (sizeof(uint8_t) + sizeof(uint16_t))
-#define ANIMATION_SAMPLE_RATE (1 / 60.0f)
-#define KEYFRAME_SIZE sizeof(Transform)
+const uint8_t ANIMATION_HEADER_SIZE = sizeof(uint8_t) + sizeof(uint16_t);
+const uint8_t ANIMATION_SAMPLE_RATE = 1 / 60.0f;
+const uint8_t KEYFRAME_SIZE = sizeof(Transform);
 
 struct JointChannel {
     std::vector<Transform> keyframes;

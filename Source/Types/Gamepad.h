@@ -1,22 +1,22 @@
 #pragma once
 #include <bitset>
 
-#define GAMEPAD_A 0
-#define GAMEPAD_B 1
-#define GAMEPAD_X 2
-#define GAMEPAD_Y 3
-#define GAMEPAD_UP 4
-#define GAMEPAD_DOWN 5
-#define GAMEPAD_LEFT 6
-#define GAMEPAD_RIGHT 7
-#define GAMEPAD_LSHOULDER 8
-#define GAMEPAD_RSHOULDER 9
-#define GAMEPAD_RTRIGGER 10
-#define GAMEPAD_LTRIGGER 11
-#define GAMEPAD_LTHUMB 12
-#define GAMEPAD_RTHUMB 13
-#define GAMEPAD_START 14
-#define GAMEPAD_SELECT 15
+const uint8_t GAMEPAD_A = 0;
+const uint8_t GAMEPAD_B = 1;
+const uint8_t GAMEPAD_X = 2;
+const uint8_t GAMEPAD_Y = 3;
+const uint8_t GAMEPAD_UP = 4;
+const uint8_t GAMEPAD_DOWN = 5;
+const uint8_t GAMEPAD_LEFT = 6;
+const uint8_t GAMEPAD_RIGHT = 7;
+const uint8_t GAMEPAD_LSHOULDER = 8;
+const uint8_t GAMEPAD_RSHOULDER = 9;
+const uint8_t GAMEPAD_RTRIGGER = 10;
+const uint8_t GAMEPAD_LTRIGGER = 11;
+const uint8_t GAMEPAD_LTHUMB = 12;
+const uint8_t GAMEPAD_RTHUMB = 13;
+const uint8_t GAMEPAD_START = 14;
+const uint8_t GAMEPAD_SELECT = 15;
 
 class Gamepad {
 public:

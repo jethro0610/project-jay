@@ -3,9 +3,9 @@
 #include <bitset>
 #include <hidusage.h>
 
-#define MOUSE_KEYS 2
-#define LEFT_MOUSE_KEY 255 + 1
-#define RIGHT_MOUSE_KEY 255 + 2
+const uint8_t MOUSE_KEYS =  2
+const uint8_t LEFT_MOUSE_KEY = 255 + 1
+const uint8_t RIGHT_MOUSE_KEY = 255 + 2
 
 class WindowsLayer {
 private:

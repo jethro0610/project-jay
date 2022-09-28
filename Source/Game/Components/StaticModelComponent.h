@@ -2,7 +2,7 @@
 #include "../Entity/Entity.h"
 #include <string>
 
-#define MAX_MESHES_PER_MODEL 8
+const uint8_t MAX_MESHES_PER_MODEL = 8;
 
 struct StaticModelCProperties {
     std::string& model;

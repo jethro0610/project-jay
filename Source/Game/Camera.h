@@ -4,7 +4,7 @@
 #include "../Types/Inputs.h"
 #include "Components/TransformComponent.h"
 
-#define NO_TRACK -1
+const int8_t NO_TRACK = -1;
 
 class Camera {
 public:

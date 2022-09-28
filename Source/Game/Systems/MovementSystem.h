@@ -7,8 +7,8 @@
 #include "../Components/VelocityComponent.h"
 #include "../Components/ColliderComponent.h"
 
-#define GRAVITY_ACCELERATION 1.0f
-#define MAX_GRAVITY 60.0f
+const float GRAVITY_ACCELERATION = 1.0f;
+const float MAX_GRAVITY = 60.0f;
 
 namespace MovementSystem {
     void Execute(

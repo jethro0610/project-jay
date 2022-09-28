@@ -5,7 +5,7 @@
 #include "../Components/ColliderComponent.h"
 #include "../Components/GroundTraceComponent.h"
 
-#define GROUND_CUTOFF_SCALE 0.25f
+const float GROUND_CUTOFF_SCALE = 0.25f;
 
 namespace CollisionSystem {
     void Execute(

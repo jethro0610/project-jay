@@ -10,7 +10,8 @@ struct StaticModelDesc {
     int meshCount;
 };
 
-#define MAX_MATERIAL_TEXTURES 8
+const uint8_t MAX_MATERIAL_TEXTURES = 8;
+
 struct MaterialDesc {
     std::string vertexShader;
     std::string pixelShader;

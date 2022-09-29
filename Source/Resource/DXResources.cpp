@@ -53,7 +53,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     // Create a render target to the back buffer
     ID3D11Resource* backBuffer = nullptr;
     swapChain_->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&backBuffer));
-
     HRASSERT(device_->CreateRenderTargetView(
         backBuffer,
         nullptr,
@@ -108,17 +107,80 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         1.0f
     };
     context_->RSSetViewports(1, &viewport);
-    /* context_->OMSetRenderTargets(1, &renderTarget_, depthStencilBuffer_); */
 
     // Create vertex descriptions
-    worldVertexDescription_[0] = skeletalVertexDescription_[0] = staticVertexDescription_[0] = {"POS", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
-    worldVertexDescription_[1] = skeletalVertexDescription_[1] = staticVertexDescription_[1] = {"NORM", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3), D3D11_INPUT_PER_VERTEX_DATA, 0};
-    skeletalVertexDescription_[2] = staticVertexDescription_[2] = {"TAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0};
-    skeletalVertexDescription_[3] = staticVertexDescription_[3] = {"BITAN", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(glm::vec3) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0};
-    skeletalVertexDescription_[4] = staticVertexDescription_[4] = {"UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(glm::vec3) * 4, D3D11_INPUT_PER_VERTEX_DATA, 0};
-    skeletalVertexDescription_[5] = { "JOINTS", 0, DXGI_FORMAT_R32G32B32A32_SINT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2), D3D11_INPUT_PER_VERTEX_DATA, 0};
-    skeletalVertexDescription_[6] = { "WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), D3D11_INPUT_PER_VERTEX_DATA, 0};
+    worldVertexDescription_[0] = 
+    skeletalVertexDescription_[0] = 
+    staticVertexDescription_[0] = {
+        "POS", 
+        0, 
+        DXGI_FORMAT_R32G32B32_FLOAT, 
+        0,
+        0, 
+        D3D11_INPUT_PER_VERTEX_DATA,
+        0
+    };
+    worldVertexDescription_[1] = 
+    skeletalVertexDescription_[1] = 
+    staticVertexDescription_[1] = {
+        "NORM", 
+        0, 
+        DXGI_FORMAT_R32G32B32_FLOAT, 
+        0, 
+        sizeof(glm::vec3), 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
+    skeletalVertexDescription_[2] = 
+    staticVertexDescription_[2] = {
+        "TAN", 
+        0, 
+        DXGI_FORMAT_R32G32B32_FLOAT, 
+        0, 
+        sizeof(glm::vec3) * 2, 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
+    skeletalVertexDescription_[3] = 
+    staticVertexDescription_[3] = {
+        "BITAN", 
+        0, 
+        DXGI_FORMAT_R32G32B32_FLOAT, 
+        0, 
+        sizeof(glm::vec3) * 3, 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
+    skeletalVertexDescription_[4] = 
+    staticVertexDescription_[4] = {
+        "UV", 
+        0, 
+        DXGI_FORMAT_R32G32_FLOAT, 
+        0, 
+        sizeof(glm::vec3) * 4, 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
+    skeletalVertexDescription_[5] = { 
+        "JOINTS", 
+        0, 
+        DXGI_FORMAT_R32G32B32A32_SINT, 
+        0, 
+        sizeof(glm::vec3) * 4 + sizeof(glm::vec2), 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
+    skeletalVertexDescription_[6] = { 
+        "WEIGHTS", 
+        0, 
+        DXGI_FORMAT_R32G32B32A32_FLOAT, 
+        0, 
+        sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), 
+        D3D11_INPUT_PER_VERTEX_DATA, 
+        0
+    };
 
+    // Setup the world vertex compute shader
     CreateInputStructuredBufferAndView(
         sizeof(float), 
         DISTANCE_CACHE_SIZE* DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE, 
@@ -142,6 +204,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     ));
     computeWVertsBlob->Release();
 
+    // Create the post process render target texture
     D3D11_TEXTURE2D_DESC rtDesc = {};
     rtDesc.Width = width_;
     rtDesc.Height = height_;
@@ -154,13 +217,11 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     rtDesc.CPUAccessFlags = 0;
     rtDesc.MiscFlags = 0;
     device_->CreateTexture2D(&rtDesc, nullptr, &pRenderTexture_);
-
     D3D11_RENDER_TARGET_VIEW_DESC rtViewDesc = {};
     rtViewDesc.Format = rtDesc.Format;
     rtViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     rtViewDesc.Texture2D.MipSlice = 0;
     device_->CreateRenderTargetView(pRenderTexture_, &rtViewDesc, &pRenderTarget_);
-
     D3D11_SHADER_RESOURCE_VIEW_DESC rtResourceViewDesc = {};
     rtResourceViewDesc.Format = rtDesc.Format;
     rtResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -170,17 +231,14 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     
     ID3DBlob* screenQuadVSBlob;
     HRASSERT(D3DReadFileToBlob(L"ScreenQuad.cso", &screenQuadVSBlob));
- 
     HRASSERT(device_->CreateVertexShader(
         screenQuadVSBlob->GetBufferPointer(),
         screenQuadVSBlob->GetBufferSize(),
         nullptr,
         &screenQuadVS_
     ));
-    
     ID3DBlob* postProcessBlob;
     HRASSERT(D3DReadFileToBlob(L"PostProcess.cso", &postProcessBlob));
-
     HRASSERT(device_->CreatePixelShader(
         postProcessBlob->GetBufferPointer(),
         postProcessBlob->GetBufferSize(),

@@ -195,11 +195,11 @@ float World::Lerp(float a, float b, float t) {
 }
 
 void World::MarkCoordinateDirty(ivec3 coordinate) {
-    float index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
+    int index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
     dirtyCoordinates_[index] = true;
 }
 
 bool World::CoordinateIsDirty(ivec3 coordinate) const {
-    float index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
+    int index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
     return dirtyCoordinates_[index];
 }

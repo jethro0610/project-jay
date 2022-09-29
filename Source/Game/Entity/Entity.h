@@ -3,7 +3,6 @@
 const uint8_t MAX_ENTITIES = 100;
 const uint8_t MAX_COMPONENT_TYPES = 32;
 const uint8_t PLAYER_ENTITY = 0;
-const uint8_t MAX_COMPONENT_TYPES = 32;
 
 typedef std::bitset<MAX_COMPONENT_TYPES> ComponentMask;
 

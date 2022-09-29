@@ -6,6 +6,6 @@ void TerrainModSystem::Execute(Entity* entities, TerrainModComponent& terrainMod
         if (!entity.HasComponent<TerrainModComponent>())
             continue;
 
-        terrainModComponent.radius[i] += 0.1f;
+        /* terrainModComponent.radius[i] += 0.1f; */
     }
 }

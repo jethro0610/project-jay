@@ -70,16 +70,6 @@ void Game::Init() {
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
 
-    // Update the 0 world chunk for testing
-    for (int x = -1; x < 1; x++)
-    for (int z = -1; z < 1; z++) {
-        ivec3 coordinate = ivec3(x, 1, z);
-        std::vector<WorldVertex> vertices;
-        std::vector<uint16_t> indices;        
-        world_->GetMeshGPUCompute(dxResources_, coordinate, vertices, indices);
-        SendWorldMeshToGPU_P(coordinate, vertices, indices);
-    }
-
     while (timeAccumlulator_ >= TIMESTEP) {
         TerrainModSystem::Execute(
             entityManager_.entities_,

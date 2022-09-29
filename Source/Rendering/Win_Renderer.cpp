@@ -122,8 +122,8 @@ void Renderer::Present_P() {
 
     context->OMSetRenderTargets(1, &dxResources->renderTarget_, nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources->screenQuadVS_, nullptr, 0);
-    context->PSSetShader(dxResources->postProcess_, nullptr, 0);
+    context->VSSetShader(dxResources->vertexShaders_["ScreenQuad"].shader, nullptr, 0);
+    context->PSSetShader(dxResources->pixelShaders_["PostProcess"], nullptr, 0);
     context->PSSetShaderResources(0, 1, &dxResources->pRenderTextureResource_);
 
     context->Draw(4, 0);

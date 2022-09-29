@@ -60,6 +60,61 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     ));
     backBuffer->Release();
 
+    // Create the post process render target texture
+    LoadPixelShader("PostProcess");
+    D3D11_TEXTURE2D_DESC rtDesc = {};
+    rtDesc.Width = width_;
+    rtDesc.Height = height_;
+    rtDesc.MipLevels = 1;
+    rtDesc.ArraySize = 1;
+    rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    rtDesc.SampleDesc.Count = 1;
+    rtDesc.Usage = D3D11_USAGE_DEFAULT;
+    rtDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    rtDesc.CPUAccessFlags = 0;
+    rtDesc.MiscFlags = 0;
+    device_->CreateTexture2D(&rtDesc, nullptr, &pRenderTexture_);
+    D3D11_RENDER_TARGET_VIEW_DESC rtViewDesc = {};
+    rtViewDesc.Format = rtDesc.Format;
+    rtViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    rtViewDesc.Texture2D.MipSlice = 0;
+    device_->CreateRenderTargetView(pRenderTexture_, &rtViewDesc, &pRenderTarget_);
+    D3D11_SHADER_RESOURCE_VIEW_DESC rtResourceViewDesc = {};
+    rtResourceViewDesc.Format = rtDesc.Format;
+    rtResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    rtResourceViewDesc.Texture2D.MostDetailedMip = 0;
+    rtResourceViewDesc.Texture2D.MipLevels= 1;
+    device_->CreateShaderResourceView(pRenderTexture_, &rtResourceViewDesc, &pRenderTextureResource_);
+    
+    // Create the depth stencil buffer
+    D3D11_TEXTURE2D_DESC dsDesc;
+    dsDesc.Width = width;
+    dsDesc.Height = height;
+    dsDesc.MipLevels = 1;
+    dsDesc.ArraySize = 1;
+    dsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    dsDesc.SampleDesc.Count = 1;
+    dsDesc.SampleDesc.Quality = 0;
+    dsDesc.Usage = D3D11_USAGE_DEFAULT;
+    dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    dsDesc.CPUAccessFlags = 0;
+    dsDesc.MiscFlags = 0;
+    ID3D11Texture2D* depthStencilResource;
+    HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilResource));
+    HRASSERT(device_->CreateDepthStencilView(depthStencilResource, nullptr, &depthStencilBuffer_));
+    depthStencilResource->Release();
+    
+    // Set the viewport 
+    D3D11_VIEWPORT viewport = {
+        0.0f,
+        0.0f,
+        (float)width_,
+        (float)height_,
+        0.0f,
+        1.0f
+    };
+    context_->RSSetViewports(1, &viewport);
+
     // Create the per object cbuffer
     CreateConstantBuffer(sizeof(PerFrameData), &perFrameCBuffer_);
     CreateConstantBuffer(sizeof(PerObjectData), &perObjectCBuffer_);
@@ -78,35 +133,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     tSampDesc.MinLOD = 0;
     tSampDesc.MaxLOD = D3D11_FLOAT32_MAX;
     HRASSERT(device_->CreateSamplerState(&tSampDesc, &textureSampler_));
-
-    // Create the depth stencil buffer
-    D3D11_TEXTURE2D_DESC dsDesc;
-    dsDesc.Width = width;
-    dsDesc.Height = height;
-    dsDesc.MipLevels = 1;
-    dsDesc.ArraySize = 1;
-    dsDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    dsDesc.SampleDesc.Count = 1;
-    dsDesc.SampleDesc.Quality = 0;
-    dsDesc.Usage = D3D11_USAGE_DEFAULT;
-    dsDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    dsDesc.CPUAccessFlags = 0;
-    dsDesc.MiscFlags = 0;
-    ID3D11Texture2D* depthStencilResource;
-    HRASSERT(device_->CreateTexture2D(&dsDesc, nullptr, &depthStencilResource));
-    HRASSERT(device_->CreateDepthStencilView(depthStencilResource, nullptr, &depthStencilBuffer_));
-    depthStencilResource->Release();
-
-    // Set the viewport and output merger
-    D3D11_VIEWPORT viewport = {
-        0.0f,
-        0.0f,
-        (float)width_,
-        (float)height_,
-        0.0f,
-        1.0f
-    };
-    context_->RSSetViewports(1, &viewport);
 
     // Create vertex descriptions
     worldVertexDescription_[0] = 
@@ -179,7 +205,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
     };
-
+    LoadVertexShader("ScreenQuad");
+    
     // Setup the world vertex compute shader
     CreateInputStructuredBufferAndView(
         sizeof(float), 
@@ -203,49 +230,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
-
-    // Create the post process render target texture
-    D3D11_TEXTURE2D_DESC rtDesc = {};
-    rtDesc.Width = width_;
-    rtDesc.Height = height_;
-    rtDesc.MipLevels = 1;
-    rtDesc.ArraySize = 1;
-    rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    rtDesc.SampleDesc.Count = 1;
-    rtDesc.Usage = D3D11_USAGE_DEFAULT;
-    rtDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    rtDesc.CPUAccessFlags = 0;
-    rtDesc.MiscFlags = 0;
-    device_->CreateTexture2D(&rtDesc, nullptr, &pRenderTexture_);
-    D3D11_RENDER_TARGET_VIEW_DESC rtViewDesc = {};
-    rtViewDesc.Format = rtDesc.Format;
-    rtViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-    rtViewDesc.Texture2D.MipSlice = 0;
-    device_->CreateRenderTargetView(pRenderTexture_, &rtViewDesc, &pRenderTarget_);
-    D3D11_SHADER_RESOURCE_VIEW_DESC rtResourceViewDesc = {};
-    rtResourceViewDesc.Format = rtDesc.Format;
-    rtResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    rtResourceViewDesc.Texture2D.MostDetailedMip = 0;
-    rtResourceViewDesc.Texture2D.MipLevels= 1;
-    device_->CreateShaderResourceView(pRenderTexture_, &rtResourceViewDesc, &pRenderTextureResource_);
-    
-    ID3DBlob* screenQuadVSBlob;
-    HRASSERT(D3DReadFileToBlob(L"ScreenQuad.cso", &screenQuadVSBlob));
-    HRASSERT(device_->CreateVertexShader(
-        screenQuadVSBlob->GetBufferPointer(),
-        screenQuadVSBlob->GetBufferSize(),
-        nullptr,
-        &screenQuadVS_
-    ));
-    ID3DBlob* postProcessBlob;
-    HRASSERT(D3DReadFileToBlob(L"PostProcess.cso", &postProcessBlob));
-    HRASSERT(device_->CreatePixelShader(
-        postProcessBlob->GetBufferPointer(),
-        postProcessBlob->GetBufferSize(),
-        nullptr,
-        &postProcess_
-    ));
-
     InitWorldMeshes();
 }
 

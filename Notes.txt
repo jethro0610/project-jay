@@ -38,3 +38,5 @@
 
 -   Player and other chars are blurry due to the paint filter. Skipping them in the filter may look better. This could be done with the
     stencil buffer.
+
+-   Entity for base islands

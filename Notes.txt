@@ -40,3 +40,7 @@
     stencil buffer.
 
 -   Entity for base islands
+
+-   World Render Target
+
+-   Spread

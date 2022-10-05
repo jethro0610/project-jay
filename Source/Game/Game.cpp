@@ -65,6 +65,8 @@ void Game::Init() {
         world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
+    spreadManager_ = new SpreadManager();
+    spreadManager_->AddSpread(ivec2(0, 0));
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
@@ -118,7 +120,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.GetComponent<StaticModelComponent>(),
         entityManager_.GetComponent<TransformComponent>()
     };
-    renderer_->Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents);
+    renderer_->Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, spreadManager_);
 }
 
 void Game::UpdateTime() {

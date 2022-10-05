@@ -15,6 +15,7 @@
 #include "Systems/Systems.h"
 #include "../Types/Inputs.h"
 #include "Entity/EntityManager.h"
+#include "SpreadManager.h"
 
 class Game {
 public:
@@ -35,10 +36,12 @@ private:
     DXResources* dxResources_;
 #endif
 
+    // TODO: Make these variables, not pointers
     Renderer* renderer_;
     ResourceManager* resourceManager_;
     Camera* camera_;
     World* world_;
+    SpreadManager* spreadManager_;
 
     Gamepad gamepad_;
     Inputs inputs_;

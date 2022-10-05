@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(ProjectJay)
@@ -30,6 +30,7 @@ file(GLOB HEADERS
 	Source/Game/TimeConstants.h
 	Source/Game/World.h
 	Source/Game/WorldConstants.h
+    Source/Game/SpreadManager.h
 
 	Source/Logging/Logger.h
 
@@ -64,6 +65,7 @@ file(GLOB SOURCES
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp
 	Source/Game/World.cpp
+    Source/Game/SpreadManager.cpp
 
 	Source/Logging/Logger.cpp
 

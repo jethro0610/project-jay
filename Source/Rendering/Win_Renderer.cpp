@@ -53,7 +53,8 @@ void Renderer::RenderWorld_P() {
     Transform defaultTransform;
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
+    /* context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0); */
+    dxResources->UpdateBuffer(dxResources->perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
     SetMaterial_P("worldMaterial");
 
@@ -88,7 +89,7 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
         PerObjectData objectData;
         renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
         objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-        context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
+        dxResources->UpdateBuffer(dxResources->perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
         std::string model = renderComponents.staticMeshComponents.model[e];
         StaticModelDesc modelDesc = resourceManager_->staticModels_[model];
@@ -120,13 +121,13 @@ void Renderer::RenderSpread_P(SpreadManager* spreadManager) {
     context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
     context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
-    for (auto&[key, index] : spreadManager->keys_) {
-        PerObjectData objectData;
-        spreadManager->transforms_[index].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
-        objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-        context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-        context->DrawIndexed(dxMesh.indexCount, 0, 0);
-    }
+    /* for (auto&[key, index] : spreadManager->keys_) { */
+    /*     PerObjectData objectData; */
+    /*     spreadManager->transforms_[index].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat); */
+    /*     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat); */
+    /*     context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0); */
+    /*     context->DrawIndexed(dxMesh.indexCount, 0, 0); */
+    /* } */
 }
 
 void Renderer::Clear_P() {
@@ -182,5 +183,5 @@ void Renderer::SetFrameData_P() {
     PerFrameData frameData = {};
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input
-	context->UpdateSubresource(dxResources->perFrameCBuffer_, 0, nullptr, &frameData, 0, 0); 
+	dxResources->UpdateBuffer(dxResources->perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
 }

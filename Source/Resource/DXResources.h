@@ -57,6 +57,7 @@ public:
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
+    D3D11_INPUT_ELEMENT_DESC instancedVertexDescription_[6];
 
     ID3D11Buffer* perFrameCBuffer_;
     ID3D11Buffer* perObjectCBuffer_;
@@ -77,6 +78,8 @@ public:
     // Should only be calling this from ResourceManager
     void LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal = false);
 
+    void CreateInstanceBuffer(ID3D11Buffer** outBuffer);
+    void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
 private:
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
     void CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView);

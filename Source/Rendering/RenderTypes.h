@@ -1,6 +1,8 @@
 #pragma once
 #include <glm.hpp>
 
+const uint16_t MAX_INSTANCES = 512;
+
 struct PerFrameData {
     glm::vec3 cameraPos;
 	float time;
@@ -37,4 +39,8 @@ struct SkeletalVertex {
 struct WorldVertex {
     glm::vec3 position;
     glm::vec3 normal;
+};
+
+struct InstanceData {
+    glm::vec3 position;
 };

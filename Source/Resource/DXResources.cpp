@@ -137,7 +137,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     // Create vertex descriptions
     worldVertexDescription_[0] = 
     skeletalVertexDescription_[0] = 
-    staticVertexDescription_[0] = {
+    staticVertexDescription_[0] = 
+    instancedVertexDescription_[0] = {
         "POS", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -148,7 +149,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     worldVertexDescription_[1] = 
     skeletalVertexDescription_[1] = 
-    staticVertexDescription_[1] = {
+    staticVertexDescription_[1] = 
+    instancedVertexDescription_[1] = {
         "NORM", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -158,7 +160,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         0
     };
     skeletalVertexDescription_[2] = 
-    staticVertexDescription_[2] = {
+    staticVertexDescription_[2] =
+    instancedVertexDescription_[2] = {
         "TAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -168,7 +171,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         0
     };
     skeletalVertexDescription_[3] = 
-    staticVertexDescription_[3] = {
+    staticVertexDescription_[3] = 
+    instancedVertexDescription_[3] = {
         "BITAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -178,7 +182,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         0
     };
     skeletalVertexDescription_[4] = 
-    staticVertexDescription_[4] = {
+    staticVertexDescription_[4] = 
+    instancedVertexDescription_[4] = {
         "UV", 
         0, 
         DXGI_FORMAT_R32G32_FLOAT, 
@@ -204,6 +209,14 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         sizeof(glm::vec3) * 4 + sizeof(glm::vec2) + sizeof(glm::vec4), 
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
+    };
+    instancedVertexDescription_[5] = {
+        "INST_POS",
+        0,
+        DXGI_FORMAT_R32G32B32A32_FLOAT,
+        1,
+        0,
+        D3D11_INPUT_PER_INSTANCE_DATA
     };
     LoadVertexShader("ScreenQuad");
     
@@ -233,13 +246,31 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     InitWorldMeshes();
 }
 
+void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    context_->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    memcpy(mappedResource.pData, data, size);
+    context_->Unmap(buffer, 0);
+}
+
+void DXResources::CreateInstanceBuffer(ID3D11Buffer** outBuffer) {
+    D3D11_BUFFER_DESC desc = {};
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.ByteWidth = sizeof(InstanceData) * MAX_INSTANCES; 
+    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    desc.CPUAccessFlags = 0;
+    desc.MiscFlags = 0;
+
+    HRASSERT(device_->CreateBuffer(&desc, nullptr, outBuffer));
+}
+
 void DXResources::CreateConstantBuffer(int size, ID3D11Buffer** outBuffer) {
     // Create the per object cbuffer
     D3D11_BUFFER_DESC desc = {};
-    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
     desc.ByteWidth = size;
     desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    desc.CPUAccessFlags = 0;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;
     HRASSERT(device_->CreateBuffer(
         &desc,

@@ -9,8 +9,8 @@ void SpreadManager::AddSpread(ivec2 key) {
         return;
 
     Transform spreadTransform;
-    spreadTransform.position_ = vec3(0.0f, 48.0f, 0.0f);
-    spreadTransform.scale_ = vec3(2.0f);
+    spreadTransform.position_ = vec3(key.x, 48.0f, key.y);
+    spreadTransform.scale_ = vec3(1.5f);
     keys_[key] = count_;
     transforms_[count_] = spreadTransform;
     count_++;

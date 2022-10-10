@@ -66,7 +66,10 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
     spreadManager_ = new SpreadManager();
-    spreadManager_->AddSpread(ivec2(0, 0));
+    for (int x = 0; x < 128; x++) 
+    for (int z = 0; z < 128; z++) {
+        spreadManager_->AddSpread(ivec2(x * 1.5, z * 1.5));
+    }
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {

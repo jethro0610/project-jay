@@ -114,18 +114,17 @@ void Renderer::RenderSpread_P(SpreadManager* spreadManager) {
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
+    const std::string material = "playerMaterial";  
+    SetMaterial_P(material);
+    DXMesh dxMesh = dxResources->staticMeshes_["st_sphere_0"];
+    context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
+    context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
     for (auto&[key, index] : spreadManager->keys_) {
         PerObjectData objectData;
         spreadManager->transforms_[index].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
         objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
         context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-
-        const std::string material = "playerMaterial";  
-        SetMaterial_P(material);
-        DXMesh dxMesh = dxResources->staticMeshes_["st_sphere_0"];
-        context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
-        context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
         context->DrawIndexed(dxMesh.indexCount, 0, 0);
     }
 }

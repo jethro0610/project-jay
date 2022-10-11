@@ -53,7 +53,9 @@ public:
     std::unordered_map<std::string, DXMesh> staticMeshes_;
     std::unordered_map<std::string, DXMesh> skeletalMeshes_;
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
+
     DXMesh worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
+    ID3D11Buffer* spreadBuffer_;
 
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
@@ -79,7 +81,6 @@ public:
     // Should only be calling this from ResourceManager
     void LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal = false);
 
-    void CreateInstanceBuffer(ID3D11Buffer** outBuffer);
     void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
 private:
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
@@ -88,6 +89,8 @@ private:
 
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
     void InitWorldMeshes();
+    void InitSpreadBuffer();
+
     WorldVertex coordinateFillVertices_[MAX_COORDINATE_VERTICES];
     uint16_t coordinateFillIndices_[MAX_COORDINATE_INDICES];
 };

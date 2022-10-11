@@ -244,7 +244,9 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
+
     InitWorldMeshes();
+    InitSpreadBuffer();
 }
 
 void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
@@ -252,17 +254,6 @@ void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
     context_->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     memcpy(mappedResource.pData, data, size);
     context_->Unmap(buffer, 0);
-}
-
-void DXResources::CreateInstanceBuffer(ID3D11Buffer** outBuffer) {
-    D3D11_BUFFER_DESC desc = {};
-    desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = sizeof(InstanceData) * MAX_INSTANCES; 
-    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    desc.MiscFlags = 0;
-
-    HRASSERT(device_->CreateBuffer(&desc, nullptr, outBuffer));
 }
 
 void DXResources::CreateConstantBuffer(int size, ID3D11Buffer** outBuffer) {
@@ -527,4 +518,15 @@ void DXResources::InitWorldMeshes() {
             &worldMeshes_[x][y][z].indexBuffer
         ));
     }
+}
+
+void DXResources::InitSpreadBuffer() {
+    D3D11_BUFFER_DESC desc = {};
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.ByteWidth = sizeof(InstanceData) * MAX_INSTANCES; 
+    desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
+
+    HRASSERT(device_->CreateBuffer(&desc, nullptr, &spreadBuffer_));
 }

@@ -66,9 +66,10 @@ void Game::Init() {
         SendWorldMeshToGPU_P(coordinates, vertices, indices);
     }
 
+    spreadManager_ = new SpreadManager(resourceManager_, world_);
     for (int x = 0; x < 64; x++) 
     for (int z = 0; z < 64; z++) {
-        spreadManager_->AddSpread(ivec2(x * 2.0f, z * 2.0f), 48.0f, world_);
+        spreadManager_->AddSpread(ivec2(x * 2.0f, z * 2.0f), 48.0f);
     }
 }
 

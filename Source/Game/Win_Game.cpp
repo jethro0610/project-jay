@@ -10,7 +10,6 @@ void Game::Init_P() {
     dxResources_ = new DXResources(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
     resourceManager_ = new ResourceManager(dxResources_);
     renderer_ = new Renderer(resourceManager_);
-    spreadManager_ = new SpreadManager(dxResources_);
     Init();
 
     MSG msg;

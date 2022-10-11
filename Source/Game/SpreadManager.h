@@ -1,5 +1,6 @@
 #pragma once
 #include "../Types/Transform.h"
+#include "../Game/World.h"
 #include <unordered_map>
 #include <glm.hpp>
 
@@ -23,6 +24,6 @@ public:
     glm::vec3 positions_[MAX_INSTANCES];
     bool dirty_;
 
-    void AddSpread(glm::ivec2 key); 
+    void AddSpread(glm::ivec2 key, float height, World* world); 
     void UpdateRenderData_P();
 };

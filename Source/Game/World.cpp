@@ -203,3 +203,14 @@ bool World::CoordinateIsDirty(ivec3 coordinate) const {
     int index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
     return dirtyCoordinates_[index];
 }
+
+vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps) {
+    vec3 currentPosition = start;
+    for (int i = 0; i < maxSteps; i++) {
+        float distance = GetDistance(currentPosition);
+        if (abs(distance) < 0.001f)
+            break;
+        currentPosition += direction * distance;
+    }
+    return currentPosition;
+}

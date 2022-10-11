@@ -64,6 +64,8 @@ public:
     void MarkCoordinateDirty(glm::ivec3 coordinates);
     bool CoordinateIsDirty(glm::ivec3 coordinate) const;
 
+    glm::vec3 GetNearestInDirection(glm::vec3 start, glm::vec3 direction, uint16_t maxSteps = 32);
+
 private:
     FastNoiseLite* noise_;
 

@@ -104,6 +104,6 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
 }
 
-void Game::SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {
-    dxResources_->WriteWorldMesh(coordinates, vertices, indices);
+void Game::SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {
+    dxResources_->WriteWorldMesh(chunk, vertices, indices);
 }

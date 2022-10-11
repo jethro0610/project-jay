@@ -54,7 +54,7 @@ public:
     std::unordered_map<std::string, DXMesh> skeletalMeshes_;
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
 
-    DXMesh worldMeshes_[MAX_X_COORDINATES][MAX_Y_COORDINATES][MAX_Z_COORDINATES];
+    DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
     ID3D11Buffer* spreadBuffer_;
 
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
@@ -76,7 +76,7 @@ public:
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadTexture(std::string textureName);
-    void WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
+    void WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
     // Should only be calling this from ResourceManager
     void LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal = false);
@@ -91,6 +91,6 @@ private:
     void InitWorldMeshes();
     void InitSpreadBuffer();
 
-    WorldVertex coordinateFillVertices_[MAX_COORDINATE_VERTICES];
-    uint16_t coordinateFillIndices_[MAX_COORDINATE_INDICES];
+    WorldVertex chunkFillVertices_[MAX_CHUNK_VERTICES];
+    uint16_t chunkFillIndices_[MAX_CHUNK_INDICES];
 };

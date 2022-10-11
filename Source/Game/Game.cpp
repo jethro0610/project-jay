@@ -10,17 +10,19 @@ Game::Game() {
 }
 
 void Game::Init() {
+    world_ = new World(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>());
+    camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
+    spreadManager_ = new SpreadManager(resourceManager_, world_);
+
     // Initialize the time
     currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
     lastTimeUSec_ = currentTimeUSec_;
     elapsedTime_ = 0.0f;
 
     // Create the camera and assign it to the renderer
-    camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
     renderer_->camera_ = camera_;
 
     resourceManager_->LoadStaticModel("st_sphere");
-
     // Create the player entity
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
@@ -55,18 +57,16 @@ void Game::Init() {
     terrainModProps.position = vec3(0.0f);
     terrainModProps.radius = 16.0f;
 
-    world_ = new World(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>());
-    for (int x = -MAX_X_COORDINATES / 2; x < MAX_X_COORDINATES / 2; x++)
-    for (int y = -MAX_Y_COORDINATES / 2; y < MAX_Y_COORDINATES / 2; y++)
-    for (int z = -MAX_Z_COORDINATES / 2; z < MAX_Z_COORDINATES / 2; z++) {
-        ivec3 coordinates(x, y, z);
+    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
+    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
+        ivec3 chunk(x, y, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
-        world_->GetMeshGPUCompute(dxResources_, coordinates, vertices, indices);
-        SendWorldMeshToGPU_P(coordinates, vertices, indices);
+        world_->GetMeshGPUCompute(dxResources_, chunk, vertices, indices);
+        SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 
-    spreadManager_ = new SpreadManager(resourceManager_, world_);
     for (int x = 0; x < 64; x++) 
     for (int z = 0; z < 64; z++) {
         spreadManager_->AddSpread(ivec2(x * 2.0f, z * 2.0f), 48.0f);

@@ -10,13 +10,13 @@ World::World(Entity* entities, TerrainModComponent* terrainModComponent) {
     terrainModComponent_ = terrainModComponent;
 }
 
-void World::FillLocalDistanceCache(ivec3 coordinates) {
-    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+void World::FillLocalDistanceCache(ivec3 chunk) {
+    vec3 chunkOffset = vec3(chunk) * CHUNK_SIZE;
     for (int x = 0; x < DISTANCE_CACHE_SIZE; x++)
     for (int y = 0; y < DISTANCE_CACHE_SIZE; y++)
     for (int z = 0; z < DISTANCE_CACHE_SIZE; z++) {
         vec3 voxelOffset = vec3(x, y, z) * VOXEL_SIZE;
-        localDistanceCache_[x][y][z] = GetDistance(coordinateOffset + voxelOffset);
+        localDistanceCache_[x][y][z] = GetDistance(chunkOffset + voxelOffset);
     }
 }
 
@@ -58,27 +58,27 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
     return normalize(vec3(gradX, gradY, gradZ));
 }
 
-void World::GetMesh(ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    FillLocalDistanceCache(coordinates);
-    GetMeshVerticesCPU(coordinates, outVertices);
-    GetMeshIndices(coordinates, outIndices);
+void World::GetMesh(ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
+    FillLocalDistanceCache(chunk);
+    GetMeshVerticesCPU(chunk, outVertices);
+    GetMeshIndices(chunk, outIndices);
 
-    assert(outVertices.size() <= MAX_COORDINATE_VERTICES);
-    assert(outIndices.size() <= MAX_COORDINATE_INDICES);
+    assert(outVertices.size() <= MAX_CHUNK_VERTICES);
+    assert(outIndices.size() <= MAX_CHUNK_INDICES);
 }
 
-void World::GetMeshGPUCompute(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    FillLocalDistanceCache(coordinates);
-    GetMeshVerticesGPU_P(graphicsResources, coordinates, outVertices);
-    GetMeshIndices(coordinates, outIndices);
+void World::GetMeshGPUCompute(void* graphicsResources, ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
+    FillLocalDistanceCache(chunk);
+    GetMeshVerticesGPU_P(graphicsResources, chunk, outVertices);
+    GetMeshIndices(chunk, outIndices);
 
-    assert(outVertices.size() <= MAX_COORDINATE_VERTICES);
-    assert(outIndices.size() <= MAX_COORDINATE_INDICES);
+    assert(outVertices.size() <= MAX_CHUNK_VERTICES);
+    assert(outIndices.size() <= MAX_CHUNK_INDICES);
 }
 
-void World::GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
+void World::GetMeshVerticesCPU(ivec3 chunk, std::vector<WorldVertex>& outVertices) {
     uint16_t currentIndex = 0;
-    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+    vec3 chunkOffset = vec3(chunk) * CHUNK_SIZE;
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
@@ -115,7 +115,7 @@ void World::GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outV
             WorldVertex vertex;
             vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
             vertex.position *= VOXEL_SIZE;
-            vertex.position += coordinateOffset;
+            vertex.position += chunkOffset;
             vertex.normal = GetNormal(vertex.position, 2.0f);
             outVertices.push_back(vertex);
             currentIndex++;
@@ -123,8 +123,8 @@ void World::GetMeshVerticesCPU(ivec3 coordinates, std::vector<WorldVertex>& outV
     }
 }
 
-void World::GetMeshIndices(ivec3 coordinates, std::vector<uint16_t>& outIndices) {
-    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
+    vec3 chunkOffset = vec3(chunk) * CHUNK_SIZE;
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
@@ -194,14 +194,14 @@ float World::Lerp(float a, float b, float t) {
     return a + t * (b - a);
 }
 
-void World::MarkCoordinateDirty(ivec3 coordinate) {
-    int index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
-    dirtyCoordinates_[index] = true;
+void World::MarkChunkDirty(ivec3 chunk) {
+    int index = (chunk.x) + (chunk.y * MAX_X_CHUNKS) + (chunk.z * MAX_X_CHUNKS * MAX_Y_CHUNKS); 
+    dirtyChunks_[index] = true;
 }
 
-bool World::CoordinateIsDirty(ivec3 coordinate) const {
-    int index = (coordinate.x) + (coordinate.y * MAX_X_COORDINATES) + (coordinate.z * MAX_X_COORDINATES * MAX_Y_COORDINATES); 
-    return dirtyCoordinates_[index];
+bool World::ChunkIsDirty(ivec3 chunk) const {
+    int index = (chunk.x) + (chunk.y * MAX_X_CHUNKS) + (chunk.z * MAX_Y_CHUNKS * MAX_Z_CHUNKS); 
+    return dirtyChunks_[index];
 }
 
 vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps) {

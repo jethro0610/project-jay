@@ -312,13 +312,13 @@ void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numbe
     }
 }
 
-void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
-    ivec3 normalizedCoords = coordinates;
-    normalizedCoords.x += MAX_X_COORDINATES / 2;
-    normalizedCoords.y += MAX_Y_COORDINATES / 2;
-    normalizedCoords.z += MAX_Z_COORDINATES / 2;
+void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
+    ivec3 normalizedChunk = chunk;
+    normalizedChunk .x += MAX_X_CHUNKS / 2;
+    normalizedChunk .y += MAX_Y_CHUNKS / 2;
+    normalizedChunk .z += MAX_Z_CHUNKS / 2;
 
-    DXMesh worldMesh = worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z];
+    DXMesh worldMesh = worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z];
 
     D3D11_MAPPED_SUBRESOURCE vertexResource;
     context_->Map(worldMesh.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
@@ -330,8 +330,8 @@ void DXResources::WriteWorldMesh(ivec3 coordinates, const std::vector<WorldVerte
     memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
     context_->Unmap(worldMesh.indexBuffer, 0);
 
-    worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z].vertexCount = vertices.size();
-    worldMeshes_[normalizedCoords.x][normalizedCoords.y][normalizedCoords.z].indexCount = indices.size();
+    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexCount = vertices.size();
+    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexCount = indices.size();
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {
@@ -489,24 +489,24 @@ void DXResources::LoadTexture(std::string textureName) {
 
 void DXResources::InitWorldMeshes() {
     D3D11_BUFFER_DESC worldVBufferDesc = {};
-    worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_COORDINATE_VERTICES;
+    worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_CHUNK_VERTICES;
     worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA worldVSrData = {};
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_COORDINATE_INDICES;
+    worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_CHUNK_INDICES;
     worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA worldISrData = {};
-    worldISrData.pSysMem = &coordinateFillIndices_;
+    worldISrData.pSysMem = &chunkFillIndices_;
 
-    for (int x = 0; x < MAX_X_COORDINATES; x++)
-    for (int y = 0; y < MAX_Y_COORDINATES; y++)
-    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
-        worldVSrData.pSysMem = &coordinateFillVertices_;
+    for (int x = 0; x < MAX_X_CHUNKS; x++)
+    for (int y = 0; y < MAX_Y_CHUNKS; y++)
+    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+        worldVSrData.pSysMem = &chunkFillVertices_;
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,

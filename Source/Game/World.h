@@ -54,15 +54,15 @@ public:
     // Higher epsilon = smoother
     glm::vec3 GetNormal(glm::vec3 position, float epsilon = 1.0f) const;
 
-    // NOTE: These functions fill the local distance cache based on the coordinate
-    void GetMesh(glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
-    void GetMeshGPUCompute(void* graphicsResources, glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
+    // NOTE: These functions fill the local distance cache based on the chunk 
+    void GetMesh(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
+    void GetMeshGPUCompute(void* graphicsResources, glm::ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
     static float Lerp(float a, float b, float t);
 
-    std::bitset<MAX_X_COORDINATES * MAX_Y_COORDINATES * MAX_Z_COORDINATES> dirtyCoordinates_;
-    void MarkCoordinateDirty(glm::ivec3 coordinates);
-    bool CoordinateIsDirty(glm::ivec3 coordinate) const;
+    std::bitset<MAX_X_CHUNKS * MAX_Y_CHUNKS * MAX_Z_CHUNKS> dirtyChunks_;
+    void MarkChunkDirty(glm::ivec3 chunk);
+    bool ChunkIsDirty(glm::ivec3 chunk) const;
 
     glm::vec3 GetNearestInDirection(glm::vec3 start, glm::vec3 direction, uint16_t maxSteps = 32);
 
@@ -73,11 +73,11 @@ private:
     int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
     float localDistanceCache_[DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE];
 
-    void FillLocalDistanceCache(glm::ivec3 coordinates);
+    void FillLocalDistanceCache(glm::ivec3 chunk);
 
     // NOTE: These functions write to the indices data channell
-    void GetMeshVerticesCPU(glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices);
-    void GetMeshVerticesGPU_P(void* graphicsResources, glm::ivec3 coordinates, std::vector<WorldVertex>& outVertices);
+    void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
+    void GetMeshVerticesGPU_P(void* graphicsResources, glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
 
-    void GetMeshIndices(glm::ivec3 coordinates, std::vector<uint16_t>& outInidices);
+    void GetMeshIndices(glm::ivec3 chunk, std::vector<uint16_t>& outInidices);
 };

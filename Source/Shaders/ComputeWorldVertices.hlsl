@@ -27,8 +27,8 @@ static int2 edgeTable[12] = {
 static uint WORLD_RESOLUTION = 16;
 static uint WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
 static uint DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
-static float COORDINATE_SIZE = 32.0f;
-static float VOXEL_SIZE = COORDINATE_SIZE / (WORLD_RESOLUTION - 1);
+static float CHUNK_SIZE = 32.0f;
+static float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
 static float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
 StructuredBuffer<float> distanceCache : register(t0);

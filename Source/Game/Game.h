@@ -57,7 +57,7 @@ private:
 
     EntityManager entityManager_;
 
-    void SendWorldMeshToGPU_P(ivec3 coordinates, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
+    void SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
     void UpdateInputs_P(float deltaTime);
     void PollGamepadInputs_P();
     void UpdateTime();

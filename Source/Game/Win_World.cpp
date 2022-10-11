@@ -1,7 +1,7 @@
 #include "World.h"
 #include "../Resource/DXResources.h"
 
-void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std::vector<WorldVertex>& outVertices) {
+void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 chunk, std::vector<WorldVertex>& outVertices) {
     DXResources* dxResources = static_cast<DXResources*>(graphicsResources);
     ID3D11DeviceContext* context = dxResources->context_;
 
@@ -20,7 +20,7 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
     context->Map(dxResources->computeWVertsOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
     
-    vec3 coordinateOffset = vec3(coordinates) * COORDINATE_SIZE;
+    vec3 chunkOffset = vec3(chunk) * CHUNK_SIZE;
     vec3* vertices = reinterpret_cast<vec3*>(computeVertexOutputResource.pData);
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
@@ -31,7 +31,7 @@ void World::GetMeshVerticesGPU_P(void* graphicsResources, ivec3 coordinates, std
         }
 
         WorldVertex worldVertex;
-        worldVertex.position = vertices[index] + coordinateOffset;
+        worldVertex.position = vertices[index] + chunkOffset;
         worldVertex.normal = GetNormal(worldVertex.position, 2.0f);
         indicesDataChannel_[x][y][z] = outVertices.size();
         outVertices.push_back(worldVertex);

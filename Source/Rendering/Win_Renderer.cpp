@@ -71,9 +71,9 @@ void Renderer::RenderWorld_P() {
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(WorldVertex);
     UINT vertexOffset = 0;
-    for (int x = 0; x < MAX_X_COORDINATES; x++)
-    for (int y = 0; y < MAX_Y_COORDINATES; y++)
-    for (int z = 0; z < MAX_Z_COORDINATES; z++) {
+    for (int x = 0; x < MAX_X_CHUNKS; x++)
+    for (int y = 0; y < MAX_Y_CHUNKS; y++)
+    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
         DXMesh worldMeshResource = dxResources->worldMeshes_[x][y][z];
         context->IASetVertexBuffers(0, 1, &worldMeshResource.vertexBuffer, &vertexStride, &vertexOffset);
         context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);

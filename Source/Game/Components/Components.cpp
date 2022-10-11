@@ -9,5 +9,6 @@ ASSIGN_COMPONENT_ID(StaticModelComponent);
 ASSIGN_COMPONENT_ID(TransformComponent);
 ASSIGN_COMPONENT_ID(VelocityComponent);
 ASSIGN_COMPONENT_ID(TerrainModComponent);
+ASSIGN_COMPONENT_ID(SpreadActivatorComponent);
 
 // Static IDs are used on component classes for consistency with file writes

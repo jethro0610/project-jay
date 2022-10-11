@@ -47,6 +47,8 @@ void Game::Init() {
     movementProperties.supportedMoveModes.set(MoveMode::Default);
     movementProperties.supportedMoveModes.set(MoveMode::Ski);
     
+    auto spreadProperites = entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
+    spreadProperites.radius = 1.0f;
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
@@ -65,11 +67,6 @@ void Game::Init() {
         std::vector<uint16_t> indices;
         world_->GetMeshGPUCompute(dxResources_, chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
-    }
-
-    for (int x = 0; x < 64; x++) 
-    for (int z = 0; z < 64; z++) {
-        spreadManager_->AddSpread(ivec2(x * 2.0f, z * 2.0f), 48.0f);
     }
 }
 
@@ -110,6 +107,14 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<ColliderComponent>(),
+            entityManager_.GetComponent<GroundTraceComponent>()
+        );
+        SpreadSystem::Execute(
+            world_,
+            entityManager_.entities_,
+            spreadManager_,
+            entityManager_.GetComponent<SpreadActivatorComponent>(),
+            entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         timeAccumlulator_ -= TIMESTEP;

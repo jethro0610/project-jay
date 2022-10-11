@@ -6,3 +6,4 @@
 #include "GroundTraceComponent.h"
 #include "VelocityComponent.h"
 #include "TerrainModComponent.h"
+#include "SpreadActivatorComponent.h"

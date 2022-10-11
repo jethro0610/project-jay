@@ -34,6 +34,7 @@ private:
         GroundTraceComponent,
         VelocityComponent,
         MovementComponent,
-        TerrainModComponent
+        TerrainModComponent,
+        SpreadActivatorComponent 
     > components_;
 };

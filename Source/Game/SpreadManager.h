@@ -20,6 +20,6 @@ public:
     glm::vec3 positions_[MAX_INSTANCES];
     bool dirty_;
 
-    void AddSpread(glm::ivec2 key, float height); 
+    bool AddSpread(glm::ivec2 key, float height); 
     void UpdateRenderData_P();
 };

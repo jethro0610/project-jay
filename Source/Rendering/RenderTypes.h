@@ -1,7 +1,7 @@
 #pragma once
 #include <glm.hpp>
 
-const uint16_t MAX_INSTANCES = 512;
+const uint32_t MAX_INSTANCES = 64 * 64;
 
 struct PerFrameData {
     glm::vec3 cameraPos;

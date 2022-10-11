@@ -6,3 +6,10 @@ SpreadManager::SpreadManager(DXResources* dxResources) {
     dxResources_ = dxResources; 
     dxResources_->CreateInstanceBuffer(&instanceBuffer_);
 }
+
+void SpreadManager::UpdateRenderData_P() {
+    if (!dirty_)
+        return;
+
+    dxResources_->UpdateBuffer(instanceBuffer_, positions_, sizeof(positions_));
+}

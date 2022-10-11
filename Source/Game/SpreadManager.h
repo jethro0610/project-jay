@@ -24,4 +24,5 @@ public:
     bool dirty_;
 
     void AddSpread(glm::ivec2 key); 
+    void UpdateRenderData_P();
 };

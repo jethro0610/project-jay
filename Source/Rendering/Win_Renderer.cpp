@@ -15,6 +15,7 @@ void Renderer::Init_P() {
     dxResources->LoadVertexShader("StaticVertexShader", VertexShaderType::STATIC);
     dxResources->LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources->LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
+    dxResources->LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
     dxResources->LoadPixelShader("DefaultPS");
     dxResources->LoadPixelShader("WorldGrassPS");
 
@@ -41,6 +42,14 @@ void Renderer::Init_P() {
     playerMaterial.textures[1] = "bricks_n";
     playerMaterial.numOfTextures = 2;
     resourceManager_->materials_["playerMaterial"] = playerMaterial;
+
+    MaterialDesc spreadMaterial;
+    spreadMaterial.vertexShader = "InstancedVertexShader";
+    spreadMaterial.pixelShader = "DefaultPS";
+    spreadMaterial.textures[0] = "bricks_c";
+    spreadMaterial.textures[1] = "bricks_n";
+    spreadMaterial.numOfTextures = 2;
+    resourceManager_->materials_["spreadMaterial"] = spreadMaterial;
 }
 
 void Renderer::RenderWorld_P() {
@@ -111,16 +120,23 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
 void Renderer::RenderSpread_P(SpreadManager* spreadManager) {
     DXResources* dxResources = resourceManager_->dxResources_;
     ID3D11DeviceContext* context = dxResources->context_;
+
+    PerObjectData objectData;
+    Transform defaultTransform;
+    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
+    dxResources->UpdateBuffer(dxResources->perObjectCBuffer_, &objectData, sizeof(PerObjectData));
     
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    UINT vertexStride = sizeof(StaticVertex);
-    UINT vertexOffset = 0;
-    const std::string material = "playerMaterial";  
+    UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
+    UINT offsets[2] = { 0, 0 };
+    const std::string material = "spreadMaterial";  
     SetMaterial_P(material);
     DXMesh dxMesh = dxResources->staticMeshes_["st_sphere_0"];
-    context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
+    ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, spreadManager->instanceBuffer_};
+    context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
     context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
+    context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager->count_, 0, 0, 0);
     /* for (auto&[key, index] : spreadManager->keys_) { */
     /*     PerObjectData objectData; */
     /*     spreadManager->transforms_[index].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat); */

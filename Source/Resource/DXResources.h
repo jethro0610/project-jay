@@ -26,7 +26,8 @@ struct DXMesh {
 enum class VertexShaderType {
     STATIC,
     SKELETAL,
-    WORLD
+    WORLD,
+    INSTANCED
 };
 
 class DXResources {

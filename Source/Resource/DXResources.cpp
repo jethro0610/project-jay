@@ -213,10 +213,11 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     instancedVertexDescription_[5] = {
         "INST_POS",
         0,
-        DXGI_FORMAT_R32G32B32A32_FLOAT,
+        DXGI_FORMAT_R32G32B32_FLOAT,
         1,
         0,
-        D3D11_INPUT_PER_INSTANCE_DATA
+        D3D11_INPUT_PER_INSTANCE_DATA,
+        1
     };
     LoadVertexShader("ScreenQuad");
     
@@ -255,10 +256,10 @@ void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
 
 void DXResources::CreateInstanceBuffer(ID3D11Buffer** outBuffer) {
     D3D11_BUFFER_DESC desc = {};
-    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
     desc.ByteWidth = sizeof(InstanceData) * MAX_INSTANCES; 
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    desc.CPUAccessFlags = 0;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;
 
     HRASSERT(device_->CreateBuffer(&desc, nullptr, outBuffer));
@@ -384,6 +385,16 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
         HRASSERT(device_->CreateInputLayout(
             worldVertexDescription_,
             ARRAYSIZE(worldVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+        break;
+
+    case VertexShaderType::INSTANCED:
+        HRASSERT(device_->CreateInputLayout(
+            instancedVertexDescription_,
+            ARRAYSIZE(instancedVertexDescription_),
             vertexShaderBlob->GetBufferPointer(),
             vertexShaderBlob->GetBufferSize(),
             &inputLayout

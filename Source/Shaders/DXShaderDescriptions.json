@@ -31,6 +31,10 @@
         {
             "name": "PostProcess",
             "type": "ps"
+        },
+        {
+            "name": "InstancedVertexShader",
+            "type": "vs"
         }
 	]
 }

@@ -1,8 +1,6 @@
 #pragma once
 #include <glm.hpp>
 
-const uint32_t MAX_INSTANCES = 64 * 64;
-
 struct PerFrameData {
     glm::vec3 cameraPos;
 	float time;

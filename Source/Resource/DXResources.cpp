@@ -246,7 +246,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     computeWVertsBlob->Release();
 
     InitWorldMeshes();
-    InitSpreadBuffer();
+    InitSpreadBuffers();
 }
 
 void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
@@ -314,9 +314,9 @@ void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numbe
 
 void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
     ivec3 normalizedChunk = chunk;
-    normalizedChunk .x += MAX_X_CHUNKS / 2;
-    normalizedChunk .y += MAX_Y_CHUNKS / 2;
-    normalizedChunk .z += MAX_Z_CHUNKS / 2;
+    normalizedChunk.x += MAX_X_CHUNKS / 2;
+    normalizedChunk.y += MAX_Y_CHUNKS / 2;
+    normalizedChunk.z += MAX_Z_CHUNKS / 2;
 
     DXMesh worldMesh = worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z];
 
@@ -494,6 +494,7 @@ void DXResources::InitWorldMeshes() {
     worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA worldVSrData = {};
+    worldVSrData.pSysMem = &chunkFillVertices_;
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
     worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_CHUNK_INDICES;
@@ -506,7 +507,6 @@ void DXResources::InitWorldMeshes() {
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        worldVSrData.pSysMem = &chunkFillVertices_;
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,
@@ -520,13 +520,16 @@ void DXResources::InitWorldMeshes() {
     }
 }
 
-void DXResources::InitSpreadBuffer() {
+void DXResources::InitSpreadBuffers() {
     D3D11_BUFFER_DESC desc = {};
     desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = sizeof(InstanceData) * MAX_INSTANCES; 
+    desc.ByteWidth = sizeof(InstanceData) * MAX_SPREAD; 
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;
 
-    HRASSERT(device_->CreateBuffer(&desc, nullptr, &spreadBuffer_));
+    for (int x = 0; x < MAX_X_CHUNKS; x++)
+    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+        HRASSERT(device_->CreateBuffer(&desc, nullptr, &spreadBuffers_[x][z]));
+    }
 }

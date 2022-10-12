@@ -26,6 +26,8 @@ void SpreadSystem::Execute(
             continue;
         
         const Transform transform = transformComponent.transform[i];
-        spreadManager->AddSpread(ivec2(transform.position_.x, transform.position_.z), transform.position_.y);
+        vec2 spreadOrigin(transform.position_.x, transform.position_.z);
+        spreadOrigin /= SPREAD_DIST;
+        spreadManager->AddSpread(ivec2(spreadOrigin), transform.position_.y);
     }
 }

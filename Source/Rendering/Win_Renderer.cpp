@@ -133,10 +133,14 @@ void Renderer::RenderSpread_P(SpreadManager* spreadManager) {
     const std::string material = "spreadMaterial";  
     SetMaterial_P(material);
     DXMesh dxMesh = dxResources->staticMeshes_["st_sphere_0"];
-    ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources->spreadBuffer_ };
-    context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
     context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager->count_, 0, 0, 0);
+
+    for (int x = 0; x < MAX_X_CHUNKS; x++)
+    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+        ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources->spreadBuffers_[x][z] };
+        context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+        context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager->chunks_[x][z].count, 0, 0, 0);
+    }
 }
 
 void Renderer::Clear_P() {

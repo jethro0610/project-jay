@@ -1,9 +1,11 @@
 #include "SpreadManager.h"
 
 void SpreadManager::UpdateRenderData_P() {
-    if (!dirty_)
-        return;
-    
     DXResources* dxResources = resourceManager_->dxResources_;
-    dxResources->UpdateBuffer(dxResources->spreadBuffer_, positions_, sizeof(positions_));
+
+    for (auto it = dirtyChunks_.begin(); it != dirtyChunks_.end(); it++) {
+        SpreadChunk& chunk = chunks_[it->x][it->y];
+        dxResources->UpdateBuffer(dxResources->spreadBuffers_[it->x][it->y], chunk.positions, sizeof(vec3) * MAX_SPREAD); 
+    }
+    dirtyChunks_.clear();
 }

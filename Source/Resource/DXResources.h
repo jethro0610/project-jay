@@ -8,6 +8,7 @@
 #include "../Resource/RawModel.h"
 #include "../Rendering/RenderTypes.h"
 #include "../Game/WorldConstants.h"
+#include "../Game/SpreadConstants.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps
@@ -55,7 +56,7 @@ public:
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
 
     DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
-    ID3D11Buffer* spreadBuffer_;
+    ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
 
     D3D11_INPUT_ELEMENT_DESC worldVertexDescription_[2];
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
@@ -89,7 +90,7 @@ private:
 
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
     void InitWorldMeshes();
-    void InitSpreadBuffer();
+    void InitSpreadBuffers();
 
     WorldVertex chunkFillVertices_[MAX_CHUNK_VERTICES];
     uint16_t chunkFillIndices_[MAX_CHUNK_INDICES];

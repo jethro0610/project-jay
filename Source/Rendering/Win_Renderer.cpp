@@ -130,16 +130,24 @@ void Renderer::RenderSpread_P(SpreadManager* spreadManager) {
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
     UINT offsets[2] = { 0, 0 };
+
+    const std::string model = "st_sphere";
+    StaticModelDesc modelDesc = resourceManager_->staticModels_["st_sphere"];
     const std::string material = "spreadMaterial";  
     SetMaterial_P(material);
-    DXMesh dxMesh = dxResources->staticMeshes_["st_sphere_0"];
-    context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
-    for (int x = 0; x < MAX_X_CHUNKS; x++)
-    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources->spreadBuffers_[x][z] };
-        context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-        context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager->chunks_[x][z].count, 0, 0, 0);
+    for (int m = 0; m < modelDesc.meshCount; m++) {
+        std::string mesh = model + "_" + std::to_string(m);
+        DXMesh dxMesh = dxResources->staticMeshes_[mesh];
+        context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+
+        // TODO: Render only on visible chunks 
+        for (int x = 0; x < MAX_X_CHUNKS; x++)
+        for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+            ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources->spreadBuffers_[x][z] };
+            context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+            context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager->chunks_[x][z].count, 0, 0, 0);
+        }
     }
 }
 

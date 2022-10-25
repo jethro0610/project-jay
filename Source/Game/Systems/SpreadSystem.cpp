@@ -26,9 +26,7 @@ void SpreadSystem::Execute(
             continue;
         
         const Transform transform = transformComponent.transform[i];
-        vec2 spreadOrigin(transform.position_.x, transform.position_.z);
-        spreadOrigin /= SPREAD_DIST;
-        spreadOrigin = floor(spreadOrigin);
-        spreadManager->AddSpread(ivec2(spreadOrigin), transform.position_.y);
+        ivec2 spreadKey = spreadManager->WorldPositionToSpreadKey(transform.position_);
+        spreadManager->AddSpread(spreadKey, transform.position_.y);
     }
 }

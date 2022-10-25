@@ -14,6 +14,7 @@ file(GLOB HEADERS
 	Source/Game/Components/TransformComponent.h
 	Source/Game/Components/VelocityComponent.h
     Source/Game/Components/SpreadActivatorComponent.h
+    Source/Game/Components/SpreadDetectComponent.h
 
 	Source/Game/Entity/Entity.h
 	Source/Game/Entity/EntityManager.h
@@ -26,6 +27,7 @@ file(GLOB HEADERS
 	Source/Game/Systems/Systems.h
     Source/Game/Systems/TerrainModSystem.h
     Source/Game/Systems/SpreadSystem.h
+    Source/Game/Systems/SpreadDetectSystem.h
 
 	Source/Game/Camera.h
 	Source/Game/Game.h
@@ -64,6 +66,7 @@ file(GLOB SOURCES
 	Source/Game/Systems/TransformSystem.cpp
     Source/Game/Systems/TerrainModSystem.cpp
     Source/Game/Systems/SpreadSystem.cpp
+    Source/Game/Systems/SpreadDetectSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

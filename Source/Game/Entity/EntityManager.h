@@ -35,6 +35,7 @@ private:
         VelocityComponent,
         MovementComponent,
         TerrainModComponent,
-        SpreadActivatorComponent 
+        SpreadActivatorComponent,
+        SpreadDetectComponent 
     > components_;
 };

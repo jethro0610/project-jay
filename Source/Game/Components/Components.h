@@ -7,3 +7,4 @@
 #include "VelocityComponent.h"
 #include "TerrainModComponent.h"
 #include "SpreadActivatorComponent.h"
+#include "SpreadDetectComponent.h"

@@ -109,7 +109,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<ColliderComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
-        SpreadSystem::Execute(
+        SpreadActivatorSystem::Execute(
             world_,
             entityManager_.entities_,
             spreadManager_,

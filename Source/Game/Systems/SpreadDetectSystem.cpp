@@ -22,7 +22,7 @@ void SpreadDetectSystem::Execute(
             time += TIMESTEP; 
 
         detectComponent.time[i] = clamp(time, 0.0f, 1.0f);
-        // TODO: Only decrease speed on ENTRY of spread, not on stay.
+        // TODO: Only increment time on ENTRY of spread, not on stay.
         //
         // Have an array of passed spread points (probably last 8)
         // Test if the current is in the array
@@ -30,5 +30,7 @@ void SpreadDetectSystem::Execute(
         //
         // The activator component should add to the array BEFORE execution that way
         // activated spread isn't counted
+        //
+        // Maybe have the spread wiggle on entry?
     }
 }

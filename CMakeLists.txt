@@ -26,7 +26,7 @@ file(GLOB HEADERS
 	Source/Game/Systems/TransformSystem.h
 	Source/Game/Systems/Systems.h
     Source/Game/Systems/TerrainModSystem.h
-    Source/Game/Systems/SpreadSystem.h
+    Source/Game/Systems/SpreadActivatorSystem.h
     Source/Game/Systems/SpreadDetectSystem.h
 
 	Source/Game/Camera.h
@@ -65,7 +65,7 @@ file(GLOB SOURCES
 	Source/Game/Systems/PlayerInputSystem.cpp
 	Source/Game/Systems/TransformSystem.cpp
     Source/Game/Systems/TerrainModSystem.cpp
-    Source/Game/Systems/SpreadSystem.cpp
+    Source/Game/Systems/SpreadActivatorSystem.cpp
     Source/Game/Systems/SpreadDetectSystem.cpp
 
 	Source/Game/Camera.cpp

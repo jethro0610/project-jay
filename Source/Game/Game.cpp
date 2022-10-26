@@ -51,6 +51,8 @@ void Game::Init() {
     spreadProperites.radius = 1.0f;
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
+    entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
+
     camera_->trackEntity_ = PLAYER_ENTITY;
 
     // Create the testing terrain modifier entity
@@ -82,6 +84,21 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>()
         );
+        SpreadActivatorSystem::Execute(
+            world_,
+            entityManager_.entities_,
+            spreadManager_,
+            entityManager_.GetComponent<SpreadActivatorComponent>(),
+            entityManager_.GetComponent<SpreadDetectComponent>(),
+            entityManager_.GetComponent<TransformComponent>(), 
+            entityManager_.GetComponent<GroundTraceComponent>()
+        );
+        SpreadDetectSystem::Execute(
+            entityManager_.entities_, 
+            spreadManager_, 
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<SpreadDetectComponent>()
+        );
         PlayerInputSystem::Execute(
             inputs_, 
             camera_, 
@@ -94,7 +111,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<GroundTraceComponent>(),
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<VelocityComponent>(),
-            entityManager_.GetComponent<ColliderComponent>()
+            entityManager_.GetComponent<ColliderComponent>(),
+            entityManager_.GetComponent<SpreadDetectComponent>()
         );
         GroundTraceSystem::Execute(
             world_, 
@@ -107,14 +125,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<ColliderComponent>(),
-            entityManager_.GetComponent<GroundTraceComponent>()
-        );
-        SpreadActivatorSystem::Execute(
-            world_,
-            entityManager_.entities_,
-            spreadManager_,
-            entityManager_.GetComponent<SpreadActivatorComponent>(),
-            entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         timeAccumlulator_ -= TIMESTEP;

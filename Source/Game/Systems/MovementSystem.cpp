@@ -1,4 +1,5 @@
 #include "MovementSystem.h"
+#include "../../Logging/Logger.h"
 using namespace glm;
 
 void MovementSystem::Execute(
@@ -7,7 +8,8 @@ void MovementSystem::Execute(
     GroundTraceComponent& groundTraceComponent,
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent,
-    ColliderComponent& colliderComponent
+    ColliderComponent& colliderComponent,
+    SpreadDetectComponent& spreadDetectComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -54,6 +56,7 @@ void MovementSystem::Execute(
         default:
             break;
         }
+
         if (onGround)
             velocity.y = 0.0f;
         else {
@@ -62,6 +65,20 @@ void MovementSystem::Execute(
         }
         const float frictionLerp = 1.0f - (min(speed, frictionCapSpeed) - minSpeed) / (frictionCapSpeed - minSpeed);
         friction = lerp(minFriction, maxFriction, frictionLerp);
+
+        // Spread contanct speed decline
+        // TODO: Figure out a more elegant decline function, or at least something better for the cap
+        vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z) ;
+        float planarLength = planarVelocity.length();
+        if (
+            entity.HasComponent<SpreadDetectComponent>() && 
+            spreadDetectComponent.detecedSpread[i] &&
+            planarLength >= 0.0f &&
+            onGround
+        ) {
+            planarVelocity /= planarVelocity.length();
+            velocity -= planarVelocity * 1.5f;         
+        }
 
         // Apply the velocity
         transformComponent.transform[i].position_ += velocity * TIMESTEP;

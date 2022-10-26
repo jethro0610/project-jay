@@ -6,6 +6,7 @@ void SpreadActivatorSystem::Execute(
     Entity* entities, 
     SpreadManager* spreadManager,
     SpreadActivatorComponent& spreadActivatorComponent, 
+    SpreadDetectComponent& spreadDetectComponent,
     TransformComponent& transformComponent,
     GroundTraceComponent& groundTraceComponent
 ) {
@@ -27,6 +28,13 @@ void SpreadActivatorSystem::Execute(
         
         const Transform transform = transformComponent.transform[i];
         ivec2 spreadKey = spreadManager->WorldPositionToSpreadKey(transform.position_);
-        spreadManager->AddSpread(spreadKey, transform.position_.y);
+        const bool activated = spreadManager->AddSpread(spreadKey, transform.position_.y);
+        if (!activated || !entity.HasComponent<SpreadDetectComponent>())
+            continue;
+
+        ivec2* lastDetect = spreadDetectComponent.lastDetect[i];
+        for (int s = 0; s < MAX_DETECT - 1; s++) 
+            lastDetect[s + 1] = lastDetect[s];
+        lastDetect[0] = spreadKey;
     }
 }

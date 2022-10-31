@@ -4,7 +4,7 @@
 #include "../Entity/Entity.h"
 #include <algorithm>
 
-const uint8_t MAX_DETECT = 8;
+const uint8_t MAX_DETECT = 4;
 
 struct SpreadDetectComponent {
     bool detecedSpread[MAX_ENTITIES];

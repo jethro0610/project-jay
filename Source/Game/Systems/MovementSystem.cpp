@@ -68,7 +68,7 @@ void MovementSystem::Execute(
 
         // Spread contanct speed decline
         // TODO: Figure out a more elegant decline function, or at least something better for the cap
-        vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z) ;
+        vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = planarVelocity.length();
         if (
             entity.HasComponent<SpreadDetectComponent>() && 
@@ -76,8 +76,8 @@ void MovementSystem::Execute(
             planarLength >= 0.0f &&
             onGround
         ) {
-            planarVelocity /= planarVelocity.length();
-            velocity -= planarVelocity * 1.5f;         
+            planarVelocity /= planarLength;
+            velocity -= planarVelocity * 2.0f;         
         }
 
         // Apply the velocity

@@ -67,7 +67,6 @@ void MovementSystem::Execute(
         friction = lerp(minFriction, maxFriction, frictionLerp);
 
         // Spread contanct speed decline
-        // TODO: Figure out a more elegant decline function, or at least something better for the cap
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = planarVelocity.length();
         if (
@@ -76,8 +75,9 @@ void MovementSystem::Execute(
             planarLength >= 0.0f &&
             onGround
         ) {
-            planarVelocity /= planarLength;
-            velocity -= planarVelocity * 2.0f;         
+            planarVelocity *= 0.995f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
+            velocity.x = planarVelocity.x;
+            velocity.z = planarVelocity.z;
         }
 
         // Apply the velocity

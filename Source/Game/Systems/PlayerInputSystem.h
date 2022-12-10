@@ -7,4 +7,3 @@
 namespace PlayerInputSystem {
     void Execute(Inputs inputs, Camera* camera, Entity* entities, MovementComponent& desiredMovementComponent);
 }
-

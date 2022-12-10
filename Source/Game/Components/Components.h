@@ -8,3 +8,5 @@
 #include "TerrainModComponent.h"
 #include "SpreadActivatorComponent.h"
 #include "SpreadDetectComponent.h"
+#include "FlagsComponent.h"
+#include "PickupComponent.h"

@@ -56,10 +56,20 @@ void Game::Init() {
     camera_->trackEntity_ = PLAYER_ENTITY;
 
     // Create the testing terrain modifier entity
-    int terrainModEntity = entityManager_.CreateEntity();
-    auto terrainModProps = entityManager_.RegisterComponent<TerrainModComponent>(terrainModEntity);
-    terrainModProps.position = vec3(0.0f);
-    terrainModProps.radius = 16.0f;
+    /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */
+    /* auto terrainModProps = entityManager_.RegisterComponent<TerrainModComponent>(terrainModEntity); */
+    /* terrainModProps.position = vec3(0.0f); */
+    /* terrainModProps.radius = 16.0f; */
+
+    uint16_t holdEntity = entityManager_.CreateEntity();
+    auto transformProps = entityManager_.RegisterComponent<TransformComponent>(holdEntity);
+    transformProps.transform.position_ = vec3(0.0f, 40.0f, 0.0f);
+    transformProps.transform.scale_ = vec3(2.0f);
+    auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
+    holdableProps.range = 2.0f;
+    auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
+    meshProps.model = "st_sphere";
+    meshProps.materials[0] = "playerMaterial";
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -70,6 +80,7 @@ void Game::Init() {
         world_->GetMeshGPUCompute(dxResources_, chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
+
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {

@@ -8,11 +8,12 @@
 class EntityManager {
 public:
     Entity entities_[MAX_ENTITIES];
+    uint16_t entityCount_ = 0; // TODO: Use stack to keep track of usable entities
 
-    int CreateEntity();
+    uint16_t CreateEntity();
 
     template<class T>
-    auto RegisterComponent(int targetEntity) {
+    auto RegisterComponent(uint16_t targetEntity) {
         assert(entities_[targetEntity].alive_);
         assert(!entities_[targetEntity].componentMask_.test(T::ID));
 
@@ -36,6 +37,8 @@ private:
         MovementComponent,
         TerrainModComponent,
         SpreadActivatorComponent,
-        SpreadDetectComponent 
+        SpreadDetectComponent,
+        PickupComponent,
+        HoldableComponent
     > components_;
 };

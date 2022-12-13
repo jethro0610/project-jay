@@ -8,6 +8,7 @@ struct TerrainModCProperties {
 };
 
 struct TerrainModComponent {
+    // TODO: Remove position and use transform instead
     glm::vec3 position[MAX_ENTITIES];
     float radius[MAX_ENTITIES];
     bool updated[MAX_ENTITIES];

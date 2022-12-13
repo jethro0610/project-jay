@@ -1,7 +1,13 @@
 #include "PickupSystem.h"
+using namespace glm;
 
-void PickupSystem::Execute(Entity* entities, PickupComponent& pickupComponent, FlagsComponent& flagComponent) {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
+void PickupSystem::ExecutePickup(
+    Entity* entities, 
+    PickupComponent& pickupComponent, 
+    HoldableComponent& holdableComponent,
+    TransformComponent& transformComponent
+) {
+    for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
@@ -9,8 +15,43 @@ void PickupSystem::Execute(Entity* entities, PickupComponent& pickupComponent, F
         if (!entity.HasComponent<PickupComponent>())
             continue;
 
-        if (pickupComponent.timer[i] > 0) {
-            // DO PICKUP HERE 
+        if (pickupComponent.timer[i] <= 0) 
+            continue;
+
+        // Find an entity to pick up
+        vec3 entityPos = transformComponent.transform[i].position_;
+        uint16_t e = 0;
+        for (; e < MAX_ENTITIES; e++) {
+            const Entity& other = entities[e];
+            if (!other.alive_)
+                continue;
+            if (!other.HasComponent<HoldableComponent>())
+                continue;
+
+            // NOTE: This only picks up the first entity in range. May need to keep track of the closest instead
+            // Also need to use entity partitions when implemented
+            vec3 otherPos = transformComponent.transform[e].position_;
+            if (distance(entityPos, otherPos) <= pickupComponent.range[i] + holdableComponent.range[e])
+               break; 
         }
+        pickupComponent.entityId[i] = e;
+    }
+}
+
+void ExecuteHold(
+    Entity* entities, 
+    PickupComponent& pickupComponent, 
+    TransformComponent& transformComponent
+) {
+    for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+        if (!entity.HasComponent<PickupComponent>())
+            continue;
+
+        const uint16_t& holdEntityId = pickupComponent.entityId[i]; 
+        const Transform& transform = transformComponent.transform[i];
+        transformComponent.transform[holdEntityId] = transform;
     }
 }

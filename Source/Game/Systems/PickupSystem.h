@@ -1,8 +1,20 @@
 #pragma once
 #include "../Entity/Entity.h"
 #include "../Components/PickupComponent.h"
-#include "../Components/FlagsComponent.h"
+#include "../Components/HoldableComponent.h"
+#include "../Components/TransformComponent.h"
 
 namespace PickupSystem {
-    void Execute(Entity* entities, PickupComponent& pickupComponent, FlagsComponent& flagComponent);
+    void ExecutePickup(
+        Entity* entities, 
+        PickupComponent& pickupComponent, 
+        HoldableComponent& holdableComponent, 
+        TransformComponent& transformComponent
+    );
+
+    void ExecuteHold(
+        Entity* entities, 
+        PickupComponent& pickupComponent, 
+        TransformComponent& transformComponent
+    );
 }

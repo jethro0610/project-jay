@@ -11,7 +11,7 @@ ASSIGN_COMPONENT_ID(VelocityComponent);
 ASSIGN_COMPONENT_ID(TerrainModComponent);
 ASSIGN_COMPONENT_ID(SpreadActivatorComponent);
 ASSIGN_COMPONENT_ID(SpreadDetectComponent);
-ASSIGN_COMPONENT_ID(FlagsComponent);
 ASSIGN_COMPONENT_ID(PickupComponent);
+ASSIGN_COMPONENT_ID(HoldableComponent);
 
 // Static IDs are used on component classes for consistency with file writes

@@ -51,6 +51,9 @@ void Game::Init() {
     spreadProperites.radius = 1.0f;
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
+    auto pickupProps = entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
+    pickupProps.range = 1.0f;
+
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
@@ -65,6 +68,7 @@ void Game::Init() {
     auto transformProps = entityManager_.RegisterComponent<TransformComponent>(holdEntity);
     transformProps.transform.position_ = vec3(0.0f, 40.0f, 0.0f);
     transformProps.transform.scale_ = vec3(2.0f);
+    transformProps.interpolate = true;
     auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
     holdableProps.range = 2.0f;
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
@@ -95,6 +99,17 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>()
         );
+        PickupSystem::ExecutePickup(
+            entityManager_.entities_,
+            entityManager_.GetComponent<PickupComponent>(),
+            entityManager_.GetComponent<HoldableComponent>(),
+            entityManager_.GetComponent<TransformComponent>()
+        );
+        PickupSystem::ExecuteHold(
+            entityManager_.entities_,
+            entityManager_.GetComponent<PickupComponent>(),
+            entityManager_.GetComponent<TransformComponent>()
+        );;
         SpreadActivatorSystem::Execute(
             world_,
             entityManager_.entities_,

@@ -7,3 +7,4 @@
 #include "TerrainModSystem.h"
 #include "SpreadActivatorSystem.h"
 #include "SpreadDetectSystem.h"
+#include "PickupSystem.h"

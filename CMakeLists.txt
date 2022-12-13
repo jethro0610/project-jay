@@ -15,6 +15,8 @@ file(GLOB HEADERS
 	Source/Game/Components/VelocityComponent.h
     Source/Game/Components/SpreadActivatorComponent.h
     Source/Game/Components/SpreadDetectComponent.h
+    Source/Game/Components/PickupComponent.h
+    Source/Game/Components/HoldableComponent.h
 
 	Source/Game/Entity/Entity.h
 	Source/Game/Entity/EntityManager.h
@@ -67,6 +69,7 @@ file(GLOB SOURCES
     Source/Game/Systems/TerrainModSystem.cpp
     Source/Game/Systems/SpreadActivatorSystem.cpp
     Source/Game/Systems/SpreadDetectSystem.cpp
+    Source/Game/Systems/PickupSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

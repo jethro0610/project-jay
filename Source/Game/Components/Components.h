@@ -10,3 +10,4 @@
 #include "SpreadDetectComponent.h"
 #include "PickupComponent.h"
 #include "HoldableComponent.h"
+#include "InputComponent.h"

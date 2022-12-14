@@ -3,12 +3,14 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
+const uint16_t PICKUP_DURATION = 10;
+
 struct PickupCProperties {
     float& range;
 };
 
 struct PickupComponent {
-    uint16_t entityId[MAX_ENTITIES];
+    int entityId[MAX_ENTITIES];
     float range[MAX_ENTITIES];
     uint16_t timer[MAX_ENTITIES];
 

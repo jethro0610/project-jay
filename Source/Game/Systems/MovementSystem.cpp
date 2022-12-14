@@ -9,7 +9,8 @@ void MovementSystem::Execute(
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent,
     ColliderComponent& colliderComponent,
-    SpreadDetectComponent& spreadDetectComponent
+    SpreadDetectComponent& spreadDetectComponent,
+    InputComponent& inputComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -19,7 +20,8 @@ void MovementSystem::Execute(
             GroundTraceComponent,
             TransformComponent,
             VelocityComponent,
-            ColliderComponent
+            ColliderComponent,
+            InputComponent
             > 
         ()) continue;
 
@@ -36,10 +38,11 @@ void MovementSystem::Execute(
         const float momentumDecay = movementComponent.momentumDecay[i];
         const float speedDecay = 1.0f - friction;
         const bool onGround = groundTraceComponent.onGround[i];
-        const vec3 desiredMovement = movementComponent.desiredMovement[i];
-        const MoveMode moveMode = movementComponent.moveMode[i];
+        const vec3 desiredMovement = inputComponent.direction[i];
         const float acceleration = ((speed / speedDecay) - speed);
         const vec3 groundNormal = groundTraceComponent.groundNormal[i];
+        const MoveMode moveMode = inputComponent.toggle[i] ? MoveMode::Ski : MoveMode::Default;
+        movementComponent.moveMode[i] = moveMode;
 
         float planarVelocitySize = length(vec2(velocity.x, velocity.z));
         speed = min(maxSpeed, planarVelocitySize);

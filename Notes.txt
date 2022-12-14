@@ -17,12 +17,6 @@
 
 -   Camera needs to collide with world
 
--   Material system
-
--   Specular highlights. Cel shading
-
--   Kuwahara filter
-
 -   Camera interpolation fix
 
 -   Asset building
@@ -42,5 +36,12 @@
 -   Entity for base islands
 
 -   World Render Target
+        - Might just use simple, position based plant movement instead. Simpler and more mem-efficient
 
 -   Rename SpreadSystem to SpreadActivatorSystem 
+
+-   Use bitmask comparison for entity ownership (bitmask & componentMask)
+
+-   Pickup uses single input timer, hold input might be better. Movement would be similar to Sonic boost, but with more control instead of more speed
+
+-   Rename Inputs.h to PlayerInputs.h, maybe rename variables to match with InputComponent

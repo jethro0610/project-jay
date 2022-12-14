@@ -5,7 +5,8 @@ void PickupSystem::ExecutePickup(
     Entity* entities, 
     PickupComponent& pickupComponent, 
     HoldableComponent& holdableComponent,
-    TransformComponent& transformComponent
+    TransformComponent& transformComponent,
+    InputComponent& inputComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -15,13 +16,21 @@ void PickupSystem::ExecutePickup(
         if (!entity.HasComponent<PickupComponent>())
             continue;
 
-        /* if (pickupComponent.timer[i] <= 0) */ 
-        /*     continue; */
+        
+        if (pickupComponent.timer[i] <= 0) { 
+            if (inputComponent.action[i]) 
+                pickupComponent.timer[i] = PICKUP_DURATION;
+            continue;
+        }
+        pickupComponent.timer[i] -= 1;
 
         // Find an entity to pick up
         vec3 entityPos = transformComponent.transform[i].position_;
-        uint16_t e = 0;
-        for (; e < MAX_ENTITIES; e++) {
+        int& holdEntityId = pickupComponent.entityId[i];
+        if (holdEntityId != -1)
+            continue;
+
+        for (uint16_t e = 0; e < MAX_ENTITIES; e++) {
             const Entity& other = entities[e];
             if (!other.alive_)
                 continue;
@@ -33,17 +42,19 @@ void PickupSystem::ExecutePickup(
             // NOTE: This only picks up the first entity in range. May need to keep track of the closest instead
             // Also need to use entity partitions when implemented
             vec3 otherPos = transformComponent.transform[e].position_;
-            if (distance(entityPos, otherPos) <= pickupComponent.range[i] + holdableComponent.range[e])
+            if (distance(entityPos, otherPos) <= pickupComponent.range[i] + holdableComponent.range[e]) {
+                holdEntityId = e;
                break; 
+            }
         }
-        pickupComponent.entityId[i] = e;
     }
 }
 
 void PickupSystem::ExecuteHold(
     Entity* entities, 
     PickupComponent& pickupComponent, 
-    TransformComponent& transformComponent
+    TransformComponent& transformComponent,
+    InputComponent& inputComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -51,8 +62,10 @@ void PickupSystem::ExecuteHold(
             continue;
         if (!entity.HasComponent<PickupComponent>())
             continue;
+        if (pickupComponent.entityId[i] == -1)
+            continue;
 
-        const uint16_t& holdEntityId = pickupComponent.entityId[i]; 
+        const int& holdEntityId = pickupComponent.entityId[i]; 
         const Transform& transform = transformComponent.transform[i];
         transformComponent.transform[holdEntityId].position_ = transform.position_;
     }

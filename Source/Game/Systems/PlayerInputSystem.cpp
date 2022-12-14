@@ -1,8 +1,8 @@
 #include "PlayerInputSystem.h"
 using namespace glm;
 
-void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities, MovementComponent& movementComponent) {
-    assert(movementComponent.recievesFrom[PLAYER_ENTITY] == RecieveMovementFrom::Player);
+void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities, InputComponent& inputComponent) {
+    assert(inputComponent.recieveFrom[PLAYER_ENTITY] == RecieveInput::Player);
 
     quat cameraPlanarRotation = quat(vec3(0.0f, camera->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
@@ -12,12 +12,8 @@ void PlayerInputSystem::Execute(Inputs inputs, Camera* camera, Entity* entities,
     if (length(desiredMovement) > 1.0f)
         desiredMovement = normalize(desiredMovement);
 
-    movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
+    inputComponent.direction[PLAYER_ENTITY] = desiredMovement;
 
-    if (inputs.ski) {
-        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-    }
-    else {
-        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
-    }
+    inputComponent.toggle[PLAYER_ENTITY] = inputs.ski;
+    inputComponent.action[PLAYER_ENTITY] = inputs.pickup;
 }

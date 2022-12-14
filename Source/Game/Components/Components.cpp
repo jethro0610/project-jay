@@ -13,5 +13,6 @@ ASSIGN_COMPONENT_ID(SpreadActivatorComponent);
 ASSIGN_COMPONENT_ID(SpreadDetectComponent);
 ASSIGN_COMPONENT_ID(PickupComponent);
 ASSIGN_COMPONENT_ID(HoldableComponent);
+ASSIGN_COMPONENT_ID(InputComponent);
 
 // Static IDs are used on component classes for consistency with file writes

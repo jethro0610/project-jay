@@ -43,7 +43,6 @@ void Game::Init() {
     groundTraceProperties.distance = 2.0f;
 
     auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
-    movementProperties.recievesFrom = RecieveMovementFrom::Player;
     movementProperties.supportedMoveModes.set(MoveMode::Default);
     movementProperties.supportedMoveModes.set(MoveMode::Ski);
     
@@ -53,6 +52,9 @@ void Game::Init() {
 
     auto pickupProps = entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
     pickupProps.range = 1.0f;
+
+    auto inputProps = entityManager_.RegisterComponent<InputComponent>(PLAYER_ENTITY);
+    inputProps.recieveFrom = RecieveInput::Player;
 
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
 
@@ -89,8 +91,8 @@ void Game::Init() {
 
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
-
     while (timeAccumlulator_ >= TIMESTEP) {
+        FlushInputs_P();
         TerrainModSystem::Execute(
             entityManager_.entities_,
             entityManager_.GetComponent<TerrainModComponent>()
@@ -103,12 +105,14 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<HoldableComponent>(),
-            entityManager_.GetComponent<TransformComponent>()
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<InputComponent>()
         );
         PickupSystem::ExecuteHold(
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
-            entityManager_.GetComponent<TransformComponent>()
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<InputComponent>()
         );;
         SpreadActivatorSystem::Execute(
             world_,
@@ -129,7 +133,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             inputs_, 
             camera_, 
             entityManager_.entities_,
-            entityManager_.GetComponent<MovementComponent>()
+            entityManager_.GetComponent<InputComponent>()
         );
         MovementSystem::Execute(
             entityManager_.entities_,
@@ -138,7 +142,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ColliderComponent>(),
-            entityManager_.GetComponent<SpreadDetectComponent>()
+            entityManager_.GetComponent<SpreadDetectComponent>(),
+            entityManager_.GetComponent<InputComponent>()
         );
         GroundTraceSystem::Execute(
             world_, 

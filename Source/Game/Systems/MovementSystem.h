@@ -7,6 +7,7 @@
 #include "../Components/VelocityComponent.h"
 #include "../Components/ColliderComponent.h"
 #include "../Components/SpreadDetectComponent.h"
+#include "../Components/InputComponent.h"
 
 const float GRAVITY_ACCELERATION = 1.0f;
 const float MAX_GRAVITY = 60.0f;
@@ -19,7 +20,8 @@ namespace MovementSystem {
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent,
         ColliderComponent& colliderComponent,
-        SpreadDetectComponent& spreadDetectComponent 
+        SpreadDetectComponent& spreadDetectComponent,
+        InputComponent& inputComponent
     );
 
     void CalculateDefaultMovement(

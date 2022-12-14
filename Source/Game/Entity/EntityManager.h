@@ -39,6 +39,7 @@ private:
         SpreadActivatorComponent,
         SpreadDetectComponent,
         PickupComponent,
-        HoldableComponent
+        HoldableComponent,
+        InputComponent
     > components_;
 };

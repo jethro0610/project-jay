@@ -5,4 +5,5 @@ struct Inputs {
     float deltaLookX;
     float deltaLookY;
     bool ski;
+    bool pickup;
 };

@@ -16,7 +16,6 @@ void Game::Init_P() {
     while (!windowsLayer_->closed_ && running_) {
         UpdateTime();
 
-        windowsLayer_->ClearPressedAndReleasedKeys();
         windowsLayer_->ClearMouseMovement();
 
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -33,8 +32,6 @@ void Game::Init_P() {
 void Game::PollGamepadInputs_P() {
     XINPUT_STATE state;
 
-    gamepad_.pressedButtons_.reset();
-    gamepad_.releasedButtons_.reset();
     gamepad_.leftStickX_ = 0.0f;
     gamepad_.leftStickY_ = 0.0f;
     gamepad_.rightStickX_ = 0.0f;
@@ -102,6 +99,16 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.deltaLookY -= windowsLayer_->deltaMouseY_ * 0.005f;
     inputs_.deltaLookX -= gamepad_.rightStickX_ * deltaTime * 2.0f;
     inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
+
+    inputs_.pickup = false;
+    if (windowsLayer_->pressedKeys_['Q'])
+        inputs_.pickup = true;
+}
+
+void Game::FlushInputs_P() {
+    windowsLayer_->ClearPressedAndReleasedKeys();
+    gamepad_.pressedButtons_.reset();
+    gamepad_.releasedButtons_.reset();
 }
 
 void Game::SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {

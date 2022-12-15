@@ -36,8 +36,9 @@ void GroundTraceSystem::Execute(
             groundTraceComponent.onGround[i] = true;
             vec3 groundPosition = position - Transform::worldUp * distanceToSurface;
             vec3 groundNormal = world->GetNormal(groundPosition);
-            groundTraceComponent.groundPosition[i] = groundPosition;
+            groundTraceComponent.groundPosition[i] = groundPosition.y;
             groundTraceComponent.groundNormal[i] = groundNormal;
+            transformComponent.transform[i].position_.y = groundPosition.y;
         }
         else {
             groundTraceComponent.onGround[i] = false;

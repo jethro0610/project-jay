@@ -1,5 +1,4 @@
 #pragma once
-#include "ColliderComponent.h"
 #include "TransformComponent.h"
 #include "StaticModelComponent.h"
 #include "MovementComponent.h"
@@ -11,3 +10,4 @@
 #include "PickupComponent.h"
 #include "HoldableComponent.h"
 #include "MeterComponent.h"
+#include "WorldColliderComponent.h"

@@ -32,8 +32,7 @@ void Game::Init() {
     transformProperties.transform = spawnTransform;
     transformProperties.interpolate = true;
 
-    auto colliderProperties = entityManager_.RegisterComponent<ColliderComponent>(PLAYER_ENTITY);
-    colliderProperties.radius = 1.0f;
+    entityManager_.RegisterComponent<WorldColliderComponent>(PLAYER_ENTITY);
 
     auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
     modelProperties.model = "st_sphere";
@@ -138,7 +137,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<GroundTraceComponent>(),
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<VelocityComponent>(),
-            entityManager_.GetComponent<ColliderComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>()
         );
         GroundTraceSystem::Execute(
@@ -151,8 +149,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             world_, 
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<ColliderComponent>(),
-            entityManager_.GetComponent<GroundTraceComponent>()
+            entityManager_.GetComponent<WorldColliderComponent>()
         );
         timeAccumlulator_ -= TIMESTEP;
     }

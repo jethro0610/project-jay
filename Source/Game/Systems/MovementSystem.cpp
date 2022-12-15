@@ -8,7 +8,6 @@ void MovementSystem::Execute(
     GroundTraceComponent& groundTraceComponent,
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent,
-    ColliderComponent& colliderComponent,
     SpreadDetectComponent& spreadDetectComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
@@ -18,8 +17,7 @@ void MovementSystem::Execute(
             MovementComponent,
             GroundTraceComponent,
             TransformComponent,
-            VelocityComponent,
-            ColliderComponent
+            VelocityComponent
             > 
         ()) continue;
 
@@ -90,11 +88,8 @@ void MovementSystem::Execute(
         velocityComponent.velocity[i] = velocity;
         movementComponent.speed[i] = speed;
         movementComponent.friction[i] = friction;
-
-        // Stick the entity to the ground after movement is executed
-        // NOTE: This may make ground sticking inconsistent, maybe move this to its own system that runs around the end of the update
         if (onGround)
-            transformComponent.transform[i].position_.y = groundTraceComponent.groundPosition[i].y + colliderComponent.radius[i];
+            transformComponent.transform[i].position_.y += STEP_UP_HEIGHT;
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.
@@ -104,6 +99,7 @@ void MovementSystem::Execute(
     // NOTE: One way to remedy instant speed cancelling is to rotate the velocity by the desired movement
     // then set the friction to a low value. Another may be to have state for stopping and pivoting, 
     // so the entity can carry its momentum in said state
+    //
 }
 
 void MovementSystem::CalculateDefaultMovement(

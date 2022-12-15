@@ -30,7 +30,6 @@ private:
 
     std::tuple<
         TransformComponent,
-        ColliderComponent,
         StaticModelComponent,
         GroundTraceComponent,
         VelocityComponent,
@@ -40,6 +39,7 @@ private:
         SpreadDetectComponent,
         PickupComponent,
         HoldableComponent,
-        MeterComponent
+        MeterComponent,
+        WorldColliderComponent
     > components_;
 };

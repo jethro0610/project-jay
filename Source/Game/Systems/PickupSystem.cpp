@@ -5,8 +5,7 @@ void PickupSystem::ExecutePickup(
     Entity* entities, 
     PickupComponent& pickupComponent, 
     HoldableComponent& holdableComponent,
-    TransformComponent& transformComponent,
-    InputComponent& inputComponent
+    TransformComponent& transformComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -16,13 +15,8 @@ void PickupSystem::ExecutePickup(
         if (!entity.HasComponent<PickupComponent>())
             continue;
 
-        
-        if (pickupComponent.timer[i] <= 0) { 
-            if (inputComponent.action[i]) 
-                pickupComponent.timer[i] = PICKUP_DURATION;
+        if (!pickupComponent.pickup[i])
             continue;
-        }
-        pickupComponent.timer[i] -= 1;
 
         // Find an entity to pick up
         vec3 entityPos = transformComponent.transform[i].position_;
@@ -36,8 +30,6 @@ void PickupSystem::ExecutePickup(
                 continue;
             if (!other.HasComponent<HoldableComponent>())
                 continue;
-
-            /* DEBUGLOG(std::to_string(e)); */
 
             // NOTE: This only picks up the first entity in range. May need to keep track of the closest instead
             // Also need to use entity partitions when implemented
@@ -53,8 +45,7 @@ void PickupSystem::ExecutePickup(
 void PickupSystem::ExecuteHold(
     Entity* entities, 
     PickupComponent& pickupComponent, 
-    TransformComponent& transformComponent,
-    InputComponent& inputComponent
+    TransformComponent& transformComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];

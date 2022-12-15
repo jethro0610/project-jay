@@ -53,9 +53,6 @@ void Game::Init() {
     auto pickupProps = entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
     pickupProps.range = 1.0f;
 
-    auto inputProps = entityManager_.RegisterComponent<InputComponent>(PLAYER_ENTITY);
-    inputProps.recieveFrom = RecieveInput::Player;
-
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
@@ -105,14 +102,12 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<HoldableComponent>(),
-            entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<InputComponent>()
+            entityManager_.GetComponent<TransformComponent>()
         );
         PickupSystem::ExecuteHold(
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
-            entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<InputComponent>()
+            entityManager_.GetComponent<TransformComponent>()
         );;
         SpreadActivatorSystem::Execute(
             world_,
@@ -133,7 +128,9 @@ void Game::Update(float deltaTime, float elapsedTime) {
             inputs_, 
             camera_, 
             entityManager_.entities_,
-            entityManager_.GetComponent<InputComponent>()
+            entityManager_.GetComponent<MovementComponent>(),
+            entityManager_.GetComponent<PickupComponent>(),
+            entityManager_.GetComponent<MeterComponent>()
         );
         MovementSystem::Execute(
             entityManager_.entities_,
@@ -142,8 +139,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ColliderComponent>(),
-            entityManager_.GetComponent<SpreadDetectComponent>(),
-            entityManager_.GetComponent<InputComponent>()
+            entityManager_.GetComponent<SpreadDetectComponent>()
         );
         GroundTraceSystem::Execute(
             world_, 

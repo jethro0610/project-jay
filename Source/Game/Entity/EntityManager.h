@@ -40,6 +40,6 @@ private:
         SpreadDetectComponent,
         PickupComponent,
         HoldableComponent,
-        InputComponent
+        MeterComponent
     > components_;
 };

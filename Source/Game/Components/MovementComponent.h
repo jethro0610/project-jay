@@ -11,6 +11,7 @@ const float DEFAULT_MAX_FRICTION = 0.1f;
 const float DEFAULT_MOMENTUM_DECAY = 0.1f;
 const float FRICTION_SPEED_CAP_PERCENT = 0.35f;
 const float DEFAULT_ROTATION_SPEED = 0.25f;
+const float FLOW_ROTATION_SPEED = 0.1f;
 
 const float SKI_ACCELERATION = 4.0f;
 const float SKI_ROTATION_SPEED = 0.02f;
@@ -20,6 +21,7 @@ const float MINIMUM_SKI_ACCELERATION_SCALING = 0.15f;
 enum MoveMode {
     Default,
     Ski,
+    Flow,
     NumberOfModes
 };
 
@@ -35,6 +37,7 @@ struct MovementCProperties {
 };
 
 struct MovementComponent {
+    glm::vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
     std::bitset<MoveMode::NumberOfModes> supportedMoveModes[MAX_ENTITIES];
     float speed[MAX_ENTITIES];
@@ -46,8 +49,8 @@ struct MovementComponent {
     float momentumDecay[MAX_ENTITIES];
 
     MovementComponent() {
-        /* std::fill_n(desiredMovement, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f)); */
-        /* std::fill_n(moveMode, MAX_ENTITIES, MoveMode::Default); */
+        std::fill_n(desiredMovement, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f));
+        std::fill_n(moveMode, MAX_ENTITIES, MoveMode::Default);
         std::fill_n(speed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
         std::fill_n(minSpeed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
         std::fill_n(maxSpeed, MAX_ENTITIES, DEFAULT_MAX_SPEED);

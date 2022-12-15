@@ -75,6 +75,7 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.sideInput = 0.0f;
 
     inputs_.ski = (windowsLayer_->heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER]);
+    inputs_.pickup = windowsLayer_->heldKeys_[LEFT_MOUSE_KEY];
 
     // TODO: clamp the values to total size 1
     if (windowsLayer_->heldKeys_['W'])
@@ -99,10 +100,6 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.deltaLookY -= windowsLayer_->deltaMouseY_ * 0.005f;
     inputs_.deltaLookX -= gamepad_.rightStickX_ * deltaTime * 2.0f;
     inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
-
-    inputs_.pickup = false;
-    if (windowsLayer_->pressedKeys_['Q'])
-        inputs_.pickup = true;
 }
 
 void Game::FlushInputs_P() {

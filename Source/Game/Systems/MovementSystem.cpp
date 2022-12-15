@@ -9,8 +9,7 @@ void MovementSystem::Execute(
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent,
     ColliderComponent& colliderComponent,
-    SpreadDetectComponent& spreadDetectComponent,
-    InputComponent& inputComponent
+    SpreadDetectComponent& spreadDetectComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -20,8 +19,7 @@ void MovementSystem::Execute(
             GroundTraceComponent,
             TransformComponent,
             VelocityComponent,
-            ColliderComponent,
-            InputComponent
+            ColliderComponent
             > 
         ()) continue;
 
@@ -38,11 +36,10 @@ void MovementSystem::Execute(
         const float momentumDecay = movementComponent.momentumDecay[i];
         const float speedDecay = 1.0f - friction;
         const bool onGround = groundTraceComponent.onGround[i];
-        const vec3 desiredMovement = inputComponent.direction[i];
+        const vec3 desiredMovement = movementComponent.desiredMovement[i];
         const float acceleration = ((speed / speedDecay) - speed);
         const vec3 groundNormal = groundTraceComponent.groundNormal[i];
-        const MoveMode moveMode = inputComponent.toggle[i] ? MoveMode::Ski : MoveMode::Default;
-        movementComponent.moveMode[i] = moveMode;
+        const MoveMode moveMode = movementComponent.moveMode[i];
 
         float planarVelocitySize = length(vec2(velocity.x, velocity.z));
         speed = min(maxSpeed, planarVelocitySize);
@@ -54,6 +51,10 @@ void MovementSystem::Execute(
 
         case MoveMode::Ski:
             CalculateSkiMovement(desiredMovement, groundNormal, minSpeed, maxSpeed, speed, velocity, rotation);
+            break;
+
+        case MoveMode::Flow:
+            CalculateFlowMovement(desiredMovement, groundNormal, speed, velocity, rotation);
             break;
 
         default:
@@ -161,6 +162,23 @@ void MovementSystem::CalculateSkiMovement(
     speed += skiBoost * skiMultiplier;
     speed = clamp(speed, 0.0f, maxSpeed);
 
+    velocity.x = skiDirection.x * speed;
+    velocity.z = skiDirection.z * speed;
+}
+
+void MovementSystem::CalculateFlowMovement(
+    const glm::vec3& desiredMovement,
+    const glm::vec3& groundNormal,
+    const float& speed,
+    glm::vec3& velocity,
+    glm::quat& rotation
+) {
+    quat desiredRotation = rotation;
+    if (length(desiredMovement) > 0.001f) 
+        desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+    rotation = slerp(rotation, desiredRotation, FLOW_ROTATION_SPEED);
+    vec3 skiDirection = rotation * Transform::worldForward;
+    
     velocity.x = skiDirection.x * speed;
     velocity.z = skiDirection.z * speed;
 }

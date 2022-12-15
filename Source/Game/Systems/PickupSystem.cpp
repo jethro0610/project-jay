@@ -59,5 +59,8 @@ void PickupSystem::ExecuteHold(
         const int& holdEntityId = pickupComponent.entityId[i]; 
         const Transform& transform = transformComponent.transform[i];
         transformComponent.transform[holdEntityId].position_ = transform.position_;
+
+        if (!pickupComponent.pickup[i])
+            pickupComponent.entityId[i] = -1;
     }
 }

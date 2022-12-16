@@ -2,6 +2,8 @@
 #include "../Entity/Entity.h"
 #include <algorithm>
 
+const float NO_SPREAD = 0.0f;
+
 struct SpreadActivatorCProperties {
     float& radius;
     bool& groundOnly;

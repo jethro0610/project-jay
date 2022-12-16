@@ -47,7 +47,7 @@ void Game::Init() {
     movementProperties.supportedMoveModes.set(MoveMode::Ski);
     
     auto spreadProperites = entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
-    spreadProperites.radius = 1.0f;
+    spreadProperites.radius = NO_SPREAD;
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
 
     auto pickupProps = entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
@@ -130,7 +130,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<MovementComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
-            entityManager_.GetComponent<MeterComponent>()
+            entityManager_.GetComponent<MeterComponent>(),
+            entityManager_.GetComponent<SpreadActivatorComponent>()
         );
         GroundStickSystem::Step(
             world_,

@@ -17,6 +17,9 @@ void SpreadActivatorSystem::Execute(
 
         if (!entity.HasComponents<SpreadActivatorComponent, TransformComponent>())
             continue;
+        
+        if (spreadActivatorComponent.radius[i] == NO_SPREAD)
+            continue;
 
         bool onGround = false;
         if (entity.HasComponent<GroundTraceComponent>()) {

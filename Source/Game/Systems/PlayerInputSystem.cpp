@@ -7,7 +7,8 @@ void PlayerInputSystem::Execute(
     Entity* entities, 
     MovementComponent& movementComponent,
     PickupComponent& pickupComponent,
-    MeterComponent& meterComponent
+    MeterComponent& meterComponent,
+    SpreadActivatorComponent& spreadActivatorComponent
 ) {
     quat cameraPlanarRotation = quat(vec3(0.0f, camera->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
@@ -19,12 +20,16 @@ void PlayerInputSystem::Execute(
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
+    spreadActivatorComponent.radius[PLAYER_ENTITY] = 0.0f;
     pickupComponent.pickup[PLAYER_ENTITY] = false;
     if (inputs.pickup) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         pickupComponent.pickup[PLAYER_ENTITY] = true;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 8.0f;
         return;
     }
-    if (inputs.ski) 
+    if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1.0f;
+    }
 }

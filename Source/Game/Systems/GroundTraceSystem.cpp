@@ -20,7 +20,7 @@ void GroundTraceSystem::Execute(
         float distanceToSurface = 0;
         for (int d = 0; d < 8; d++) {
             float distanceSample = world->GetDistance(position - Transform::worldUp * distanceToSurface);
-            if (distanceSample < 0.001f)
+            if (abs(distanceSample) < 0.001f)
                 break;
 
             distanceToSurface += distanceSample;
@@ -38,7 +38,6 @@ void GroundTraceSystem::Execute(
             vec3 groundNormal = world->GetNormal(groundPosition);
             groundTraceComponent.groundPosition[i] = groundPosition.y;
             groundTraceComponent.groundNormal[i] = groundNormal;
-            transformComponent.transform[i].position_.y = groundPosition.y;
         }
         else {
             groundTraceComponent.onGround[i] = false;

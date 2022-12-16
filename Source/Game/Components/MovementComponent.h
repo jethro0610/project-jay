@@ -4,7 +4,6 @@
 #include <bitset>
 #include <algorithm>
 
-const float STEP_UP_HEIGHT = 0.25f;
 const float DEFAULT_MIN_SPEED = 12.0f;
 const float DEFAULT_MAX_SPEED = 120.0f;
 const float DEFAULT_MIN_FRICTION = 0.015f;

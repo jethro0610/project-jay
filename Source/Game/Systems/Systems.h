@@ -8,3 +8,4 @@
 #include "SpreadActivatorSystem.h"
 #include "SpreadDetectSystem.h"
 #include "PickupSystem.h"
+#include "GroundStickSystem.h"

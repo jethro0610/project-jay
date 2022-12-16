@@ -3,12 +3,22 @@
 #include "../../Types/Transform.h"
 #include <algorithm>
 
+const float STEP_UP_HEIGHT = 0.25f;
+
+enum StickType {
+    None,
+    StickOnly,
+    StepUp 
+};
+
 struct GroundTraceCProperties {
     float& distance;
+    StickType& stickType; 
 };
 
 struct GroundTraceComponent {
     float distance[MAX_ENTITIES];
+    StickType stickType[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
     bool onGroundLastFrame[MAX_ENTITIES];
     bool enteredGround[MAX_ENTITIES];
@@ -18,6 +28,7 @@ struct GroundTraceComponent {
 
     GroundTraceComponent() {
         std::fill_n(distance, MAX_ENTITIES, 0.0f);
+        std::fill_n(stickType, MAX_ENTITIES, StickType::None);
         std::fill_n(onGround, MAX_ENTITIES, false);
         std::fill_n(enteredGround, MAX_ENTITIES, false);
         std::fill_n(exitedGround, MAX_ENTITIES, false);
@@ -30,7 +41,8 @@ struct GroundTraceComponent {
 
     GroundTraceCProperties operator[](int index) {
         return GroundTraceCProperties {
-            distance[index]
+            distance[index],
+            stickType[index]
         };
     }
 

@@ -88,8 +88,6 @@ void MovementSystem::Execute(
         velocityComponent.velocity[i] = velocity;
         movementComponent.speed[i] = speed;
         movementComponent.friction[i] = friction;
-        if (onGround)
-            transformComponent.transform[i].position_.y += STEP_UP_HEIGHT;
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.

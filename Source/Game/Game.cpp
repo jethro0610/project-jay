@@ -40,6 +40,7 @@ void Game::Init() {
 
     auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
     groundTraceProperties.distance = 2.0f;
+    groundTraceProperties.stickType = StickType::StepUp;
 
     auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
     movementProperties.supportedMoveModes.set(MoveMode::Default);
@@ -131,6 +132,12 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<MeterComponent>()
         );
+        GroundStickSystem::Step(
+            world_,
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<GroundTraceComponent>()
+        );
         MovementSystem::Execute(
             entityManager_.entities_,
             entityManager_.GetComponent<MovementComponent>(),
@@ -141,6 +148,12 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         GroundTraceSystem::Execute(
             world_, 
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<GroundTraceComponent>()
+        );
+        GroundStickSystem::Stick(
+            world_,
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()

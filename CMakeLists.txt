@@ -70,6 +70,7 @@ file(GLOB SOURCES
     Source/Game/Systems/SpreadActivatorSystem.cpp
     Source/Game/Systems/SpreadDetectSystem.cpp
     Source/Game/Systems/PickupSystem.cpp
+    Source/Game/Systems/GroundStickSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

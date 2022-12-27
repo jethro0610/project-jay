@@ -20,12 +20,12 @@ void PlayerInputSystem::Execute(
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
-    spreadActivatorComponent.radius[PLAYER_ENTITY] = 0.0f;
+    spreadActivatorComponent.radius[PLAYER_ENTITY] = NO_SPREAD;
     pickupComponent.pickup[PLAYER_ENTITY] = false;
     if (inputs.pickup) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         pickupComponent.pickup[PLAYER_ENTITY] = true;
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 8.0f;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1.0f;
         return;
     }
     if (inputs.ski)  {

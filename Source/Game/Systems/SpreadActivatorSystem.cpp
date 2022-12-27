@@ -18,7 +18,8 @@ void SpreadActivatorSystem::Execute(
         if (!entity.HasComponents<SpreadActivatorComponent, TransformComponent>())
             continue;
         
-        if (spreadActivatorComponent.radius[i] == NO_SPREAD)
+        const float radius = spreadActivatorComponent.radius[i];
+        if (radius == NO_SPREAD)
             continue;
 
         bool onGround = false;
@@ -29,15 +30,20 @@ void SpreadActivatorSystem::Execute(
         if (!onGround && spreadActivatorComponent.groundOnly[i])
             continue;
         
-        const Transform transform = transformComponent.transform[i];
-        ivec2 spreadKey = spreadManager->WorldPositionToSpreadKey(transform.position_);
-        const bool activated = spreadManager->AddSpread(spreadKey, transform.position_.y);
-        if (!activated || !entity.HasComponent<SpreadDetectComponent>())
-            continue;
+        const vec3 position = transformComponent.transform[i].position_;
+        const bool hasDetect = entity.HasComponent<SpreadDetectComponent>();
 
-        ivec2* lastDetect = spreadDetectComponent.lastDetect[i];
-        for (int s = 0; s < MAX_DETECT - 1; s++) 
-            lastDetect[s + 1] = lastDetect[s];
-        lastDetect[0] = spreadKey;
+        for (float x = -radius; x <= radius; x += SPREAD_DIST)
+        for (float z = -radius; z <= radius; z += SPREAD_DIST) {
+            const ivec2 spreadOrigin = spreadManager->WorldPositionToSpreadKey(position + vec3(x, 0.0f, z));
+            const bool activated = spreadManager->AddSpread(spreadOrigin, position.y);
+            if (!activated || !hasDetect)
+                continue;
+
+            ivec2* lastDetect = spreadDetectComponent.lastDetect[i];
+            for (int s = 0; s < MAX_DETECT - 1; s++) 
+                lastDetect[s + 1] = lastDetect[s];
+            lastDetect[0] = spreadOrigin;
+        };
     }
 }

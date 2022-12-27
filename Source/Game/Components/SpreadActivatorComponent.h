@@ -14,7 +14,7 @@ struct SpreadActivatorComponent {
     bool groundOnly[MAX_ENTITIES];
 
     SpreadActivatorComponent() {
-        std::fill_n(radius, MAX_ENTITIES, 0.0f);    
+        std::fill_n(radius, MAX_ENTITIES, NO_SPREAD);    
         std::fill_n(groundOnly, MAX_ENTITIES, true);
     };
     SpreadActivatorComponent(const SpreadActivatorComponent&) = delete;

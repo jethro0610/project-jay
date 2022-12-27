@@ -15,7 +15,7 @@ void PlayerInputSystem::Execute(
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
 
     vec3 desiredMovement = cameraPlanarForward * inputs.forwardInput + cameraPlanarRight * inputs.sideInput;
-    if (length(desiredMovement) > 1.0f)
+    if (length(desiredMovement) >= 0.6f)
         desiredMovement = normalize(desiredMovement);
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;

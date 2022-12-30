@@ -21,10 +21,11 @@ void MovementSystem::Execute(
             > 
         ()) continue;
 
-        vec3 velocity = velocityComponent.velocity[i];
-        float speed = movementComponent.speed[i];
-        float friction = movementComponent.friction[i];
-        quat rotation = transformComponent.transform[i].rotation_;
+        vec3& velocity = velocityComponent.velocity[i];
+        float& speed = movementComponent.speed[i];
+        float& friction = movementComponent.friction[i];
+        quat& rotation = transformComponent.transform[i].rotation_;
+        MoveMode& moveMode = movementComponent.moveMode[i];
 
         const float minSpeed = movementComponent.minSpeed[i];
         const float maxSpeed = movementComponent.maxSpeed[i];
@@ -37,7 +38,6 @@ void MovementSystem::Execute(
         const vec3 desiredMovement = movementComponent.desiredMovement[i];
         const float acceleration = ((speed / speedDecay) - speed);
         const vec3 groundNormal = groundTraceComponent.groundNormal[i];
-        const MoveMode moveMode = movementComponent.moveMode[i];
 
         float planarVelocitySize = length(vec2(velocity.x, velocity.z));
         speed = min(maxSpeed, planarVelocitySize);
@@ -59,12 +59,15 @@ void MovementSystem::Execute(
             break;
         }
 
+        // Calculate gravity
         if (onGround)
             velocity.y = 0.0f;
         else {
             velocity.y -= GRAVITY_ACCELERATION;
             velocity.y = -min(-velocity.y, MAX_GRAVITY);
         }
+
+        // Calculate friction 
         const float frictionLerp = 1.0f - (min(speed, frictionCapSpeed) - minSpeed) / (frictionCapSpeed - minSpeed);
         friction = lerp(minFriction, maxFriction, frictionLerp);
 
@@ -77,7 +80,6 @@ void MovementSystem::Execute(
             planarLength >= 0.0f &&
             onGround
         ) {
-            /* planarVelocity *= 0.995f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)? */
             planarVelocity *= 0.998f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
@@ -85,10 +87,6 @@ void MovementSystem::Execute(
 
         // Apply the velocity
         transformComponent.transform[i].position_ += velocity * TIMESTEP;
-        transformComponent.transform[i].rotation_ = rotation;
-        velocityComponent.velocity[i] = velocity;
-        movementComponent.speed[i] = speed;
-        movementComponent.friction[i] = friction;
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.
@@ -98,7 +96,6 @@ void MovementSystem::Execute(
     // NOTE: One way to remedy instant speed cancelling is to rotate the velocity by the desired movement
     // then set the friction to a low value. Another may be to have state for stopping and pivoting, 
     // so the entity can carry its momentum in said state
-    //
 }
 
 void MovementSystem::CalculateDefaultMovement(

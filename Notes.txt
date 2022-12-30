@@ -49,3 +49,9 @@
 -   Enemies?
 
 -   Some spread bomb, but it flattens the terrain as a result
+
+-   Projectiles
+    -   Needs target component to follow a given entity 
+    -   Recieve input from somewhere 
+    -   Apply velocity using new VelocitySystem instead of MovementSystem
+    -   Separate component or apart of MovementComponent?

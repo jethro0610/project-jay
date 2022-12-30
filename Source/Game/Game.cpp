@@ -68,6 +68,8 @@ void Game::Init() {
     transformProps.transform.position_ = vec3(0.0f, 40.0f, 0.0f);
     transformProps.transform.scale_ = vec3(2.0f);
     transformProps.interpolate = true;
+    auto velocityProps = entityManager_.RegisterComponent<VelocityComponent>(holdEntity);
+    velocityProps.velocity = vec3(1.0f, 0.0f, 0.0f);
     auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
     holdableProps.range = 2.0f;
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
@@ -83,7 +85,6 @@ void Game::Init() {
         world_->GetMeshGPUCompute(dxResources_, chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
-
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
@@ -107,8 +108,9 @@ void Game::Update(float deltaTime, float elapsedTime) {
         PickupSystem::ExecuteHold(
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
-            entityManager_.GetComponent<TransformComponent>()
-        );;
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<VelocityComponent>()
+        );
         SpreadActivatorSystem::Execute(
             world_,
             entityManager_.entities_,

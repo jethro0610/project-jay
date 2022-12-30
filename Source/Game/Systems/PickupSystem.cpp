@@ -1,4 +1,5 @@
 #include "PickupSystem.h"
+#include "MovementSystem.h"
 using namespace glm;
 
 void PickupSystem::ExecutePickup(
@@ -45,7 +46,8 @@ void PickupSystem::ExecutePickup(
 void PickupSystem::ExecuteHold(
     Entity* entities, 
     PickupComponent& pickupComponent, 
-    TransformComponent& transformComponent
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -57,11 +59,17 @@ void PickupSystem::ExecuteHold(
             continue;
 
         const int& holdEntityId = pickupComponent.entityId[i]; 
+        if (!entities[holdEntityId].HasComponent<TransformComponent>())
+            continue;
         const Transform& transform = transformComponent.transform[i];
         transformComponent.transform[holdEntityId].position_ = transform.position_;
         transformComponent.transform[holdEntityId].rotation_ = transform.rotation_;
 
-        if (!pickupComponent.pickup[i])
+        if (!pickupComponent.pickup[i]) {
+            if (!entities[holdEntityId].HasComponent<VelocityComponent>())
+                continue;
+            velocityComponent.velocity[holdEntityId] = vec3(2.0f, 0.0f, 0.0f);
             pickupComponent.entityId[i] = -1;
+        }
     }
 }

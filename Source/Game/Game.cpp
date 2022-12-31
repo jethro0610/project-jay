@@ -43,8 +43,6 @@ void Game::Init() {
     groundTraceProperties.stickType = StickType::StepUp;
 
     auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
-    movementProperties.supportedMoveModes.set(MoveMode::Default);
-    movementProperties.supportedMoveModes.set(MoveMode::Ski);
     
     auto spreadProperites = entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
     spreadProperites.radius = NO_SPREAD;

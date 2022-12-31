@@ -26,7 +26,6 @@ enum MoveMode {
 };
 
 struct MovementCProperties {
-    std::bitset<MoveMode::NumberOfModes>& supportedMoveModes;
     float& speed;
     float& minSpeed;
     float& maxSpeed;
@@ -39,7 +38,6 @@ struct MovementCProperties {
 struct MovementComponent {
     glm::vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
-    std::bitset<MoveMode::NumberOfModes> supportedMoveModes[MAX_ENTITIES];
     float speed[MAX_ENTITIES];
     float minSpeed[MAX_ENTITIES];
     float maxSpeed[MAX_ENTITIES];
@@ -64,7 +62,6 @@ struct MovementComponent {
 
     MovementCProperties operator[](int index) {
         return MovementCProperties {
-            supportedMoveModes[index],
             speed[index],
             minSpeed[index],
             maxSpeed[index],

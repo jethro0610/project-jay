@@ -84,9 +84,6 @@ void MovementSystem::Execute(
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
         }
-
-        // Apply the velocity
-        transformComponent.transform[i].position_ += velocity * TIMESTEP;
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.

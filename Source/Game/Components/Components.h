@@ -11,3 +11,4 @@
 #include "HoldableComponent.h"
 #include "MeterComponent.h"
 #include "WorldColliderComponent.h"
+#include "ProjectileComponent.h"

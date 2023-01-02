@@ -1,5 +1,5 @@
 #include "PickupSystem.h"
-#include "MovementSystem.h"
+#include "ProjectileSystem.h" 
 using namespace glm;
 
 void PickupSystem::ExecutePickup(
@@ -47,7 +47,8 @@ void PickupSystem::ExecuteHold(
     Entity* entities, 
     PickupComponent& pickupComponent, 
     TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    VelocityComponent& velocityComponent,
+    ProjectileComponent& projectileComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -68,7 +69,14 @@ void PickupSystem::ExecuteHold(
         if (!pickupComponent.pickup[i]) {
             if (!entities[holdEntityId].HasComponent<VelocityComponent>())
                 continue;
-            velocityComponent.velocity[holdEntityId] = vec3(2.0f, 0.0f, 0.0f);
+            ProjectileSystem::Launch(
+                holdEntityId, 
+                -1, 
+                velocityComponent.velocity[i], 
+                projectileComponent, 
+                velocityComponent, 
+                transformComponent
+            );
             pickupComponent.entityId[i] = -1;
         }
     }

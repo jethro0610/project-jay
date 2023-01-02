@@ -4,7 +4,7 @@
 #include "../Components/HoldableComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
-#include "../Components/MovementComponent.h"
+#include "../Components/ProjectileComponent.h"
 
 namespace PickupSystem {
     void ExecutePickup(
@@ -18,6 +18,7 @@ namespace PickupSystem {
         Entity* entities, 
         PickupComponent& pickupComponent, 
         TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
+        VelocityComponent& velocityComponent,
+        ProjectileComponent& projectileComponent
     );
 }

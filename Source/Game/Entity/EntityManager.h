@@ -40,6 +40,7 @@ private:
         PickupComponent,
         HoldableComponent,
         MeterComponent,
-        WorldColliderComponent
+        WorldColliderComponent,
+        ProjectileComponent
     > components_;
 };

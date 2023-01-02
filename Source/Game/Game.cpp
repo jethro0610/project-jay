@@ -66,8 +66,8 @@ void Game::Init() {
     transformProps.transform.position_ = vec3(0.0f, 40.0f, 0.0f);
     transformProps.transform.scale_ = vec3(2.0f);
     transformProps.interpolate = true;
-    auto velocityProps = entityManager_.RegisterComponent<VelocityComponent>(holdEntity);
-    velocityProps.velocity = vec3(1.0f, 0.0f, 0.0f);
+    entityManager_.RegisterComponent<VelocityComponent>(holdEntity);
+    entityManager_.RegisterComponent<ProjectileComponent>(holdEntity);
     auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
     holdableProps.range = 2.0f;
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
@@ -107,7 +107,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<VelocityComponent>()
+            entityManager_.GetComponent<VelocityComponent>(),
+            entityManager_.GetComponent<ProjectileComponent>()
         );
         SpreadActivatorSystem::Execute(
             world_,
@@ -146,6 +147,18 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>()
+        );
+        ProjectileSystem::CalculateVelocities(
+            entityManager_.entities_,
+            entityManager_.GetComponent<ProjectileComponent>(),
+            entityManager_.GetComponent<VelocityComponent>(),
+            entityManager_.GetComponent<TransformComponent>(),
+            world_
+        );
+        VelocitySystem::Apply(
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<VelocityComponent>()
         );
         GroundTraceSystem::Execute(
             world_, 

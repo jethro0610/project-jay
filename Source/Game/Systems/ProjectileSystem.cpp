@@ -44,6 +44,7 @@ void ProjectileSystem::Launch(
     TransformComponent& transformComponent
 ) {
     vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
+    planarVelocity += normalize(planarVelocity) * 5.0f;
     velocityComponent.velocity[projectileEntity] = vec3(planarVelocity.x, 30.0f, planarVelocity.z);
     projectileComponent.active[projectileEntity] = true;
     transformComponent.transform[projectileEntity].position_.y += 1.0f;

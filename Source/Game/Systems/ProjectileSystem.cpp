@@ -12,7 +12,7 @@ void ProjectileSystem::CalculateVelocities(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-
+        
         if (!entity.HasComponents<
             ProjectileComponent, 
             VelocityComponent,
@@ -34,7 +34,6 @@ void ProjectileSystem::CalculateVelocities(
     }
 }
 
-
 void ProjectileSystem::Launch(
     uint16_t projectileEntity, 
     uint16_t targetEntity,
@@ -43,8 +42,7 @@ void ProjectileSystem::Launch(
     VelocityComponent& velocityComponent,
     TransformComponent& transformComponent
 ) {
-    vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
-    planarVelocity += normalize(planarVelocity) * 5.0f;
+    vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z) * 0.99f;
     velocityComponent.velocity[projectileEntity] = vec3(planarVelocity.x, 30.0f, planarVelocity.z);
     projectileComponent.active[projectileEntity] = true;
     transformComponent.transform[projectileEntity].position_.y += 1.0f;

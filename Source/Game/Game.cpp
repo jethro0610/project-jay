@@ -7,6 +7,7 @@ Game::Game() {
     resolutionWidth_ = 1280;
     resolutionHeight_ = 720;
     timeAccumlulator_ = 0.0f;
+    gamepad_ = Gamepad();
 }
 
 void Game::Init() {

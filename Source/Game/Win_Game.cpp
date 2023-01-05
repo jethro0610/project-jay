@@ -46,6 +46,14 @@ void Game::PollGamepadInputs_P() {
         gamepad_.leftStickY_ = (float)xGamepad.sThumbLY / SHRT_MAX;
         gamepad_.rightStickX_ = (float)xGamepad.sThumbRX / SHRT_MAX;
         gamepad_.rightStickY_ = (float)xGamepad.sThumbRY / SHRT_MAX;
+        if (gamepad_.leftStickX_ < 0.1f && gamepad_.leftStickX_ > -0.1f)
+            gamepad_.leftStickX_ = 0.0f;
+        if (gamepad_.leftStickY_ < 0.1f && gamepad_.leftStickY_ > -0.1f)
+            gamepad_.leftStickY_ = 0.0f;
+        if (gamepad_.rightStickX_ < 0.1f && gamepad_.rightStickX_ > -0.1f)
+            gamepad_.rightStickX_ = 0.0f;
+        if (gamepad_.rightStickY_ < 0.1f && gamepad_.rightStickY_ > -0.1f)
+            gamepad_.rightStickY_ = 0.0f;
 
         gamepad_.SetButtonHeld(GAMEPAD_A, xGamepad.wButtons & XINPUT_GAMEPAD_A);
         gamepad_.SetButtonHeld(GAMEPAD_B, xGamepad.wButtons & XINPUT_GAMEPAD_B);
@@ -74,8 +82,8 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
-    inputs_.ski = windowsLayer_->heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
-    inputs_.pickup = windowsLayer_->heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
+    inputs_.ski = windowsLayer_->heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RTRIGGER] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
+    inputs_.pickup = windowsLayer_->heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
 
     // TODO: clamp the values to total size 1
     if (windowsLayer_->heldKeys_['W'])

@@ -11,3 +11,4 @@
 #include "GroundStickSystem.h"
 #include "VelocitySystem.h"
 #include "ProjectileSystem.h"
+#include "KickSystem.h"

@@ -15,5 +15,6 @@ ASSIGN_COMPONENT_ID(HoldableComponent);
 ASSIGN_COMPONENT_ID(MeterComponent);
 ASSIGN_COMPONENT_ID(WorldColliderComponent);
 ASSIGN_COMPONENT_ID(ProjectileComponent);
+ASSIGN_COMPONENT_ID(HitboxComponent);
 
 // Static IDs are used on component classes for consistency with file writes

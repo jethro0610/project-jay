@@ -41,6 +41,7 @@ private:
         HoldableComponent,
         MeterComponent,
         WorldColliderComponent,
-        ProjectileComponent
+        ProjectileComponent,
+        HitboxComponent
     > components_;
 };

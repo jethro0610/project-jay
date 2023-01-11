@@ -55,3 +55,9 @@
     -   Recieve input from somewhere 
     -   Apply velocity using new VelocitySystem instead of MovementSystem
     -   Separate component or apart of MovementComponent?
+
+-   Hitbox system
+    -   Hitboxes have flags that indicate behavior (RecieveKick, SpreadOnKick, DestroyOnKick, StopProjectileOnWorld, etc.)
+    -   Some kind of behavior system based on those flags
+    -   Remove radius from ProjectileComponent, maybe add radius to world collider?
+    -   Rename to interaction bubble?

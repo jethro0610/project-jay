@@ -7,6 +7,7 @@ struct WorldColliderCProperties {
 };
 
 struct WorldColliderComponent {
+    // TODO: Add radius
     bool colliding[MAX_ENTITIES];
 
     WorldColliderComponent() {

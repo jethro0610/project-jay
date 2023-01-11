@@ -53,6 +53,10 @@ void Game::Init() {
     pickupProps.range = 1.0f;
 
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
+    
+    auto hitboxProps = entityManager_.RegisterComponent<HitboxComponent>(PLAYER_ENTITY);
+    hitboxProps.radius = 2.0f;
+    hitboxProps.flags.set(HitboxFlag::SendKick);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
 
@@ -74,6 +78,9 @@ void Game::Init() {
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
     meshProps.model = "st_sphere";
     meshProps.materials[0] = "playerMaterial";
+    auto pickupHitboxProps = entityManager_.RegisterComponent<HitboxComponent>(holdEntity);
+    pickupHitboxProps.radius = 2.0f;
+    pickupHitboxProps.flags.set(HitboxFlag::RecieveKick);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -110,6 +117,11 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ProjectileComponent>()
+        );
+        KickSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<HitboxComponent>()
         );
         SpreadActivatorSystem::Execute(
             world_,

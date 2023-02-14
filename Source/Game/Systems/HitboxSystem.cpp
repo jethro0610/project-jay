@@ -1,7 +1,7 @@
-#include "KickSystem.h"
+#include "./HitboxSystem.h"
 using namespace glm;
 
-void KickSystem::Execute(
+void HitboxSystem::Execute(
     Entity* entities,
     TransformComponent& transformComponent,
     HitboxComponent& hitboxComponent
@@ -12,8 +12,6 @@ void KickSystem::Execute(
             continue;
         if (!entity.HasComponents<TransformComponent, HitboxComponent>())
             continue;
-        if (!hitboxComponent.properties[i][HitboxProperty::SendKick])
-            continue;
         const vec3 position = transformComponent.transform[i].position_;
         const float radius = hitboxComponent.radius[i];
 
@@ -22,7 +20,9 @@ void KickSystem::Execute(
         // basically skip double checks
         // Maybe do a i-j for loop on a chunk, with j starting at i instead of 0
         // Also should probably do hitbox scans in seperate systems, then handle resolution in other systems
-        for (int j = 0; j < MAX_ENTITIES; j++) {
+        //
+        // Flags may need to be cleared at the start of a frame
+        for (int j = i + 1; j < MAX_ENTITIES; j++) {
             if (j == i)
                 continue;
             const Entity& otherEntity = entities[i];
@@ -30,15 +30,12 @@ void KickSystem::Execute(
                 continue;
             if (!otherEntity.HasComponents<TransformComponent, HitboxComponent>())
                 continue;
-            if (!hitboxComponent.properties[j][HitboxProperty::RecieveKick])
-                continue;
-
             const vec3 otherPosition = transformComponent.transform[j].position_;    
             const float otherRadius = hitboxComponent.radius[j]; 
             
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {
-                transformComponent.transform[j].position_ = vec3(0.0f); 
+                // CODE: Check if the two components are in the states and set the flag
             }
         }
     }

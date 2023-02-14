@@ -56,7 +56,7 @@ void Game::Init() {
     
     auto hitboxProps = entityManager_.RegisterComponent<HitboxComponent>(PLAYER_ENTITY);
     hitboxProps.radius = 2.0f;
-    hitboxProps.flags.set(HitboxFlag::SendKick);
+    hitboxProps.properties.set(HitboxProperty::SendKick);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
 
@@ -80,7 +80,7 @@ void Game::Init() {
     meshProps.materials[0] = "playerMaterial";
     auto pickupHitboxProps = entityManager_.RegisterComponent<HitboxComponent>(holdEntity);
     pickupHitboxProps.radius = 2.0f;
-    pickupHitboxProps.flags.set(HitboxFlag::RecieveKick);
+    pickupHitboxProps.properties.set(HitboxProperty::RecieveKick);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)

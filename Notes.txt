@@ -61,3 +61,7 @@
     -   Some kind of behavior system based on those flags
     -   Remove radius from ProjectileComponent, maybe add radius to world collider?
     -   Rename to interaction bubble?
+
+-   Need some way to sleep components
+
+- Should holds be linked to hitbox?

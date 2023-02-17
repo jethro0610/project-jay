@@ -9,4 +9,10 @@ namespace HitboxSystem {
         TransformComponent& transformComponent,
         HitboxComponent& hitboxComponent
     ); 
+
+    void HandleIntersection(
+        int hitbox1,
+        int hitbox2,
+        HitboxComponent& hitboxComponent
+    );
 };

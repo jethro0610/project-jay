@@ -123,6 +123,12 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<HitboxComponent>()
         );
+        KickSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<HitboxComponent>()
+        );
         SpreadActivatorSystem::Execute(
             world_,
             entityManager_.entities_,

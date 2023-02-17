@@ -74,6 +74,7 @@ file(GLOB SOURCES
     Source/Game/Systems/VelocitySystem.cpp
     Source/Game/Systems/ProjectileSystem.cpp
     Source/Game/Systems/HitboxSystem.cpp
+    Source/Game/Systems/KickSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

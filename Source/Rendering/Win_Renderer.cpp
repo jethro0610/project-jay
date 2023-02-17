@@ -92,6 +92,8 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
 
     for (int e = 0; e < MAX_ENTITIES; e++) {
         const Entity& entity = entities[e];
+        if (!entity.alive_)
+            continue;
         if (!entities->HasComponents<TransformComponent, StaticModelComponent>())
             continue;
 

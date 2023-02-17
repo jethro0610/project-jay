@@ -1,4 +1,5 @@
 #include "../Entity/Entity.h"
+#include "../SpreadManager.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/HitboxComponent.h"
 

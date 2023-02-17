@@ -118,7 +118,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ProjectileComponent>()
         );
-        KickSystem::Execute(
+        HitboxSystem::Execute(
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<HitboxComponent>()

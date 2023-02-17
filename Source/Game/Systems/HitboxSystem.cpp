@@ -36,6 +36,13 @@ void HitboxSystem::Execute(
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {
                 // CODE: Check if the two components are in the states and set the flag
+                // Set the state in this component only
+                // Handle state actions in other component
+                // Reset state 
+                if (hitboxComponent.properties[i][HitboxProperty::SendKick] && hitboxComponent.properties[j][HitboxProperty::RecieveKick]) {
+                    hitboxComponent.state[i].set(HitboxState::SentKick); 
+                    hitboxComponent.state[j].set(HitboxState::RecievedKick);
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 #pragma once
 #include <bitset>
-const uint16_t MAX_ENTITIES = 128;
+const uint16_t MAX_ENTITIES = 1024;
 const uint8_t MAX_COMPONENT_TYPES = 32;
 const uint8_t PLAYER_ENTITY = 0;
 
@@ -10,6 +10,11 @@ class Entity {
 public:
     bool alive_;
     ComponentMask componentMask_;
+
+    Entity() {
+        alive_ = false;
+        componentMask_ = 0;
+    }
 
     template <class T>
     bool HasComponent() const {

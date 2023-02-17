@@ -36,7 +36,12 @@ float World::GetDistance(vec3 position) const {
     float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 
     float modDist = INFINITY;
+    // TODO: We check entities on every distance
+    // It's more efficient to precauclate the list of modifying entities
+    // Implement this later
     for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities_[i].alive_)
+            continue;
         if (!entities_[i].HasComponent<TerrainModComponent>())
             continue;
 

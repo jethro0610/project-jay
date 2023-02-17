@@ -65,3 +65,7 @@
 -   Need some way to sleep components
 
 - Should holds be linked to hitbox?
+
+- Move holds and projectile states to hitbox
+
+- For components that are a single variable, just use a general state and properties component

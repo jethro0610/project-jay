@@ -8,6 +8,8 @@ struct ProjectileCProperties {
 
 struct ProjectileComponent {
     int targetEntity[MAX_ENTITIES];
+
+    // Should probably move this to hitbox component instead
     float radius[MAX_ENTITIES];
     bool active[MAX_ENTITIES];
 

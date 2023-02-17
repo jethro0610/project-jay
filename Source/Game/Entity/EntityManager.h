@@ -39,7 +39,6 @@ private:
         SpreadDetectComponent,
         PickupComponent,
         HoldableComponent,
-        MeterComponent,
         WorldColliderComponent,
         ProjectileComponent,
         HitboxComponent

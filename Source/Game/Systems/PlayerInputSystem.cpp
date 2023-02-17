@@ -7,7 +7,6 @@ void PlayerInputSystem::Execute(
     Entity* entities, 
     MovementComponent& movementComponent,
     PickupComponent& pickupComponent,
-    MeterComponent& meterComponent,
     SpreadActivatorComponent& spreadActivatorComponent
 ) {
     quat cameraPlanarRotation = quat(vec3(0.0f, camera->lookX_, 0.0f));

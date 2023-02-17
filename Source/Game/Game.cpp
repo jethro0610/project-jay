@@ -150,7 +150,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<MovementComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
-            entityManager_.GetComponent<MeterComponent>(),
             entityManager_.GetComponent<SpreadActivatorComponent>()
         );
         GroundStickSystem::Step(

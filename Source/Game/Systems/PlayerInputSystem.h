@@ -3,7 +3,6 @@
 #include "../Components/MovementComponent.h"
 #include "../Components/PickupComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
-#include "../Components/MeterComponent.h"
 #include "../Camera.h"
 #include "../../Types/Inputs.h"
 
@@ -14,7 +13,6 @@ namespace PlayerInputSystem {
         Entity* entities, 
         MovementComponent& movementComponent,
         PickupComponent& pickupComponent,
-        MeterComponent& meterComponent,
         SpreadActivatorComponent& spreadActivatorComponent
     );
 }

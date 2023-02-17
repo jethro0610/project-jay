@@ -12,7 +12,6 @@ ASSIGN_COMPONENT_ID(SpreadActivatorComponent);
 ASSIGN_COMPONENT_ID(SpreadDetectComponent);
 ASSIGN_COMPONENT_ID(PickupComponent);
 ASSIGN_COMPONENT_ID(HoldableComponent);
-ASSIGN_COMPONENT_ID(MeterComponent);
 ASSIGN_COMPONENT_ID(WorldColliderComponent);
 ASSIGN_COMPONENT_ID(ProjectileComponent);
 ASSIGN_COMPONENT_ID(HitboxComponent);

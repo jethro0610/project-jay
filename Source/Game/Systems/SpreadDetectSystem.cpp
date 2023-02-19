@@ -20,7 +20,8 @@ void SpreadDetectSystem::Execute(
         detectedSpread = false;
         ivec2* lastDetect = detectComponent.lastDetect[i];
         ivec2 currentKey = spreadManager->WorldPositionToSpreadKey(transformComponent.transform[i].position_);
-        // TODO:: Detect is non valid space is used
+        if (!spreadManager->SpreadIsActive(currentKey))
+            continue;
 
         // Check if the spread has already been detected
         bool touchedNew = true;

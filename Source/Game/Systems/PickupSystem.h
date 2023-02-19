@@ -5,13 +5,15 @@
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../Components/ProjectileComponent.h"
+#include "../Components/BubbleComponent.h"
 
 namespace PickupSystem {
     void ExecutePickup(
         Entity* entities, 
         PickupComponent& pickupComponent, 
         HoldableComponent& holdableComponent, 
-        TransformComponent& transformComponent
+        TransformComponent& transformComponent,
+        BubbleComponent& bubbleComponent
     );
 
     void ExecuteHold(

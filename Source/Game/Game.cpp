@@ -27,36 +27,27 @@ void Game::Init() {
     // Create the player entity
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
-    entityManager_.CreateEntity();
 
+    entityManager_.CreateEntity();
     auto transformProperties = entityManager_.RegisterComponent<TransformComponent>(PLAYER_ENTITY);
     transformProperties.transform = spawnTransform;
     transformProperties.interpolate = true;
-
     entityManager_.RegisterComponent<WorldColliderComponent>(PLAYER_ENTITY);
-
     auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
     modelProperties.model = "st_sphere";
     modelProperties.materials[0] = "playerMaterial";
-
     auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
     groundTraceProperties.distance = 2.0f;
     groundTraceProperties.stickType = StickType::StepUp;
-
     auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
-    
     auto spreadProperites = entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
-    spreadProperites.radius = NO_SPREAD;
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
-
-    auto pickupProps = entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
-    pickupProps.range = 1.0f;
-
+    entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
-    
     auto hitboxProps = entityManager_.RegisterComponent<HitboxComponent>(PLAYER_ENTITY);
-    hitboxProps.radius = 2.0f;
     hitboxProps.properties.set(HitboxProperty::SendKick);
+    auto playerBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(PLAYER_ENTITY);
+    playerBubbleProps.radius = 2.0f;
 
     camera_->trackEntity_ = PLAYER_ENTITY;
 
@@ -74,13 +65,13 @@ void Game::Init() {
     entityManager_.RegisterComponent<VelocityComponent>(holdEntity);
     entityManager_.RegisterComponent<ProjectileComponent>(holdEntity);
     auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
-    holdableProps.range = 2.0f;
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
     meshProps.model = "st_sphere";
     meshProps.materials[0] = "playerMaterial";
     auto pickupHitboxProps = entityManager_.RegisterComponent<HitboxComponent>(holdEntity);
-    pickupHitboxProps.radius = 2.0f;
     pickupHitboxProps.properties.set(HitboxProperty::RecieveKick);
+    auto pickupBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(holdEntity);
+    pickupBubbleProps.radius = 2.0f;
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -109,7 +100,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<HoldableComponent>(),
-            entityManager_.GetComponent<TransformComponent>()
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<BubbleComponent>()
         );
         PickupSystem::ExecuteHold(
             entityManager_.entities_,
@@ -121,7 +113,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
         HitboxSystem::Execute(
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<HitboxComponent>()
+            entityManager_.GetComponent<HitboxComponent>(),
+            entityManager_.GetComponent<BubbleComponent>()
         );
         KickSystem::Execute(
             entityManager_.entities_,

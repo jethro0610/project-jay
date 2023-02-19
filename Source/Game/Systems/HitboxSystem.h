@@ -2,12 +2,14 @@
 #include "../SpreadManager.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/HitboxComponent.h"
+#include "../Components/BubbleComponent.h"
 
 namespace HitboxSystem {
     void Execute(
         Entity* entities,
         TransformComponent& transformComponent,
-        HitboxComponent& hitboxComponent
+        HitboxComponent& hitboxComponent,
+        BubbleComponent& bubbleComponent
     ); 
 
     void HandleIntersection(

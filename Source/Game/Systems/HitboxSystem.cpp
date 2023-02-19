@@ -4,7 +4,8 @@ using namespace glm;
 void HitboxSystem::Execute(
     Entity* entities,
     TransformComponent& transformComponent,
-    HitboxComponent& hitboxComponent
+    HitboxComponent& hitboxComponent,
+    BubbleComponent& bubbleComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -13,7 +14,7 @@ void HitboxSystem::Execute(
         if (!entity.HasComponents<TransformComponent, HitboxComponent>())
             continue;
         const vec3 position = transformComponent.transform[i].position_;
-        const float radius = hitboxComponent.radius[i];
+        const float radius = bubbleComponent.radius[i];
 
         // TODO: Only check components within the same chunk
         // NOTE: There needs to be consistent checking between which components do what
@@ -31,7 +32,7 @@ void HitboxSystem::Execute(
             if (!otherEntity.HasComponents<TransformComponent, HitboxComponent>())
                 continue;
             const vec3 otherPosition = transformComponent.transform[j].position_;    
-            const float otherRadius = hitboxComponent.radius[j]; 
+            const float otherRadius = bubbleComponent.radius[j]; 
             
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {

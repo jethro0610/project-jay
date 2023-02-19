@@ -6,7 +6,8 @@ void PickupSystem::ExecutePickup(
     Entity* entities, 
     PickupComponent& pickupComponent, 
     HoldableComponent& holdableComponent,
-    TransformComponent& transformComponent
+    TransformComponent& transformComponent,
+    BubbleComponent& bubbleComponent
 ) {
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -35,7 +36,7 @@ void PickupSystem::ExecutePickup(
             // NOTE: This only picks up the first entity in range. May need to keep track of the closest instead
             // Also need to use entity partitions when implemented
             vec3 otherPos = transformComponent.transform[e].position_;
-            if (distance(entityPos, otherPos) <= pickupComponent.range[i] + holdableComponent.range[e]) {
+            if (distance(entityPos, otherPos) <= bubbleComponent.radius[i] + bubbleComponent.radius[e]) {
                 holdEntityId = e;
                break; 
             }

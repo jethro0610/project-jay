@@ -20,17 +20,14 @@ enum HitboxState {
 };
 
 struct HitboxCProperties {
-    float& radius;
     std::bitset<HitboxPropertyCount>& properties;
 };
 
 struct HitboxComponent {
-    float radius[MAX_ENTITIES];
     std::bitset<HitboxPropertyCount> properties[MAX_ENTITIES];
     std::bitset<HitboxStateCount> state[MAX_ENTITIES];
 
     HitboxComponent () {
-        std::fill_n(radius, MAX_ENTITIES, -1.0f);
         std::fill_n(properties, MAX_ENTITIES, 0); 
         std::fill_n(state, MAX_ENTITIES, 0); 
     };
@@ -39,7 +36,6 @@ struct HitboxComponent {
 
     HitboxCProperties operator[](int index) {
         return HitboxCProperties {
-            radius[index],
             properties[index]
         };
     }

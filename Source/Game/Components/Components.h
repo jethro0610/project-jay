@@ -12,3 +12,4 @@
 #include "WorldColliderComponent.h"
 #include "ProjectileComponent.h"
 #include "HitboxComponent.h"
+#include "BubbleComponent.h"

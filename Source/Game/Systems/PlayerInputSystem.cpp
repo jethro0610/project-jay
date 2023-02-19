@@ -19,16 +19,16 @@ void PlayerInputSystem::Execute(
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
-    spreadActivatorComponent.radius[PLAYER_ENTITY] = NO_SPREAD;
+    spreadActivatorComponent.active[PLAYER_ENTITY] = false;
     pickupComponent.pickup[PLAYER_ENTITY] = false;
     if (inputs.pickup) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         pickupComponent.pickup[PLAYER_ENTITY] = true;
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1.0f;
+        spreadActivatorComponent.active[PLAYER_ENTITY] = true;
         return;
     }
     if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1.0f;
+        spreadActivatorComponent.active[PLAYER_ENTITY] = true;
     }
 }

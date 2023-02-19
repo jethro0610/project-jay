@@ -58,8 +58,10 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position) {
 
 void SpreadManager::AddSpread(glm::vec3 position, int radius) {
     ivec2 origin = WorldPositionToSpreadKey(position);
-    for (int x = 0; x < radius; x++)
-    for (int z = 0; z < radius; z++) {
+    for (int x = -radius; x <= radius; x++)
+    for (int z = -radius; z <= radius; z++) {
+        if (sqrt(x*x + z*z) > radius)
+            continue;
         AddSpread(origin + ivec2(x, z), position.y); 
     }
 }

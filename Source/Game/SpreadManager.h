@@ -10,6 +10,11 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include "gtx/hash.hpp"
 
+struct AddSpreadInfo {
+    bool added;
+    ivec2 key;
+};
+
 struct SpreadChunk {
     std::unordered_map<glm::ivec2, uint16_t> keys;
     uint16_t count = 0;
@@ -30,5 +35,7 @@ public:
     glm::ivec2 SpreadKeyToChunk(glm::ivec2 key) const;
     bool SpreadIsActive(glm::ivec2 key) const;
     bool AddSpread(glm::ivec2 key, float height); 
+    AddSpreadInfo AddSpread(glm::vec3 position); 
+    void AddSpread(glm::vec3 position, int radius); 
     void UpdateRenderData_P();
 };

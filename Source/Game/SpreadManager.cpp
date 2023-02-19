@@ -1,6 +1,7 @@
 #include "SpreadManager.h"
 using namespace glm;
 
+
 SpreadManager::SpreadManager(ResourceManager* resourceManager, World* world) {
     resourceManager_ = resourceManager;
     world_ = world;
@@ -46,4 +47,19 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
     dirtyChunks_.insert(chunkPos);
 
     return true;
+}
+
+AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position) {
+    AddSpreadInfo returnInfo;
+    returnInfo.key = WorldPositionToSpreadKey(position);
+    returnInfo.added = AddSpread(returnInfo.key , position.y);
+    return returnInfo;
+}
+
+void SpreadManager::AddSpread(glm::vec3 position, int radius) {
+    ivec2 origin = WorldPositionToSpreadKey(position);
+    for (int x = 0; x < radius; x++)
+    for (int z = 0; z < radius; z++) {
+        AddSpread(origin + ivec2(x, z), position.y); 
+    }
 }

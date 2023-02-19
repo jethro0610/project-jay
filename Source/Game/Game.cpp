@@ -69,7 +69,7 @@ void Game::Init() {
     meshProps.materials[0] = "playerMaterial";
     auto pickupBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(holdEntity);
     pickupBubbleProps.radius = 2.0f;
-    entityManager_.RegisterComponent<KickableComponent>(PLAYER_ENTITY);
+    entityManager_.RegisterComponent<KickableComponent>(holdEntity);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -96,6 +96,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         IntersectSystem::Execute(
             entityManager_.entities_,
+            spreadManager_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<BubbleComponent>(),
             entityManager_.GetComponent<PickupComponent>(),

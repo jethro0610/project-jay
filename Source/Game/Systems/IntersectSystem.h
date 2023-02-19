@@ -12,6 +12,7 @@
 namespace IntersectSystem {
     void Execute(
         Entity* entities,
+        SpreadManager* spreadManager,
         TransformComponent& transformComponent,
         BubbleComponent& bubbleComponent,
         PickupComponent& pickupComponent,
@@ -22,8 +23,10 @@ namespace IntersectSystem {
 
     void HandleIntersection(
         Entity* entites,
+        SpreadManager* spreadManager,
         int hitbox1,
         int hitbox2,
+        TransformComponent& transformComponent,
         PickupComponent& pickupComponent,
         HoldableComponent& holdableComponent,
         KickerComponent& kickerComponent,

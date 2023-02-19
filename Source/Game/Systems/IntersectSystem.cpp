@@ -4,6 +4,7 @@ using namespace glm;
 
 void IntersectSystem::Execute(
     Entity* entities,
+    SpreadManager* spreadManager,
     TransformComponent& transformComponent,
     BubbleComponent& bubbleComponent,
     PickupComponent& pickupComponent,
@@ -39,8 +40,29 @@ void IntersectSystem::Execute(
             
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {
-                HandleIntersection(entities, i, j, pickupComponent, holdableComponent, kickerComponent, kickableComponent);
-                HandleIntersection(entities, j, i, pickupComponent, holdableComponent, kickerComponent, kickableComponent);
+                HandleIntersection(
+                    entities, 
+                    spreadManager, 
+                    i, 
+                    j, 
+                    transformComponent,
+                    pickupComponent, 
+                    holdableComponent, 
+                    kickerComponent, 
+                    kickableComponent
+                );
+
+                HandleIntersection(
+                    entities, 
+                    spreadManager, 
+                    j, 
+                    i, 
+                    transformComponent,
+                    pickupComponent, 
+                    holdableComponent, 
+                    kickerComponent, 
+                    kickableComponent
+                );
             }
         }
     }
@@ -48,8 +70,10 @@ void IntersectSystem::Execute(
 
 void IntersectSystem::HandleIntersection(
     Entity* entities,
+    SpreadManager* spreadManager,
     int hitbox1,
     int hitbox2,
+    TransformComponent& transformComponent,
     PickupComponent& pickupComponent,
     HoldableComponent& holdableComponent,
     KickerComponent& kickerComponent,
@@ -64,7 +88,7 @@ void IntersectSystem::HandleIntersection(
     if (entities[hitbox1].HasComponent<KickerComponent>() && 
         entities[hitbox2].HasComponent<KickableComponent>()) 
     {
-
+        spreadManager->AddSpread(transformComponent.transform[hitbox2].position_, 4);
     }
 }
 

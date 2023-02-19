@@ -32,14 +32,13 @@ void SpreadActivatorSystem::Execute(
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.HasComponent<SpreadDetectComponent>();
 
-        const ivec2 spreadOrigin = spreadManager->WorldPositionToSpreadKey(position);
-        const bool activated = spreadManager->AddSpread(spreadOrigin, position.y);
-        if (!activated || !hasDetect)
+        const AddSpreadInfo addSpreadInfo = spreadManager->AddSpread(position);
+        if (!addSpreadInfo.added || !hasDetect)
             continue;
 
         ivec2* lastDetect = spreadDetectComponent.lastDetect[i];
         for (int s = 0; s < MAX_DETECT - 1; s++) 
             lastDetect[s + 1] = lastDetect[s];
-        lastDetect[0] = spreadOrigin;
+        lastDetect[0] = addSpreadInfo.key;
     }
 }

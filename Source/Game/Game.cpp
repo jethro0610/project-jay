@@ -44,10 +44,9 @@ void Game::Init() {
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
-    auto hitboxProps = entityManager_.RegisterComponent<HitboxComponent>(PLAYER_ENTITY);
-    hitboxProps.properties.set(HitboxProperty::SendKick);
     auto playerBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(PLAYER_ENTITY);
     playerBubbleProps.radius = 2.0f;
+    entityManager_.RegisterComponent<KickerComponent>(PLAYER_ENTITY);
 
     camera_->trackEntity_ = PLAYER_ENTITY;
 
@@ -68,10 +67,9 @@ void Game::Init() {
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
     meshProps.model = "st_sphere";
     meshProps.materials[0] = "playerMaterial";
-    auto pickupHitboxProps = entityManager_.RegisterComponent<HitboxComponent>(holdEntity);
-    pickupHitboxProps.properties.set(HitboxProperty::RecieveKick);
     auto pickupBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(holdEntity);
     pickupBubbleProps.radius = 2.0f;
+    entityManager_.RegisterComponent<KickableComponent>(PLAYER_ENTITY);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -96,12 +94,14 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>()
         );
-        PickupSystem::ExecutePickup(
+        IntersectSystem::Execute(
             entityManager_.entities_,
+            entityManager_.GetComponent<TransformComponent>(),
+            entityManager_.GetComponent<BubbleComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<HoldableComponent>(),
-            entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<BubbleComponent>()
+            entityManager_.GetComponent<KickerComponent>(),
+            entityManager_.GetComponent<KickableComponent>()
         );
         PickupSystem::ExecuteHold(
             entityManager_.entities_,
@@ -109,18 +109,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ProjectileComponent>()
-        );
-        HitboxSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<HitboxComponent>(),
-            entityManager_.GetComponent<BubbleComponent>()
-        );
-        KickSystem::Execute(
-            entityManager_.entities_,
-            spreadManager_,
-            entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<HitboxComponent>()
         );
         SpreadActivatorSystem::Execute(
             world_,

@@ -8,13 +8,7 @@
 #include "../Components/BubbleComponent.h"
 
 namespace PickupSystem {
-    void ExecutePickup(
-        Entity* entities, 
-        PickupComponent& pickupComponent, 
-        HoldableComponent& holdableComponent, 
-        TransformComponent& transformComponent,
-        BubbleComponent& bubbleComponent
-    );
+    bool DoPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent);
 
     void ExecuteHold(
         Entity* entities, 

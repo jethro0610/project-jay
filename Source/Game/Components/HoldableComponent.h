@@ -6,12 +6,8 @@
 struct HoldableCProperties {
 };
 
-enum UseType {
-    Throw
-};
 
 struct HoldableComponent {
-    UseType useType[MAX_ENTITIES];
 
     HoldableComponent() {
     };

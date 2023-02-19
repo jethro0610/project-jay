@@ -30,18 +30,19 @@ private:
 
     std::tuple<
         TransformComponent,
-        StaticModelComponent,
+        MovementComponent,
         GroundTraceComponent,
         VelocityComponent,
-        MovementComponent,
+        ProjectileComponent,
         TerrainModComponent,
+        WorldColliderComponent,
         SpreadActivatorComponent,
         SpreadDetectComponent,
+        BubbleComponent,
         PickupComponent,
         HoldableComponent,
-        WorldColliderComponent,
-        ProjectileComponent,
-        HitboxComponent,
-        BubbleComponent
+        KickerComponent,
+        KickableComponent,
+        StaticModelComponent
     > components_;
 };

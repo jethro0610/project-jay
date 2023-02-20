@@ -4,12 +4,14 @@
 #include <bitset>
 #include <tuple>
 #include <unordered_map>
+#include <deque>
 
 class EntityManager {
 public:
     Entity entities_[MAX_ENTITIES];
-    uint16_t entityCount_ = 0; // TODO: Use stack to keep track of usable entities
+    std::deque<uint16_t> usableEntities_;
 
+    EntityManager();
     uint16_t CreateEntity();
     void DestroyEntity(uint16_t entityToDestroy);
 

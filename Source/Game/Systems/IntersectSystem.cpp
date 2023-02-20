@@ -96,4 +96,3 @@ void IntersectSystem::HandleIntersection(
         entityManager->DestroyEntity(hitbox2);
     }
 }
-

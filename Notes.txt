@@ -69,3 +69,13 @@
 - Move holds and projectile states to hitbox
 
 - For components that are a single variable, just use a general state and properties component
+
+- Fire spread
+
+- Cutting the spread for benefits ie. speed, stop fire
+
+- Enemy that launches fireballs that rain down and destroy spread
+
+- Some constant properties on holdable so they move with the property ie. spreading
+
+- Should kick be a button or automatic

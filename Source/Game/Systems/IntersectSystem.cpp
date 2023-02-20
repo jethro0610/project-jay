@@ -92,7 +92,7 @@ void IntersectSystem::HandleIntersection(
     if (entities[hitbox1].HasComponent<KickerComponent>() && 
         entities[hitbox2].HasComponent<KickableComponent>()) 
     {
-        spreadManager->AddSpread(transformComponent.transform[hitbox2].position_, 4);
+        spreadManager->AddSpread(transformComponent.transform[hitbox2].position_, 8);
         entityManager->DestroyEntity(hitbox2);
     }
 }

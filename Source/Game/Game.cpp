@@ -96,6 +96,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         IntersectSystem::Execute(
             entityManager_.entities_,
+            &entityManager_,
             spreadManager_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<BubbleComponent>(),

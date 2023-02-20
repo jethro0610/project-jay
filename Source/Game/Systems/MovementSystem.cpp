@@ -12,6 +12,8 @@ void MovementSystem::Execute(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
         if (!entity.HasComponents
             <
             MovementComponent,
@@ -80,7 +82,7 @@ void MovementSystem::Execute(
             planarLength >= 0.0f &&
             onGround
         ) {
-            planarVelocity *= 0.99f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
+            planarVelocity *= 0.995f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
         }

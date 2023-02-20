@@ -11,6 +11,7 @@ public:
     uint16_t entityCount_ = 0; // TODO: Use stack to keep track of usable entities
 
     uint16_t CreateEntity();
+    void DestroyEntity(uint16_t entityToDestroy);
 
     template<class T>
     auto RegisterComponent(uint16_t targetEntity) {
@@ -27,7 +28,6 @@ public:
     }
 
 private:
-
     std::tuple<
         TransformComponent,
         MovementComponent,

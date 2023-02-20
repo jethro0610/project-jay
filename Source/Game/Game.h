@@ -42,6 +42,7 @@ private:
     Camera* camera_;
     World* world_;
     SpreadManager* spreadManager_;
+    EntityManager entityManager_;
 
     Gamepad gamepad_;
     Inputs inputs_;
@@ -54,8 +55,6 @@ private:
     float deltaTime_;
     float elapsedTime_;
     float timeAccumlulator_;
-
-    EntityManager entityManager_;
 
     void SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
     void UpdateInputs_P(float deltaTime);

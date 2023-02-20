@@ -30,7 +30,9 @@ public:
         for (int i = 0; i < sizeof...(T); i++) {
             if (!hasComponent[i])
                 return false;
+
         }
         return true;
     }
+
 };

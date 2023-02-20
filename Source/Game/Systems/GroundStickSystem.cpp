@@ -8,6 +8,8 @@ void GroundStickSystem::Step (
 ) {
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
         if (!entities->HasComponents<TransformComponent, GroundTraceComponent>())
             continue;
 
@@ -23,6 +25,8 @@ void GroundStickSystem::Stick (
 ) {
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
         if (!entities->HasComponents<TransformComponent, GroundTraceComponent>())
             continue;
 

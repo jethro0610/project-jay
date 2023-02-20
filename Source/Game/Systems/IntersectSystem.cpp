@@ -4,6 +4,7 @@ using namespace glm;
 
 void IntersectSystem::Execute(
     Entity* entities,
+    EntityManager* entityManager,
     SpreadManager* spreadManager,
     TransformComponent& transformComponent,
     BubbleComponent& bubbleComponent,
@@ -29,7 +30,7 @@ void IntersectSystem::Execute(
             if (j == i)
                 continue;
 
-            const Entity& otherEntity = entities[i];
+            const Entity& otherEntity = entities[j];
             if (!otherEntity.alive_)
                 continue;
             if (!otherEntity.HasComponents<TransformComponent, BubbleComponent>())
@@ -42,6 +43,7 @@ void IntersectSystem::Execute(
             if (dist < radius + otherRadius) {
                 HandleIntersection(
                     entities, 
+                    entityManager,
                     spreadManager, 
                     i, 
                     j, 
@@ -54,6 +56,7 @@ void IntersectSystem::Execute(
 
                 HandleIntersection(
                     entities, 
+                    entityManager,
                     spreadManager, 
                     j, 
                     i, 
@@ -70,6 +73,7 @@ void IntersectSystem::Execute(
 
 void IntersectSystem::HandleIntersection(
     Entity* entities,
+    EntityManager* entityManager,
     SpreadManager* spreadManager,
     int hitbox1,
     int hitbox2,
@@ -89,6 +93,7 @@ void IntersectSystem::HandleIntersection(
         entities[hitbox2].HasComponent<KickableComponent>()) 
     {
         spreadManager->AddSpread(transformComponent.transform[hitbox2].position_, 4);
+        entityManager->DestroyEntity(hitbox2);
     }
 }
 

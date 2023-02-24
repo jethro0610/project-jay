@@ -2,7 +2,9 @@
 
 #include "../Logging/Logger.h"
 
-void Renderer::Init_P() {
+Renderer::Renderer(ResourceManager* resourceManager):
+    resourceManager_(resourceManager)
+{
     DXResources* dxResources = resourceManager_->dxResources_;
 
     width_ = dxResources->width_;

@@ -4,12 +4,20 @@
 
 using namespace std::chrono;
 
-void Game::Init_P() {
+Game::Game(int width, int height):
+    resolutionWidth_(width),
+    resolutionHeight_(height),
+    timeAccumlulator_(0.0f),
+    windowsLayer_(WindowsLayer::InitWindowsLayer(width, height, "DirectXLearning")),
+    dxResources_(windowsLayer_->windowHandle_, width, height),
+    resourceManager_(&dxResources_),
+    renderer_(&resourceManager_),
+    camera_(&entityManager_.GetComponent<TransformComponent>(), 15.0f),
+    world_(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>()),
+    spreadManager_(&resourceManager_, &world_),
+    gamepad_()
+{
     running_ = true;
-    windowsLayer_ = WindowsLayer::InitWindowsLayer(resolutionWidth_, resolutionHeight_, "DirectXLearning");
-    dxResources_ = new DXResources(windowsLayer_->windowHandle_, resolutionWidth_, resolutionHeight_);
-    resourceManager_ = new ResourceManager(dxResources_);
-    renderer_ = new Renderer(resourceManager_);
     Init();
 
     MSG msg;
@@ -117,5 +125,5 @@ void Game::FlushInputs_P() {
 }
 
 void Game::SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {
-    dxResources_->WriteWorldMesh(chunk, vertices, indices);
+    dxResources_.WriteWorldMesh(chunk, vertices, indices);
 }

@@ -3,27 +3,16 @@
 
 using namespace std::chrono;
 
-Game::Game() {
-    resolutionWidth_ = 1280;
-    resolutionHeight_ = 720;
-    timeAccumlulator_ = 0.0f;
-    gamepad_ = Gamepad();
-}
-
 void Game::Init() {
-    world_ = new World(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>());
-    camera_ = new Camera(&entityManager_.GetComponent<TransformComponent>(), 15.0f);
-    spreadManager_ = new SpreadManager(resourceManager_, world_);
-
     // Initialize the time
     currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
     lastTimeUSec_ = currentTimeUSec_;
     elapsedTime_ = 0.0f;
 
     // Create the camera and assign it to the renderer
-    renderer_->camera_ = camera_;
+    renderer_.camera_ = &camera_;
 
-    resourceManager_->LoadStaticModel("st_sphere");
+    resourceManager_.LoadStaticModel("st_sphere");
     // Create the player entity
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
@@ -40,7 +29,7 @@ void Game::Init() {
     groundTraceProperties.distance = 2.0f;
     groundTraceProperties.stickType = StickType::StepUp;
     auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
-    auto spreadProperites = entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
+    entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
     entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
@@ -48,7 +37,7 @@ void Game::Init() {
     playerBubbleProps.radius = 2.0f;
     entityManager_.RegisterComponent<KickerComponent>(PLAYER_ENTITY);
 
-    camera_->trackEntity_ = PLAYER_ENTITY;
+    camera_.trackEntity_ = PLAYER_ENTITY;
 
     // Create the testing terrain modifier entity
     /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */
@@ -77,7 +66,7 @@ void Game::Init() {
         ivec3 chunk(x, y, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
-        world_->GetMeshGPUCompute(dxResources_, chunk, vertices, indices);
+        world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 }
@@ -97,7 +86,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         IntersectSystem::Execute(
             entityManager_.entities_,
             &entityManager_,
-            spreadManager_,
+            &spreadManager_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<BubbleComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
@@ -113,9 +102,9 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<ProjectileComponent>()
         );
         SpreadActivatorSystem::Execute(
-            world_,
+            &world_,
             entityManager_.entities_,
-            spreadManager_,
+            &spreadManager_,
             entityManager_.GetComponent<SpreadActivatorComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>(),
             entityManager_.GetComponent<TransformComponent>(), 
@@ -123,20 +112,20 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         SpreadDetectSystem::Execute(
             entityManager_.entities_, 
-            spreadManager_, 
+            &spreadManager_, 
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>()
         );
         PlayerInputSystem::Execute(
             inputs_, 
-            camera_, 
+            &camera_, 
             entityManager_.entities_,
             entityManager_.GetComponent<MovementComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<SpreadActivatorComponent>()
         );
         GroundStickSystem::Step(
-            world_,
+            &world_,
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
@@ -154,7 +143,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<ProjectileComponent>(),
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<TransformComponent>(),
-            world_
+            &world_
         );
         VelocitySystem::Apply(
             entityManager_.entities_,
@@ -162,19 +151,19 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<VelocityComponent>()
         );
         GroundTraceSystem::Execute(
-            world_, 
+            &world_, 
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         GroundStickSystem::Stick(
-            world_,
+            &world_,
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         CollisionSystem::Execute(
-            world_, 
+            &world_, 
             entityManager_.entities_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<WorldColliderComponent>()
@@ -186,13 +175,13 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.entities_,
         entityManager_.GetComponent<TransformComponent>()
     );
-    camera_->Update(deltaTime, inputs_);
-    spreadManager_->UpdateRenderData_P();
+    camera_.Update(deltaTime, inputs_);
+    spreadManager_.UpdateRenderData_P();
     RenderComponents renderComponents {
         entityManager_.GetComponent<StaticModelComponent>(),
         entityManager_.GetComponent<TransformComponent>()
     };
-    renderer_->Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, spreadManager_);
+    renderer_.Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, &spreadManager_);
 }
 
 void Game::UpdateTime() {

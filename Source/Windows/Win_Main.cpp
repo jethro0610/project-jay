@@ -10,6 +10,5 @@ int CALLBACK WinMain(
 #ifdef _DEBUG
     Logger::InitLogger();
 #endif
-    Game app;
-    app.Init_P();
+    Game* app = new Game(1280, 720);
 }

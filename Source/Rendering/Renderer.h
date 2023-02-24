@@ -20,7 +20,6 @@ class Renderer {
 public:
     Renderer(ResourceManager* resourceManager);
     Camera* camera_;
-    void Init_P();
 
     int width_;
     int height_;

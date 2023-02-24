@@ -19,13 +19,8 @@
 
 class Game {
 public:
-    Game();
-
-    // Called during Init_P right before the game loop starts
+    Game(int width, int height);
     void Init();
-
-    // Called before Init to start the game
-    void Init_P();
 
     bool running_;
     void Update(float deltaTime, float elapsedTime);
@@ -33,16 +28,14 @@ public:
 private:
 #ifdef _WINDOWS
     WindowsLayer* windowsLayer_;
-    DXResources* dxResources_;
+    DXResources dxResources_;
 #endif
-
-    // TODO: Make these variables, not pointers
-    Renderer* renderer_;
-    ResourceManager* resourceManager_;
-    Camera* camera_;
-    World* world_;
-    SpreadManager* spreadManager_;
     EntityManager entityManager_;
+    ResourceManager resourceManager_;
+    Renderer renderer_;
+    Camera camera_;
+    World world_;
+    SpreadManager spreadManager_;
 
     Gamepad gamepad_;
     Inputs inputs_;

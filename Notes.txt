@@ -79,3 +79,19 @@
 - Some constant properties on holdable so they move with the property ie. spreading
 
 - Should kick be a button or automatic
+
+- Seed system
+    - Need seeds to give spread
+    - Seed bags that are necessary to hold a seed
+    - Seeds are disperese with some kind of entity
+    - Cutting spread gives seeds back
+    - Each spread type have different properties
+
+- When you slow down, certain parts of the world "unghost".
+    - Basically shows hint, story of the is`land, etc.
+
+- Each island level has its own story
+
+- Some wind ability that magnets stuff toward you
+
+- Should cut and kick be the same button?

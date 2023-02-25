@@ -8,8 +8,8 @@ const int8_t NO_TRACK = -1;
 
 class Camera {
 public:
-    Camera(TransformComponent* transformComponent, float trackDistance, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
-    Camera(TransformComponent* transformComponent, float trackDistance, int trackEntity);
+    Camera(TransformComponent& transformComponent, float trackDistance, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
+    Camera(TransformComponent& transformComponent, float trackDistance, int trackEntity);
     Transform transform_;
     glm::vec3 smoothTrackPosition_;
     
@@ -22,6 +22,6 @@ public:
     void Update(float deltaTime, Inputs inputs);
     glm::mat4 GetViewMatrix() const;
 private:
-    TransformComponent* transformComponent_;
+    TransformComponent& transformComponent_;
 };
 

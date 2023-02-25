@@ -1,4 +1,3 @@
-#include "../Entity/Entity.h"
 #include "../Entity/EntityManager.h"
 #include "../SpreadManager.h"
 #include "../Components/TransformComponent.h"
@@ -12,9 +11,8 @@
 
 namespace IntersectSystem {
     void Execute(
-        Entity* entities,
-        EntityManager* entityManager,
-        SpreadManager* spreadManager,
+        EntityManager& entityManager,
+        SpreadManager& spreadManager,
         TransformComponent& transformComponent,
         BubbleComponent& bubbleComponent,
         PickupComponent& pickupComponent,
@@ -24,9 +22,8 @@ namespace IntersectSystem {
     ); 
 
     void HandleIntersection(
-        Entity* entites,
-        EntityManager* entityManager,
-        SpreadManager* spreadManager,
+        EntityManager& entityManager,
+        SpreadManager& spreadManager,
         int hitbox1,
         int hitbox2,
         TransformComponent& transformComponent,

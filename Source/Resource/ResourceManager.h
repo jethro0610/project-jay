@@ -22,8 +22,8 @@ struct MaterialDesc {
 class ResourceManager {
 public:
 #ifdef _WINDOWS
-    ResourceManager(DXResources* dxResources);
-    DXResources* dxResources_;
+    ResourceManager(DXResources& dxResources);
+    DXResources& dxResources_;
 #endif
     std::unordered_map<std::string, StaticModelDesc> staticModels_;
     std::unordered_map<std::string, MaterialDesc> materials_;

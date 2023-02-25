@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/PickupComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
@@ -8,9 +8,9 @@
 
 namespace PlayerInputSystem {
     void Execute(
+        EntityManager& entityManager,
+        Camera& camera,
         Inputs inputs, 
-        Camera* camera, 
-        Entity* entities, 
         MovementComponent& movementComponent,
         PickupComponent& pickupComponent,
         SpreadActivatorComponent& spreadActivatorComponent

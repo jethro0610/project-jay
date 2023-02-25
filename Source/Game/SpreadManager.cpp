@@ -2,9 +2,11 @@
 using namespace glm;
 
 
-SpreadManager::SpreadManager(ResourceManager* resourceManager, World* world) {
-    resourceManager_ = resourceManager;
-    world_ = world;
+SpreadManager::SpreadManager(ResourceManager& resourceManager, World& world):
+    resourceManager_(resourceManager),
+    world_(world)
+{
+
 }
 
 ivec2 SpreadManager::WorldPositionToSpreadKey(vec3 position) const {
@@ -39,7 +41,7 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
 
     const float offset = SPREAD_DIST / 2.0f;
     vec3 position = vec3(key.x * SPREAD_DIST + offset, height, key.y * SPREAD_DIST + offset);
-    position = world_->GetNearestInDirection(position, -Transform::worldUp);
+    position = world_.GetNearestInDirection(position, -Transform::worldUp);
     chunk.positions[chunk.count] = position; 
     chunk.keys[key] = chunk.count;
     chunk.count++;

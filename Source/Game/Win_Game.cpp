@@ -7,30 +7,34 @@ using namespace std::chrono;
 Game::Game(int width, int height):
     resolutionWidth_(width),
     resolutionHeight_(height),
+    lastTimeUSec_(0),
+    currentTimeUSec_(0),
+    deltaTime_(0),
+    elapsedTime_(0),
     timeAccumlulator_(0.0f),
-    windowsLayer_(WindowsLayer::InitWindowsLayer(width, height, "DirectXLearning")),
-    dxResources_(windowsLayer_->windowHandle_, width, height),
-    resourceManager_(&dxResources_),
-    renderer_(&resourceManager_),
-    camera_(&entityManager_.GetComponent<TransformComponent>(), 15.0f),
-    world_(entityManager_.entities_, &entityManager_.GetComponent<TerrainModComponent>()),
-    spreadManager_(&resourceManager_, &world_),
-    gamepad_()
+    windowsLayer_(width, height, "DirectXLearning"),
+    dxResources_(windowsLayer_.windowHandle_, width, height),
+    resourceManager_(dxResources_),
+    renderer_(resourceManager_),
+    camera_(entityManager_.GetComponent<TransformComponent>(), 15.0f),
+    world_(entityManager_.entities_, entityManager_.GetComponent<TerrainModComponent>()),
+    spreadManager_(resourceManager_, world_),
+    gamepad_(),
+    running_(true)
 {
-    running_ = true;
     Init();
 
     MSG msg;
-    while (!windowsLayer_->closed_ && running_) {
+    while (!windowsLayer_.closed_ && running_) {
         UpdateTime();
 
-        windowsLayer_->ClearMouseMovement();
+        windowsLayer_.ClearMouseMovement();
 
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        windowsLayer_->UpdateMouseMovement();
+        windowsLayer_.UpdateMouseMovement();
         PollGamepadInputs_P();
         UpdateInputs_P(deltaTime_);
         Update(deltaTime_, elapsedTime_);
@@ -90,20 +94,20 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
-    inputs_.ski = windowsLayer_->heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RTRIGGER] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
-    inputs_.pickup = windowsLayer_->heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
+    inputs_.ski = windowsLayer_.heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RTRIGGER] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
+    inputs_.pickup = windowsLayer_.heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
 
     // TODO: clamp the values to total size 1
-    if (windowsLayer_->heldKeys_['W'])
+    if (windowsLayer_.heldKeys_['W'])
         inputs_.forwardInput += 1.0f;
 
-    if (windowsLayer_->heldKeys_['S'])
+    if (windowsLayer_.heldKeys_['S'])
         inputs_.forwardInput -= 1.0f;
 
-    if (windowsLayer_->heldKeys_['D'])
+    if (windowsLayer_.heldKeys_['D'])
         inputs_.sideInput += 1.0f;
 
-    if (windowsLayer_->heldKeys_['A'])
+    if (windowsLayer_.heldKeys_['A'])
         inputs_.sideInput -= 1.0f;
 
     inputs_.forwardInput += gamepad_.leftStickY_;
@@ -112,14 +116,14 @@ void Game::UpdateInputs_P(float deltaTime) {
     // TODO: scale these by delta time and clamp the values
     inputs_.deltaLookX = 0.0f;
     inputs_.deltaLookY = 0.0f;
-    inputs_.deltaLookX -= windowsLayer_->deltaMouseX_ * 0.005f;
-    inputs_.deltaLookY -= windowsLayer_->deltaMouseY_ * 0.005f;
+    inputs_.deltaLookX -= windowsLayer_.deltaMouseX_ * 0.005f;
+    inputs_.deltaLookY -= windowsLayer_.deltaMouseY_ * 0.005f;
     inputs_.deltaLookX -= gamepad_.rightStickX_ * deltaTime * 2.0f;
     inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
 }
 
 void Game::FlushInputs_P() {
-    windowsLayer_->ClearPressedAndReleasedKeys();
+    windowsLayer_.ClearPressedAndReleasedKeys();
     gamepad_.pressedButtons_.reset();
     gamepad_.releasedButtons_.reset();
 }

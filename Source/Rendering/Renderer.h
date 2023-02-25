@@ -18,7 +18,7 @@ struct RenderComponents {
 
 class Renderer {
 public:
-    Renderer(ResourceManager* resourceManager);
+    Renderer(ResourceManager& resourceManager);
     Camera* camera_;
 
     int width_;
@@ -30,16 +30,16 @@ public:
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
 
     mat4 GetWorldViewProjection(mat4 worldMatrix);
-    void Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents, SpreadManager* spreadManager);
+    void Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents, SpreadManager& spreadManager);
 private:
-    ResourceManager* resourceManager_;
+    ResourceManager& resourceManager_;
 	
     void SetFrameData_P();
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P();
     void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
-    void RenderSpread_P(SpreadManager* spreadManager);
+    void RenderSpread_P(SpreadManager& spreadManager);
     void Present_P();
 };
 

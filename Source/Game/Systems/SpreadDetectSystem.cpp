@@ -3,13 +3,13 @@
 using namespace glm;
 
 void SpreadDetectSystem::Execute(
-    Entity* entities, 
-    SpreadManager* spreadManager,
+    EntityManager& entityManager, 
+    SpreadManager& spreadManager,
     TransformComponent& transformComponent,
     SpreadDetectComponent& detectComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
 
@@ -19,8 +19,8 @@ void SpreadDetectSystem::Execute(
         bool& detectedSpread = detectComponent.detecedSpread[i];
         detectedSpread = false;
         ivec2* lastDetect = detectComponent.lastDetect[i];
-        ivec2 currentKey = spreadManager->WorldPositionToSpreadKey(transformComponent.transform[i].position_);
-        if (!spreadManager->SpreadIsActive(currentKey))
+        ivec2 currentKey = spreadManager.WorldPositionToSpreadKey(transformComponent.transform[i].position_);
+        if (!spreadManager.SpreadIsActive(currentKey))
             continue;
 
         // Check if the spread has already been detected

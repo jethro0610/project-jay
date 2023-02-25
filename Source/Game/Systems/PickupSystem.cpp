@@ -13,12 +13,13 @@ bool PickupSystem::DoPickup(int pickupEntityId, int holdEntityId, PickupComponen
 }
 
 void PickupSystem::ExecuteHold(
-    Entity* entities, 
+    EntityManager& entityManager, 
     PickupComponent& pickupComponent, 
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent,
     ProjectileComponent& projectileComponent
 ) {
+    const Entity* entities = entityManager.entities_;
     for (uint16_t i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)

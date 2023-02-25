@@ -27,7 +27,7 @@ public:
 
 private:
 #ifdef _WINDOWS
-    WindowsLayer* windowsLayer_;
+    WindowsLayer windowsLayer_;
     DXResources dxResources_;
 #endif
     EntityManager entityManager_;

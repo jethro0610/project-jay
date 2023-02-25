@@ -1,13 +1,13 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../World.h"
 
 namespace GroundTraceSystem {
     void Execute(
-        World* world, 
-        Entity* entities,
+        EntityManager& entityManager,
+        World& world, 
         TransformComponent& transformComponent, 
         GroundTraceComponent& groundTraceComponent
     );

@@ -1,8 +1,8 @@
 #include "TransformSystem.h"
 
-void TransformSystem::UpdateLastTransforms(Entity* entities, TransformComponent& transformComponent) {
+void TransformSystem::UpdateLastTransforms(EntityManager& entityManager, TransformComponent& transformComponent) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
         if (!entity.HasComponent<TransformComponent>())
@@ -12,11 +12,11 @@ void TransformSystem::UpdateLastTransforms(Entity* entities, TransformComponent&
     }
 }
 
-void TransformSystem::UpdateRenderTransforms(float interpTime, Entity* entities, TransformComponent& transformComponent) {
+void TransformSystem::UpdateRenderTransforms(float interpTime, EntityManager& entityManager, TransformComponent& transformComponent) {
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
         if (!entity.HasComponent<TransformComponent>())

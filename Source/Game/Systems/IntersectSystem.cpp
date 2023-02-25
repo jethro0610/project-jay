@@ -3,9 +3,8 @@
 using namespace glm;
 
 void IntersectSystem::Execute(
-    Entity* entities,
-    EntityManager* entityManager,
-    SpreadManager* spreadManager,
+    EntityManager& entityManager,
+    SpreadManager& spreadManager,
     TransformComponent& transformComponent,
     BubbleComponent& bubbleComponent,
     PickupComponent& pickupComponent,
@@ -13,6 +12,7 @@ void IntersectSystem::Execute(
     KickerComponent& kickerComponent,
     KickableComponent& kickableComponent
 ) {
+    const Entity* entities = entityManager.entities_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -42,7 +42,6 @@ void IntersectSystem::Execute(
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {
                 HandleIntersection(
-                    entities, 
                     entityManager,
                     spreadManager, 
                     i, 
@@ -55,7 +54,6 @@ void IntersectSystem::Execute(
                 );
 
                 HandleIntersection(
-                    entities, 
                     entityManager,
                     spreadManager, 
                     j, 
@@ -72,9 +70,8 @@ void IntersectSystem::Execute(
 }
 
 void IntersectSystem::HandleIntersection(
-    Entity* entities,
-    EntityManager* entityManager,
-    SpreadManager* spreadManager,
+    EntityManager& entityManager,
+    SpreadManager& spreadManager,
     int hitbox1,
     int hitbox2,
     TransformComponent& transformComponent,
@@ -83,6 +80,7 @@ void IntersectSystem::HandleIntersection(
     KickerComponent& kickerComponent,
     KickableComponent& kickableComponent
 ) {
+    const Entity* entities = entityManager.entities_;
     if (entities[hitbox1].HasComponent<PickupComponent>() && 
         entities[hitbox2].HasComponent<HoldableComponent>()) 
     {
@@ -92,7 +90,7 @@ void IntersectSystem::HandleIntersection(
     if (entities[hitbox1].HasComponent<KickerComponent>() && 
         entities[hitbox2].HasComponent<KickableComponent>()) 
     {
-        spreadManager->AddSpread(transformComponent.transform[hitbox2].position_, 8);
-        entityManager->DestroyEntity(hitbox2);
+        spreadManager.AddSpread(transformComponent.transform[hitbox2].position_, 8);
+        entityManager.DestroyEntity(hitbox2);
     }
 }

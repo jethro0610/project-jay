@@ -2,13 +2,13 @@
 using namespace glm;
 
 void GroundTraceSystem::Execute(
-    World* world,
-    Entity* entities,
+    EntityManager& entityManager,
+    World& world,
     TransformComponent& transformComponent,
     GroundTraceComponent& groundTraceComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
         if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
@@ -21,7 +21,7 @@ void GroundTraceSystem::Execute(
         vec3 position = transformComponent.transform[i].position_;
         float distanceToSurface = 0;
         for (int d = 0; d < 8; d++) {
-            float distanceSample = world->GetDistance(position - Transform::worldUp * distanceToSurface);
+            float distanceSample = world.GetDistance(position - Transform::worldUp * distanceToSurface);
             if (abs(distanceSample) < 0.001f)
                 break;
 
@@ -37,7 +37,7 @@ void GroundTraceSystem::Execute(
         if (distanceToSurface < traceDistance) {
             groundTraceComponent.onGround[i] = true;
             vec3 groundPosition = position - Transform::worldUp * distanceToSurface;
-            vec3 groundNormal = world->GetNormal(groundPosition);
+            vec3 groundNormal = world.GetNormal(groundPosition);
             groundTraceComponent.groundPosition[i] = groundPosition.y;
             groundTraceComponent.groundNormal[i] = groundNormal;
         }

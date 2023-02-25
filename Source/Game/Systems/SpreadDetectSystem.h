@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../SpreadManager.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
@@ -7,8 +7,8 @@
 
 namespace SpreadDetectSystem {
     void Execute(
-        Entity* entities, 
-        SpreadManager* spreadManager,
+        EntityManager& entityManager,
+        SpreadManager& spreadManager,
         TransformComponent& transformComponent,
         SpreadDetectComponent& detectComponent
     );

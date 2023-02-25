@@ -76,17 +76,16 @@ void Game::Update(float deltaTime, float elapsedTime) {
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         TerrainModSystem::Execute(
-            entityManager_.entities_,
+            entityManager_,
             entityManager_.GetComponent<TerrainModComponent>()
         );
         TransformSystem::UpdateLastTransforms(
-            entityManager_.entities_,
+            entityManager_,
             entityManager_.GetComponent<TransformComponent>()
         );
         IntersectSystem::Execute(
-            entityManager_.entities_,
-            &entityManager_,
-            &spreadManager_,
+            entityManager_,
+            spreadManager_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<BubbleComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
@@ -95,43 +94,43 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<KickableComponent>()
         );
         PickupSystem::ExecuteHold(
-            entityManager_.entities_,
+            entityManager_,
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<VelocityComponent>(),
             entityManager_.GetComponent<ProjectileComponent>()
         );
         SpreadActivatorSystem::Execute(
-            &world_,
-            entityManager_.entities_,
-            &spreadManager_,
+            entityManager_,
+            world_,
+            spreadManager_,
             entityManager_.GetComponent<SpreadActivatorComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>(),
             entityManager_.GetComponent<TransformComponent>(), 
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         SpreadDetectSystem::Execute(
-            entityManager_.entities_, 
-            &spreadManager_, 
+            entityManager_, 
+            spreadManager_, 
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<SpreadDetectComponent>()
         );
         PlayerInputSystem::Execute(
+            entityManager_,
+            camera_, 
             inputs_, 
-            &camera_, 
-            entityManager_.entities_,
             entityManager_.GetComponent<MovementComponent>(),
             entityManager_.GetComponent<PickupComponent>(),
             entityManager_.GetComponent<SpreadActivatorComponent>()
         );
         GroundStickSystem::Step(
-            &world_,
-            entityManager_.entities_,
+            entityManager_,
+            world_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         MovementSystem::Execute(
-            entityManager_.entities_,
+            entityManager_,
             entityManager_.GetComponent<MovementComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>(),
             entityManager_.GetComponent<TransformComponent>(), 
@@ -139,32 +138,32 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.GetComponent<SpreadDetectComponent>()
         );
         ProjectileSystem::CalculateVelocities(
-            entityManager_.entities_,
+            entityManager_,
+            world_,
             entityManager_.GetComponent<ProjectileComponent>(),
             entityManager_.GetComponent<VelocityComponent>(),
-            entityManager_.GetComponent<TransformComponent>(),
-            &world_
+            entityManager_.GetComponent<TransformComponent>()
         );
         VelocitySystem::Apply(
-            entityManager_.entities_,
+            entityManager_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<VelocityComponent>()
         );
         GroundTraceSystem::Execute(
-            &world_, 
-            entityManager_.entities_,
+            entityManager_,
+            world_, 
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         GroundStickSystem::Stick(
-            &world_,
-            entityManager_.entities_,
+            entityManager_,
+            world_,
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<GroundTraceComponent>()
         );
         CollisionSystem::Execute(
-            &world_, 
-            entityManager_.entities_,
+            entityManager_,
+            world_, 
             entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<WorldColliderComponent>()
         );
@@ -172,7 +171,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
     }
     TransformSystem::UpdateRenderTransforms(
         timeAccumlulator_, 
-        entityManager_.entities_,
+        entityManager_,
         entityManager_.GetComponent<TransformComponent>()
     );
     camera_.Update(deltaTime, inputs_);
@@ -181,7 +180,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.GetComponent<StaticModelComponent>(),
         entityManager_.GetComponent<TransformComponent>()
     };
-    renderer_.Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, &spreadManager_);
+    renderer_.Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, spreadManager_);
 }
 
 void Game::UpdateTime() {

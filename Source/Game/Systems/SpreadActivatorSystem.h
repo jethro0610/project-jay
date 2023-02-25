@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../Components/SpreadActivatorComponent.h"
 #include "../Components/SpreadDetectComponent.h"
 #include "../Components/TransformComponent.h"
@@ -9,9 +9,9 @@
 
 namespace SpreadActivatorSystem {
     void Execute(
-        World* world,
-        Entity* entities,
-        SpreadManager* spreadManager, 
+        EntityManager& entities,
+        World& world,
+        SpreadManager& spreadManager, 
         SpreadActivatorComponent& spreadActivatorComponent, 
         SpreadDetectComponent& spreadDetectComponent,
         TransformComponent& transformComponent,

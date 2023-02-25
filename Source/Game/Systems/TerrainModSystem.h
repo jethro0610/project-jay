@@ -1,10 +1,10 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../Components/TerrainModComponent.h"
 
 namespace TerrainModSystem {
     void Execute(
-        Entity* entities,
+        EntityManager& entities,
         TerrainModComponent& terrainModComponent
     );
 }

@@ -10,9 +10,9 @@ const uint16_t RIGHT_MOUSE_KEY = 255 + 2;
 class WindowsLayer {
 private:
     static WindowsLayer* windowsLayer_;
-    WindowsLayer(int width, int height, const char* name);
 
 public:
+    WindowsLayer(int width, int height, const char* name);
     const char* className_ = "WindowGameClass";
     HINSTANCE classInstance_;
 
@@ -38,7 +38,6 @@ public:
     static LRESULT CALLBACK HandleMsgThunk(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lParam);
     LRESULT HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    static WindowsLayer* InitWindowsLayer(int width, int height, const char* name);
 
 private:
     void OnKeyDown(uint16_t key);

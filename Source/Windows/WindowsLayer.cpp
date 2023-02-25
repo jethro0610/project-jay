@@ -4,6 +4,7 @@
 WindowsLayer* WindowsLayer::windowsLayer_ = nullptr;
 
 WindowsLayer::WindowsLayer(int width, int height, const char* name) {
+    assert(windowsLayer_ == nullptr);
     windowsLayer_ = this;
     closed_ = false;
 
@@ -157,11 +158,6 @@ void WindowsLayer::UpdateMouseMovement() {
 
     deltaMouseX_ = mouseX_ - lastMouseX_;
     deltaMouseY_ = mouseY_ - lastMouseY_;
-}
-
-WindowsLayer* WindowsLayer::InitWindowsLayer(int width, int height, const char* name) {
-    assert(windowsLayer_ == nullptr);
-    return new WindowsLayer(width, height, name);
 }
 
 WindowsLayer* WindowsLayer::GetWindowsLayer() {

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../Components/PickupComponent.h"
 #include "../Components/HoldableComponent.h"
 #include "../Components/TransformComponent.h"
@@ -11,7 +11,7 @@ namespace PickupSystem {
     bool DoPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent);
 
     void ExecuteHold(
-        Entity* entities, 
+        EntityManager& entityManager,
         PickupComponent& pickupComponent, 
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent,

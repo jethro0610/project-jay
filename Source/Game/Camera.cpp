@@ -1,21 +1,24 @@
 #include "Camera.h"
 using namespace glm;
 
-Camera::Camera(TransformComponent* transformComponent, float trackDistance, vec3 startPosition) {
-    transformComponent_ = transformComponent;
+Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3 startPosition):
+    transformComponent_(transformComponent),
+    trackEntity_(-1),
+    lookX_(0.0f),
+    lookY_(0.0f),
+    trackDistance_(trackDistance)
+{
     transform_.position_ = startPosition;
-    trackEntity_ = -1;
-    lookX_ = 0.0f;
-    lookY_ = 0.0f;
-    trackDistance_ = trackDistance;
 }
 
-Camera::Camera(TransformComponent* transformComponent, float trackDistance, int trackEntity) {
-    transformComponent_ = transformComponent;
-    trackEntity_ = trackEntity;
-    lookX_ = 0.0f;
-    lookY_ = 0.0f;
-    trackDistance_ = trackDistance;
+Camera::Camera(TransformComponent& transformComponent, float trackDistance, int trackEntity):
+    transformComponent_(transformComponent),
+    trackEntity_(trackEntity),
+    lookX_(0.0f),
+    lookY_(0.0f),
+    trackDistance_(trackDistance)
+{
+
 }
 
 mat4 Camera::GetViewMatrix() const {
@@ -42,7 +45,7 @@ void Camera::Update(float deltaTime, Inputs inputs) {
         transform_.position_ += forwardMovement + rightMovement;
     }
     else {
-        vec3 trackPosition = transformComponent_[trackEntity_].renderTransform->position_;
+        vec3 trackPosition = transformComponent_.renderTransform[trackEntity_].position_;
         smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
         if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
             vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;

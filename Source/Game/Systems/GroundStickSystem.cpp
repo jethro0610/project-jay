@@ -1,16 +1,16 @@
 #include "GroundStickSystem.h"
 
 void GroundStickSystem::Step (
-    World* world, 
-    Entity* entities,
+    EntityManager& entityManager,
+    World& world, 
     TransformComponent& transformComponent, 
     GroundTraceComponent& groundTraceComponent
 ) {
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entities->HasComponents<TransformComponent, GroundTraceComponent>())
+        if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StepUp)
@@ -18,16 +18,16 @@ void GroundStickSystem::Step (
     }
 }
 void GroundStickSystem::Stick (
-    World* world, 
-    Entity* entities,
+    EntityManager& entityManager,
+    World& world, 
     TransformComponent& transformComponent, 
     GroundTraceComponent& groundTraceComponent
 ) {
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entities->HasComponents<TransformComponent, GroundTraceComponent>())
+        if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StickOnly)

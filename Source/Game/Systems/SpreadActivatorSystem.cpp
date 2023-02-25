@@ -2,16 +2,16 @@
 using namespace glm;
 
 void SpreadActivatorSystem::Execute(
-    World* world,
-    Entity* entities, 
-    SpreadManager* spreadManager,
+    EntityManager& entityManager, 
+    World& world,
+    SpreadManager& spreadManager,
     SpreadActivatorComponent& spreadActivatorComponent, 
     SpreadDetectComponent& spreadDetectComponent,
     TransformComponent& transformComponent,
     GroundTraceComponent& groundTraceComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
 
@@ -32,7 +32,7 @@ void SpreadActivatorSystem::Execute(
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.HasComponent<SpreadDetectComponent>();
 
-        const AddSpreadInfo addSpreadInfo = spreadManager->AddSpread(position);
+        const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position);
         if (!addSpreadInfo.added || !hasDetect)
             continue;
 

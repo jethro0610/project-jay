@@ -2,14 +2,14 @@
 using namespace glm;
 
 void ProjectileSystem::CalculateVelocities(
-    Entity* entities,
+    EntityManager& entityManager,
+    World& world,
     ProjectileComponent& projectileComponent,
     VelocityComponent& velocityComponent,
-    TransformComponent& transformComponent,
-    World* world
+    TransformComponent& transformComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
         
@@ -26,7 +26,7 @@ void ProjectileSystem::CalculateVelocities(
         vec3& velocity = velocityComponent.velocity[i];
         velocity.y -= 1.0f;
 
-        const float distance = world->GetDistance(transformComponent.transform[i].position_);
+        const float distance = world.GetDistance(transformComponent.transform[i].position_);
         if (distance < 0.2f) {
             projectileComponent.active[i] = false;
             velocity = vec3(0.0f);

@@ -2,14 +2,14 @@
 using namespace glm;
 
 void PlayerInputSystem::Execute(
+    EntityManager& entityManager,
+    Camera& camera, 
     Inputs inputs, 
-    Camera* camera, 
-    Entity* entities, 
     MovementComponent& movementComponent,
     PickupComponent& pickupComponent,
     SpreadActivatorComponent& spreadActivatorComponent
 ) {
-    quat cameraPlanarRotation = quat(vec3(0.0f, camera->lookX_, 0.0f));
+    quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
 

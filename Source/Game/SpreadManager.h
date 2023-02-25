@@ -23,10 +23,10 @@ struct SpreadChunk {
 
 class SpreadManager {
 public:
-    SpreadManager(ResourceManager* resourceManager, World* world);
+    SpreadManager(ResourceManager& resourceManager, World& world);
 
-    ResourceManager* resourceManager_;
-    World* world_;
+    ResourceManager& resourceManager_;
+    World& world_;
 
     SpreadChunk chunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
     std::unordered_set<glm::ivec2> dirtyChunks_;

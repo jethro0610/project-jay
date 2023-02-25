@@ -3,7 +3,7 @@
 using namespace glm;
 
 void MovementSystem::Execute(
-    Entity* entities,
+    EntityManager& entityManager,
     MovementComponent& movementComponent,
     GroundTraceComponent& groundTraceComponent,
     TransformComponent& transformComponent,
@@ -11,7 +11,7 @@ void MovementSystem::Execute(
     SpreadDetectComponent& spreadDetectComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
+        const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
         if (!entity.HasComponents

@@ -1,5 +1,5 @@
 #pragma once
-#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../TimeConstants.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/GroundTraceComponent.h"
@@ -12,7 +12,7 @@ const float MAX_GRAVITY = 60.0f;
 
 namespace MovementSystem {
     void Execute(
-        Entity* entities,
+        EntityManager& entityManager,
         MovementComponent& movementComponent,
         GroundTraceComponent& groundTraceComponent,
         TransformComponent& transformComponent,

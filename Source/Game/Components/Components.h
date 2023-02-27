@@ -16,4 +16,6 @@
 #include "KickerComponent.h"
 #include "KickableComponent.h"
 
+#include "IntervalSpawnComponent.h"
+
 #include "StaticModelComponent.h"

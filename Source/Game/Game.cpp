@@ -75,6 +75,10 @@ void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
+        IntervalSpawnSystem::Execute(
+            entityManager_,
+            entityManager_.GetComponent<IntervalSpawnComponent>()
+        );
         TerrainModSystem::Execute(
             entityManager_,
             entityManager_.GetComponent<TerrainModComponent>()

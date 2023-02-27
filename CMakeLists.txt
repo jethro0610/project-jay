@@ -74,6 +74,7 @@ file(GLOB SOURCES
     Source/Game/Systems/VelocitySystem.cpp
     Source/Game/Systems/ProjectileSystem.cpp
     Source/Game/Systems/IntersectSystem.cpp
+    Source/Game/Systems/IntervalSpawnSystem.cpp
 
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp

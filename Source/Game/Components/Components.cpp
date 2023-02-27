@@ -20,5 +20,7 @@ ASSIGN_COMPONENT_ID(HoldableComponent);
 ASSIGN_COMPONENT_ID(KickerComponent);
 ASSIGN_COMPONENT_ID(KickableComponent);
 
+ASSIGN_COMPONENT_ID(IntervalSpawnComponent);
+
 ASSIGN_COMPONENT_ID(StaticModelComponent);
 // Static IDs are used on component classes for consistency with file writes

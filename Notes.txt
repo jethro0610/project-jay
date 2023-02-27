@@ -95,3 +95,11 @@
 - Some wind ability that magnets stuff toward you
 
 - Should cut and kick be the same button?
+
+- Spread that reflects the sky, shows soemthing
+
+- Spread that lights up to reveal the dark
+
+- Levels have pre-placed spread, cut and move the seeds
+
+- Meteoric speed effect where if you go fast enough you can bump people hard

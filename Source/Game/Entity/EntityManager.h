@@ -45,6 +45,7 @@ private:
         HoldableComponent,
         KickerComponent,
         KickableComponent,
+        IntervalSpawnComponent,
         StaticModelComponent
     > components_;
 };

@@ -15,6 +15,7 @@ void IntervalSpawnSystem::Execute (
             continue;
 
         uint16_t& spawnTimer = intervalSpawnComponent.spawnTimer[i];
+        spawnTimer += 1;
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
             uint16_t newEntity = entityManager.CreateEntity();
             auto transformProps = entityManager.RegisterComponent<TransformComponent>(newEntity);
@@ -22,12 +23,13 @@ void IntervalSpawnSystem::Execute (
             transformProps.transform.position_ += vec3(0.0f, 2.5f, 0.0f);
             transformProps.interpolate = true;
 
-            auto modelProperties = entityManager.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
+            auto modelProperties = entityManager.RegisterComponent<StaticModelComponent>(newEntity);
             modelProperties.model = "st_sphere";
             modelProperties.materials[0] = "playerMaterial";
 
             // Create the spawn entity
             spawnTimer = 0;
+            entityManager.DestroyEntity(i);
         }
     }
 }

@@ -103,6 +103,7 @@
 - Levels have pre-placed spread, cut and move the seeds
 
 - Meteoric speed effect where if you go fast enough you can bump people hard
+    - Crash into enemy to stun for a while, but removes your own speed
 
 - Music bells
 

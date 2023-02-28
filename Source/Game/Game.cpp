@@ -59,6 +59,8 @@ void Game::Init() {
     auto pickupBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(holdEntity);
     pickupBubbleProps.radius = 2.0f;
     entityManager_.RegisterComponent<KickableComponent>(holdEntity);
+    auto intervalProps = entityManager_.RegisterComponent<IntervalSpawnComponent>(holdEntity);
+    intervalProps.spawnInterval = 120;
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -77,6 +79,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(
             entityManager_,
+            entityManager_.GetComponent<TransformComponent>(),
             entityManager_.GetComponent<IntervalSpawnComponent>()
         );
         TerrainModSystem::Execute(

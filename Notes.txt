@@ -103,3 +103,20 @@
 - Levels have pre-placed spread, cut and move the seeds
 
 - Meteoric speed effect where if you go fast enough you can bump people hard
+
+- Music bells
+
+- Enemy that slowly follows you
+    - Have an obstacle in the level that slow you down
+
+- Level where you form terrain pits to round up object
+
+- Mole that goes underground and modifies terrain
+    - Player needs to modify terrain too to beat them
+
+- Effect that only works on flat terrain. Probably on an enemy
+
+- Enemy that stabs the world and pokes a hole through it
+    - Some rounding quest with these present, keep other entities alive
+
+- Badge that puts interval spawner on player, spawns something

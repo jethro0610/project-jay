@@ -130,3 +130,9 @@
 - Fall colored spread that grows under trees
     - Trees can be knocked down with meteor effect
     - Trees give some resource when dropped
+    
+- Interval spawning enemy that pops up and disappears in random spots
+
+- Kick on ground = knockback (reverse grounded veloicty), maybe launch
+    - Can have entity shock if stop effect is wanted
+- Kick in air = throw 

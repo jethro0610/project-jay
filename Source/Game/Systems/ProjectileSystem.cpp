@@ -51,7 +51,7 @@ void ProjectileSystem::CalculateVelocities(
         // Ground inactivate
         // TODO: Move this to generic world intersect component
         const float distance = world.GetDistance(position);
-        if (distance < 0.2f && velocity.y < 0.0f) {
+        if (distance < 0.2f) {
             projectileComponent.state[i] = ProjectileState::Inactive;
             velocity = vec3(0.0f);
             position.y -= distance;
@@ -105,5 +105,6 @@ void ProjectileSystem::Throw(
     velocity = vec3(0.0f, 30.0f, 0.0f);
     const vec3& throwerVelocity = velocityComponent.velocity[throwingEntity];
     velocity = vec3(throwerVelocity.x, height, throwerVelocity.z);
+    transformComponent.transform[projectileEntity].position_.y += 0.5f;
     projectileComponent.state[projectileEntity] = ProjectileState::Throw;
 }

@@ -35,7 +35,7 @@ mat4 Camera::GetViewMatrix() const {
 void Camera::Update(float deltaTime, Inputs inputs) {
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
-    lookY_ = clamp(lookY_, radians(-80.0f), radians(80.0f));
+    lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));
 
     if (trackEntity_ == NO_TRACK) {
         // Move and use first person look when there is no entity to track

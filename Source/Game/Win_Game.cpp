@@ -19,7 +19,7 @@ Game::Game(int width, int height):
     camera_(entityManager_.GetComponent<TransformComponent>(), 15.0f),
     world_(entityManager_.entities_, entityManager_.GetComponent<TerrainModComponent>()),
     spreadManager_(resourceManager_, world_),
-    gamepad_(),
+    gamepad_(Gamepad()),
     running_(true)
 {
     Init();
@@ -85,8 +85,8 @@ void Game::PollGamepadInputs_P() {
         gamepad_.leftTrigger_ = (float)xGamepad.bLeftTrigger / MAXBYTE;
         gamepad_.rightTrigger_ = (float)xGamepad.bRightTrigger / MAXBYTE;
 
-        gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, gamepad_.leftTrigger_ > gamepad_.triggerLimit_);
-        gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, gamepad_.rightTrigger_ > gamepad_.triggerLimit_);
+        gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, gamepad_.leftTrigger_ > TRIGGER_LIMIT);
+        gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, gamepad_.rightTrigger_ > TRIGGER_LIMIT);
     }
 }
 

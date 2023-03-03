@@ -9,7 +9,10 @@ Gamepad::Gamepad() {
 
     float leftTrigger_ = 0.0f;
     float rightTrigger_ = 0.0f;
-    float triggerLimit_ = 0.5f;
+
+    heldButtons_ = 0;
+    pressedButtons_ = 0;
+    releasedButtons_ = 0;
 }
 
 void Gamepad::SetButtonHeld(uint8_t btn, bool held) {

@@ -58,7 +58,7 @@ void Game::Init() {
     meshProps.materials[0] = "playerMaterial";
     auto pickupBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(holdEntity);
     pickupBubbleProps.radius = 2.0f;
-    entityManager_.RegisterComponent<KickableComponent>(holdEntity);
+    // entityManager_.RegisterComponent<KickableComponent>(holdEntity);
     auto intervalProps = entityManager_.RegisterComponent<IntervalSpawnComponent>(holdEntity);
     intervalProps.spawnInterval = 120;
 
@@ -80,7 +80,9 @@ void Game::Update(float deltaTime, float elapsedTime) {
         IntervalSpawnSystem::Execute(
             entityManager_,
             entityManager_.GetComponent<TransformComponent>(),
-            entityManager_.GetComponent<IntervalSpawnComponent>()
+            entityManager_.GetComponent<IntervalSpawnComponent>(),
+            entityManager_.GetComponent<ProjectileComponent>(),
+            entityManager_.GetComponent<VelocityComponent>()
         );
         TerrainModSystem::Execute(
             entityManager_,

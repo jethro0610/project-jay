@@ -14,11 +14,18 @@ namespace ProjectileSystem {
     );
 
     void Launch(
-        uint16_t projectileEntity, 
-        uint16_t targetEntity,
-        glm::vec3 velocity,
         ProjectileComponent& projectileComponent,
         VelocityComponent& velocityComponent,
-        TransformComponent& transformComponent
+        TransformComponent& transformComponent,
+        uint16_t projectileEntity
+    );
+
+    void Throw(
+        ProjectileComponent& projectileComponent,
+        VelocityComponent& velocityComponent,
+        TransformComponent& transformComponent,
+        uint16_t projectileEntity,
+        uint16_t throwingEntity,
+        float height
     );
 }

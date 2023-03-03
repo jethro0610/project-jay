@@ -17,6 +17,7 @@ const uint8_t GAMEPAD_LTHUMB = 12;
 const uint8_t GAMEPAD_RTHUMB = 13;
 const uint8_t GAMEPAD_START = 14;
 const uint8_t GAMEPAD_SELECT = 15;
+const float TRIGGER_LIMIT = 0.5f;
 
 class Gamepad {
 public:
@@ -30,7 +31,6 @@ public:
 
     float leftTrigger_;
     float rightTrigger_;
-    float triggerLimit_;
 
     std::bitset<16> heldButtons_;
     std::bitset<16> pressedButtons_;

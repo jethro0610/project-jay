@@ -121,3 +121,12 @@
     - Some rounding quest with these present, keep other entities alive
 
 - Badge that puts interval spawner on player, spawns something
+
+- Reflection necessary to see things falling from the sky
+    - Only reflects on flat terrain
+    - Spread that reflects from straight above
+
+- IMPLEMENT: Hover highlight like Mario Galaxy?
+- Fall colored spread that grows under trees
+    - Trees can be knocked down with meteor effect
+    - Trees give some resource when dropped

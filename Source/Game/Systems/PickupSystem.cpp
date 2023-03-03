@@ -37,13 +37,13 @@ void PickupSystem::ExecuteHold(
         if (!pickupComponent.pickup[i]) {
             if (!entities[holdEntityId].HasComponent<VelocityComponent>())
                 continue;
-            ProjectileSystem::Launch(
-                holdEntityId, 
-                -1, 
-                velocityComponent.velocity[i], 
+            ProjectileSystem::Throw(
                 projectileComponent, 
                 velocityComponent, 
-                transformComponent
+                transformComponent,
+                holdEntityId,
+                i,
+                30.0f
             );
             pickupComponent.entityId[i] = -1;
         }

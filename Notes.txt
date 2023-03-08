@@ -136,3 +136,7 @@
 - Kick on ground = knockback (reverse grounded veloicty), maybe launch
     - Can have entity shock if stop effect is wanted
 - Kick in air = throw 
+
+- Wind waker style light and shadow colors (lerp to values)
+
+- Bouncy ball projectile that has to be dodged (super low gravity and movement, high count)

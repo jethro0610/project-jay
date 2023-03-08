@@ -1,8 +1,10 @@
 #pragma once
-#include <glm.hpp>
 #include <queue>
 #include "../Entity/Entity.h"
 #include <algorithm>
+#include <glm.hpp>
+
+#include "ComponentDesc.h"
 
 const uint8_t MAX_DETECT = 4;
 
@@ -22,5 +24,10 @@ struct SpreadDetectComponent {
         return; 
     };
 
-    static int ID;
+    inline static int ID = 10;
+    inline static ComponentDesc description {
+        "Spread Detect",
+        0,
+        {}
+    };
 };

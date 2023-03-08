@@ -1,7 +1,9 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+#include <glm.hpp>
+
+#include "ComponentDesc.h"
 
 const float STEP_UP_HEIGHT = 0.25f;
 
@@ -46,5 +48,14 @@ struct GroundTraceComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 1;
+
+    inline static ComponentDesc description {
+        "Ground Trace Component",
+        2,
+        {
+            {"Distance", "float"},
+            {"Stick Type", "enum"}
+        }
+    };
 };

@@ -2,6 +2,8 @@
 #include "../Entity/Entity.h"
 #include <algorithm>
 
+#include "ComponentDesc.h"
+
 struct SpreadActivatorCProperties {
     bool& groundOnly;
 };
@@ -23,5 +25,12 @@ struct SpreadActivatorComponent {
         };
     };
 
-    static int ID;
+    inline static int ID = 9;
+    inline static ComponentDesc description {
+        "Spread Activator",
+        1,
+        {
+            {"Ground Only", "bool"}
+        }
+    };
 };

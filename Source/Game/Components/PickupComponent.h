@@ -1,7 +1,8 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+
+#include "ComponentDesc.h"
 
 const uint16_t PICKUP_DURATION = 10;
 
@@ -24,5 +25,10 @@ struct PickupComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 7;
+    inline static ComponentDesc description {
+        "Pickup Component",
+        0,
+        {}
+    };
 };

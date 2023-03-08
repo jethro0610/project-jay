@@ -2,6 +2,8 @@
 #include "../Entity/Entity.h"
 #include <glm.hpp>
 
+#include "ComponentDesc.h"
+
 struct TerrainModCProperties {
     glm::vec3& position;
     float& radius;
@@ -28,5 +30,12 @@ struct TerrainModComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 12;
+    inline static ComponentDesc description {
+        "Terrain Modifier",
+        1,
+        {
+            {"Radius", "float"}
+        }
+    };
 };

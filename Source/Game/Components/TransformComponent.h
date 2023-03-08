@@ -1,7 +1,9 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+#include "../../Types/Transform.h"
+
+#include "ComponentDesc.h"
 
 struct TransformCProperties {
     Transform& transform;
@@ -27,5 +29,12 @@ struct TransformComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 13;
+    inline static ComponentDesc description {
+        "Transform Component",
+        1,
+        {
+            {"Interpolate", "bool"}
+        }
+    };
 };

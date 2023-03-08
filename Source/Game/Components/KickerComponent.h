@@ -2,6 +2,8 @@
 #include "../Entity/Entity.h"
 #include <algorithm>
 
+#include "ComponentDesc.h"
+
 struct KickerCProperties {
     bool& kicking;
 };
@@ -21,5 +23,10 @@ struct KickerComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 5;
+    inline static ComponentDesc description {
+        "Kicker Component",
+        0,
+        {}
+    };
 };

@@ -2,7 +2,10 @@
 #include "../Entity/Entity.h"
 #include <string>
 
-const uint8_t MAX_MESHES_PER_MODEL = 8;
+#include "ComponentDesc.h"
+
+// TODO: Move this to raw model or something else
+const uint8_t MAX_MESHES_PER_MODEL = 4;
 
 struct StaticModelCProperties {
     std::string& model;
@@ -27,5 +30,16 @@ struct StaticModelComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 11;
+    inline static ComponentDesc description {
+        "Static Model",
+        2,
+        {
+            {"Model", "string"},
+            {"Material 1", "string"},
+            {"Material 2", "string"},
+            {"Material 3", "string"},
+            {"Material 4", "string"},
+        }
+    };
 };

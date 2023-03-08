@@ -1,7 +1,8 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+
+#include "ComponentDesc.h"
 
 struct WorldColliderCProperties {
 };
@@ -20,5 +21,10 @@ struct WorldColliderComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 15;
+    inline static ComponentDesc description {
+        "World Collider",
+        0,
+        {}
+    };
 };

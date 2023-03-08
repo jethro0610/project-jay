@@ -1,7 +1,8 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+
+#include "ComponentDesc.h"
 
 struct BubbleCProperties {
     float& radius;
@@ -22,5 +23,12 @@ struct BubbleComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 0;
+    inline static ComponentDesc description {
+        "Bubble Component",
+        2,
+        {
+            {"Radius", "float"},
+        }
+    };
 };

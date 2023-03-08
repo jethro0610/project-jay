@@ -1,7 +1,9 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+#include <glm.hpp>
+
+#include "ComponentDesc.h"
 
 struct VelocityCProperties {
     glm::vec3& velocity;
@@ -22,5 +24,10 @@ struct VelocityComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 14;
+    inline static ComponentDesc description {
+        "Velocity Component",
+        0,
+        {}
+    };
 };

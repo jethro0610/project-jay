@@ -1,7 +1,8 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+
+#include "ComponentDesc.h"
 
 struct HoldableCProperties {
 };
@@ -19,6 +20,11 @@ struct HoldableComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 2;
+    inline static ComponentDesc description {
+        "Holdable Component",
+        0,
+        {}
+    };
 };
 

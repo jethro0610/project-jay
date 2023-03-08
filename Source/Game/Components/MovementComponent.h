@@ -1,8 +1,10 @@
 #pragma once
-#include "../../Types/Transform.h"
 #include "../Entity/Entity.h"
 #include <bitset>
 #include <algorithm>
+#include <glm.hpp>
+
+#include "ComponentDesc.h"
 
 const float DEFAULT_MIN_SPEED = 12.0f;
 const float DEFAULT_MAX_SPEED = 120.0f;
@@ -72,5 +74,18 @@ struct MovementComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 6;
+    inline static ComponentDesc description {
+        "Movement Component",
+        7,
+        {
+            {"Speed", "float"},
+            {"Minimum Speed", "float"},
+            {"Maximum Speed", "float"},
+            {"Friction", "float"},
+            {"Minimum Friction", "float"},
+            {"Maximum Friction", "float"},
+            {"Momentum Decay", "float"}
+        }
+    };
 };

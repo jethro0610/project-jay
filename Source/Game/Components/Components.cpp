@@ -2,7 +2,6 @@
 #define ASSIGN_COMPONENT_ID(componentType) int componentType::ID = componentCounter++
 static int componentCounter = 0;
 
-
 ASSIGN_COMPONENT_ID(TransformComponent);
 ASSIGN_COMPONENT_ID(MovementComponent);
 ASSIGN_COMPONENT_ID(GroundTraceComponent);

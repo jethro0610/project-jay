@@ -1,7 +1,8 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
 #include <algorithm>
+
+#include "ComponentDesc.h"
 
 struct IntervalSpawnCProperties {
     uint16_t& spawnInterval;
@@ -24,5 +25,12 @@ struct IntervalSpawnComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 3;
+    inline static ComponentDesc description {
+        "Interval Spawner Component",
+        1,
+        {
+            {"Spawn Interval", "uint16_t"}
+        }
+    };
 };

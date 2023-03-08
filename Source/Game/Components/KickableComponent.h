@@ -3,6 +3,7 @@
 #include <bitset>
 #include <algorithm>
 
+#include "ComponentDesc.h"
 
 enum KickProperties {
     Destroy,
@@ -33,5 +34,13 @@ struct KickableComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 4;
+    inline static ComponentDesc description {
+        "Kickable Component",
+        2,
+        {
+            {"Destroy On Kicked", "bool"},
+            {"Spread On Kickied", "bool"}
+        }
+    };
 };

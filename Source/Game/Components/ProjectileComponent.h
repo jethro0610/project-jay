@@ -2,6 +2,8 @@
 #include "../Entity/Entity.h"
 #include <algorithm>
 
+#include "ComponentDesc.h"
+
 enum ProjectileType {
     Random,
     RiseAndFall
@@ -41,5 +43,15 @@ struct ProjectileComponent {
             param2[index]
         };
     }
-    static int ID;
+
+    inline static int ID = 8;
+    inline static ComponentDesc description {
+        "Projectile Component",
+        3,
+        {
+            {"Projectile Type", "enum"},
+            {"Parameter 1", "float"},
+            {"Parameter 2", "float"}
+        }
+    };
 };

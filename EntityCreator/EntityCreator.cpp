@@ -1,6 +1,7 @@
 #define ENTITYCREATOR
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include "../Source/Game/Components/Components.h"
 
 using namespace std;
@@ -31,6 +32,8 @@ int main() {
     RegisterDescription<TransformComponent>();
     RegisterDescription<VelocityComponent>();
     RegisterDescription<WorldColliderComponent>();
+    bool enabledComponents[32];
+    fill_n(enabledComponents, 32, false);
 
     cout << left;
     cout << "\n=======PROJECT JAY ENTITY CREATOR=======\n";
@@ -41,6 +44,7 @@ int main() {
     int16_t currentComponent = -1;
     cout << "Select: ";
     cin >> currentComponent;
+    enabledComponents[currentComponent] = true;
 
     ComponentDesc& currentDesc = descriptions[currentComponent];
     cout << "\n=======" << currentDesc.name << "=======\n";

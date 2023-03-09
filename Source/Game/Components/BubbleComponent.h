@@ -26,7 +26,7 @@ struct BubbleComponent {
     inline static int ID = 0;
     inline static ComponentDesc description {
         "Bubble Component",
-        2,
+        1,
         {
             {"Radius", "float"},
         }

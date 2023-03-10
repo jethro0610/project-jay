@@ -20,7 +20,7 @@ struct PickupComponent : public Component {
         return; 
     }
 
-    uint8_t GetID() const { return 7; }
+    std::string GetName() const { return "pickup"; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

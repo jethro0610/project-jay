@@ -34,7 +34,7 @@ struct KickableComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 4; }
+    std::string GetName() const { return "kickable"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         if (data["destroy"].get<bool>() == true)
             properties[entity].set(Destroy);

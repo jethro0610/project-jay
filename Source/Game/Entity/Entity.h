@@ -19,7 +19,7 @@ public:
     }
 
     bool HasComponent(Component& component) const {
-        return componentMask_.test(component.GetID());
+        return componentMask_.test(component.id);
     }
 
     bool HasComponents(const std::initializer_list<std::reference_wrapper<Component>> &list)const {

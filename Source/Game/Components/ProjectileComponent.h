@@ -43,7 +43,7 @@ struct ProjectileComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 8; }
+    std::string GetName() const { return "projectile"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         type[entity] = (ProjectileType)(uint8_t)data["type"].get<double>();
         param1[entity] = data["param1"].get<float>();

@@ -20,8 +20,8 @@ public:
 
     void RegisterComponent(Component& component, uint16_t targetEntity) {
         assert(entities_[targetEntity].alive_);
-        assert(!entities_[targetEntity].componentMask_.test(component.GetID()));
-        entities_[targetEntity].componentMask_.set(component.GetID());
+        assert(!entities_[targetEntity].componentMask_.test(component.id));
+        entities_[targetEntity].componentMask_.set(component.id);
     }
 
     #define COMPONENTVAR(TYPE, VAR) TYPE VAR;
@@ -30,5 +30,5 @@ public:
 
 private:
     ResourceManager& resourceManager_;
-    Component* componentIdMap_[MAX_COMPONENT_TYPES];
+    std::unordered_map<std::string, Component*> componentMap_;
 };

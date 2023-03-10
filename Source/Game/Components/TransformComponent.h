@@ -28,7 +28,7 @@ struct TransformComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 13; }
+    std::string GetName() const { return "transform"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         interpolate[entity] = data["interpolate"].get<bool>();
     }

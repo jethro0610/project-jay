@@ -24,7 +24,7 @@ struct SpreadActivatorComponent : public Component {
         };
     };
 
-    uint8_t GetID() const { return 9; }
+    std::string GetName() const { return "spread_activator"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         groundOnly[entity] = data["groundOnly"].get<bool>();
     }

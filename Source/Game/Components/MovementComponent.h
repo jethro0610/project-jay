@@ -73,7 +73,7 @@ struct MovementComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 6; }
+    std::string GetName() const { return "movement"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         minSpeed[entity] = data["minSpeed"].get<float>();
         maxSpeed[entity] = data["maxSpeed"].get<float>();

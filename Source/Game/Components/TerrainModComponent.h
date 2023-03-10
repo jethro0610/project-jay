@@ -29,7 +29,7 @@ struct TerrainModComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 12; }
+    std::string GetName() const { return "terrain_modifier"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         radius[entity] = data["radius"].get<float>();
     }

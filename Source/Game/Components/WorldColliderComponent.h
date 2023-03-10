@@ -17,7 +17,7 @@ struct WorldColliderComponent : public Component {
         return; 
     }
 
-    uint8_t GetID() const { return 15; }
+    std::string GetName() const { return "world_collider"; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

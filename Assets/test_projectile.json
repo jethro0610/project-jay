@@ -1,19 +1,19 @@
 {
     "components": [
         {
-            "id": 13,
+            "name": "transform",
             "interpolate": true
         },
         {
-            "id": 11,
+            "name": "static_model",
             "model": "st_sphere",
             "material0": "playerMaterial"
         },
         {
-            "id": 14
+            "name": "velocity" 
         },
         {
-            "id": 8,
+            "name": "projectile",
             "type": 0,
             "param1": 30.0,
             "param2": 50.0

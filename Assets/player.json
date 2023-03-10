@@ -1,24 +1,24 @@
 {
     "components": [
         {
-            "id": 13,
+            "name": "transform",
             "interpolate": true
         },
         {
-            "id": 15
+            "name": "world_collider" 
         },
         {
-            "id": 11,
+            "name": "static_model",
             "model": "st_sphere",
             "material0": "playerMaterial"
         },
         {
-            "id": 1,
+            "name": "ground_trace",
             "stickType": 2,
             "distance": 2.0
         },
         {
-            "id": 6,
+            "name": "movement",
             "minSpeed": 12.0,
             "maxSpeed": 120.0,
             "minFriction": 0.015,
@@ -26,24 +26,24 @@
             "momentumDecay": 0.1
         },
         {
-            "id": 9,
+            "name" : "spread_activator",
             "groundOnly": true
         },
         {
-            "id": 14
+            "name": "velocity" 
         },
         {
-            "id": 7
+            "name": "pickup"
         },
         {
-            "id": 10 
+            "name": "spread_detect"
         },
         {
-            "id": 0,
+            "name": "bubble",
             "radius": 2.0
         },
         {
-            "id": 5
+            "name": "kicker" 
         }
     ]
 }

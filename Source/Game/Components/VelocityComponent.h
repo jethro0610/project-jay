@@ -23,7 +23,7 @@ struct VelocityComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 14; }
+    std::string GetName() const { return "velocity"; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

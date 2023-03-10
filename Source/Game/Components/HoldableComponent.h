@@ -13,7 +13,7 @@ struct HoldableComponent : public Component {
         return; 
     }
 
-    uint8_t GetID() const { return 2; }
+    std::string GetName() const { return "holdable"; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

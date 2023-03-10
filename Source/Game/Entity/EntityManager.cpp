@@ -4,9 +4,11 @@ EntityManager::EntityManager (ResourceManager& resourceManager):
     resourceManager_(resourceManager)
 {
     usableEntities_.push_front(0);
+    uint8_t idCounter = 0;
     
     #define COMPONENTVAR(TYPE, VAR) \
-        componentIdMap_[VAR.GetID()] = &VAR;   
+        VAR.id = idCounter++; \
+        componentMap_[VAR.GetName()] = &VAR;   
         CREATECOMPONENTVARS  
     #undef COMPONENTVAR
 }
@@ -25,9 +27,10 @@ uint16_t EntityManager::CreateEntity(std::string entityName) {
     uint16_t createdEntity = CreateEntity();
     nlohmann::json entityData = resourceManager_.entities_[entityName];
     for (auto& componentData : entityData["components"]) {
-        uint8_t id = componentData["id"].get<double>();
-        entities_[createdEntity].componentMask_.set(id);
-        componentIdMap_[id]->Load(componentData, createdEntity);
+        std::string name = componentData["name"].get<std::string>();
+        Component* component = componentMap_[name];
+        entities_[createdEntity].componentMask_.set(component->id);
+        component->Load(componentData, createdEntity);
     }
     return createdEntity;
 }

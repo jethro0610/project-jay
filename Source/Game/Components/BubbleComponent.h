@@ -23,7 +23,7 @@ struct BubbleComponent : public Component {
         };
     }
 
-    uint8_t GetID() const { return 0; }
+    std::string GetName() const { return "bubble"; }
     void Load(nlohmann::json& data, uint16_t entity) {
         radius[entity] = data["radius"].get<float>();
     }

@@ -17,25 +17,9 @@ void Game::Init() {
     Transform spawnTransform;
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
 
-    entityManager_.CreateEntity();
-    auto transformProperties = entityManager_.RegisterComponent<TransformComponent>(PLAYER_ENTITY);
-    transformProperties.transform = spawnTransform;
-    transformProperties.interpolate = true;
-    entityManager_.RegisterComponent<WorldColliderComponent>(PLAYER_ENTITY);
-    auto modelProperties = entityManager_.RegisterComponent<StaticModelComponent>(PLAYER_ENTITY);
-    modelProperties.model = "st_sphere";
-    modelProperties.materials[0] = "playerMaterial";
-    auto groundTraceProperties = entityManager_.RegisterComponent<GroundTraceComponent>(PLAYER_ENTITY);
-    groundTraceProperties.distance = 2.0f;
-    groundTraceProperties.stickType = StickType::StepUp;
-    auto movementProperties = entityManager_.RegisterComponent<MovementComponent>(PLAYER_ENTITY);
-    entityManager_.RegisterComponent<SpreadActivatorComponent>(PLAYER_ENTITY);
-    entityManager_.RegisterComponent<VelocityComponent>(PLAYER_ENTITY);
-    entityManager_.RegisterComponent<PickupComponent>(PLAYER_ENTITY);
-    entityManager_.RegisterComponent<SpreadDetectComponent>(PLAYER_ENTITY);
-    auto playerBubbleProps = entityManager_.RegisterComponent<BubbleComponent>(PLAYER_ENTITY);
-    playerBubbleProps.radius = 2.0f;
-    entityManager_.RegisterComponent<KickerComponent>(PLAYER_ENTITY);
+    resourceManager_.LoadEntity("player");
+    entityManager_.CreateEntity("player");
+    entityManager_.GetComponent<TransformComponent>().transform[PLAYER_ENTITY] = spawnTransform;
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 

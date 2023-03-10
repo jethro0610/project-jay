@@ -74,6 +74,11 @@ struct MovementComponent : public Component {
     }
 
     inline static int ID = 6;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
+        minSpeed[entity] = data["components"][index]["minSpeed"].get<float>();
+        maxSpeed[entity] = data["components"][index]["maxSpeed"].get<float>();
+        minFriction[entity] = data["components"][index]["minFriction"].get<float>();
+        maxFriction[entity] = data["components"][index]["maxFriction"].get<float>();
+        momentumDecay[entity] = data["components"][index]["momentumDecay"].get<float>();
     }
 };

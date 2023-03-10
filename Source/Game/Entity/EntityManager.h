@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "../../Resource/ResourceManager.h"
 #include "../Components/ComponentInclude.h"
+#include "../../Logging/Logger.h"
 #include <bitset>
 #include <tuple>
 #include <unordered_map>
@@ -23,8 +24,12 @@ public:
             (&GetComponent<ComponentTypes>())...
         };
 
+        uint8_t ids[] = {
+            (ComponentTypes::ID)...
+        };
+
         for (int i = 0; i < sizeof...(ComponentTypes); i++) {
-            componentIdMap_[i] = components[i];
+            componentIdMap_[ids[i]] = components[i];
         }
     }
 
@@ -39,9 +44,15 @@ public:
     }
     uint16_t CreateEntity(std::string entityName) {
         uint16_t createdEntity = CreateEntity();
-        nlohmann::json& entityData = resourceManager_.entities_[entityName];
-        for (auto& component : entityData["components"]) {
-            componentIdMap_[component["id"]]->Load(entityData, createdEntity); 
+        nlohmann::json entityData = resourceManager_.entities_[entityName];
+        auto dump = entityData.dump();
+        int itrS = entityData["components"].size();
+        int i = 0;
+        int id = -1;
+        for (; i < entityData["components"].size(); i++) {
+            id = entityData["components"][i]["id"].get<double>();
+            entities_[createdEntity].componentMask_.set(id);
+            componentIdMap_[id]->Load(entityData, i, createdEntity);
         }
         return createdEntity;
     }

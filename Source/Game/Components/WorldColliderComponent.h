@@ -7,7 +7,9 @@ struct WorldColliderComponent : public Component {
     // TODO: Add radius
     bool colliding[MAX_ENTITIES];
 
-    WorldColliderComponent(){};
+    WorldColliderComponent(){
+        std::fill_n(colliding, MAX_ENTITIES, false);
+    };
     WorldColliderComponent(const WorldColliderComponent&) = delete;
     WorldColliderComponent& operator=(const WorldColliderComponent&) = delete;
 
@@ -16,6 +18,6 @@ struct WorldColliderComponent : public Component {
     }
 
     inline static int ID = 15;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
     }
 };

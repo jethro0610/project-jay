@@ -30,6 +30,7 @@ struct TerrainModComponent : public Component {
     }
 
     inline static int ID = 12;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
+        radius[entity] = data["components"][index]["radius"].get<float>();
     }
 };

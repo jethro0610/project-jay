@@ -43,6 +43,9 @@ struct ProjectileComponent : public Component {
         };
     }
     inline static int ID = 8;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
+        type[entity] = (ProjectileType)(uint8_t)data["components"][index]["type"].get<double>();
+        param1[entity] = data["components"][index]["param1"].get<float>();
+        param2[entity] = data["components"][index]["param2"].get<float>();
     }
 };

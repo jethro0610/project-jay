@@ -14,5 +14,6 @@ void ResourceManager::LoadStaticModel(std::string modelName) {
 void ResourceManager::LoadEntity(std::string entityName) {
     assert(entities_.count(entityName) == 0);
     std::ifstream inFile(entityName + ".json");
-    entities_[entityName] = json::parse(inFile);
+    json data = json::parse(inFile);
+    entities_[entityName] = data;
 }

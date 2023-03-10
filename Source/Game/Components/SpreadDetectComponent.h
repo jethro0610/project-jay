@@ -24,6 +24,6 @@ struct SpreadDetectComponent : public Component {
     };
 
     inline static int ID = 10;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
     }
 };

@@ -48,6 +48,8 @@ struct GroundTraceComponent : public Component {
     }
 
     inline static int ID = 1;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
+        distance[entity] = data["components"][index]["distance"].get<float>();
+        stickType[entity]= (StickType)(uint8_t)data["components"][index]["stickType"].get<double>(); 
     }
 };

@@ -29,6 +29,7 @@ struct TransformComponent : public Component {
     }
 
     inline static int ID = 13;
-    void Load(nlohmann::json& json, uint16_t entity) {
+    void Load(nlohmann::json& data, uint8_t index, uint16_t entity) {
+        interpolate[entity] = data["components"][index]["interpolate"].get<bool>();
     }
 };

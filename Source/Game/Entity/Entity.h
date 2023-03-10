@@ -1,5 +1,7 @@
 #pragma once
+#include "../Components/Component.h"
 #include <bitset>
+#include <initializer_list> 
 const uint16_t MAX_ENTITIES = 1024;
 const uint8_t MAX_COMPONENT_TYPES = 32;
 const uint8_t PLAYER_ENTITY = 0;
@@ -16,21 +18,14 @@ public:
         componentMask_ = 0;
     }
 
-    template <class T>
-    bool HasComponent() const {
-        return componentMask_.test(T::ID);
+    bool HasComponent(Component& component) const {
+        return componentMask_.test(component.GetID());
     }
 
-    template <class... T>
-    bool HasComponents() const {
-        bool hasComponent[] = {
-            (componentMask_.test(T::ID))...
-        };
-
-        for (int i = 0; i < sizeof...(T); i++) {
-            if (!hasComponent[i])
+    bool HasComponents(const std::initializer_list<std::reference_wrapper<Component>> &list)const {
+        for (auto component : list) {
+            if (!HasComponent(component))
                 return false;
-
         }
         return true;
     }

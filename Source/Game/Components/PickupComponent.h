@@ -20,7 +20,7 @@ struct PickupComponent : public Component {
         return; 
     }
 
-    inline static int ID = 7;
+    uint8_t GetID() const { return 7; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

@@ -15,11 +15,11 @@ void ProjectileSystem::CalculateVelocities(
         if (!entity.alive_)
             continue;
         
-        if (!entity.HasComponents<
-            ProjectileComponent, 
-            VelocityComponent,
-            TransformComponent
-        >()) continue;
+        if (!entity.HasComponents({
+            projectileComponent, 
+            velocityComponent,
+            transformComponent
+        })) continue;
 
         ProjectileState& state = projectileComponent.state[i];
         if (state == Inactive)

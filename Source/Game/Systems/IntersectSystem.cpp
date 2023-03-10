@@ -17,7 +17,7 @@ void IntersectSystem::Execute(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents<TransformComponent, BubbleComponent>())
+        if (!entity.HasComponents({transformComponent, bubbleComponent}))
             continue;
         const vec3 position = transformComponent.transform[i].position_;
         const float radius = bubbleComponent.radius[i];
@@ -33,7 +33,7 @@ void IntersectSystem::Execute(
             const Entity& otherEntity = entities[j];
             if (!otherEntity.alive_)
                 continue;
-            if (!otherEntity.HasComponents<TransformComponent, BubbleComponent>())
+            if (!entity.HasComponents({transformComponent, bubbleComponent}))
                 continue;
 
             const vec3 otherPosition = transformComponent.transform[j].position_;    
@@ -81,14 +81,14 @@ void IntersectSystem::HandleIntersection(
     KickableComponent& kickableComponent
 ) {
     const Entity* entities = entityManager.entities_;
-    if (entities[hitbox1].HasComponent<PickupComponent>() && 
-        entities[hitbox2].HasComponent<HoldableComponent>()) 
+    if (entities[hitbox1].HasComponent(pickupComponent) && 
+        entities[hitbox2].HasComponent(holdableComponent)) 
     {
         PickupSystem::DoPickup(hitbox1, hitbox2, pickupComponent);
     }
     
-    if (entities[hitbox1].HasComponent<KickerComponent>() && 
-        entities[hitbox2].HasComponent<KickableComponent>()) 
+    if (entities[hitbox1].HasComponent(kickerComponent) && 
+        entities[hitbox2].HasComponent(kickableComponent)) 
     {
         spreadManager.AddSpread(transformComponent.transform[hitbox2].position_, 8);
         entityManager.DestroyEntity(hitbox2);

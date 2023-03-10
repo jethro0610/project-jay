@@ -28,7 +28,7 @@ struct StaticModelComponent : public Component {
         };
     }
 
-    inline static int ID = 11;
+    uint8_t GetID() const { return 11; }
     void Load(nlohmann::json& data, uint16_t entity) {
         model[entity] = data["model"].get<std::string>();
         materials[entity][0] = data["material0"].get<std::string>();

@@ -44,7 +44,7 @@ float World::GetDistance(vec3 position) const {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities_[i].alive_)
             continue;
-        if (!entities_[i].HasComponent<TerrainModComponent>())
+        if (!entities_[i].HasComponent(terrainModComponent_))
             continue;
 
         float dist = distance(terrainModComponent_.position[i], position) - terrainModComponent_.radius[i]; 

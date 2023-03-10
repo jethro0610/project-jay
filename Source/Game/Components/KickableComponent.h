@@ -34,7 +34,7 @@ struct KickableComponent : public Component {
         };
     }
 
-    inline static int ID = 4;
+    uint8_t GetID() const { return 4; }
     void Load(nlohmann::json& data, uint16_t entity) {
         if (data["destroy"].get<bool>() == true)
             properties[entity].set(Destroy);

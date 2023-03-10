@@ -15,13 +15,13 @@ void MovementSystem::Execute(
         if (!entity.alive_)
             continue;
         if (!entity.HasComponents
-            <
-            MovementComponent,
-            GroundTraceComponent,
-            TransformComponent,
-            VelocityComponent
-            > 
-        ()) continue;
+            ({
+                movementComponent,
+                groundTraceComponent,
+                transformComponent,
+                velocityComponent
+            }) 
+        ) continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];
@@ -77,7 +77,7 @@ void MovementSystem::Execute(
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = planarVelocity.length();
         if (
-            entity.HasComponent<SpreadDetectComponent>() && 
+            entity.HasComponent(spreadDetectComponent) && 
             spreadDetectComponent.detecedSpread[i] &&
             planarLength >= 0.0f &&
             onGround

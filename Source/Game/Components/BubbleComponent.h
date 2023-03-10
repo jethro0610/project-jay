@@ -23,7 +23,7 @@ struct BubbleComponent : public Component {
         };
     }
 
-    inline static int ID = 0;
+    uint8_t GetID() const { return 0; }
     void Load(nlohmann::json& data, uint16_t entity) {
         radius[entity] = data["radius"].get<float>();
     }

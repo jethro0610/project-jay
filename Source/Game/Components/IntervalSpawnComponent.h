@@ -24,7 +24,7 @@ struct IntervalSpawnComponent : public Component {
         };
     }
 
-    inline static int ID = 3;
+    uint8_t GetID() const { return 3; }
     void Load(nlohmann::json& data, uint16_t entity) {
         spawnInterval[entity] = (uint16_t)data["spawnInterval"].get<double>();
     }

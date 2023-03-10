@@ -23,7 +23,7 @@ struct VelocityComponent : public Component {
         };
     }
 
-    inline static int ID = 14;
+    uint8_t GetID() const { return 14; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

@@ -15,14 +15,14 @@ void SpreadActivatorSystem::Execute(
         if (!entity.alive_)
             continue;
 
-        if (!entity.HasComponents<SpreadActivatorComponent, TransformComponent>())
+        if (!entity.HasComponents({spreadActivatorComponent, transformComponent}))
             continue;
         
         if (!spreadActivatorComponent.active[i])
             continue;
 
         bool onGround = false;
-        if (entity.HasComponent<GroundTraceComponent>()) {
+        if (entity.HasComponent(groundTraceComponent)) {
             onGround = groundTraceComponent.onGround[i];
         }
 
@@ -30,7 +30,7 @@ void SpreadActivatorSystem::Execute(
             continue;
         
         const vec3 position = transformComponent.transform[i].position_;
-        const bool hasDetect = entity.HasComponent<SpreadDetectComponent>();
+        const bool hasDetect = entity.HasComponent(spreadDetectComponent);
 
         const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position);
         if (!addSpreadInfo.added || !hasDetect)

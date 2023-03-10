@@ -10,7 +10,7 @@ void GroundStickSystem::Step (
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
+        if (!entity.HasComponents({transformComponent, groundTraceComponent}))
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StepUp)
@@ -27,7 +27,7 @@ void GroundStickSystem::Stick (
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents<TransformComponent, GroundTraceComponent>())
+        if (!entity.HasComponents({transformComponent, groundTraceComponent}))
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StickOnly)

@@ -13,7 +13,7 @@ struct HoldableComponent : public Component {
         return; 
     }
 
-    inline static int ID = 2;
+    uint8_t GetID() const { return 2; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

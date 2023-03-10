@@ -11,7 +11,7 @@ void VelocitySystem::Apply(
         if (!entity.alive_)
             continue;
 
-        if (!entity.HasComponents<TransformComponent, VelocityComponent>())
+        if (!entity.HasComponents({transformComponent, velocityComponent}))
             continue;
 
         transformComponent.transform[i].position_ += velocityComponent.velocity[i] * TIMESTEP;

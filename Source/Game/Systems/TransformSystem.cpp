@@ -5,7 +5,7 @@ void TransformSystem::UpdateLastTransforms(EntityManager& entityManager, Transfo
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<TransformComponent>())
+        if (!entity.HasComponent(transformComponent))
             continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
@@ -19,7 +19,7 @@ void TransformSystem::UpdateRenderTransforms(float interpTime, EntityManager& en
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<TransformComponent>())
+        if (!entity.HasComponent(transformComponent))
             continue;
 
         if (transformComponent.interpolate[i]) {

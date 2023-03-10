@@ -11,7 +11,7 @@ void CollisionSystem::Execute(
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents<TransformComponent, WorldColliderComponent>())
+        if (!entity.HasComponents({transformComponent, worldColliderComponent}))
             continue;
 
         // Raymarch towards the nearest point on the surface

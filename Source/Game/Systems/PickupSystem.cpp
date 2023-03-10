@@ -24,7 +24,7 @@ void PickupSystem::ExecuteHold(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<PickupComponent>())
+        if (!entity.HasComponent(pickupComponent))
             continue;
         if (pickupComponent.entityId[i] == -1)
             continue;
@@ -35,7 +35,7 @@ void PickupSystem::ExecuteHold(
         transformComponent.transform[holdEntityId].rotation_ = transform.rotation_;
 
         if (!pickupComponent.pickup[i]) {
-            if (!entities[holdEntityId].HasComponent<VelocityComponent>())
+            if (!entities[holdEntityId].HasComponent(velocityComponent))
                 continue;
             ProjectileSystem::Throw(
                 projectileComponent, 

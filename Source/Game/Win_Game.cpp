@@ -17,8 +17,8 @@ Game::Game(int width, int height):
     resourceManager_(dxResources_),
     entityManager_(resourceManager_),
     renderer_(resourceManager_),
-    camera_(entityManager_.GetComponent<TransformComponent>(), 15.0f),
-    world_(entityManager_.entities_, entityManager_.GetComponent<TerrainModComponent>()),
+    camera_(entityManager_.transformComponent_, 15.0f),
+    world_(entityManager_.entities_, entityManager_.terrainModComponent_),
     spreadManager_(resourceManager_, world_),
     gamepad_(Gamepad()),
     running_(true)

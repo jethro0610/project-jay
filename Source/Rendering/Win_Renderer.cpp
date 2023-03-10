@@ -99,8 +99,10 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
         const Entity& entity = entities[e];
         if (!entity.alive_)
             continue;
-        if (!entities->HasComponents<TransformComponent, StaticModelComponent>())
-            continue;
+        if (!entities[e].HasComponents({
+            renderComponents.staticMeshComponents, 
+            renderComponents.transformComponents
+        })) continue;
 
         PerObjectData objectData;
         renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);

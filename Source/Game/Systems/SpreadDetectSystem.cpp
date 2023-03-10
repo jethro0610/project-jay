@@ -13,7 +13,7 @@ void SpreadDetectSystem::Execute(
         if (!entity.alive_)
             continue;
 
-        if (!entity.HasComponents<SpreadDetectComponent, TransformComponent>())
+        if (!entity.HasComponents({detectComponent, transformComponent}))
             continue;
 
         bool& detectedSpread = detectComponent.detecedSpread[i];

@@ -22,7 +22,7 @@ struct KickerComponent : public Component {
         };
     }
 
-    inline static int ID = 5;
+    uint8_t GetID() const { return 5; }
     void Load(nlohmann::json& data, uint16_t entity) {
     }
 };

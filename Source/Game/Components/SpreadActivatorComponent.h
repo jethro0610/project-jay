@@ -24,7 +24,7 @@ struct SpreadActivatorComponent : public Component {
         };
     };
 
-    inline static int ID = 9;
+    uint8_t GetID() const { return 9; }
     void Load(nlohmann::json& data, uint16_t entity) {
         groundOnly[entity] = data["groundOnly"].get<bool>();
     }

@@ -5,7 +5,7 @@ void TerrainModSystem::Execute(EntityManager& entityManager, TerrainModComponent
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<TerrainModComponent>())
+        if (!entity.HasComponent(terrainModComponent))
             continue;
 
         /* terrainModComponent.radius[i] += 0.1f; */

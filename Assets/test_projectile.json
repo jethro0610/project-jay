@@ -1,0 +1,22 @@
+{
+    "components": [
+        {
+            "id": 13,
+            "interpolate": true
+        },
+        {
+            "id": 11,
+            "model": "st_sphere",
+            "material0": "playerMaterial"
+        },
+        {
+            "id": 14
+        },
+        {
+            "id": 8,
+            "type": 0,
+            "param1": 30.0,
+            "param2": 50.0
+        }
+    ]
+}

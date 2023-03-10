@@ -18,6 +18,7 @@ void Game::Init() {
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
 
     resourceManager_.LoadEntity("player");
+    resourceManager_.LoadEntity("test_projectile");
     entityManager_.CreateEntity("player");
     entityManager_.transformComponent_.transform[PLAYER_ENTITY] = spawnTransform;
 
@@ -44,6 +45,7 @@ void Game::Init() {
     entityManager_.bubbleComponent_.radius[holdEntity] = 2.0f;
     entityManager_.RegisterComponent(entityManager_.intervalSpawnComponent_, holdEntity);
     entityManager_.intervalSpawnComponent_.spawnInterval[holdEntity] = 120;
+    entityManager_.intervalSpawnComponent_.entityToSpawn[holdEntity] = "test_projectile";
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)

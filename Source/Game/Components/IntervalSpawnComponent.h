@@ -10,10 +10,12 @@ struct IntervalSpawnCProperties {
 struct IntervalSpawnComponent : public Component {
     uint16_t spawnInterval[MAX_ENTITIES];
     uint16_t spawnTimer[MAX_ENTITIES]; 
+    std::string entityToSpawn[MAX_ENTITIES];
 
     IntervalSpawnComponent() {
         std::fill_n(spawnInterval, MAX_ENTITIES, 0);
         std::fill_n(spawnTimer, MAX_ENTITIES, 0);
+        std::fill_n(entityToSpawn, MAX_ENTITIES, "");
     };
     IntervalSpawnComponent(const IntervalSpawnComponent&) = delete;
     IntervalSpawnComponent& operator=(const IntervalSpawnComponent&) = delete;
@@ -27,5 +29,6 @@ struct IntervalSpawnComponent : public Component {
     uint8_t GetID() const { return 3; }
     void Load(nlohmann::json& data, uint16_t entity) {
         spawnInterval[entity] = (uint16_t)data["spawnInterval"].get<double>();
+        entityToSpawn[entity] = data["entityToSpawn"].get<std::string>();
     }
 };

@@ -45,14 +45,10 @@ public:
     uint16_t CreateEntity(std::string entityName) {
         uint16_t createdEntity = CreateEntity();
         nlohmann::json entityData = resourceManager_.entities_[entityName];
-        auto dump = entityData.dump();
-        int itrS = entityData["components"].size();
-        int i = 0;
-        int id = -1;
-        for (; i < entityData["components"].size(); i++) {
-            id = entityData["components"][i]["id"].get<double>();
+        for (auto& componentData : entityData["components"]) {
+            uint8_t id = componentData["id"].get<double>();
             entities_[createdEntity].componentMask_.set(id);
-            componentIdMap_[id]->Load(entityData, i, createdEntity);
+            componentIdMap_[id]->Load(componentData, createdEntity);
         }
         return createdEntity;
     }

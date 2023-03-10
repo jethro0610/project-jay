@@ -26,11 +26,11 @@ uint16_t EntityManager::CreateEntity() {
 uint16_t EntityManager::CreateEntity(std::string entityName) {
     uint16_t createdEntity = CreateEntity();
     nlohmann::json entityData = resourceManager_.entities_[entityName];
-    for (auto& componentData : entityData["components"]) {
-        std::string name = componentData["name"].get<std::string>();
+    for (auto& componentData : entityData["components"].items()) {
+        std::string name = componentData.key();
         Component* component = componentMap_[name];
         entities_[createdEntity].componentMask_.set(component->id);
-        component->Load(componentData, createdEntity);
+        component->Load(componentData.value(), createdEntity);
     }
     return createdEntity;
 }

@@ -1,49 +1,39 @@
 {
-    "components": [
-        {
-            "name": "transform",
+    "components": {
+        "transform": {
             "interpolate": true
         },
-        {
-            "name": "world_collider" 
+        "world_collider": {
         },
-        {
+        "static_model": {
             "name": "static_model",
             "model": "st_sphere",
             "material0": "playerMaterial"
         },
-        {
-            "name": "ground_trace",
+        "ground_trace": {
             "stickType": 2,
             "distance": 2.0
         },
-        {
-            "name": "movement",
+        "movement": {
             "minSpeed": 12.0,
             "maxSpeed": 120.0,
             "minFriction": 0.015,
             "maxFriction": 0.1,
             "momentumDecay": 0.1
         },
-        {
-            "name" : "spread_activator",
+        "spread_activator": {
             "groundOnly": true
         },
-        {
-            "name": "velocity" 
+        "velocity": {
         },
-        {
-            "name": "pickup"
+        "pickup": {
         },
-        {
-            "name": "spread_detect"
+        "spread_detect":{
         },
-        {
-            "name": "bubble",
+        "bubble": {
             "radius": 2.0
         },
-        {
-            "name": "kicker" 
+        "kicker": {
         }
-    ]
+    }
 }

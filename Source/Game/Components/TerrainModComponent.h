@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <glm.hpp>
 
 struct TerrainModCProperties {
@@ -7,13 +8,13 @@ struct TerrainModCProperties {
     float& radius;
 };
 
-struct TerrainModComponent {
+struct TerrainModComponent : public Component {
     // TODO: Remove position and use transform instead
     glm::vec3 position[MAX_ENTITIES];
     float radius[MAX_ENTITIES];
     bool updated[MAX_ENTITIES];
 
-    TerrainModComponent () {
+    TerrainModComponent() {
         std::fill_n(position, MAX_ENTITIES, glm::vec3(0.0f));
         std::fill_n(radius, MAX_ENTITIES, 0.0f);
         std::fill_n(updated, MAX_ENTITIES, false);
@@ -28,5 +29,7 @@ struct TerrainModComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 12;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

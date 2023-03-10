@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <bitset>
 #include <algorithm>
 
@@ -15,7 +16,7 @@ struct KickableCProperties {
     bool& canKick;
 };
 
-struct KickableComponent {
+struct KickableComponent : public Component {
     std::bitset<KickPropertyCount> properties[MAX_ENTITIES];
     bool canKick[MAX_ENTITIES];
 
@@ -33,5 +34,7 @@ struct KickableComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 4;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

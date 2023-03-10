@@ -1,6 +1,7 @@
 #pragma once
-#include "../../Types/Transform.h"
 #include "../Entity/Entity.h"
+#include "Component.h"
+#include <glm.hpp>
 #include <bitset>
 #include <algorithm>
 
@@ -35,7 +36,7 @@ struct MovementCProperties {
     float& momentumDecay;
 };
 
-struct MovementComponent {
+struct MovementComponent : public Component {
     glm::vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
     float speed[MAX_ENTITIES];
@@ -72,5 +73,7 @@ struct MovementComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 6;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

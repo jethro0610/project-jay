@@ -1,14 +1,11 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include "Component.h"
 #include <algorithm>
 
 const uint16_t PICKUP_DURATION = 10;
 
-struct PickupCProperties {
-};
-
-struct PickupComponent {
+struct PickupComponent : public Component {
     int entityId[MAX_ENTITIES];
     bool pickup[MAX_ENTITIES];
 
@@ -19,10 +16,11 @@ struct PickupComponent {
     PickupComponent(const PickupComponent&) = delete;
     PickupComponent& operator=(const PickupComponent&) = delete;
 
-    PickupCProperties operator[](int index) {
-        return PickupCProperties {
-        };
+    void operator[](int index) {
+        return; 
     }
 
-    static int ID;
+    inline static int ID = 7;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

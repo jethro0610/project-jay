@@ -3,5 +3,6 @@
 -I./Libraries/glm
 -I./Libraries/FastNoise
 -I./Libraries/DirectXTK/Inc
+-I./Libraries/json
 -D_WINDOWS
 -D_DEBUG

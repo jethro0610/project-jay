@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <string>
 
 const uint8_t MAX_MESHES_PER_MODEL = 8;
@@ -9,7 +10,7 @@ struct StaticModelCProperties {
     std::string* materials;
 };
 
-struct StaticModelComponent {
+struct StaticModelComponent : public Component {
     std::string model[MAX_ENTITIES];
     std::string materials[MAX_ENTITIES][MAX_MESHES_PER_MODEL];
 
@@ -27,5 +28,7 @@ struct StaticModelComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 11;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

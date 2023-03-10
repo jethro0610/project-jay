@@ -1,4 +1,5 @@
 #pragma once
+#include <json.hpp>
 #include <unordered_map>
 #include "RawModel.h"
 
@@ -27,8 +28,10 @@ public:
 #endif
     std::unordered_map<std::string, StaticModelDesc> staticModels_;
     std::unordered_map<std::string, MaterialDesc> materials_;
+    std::unordered_map<std::string, nlohmann::json> entities_;
 
     void LoadStaticModel(std::string modelName);
+    void LoadEntity(std::string entityName);
 private:
     void GPULoadStaticModel_P(RawModel& rawModel, std::string modelName);
 };

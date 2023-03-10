@@ -1,12 +1,13 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <algorithm>
 
 struct KickerCProperties {
     bool& kicking;
 };
 
-struct KickerComponent {
+struct KickerComponent : public Component {
     bool kicking[MAX_ENTITIES];
 
     KickerComponent() {
@@ -21,5 +22,7 @@ struct KickerComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 5;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

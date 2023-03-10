@@ -11,7 +11,7 @@
 #include "../Types/Gamepad.h"
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
-#include "Components/Components.h"
+#include "Components/ComponentInclude.h"
 #include "Systems/Systems.h"
 #include "../Types/Inputs.h"
 #include "Entity/EntityManager.h"
@@ -30,8 +30,8 @@ private:
     WindowsLayer windowsLayer_;
     DXResources dxResources_;
 #endif
-    EntityManager entityManager_;
     ResourceManager resourceManager_;
+    EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;
     World world_;

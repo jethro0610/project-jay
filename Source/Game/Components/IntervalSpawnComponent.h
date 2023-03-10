@@ -1,13 +1,13 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include "Component.h"
 #include <algorithm>
 
 struct IntervalSpawnCProperties {
     uint16_t& spawnInterval;
 };
 
-struct IntervalSpawnComponent {
+struct IntervalSpawnComponent : public Component {
     uint16_t spawnInterval[MAX_ENTITIES];
     uint16_t spawnTimer[MAX_ENTITIES]; 
 
@@ -24,5 +24,7 @@ struct IntervalSpawnComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 3;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

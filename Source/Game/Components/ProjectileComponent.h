@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <algorithm>
 
 enum ProjectileType {
@@ -21,13 +22,13 @@ struct ProjectileCProperties {
     float& param2;
 };
 
-struct ProjectileComponent {
+struct ProjectileComponent : public Component {
     ProjectileType type[MAX_ENTITIES];
     ProjectileState state[MAX_ENTITIES];
     float param1[MAX_ENTITIES];
     float param2[MAX_ENTITIES];
 
-    ProjectileComponent () {
+    ProjectileComponent() {
         std::fill_n(type, MAX_ENTITIES, Random);
         std::fill_n(state, MAX_ENTITIES, Inactive);
         std::fill_n(param1, MAX_ENTITIES, 0.0f);
@@ -41,5 +42,7 @@ struct ProjectileComponent {
             param2[index]
         };
     }
-    static int ID;
+    inline static int ID = 8;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

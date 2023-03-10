@@ -1,6 +1,7 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include "Component.h"
+#include <glm.hpp>
 #include <algorithm>
 
 const float STEP_UP_HEIGHT = 0.25f;
@@ -16,7 +17,7 @@ struct GroundTraceCProperties {
     StickType& stickType; 
 };
 
-struct GroundTraceComponent {
+struct GroundTraceComponent : public Component {
     float distance[MAX_ENTITIES];
     StickType stickType[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
@@ -46,5 +47,7 @@ struct GroundTraceComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 1;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

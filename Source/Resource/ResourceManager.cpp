@@ -1,4 +1,6 @@
 #include "ResourceManager.h"
+#include <fstream>
+using json = nlohmann::json;
 
 void ResourceManager::LoadStaticModel(std::string modelName) {
     assert(staticModels_.count(modelName) == 0);
@@ -7,4 +9,10 @@ void ResourceManager::LoadStaticModel(std::string modelName) {
     description.meshCount = rawModel.meshes_.size();
     GPULoadStaticModel_P(rawModel, modelName);
     staticModels_[modelName] = description;
+}
+
+void ResourceManager::LoadEntity(std::string entityName) {
+    assert(entities_.count(entityName) == 0);
+    std::ifstream inFile(entityName + ".json");
+    entities_[entityName] = json::parse(inFile);
 }

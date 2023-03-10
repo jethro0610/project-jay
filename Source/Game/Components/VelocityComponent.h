@@ -1,13 +1,14 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include "Component.h"
+#include <glm.hpp>
 #include <algorithm>
 
 struct VelocityCProperties {
     glm::vec3& velocity;
 };
 
-struct VelocityComponent {
+struct VelocityComponent : public Component {
     glm::vec3 velocity[MAX_ENTITIES];
 
     VelocityComponent() {
@@ -22,5 +23,7 @@ struct VelocityComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 14;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

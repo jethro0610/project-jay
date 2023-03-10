@@ -1,12 +1,13 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include <algorithm>
 
 struct SpreadActivatorCProperties {
     bool& groundOnly;
 };
 
-struct SpreadActivatorComponent {
+struct SpreadActivatorComponent : public Component {
     bool groundOnly[MAX_ENTITIES];
     bool active[MAX_ENTITIES];
 
@@ -23,5 +24,7 @@ struct SpreadActivatorComponent {
         };
     };
 
-    static int ID;
+    inline static int ID = 9;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

@@ -1,13 +1,14 @@
 #pragma once
+#include "Component.h"
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include <json.hpp>
 #include <algorithm>
 
 struct BubbleCProperties {
     float& radius;
 };
 
-struct BubbleComponent {
+struct BubbleComponent : public Component {
     float radius[MAX_ENTITIES];
 
     BubbleComponent() {
@@ -22,5 +23,8 @@ struct BubbleComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 0;
+    void Load(nlohmann::json& json, uint16_t entity) {
+        radius[entity] = json["radius"];
+    }
 };

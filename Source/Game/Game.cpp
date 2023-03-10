@@ -52,7 +52,7 @@ void Game::Init() {
     transformProps.interpolate = true;
     entityManager_.RegisterComponent<VelocityComponent>(holdEntity);
     entityManager_.RegisterComponent<ProjectileComponent>(holdEntity);
-    auto holdableProps = entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
+    entityManager_.RegisterComponent<HoldableComponent>(holdEntity);
     auto meshProps = entityManager_.RegisterComponent<StaticModelComponent>(holdEntity);
     meshProps.model = "st_sphere";
     meshProps.materials[0] = "playerMaterial";

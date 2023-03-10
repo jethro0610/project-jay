@@ -4,60 +4,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(ProjectJay)
 
-# Headers can be added to the executable so they show up in the VS solution
-file(GLOB HEADERS
-	Source/Game/Components/ColliderComponent.h
-	Source/Game/Components/Components.h
-	Source/Game/Components/GroundTraceComponent.h
-	Source/Game/Components/MovementComponent.h
-	Source/Game/Components/StaticModelComponent.h
-	Source/Game/Components/TransformComponent.h
-	Source/Game/Components/VelocityComponent.h
-    Source/Game/Components/SpreadActivatorComponent.h
-    Source/Game/Components/SpreadDetectComponent.h
-    Source/Game/Components/PickupComponent.h
-    Source/Game/Components/HoldableComponent.h
-
-	Source/Game/Entity/Entity.h
-	Source/Game/Entity/EntityManager.h
-
-	Source/Game/Systems/CollisionSystem.h
-	Source/Game/Systems/GroundTraceSystem.h
-	Source/Game/Systems/MovementSystem.h
-	Source/Game/Systems/PlayerInputSystem.h
-	Source/Game/Systems/TransformSystem.h
-	Source/Game/Systems/Systems.h
-    Source/Game/Systems/TerrainModSystem.h
-    Source/Game/Systems/SpreadActivatorSystem.h
-    Source/Game/Systems/SpreadDetectSystem.h
-
-	Source/Game/Camera.h
-	Source/Game/Game.h
-	Source/Game/TimeConstants.h
-	Source/Game/World.h
-	Source/Game/WorldConstants.h
-    Source/Game/SpreadManager.h
-
-	Source/Logging/Logger.h
-
-	Source/Rendering/Renderer.h
-
-	Source/Resource/AnimationResource.h
-	Source/Resource/RawModel.h
-	Source/Resource/ResourceManager.h
-	Source/Resource/SkeletonResource.h
-
-	Source/Types/Gamepad.h
-	Source/Types/Transform.h
-
-	IF(WIN32)
-		Source/Windows/WindowsLayer.h
-		Source/Resource/DXResources.h
-)
-
 file(GLOB SOURCES
-	Source/Game/Components/Components.cpp
-
 	Source/Game/Entity/Entity.cpp
 	Source/Game/Entity/EntityManager.cpp
 
@@ -108,8 +55,9 @@ file(GLOB SOURCES
 )
 
 include_directories("Libraries/glm")
+include_directories("Libraries/json")
 include_directories("Libraries/FastNoise")
 add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/DirectXTK ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK)
 add_compile_definitions(_DEBUG)
-add_executable(ProjectJay WIN32 ${SOURCES} ${HEADERS}) # Headers are added into the VS solution
+add_executable(ProjectJay WIN32 ${SOURCES}) # Headers are added into the VS solution
 target_link_libraries(${PROJECT_NAME} PRIVATE DirectXTK d3d11.lib Xinput.lib d3dcompiler.lib)

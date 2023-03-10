@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/Entity.h"
+#include "Component.h"
 #include "../../Types/Transform.h"
 #include <algorithm>
 
@@ -8,7 +9,7 @@ struct TransformCProperties {
     bool& interpolate;
 };
 
-struct TransformComponent {
+struct TransformComponent : public Component {
     Transform transform[MAX_ENTITIES];
     Transform transformLastUpdate[MAX_ENTITIES];
     Transform renderTransform[MAX_ENTITIES];
@@ -27,5 +28,7 @@ struct TransformComponent {
         };
     }
 
-    static int ID;
+    inline static int ID = 13;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

@@ -15,6 +15,7 @@ Game::Game(int width, int height):
     windowsLayer_(width, height, "DirectXLearning"),
     dxResources_(windowsLayer_.windowHandle_, width, height),
     resourceManager_(dxResources_),
+    entityManager_(resourceManager_),
     renderer_(resourceManager_),
     camera_(entityManager_.GetComponent<TransformComponent>(), 15.0f),
     world_(entityManager_.entities_, entityManager_.GetComponent<TerrainModComponent>()),

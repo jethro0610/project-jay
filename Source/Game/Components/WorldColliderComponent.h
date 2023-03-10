@@ -1,24 +1,21 @@
 #pragma once
 #include "../Entity/Entity.h"
-#include "../../Types/Transform.h"
+#include "Component.h"
 #include <algorithm>
 
-struct WorldColliderCProperties {
-};
-
-struct WorldColliderComponent {
+struct WorldColliderComponent : public Component {
     // TODO: Add radius
     bool colliding[MAX_ENTITIES];
 
-    WorldColliderComponent() {
-    };
+    WorldColliderComponent(){};
     WorldColliderComponent(const WorldColliderComponent&) = delete;
     WorldColliderComponent& operator=(const WorldColliderComponent&) = delete;
 
-    WorldColliderCProperties operator[](int index) {
-        return WorldColliderCProperties {
-        };
+    void operator[](int index) {
+        return; 
     }
 
-    static int ID;
+    inline static int ID = 15;
+    void Load(nlohmann::json& json, uint16_t entity) {
+    }
 };

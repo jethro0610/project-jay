@@ -24,16 +24,12 @@
         "spread_activator": {
             "groundOnly": true
         },
-        "velocity": {
-        },
-        "pickup": {
-        },
-        "spread_detect":{
-        },
         "bubble": {
             "radius": 2.0
         },
-        "kicker": {
-        }
+        "velocity": {},
+        "pickup": {},
+        "kicker": {},
+        "spread_detect": {}
     }
 }

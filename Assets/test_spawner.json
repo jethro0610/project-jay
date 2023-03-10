@@ -7,11 +7,19 @@
             "model": "st_sphere",
             "material0": "playerMaterial"
         },
+        "bubble": {
+            "radius": 2.0
+        },
+        "interval_spawner": {
+            "interval": 120,
+            "entity": "test_projectile"
+        },
         "projectile": {
             "type": 0,
-            "param1": 30.0,
-            "param2": 50.0
+            "param1": 0.0,
+            "param2": 0.0
         },
-        "velocity": {}
+        "velocity": {},
+        "holdable": {}
     }
 }

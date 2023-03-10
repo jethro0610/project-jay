@@ -28,7 +28,7 @@ struct IntervalSpawnComponent : public Component {
 
     std::string GetName() const { return "interval_spawner"; }
     void Load(nlohmann::json& data, uint16_t entity) {
-        spawnInterval[entity] = (uint16_t)data["spawnInterval"].get<double>();
-        entityToSpawn[entity] = data["entityToSpawn"].get<std::string>();
+        spawnInterval[entity] = (uint16_t)data["interval"].get<double>();
+        entityToSpawn[entity] = data["entity"].get<std::string>();
     }
 };

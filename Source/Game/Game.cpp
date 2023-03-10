@@ -18,6 +18,7 @@ void Game::Init() {
     spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
 
     resourceManager_.LoadEntity("player");
+    resourceManager_.LoadEntity("test_spawner");
     resourceManager_.LoadEntity("test_projectile");
     entityManager_.CreateEntity("player");
     entityManager_.transformComponent_.transform[PLAYER_ENTITY] = spawnTransform;
@@ -30,22 +31,10 @@ void Game::Init() {
     /* terrainModProps.position = vec3(0.0f); */
     /* terrainModProps.radius = 16.0f; */
 
-    uint16_t holdEntity = entityManager_.CreateEntity();
-    entityManager_.RegisterComponent(entityManager_.transformComponent_, holdEntity);
+    uint16_t holdEntity = entityManager_.CreateEntity("test_spawner");
     entityManager_.transformComponent_.transform[holdEntity].position_ = vec3(0.0f, 40.0f, 0.0f);
     entityManager_.transformComponent_.transform[holdEntity].scale_ = vec3(2.0f);
     entityManager_.transformComponent_.interpolate[holdEntity] = true;
-    entityManager_.RegisterComponent(entityManager_.velocityComponent_, holdEntity);
-    entityManager_.RegisterComponent(entityManager_.projectileComponent_, holdEntity);
-    entityManager_.RegisterComponent(entityManager_.holdableComponent_, holdEntity);
-    entityManager_.RegisterComponent(entityManager_.staticModelComponent_, holdEntity);
-    entityManager_.staticModelComponent_.model[holdEntity] = "st_sphere";
-    entityManager_.staticModelComponent_.materials[holdEntity][0] = "playerMaterial";
-    entityManager_.RegisterComponent(entityManager_.bubbleComponent_, holdEntity);
-    entityManager_.bubbleComponent_.radius[holdEntity] = 2.0f;
-    entityManager_.RegisterComponent(entityManager_.intervalSpawnComponent_, holdEntity);
-    entityManager_.intervalSpawnComponent_.spawnInterval[holdEntity] = 120;
-    entityManager_.intervalSpawnComponent_.entityToSpawn[holdEntity] = "test_projectile";
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)

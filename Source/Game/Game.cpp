@@ -20,8 +20,8 @@ void Game::Init() {
     resourceManager_.LoadEntity("player");
     resourceManager_.LoadEntity("test_spawner");
     resourceManager_.LoadEntity("test_projectile");
-    entityManager_.CreateEntity("player");
-    entityManager_.transformComponent_.transform[PLAYER_ENTITY] = spawnTransform;
+    auto [playerEntityId, playerTransform] = entityManager_.CreateEntity("player");
+    playerTransform = spawnTransform;
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 
@@ -31,10 +31,9 @@ void Game::Init() {
     /* terrainModProps.position = vec3(0.0f); */
     /* terrainModProps.radius = 16.0f; */
 
-    uint16_t holdEntity = entityManager_.CreateEntity("test_spawner");
-    entityManager_.transformComponent_.transform[holdEntity].position_ = vec3(0.0f, 40.0f, 0.0f);
-    entityManager_.transformComponent_.transform[holdEntity].scale_ = vec3(2.0f);
-    entityManager_.transformComponent_.interpolate[holdEntity] = true;
+    auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
+    holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
+    holdTransform.scale_ = vec3(2.0f);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)

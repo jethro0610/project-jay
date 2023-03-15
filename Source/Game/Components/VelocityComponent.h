@@ -1,12 +1,7 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <glm.hpp>
 #include <algorithm>
-
-struct VelocityCProperties {
-    glm::vec3& velocity;
-};
 
 struct VelocityComponent : public Component {
     glm::vec3 velocity[MAX_ENTITIES];
@@ -17,13 +12,7 @@ struct VelocityComponent : public Component {
     VelocityComponent(const VelocityComponent&) = delete;
     VelocityComponent& operator=(const VelocityComponent&) = delete;
 
-    VelocityCProperties operator[](int index) {
-        return VelocityCProperties{
-            velocity[index]
-        };
-    }
-
     std::string GetName() const { return "velocity"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
     }
 };

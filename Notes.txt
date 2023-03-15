@@ -12,9 +12,6 @@
     -   Tracking the active entity indices would be helpful in preventing unecessary updates as well if Sparse Arrays 
         will not be used
 
--   Removing the template on the EntityManager and Entity may also be beneficial for the sake of program 
-    simplicty. Furthermore, a loop is used to determine what components the Entity has, but using Component::ID is simpler
-
 -   Camera needs to collide with world
 
 -   Camera interpolation fix
@@ -140,3 +137,27 @@
 - Wind waker style light and shadow colors (lerp to values)
 
 - Bouncy ball projectile that has to be dodged (super low gravity and movement, high count)
+
+- Tunicate squirter
+
+- Level where tide rises and falls
+    - Some stuff on high
+    - Others on low
+    - Different benefits for each
+
+-   How to balance meteor, cut/hit, and pickup?
+    -   Remove pickup?
+    -   Make left trigger movement spread on hard press only
+        -   Can also use top triggers for no spread
+        -   Remove spread from ski, or hard press only?
+        -   There might be value in keeping forced spread, need to test
+    -   Cut/hit gives reverse knockback
+    -   Meteor give no knockback, armor breaking
+    -   Only meteor has targeting on projectiles
+        -   See what happens when player is allowed to be target
+        -   Some projectiles are meteorable, need a color indicator
+        -   Have meteor reflect projectiles back to target
+
+- TODO===========================================
+- Return transform when entity created
+- typedef uinta6_t EntityID

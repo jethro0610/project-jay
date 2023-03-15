@@ -1,5 +1,4 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <glm.hpp>
 #include <queue>
@@ -19,11 +18,7 @@ struct SpreadDetectComponent : public Component {
     SpreadDetectComponent (const SpreadDetectComponent &) = delete;
     SpreadDetectComponent & operator=(const SpreadDetectComponent &) = delete;
 
-    void operator[](int index) {
-        return; 
-    };
-
     std::string GetName() const { return "spread_detect"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
     }
 };

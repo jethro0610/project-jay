@@ -63,7 +63,7 @@ void ProjectileSystem::Launch(
     ProjectileComponent& projectileComponent,
     VelocityComponent& velocityComponent,
     TransformComponent& transformComponent,
-    uint16_t projectileEntity
+    EntityID projectileEntity
 ) {
     const float& param1 = projectileComponent.param1[projectileEntity];
     const float& param2 = projectileComponent.param2[projectileEntity];
@@ -97,8 +97,8 @@ void ProjectileSystem::Throw(
     ProjectileComponent& projectileComponent,
     VelocityComponent& velocityComponent,
     TransformComponent& transformComponent,
-    uint16_t projectileEntity,
-    uint16_t throwingEntity,
+    EntityID projectileEntity,
+    EntityID throwingEntity,
     float height
 ) {
     vec3& velocity = velocityComponent.velocity[projectileEntity]; 

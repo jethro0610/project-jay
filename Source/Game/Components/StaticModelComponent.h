@@ -1,14 +1,8 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <string>
 
 const uint8_t MAX_MESHES_PER_MODEL = 8;
-
-struct StaticModelCProperties {
-    std::string& model;
-    std::string* materials;
-};
 
 struct StaticModelComponent : public Component {
     std::string model[MAX_ENTITIES];
@@ -21,15 +15,8 @@ struct StaticModelComponent : public Component {
     StaticModelComponent(const StaticModelComponent&) = delete;
     StaticModelComponent& operator=(const StaticModelComponent&) = delete;
 
-    StaticModelCProperties operator[](int index) {
-        return StaticModelCProperties {
-            model[index],
-            &materials[index][0]
-        };
-    }
-
     std::string GetName() const { return "static_model"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         model[entity] = data["model"].get<std::string>();
         materials[entity][0] = data["material0"].get<std::string>();
     }

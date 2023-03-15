@@ -1,13 +1,7 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include "../../Types/Transform.h"
 #include <algorithm>
-
-struct TransformCProperties {
-    Transform& transform;
-    bool& interpolate;
-};
 
 struct TransformComponent : public Component {
     Transform transform[MAX_ENTITIES];
@@ -21,15 +15,8 @@ struct TransformComponent : public Component {
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;
 
-    TransformCProperties operator[](int index) {
-        return TransformCProperties {
-            transform[index],
-            interpolate[index]
-        };
-    }
-
     std::string GetName() const { return "transform"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         interpolate[entity] = data["interpolate"].get<bool>();
     }
 };

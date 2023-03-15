@@ -15,7 +15,7 @@
             "entity": "test_projectile"
         },
         "projectile": {
-            "type": 0,
+            "type": "random",
             "param1": 0.0,
             "param2": 0.0
         },

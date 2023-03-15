@@ -1,5 +1,4 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <glm.hpp>
 #include <bitset>
@@ -24,16 +23,6 @@ enum MoveMode {
     Ski,
     Flow,
     NumberOfModes
-};
-
-struct MovementCProperties {
-    float& speed;
-    float& minSpeed;
-    float& maxSpeed;
-    float& friction;
-    float& minFriction;
-    float& maxFriction;
-    float& momentumDecay;
 };
 
 struct MovementComponent : public Component {
@@ -61,24 +50,12 @@ struct MovementComponent : public Component {
     MovementComponent(const MovementComponent&) = delete;
     MovementComponent& operator=(const MovementComponent&) = delete;
 
-    MovementCProperties operator[](int index) {
-        return MovementCProperties {
-            speed[index],
-            minSpeed[index],
-            maxSpeed[index],
-            friction[index],
-            minFriction[index],
-            maxFriction[index],
-            momentumDecay[index]
-        };
-    }
-
     std::string GetName() const { return "movement"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
-        minSpeed[entity] = data["minSpeed"].get<float>();
-        maxSpeed[entity] = data["maxSpeed"].get<float>();
-        minFriction[entity] = data["minFriction"].get<float>();
-        maxFriction[entity] = data["maxFriction"].get<float>();
-        momentumDecay[entity] = data["momentumDecay"].get<float>();
+    void Load(nlohmann::json& data, EntityID entity) {
+        minSpeed[entity] = data["min_speed"].get<float>();
+        maxSpeed[entity] = data["max_speed"].get<float>();
+        minFriction[entity] = data["min_friction"].get<float>();
+        maxFriction[entity] = data["max_friction"].get<float>();
+        momentumDecay[entity] = data["momentum_decay"].get<float>();
     }
 };

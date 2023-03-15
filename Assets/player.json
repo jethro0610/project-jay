@@ -3,26 +3,24 @@
         "transform": {
             "interpolate": true
         },
-        "world_collider": {
-        },
         "static_model": {
             "name": "static_model",
             "model": "st_sphere",
             "material0": "playerMaterial"
         },
         "ground_trace": {
-            "stickType": 2,
+            "type": "step_up",
             "distance": 2.0
         },
         "movement": {
-            "minSpeed": 12.0,
-            "maxSpeed": 120.0,
-            "minFriction": 0.015,
-            "maxFriction": 0.1,
-            "momentumDecay": 0.1
+            "min_speed": 12.0,
+            "max_speed": 120.0,
+            "min_friction": 0.015,
+            "max_friction": 0.1,
+            "momentum_decay": 0.1
         },
         "spread_activator": {
-            "groundOnly": true
+            "ground_only": true
         },
         "bubble": {
             "radius": 2.0
@@ -30,6 +28,7 @@
         "velocity": {},
         "pickup": {},
         "kicker": {},
-        "spread_detect": {}
+        "spread_detect": {},
+        "world_collider": {}
     }
 }

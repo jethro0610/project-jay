@@ -1,11 +1,6 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <algorithm>
-
-struct KickerCProperties {
-    bool& kicking;
-};
 
 struct KickerComponent : public Component {
     bool kicking[MAX_ENTITIES];
@@ -16,13 +11,7 @@ struct KickerComponent : public Component {
     KickerComponent(const KickerComponent&) = delete;
     KickerComponent& operator=(const KickerComponent&) = delete;
 
-    KickerCProperties operator[](int index) {
-        return KickerCProperties {
-            kicking[index]
-        };
-    }
-
     std::string GetName() const { return "kicker"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
     }
 };

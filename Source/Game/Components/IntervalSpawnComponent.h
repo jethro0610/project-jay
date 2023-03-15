@@ -1,11 +1,6 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <algorithm>
-
-struct IntervalSpawnCProperties {
-    uint16_t& spawnInterval;
-};
 
 struct IntervalSpawnComponent : public Component {
     uint16_t spawnInterval[MAX_ENTITIES];
@@ -20,15 +15,9 @@ struct IntervalSpawnComponent : public Component {
     IntervalSpawnComponent(const IntervalSpawnComponent&) = delete;
     IntervalSpawnComponent& operator=(const IntervalSpawnComponent&) = delete;
 
-    IntervalSpawnCProperties operator[](int index) {
-        return IntervalSpawnCProperties {
-            spawnInterval[index]
-        };
-    }
-
     std::string GetName() const { return "interval_spawner"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
-        spawnInterval[entity] = (uint16_t)data["interval"].get<double>();
+    void Load(nlohmann::json& data, EntityID entity) {
+        spawnInterval[entity] = data["interval"].get<int>();
         entityToSpawn[entity] = data["entity"].get<std::string>();
     }
 };

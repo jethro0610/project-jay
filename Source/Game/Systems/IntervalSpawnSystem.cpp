@@ -20,11 +20,10 @@ void IntervalSpawnSystem::Execute (
         uint16_t& spawnTimer = intervalSpawnComponent.spawnTimer[i];
         spawnTimer += 1;
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
-            uint16_t newEntity = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i]);
-            transformComponent.transform[newEntity].position_ = transformComponent.transform[i].position_;
-            transformComponent.transform[newEntity].position_ += vec3(0.0f, 2.5f, 0.0f);
-            transformComponent.interpolate[newEntity] = true;
-            ProjectileSystem::Launch(projectileComponent, velocityComponent, transformComponent, newEntity);
+            auto [entityId, transform] = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i]);
+            transform.position_ = transformComponent.transform[i].position_;
+            transform.position_ += vec3(0.0f, 2.5f, 0.0f);
+            ProjectileSystem::Launch(projectileComponent, velocityComponent, transformComponent, entityId);
 
             // Create the spawn entity
             spawnTimer = 0;

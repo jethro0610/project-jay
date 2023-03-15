@@ -1,11 +1,6 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <algorithm>
-
-struct SpreadActivatorCProperties {
-    bool& groundOnly;
-};
 
 struct SpreadActivatorComponent : public Component {
     bool groundOnly[MAX_ENTITIES];
@@ -18,14 +13,8 @@ struct SpreadActivatorComponent : public Component {
     SpreadActivatorComponent(const SpreadActivatorComponent&) = delete;
     SpreadActivatorComponent& operator=(const SpreadActivatorComponent&) = delete;
 
-    SpreadActivatorCProperties operator[](int index) {
-        return {
-            groundOnly[index]
-        };
-    };
-
     std::string GetName() const { return "spread_activator"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
-        groundOnly[entity] = data["groundOnly"].get<bool>();
+    void Load(nlohmann::json& data, EntityID entity) {
+        groundOnly[entity] = data["ground_only"].get<bool>();
     }
 };

@@ -1,5 +1,4 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <algorithm>
 
@@ -16,11 +15,7 @@ struct PickupComponent : public Component {
     PickupComponent(const PickupComponent&) = delete;
     PickupComponent& operator=(const PickupComponent&) = delete;
 
-    void operator[](int index) {
-        return; 
-    }
-
     std::string GetName() const { return "pickup"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
     }
 };

@@ -6,6 +6,7 @@
 #include <FastNoiseLite.h>
 #include <bitset>
 #include "Components/TerrainModComponent.h"
+#include "Entity/Entity.h"
 
 const glm::ivec3 cornerTable[8] = {
     {0, 0, 0},

@@ -1,12 +1,6 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <glm.hpp>
-
-struct TerrainModCProperties {
-    glm::vec3& position;
-    float& radius;
-};
 
 struct TerrainModComponent : public Component {
     // TODO: Remove position and use transform instead
@@ -22,15 +16,8 @@ struct TerrainModComponent : public Component {
     TerrainModComponent (const TerrainModComponent &) = delete;
     TerrainModComponent & operator=(const TerrainModComponent &) = delete;
 
-    TerrainModCProperties operator[](int index) {
-        return TerrainModCProperties{
-            position[index],
-            radius[index]
-        };
-    }
-
     std::string GetName() const { return "terrain_modifier"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         radius[entity] = data["radius"].get<float>();
     }
 };

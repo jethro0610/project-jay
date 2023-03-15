@@ -1,5 +1,4 @@
 #pragma once
-#include "../Entity/Entity.h"
 #include "Component.h"
 #include <glm.hpp>
 #include <algorithm>
@@ -10,11 +9,6 @@ enum StickType {
     None,
     StickOnly,
     StepUp 
-};
-
-struct GroundTraceCProperties {
-    float& distance;
-    StickType& stickType; 
 };
 
 struct GroundTraceComponent : public Component {
@@ -40,16 +34,15 @@ struct GroundTraceComponent : public Component {
     GroundTraceComponent(const GroundTraceComponent&) = delete;
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
 
-    GroundTraceCProperties operator[](int index) {
-        return GroundTraceCProperties {
-            distance[index],
-            stickType[index]
-        };
-    }
-
     std::string GetName() const { return "ground_trace"; }
-    void Load(nlohmann::json& data, uint16_t entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = data["distance"].get<float>();
-        stickType[entity]= (StickType)(uint8_t)data["stickType"].get<double>(); 
+        std::string stickTypeS = data["type"].get<std::string>();
+        if (stickTypeS == "no_stick")
+            stickType[entity] = None;
+        else if (stickTypeS == "stick_only")
+            stickType[entity] = StickOnly;
+        else if (stickTypeS == "step_up")
+            stickType[entity] = StepUp;
     }
 };

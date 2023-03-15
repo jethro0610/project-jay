@@ -2,8 +2,6 @@
 #include "../Components/Component.h"
 #include <bitset>
 #include <initializer_list> 
-const uint16_t MAX_ENTITIES = 512;
-const uint8_t MAX_COMPONENT_TYPES = 32;
 const uint8_t PLAYER_ENTITY = 0;
 
 typedef std::bitset<MAX_COMPONENT_TYPES> ComponentMask;

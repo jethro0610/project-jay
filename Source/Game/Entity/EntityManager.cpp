@@ -13,29 +13,29 @@ EntityManager::EntityManager (ResourceManager& resourceManager):
     #undef COMPONENTVAR
 }
 
-uint16_t EntityManager::CreateEntity() {
-    uint16_t createdEntity = usableEntities_.front();
+EntityReturn EntityManager::CreateEntity() {
+    EntityID createdEntity = usableEntities_.front();
     usableEntities_.pop_front();
     if (usableEntities_.size() <= 0)
         usableEntities_.push_front(createdEntity + 1);
 
     entities_[createdEntity].alive_ = true;
-    return createdEntity;
+    return { createdEntity, transformComponent_.transform[createdEntity] };
 }
 
-uint16_t EntityManager::CreateEntity(std::string entityName) {
-    uint16_t createdEntity = CreateEntity();
+EntityReturn EntityManager::CreateEntity(std::string entityName) {
+    auto [entityId, entityTransform] = CreateEntity();
     nlohmann::json entityData = resourceManager_.entities_[entityName];
     for (auto& componentData : entityData["components"].items()) {
         std::string name = componentData.key();
         Component* component = componentMap_[name];
-        entities_[createdEntity].componentMask_.set(component->id);
-        component->Load(componentData.value(), createdEntity);
+        entities_[entityId].componentMask_.set(component->id);
+        component->Load(componentData.value(), entityId);
     }
-    return createdEntity;
+    return { entityId, entityTransform };
 }
 
-void EntityManager::DestroyEntity(uint16_t entityToDestroy) {
+void EntityManager::DestroyEntity(EntityID entityToDestroy) {
     entities_[entityToDestroy].alive_ = false;
     entities_[entityToDestroy].componentMask_ = 0;
     usableEntities_.push_front(entityToDestroy);

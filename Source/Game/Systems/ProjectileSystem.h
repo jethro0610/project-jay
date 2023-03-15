@@ -17,15 +17,15 @@ namespace ProjectileSystem {
         ProjectileComponent& projectileComponent,
         VelocityComponent& velocityComponent,
         TransformComponent& transformComponent,
-        uint16_t projectileEntity
+        EntityID projectileEntity
     );
 
     void Throw(
         ProjectileComponent& projectileComponent,
         VelocityComponent& velocityComponent,
         TransformComponent& transformComponent,
-        uint16_t projectileEntity,
-        uint16_t throwingEntity,
+        EntityID projectileEntity,
+        EntityID throwingEntity,
         float height
     );
 }

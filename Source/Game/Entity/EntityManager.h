@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "EntityConstants.h"
 #include "../../Resource/ResourceManager.h"
 #include "../Components/ComponentInclude.h"
 #include <bitset>
@@ -11,14 +12,14 @@
 class EntityManager {
 public:
     Entity entities_[MAX_ENTITIES];
-    std::deque<uint16_t> usableEntities_;
+    std::deque<EntityID> usableEntities_;
 
     EntityManager (ResourceManager& resourceManager);
-    uint16_t CreateEntity();
-    uint16_t CreateEntity(std::string entityName);
-    void DestroyEntity(uint16_t entityToDestroy);
+    EntityReturn CreateEntity();
+    EntityReturn CreateEntity(std::string entityName);
+    void DestroyEntity(EntityID entityToDestroy);
 
-    void RegisterComponent(Component& component, uint16_t targetEntity) {
+    void RegisterComponent(Component& component, EntityID targetEntity) {
         assert(entities_[targetEntity].alive_);
         assert(!entities_[targetEntity].componentMask_.test(component.id));
         entities_[targetEntity].componentMask_.set(component.id);

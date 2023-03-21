@@ -1,20 +1,18 @@
 #include "./IntersectSystem.h"
 #include "../Systems/PickupSystem.h"
+#include "../Systems/ProjectileSystem.h"
 using namespace glm;
 
 void IntersectSystem::Execute(
     EntityManager& entityManager,
-    SpreadManager& spreadManager,
-    TransformComponent& transformComponent,
-    BubbleComponent& bubbleComponent,
-    PickupComponent& pickupComponent,
-    HoldableComponent& holdableComponent,
-    KickerComponent& kickerComponent,
-    KickableComponent& kickableComponent
+    SpreadManager& spreadManager
 ) {
     const Entity* entities = entityManager.entities_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
+        TransformComponent& transformComponent = entityManager.transformComponent_;
+        BubbleComponent& bubbleComponent = entityManager.bubbleComponent_;
+
         if (!entity.alive_)
             continue;
         if (!entity.HasComponents({transformComponent, bubbleComponent}))
@@ -45,24 +43,14 @@ void IntersectSystem::Execute(
                     entityManager,
                     spreadManager, 
                     i, 
-                    j, 
-                    transformComponent,
-                    pickupComponent, 
-                    holdableComponent, 
-                    kickerComponent, 
-                    kickableComponent
+                    j 
                 );
 
                 HandleIntersection(
                     entityManager,
                     spreadManager, 
                     j, 
-                    i, 
-                    transformComponent,
-                    pickupComponent, 
-                    holdableComponent, 
-                    kickerComponent, 
-                    kickableComponent
+                    i 
                 );
             }
         }
@@ -72,25 +60,27 @@ void IntersectSystem::Execute(
 void IntersectSystem::HandleIntersection(
     EntityManager& entityManager,
     SpreadManager& spreadManager,
-    int hitbox1,
-    int hitbox2,
-    TransformComponent& transformComponent,
-    PickupComponent& pickupComponent,
-    HoldableComponent& holdableComponent,
-    KickerComponent& kickerComponent,
-    KickableComponent& kickableComponent
+    EntityID entity1,
+    EntityID entity2 
 ) {
     const Entity* entities = entityManager.entities_;
-    if (entities[hitbox1].HasComponent(pickupComponent) && 
-        entities[hitbox2].HasComponent(holdableComponent)) 
+    PickupComponent& pickupComponent = entityManager.pickupComponent_; 
+    HoldableComponent& holdableComponent = entityManager.holdableComponent_; 
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+    BubbleComponent& bubbleComponent = entityManager.bubbleComponent_;
+
+    if (entities[entity1].HasComponent(pickupComponent) && 
+        entities[entity2].HasComponent(holdableComponent)) 
     {
-        PickupSystem::DoPickup(hitbox1, hitbox2, pickupComponent);
+        PickupSystem::TryPickup(entity1, entity2, pickupComponent);
     }
     
-    if (entities[hitbox1].HasComponent(kickerComponent) && 
-        entities[hitbox2].HasComponent(kickableComponent)) 
-    {
-        spreadManager.AddSpread(transformComponent.transform[hitbox2].position_, 8);
-        entityManager.DestroyEntity(hitbox2);
+    if (bubbleComponent.properties[entity1].test(BubbleProperties::Meteor)) {
+        if (bubbleComponent.properties[entity2].test(BubbleProperties::ThrowOnMeteored) && 
+        projectileComponent.state[entity2] == ProjectileState::Inactive) {
+            ProjectileSystem::Throw(projectileComponent, velocityComponent, transformComponent, entity2, entity1, 30.0f); 
+        }
     }
 }

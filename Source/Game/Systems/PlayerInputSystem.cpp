@@ -23,7 +23,6 @@ void PlayerInputSystem::Execute(
     pickupComponent.pickup[PLAYER_ENTITY] = false;
     if (inputs.pickup) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        pickupComponent.pickup[PLAYER_ENTITY] = true;
         spreadActivatorComponent.active[PLAYER_ENTITY] = true;
         return;
     }

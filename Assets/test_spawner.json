@@ -8,7 +8,9 @@
             "material0": "playerMaterial"
         },
         "bubble": {
-            "radius": 2.0
+            "radius": 2.0,
+            "meteor": false,
+            "throw_on_meteored": true
         },
         "interval_spawner": {
             "interval": 120,
@@ -19,7 +21,6 @@
             "param1": 0.0,
             "param2": 0.0
         },
-        "velocity": {},
-        "holdable": {}
+        "velocity": {}
     }
 }

@@ -26,8 +26,6 @@
             "radius": 2.0
         },
         "velocity": {},
-        "pickup": {},
-        "kicker": {},
         "spread_detect": {},
         "world_collider": {}
     }

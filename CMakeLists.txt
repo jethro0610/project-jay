@@ -23,6 +23,7 @@ file(GLOB SOURCES
     Source/Game/Systems/IntersectSystem.cpp
     Source/Game/Systems/IntervalSpawnSystem.cpp
 
+    Source/Game/LoadHelpers.cpp
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp
 	Source/Game/World.cpp

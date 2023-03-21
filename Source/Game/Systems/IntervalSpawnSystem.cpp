@@ -22,7 +22,6 @@ void IntervalSpawnSystem::Execute (
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
             auto [entityId, transform] = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i]);
             transform.position_ = transformComponent.transform[i].position_;
-            transform.position_ += vec3(0.0f, 2.5f, 0.0f);
             ProjectileSystem::Launch(projectileComponent, velocityComponent, transformComponent, entityId);
 
             // Create the spawn entity

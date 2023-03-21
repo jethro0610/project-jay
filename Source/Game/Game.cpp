@@ -67,13 +67,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         IntersectSystem::Execute(
             entityManager_,
-            spreadManager_,
-            entityManager_.transformComponent_,
-            entityManager_.bubbleComponent_,
-            entityManager_.pickupComponent_,
-            entityManager_.holdableComponent_,
-            entityManager_.kickerComponent_,
-            entityManager_.kickableComponent_
+            spreadManager_
         );
         PickupSystem::ExecuteHold(
             entityManager_,

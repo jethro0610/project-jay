@@ -158,6 +158,6 @@
         -   Some projectiles are meteorable, need a color indicator
         -   Have meteor reflect projectiles back to target
 
-- TODO===========================================
-- Return transform when entity created
-- typedef uinta6_t EntityID
+- Point cloud rendering for world?
+
+- Kickable that forms wall in the air, if anything hits the wall, dead

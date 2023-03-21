@@ -14,8 +14,6 @@
 #include "BubbleComponent.h"
 #include "PickupComponent.h"
 #include "HoldableComponent.h"
-#include "KickerComponent.h"
-#include "KickableComponent.h"
 
 #include "IntervalSpawnComponent.h"
 
@@ -34,7 +32,5 @@
     COMPONENTVAR(BubbleComponent, bubbleComponent_) \
     COMPONENTVAR(PickupComponent, pickupComponent_) \
     COMPONENTVAR(HoldableComponent, holdableComponent_) \
-    COMPONENTVAR(KickerComponent, kickerComponent_) \
-    COMPONENTVAR(KickableComponent, kickableComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
     COMPONENTVAR(StaticModelComponent, staticModelComponent_)

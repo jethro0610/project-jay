@@ -2,7 +2,7 @@
 #include "ProjectileSystem.h" 
 using namespace glm;
 
-bool PickupSystem::DoPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent) {
+bool PickupSystem::TryPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent) {
     if (!pickupComponent.pickup[pickupEntityId])
         return false;
     if (pickupComponent.entityId[pickupEntityId] != -1)

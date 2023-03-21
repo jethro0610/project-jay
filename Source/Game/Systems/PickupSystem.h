@@ -8,7 +8,7 @@
 #include "../Components/BubbleComponent.h"
 
 namespace PickupSystem {
-    bool DoPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent);
+    bool TryPickup(int pickupEntityId, int holdEntityId, PickupComponent& pickupComponent);
 
     void ExecuteHold(
         EntityManager& entityManager,

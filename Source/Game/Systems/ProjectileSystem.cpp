@@ -71,6 +71,7 @@ void ProjectileSystem::Launch(
 
     switch (projectileComponent.type[projectileEntity]) {
         case ProjectileType::Random: {
+            transformComponent.transform[projectileEntity].position_.y += 0.5f; // Ensures projectiles on ground dont get stuck 
             velocity.y = param2;
             const int randAngle = rand();
             const float randSpeed = (rand() % (int)(param1 * 100)) * 0.01f;

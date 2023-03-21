@@ -1,5 +1,6 @@
 #pragma once
 #include <json.hpp>
+#include "../LoadHelpers.h"
 #include "../Entity/EntityConstants.h"
 
 const uint8_t MAX_COMPONENT_TYPES = 32;

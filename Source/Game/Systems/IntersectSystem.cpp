@@ -1,3 +1,4 @@
+#include "../GameConstants.h"
 #include "./IntersectSystem.h"
 #include "../Systems/PickupSystem.h"
 #include "../Systems/ProjectileSystem.h"
@@ -78,8 +79,13 @@ void IntersectSystem::HandleIntersection(
     }
     
     if (bubbleComponent.properties[entity1].test(BubbleProperties::Meteor)) {
-        if (bubbleComponent.properties[entity2].test(BubbleProperties::ThrowOnMeteored) && 
-        projectileComponent.state[entity2] == ProjectileState::Inactive) {
+        const vec3 velocity = velocityComponent.velocity[entity1];
+        float speed = length(vec2(velocity.x, velocity.z));
+        if (
+            speed >= METEOR_SPEED &&
+            bubbleComponent.properties[entity2].test(BubbleProperties::ThrowOnMeteored) && 
+            projectileComponent.state[entity2] == ProjectileState::Inactive
+        ) {
             ProjectileSystem::Throw(projectileComponent, velocityComponent, transformComponent, entity2, entity1, 30.0f); 
         }
     }

@@ -2,7 +2,7 @@
 #include "./Entity/EntityManager.h"
 #include "Camera.h"
 
-const int CUT_TIME = 60;
+const int TIME_TO_CUT = 15;
 
 class PlayerController {
 public:

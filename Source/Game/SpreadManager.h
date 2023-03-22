@@ -2,9 +2,11 @@
 #include "../Types/Transform.h"
 #include "../Game/World.h"
 #include "../Resource/ResourceManager.h"
-#include <unordered_map>
+#include <set>
 #include <glm.hpp>
+#include <deque>
 #include <unordered_set>
+#include <algorithm>
 #include "SpreadConstants.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -16,9 +18,17 @@ struct AddSpreadInfo {
 };
 
 struct SpreadChunk {
-    std::unordered_map<glm::ivec2, uint16_t> keys;
-    uint16_t count = 0;
     glm::vec3 positions[MAX_SPREAD];
+    glm::ivec2 keys[MAX_SPREAD];
+    uint16_t count;
+
+    std::unordered_map<glm::ivec2, uint16_t> keysToIndex;
+
+    SpreadChunk() {
+        count = 0;
+        std::fill_n(positions, MAX_SPREAD, vec3(0.0f, 0.0f, 0.0f));
+        std::fill_n(keys, MAX_SPREAD, ivec2(0, 0));
+    }
 };
 
 class SpreadManager {
@@ -34,8 +44,14 @@ public:
     glm::ivec2 WorldPositionToSpreadKey(glm::vec3 position) const;
     glm::ivec2 SpreadKeyToChunk(glm::ivec2 key) const;
     bool SpreadIsActive(glm::ivec2 key) const;
+
     bool AddSpread(glm::ivec2 key, float height); 
     AddSpreadInfo AddSpread(glm::vec3 position); 
     void AddSpread(glm::vec3 position, int radius); 
+
+    bool RemoveSpread(glm::ivec2 key);
+    bool RemoveSpread(glm::vec3 position);
+    void RemoveSpread(glm::vec3 position, int radius); 
+
     void UpdateRenderData_P();
 };

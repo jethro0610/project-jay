@@ -21,20 +21,23 @@ void PlayerController::Execute(Inputs inputs) {
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
-    spreadActivatorComponent.active[PLAYER_ENTITY] = false;
-    if (inputs.cut)
-        cutTimer_ = CUT_TIME;
+    spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::NoSpread;
 
-    if (cutTimer_ > 0) {
-        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
-        cutTimer_--;
-    }
+    if (inputs.flow && inputs.ski)
+        cutTimer_++;
+    else 
+        cutTimer_ = 0;
+
+    if (cutTimer_ > TIME_TO_CUT){
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
+        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Cut;
+    } 
     else if (inputs.flow) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        spreadActivatorComponent.active[PLAYER_ENTITY] = true;
+        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Spread;
     }
     else if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        spreadActivatorComponent.active[PLAYER_ENTITY] = true;
+        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Spread;
     }
 }

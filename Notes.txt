@@ -166,3 +166,7 @@
 
 - Attack that only shoots up from spread, have to cut
 
+- Instead of seeds, use a meter with how much spread energy player has
+    - Kinda like Rocket League boost meter
+    - Cutting gives 1 meter back
+    - Objects that distrubte meter based on condition, ie. meteor hit

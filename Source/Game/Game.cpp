@@ -31,9 +31,9 @@ void Game::Init() {
     /* terrainModProps.position = vec3(0.0f); */
     /* terrainModProps.radius = 16.0f; */
 
-    auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
-    holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
-    holdTransform.scale_ = vec3(2.0f);
+    // auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
+    // holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
+    // holdTransform.scale_ = vec3(2.0f);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -79,11 +79,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         SpreadActivatorSystem::Execute(
             entityManager_,
             world_,
-            spreadManager_,
-            entityManager_.spreadActivatorComponent_,
-            entityManager_.spreadDetectComponent_,
-            entityManager_.transformComponent_,
-            entityManager_.groundTraceComponent_
+            spreadManager_
         );
         SpreadDetectSystem::Execute(
             entityManager_, 

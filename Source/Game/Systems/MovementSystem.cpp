@@ -57,6 +57,10 @@ void MovementSystem::Execute(
             CalculateFlowMovement(desiredMovement, groundNormal, speed, velocity, rotation);
             break;
 
+        case MoveMode::Line:
+            CalculateLineMovement(desiredMovement, groundNormal, speed, velocity, rotation);
+            break;
+
         default:
             break;
         }
@@ -172,4 +176,21 @@ void MovementSystem::CalculateFlowMovement(
     
     velocity.x = skiDirection.x * speed;
     velocity.z = skiDirection.z * speed;
+}
+
+void MovementSystem::CalculateLineMovement(
+    const glm::vec3& desiredMovement,
+    const glm::vec3& groundNormal,
+    const float& speed,
+    glm::vec3& velocity,
+    glm::quat& rotation
+) {
+    quat desiredRotation = rotation;
+    if (length(desiredMovement) > 0.001f) 
+        desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+    rotation = slerp(rotation, desiredRotation, LINE_ROTATION_SPEED);
+    vec3 lineDirection = rotation * Transform::worldForward;
+    
+    velocity.x = lineDirection.x * speed;
+    velocity.z = lineDirection.z * speed;
 }

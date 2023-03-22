@@ -1,15 +1,17 @@
-#include "PlayerInputSystem.h"
-using namespace glm;
+#include "PlayerController.h"
 
-void PlayerInputSystem::Execute(
-    EntityManager& entityManager,
-    Camera& camera, 
-    Inputs inputs, 
-    MovementComponent& movementComponent,
-    PickupComponent& pickupComponent,
-    SpreadActivatorComponent& spreadActivatorComponent
-) {
-    quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
+PlayerController::PlayerController(EntityManager& entityManager, Camera& camera) :
+    entityManager_(entityManager),
+    camera_(camera)
+{
+    actionMeter_ = 0.0f; 
+}
+
+void PlayerController::Execute(Inputs inputs) {
+    MovementComponent& movementComponent = entityManager_.movementComponent_; 
+    SpreadActivatorComponent& spreadActivatorComponent = entityManager_.spreadActivatorComponent_; 
+
+    quat cameraPlanarRotation = quat(vec3(0.0f, camera_.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
 
@@ -20,13 +22,18 @@ void PlayerInputSystem::Execute(
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.active[PLAYER_ENTITY] = false;
-    pickupComponent.pickup[PLAYER_ENTITY] = false;
-    if (inputs.pickup) {
+    if (inputs.cut)
+        cutTimer_ = CUT_TIME;
+
+    if (cutTimer_ > 0) {
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
+        cutTimer_--;
+    }
+    else if (inputs.flow) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.active[PLAYER_ENTITY] = true;
-        return;
     }
-    if (inputs.ski)  {
+    else if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         spreadActivatorComponent.active[PLAYER_ENTITY] = true;
     }

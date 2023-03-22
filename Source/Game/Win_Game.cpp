@@ -20,6 +20,7 @@ Game::Game(int width, int height):
     camera_(entityManager_.transformComponent_, 15.0f),
     world_(entityManager_.entities_, entityManager_.terrainModComponent_),
     spreadManager_(resourceManager_, world_),
+    playerController_(entityManager_, camera_),
     gamepad_(Gamepad()),
     running_(true)
 {
@@ -95,8 +96,9 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
+    inputs_.cut = windowsLayer_.heldKeys_[' '] || gamepad_.heldButtons_[GAMEPAD_Y];
     inputs_.ski = windowsLayer_.heldKeys_[RIGHT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_RTRIGGER] || gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
-    inputs_.pickup = windowsLayer_.heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
+    inputs_.flow = windowsLayer_.heldKeys_[LEFT_MOUSE_KEY] || gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
 
     // TODO: clamp the values to total size 1
     if (windowsLayer_.heldKeys_['W'])

@@ -157,9 +157,12 @@
         -   See what happens when player is allowed to be target
         -   Some projectiles are meteorable, need a color indicator
         -   Have meteor reflect projectiles back to target
+    - Cut forces you on a line path with little control, reflects?
+        - Can exit and transfer velocity in any direction
 
 - Point cloud rendering for world?
 
 - Kickable that forms wall in the air, if anything hits the wall, dead
 
 - Attack that only shoots up from spread, have to cut
+

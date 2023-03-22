@@ -16,6 +16,7 @@
 #include "../Types/Inputs.h"
 #include "Entity/EntityManager.h"
 #include "SpreadManager.h"
+#include "PlayerController.h"
 
 class Game {
 public:
@@ -36,6 +37,7 @@ private:
     Camera camera_;
     World world_;
     SpreadManager spreadManager_;
+    PlayerController playerController_;
 
     Gamepad gamepad_;
     Inputs inputs_;

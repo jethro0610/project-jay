@@ -91,13 +91,8 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.transformComponent_,
             entityManager_.spreadDetectComponent_
         );
-        PlayerInputSystem::Execute(
-            entityManager_,
-            camera_, 
-            inputs_, 
-            entityManager_.movementComponent_,
-            entityManager_.pickupComponent_,
-            entityManager_.spreadActivatorComponent_
+        playerController_.Execute(
+            inputs_ 
         );
         GroundStickSystem::Step(
             entityManager_,

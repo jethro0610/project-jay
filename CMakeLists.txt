@@ -11,7 +11,6 @@ file(GLOB SOURCES
 	Source/Game/Systems/CollisionSystem.cpp
 	Source/Game/Systems/GroundTraceSystem.cpp
 	Source/Game/Systems/MovementSystem.cpp
-	Source/Game/Systems/PlayerInputSystem.cpp
 	Source/Game/Systems/TransformSystem.cpp
     Source/Game/Systems/TerrainModSystem.cpp
     Source/Game/Systems/SpreadActivatorSystem.cpp
@@ -28,6 +27,7 @@ file(GLOB SOURCES
 	Source/Game/Game.cpp
 	Source/Game/World.cpp
     Source/Game/SpreadManager.cpp
+    Source/Game/PlayerController.cpp
 
 	Source/Logging/Logger.cpp
 

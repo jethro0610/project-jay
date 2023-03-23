@@ -83,9 +83,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         );
         SpreadDetectSystem::Execute(
             entityManager_, 
-            spreadManager_, 
-            entityManager_.transformComponent_,
-            entityManager_.spreadDetectComponent_
+            spreadManager_
         );
         playerController_.Execute(
             inputs_ 

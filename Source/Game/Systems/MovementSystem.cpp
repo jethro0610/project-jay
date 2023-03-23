@@ -82,7 +82,7 @@ void MovementSystem::Execute(
         float planarLength = planarVelocity.length();
         if (
             entity.HasComponent(spreadDetectComponent) && 
-            spreadDetectComponent.detecedSpread[i] &&
+            spreadDetectComponent.deteced[i] &&
             planarLength >= 0.0f &&
             onGround
         ) {

@@ -21,23 +21,26 @@ void PlayerController::Execute(Inputs inputs) {
 
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
-    spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::NoSpread;
+    spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
 
-    if (inputs.flow && inputs.ski)
-        cutTimer_++;
+    if (inputs.flow && inputs.ski) {
+        // Have to check this to prevent overflow
+        if (cutTimer_ < TIME_TO_CUT)
+            cutTimer_++;
+    }
     else 
         cutTimer_ = 0;
 
-    if (cutTimer_ > TIME_TO_CUT){
+    if (cutTimer_ >= TIME_TO_CUT){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Cut;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
     } 
     else if (inputs.flow) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Spread;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
     else if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        spreadActivatorComponent.mode[PLAYER_ENTITY] = SpreadActivatorMode::Spread;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
 }

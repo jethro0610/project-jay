@@ -2,19 +2,13 @@
 #include "Component.h"
 #include <algorithm>
 
-enum SpreadActivatorMode {
-    NoSpread,
-    Spread,
-    Cut
-};
-
 struct SpreadActivatorComponent : public Component {
     bool groundOnly[MAX_ENTITIES];
-    SpreadActivatorMode mode[MAX_ENTITIES];
+    int16_t radius[MAX_ENTITIES]; 
 
     SpreadActivatorComponent() {
         std::fill_n(groundOnly, MAX_ENTITIES, true);
-        std::fill_n(mode, MAX_ENTITIES, NoSpread);
+        std::fill_n(radius, MAX_ENTITIES, 0);
     };
     SpreadActivatorComponent(const SpreadActivatorComponent&) = delete;
     SpreadActivatorComponent& operator=(const SpreadActivatorComponent&) = delete;

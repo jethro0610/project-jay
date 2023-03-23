@@ -2,12 +2,12 @@
 #include "./Entity/EntityManager.h"
 #include "Camera.h"
 
-const int TIME_TO_CUT = 15;
+const uint8_t TIME_TO_CUT = 15;
 
 class PlayerController {
 public:
-    int actionMeter_;
-    int cutTimer_;
+    uint8_t actionMeter_;
+    uint8_t cutTimer_;
 
     EntityManager& entityManager_;
     Camera& camera_;

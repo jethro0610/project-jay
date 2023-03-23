@@ -14,14 +14,17 @@ namespace SpreadActivatorSystem {
         EntityManager& entityManager,
         World& world,
         SpreadManager& spreadManager,
-        EntityID entity 
+        EntityID entity,
+        bool hasDetect,
+        int16_t radius
     );
 
     void RemoveSpread(
         EntityManager& entityManager,
         World& world,
         SpreadManager& spreadManager,
-        EntityID entity 
+        EntityID entity,
+        int16_t radius
     );
 }
 

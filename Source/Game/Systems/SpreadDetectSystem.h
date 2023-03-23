@@ -8,9 +8,7 @@
 namespace SpreadDetectSystem {
     void Execute(
         EntityManager& entityManager,
-        SpreadManager& spreadManager,
-        TransformComponent& transformComponent,
-        SpreadDetectComponent& detectComponent
+        SpreadManager& spreadManager
     );
 }
 

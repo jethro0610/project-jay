@@ -6,34 +6,27 @@ void SpreadActivatorSystem::Execute(
     World& world,
     SpreadManager& spreadManager
 ) {
+    SpreadActivatorComponent& spreadActivatorComponent= entityManager.spreadActivatorComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+    GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
+    SpreadDetectComponent& spreadDetectComponent=  entityManager.spreadDetectComponent_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
-        SpreadActivatorComponent& spreadActivatorComponent= entityManager.spreadActivatorComponent_;
-        TransformComponent& transformComponent = entityManager.transformComponent_;
-        GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
-        SpreadDetectComponent& spreadDetectComponent=  entityManager.spreadDetectComponent_;
 
         if (!entity.alive_)
             continue;
 
         if (!entity.HasComponents({spreadActivatorComponent, transformComponent}))
             continue;
-        
-        switch (spreadActivatorComponent.mode[i]) {
-            case SpreadActivatorMode::Spread:
-                AddSpread(entityManager, world, spreadManager, i);
-                break;
 
-            case SpreadActivatorMode::Cut:
-                RemoveSpread(entityManager, world, spreadManager, i);
-                break;
-
-            case SpreadActivatorMode::NoSpread:
-                break;
-
-            default:
-                break;
-        }
+        const bool hasDetect = entity.HasComponent(spreadDetectComponent);
+        const int16_t radius = spreadActivatorComponent.radius[i]; 
+        if (radius == 0)
+            continue;
+        else if (radius > 0)
+            AddSpread(entityManager, world, spreadManager, i, hasDetect, radius - 1);
+        else
+            RemoveSpread(entityManager, world, spreadManager, i, -radius);
     }
 }
 
@@ -41,7 +34,9 @@ void SpreadActivatorSystem::AddSpread(
     EntityManager& entityManager, 
     World& world,
     SpreadManager& spreadManager,
-    EntityID entity
+    EntityID entity,
+    bool hasDetect,
+    int16_t radius
 ) {
     SpreadActivatorComponent& spreadActivatorComponent= entityManager.spreadActivatorComponent_;
     TransformComponent& transformComponent = entityManager.transformComponent_;
@@ -57,22 +52,18 @@ void SpreadActivatorSystem::AddSpread(
         return;
     
     const vec3 position = transformComponent.transform[entity].position_;
-    const bool hasDetect = entityManager.entities_[entity].HasComponent(spreadDetectComponent);
 
-    const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position);
+    const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius);
     if (!addSpreadInfo.added || !hasDetect)
         return;
-
-    ivec2* lastDetect = spreadDetectComponent.lastDetect[entity];
-    for (int s = 0; s < MAX_DETECT - 1; s++) 
-        lastDetect[s + 1] = lastDetect[s];
-    lastDetect[0] = addSpreadInfo.key;
+    spreadDetectComponent.lastAdd[entity] = addSpreadInfo.key;
 }
 void SpreadActivatorSystem::RemoveSpread(
     EntityManager& entityManager,
     World& world,
     SpreadManager& spreadManager,
-    EntityID entity 
+    EntityID entity,
+    int16_t radius
 ) {
 
     SpreadActivatorComponent& spreadActivatorComponent= entityManager.spreadActivatorComponent_;
@@ -89,5 +80,5 @@ void SpreadActivatorSystem::RemoveSpread(
         return;
 
     const vec3 position = transformComponent.transform[entity].position_;
-    spreadManager.RemoveSpread(position, 3);
+    spreadManager.RemoveSpread(position, radius);
 }

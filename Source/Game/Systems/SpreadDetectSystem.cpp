@@ -4,10 +4,11 @@ using namespace glm;
 
 void SpreadDetectSystem::Execute(
     EntityManager& entityManager, 
-    SpreadManager& spreadManager,
-    TransformComponent& transformComponent,
-    SpreadDetectComponent& detectComponent
+    SpreadManager& spreadManager
 ) {
+    SpreadDetectComponent& detectComponent = entityManager.spreadDetectComponent_;
+    SpreadActivatorComponent& activatorComponent = entityManager.spreadActivatorComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
@@ -16,33 +17,25 @@ void SpreadDetectSystem::Execute(
         if (!entity.HasComponents({detectComponent, transformComponent}))
             continue;
 
-        bool& detectedSpread = detectComponent.detecedSpread[i];
-        detectedSpread = false;
-        ivec2* lastDetect = detectComponent.lastDetect[i];
+        bool& detected = detectComponent.deteced[i];
+        detected = false;
+
         ivec2 currentKey = spreadManager.WorldPositionToSpreadKey(transformComponent.transform[i].position_);
-        if (!spreadManager.SpreadIsActive(currentKey))
+        if (!spreadManager.SpreadIsActive(currentKey)) {
+            detectComponent.lastAdd[i] = NO_ADD;
             continue;
-
-        // Check if the spread has already been detected
-        bool touchedNew = true;
-        for (int s = 0; s < MAX_DETECT; s++) {
-            if (lastDetect[s] == currentKey) {
-                touchedNew = false;
-                break;
-            }
         }
-        if (!touchedNew)
-            continue;
-        
-        // Pop the queue
-        for (int s = 0; s < MAX_DETECT - 1; s++) 
-            lastDetect[s + 1] = lastDetect[s];
-        lastDetect[0] = currentKey;
-        detectedSpread = true;
 
-        // The activator component should add to the array BEFORE execution that way
-        // activated spread isn't counted
-        //
+        if (currentKey == detectComponent.lastKey[i])
+            continue;
+        detectComponent.lastKey[i] = currentKey;
+
+        const bool hasActivator = entity.HasComponent(activatorComponent);
+        if (hasActivator && distance(vec2(detectComponent.lastAdd[i]), vec2(currentKey)) <= MAX_ADD_DISTANCE)
+            continue;
+
+        detected = true;
+        detectComponent.lastAdd[i] = NO_ADD;  
         // Maybe have the spread wiggle on entry?
     }
 }

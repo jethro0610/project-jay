@@ -47,7 +47,7 @@ public:
 
     bool AddSpread(glm::ivec2 key, float height); 
     AddSpreadInfo AddSpread(glm::vec3 position); 
-    void AddSpread(glm::vec3 position, int radius); 
+    AddSpreadInfo AddSpread(glm::vec3 position, int radius); 
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);

@@ -26,7 +26,7 @@ void SpreadActivatorSystem::Execute(
         else if (radius > 0)
             AddSpread(entityManager, world, spreadManager, i, hasDetect, radius - 1);
         else
-            RemoveSpread(entityManager, world, spreadManager, i, -radius);
+            RemoveSpread(entityManager, world, spreadManager, i, -(radius - 1));
     }
 }
 

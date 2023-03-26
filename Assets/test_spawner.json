@@ -12,10 +12,6 @@
             "meteor": false,
             "throw_on_meteored": true
         },
-        "interval_spawner": {
-            "interval": 120,
-            "entity": "test_projectile"
-        },
         "projectile": {
             "type": "random",
             "param1": 0.0,

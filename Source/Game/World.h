@@ -68,7 +68,7 @@ public:
     glm::vec3 GetNearestInDirection(glm::vec3 start, glm::vec3 direction, uint16_t maxSteps = 32);
 
 private:
-    FastNoiseLite noise_;
+    FastNoiseLite* noise_;
 
     // This data channel is necessary because it would otherwise be too big to work in the stack
     int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];

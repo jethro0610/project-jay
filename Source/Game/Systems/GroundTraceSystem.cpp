@@ -3,10 +3,12 @@ using namespace glm;
 
 void GroundTraceSystem::Execute(
     EntityManager& entityManager,
-    World& world,
-    TransformComponent& transformComponent,
-    GroundTraceComponent& groundTraceComponent
+    World& world
 ) {
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+    GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
@@ -15,6 +17,10 @@ void GroundTraceSystem::Execute(
             continue;
 
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
+        if (entity.HasComponent(velocityComponent) && velocityComponent.velocity[i].y > 0.0f) {
+            groundTraceComponent.onGround[i] = false;
+            continue;
+        }
         float traceDistance = groundTraceComponent.distance[i];
 
         // Raymarch towards the ground

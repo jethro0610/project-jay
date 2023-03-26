@@ -5,7 +5,7 @@
 using namespace glm;
 
 World::World(Entity* entities, TerrainModComponent& terrainModComponent):
-    noise_(FastNoiseLite()),
+    noise_(new FastNoiseLite()),
     entities_(entities),
     terrainModComponent_(terrainModComponent)
 {
@@ -25,13 +25,15 @@ void World::FillLocalDistanceCache(ivec3 chunk) {
 float World::GetDistance(vec3 position) const {
     // Sample perlin noise in a circle following the position to form a blob
     vec2 noiseDir = normalize(vec2(position.x, position.z)) * 64.0f;
+    auto otherNoise = noise_;
     float blobRadius = 0.0f;
     if (length(noiseDir) > 0.0f)
-        blobRadius = noise_.GetNoise<float>(noiseDir.x, noiseDir.y) * 32.0f;
+        blobRadius = noise_->GetNoise(noiseDir.x, noiseDir.y) * 32.0f;
 
     float radius = 160.0f + blobRadius;
+    auto test = noise_;
 
-    float noiseHeight = noise_.GetNoise<float>(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f;
+    float noiseHeight = noise_->GetNoise(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f;
     float height = 32.0f + noiseHeight;
 
     vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 

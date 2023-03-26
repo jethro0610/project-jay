@@ -7,8 +7,6 @@
 namespace GroundTraceSystem {
     void Execute(
         EntityManager& entityManager,
-        World& world, 
-        TransformComponent& transformComponent, 
-        GroundTraceComponent& groundTraceComponent
+        World& world
     );
 }

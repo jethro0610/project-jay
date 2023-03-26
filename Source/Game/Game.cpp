@@ -31,9 +31,9 @@ void Game::Init() {
     /* terrainModProps.position = vec3(0.0f); */
     /* terrainModProps.radius = 16.0f; */
 
-    // auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
-    // holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
-    // holdTransform.scale_ = vec3(2.0f);
+    auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
+    holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
+    holdTransform.scale_ = vec3(2.0f);
 
     for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
@@ -94,6 +94,10 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.transformComponent_,
             entityManager_.groundTraceComponent_
         );
+        GroundTraceSystem::Execute(
+            entityManager_,
+            world_
+        );
         MovementSystem::Execute(
             entityManager_,
             entityManager_.movementComponent_,
@@ -113,12 +117,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_,
             entityManager_.transformComponent_,
             entityManager_.velocityComponent_
-        );
-        GroundTraceSystem::Execute(
-            entityManager_,
-            world_, 
-            entityManager_.transformComponent_,
-            entityManager_.groundTraceComponent_
         );
         GroundStickSystem::Stick(
             entityManager_,

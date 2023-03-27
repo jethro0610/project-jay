@@ -88,16 +88,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
         playerController_.Execute(
             inputs_ 
         );
-        GroundStickSystem::Step(
-            entityManager_,
-            world_,
-            entityManager_.transformComponent_,
-            entityManager_.groundTraceComponent_
-        );
-        GroundTraceSystem::Execute(
-            entityManager_,
-            world_
-        );
         MovementSystem::Execute(
             entityManager_,
             entityManager_.movementComponent_,
@@ -113,10 +103,20 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.velocityComponent_,
             entityManager_.transformComponent_
         );
+        GroundStickSystem::Step(
+            entityManager_,
+            world_,
+            entityManager_.transformComponent_,
+            entityManager_.groundTraceComponent_
+        );
         VelocitySystem::Apply(
             entityManager_,
             entityManager_.transformComponent_,
             entityManager_.velocityComponent_
+        );
+        GroundTraceSystem::Execute(
+            entityManager_,
+            world_
         );
         GroundStickSystem::Stick(
             entityManager_,

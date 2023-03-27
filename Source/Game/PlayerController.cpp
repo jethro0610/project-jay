@@ -56,9 +56,9 @@ void PlayerController::Execute(Inputs inputs) {
         actionMeter_--;
 
     if (actionMeter_ >= MAX_ACTION_METER) {
-        entityManager_.velocityComponent_.velocity[PLAYER_ENTITY] *= 0.25f;  
+        entityManager_.velocityComponent_.velocity[PLAYER_ENTITY] *= 0.75f;  
         entityManager_.velocityComponent_.velocity[PLAYER_ENTITY].y = 50.0f;
-        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 8);
+        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
         // entityManager_.transformComponent_.transform->position_.y += 20.0f;
         actionMeter_ = 0;
     } 

@@ -170,3 +170,12 @@
     - Kinda like Rocket League boost meter
     - Cutting gives 1 meter back
     - Objects that distrubte meter based on condition, ie. meteor hit
+
+- Spread spend sends player into sky meteor state
+    - Full control rising
+    - Limited control falling
+    - Spread on launch, with hill?
+    - Depress ground on land
+
+- Ring a bell to go to next level
+    - Lots of reverb

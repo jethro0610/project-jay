@@ -35,6 +35,14 @@
         {
             "name": "InstancedVertexShader",
             "type": "vs"
+        },
+        {
+            "name": "TextVS",
+            "type": "vs"
+        },
+        {
+            "name": "TextPS",
+            "type": "ps"
         }
 	]
 }

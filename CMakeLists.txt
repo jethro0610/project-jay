@@ -30,6 +30,7 @@ file(GLOB SOURCES
     Source/Game/PlayerController.cpp
 
 	Source/Logging/Logger.cpp
+    Source/Logging/ScreenText.cpp
 
 	Source/Rendering/Renderer.cpp
 

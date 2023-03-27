@@ -4,6 +4,8 @@
 struct PerFrameData {
     glm::vec3 cameraPos;
 	float time;
+    float aspectRatio;
+    glm::vec3 extra;
 };
 
 struct PerObjectData {
@@ -41,4 +43,8 @@ struct WorldVertex {
 
 struct InstanceData {
     glm::vec3 position;
+};
+
+struct TextData {
+    uint32_t character;
 };

@@ -8,6 +8,7 @@
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
 #include "../Game/SpreadManager.h"
+#include "../Logging/ScreenText.h"
 
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 
@@ -40,6 +41,8 @@ private:
     void RenderWorld_P();
     void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
     void RenderSpread_P(SpreadManager& spreadManager);
+    void RenderPostProcess_P();
+    void RenderScreenText_P(ScreenText& screenText);
     void Present_P();
 };
 

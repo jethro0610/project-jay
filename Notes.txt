@@ -179,3 +179,7 @@
 
 - Ring a bell to go to next level
     - Lots of reverb
+
+=========================================
+- Calculate UVs based on character
+- Switch input/layout to custom text layout

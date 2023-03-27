@@ -35,4 +35,3 @@ public:
 private:
     void GPULoadStaticModel_P(RawModel& rawModel, std::string modelName);
 };
-

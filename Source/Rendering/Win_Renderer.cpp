@@ -55,6 +55,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     spreadMaterial.textures[1] = "bricks_n";
     spreadMaterial.numOfTextures = 2;
     resourceManager_.materials_["spreadMaterial"] = spreadMaterial;
+
 }
 
 void Renderer::RenderWorld_P() {
@@ -160,6 +161,34 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     }
 }
 
+void Renderer::RenderPostProcess_P() {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+
+    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["PostProcess"], nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
+
+    context->Draw(4, 0);
+}
+
+void Renderer::RenderScreenText_P(ScreenText& screenText) {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+    
+    // dxResources.UpdateBuffer(dxResources.textBuffer_, screenText.lines_, sizeof(TextData) * MAX_SPREAD); 
+
+    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources.vertexShaders_["TextVS"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["TextPS"], nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
+
+    context->DrawInstanced(4, 64, 0, 0);
+}
+
 void Renderer::Clear_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
@@ -172,16 +201,6 @@ void Renderer::Clear_P() {
 
 void Renderer::Present_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["PostProcess"], nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
-
-    context->Draw(4, 0);
-    // Set the first parameter to 0 to disable VSync
     dxResources.swapChain_->Present(0, 0);
 }
 
@@ -211,6 +230,7 @@ void Renderer::SetFrameData_P() {
     
     context->OMSetRenderTargets(1, &dxResources.pRenderTarget_, dxResources.depthStencilBuffer_);
     PerFrameData frameData = {};
+    frameData.aspectRatio = float(width_) / height_;
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input
 	dxResources.UpdateBuffer(dxResources.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 

@@ -247,6 +247,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
 
     InitWorldMeshes();
     InitSpreadBuffers();
+    InitText();
 }
 
 void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
@@ -532,4 +533,17 @@ void DXResources::InitSpreadBuffers() {
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
         HRASSERT(device_->CreateBuffer(&desc, nullptr, &spreadBuffers_[x][z]));
     }
+}
+
+void DXResources::InitText() {
+    D3D11_BUFFER_DESC textDesc = {};
+    textDesc.Usage = D3D11_USAGE_DYNAMIC;
+    textDesc.ByteWidth = sizeof(TextData) * MAX_LINES * CHARS_PER_LINE; 
+    textDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    textDesc.MiscFlags = 0;
+    HRASSERT(device_->CreateBuffer(&textDesc, nullptr, &textBuffer_));
+    HRASSERT(CreateWICTextureFromFile(device_, context_, L"text.png", nullptr, &textTexture_, 0));
+    LoadVertexShader("TextVS", VertexShaderType::INSTANCED);
+    LoadPixelShader("TextPS");
 }

@@ -3,9 +3,8 @@ Texture2D screenTex : register(t0);
 SamplerState screenSampler;
 
 float4 main(TextOut textOut) : SV_TARGET {
-    float3 color = screenTex.Sample(screenSampler, textOut.coord); 
-    if (color.r == 0.0f && color.g == 0.0f && color.b == 0.0f)
-        discard;
+    float3 texColor = screenTex.Sample(screenSampler, textOut.coord); 
 
-    return float4(color, 1.0f);
+
+    return float4(1.0f, 1.0f, 1.0f, texColor.r);
 }

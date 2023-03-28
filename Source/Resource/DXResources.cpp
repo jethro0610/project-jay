@@ -245,6 +245,22 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     ));
     computeWVertsBlob->Release();
 
+    D3D11_BLEND_DESC noBlendDesc = {};
+    noBlendDesc.RenderTarget[0].BlendEnable = FALSE;
+    noBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    HRASSERT(device_->CreateBlendState(&noBlendDesc, &noBlendState_));
+
+    D3D11_BLEND_DESC alphaBlendDesc = {};
+    alphaBlendDesc.RenderTarget[0].BlendEnable = TRUE;
+    alphaBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    alphaBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    alphaBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    alphaBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+    alphaBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+    alphaBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    alphaBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    HRASSERT(device_->CreateBlendState(&alphaBlendDesc, &alphaBlendState_));
+
     InitWorldMeshes();
     InitSpreadBuffers();
     InitText();

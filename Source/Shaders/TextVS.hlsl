@@ -16,7 +16,7 @@ TextOut main(TextIn inputText) {
     float marginY = 0.05f;
     float marginX = marginY * inverseRatio;
 
-    float height = 0.075f;
+    float height = 0.2f;
     float width = height * inverseRatio;
 
     float2 coord = float2(inputText.vertexID&1, inputText.vertexID>>1);

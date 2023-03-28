@@ -181,6 +181,5 @@
     - Lots of reverb
 
 =========================================
-- Load text texture
-- Calculate UVs based on character
-- Switch input/layout to custom text layout
+- Use Valve SDF style rendering
+    - Implement blending first

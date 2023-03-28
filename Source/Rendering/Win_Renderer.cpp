@@ -181,6 +181,10 @@ void Renderer::RenderScreenText_P(ScreenText& screenText) {
     screenText.SetLine(0, "Wow it works.");
     dxResources.UpdateBuffer(dxResources.textBuffer_, screenText.lines_, sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
 
+    UINT sampleMask = 0xffffffff;
+    float blendFactor[] = {0.75f, 0.75f, 0.75f, 1.0f};
+
+    context->OMSetBlendState(dxResources.alphaBlendState_, blendFactor, sampleMask);
     context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     context->VSSetShader(dxResources.textVS_, nullptr, 0);
@@ -235,6 +239,10 @@ void Renderer::SetFrameData_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     
+    float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    UINT sampleMask = 0xffffffff;
+
+    context->OMSetBlendState(dxResources.noBlendState_, 0, sampleMask);
     context->OMSetRenderTargets(1, &dxResources.pRenderTarget_, dxResources.depthStencilBuffer_);
     PerFrameData frameData = {};
     frameData.aspectRatio = float(width_) / height_;

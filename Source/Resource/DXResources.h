@@ -59,6 +59,9 @@ public:
     DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
     ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
 
+    ID3D11BlendState* noBlendState_;
+    ID3D11BlendState* alphaBlendState_;
+
     ID3D11Buffer* textBuffer_;
     ID3D11VertexShader* textVS_;
     ID3D11InputLayout* textVSLayout_;

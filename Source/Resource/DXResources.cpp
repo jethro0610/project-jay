@@ -586,5 +586,5 @@ void DXResources::InitText() {
         nullptr,
         &textPS_
     ));
-    HRASSERT(CreateWICTextureFromFile(device_, context_, L"text.bmp", nullptr, &textTexture_, 0));
+    HRASSERT(CreateWICTextureFromFile(device_, context_, L"font.bmp", nullptr, &textTexture_, 0));
 }

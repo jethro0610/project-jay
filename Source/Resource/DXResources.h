@@ -61,6 +61,7 @@ public:
 
     ID3D11Buffer* textBuffer_;
     ID3D11VertexShader* textVS_;
+    ID3D11InputLayout* textVSLayout_;
     ID3D11PixelShader* textPS_; 
     ID3D11ShaderResourceView* textTexture_;
 

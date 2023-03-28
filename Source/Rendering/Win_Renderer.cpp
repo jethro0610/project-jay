@@ -178,13 +178,20 @@ void Renderer::RenderScreenText_P(ScreenText& screenText) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     
-    // dxResources.UpdateBuffer(dxResources.textBuffer_, screenText.lines_, sizeof(TextData) * MAX_SPREAD); 
+    screenText.SetLine(0, "Wow it works.");
+    dxResources.UpdateBuffer(dxResources.textBuffer_, screenText.lines_, sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
 
     context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["TextVS"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["TextPS"], nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
+    context->VSSetShader(dxResources.textVS_, nullptr, 0);
+    context->IASetInputLayout(dxResources.textVSLayout_);
+    context->PSSetShader(dxResources.textPS_, nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources.textTexture_);
+
+    UINT strides[1] = { sizeof(TextData) };
+    UINT offsets[1] = { 0 };
+    ID3D11Buffer* buffers[1] = { dxResources.textBuffer_ };
+    context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
 
     context->DrawInstanced(4, 64, 0, 0);
 }

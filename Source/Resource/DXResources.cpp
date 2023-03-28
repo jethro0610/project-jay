@@ -543,7 +543,32 @@ void DXResources::InitText() {
     textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     textDesc.MiscFlags = 0;
     HRASSERT(device_->CreateBuffer(&textDesc, nullptr, &textBuffer_));
-    HRASSERT(CreateWICTextureFromFile(device_, context_, L"text.png", nullptr, &textTexture_, 0));
-    LoadVertexShader("TextVS", VertexShaderType::INSTANCED);
-    LoadPixelShader("TextPS");
+    ID3DBlob* vertexShaderBlob;
+    HRASSERT(D3DReadFileToBlob(L"TextVS.cso", &vertexShaderBlob));
+    HRASSERT(device_->CreateVertexShader(
+        vertexShaderBlob->GetBufferPointer(),
+        vertexShaderBlob->GetBufferSize(),
+        nullptr,
+        &textVS_
+    ));
+
+    D3D11_INPUT_ELEMENT_DESC textVertexDescription[] = {{"CHAR_INDEX", 0, DXGI_FORMAT_R32_UINT, 0, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1}};
+    HRASSERT(device_->CreateInputLayout(
+        textVertexDescription,
+        ARRAYSIZE(textVertexDescription),
+        vertexShaderBlob->GetBufferPointer(),
+        vertexShaderBlob->GetBufferSize(),
+        &textVSLayout_
+    ));
+
+    ID3DBlob* pixelShaderBlob;
+    HRASSERT(D3DReadFileToBlob(L"TextPS.cso", &pixelShaderBlob));
+
+    HRASSERT(device_->CreatePixelShader(
+        pixelShaderBlob->GetBufferPointer(),
+        pixelShaderBlob->GetBufferSize(),
+        nullptr,
+        &textPS_
+    ));
+    HRASSERT(CreateWICTextureFromFile(device_, context_, L"text.bmp", nullptr, &textTexture_, 0));
 }

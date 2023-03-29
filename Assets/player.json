@@ -10,7 +10,7 @@
         },
         "ground_trace": {
             "type": "step_up",
-            "distance": 2.0
+            "distance": 1.0
         },
         "movement": {
             "min_speed": 12.0,

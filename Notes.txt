@@ -181,5 +181,4 @@
     - Lots of reverb
 
 =========================================
-- Use Valve SDF style rendering
-    - Implement blending first
+- Need to implement slide off

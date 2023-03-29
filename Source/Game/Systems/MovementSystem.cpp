@@ -66,9 +66,7 @@ void MovementSystem::Execute(
         }
 
         // Calculate gravity
-        if (onGround && velocity.y < 0.0f)
-            velocity.y = 0.0f;
-        else {
+        if (!onGround) {
             velocity.y -= GRAVITY_ACCELERATION;
             velocity.y = -min(-velocity.y, MAX_GRAVITY);
         }

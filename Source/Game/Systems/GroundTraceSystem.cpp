@@ -1,4 +1,5 @@
 #include "GroundTraceSystem.h"
+#include "../../Logging/ScreenText.h"
 using namespace glm;
 
 void GroundTraceSystem::Execute(
@@ -15,13 +16,20 @@ void GroundTraceSystem::Execute(
             continue;
         if (!entity.HasComponents({transformComponent, groundTraceComponent}))
             continue;
+        bool hasVelocity = entity.HasComponent(velocityComponent);
+        bool isRising = hasVelocity && velocityComponent.velocity[i].y > 0.0f;
 
-        groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
-        if (entity.HasComponent(velocityComponent) && velocityComponent.velocity[i].y > 0.0f) {
-            groundTraceComponent.onGround[i] = false;
-            continue;
-        }
         float traceDistance = groundTraceComponent.distance[i];
+        groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
+
+        // Zero out the y velocity and trace far down if on ground
+        if (groundTraceComponent.onGroundLastFrame[i] && !isRising) {
+            traceDistance = 100.0f;
+            if (hasVelocity)
+                velocityComponent.velocity[i].y = 0.0f;
+        }
+        else if (isRising) // If its rising then don't trace
+            traceDistance = 0.0f;
 
         // Raymarch towards the ground
         vec3 position = transformComponent.transform[i].position_;

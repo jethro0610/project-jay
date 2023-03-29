@@ -40,21 +40,21 @@ void PlayerController::Execute(Inputs inputs) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
         isDoingAction = true;
+        actionMeter_ += 1;
     } 
     else if (inputs.flow) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
+        actionMeter_ += 2;
     }
     else if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
 
-    if (isDoingAction)
-        actionMeter_++; 
-    else if (actionMeter_ > 0)
-        actionMeter_--;
+    if (!isDoingAction && actionMeter_ > 0)
+        actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
         entityManager_.velocityComponent_.velocity[PLAYER_ENTITY] *= 0.75f;  
@@ -66,4 +66,5 @@ void PlayerController::Execute(Inputs inputs) {
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
     SCREENLINE(1, "Action: " + std::to_string(actionMeter_));
+    SCREENLINE(4, "Y Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
 }

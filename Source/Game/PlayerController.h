@@ -4,7 +4,7 @@
 #include "Camera.h"
 
 const uint8_t TIME_TO_CUT = 15;
-const uint16_t MAX_ACTION_METER = 150;
+const uint16_t MAX_ACTION_METER = 250;
 
 class PlayerController {
 public:

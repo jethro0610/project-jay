@@ -200,7 +200,7 @@ void Renderer::RenderScreenText_P() {
     ID3D11Buffer* buffers[1] = { dxResources.textBuffer_ };
     context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
 
-    context->DrawInstanced(4, 64, 0, 0);
+    context->DrawInstanced(4, MAX_LINES * CHARS_PER_LINE, 0, 0);
 }
 #endif
 

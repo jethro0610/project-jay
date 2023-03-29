@@ -14,7 +14,6 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 }
 
 void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents, SpreadManager& spreadManager) {
-    ScreenText test;
     UpdateViewMatrix();
     Clear_P();
     SetFrameData_P();
@@ -23,6 +22,8 @@ void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, Rend
     RenderEntities_P(entities, renderComponents);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
-    RenderScreenText_P(test);
+    #ifdef _DEBUG
+    RenderScreenText_P();
+    #endif
     Present_P();
 }

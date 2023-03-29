@@ -1,5 +1,9 @@
 #include "../Game/Game.h"
+
+#ifdef _DEBUG
 #include "../Logging/Logger.h"
+#include "../Logging/ScreenText.h"
+#endif
 
 int CALLBACK WinMain(
     HINSTANCE instance,
@@ -9,6 +13,7 @@ int CALLBACK WinMain(
 ) {
 #ifdef _DEBUG
     Logger::InitLogger();
+    ScreenText::Init();
 #endif
     Game* app = new Game(1280, 720);
 }

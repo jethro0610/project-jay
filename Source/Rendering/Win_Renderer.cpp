@@ -174,12 +174,16 @@ void Renderer::RenderPostProcess_P() {
     context->Draw(4, 0);
 }
 
-void Renderer::RenderScreenText_P(ScreenText& screenText) {
+#ifdef _DEBUG
+void Renderer::RenderScreenText_P() {
+    if (!ScreenText::IsEnabled())
+        return;
+
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     
-    screenText.SetLine(0, "Wow it works.");
-    dxResources.UpdateBuffer(dxResources.textBuffer_, screenText.lines_, sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
+    ScreenText::SetLine(0, "Wow it works");
+    dxResources.UpdateBuffer(dxResources.textBuffer_, ScreenText::GetLines(), sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
 
     UINT sampleMask = 0xffffffff;
     float blendFactor[] = {0.75f, 0.75f, 0.75f, 1.0f};
@@ -199,6 +203,7 @@ void Renderer::RenderScreenText_P(ScreenText& screenText) {
 
     context->DrawInstanced(4, 64, 0, 0);
 }
+#endif
 
 void Renderer::Clear_P() {
     DXResources& dxResources = resourceManager_.dxResources_;

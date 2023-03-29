@@ -42,7 +42,9 @@ private:
     void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();
-    void RenderScreenText_P(ScreenText& screenText);
+    #ifdef _DEBUG
+    void RenderScreenText_P();
+    #endif
     void Present_P();
 };
 

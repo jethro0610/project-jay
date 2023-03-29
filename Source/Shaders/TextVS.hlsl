@@ -28,7 +28,6 @@ TextOut main(TextIn inputText) {
 
     output.coord = coord * CHAR_SIZE;
     output.coord.x *= KERN_WIDTH;
-    /* output.coord.x += CHAR_SIZE; */
     int charRow = floor(inputText.charIndex / MAP_CHARS);
     int charCol = inputText.charIndex % MAP_CHARS;
 

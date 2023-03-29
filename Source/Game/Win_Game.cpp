@@ -1,6 +1,9 @@
 #include "Game.h"
 #include <Xinput.h>
 #include <sstream>
+#ifdef _DEBUG
+#include "../Logging/ScreenText.h"
+#endif
 
 using namespace std::chrono;
 
@@ -126,6 +129,13 @@ void Game::UpdateInputs_P(float deltaTime) {
 }
 
 void Game::FlushInputs_P() {
+    // Have to toggle on flush since released keys are cleared per game update
+    // and not per program update. Clearing happens in this function
+    #ifdef _DEBUG
+    if (windowsLayer_.pressedKeys_['Q'])
+        ScreenText::Toggle();
+    #endif
+
     windowsLayer_.ClearPressedAndReleasedKeys();
     gamepad_.pressedButtons_.reset();
     gamepad_.releasedButtons_.reset();

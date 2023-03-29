@@ -182,7 +182,6 @@ void Renderer::RenderScreenText_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     
-    ScreenText::SetLine(0, "Wow it works");
     dxResources.UpdateBuffer(dxResources.textBuffer_, ScreenText::GetLines(), sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
 
     UINT sampleMask = 0xffffffff;

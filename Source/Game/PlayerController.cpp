@@ -1,4 +1,5 @@
 #include "PlayerController.h"
+#include "../Logging/ScreenText.h"
 
 PlayerController::PlayerController(EntityManager& entityManager, SpreadManager& spreadManager, Camera& camera) :
     entityManager_(entityManager),
@@ -62,4 +63,7 @@ void PlayerController::Execute(Inputs inputs) {
         // entityManager_.transformComponent_.transform->position_.y += 20.0f;
         actionMeter_ = 0;
     } 
+
+    SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
+    SCREENLINE(1, "Action: " + std::to_string(actionMeter_));
 }

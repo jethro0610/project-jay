@@ -176,9 +176,16 @@
     - Limited control falling
     - Spread on launch, with hill?
     - Depress ground on land
+    - OR
+    - Remove spread on launch, with hill
+    - Nothing on landing
+    - Test both
 
 - Ring a bell to go to next level
     - Lots of reverb
 
 =========================================
-- Need to implement slide off
+- Movement on action jump
+- Cool down on cut
+- World modifier
+- Slide off/strong slopes

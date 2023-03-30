@@ -14,21 +14,19 @@ void MovementSystem::Execute(
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents
-            ({
-                movementComponent,
-                groundTraceComponent,
-                transformComponent,
-                velocityComponent
-            }) 
-        ) continue;
+        if (!entity.HasComponents ({
+            movementComponent,
+            groundTraceComponent,
+            transformComponent,
+            velocityComponent
+        })) continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];
         float& friction = movementComponent.friction[i];
         quat& rotation = transformComponent.transform[i].rotation_;
-        MoveMode& moveMode = movementComponent.moveMode[i];
 
+        const MoveMode moveMode = movementComponent.moveMode[i];
         const float minSpeed = movementComponent.minSpeed[i];
         const float maxSpeed = movementComponent.maxSpeed[i];
         const float minFriction = movementComponent.minFriction[i];

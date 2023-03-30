@@ -10,7 +10,6 @@ static const float SHADOW_THICKNESS = 0.1f;
 static const float SHADOW_BLUR = 0.4;
 static const float TOTAL_THICKNESS = THICKNESS + SHADOW_THICKNESS;
 
-
 float smoothstep(float a, float b, float x) {
     float t = clamp((x - a) / (b - a), 0.0f, 1.0f);
     return t * t * (3.0f - 2.0f * t);

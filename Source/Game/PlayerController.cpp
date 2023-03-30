@@ -57,17 +57,15 @@ void PlayerController::Execute(Inputs inputs) {
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
 
-
     if (!isDoingAction && actionMeter_ > 0)
         actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
-        // entityManager_.velocityComponent_.velocity[PLAYER_ENTITY] *= 0.75f;  
         entityManager_.velocityComponent_.velocity[PLAYER_ENTITY].y = 50.0f;
         spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
-        transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-        // entityManager_.transformComponent_.transform->position_.y += 20.0f;
         actionMeter_ = 0;
+        if (length(desiredMovement) > 0.0001f)
+            transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

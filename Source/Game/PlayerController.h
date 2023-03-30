@@ -10,6 +10,7 @@ class PlayerController {
 public:
     uint16_t actionMeter_;
     uint8_t cutTimer_;
+    uint8_t cutCooldown_;
 
     EntityManager& entityManager_;
     SpreadManager& spreadManager_;

@@ -184,6 +184,8 @@
 - Ring a bell to go to next level
     - Lots of reverb
 
+- Add some kind of action on hard turn
+
 =========================================
 - Movement on action jump
 - Cool down on cut

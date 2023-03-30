@@ -33,12 +33,19 @@ void PlayerController::Execute(Inputs inputs) {
         if (cutTimer_ < TIME_TO_CUT)
             cutTimer_++;
     }
-    else 
+    else {
+        if (cutTimer_ >= TIME_TO_CUT)
+            cutCooldown_ = TIME_TO_CUT;
         cutTimer_ = 0;
+    }
 
     bool isDoingAction = false;
     if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
+    }
+    else if (cutCooldown_ > 0) {
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
+        cutCooldown_--;
     }
     else if (cutTimer_ >= TIME_TO_CUT){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;

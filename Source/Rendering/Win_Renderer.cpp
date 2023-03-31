@@ -162,19 +162,6 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     }
 }
 
-void Renderer::RenderTest() {
-
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["TextureOnly"], nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
-
-    context->Draw(4, 0);
-}
-
 void Renderer::RenderPostProcess_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
@@ -267,4 +254,16 @@ void Renderer::SetFrameData_P() {
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input
 	dxResources.UpdateBuffer(dxResources.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
+}
+
+void Renderer::RenderTextureToScreen_P() {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["TextureOnly"], nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
+
+    context->Draw(4, 0);
 }

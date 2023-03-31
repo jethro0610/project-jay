@@ -22,16 +22,15 @@ void World::GenerateNoiseTexture_P() {
 void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVertices) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
+    vec4 chunkPos = vec4(vec3(chunk) * CHUNK_SIZE, 0.0f);
 
-    D3D11_MAPPED_SUBRESOURCE distanceCacheResource;
-    context->Map(dxResources.distanceCacheBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &distanceCacheResource);
-    memcpy(distanceCacheResource.pData, localDistanceCache_, sizeof(float) * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
-    context->Unmap(dxResources.distanceCacheBuffer_, 0);
+    D3D11_MAPPED_SUBRESOURCE chunkDataResource;
+    context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);
+    memcpy(chunkDataResource.pData, &chunkPos, sizeof(vec4)); 
+    context->Unmap(dxResources.perChunkCBuffer_, 0);
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    context->CSSetShaderResources(0, 1, &dxResources.distanceCacheView_);
     context->CSSetUnorderedAccessViews(0, 1, &dxResources.computeWVertsView_, nullptr);
-
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
 
     context->CopyResource(dxResources.computeWVertsOutput_, dxResources.computeWVertsBuffer_);
@@ -49,7 +48,7 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
         }
 
         WorldVertex worldVertex;
-        worldVertex.position = vertices[index] + chunkOffset;
+        worldVertex.position = vertices[index];
         worldVertex.normal = GetNormal(worldVertex.position, 2.0f);
         indicesDataChannel_[x][y][z] = outVertices.size();
         outVertices.push_back(worldVertex);

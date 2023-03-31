@@ -76,6 +76,7 @@ public:
     ID3D11Buffer* perFrameCBuffer_;
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11Buffer* perSkeletonCBuffer_;
+    ID3D11Buffer* perChunkCBuffer_;
 
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;
@@ -83,8 +84,6 @@ public:
     ID3D11Buffer* computeWVertsBuffer_;
     ID3D11UnorderedAccessView* computeWVertsView_;
     ID3D11Buffer* computeWVertsOutput_;
-    ID3D11Buffer* distanceCacheBuffer_;
-    ID3D11ShaderResourceView* distanceCacheView_;
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);

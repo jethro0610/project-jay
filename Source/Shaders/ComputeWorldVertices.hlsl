@@ -1,12 +1,20 @@
-static int3 cornerTable[8] = {
-    { 0, 0, 0 },
-    { 1, 0, 0 },
-    { 1, 1, 0 },
-    { 0, 1, 0 },
-    { 0, 0, 1 },
-    { 1, 0, 1 },
-    { 1, 1, 1 },
-    { 0, 1, 1 },
+#include "WorldFunctions.hlsli"
+Texture2D noiseTex : register(t0);
+SamplerState noiseSamp;
+
+cbuffer perChunkData : register(b0) {
+    float4 chunkPos;
+}
+
+static float3 cornerTable[8] = {
+    { 0.0f, 0.0f, 0.0f },
+    { 1.0f, 0.0f, 0.0f },
+    { 1.0f, 1.0f, 0.0f },
+    { 0.0f, 1.0f, 0.0f },
+    { 0.0f, 0.0f, 1.0f },
+    { 1.0f, 0.0f, 1.0f },
+    { 1.0f, 1.0f, 1.0f },
+    { 0.0f, 1.0f, 1.0f },
 };
 
 static int2 edgeTable[12] = {
@@ -31,40 +39,42 @@ static float CHUNK_SIZE = 32.0f;
 static float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
 static float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
-StructuredBuffer<float> distanceCache : register(t0);
+/* StructuredBuffer<float> distanceCache : register(t0); */
 RWStructuredBuffer<float3> computeVertices : register(u0);
 
-float GetDistance(int3 localPosition) {
-    int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) + (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE);
-    return distanceCache[index];
-}
+/* float GetDistance(int3 localPosition) { */
+/*     int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) + (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE); */
+/*     return distanceCache[index]; */
+/* } */
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
-    int3 localVoxelPosition = groupId * GROUP_OFFSET + threadId;
-    int index = (localVoxelPosition.z) + (localVoxelPosition.y * WORLD_RESOLUTION) + (localVoxelPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-    
+    int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
+    int index = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+
+    float3 voxelPosition = localVoxelIndex * VOXEL_SIZE + chunkPos;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
     int totalIntersections = 0;
+
+    
     
     for (int e = 0; e < 12; e++) {
-        int3 localEdgeStart = localVoxelPosition + cornerTable[edgeTable[e][0]];
-        int3 localEdgeEnd = localVoxelPosition + cornerTable[edgeTable[e][1]];
+        float3 edgeStart = voxelPosition + cornerTable[edgeTable[e][0]] * VOXEL_SIZE;
+        float3 edgeEnd = voxelPosition + cornerTable[edgeTable[e][1]] * VOXEL_SIZE;
         
-        float edgeStartDistance = GetDistance(localEdgeStart);
-        float edgeEndDistance = GetDistance(localEdgeEnd);
+        float edgeStartDistance = GetDistance(edgeStart, noiseTex, noiseSamp);
+        float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
         
         // If the value is negative, it implies the two signs are different, 
         // so there must be an intersection on this edge
         if (edgeStartDistance * edgeEndDistance <= 0.0f) {
-            
             float differenceRatio = edgeStartDistance / (edgeStartDistance - edgeEndDistance);
             float3 intersection = float3(0.0f, 0.0f, 0.0f);
 
             if (edgeStartDistance - edgeEndDistance == 0.0f)
-                intersection = (float3(localEdgeStart) + float3(localEdgeEnd)) / 2.0f;
+                intersection = (edgeStart + edgeEnd) / 2.0f;
             else
-                intersection = (1.0f - differenceRatio) * float3(localEdgeStart) + differenceRatio * float3(localEdgeEnd);
+                intersection = (1.0f - differenceRatio) * edgeStart + differenceRatio * edgeEnd;
 
             sumOfIntersections += intersection;
             totalIntersections++;
@@ -74,8 +84,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         computeVertices[index] = float3(-1.0f, 0.0f, 0.0f); // X = 1.0f indicated the vertex is non-existant
     }
     else {      
-        float3 outPosition = sumOfIntersections / (float) totalIntersections;
-        outPosition *= VOXEL_SIZE;
-        computeVertices[index] = outPosition;
+        /* float3 outPosition = sumOfIntersections / (float) totalIntersections; */
+        computeVertices[index] = voxelPosition;
     }
 }

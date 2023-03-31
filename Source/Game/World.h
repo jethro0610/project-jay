@@ -9,15 +9,15 @@
 #include "Entity/Entity.h"
 #include "../Resource/ResourceManager.h"
 
-const glm::ivec3 cornerTable[8] = {
-    {0, 0, 0},
-    {1, 0, 0},
-    {1, 1, 0},
-    {0, 1 ,0},
-    {0, 0, 1},
-    {1, 0, 1},
-    {1, 1, 1},
-    {0, 1, 1},
+const glm::float3 cornerTable[8] = {
+    {0.0f, 0.0f, 0.0f},
+    {1.0f, 0.0f, 0.0f},
+    {1.0f, 1.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f},
+    {1.0f, 0.0f, 1.0f},
+    {1.0f, 1.0f, 1.0f},
+    {0.0f, 1.0f, 1.0f},
 };
 const glm::ivec2 edgeTable[12] = {
     {0, 1},
@@ -35,10 +35,10 @@ const glm::ivec2 edgeTable[12] = {
     {1, 5},
     {2, 6},
 };
-const glm::ivec3 triangleEdgeTable[3] = {
-    {1, 0, 0},  // X
-    {0, 1, 0},  // Y
-    {0, 0, 1},  // Z
+const glm::vec3 triangleEdgeTable[3] = {
+    {1.0f, 0.0f, 0.0f},  // X
+    {0.0f, 1.0f, 0.0f},  // Y
+    {0.0f, 0.0f, 1.0f},  // Z
 };
 const glm::ivec3 triangulationTable[3][4] = {
     {{ 0,  0,  0}, { 0,  0, -1}, { 0, -1, -1}, { 0, -1,  0}},   // X; Why is this LHS and backwards tf.
@@ -74,9 +74,6 @@ private:
 
     // This data channel is necessary because it would otherwise be too big to work in the stack
     int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
-    float localDistanceCache_[DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE][DISTANCE_CACHE_SIZE];
-
-    void FillLocalDistanceCache(glm::ivec3 chunk);
 
     // NOTE: These functions write to the indices data channell
     void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);

@@ -41,7 +41,8 @@ void Game::Init() {
         ivec3 chunk(x, y, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
-        world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
+        // world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
+        world_.GetMesh(chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 }

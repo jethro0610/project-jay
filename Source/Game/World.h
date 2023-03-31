@@ -7,6 +7,7 @@
 #include <bitset>
 #include "Components/TerrainModComponent.h"
 #include "Entity/Entity.h"
+#include "../Resource/ResourceManager.h"
 
 const glm::ivec3 cornerTable[8] = {
     {0, 0, 0},
@@ -47,7 +48,8 @@ const glm::ivec3 triangulationTable[3][4] = {
 
 class World {
 public:
-    World(Entity* entities, TerrainModComponent& terrainModComponent);
+    World(Entity* entities, ResourceManager& resourceManager, TerrainModComponent& terrainModComponent);
+    ResourceManager& resourceManager_;
     Entity* entities_;
     TerrainModComponent& terrainModComponent_;
 
@@ -78,7 +80,8 @@ private:
 
     // NOTE: These functions write to the indices data channell
     void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
-    void GetMeshVerticesGPU_P(void* graphicsResources, glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
+    void GetMeshVerticesGPU_P(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
 
     void GetMeshIndices(glm::ivec3 chunk, std::vector<uint16_t>& outInidices);
+    void GenerateNoiseTexture_P();
 };

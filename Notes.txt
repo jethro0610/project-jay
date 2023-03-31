@@ -187,7 +187,9 @@
 - Add some kind of action on hard turn
 
 =========================================
-- Movement on action jump
-- Cool down on cut
 - World modifier
+    - CPU noise texture
+    - Modifier objects (not component)
+    - Try splats
+
 - Slide off/strong slopes

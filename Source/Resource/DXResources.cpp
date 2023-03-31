@@ -264,6 +264,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     InitWorldMeshes();
     InitSpreadBuffers();
     InitText();
+    InitNoiseTexture();
 }
 
 void DXResources::UpdateBuffer(ID3D11Buffer* buffer, void* data, int size) {
@@ -587,4 +588,28 @@ void DXResources::InitText() {
         &textPS_
     ));
     HRASSERT(CreateWICTextureFromFile(device_, context_, L"font.bmp", nullptr, &textTexture_, 0));
+}
+
+void DXResources::InitNoiseTexture() {
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Width = NOISE_SIZE;
+    desc.Height = NOISE_SIZE;
+    desc.MipLevels = desc.ArraySize = 1;
+    desc.Format = DXGI_FORMAT_R32_FLOAT;
+    desc.SampleDesc.Count = 1;
+    desc.Usage = D3D11_USAGE_DYNAMIC;
+    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    desc.MiscFlags = 0;
+    desc.SampleDesc.Count = 1;
+    desc.SampleDesc.Quality = 0;
+
+    device_->CreateTexture2D(&desc, NULL, &noiseTexture_);
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
+    viewDesc.Format = desc.Format;
+    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    viewDesc.Texture2D.MostDetailedMip = 0;
+    viewDesc.Texture2D.MipLevels= 1;
+    device_->CreateShaderResourceView(noiseTexture_, &viewDesc, &noiseTextureSRV_);
 }

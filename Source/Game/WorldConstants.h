@@ -15,3 +15,5 @@ const uint8_t MAX_Z_CHUNKS = 12;
 
 const uint16_t MAX_CHUNK_VERTICES = 4096;
 const uint16_t MAX_CHUNK_INDICES = 16384;
+
+const uint16_t NOISE_SIZE = 8192;

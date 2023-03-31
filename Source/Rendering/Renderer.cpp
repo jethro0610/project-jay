@@ -22,6 +22,7 @@ void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, Rend
     RenderEntities_P(entities, renderComponents);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
+    RenderTest();
     #ifdef _DEBUG
     RenderScreenText_P();
     #endif

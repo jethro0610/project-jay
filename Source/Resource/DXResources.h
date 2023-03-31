@@ -77,6 +77,8 @@ public:
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11Buffer* perSkeletonCBuffer_;
 
+    ID3D11Texture2D* noiseTexture_;
+    ID3D11ShaderResourceView* noiseTextureSRV_;
     ID3D11ComputeShader* computeWVertsShader_;
     ID3D11Buffer* computeWVertsBuffer_;
     ID3D11UnorderedAccessView* computeWVertsView_;
@@ -102,6 +104,7 @@ private:
     void InitWorldMeshes();
     void InitSpreadBuffers();
     void InitText();
+    void InitNoiseTexture();
 
     WorldVertex chunkFillVertices_[MAX_CHUNK_VERTICES];
     uint16_t chunkFillIndices_[MAX_CHUNK_INDICES];

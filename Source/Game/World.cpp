@@ -4,12 +4,13 @@
 #include <gtx/string_cast.hpp>
 using namespace glm;
 
-World::World(Entity* entities, TerrainModComponent& terrainModComponent):
+World::World(Entity* entities, ResourceManager& resourceManager, TerrainModComponent& terrainModComponent):
     noise_(new FastNoiseLite()),
     entities_(entities),
+    resourceManager_(resourceManager),
     terrainModComponent_(terrainModComponent)
 {
-
+    GenerateNoiseTexture_P();
 }
 
 void World::FillLocalDistanceCache(ivec3 chunk) {
@@ -78,7 +79,7 @@ void World::GetMesh(ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vec
 
 void World::GetMeshGPUCompute(void* graphicsResources, ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
     FillLocalDistanceCache(chunk);
-    GetMeshVerticesGPU_P(graphicsResources, chunk, outVertices);
+    GetMeshVerticesGPU_P(chunk, outVertices);
     GetMeshIndices(chunk, outIndices);
 
     assert(outVertices.size() <= MAX_CHUNK_VERTICES);

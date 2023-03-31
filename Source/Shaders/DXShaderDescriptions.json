@@ -43,6 +43,10 @@
         {
             "name": "TextPS",
             "type": "ps"
+        },
+        {
+            "name": "TextureOnly",
+            "type": "ps"
         }
 	]
 }

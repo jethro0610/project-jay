@@ -45,6 +45,7 @@ private:
     #ifdef _DEBUG
     void RenderScreenText_P();
     #endif
+    void RenderTest();
     void Present_P();
 };
 

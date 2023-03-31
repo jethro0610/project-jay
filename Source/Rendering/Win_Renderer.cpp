@@ -23,6 +23,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("WorldGrassPS");
+    dxResources.LoadPixelShader("TextureOnly");
 
     dxResources.LoadTexture("grass_c");
     dxResources.LoadTexture("grass_n");
@@ -159,6 +160,19 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
             context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.chunks_[x][z].count, 0, 0, 0);
         }
     }
+}
+
+void Renderer::RenderTest() {
+
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["TextureOnly"], nullptr, 0);
+    context->PSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
+
+    context->Draw(4, 0);
 }
 
 void Renderer::RenderPostProcess_P() {

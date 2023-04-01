@@ -50,18 +50,20 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     memcpy(indexMap_, computeIMapOutputResource.pData, sizeof(int) * WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION);
     context->Unmap(dxResources.computeWIMapOutput_, 0);
     
-    WorldVertex* worldVert = reinterpret_cast<WorldVertex*>(computeVertexOutputResourceA.pData);
+    WorldVertex* vertices = reinterpret_cast<WorldVertex*>(computeVertexOutputResourceA.pData);
 
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
         int index = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-        indicesDataChannel_[x][y][z] = indexMap_[index];
-        if (indexMap_[index] == -1) 
+        indicesDataChannel_[x][y][z] = outVertices.size();
+        if (indexMap_[index] == -1)  {
+            indicesDataChannel_[x][y][z] = -1;
             continue;
+        }
         
-        WorldVertex worldVertex = worldVert[indexMap_[index]];
-        outVertices.push_back(worldVertex);
+        WorldVertex vertex = vertices[indexMap_[index]];
+        outVertices.push_back(vertex);
     }
     context->Unmap(dxResources.computeWVertsOutputA_, 0);
 }

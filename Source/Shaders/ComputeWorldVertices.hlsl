@@ -87,10 +87,9 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         indexMap[index] = -1;
     }
     else {
-        uint c = vertexAppend.IncrementCounter() - 1;
-        vertexAppend[c].pos = sumOfIntersections / (float)totalIntersections;
-        vertexAppend[c].norm = GetNormal(vertexAppend[c].pos, 2.0f, noiseTex, noiseSamp);
-
-        indexMap[index] = c;
+        uint count = vertexAppend.IncrementCounter() - 1;
+        vertexAppend[count].pos = sumOfIntersections / (float)totalIntersections;
+        vertexAppend[count].norm = GetNormal(vertexAppend[count].pos, 2.0f, noiseTex, noiseSamp);
+        indexMap[index] = count;
     }
 }

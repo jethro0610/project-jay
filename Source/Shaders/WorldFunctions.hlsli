@@ -4,7 +4,6 @@ float GetNoise(float2 pos, Texture2D noiseTex, SamplerState noiseSamp) {
 }
 
 float GetDistance(float3 pos, Texture2D noiseTex, SamplerState noiseSamp) {
-    /* return distance(pos, float3(0.0f, 0.0f, 0.0f)) - 32.0f; */
     float2 pos2d = float2(pos.x, pos.z);
     float n = GetNoise(pos2d, noiseTex, noiseSamp);
     return pos.y - n * 4.0f;

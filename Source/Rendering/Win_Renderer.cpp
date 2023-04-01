@@ -84,8 +84,8 @@ void Renderer::RenderWorld_P() {
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
         DXMesh worldMeshResource = dxResources.worldMeshes_[x][y][z];
         context->IASetVertexBuffers(0, 1, &worldMeshResource.vertexBuffer, &vertexStride, &vertexOffset);
-        context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-        context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
+        context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        context->DrawIndexed(MAX_CHUNK_INDICES, 0, 0);
     }
 }
 

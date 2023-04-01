@@ -47,6 +47,10 @@
         {
             "name": "TextureOnly",
             "type": "ps"
+        },
+        {
+            "name": "ComputeWorldTris",
+            "type": "cs"
         }
 	]
 }

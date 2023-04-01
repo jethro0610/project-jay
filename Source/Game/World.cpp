@@ -48,15 +48,7 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
 
 void World::GetMesh(ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
     GetMeshVerticesCPU(chunk, outVertices);
-    GetMeshIndices(chunk, outIndices);
-
-    assert(outVertices.size() <= MAX_CHUNK_VERTICES);
-    assert(outIndices.size() <= MAX_CHUNK_INDICES);
-}
-
-void World::GetMeshGPUCompute(void* graphicsResources, ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
-    GetMeshVerticesGPU_P(chunk, outVertices);
-    GetMeshIndices(chunk, outIndices);
+    // GetMeshIndices(chunk, outIndices);
 
     assert(outVertices.size() <= MAX_CHUNK_VERTICES);
     assert(outIndices.size() <= MAX_CHUNK_INDICES);
@@ -93,11 +85,13 @@ void World::GetMeshVerticesCPU(ivec3 chunk, std::vector<WorldVertex>& outVertice
                 totalIntersections++;
             }
         }
+        int voxelId = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+
         if (totalIntersections == 0) {
-            indicesDataChannel_[x][y][z] = -1;
+            indexMap_[voxelId] = -1;
         }
         else {
-            indicesDataChannel_[x][y][z] = currentIndex;
+            indexMap_[voxelId] = currentIndex;
             WorldVertex vertex;
             vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
             // vertex.position *= VOXEL_SIZE;
@@ -109,8 +103,9 @@ void World::GetMeshVerticesCPU(ivec3 chunk, std::vector<WorldVertex>& outVertice
     }
 }
 
-void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
+void World::GetMeshIndices(ivec3 chunk, std::vector<uint>& outIndices) {
     vec3 chunkOffset = vec3(chunk) * CHUNK_SIZE;
+    int count = 0;
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
@@ -121,7 +116,7 @@ void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
             vec3 edgeEnd = voxelPosition + triangleEdgeTable[e] * VOXEL_SIZE;
             float edgeEndDistance = GetDistance(edgeEnd);
 
-            if (edgeStartDistance * edgeEndDistance <= 0) {
+            if (edgeStartDistance * edgeEndDistance <= 0.0f) {
                 int indiceCount = 0;
                 int planeIndices[4] = { -1, -1, -1, -1 };
                 for (int t = 0; t < 4; t++) {
@@ -139,7 +134,8 @@ void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
                         break;
                     }
 
-                    int index = indicesDataChannel_[indexPosition.x][indexPosition.y][indexPosition.z];
+                    int voxelId = (indexPosition.z) + (indexPosition.y * WORLD_RESOLUTION) + (indexPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+                    int index = indexMap_[voxelId];
                     if (index == -1) {
                         break;
                     }
@@ -149,22 +145,24 @@ void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
                 }
 
                 if (indiceCount == 4) {
+                    int quadStart = count * 6;
                     if (edgeStartDistance > edgeEndDistance) {
-                        outIndices.push_back(planeIndices[0]);
-                        outIndices.push_back(planeIndices[3]);
-                        outIndices.push_back(planeIndices[2]);
-                        outIndices.push_back(planeIndices[2]);
-                        outIndices.push_back(planeIndices[1]);
-                        outIndices.push_back(planeIndices[0]);
+                        outIndices[quadStart + 0] = planeIndices[0];
+                        outIndices[quadStart + 1] = planeIndices[3];
+                        outIndices[quadStart + 2] = planeIndices[2];
+                        outIndices[quadStart + 3] = planeIndices[2];
+                        outIndices[quadStart + 4] = planeIndices[1];
+                        outIndices[quadStart + 5] = planeIndices[0];
                     }
                     else {
-                        outIndices.push_back(planeIndices[0]);
-                        outIndices.push_back(planeIndices[1]);
-                        outIndices.push_back(planeIndices[2]);
-                        outIndices.push_back(planeIndices[2]);
-                        outIndices.push_back(planeIndices[3]);
-                        outIndices.push_back(planeIndices[0]);
+                        outIndices[quadStart + 0] = planeIndices[0];
+                        outIndices[quadStart + 1] = planeIndices[1];
+                        outIndices[quadStart + 2] = planeIndices[2];
+                        outIndices[quadStart + 3] = planeIndices[2];
+                        outIndices[quadStart + 4] = planeIndices[3];
+                        outIndices[quadStart + 5] = planeIndices[0];
                     }
+                    count++;
                 }
             }
         }

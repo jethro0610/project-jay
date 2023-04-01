@@ -40,10 +40,9 @@ void Game::Init() {
     for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
         ivec3 chunk(x, y, z);
         std::vector<WorldVertex> vertices;
-        std::vector<uint16_t> indices;
-        world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
+        world_.GenerateMeshGPU_P(chunk);
         // world_.GetMesh(chunk, vertices, indices);
-        SendWorldMeshToGPU_P(chunk, vertices, indices);
+        // SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 }
 

@@ -150,7 +150,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA,
         0
     };
-    worldVertexDescription_[1] = 
     skeletalVertexDescription_[1] = 
     staticVertexDescription_[1] = 
     instancedVertexDescription_[1] = {
@@ -213,7 +212,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
     };
-    instancedVertexDescription_[5] = {
+    instancedVertexDescription_[5] =
+    worldVertexDescription_[0] = {
         "INST_POS",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
@@ -222,9 +222,26 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
+    worldVertexDescription_[1] = {
+        "INST_NORM",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        1,
+        sizeof(glm::vec3),
+        D3D11_INPUT_PER_INSTANCE_DATA,
+        1
+    };
     LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
+    CreateStructuredBufferAndView(
+        sizeof(WorldVertex),
+        MAX_CHUNK_VERTICES,
+        &computeWVertsBufferA_,
+        &computeWVertsViewA_,
+        false,
+        &computeWVertsOutputA_
+    );
     CreateStructuredBufferAndView(
         sizeof(int),
         WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
@@ -234,12 +251,12 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWIMapOutput_
     );
     CreateStructuredBufferAndView(
-        sizeof(WorldVertex),
-        MAX_CHUNK_VERTICES,
-        &computeWVertsBufferA_,
-        &computeWVertsViewA_,
+        sizeof(uint),
+        MAX_CHUNK_INDICES,
+        &computeWTrisBuffer_,
+        &computeWTrisView_,
         false,
-        &computeWVertsOutputA_
+        &computeWTrisOutput_
     );
 
     ID3DBlob* computeWVertsBlob;
@@ -251,6 +268,17 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
+
+    ID3DBlob* computeWTrisBlob;
+    HRASSERT(D3DReadFileToBlob(L"ComputeWorldTris.cso", &computeWTrisBlob));
+    HRASSERT(device_->CreateComputeShader(
+        computeWTrisBlob->GetBufferPointer(),
+        computeWTrisBlob->GetBufferSize(),
+        nullptr,
+        &computeWTrisShader_
+    ));
+    computeWTrisBlob->Release();
+
 
     D3D11_BLEND_DESC noBlendDesc = {};
     noBlendDesc.RenderTarget[0].BlendEnable = FALSE;
@@ -514,7 +542,7 @@ void DXResources::InitWorldMeshes() {
     worldVSrData.pSysMem = &chunkFillVertices_;
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint16_t) * MAX_CHUNK_INDICES;
+    worldIBufferDesc.ByteWidth = sizeof(uint) * MAX_CHUNK_INDICES;
     worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

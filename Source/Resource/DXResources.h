@@ -82,10 +82,6 @@ public:
     ID3D11ShaderResourceView* noiseTextureSRV_;
     ID3D11ComputeShader* computeWVertsShader_;
 
-    ID3D11Buffer* computeWVertsBuffer_;
-    ID3D11UnorderedAccessView* computeWVertsView_;
-    ID3D11Buffer* computeWVertsOutput_;
-
     ID3D11Buffer* computeWVertsBufferA_;
     ID3D11UnorderedAccessView* computeWVertsViewA_;
     ID3D11Buffer* computeWVertsOutputA_;

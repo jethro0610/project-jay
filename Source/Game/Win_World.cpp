@@ -33,16 +33,12 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* views[3] = {dxResources.computeWVertsView_, dxResources.computeWIMapView_, dxResources.computeWVertsViewA_};
-    UINT counts[3] = {0, 0, 0};
-    context->CSSetUnorderedAccessViews(0, 3, views, counts);
+    ID3D11UnorderedAccessView* views[2] = {dxResources.computeWIMapView_, dxResources.computeWVertsViewA_};
+    UINT counts[2] = {0, 0};
+    context->CSSetUnorderedAccessViews(0, 2, views, counts);
     context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
-
-    context->CopyResource(dxResources.computeWVertsOutput_, dxResources.computeWVertsBuffer_);
-    D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
-    context->Map(dxResources.computeWVertsOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
 
     context->CopyResource(dxResources.computeWVertsOutputA_, dxResources.computeWVertsBufferA_);
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResourceA;
@@ -54,7 +50,6 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     memcpy(indexMap_, computeIMapOutputResource.pData, sizeof(int) * WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION);
     context->Unmap(dxResources.computeWIMapOutput_, 0);
     
-    ComputeVertex* vertices = reinterpret_cast<ComputeVertex*>(computeVertexOutputResource.pData);
     WorldVertex* worldVert = reinterpret_cast<WorldVertex*>(computeVertexOutputResourceA.pData);
 
     for (int x = 0; x < WORLD_RESOLUTION; x++)
@@ -62,24 +57,11 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
         int index = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
         indicesDataChannel_[x][y][z] = indexMap_[index];
-        // if (!vertices[index].valid) {
-        //     indicesDataChannel_[x][y][z] = -1;
-        //     continue;
-        // }
-        if (indexMap_[index] == -1) {
-            // assert(!vertices[index].valid);
+        if (indexMap_[index] == -1) 
             continue;
-        }
-        // assert(vertices[index].valid);
-
-        // WorldVertex worldVertex;
-        // worldVertex.position = vertices[index].position;
-        // worldVertex.normal = GetNormal(vertices[index].position);
+        
         WorldVertex worldVertex = worldVert[indexMap_[index]];
-        // indicesDataChannel_[x][y][z] = outVertices.size();
-        // indicesDataChannel_[x][y][z] = outVertices.size();
         outVertices.push_back(worldVertex);
     }
-    context->Unmap(dxResources.computeWVertsOutput_, 0);
     context->Unmap(dxResources.computeWVertsOutputA_, 0);
 }

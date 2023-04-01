@@ -34,7 +34,8 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
     ID3D11UnorderedAccessView* views[3] = {dxResources.computeWVertsView_, dxResources.computeWIMapView_, dxResources.computeWVertsViewA_};
-    context->CSSetUnorderedAccessViews(0, 3, views, nullptr);
+    UINT counts[3] = {0, 0, 0};
+    context->CSSetUnorderedAccessViews(0, 3, views, counts);
     context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);

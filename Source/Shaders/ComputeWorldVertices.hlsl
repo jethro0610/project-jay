@@ -49,7 +49,6 @@ struct WorldVertex {
     float3 norm;
 };
 
-uint count = 0;
 RWStructuredBuffer<ComputeVertex> computeVertices : register(u0);
 RWStructuredBuffer<int> indexMap : register(u1);
 RWStructuredBuffer<WorldVertex> vertexAppend : register(u2);
@@ -93,10 +92,10 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         computeVertices[index].valid = true;
         computeVertices[index].pos = sumOfIntersections / (float)totalIntersections;
 
-        vertexAppend[count].pos = computeVertices[index].pos;
-        vertexAppend[count].norm = GetNormal(vertexAppend[count].pos, 2.0f, noiseTex, noiseSamp);
+        uint c = vertexAppend.IncrementCounter() - 1;
+        vertexAppend[c].pos = computeVertices[index].pos;
+        vertexAppend[c].norm = GetNormal(vertexAppend[c].pos, 2.0f, noiseTex, noiseSamp);
 
-        indexMap[index] = int(count);
-        InterlockedAdd(chunkPos.x, 1);
+        indexMap[index] = c;
     }
 }

@@ -81,9 +81,14 @@ public:
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;
     ID3D11ComputeShader* computeWVertsShader_;
+
     ID3D11Buffer* computeWVertsBuffer_;
     ID3D11UnorderedAccessView* computeWVertsView_;
     ID3D11Buffer* computeWVertsOutput_;
+
+    ID3D11Buffer* computeWIMapBuffer_;
+    ID3D11UnorderedAccessView* computeWIMapView_;
+    ID3D11Buffer* computeWIMapOutput_;
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
@@ -96,8 +101,14 @@ public:
     void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
 private:
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
-    void CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView);
-    void CreateOutputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11UnorderedAccessView** outView, ID3D11Buffer** outStagingBuffer);
+    void CreateStructuredBufferAndView(
+        int elementSize, 
+        int numberOfElements, 
+        ID3D11Buffer** outBuffer, 
+        ID3D11UnorderedAccessView** outView, 
+        bool append,
+        ID3D11Buffer** outStagingBuffer
+    );
 
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);
     void InitWorldMeshes();

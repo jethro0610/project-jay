@@ -45,6 +45,7 @@ struct ComputeVertex {
 };
 
 RWStructuredBuffer<ComputeVertex> computeVertices : register(u0);
+RWStructuredBuffer<int> indexMap : register(u1);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
@@ -77,10 +78,13 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
             totalIntersections++;
         }
     }
-    if (totalIntersections <= 0)
+    if (totalIntersections <= 0){
         computeVertices[index].valid = false;
+        indexMap[index] = -2;
+    }
     else {
         computeVertices[index].valid = true;
         computeVertices[index].pos = sumOfIntersections / (float)totalIntersections;
+        indexMap[index] = index;
     }
 }

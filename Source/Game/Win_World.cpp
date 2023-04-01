@@ -33,13 +33,20 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    context->CSSetUnorderedAccessViews(0, 1, &dxResources.computeWVertsView_, nullptr);
+    ID3D11UnorderedAccessView* views[2] = {dxResources.computeWVertsView_, dxResources.computeWIMapView_};
+    context->CSSetUnorderedAccessViews(0, 2, views, nullptr);
     context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
 
     context->CopyResource(dxResources.computeWVertsOutput_, dxResources.computeWVertsBuffer_);
     D3D11_MAPPED_SUBRESOURCE computeVertexOutputResource;
     context->Map(dxResources.computeWVertsOutput_, 0, D3D11_MAP_READ, 0, &computeVertexOutputResource);
+
+    context->CopyResource(dxResources.computeWIMapOutput_, dxResources.computeWIMapBuffer_);
+    D3D11_MAPPED_SUBRESOURCE computeIMapOutputResource;
+    context->Map(dxResources.computeWIMapOutput_, 0, D3D11_MAP_READ, 0, &computeIMapOutputResource);
+    memcpy(indicesDataChannel_, computeIMapOutputResource.pData, sizeof(int) * WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION);
+    context->Unmap(dxResources.computeWIMapOutput_, 0);
     
     ComputeVertex* vertices = reinterpret_cast<ComputeVertex*>(computeVertexOutputResource.pData);
     for (int x = 0; x < WORLD_RESOLUTION; x++)
@@ -58,4 +65,5 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
         outVertices.push_back(worldVertex);
     }
     context->Unmap(dxResources.computeWVertsOutput_, 0);
+
 }

@@ -225,12 +225,21 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
-    CreateOutputStructuredBufferAndView(
+    CreateStructuredBufferAndView(
         sizeof(ComputeVertex),
         WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
         &computeWVertsBuffer_,
         &computeWVertsView_,
+        false,
         &computeWVertsOutput_
+    );
+    CreateStructuredBufferAndView(
+        sizeof(int),
+        WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
+        &computeWIMapBuffer_,
+        &computeWIMapView_,
+        false,
+        &computeWIMapOutput_
     );
     ID3DBlob* computeWVertsBlob;
     HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeWVertsBlob));
@@ -286,25 +295,14 @@ void DXResources::CreateConstantBuffer(int size, ID3D11Buffer** outBuffer) {
     ));
 }
 
-void DXResources::CreateInputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11ShaderResourceView** outView) {
-    D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    bufferDesc.ByteWidth = elementSize * numberOfElements;
-    bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-    bufferDesc.StructureByteStride = elementSize;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    HRASSERT(device_->CreateBuffer(&bufferDesc, nullptr, outBuffer));
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
-    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
-    viewDesc.BufferEx.FirstElement = 0;
-    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
-    viewDesc.BufferEx.NumElements = numberOfElements;
-    HRASSERT(device_->CreateShaderResourceView(*outBuffer, &viewDesc, outView));
-}
-
-void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numberOfElements, ID3D11Buffer** outBuffer, ID3D11UnorderedAccessView** outView, ID3D11Buffer** outStagingBuffer) {
+void DXResources::CreateStructuredBufferAndView(
+    int elementSize, 
+    int numberOfElements, 
+    ID3D11Buffer** outBuffer, 
+    ID3D11UnorderedAccessView** outView, 
+    bool append,
+    ID3D11Buffer** outStagingBuffer
+) {
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
     bufferDesc.ByteWidth = elementSize * numberOfElements;
@@ -317,6 +315,8 @@ void DXResources::CreateOutputStructuredBufferAndView(int elementSize, int numbe
     viewDesc.Buffer.FirstElement = 0;
     viewDesc.Format = DXGI_FORMAT_UNKNOWN;
     viewDesc.Buffer.NumElements = numberOfElements;
+    if (append)
+        viewDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_APPEND;
     HRASSERT(device_->CreateUnorderedAccessView(*outBuffer, &viewDesc, outView));
 
     if (outStagingBuffer != nullptr) {

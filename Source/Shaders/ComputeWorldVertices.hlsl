@@ -39,22 +39,18 @@ static float CHUNK_SIZE = 32.0f;
 static float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
 static float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
-struct ComputeVertex {
-    float3 pos;
-    bool valid;
-};
-
 struct WorldVertex {
     float3 pos;
     float3 norm;
 };
 
-AppendStructuredBuffer<WorldVertex> vertexAppend : register(u0);
+RWStructuredBuffer<WorldVertex> vertices : register(u0);
+RWStructuredBuffer<int> validity : register(u1);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
-    int index = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+    int key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
 
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
@@ -83,13 +79,11 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         }
     }
     if (totalIntersections <= 0){
-
+        validity[key] = -1; 
     }
     else {
-        WorldVertex newVertex;
-        newVertex.pos = sumOfIntersections / (float)totalIntersections;
-        /* vertexAppend[count].pos = voxelPosition; */
-        newVertex.norm = GetNormal(newVertex.pos, 2.0f, noiseTex, noiseSamp);
-        vertexAppend.Append(newVertex);
+        vertices[key].pos = sumOfIntersections / (float)totalIntersections;
+        vertices[key].norm = GetNormal(vertices[key].pos, 2.0f, noiseTex, noiseSamp);
+        validity[key] = 1; 
     }
 }

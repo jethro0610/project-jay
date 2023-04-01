@@ -49,9 +49,6 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
 void World::GetMesh(ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices) {
     GetMeshVerticesCPU(chunk, outVertices);
     // GetMeshIndices(chunk, outIndices);
-
-    assert(outVertices.size() <= MAX_CHUNK_VERTICES);
-    assert(outIndices.size() <= MAX_CHUNK_INDICES);
 }
 
 void World::GetMeshVerticesCPU(ivec3 chunk, std::vector<WorldVertex>& outVertices) {

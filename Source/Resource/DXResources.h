@@ -81,10 +81,15 @@ public:
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;
     ID3D11ComputeShader* computeWVertsShader_;
+    ID3D11ComputeShader* computeWQuadsShader_;
 
-    ID3D11Buffer* computeWVertsBufferA_;
-    ID3D11UnorderedAccessView* computeWVertsViewA_;
-    ID3D11Buffer* computeWVertsOutputA_;
+    ID3D11Buffer* computeWVertsBuffer_;
+    ID3D11UnorderedAccessView* computeWVertsView_;
+    ID3D11Buffer* computeWValidBuffer_;
+    ID3D11UnorderedAccessView* computeWValidView_;
+
+    ID3D11Buffer* computeWQuadsBuffer_;
+    ID3D11UnorderedAccessView* computeWQuadsView_;
 
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
@@ -113,5 +118,5 @@ private:
     void InitNoiseTexture();
 
     WorldVertex chunkFillVertices_[MAX_CHUNK_VERTICES];
-    uint16_t chunkFillIndices_[MAX_CHUNK_INDICES];
+    uint16_t chunkFillIndices_[MAX_CHUNK_QUADS];
 };

@@ -39,10 +39,7 @@ void Game::Init() {
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
     for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
         ivec3 chunk(x, y, z);
-        std::vector<WorldVertex> vertices;
         world_.GenerateMeshGPU_P(chunk);
-        // world_.GetMesh(chunk, vertices, indices);
-        // SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 }
 
@@ -52,10 +49,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
     for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
         ivec3 chunk(x, y, z);
-        std::vector<WorldVertex> vertices;
         world_.GenerateMeshGPU_P(chunk);
-        // world_.GetMesh(chunk, vertices, indices);
-        // SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();

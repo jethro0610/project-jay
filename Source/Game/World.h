@@ -76,7 +76,6 @@ private:
     int indexMap_[WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION];
 
     void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
-
     void GetMeshIndices(glm::ivec3 chunk, std::vector<uint>& outInidices);
     void GenerateNoiseTexture_P();
 };

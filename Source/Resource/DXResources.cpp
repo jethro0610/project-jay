@@ -245,10 +245,26 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     CreateStructuredBufferAndView(
         sizeof(WorldVertex),
         MAX_CHUNK_VERTICES,
-        &computeWVertsBufferA_,
-        &computeWVertsViewA_,
+        &computeWVertsBuffer_,
+        &computeWVertsView_,
+        false,
+        nullptr
+    );
+    CreateStructuredBufferAndView(
+        sizeof(int),
+        MAX_CHUNK_VERTICES,
+        &computeWValidBuffer_,
+        &computeWValidView_,
+        false,
+        nullptr
+    );
+    CreateStructuredBufferAndView(
+        sizeof(uint) * 8,
+        MAX_CHUNK_QUADS,
+        &computeWQuadsBuffer_,
+        &computeWQuadsView_,
         true,
-        &computeWVertsOutputA_
+        nullptr
     );
 
     ID3DBlob* computeWVertsBlob;
@@ -260,6 +276,17 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
+
+    ID3DBlob* computeWQuadsBlob;
+    HRASSERT(D3DReadFileToBlob(L"ComputeWorldQuads.cso", &computeWQuadsBlob));
+    HRASSERT(device_->CreateComputeShader(
+        computeWQuadsBlob->GetBufferPointer(),
+        computeWQuadsBlob->GetBufferSize(),
+        nullptr,
+        &computeWQuadsShader_
+    ));
+    computeWQuadsBlob->Release();
+
 
     D3D11_BLEND_DESC noBlendDesc = {};
     noBlendDesc.RenderTarget[0].BlendEnable = FALSE;
@@ -313,6 +340,11 @@ void DXResources::CreateStructuredBufferAndView(
     bool append,
     ID3D11Buffer** outStagingBuffer
 ) {
+    std::string str = "Element size: " + std::to_string(elementSize) + '\n';
+    std::wstring wStr = std::wstring(str.begin(), str.end());
+    LPCWSTR outStr = wStr.c_str();
+    OutputDebugStringW(outStr);
+
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
     bufferDesc.ByteWidth = elementSize * numberOfElements;
@@ -524,7 +556,7 @@ void DXResources::InitWorldMeshes() {
     worldVSrData.pSysMem = &chunkFillVertices_;
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint) * MAX_CHUNK_INDICES;
+    worldIBufferDesc.ByteWidth = sizeof(uint) * 8 * MAX_CHUNK_QUADS;
     worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

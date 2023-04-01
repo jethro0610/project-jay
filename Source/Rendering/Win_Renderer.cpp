@@ -69,7 +69,7 @@ void Renderer::RenderWorld_P() {
     Transform defaultTransform;
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    /* context->UpdateSubresource(dxResources->perObjectCBuffer_, 0, nullptr, &objectData, 0, 0); */
+    context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
     dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
     SetMaterial_P("worldMaterial");
@@ -78,6 +78,7 @@ void Renderer::RenderWorld_P() {
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(WorldVertex);
     UINT vertexOffset = 0;
+
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {

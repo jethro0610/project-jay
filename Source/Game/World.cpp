@@ -14,19 +14,23 @@ World::World(Entity* entities, ResourceManager& resourceManager, TerrainModCompo
 }
 
 float World::GetDistance(vec3 position) const {
-    return distance(position, vec3(0.0f, 0.0f, 0.0f)) - 32.0f;
+    // return distance(position, vec3(0.0f, 0.0f, 0.0f)) - 32.0f;
     // Sample perlin noise in a circle following the position to form a blob
-    vec2 noiseDir = normalize(vec2(position.x, position.z)) * 64.0f;
+    vec2 position2d = vec2(position.x, position.z);
+    float n = noise_->GetNoise(position2d.x, position2d.y);
+    return position.y - n * 16.0f;
+
+    vec2 noiseDir = normalize(position2d) * 64.0f;
     float blobRadius = 0.0f;
     if (length(noiseDir) > 0.0f)
         blobRadius = noise_->GetNoise(noiseDir.x, noiseDir.y) * 32.0f;
 
     float radius = 160.0f + blobRadius;
 
-    float noiseHeight = noise_->GetNoise(position.x * 0.75f, position.z * 0.75f) * 8.0f + 8.0f;
+    float noiseHeight = noise_->GetNoise(position2d.x * 0.75f, position2d.y * 0.75f) * 8.0f + 8.0f;
     float height = 32.0f + noiseHeight;
 
-    vec2 d = vec2(length(vec2(position.x, position.z)), abs(position.y)) - vec2(radius, height) + height; 
+    vec2 d = vec2(length(position2d), abs(position.y)) - vec2(radius, height) + height; 
     float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;
 
     return blobDist;
@@ -96,8 +100,7 @@ void World::GetMeshVerticesCPU(ivec3 chunk, std::vector<WorldVertex>& outVertice
         else {
             indicesDataChannel_[x][y][z] = currentIndex;
             WorldVertex vertex;
-            // vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
-            vertex.position = voxelPosition;
+            vertex.position = sumOfIntersections / (float)totalIntersections; // voxelPosition gives cube vertices
             // vertex.position *= VOXEL_SIZE;
             // vertex.position += chunkOffset;
             vertex.normal = GetNormal(vertex.position, 2.0f);
@@ -113,16 +116,11 @@ void World::GetMeshIndices(ivec3 chunk, std::vector<uint16_t>& outIndices) {
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
         vec3 voxelPosition = vec3(x, y, z) * VOXEL_SIZE + chunkOffset;
-
         float edgeStartDistance = GetDistance(voxelPosition);
-        if (edgeStartDistance == 0.0f)
-            edgeStartDistance = 1.0f;
 
         for (int e = 0; e < 3; e++) {
             vec3 edgeEnd = voxelPosition + triangleEdgeTable[e] * VOXEL_SIZE;
             float edgeEndDistance = GetDistance(edgeEnd);
-            if (edgeEndDistance == 0.0f)
-                edgeEndDistance = 1.0f;
 
             if (edgeStartDistance * edgeEndDistance <= 0) {
                 int indiceCount = 0;

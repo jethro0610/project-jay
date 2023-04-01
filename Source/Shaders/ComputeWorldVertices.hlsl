@@ -39,25 +39,22 @@ static float CHUNK_SIZE = 32.0f;
 static float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
 static float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
-/* StructuredBuffer<float> distanceCache : register(t0); */
-RWStructuredBuffer<float3> computeVertices : register(u0);
+struct ComputeVertex {
+    float3 pos;
+    bool valid;
+};
 
-/* float GetDistance(int3 localPosition) { */
-/*     int index = (localPosition.z) + (localPosition.y * DISTANCE_CACHE_SIZE) + (localPosition.x * DISTANCE_CACHE_SIZE * DISTANCE_CACHE_SIZE); */
-/*     return distanceCache[index]; */
-/* } */
+RWStructuredBuffer<ComputeVertex> computeVertices : register(u0);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
     int index = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
 
-    float3 voxelPosition = localVoxelIndex * VOXEL_SIZE + chunkPos;
+    float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
     int totalIntersections = 0;
 
-    
-    
     for (int e = 0; e < 12; e++) {
         float3 edgeStart = voxelPosition + cornerTable[edgeTable[e][0]] * VOXEL_SIZE;
         float3 edgeEnd = voxelPosition + cornerTable[edgeTable[e][1]] * VOXEL_SIZE;
@@ -80,11 +77,10 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
             totalIntersections++;
         }
     }
-    if (totalIntersections == 0) {
-        computeVertices[index] = float3(-1.0f, 0.0f, 0.0f); // X = 1.0f indicated the vertex is non-existant
-    }
-    else {      
-        /* float3 outPosition = sumOfIntersections / (float) totalIntersections; */
-        computeVertices[index] = voxelPosition;
+    if (totalIntersections <= 0)
+        computeVertices[index].valid = false;
+    else {
+        computeVertices[index].valid = true;
+        computeVertices[index].pos = sumOfIntersections / (float)totalIntersections;
     }
 }

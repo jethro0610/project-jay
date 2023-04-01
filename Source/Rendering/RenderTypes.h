@@ -41,6 +41,11 @@ struct WorldVertex {
     glm::vec3 normal;
 };
 
+struct ComputeVertex {
+    glm::vec3 position;
+    bool valid;
+};
+
 struct InstanceData {
     glm::vec3 position;
 };

@@ -15,7 +15,7 @@ void Game::Init() {
     resourceManager_.LoadStaticModel("st_sphere");
     // Create the player entity
     Transform spawnTransform;
-    spawnTransform.position_ = vec3(10.0f, 50.0f, 10.0f);
+    spawnTransform.position_ = vec3(0.0f, 50.0f, 0.0f);
 
     resourceManager_.LoadEntity("player");
     resourceManager_.LoadEntity("test_spawner");
@@ -41,8 +41,8 @@ void Game::Init() {
         ivec3 chunk(x, y, z);
         std::vector<WorldVertex> vertices;
         std::vector<uint16_t> indices;
-        // world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
-        world_.GetMesh(chunk, vertices, indices);
+        world_.GetMeshGPUCompute(&dxResources_, chunk, vertices, indices);
+        // world_.GetMesh(chunk, vertices, indices);
         SendWorldMeshToGPU_P(chunk, vertices, indices);
     }
 }

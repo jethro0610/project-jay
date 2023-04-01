@@ -226,7 +226,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     
     // Setup the world vertex compute shader
     CreateOutputStructuredBufferAndView(
-        sizeof(vec3),
+        sizeof(ComputeVertex),
         WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
         &computeWVertsBuffer_,
         &computeWVertsView_,

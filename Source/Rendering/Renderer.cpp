@@ -25,5 +25,6 @@ void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, Rend
     #ifdef _DEBUG
     RenderScreenText_P();
     #endif
+    // RenderTextureToScreen_P();
     Present_P();
 }

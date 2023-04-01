@@ -86,10 +86,6 @@ public:
     ID3D11UnorderedAccessView* computeWVertsViewA_;
     ID3D11Buffer* computeWVertsOutputA_;
 
-    ID3D11Buffer* computeWIMapBuffer_;
-    ID3D11UnorderedAccessView* computeWIMapView_;
-    ID3D11Buffer* computeWIMapOutput_;
-
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadTexture(std::string textureName);

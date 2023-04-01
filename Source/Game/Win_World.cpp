@@ -40,9 +40,9 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* views[2] = {dxResources.computeWIMapView_, dxResources.computeWVertsViewA_};
-    UINT counts[2] = {0, 0};
-    context->CSSetUnorderedAccessViews(0, 2, views, counts);
+    ID3D11UnorderedAccessView* views[1] = {dxResources.computeWVertsViewA_};
+    UINT counts[2] = {0};
+    context->CSSetUnorderedAccessViews(0, 1, views, counts);
     context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);

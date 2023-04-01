@@ -247,16 +247,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         MAX_CHUNK_VERTICES,
         &computeWVertsBufferA_,
         &computeWVertsViewA_,
-        false,
+        true,
         &computeWVertsOutputA_
-    );
-    CreateStructuredBufferAndView(
-        sizeof(int),
-        WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION,
-        &computeWIMapBuffer_,
-        &computeWIMapView_,
-        false,
-        &computeWIMapOutput_
     );
 
     ID3DBlob* computeWVertsBlob;
@@ -335,7 +327,8 @@ void DXResources::CreateStructuredBufferAndView(
     viewDesc.Buffer.NumElements = numberOfElements;
     if (append)
         viewDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_APPEND;
-    viewDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_COUNTER;
+    else
+        viewDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_COUNTER;
     HRASSERT(device_->CreateUnorderedAccessView(*outBuffer, &viewDesc, outView));
 
     if (outStagingBuffer != nullptr) {

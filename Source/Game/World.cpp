@@ -18,7 +18,7 @@ float World::GetDistance(vec3 position) const {
     // Sample perlin noise in a circle following the position to form a blob
     vec2 position2d = vec2(position.x, position.z);
     float n = noise_->GetNoise(position2d.x, position2d.y);
-    return position.y - n * 16.0f;
+    return position.y - n * 4.0f;
 
     vec2 noiseDir = normalize(position2d) * 64.0f;
     float blobRadius = 0.0f;

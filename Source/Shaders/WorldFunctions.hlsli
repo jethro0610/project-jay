@@ -1,13 +1,13 @@
 float GetNoise(float2 pos, Texture2D noiseTex, SamplerState noiseSamp) {
     float2 center = float2(0.5f, 0.5f);
-    return noiseTex.SampleLevel(noiseSamp, pos / 8192.0f + center, 0).r;
+    return noiseTex.SampleLevel(noiseSamp, (pos / 8192.0f) + center, 0).r;
 }
 
 float GetDistance(float3 pos, Texture2D noiseTex, SamplerState noiseSamp) {
     /* return distance(pos, float3(0.0f, 0.0f, 0.0f)) - 32.0f; */
     float2 pos2d = float2(pos.x, pos.z);
     float n = GetNoise(pos2d, noiseTex, noiseSamp);
-    return pos.y - n * 16.0f;
+    return pos.y - n * 4.0f;
 
     float2 noiseDir = normalize(pos2d) * 64.0f;
     float blobRadius = 0.0f;

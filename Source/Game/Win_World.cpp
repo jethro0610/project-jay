@@ -46,8 +46,10 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     for (int y = 0; y < WORLD_RESOLUTION; y++)
     for (int z = 0; z < WORLD_RESOLUTION; z++) {
         int index = (z) + (y * WORLD_RESOLUTION) + (x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-        if (vertices[index].valid == false)
+        if (vertices[index].valid == false) {
+            indicesDataChannel_[x][y][z] = -1;
             continue;
+        }
 
         WorldVertex worldVertex;
         worldVertex.position = vertices[index].position;

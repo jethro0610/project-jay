@@ -49,9 +49,10 @@ struct WorldVertex {
     float3 norm;
 };
 
+uint count = 0;
 RWStructuredBuffer<ComputeVertex> computeVertices : register(u0);
 RWStructuredBuffer<int> indexMap : register(u1);
-AppendStructuredBuffer<WorldVertex> vertexAppend : register(u2);
+RWStructuredBuffer<WorldVertex> vertexAppend : register(u2);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
@@ -86,15 +87,16 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     }
     if (totalIntersections <= 0){
         computeVertices[index].valid = false;
-        indexMap[index] = -2;
+        indexMap[index] = -1;
     }
     else {
         computeVertices[index].valid = true;
         computeVertices[index].pos = sumOfIntersections / (float)totalIntersections;
-        WorldVertex vert;
-        vert.pos = computeVertices[index].pos;
-        vert.norm = GetNormal(vert.pos, 2.0f, noiseTex, noiseSamp);
-        vertexAppend.Append(vert);
-        indexMap[index] = index;
+
+        vertexAppend[count].pos = computeVertices[index].pos;
+        vertexAppend[count].norm = GetNormal(vertexAppend[count].pos, 2.0f, noiseTex, noiseSamp);
+
+        indexMap[index] = int(count);
+        InterlockedAdd(chunkPos.x, 1);
     }
 }

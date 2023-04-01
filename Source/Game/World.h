@@ -74,6 +74,7 @@ private:
 
     // This data channel is necessary because it would otherwise be too big to work in the stack
     int indicesDataChannel_[WORLD_RESOLUTION][WORLD_RESOLUTION][WORLD_RESOLUTION];
+    int indexMap_[WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION];
 
     // NOTE: These functions write to the indices data channell
     void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);

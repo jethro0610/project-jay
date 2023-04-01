@@ -39,14 +39,22 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     memcpy(chunkDataResource.pData, &chunkPos, sizeof(vec4)); 
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
+    context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
+    context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
+
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
     ID3D11UnorderedAccessView* vertView[2] = {dxResources.computeWVertsView_, dxResources.computeWValidView_};
     context->CSSetUnorderedAccessViews(0, 2, vertView, nullptr);
-    context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
-    context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
     context->CopyResource(dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexBuffer, dxResources.computeWVertsBuffer_);
 
+    D3D11_MAPPED_SUBRESOURCE validR;
+    int valids[WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION];
+    context->CopyResource(dxResources.computeWValidOutput_, dxResources.computeWValidBuffer_);
+    context->Map(dxResources.computeWValidOutput_, 0, D3D11_MAP_READ, 0, &validR);
+    memcpy(valids, validR.pData, sizeof(int) * WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION);
+    context->Unmap(dxResources.computeWValidOutput_, 0);
+    
     context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
     ID3D11UnorderedAccessView* quadView[3] = {dxResources.computeWVertsView_, dxResources.computeWValidView_, dxResources.computeWQuadsView_};
     context->CSSetUnorderedAccessViews(0, 3, quadView, nullptr);

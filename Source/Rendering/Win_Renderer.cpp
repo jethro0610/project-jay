@@ -35,8 +35,11 @@ Renderer::Renderer(ResourceManager& resourceManager):
 
     MaterialDesc worldMaterialDesc;
     worldMaterialDesc.vertexShader = "WorldVertexShader";
-    worldMaterialDesc.pixelShader = "WorldPS";
-    worldMaterialDesc.numOfTextures = 0;
+    worldMaterialDesc.pixelShader = "WorldGrassPS";
+    worldMaterialDesc.textures[0] = "grass_c";
+    worldMaterialDesc.textures[1] = "grass_n";
+    worldMaterialDesc.textures[2] = "marble_c";
+    worldMaterialDesc.numOfTextures = 3;
     resourceManager_.materials_["worldMaterial"] = worldMaterialDesc;
 
     MaterialDesc playerMaterial;
@@ -70,7 +73,7 @@ void Renderer::RenderWorld_P() {
     // context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
     // dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     SetMaterial_P("worldMaterial");
 
     UINT strides[1] = { sizeof(WorldVertex) };
@@ -82,7 +85,8 @@ void Renderer::RenderWorld_P() {
         DXMesh worldMeshResource = dxResources.worldMeshes_[x][y][z];
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-        context->DrawInstanced(4, MAX_CHUNK_VERTICES, 0, 0);
+        context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+        context->DrawIndexed(MAX_CHUNK_QUADS * 12, 0, 0);
     }
 }
 

@@ -150,6 +150,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA,
         0
     };
+    worldVertexDescription_[1] =
     skeletalVertexDescription_[1] = 
     staticVertexDescription_[1] = 
     instancedVertexDescription_[1] = {
@@ -221,24 +222,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
-    worldVertexDescription_[0] = {
-        "INST_POS",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        0,
-        D3D11_INPUT_PER_INSTANCE_DATA,
-        1
-    };;
-    worldVertexDescription_[1] = {
-        "INST_NORM",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        sizeof(glm::vec3),
-        D3D11_INPUT_PER_INSTANCE_DATA,
-        1
-    };
     LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
@@ -256,10 +239,10 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWValidBuffer_,
         &computeWValidView_,
         false,
-        nullptr
+        &computeWValidOutput_ 
     );
     CreateStructuredBufferAndView(
-        sizeof(uint) * 8,
+        sizeof(uint) * 12,
         MAX_CHUNK_QUADS,
         &computeWQuadsBuffer_,
         &computeWQuadsView_,
@@ -556,7 +539,7 @@ void DXResources::InitWorldMeshes() {
     worldVSrData.pSysMem = &chunkFillVertices_;
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint) * 8 * MAX_CHUNK_QUADS;
+    worldIBufferDesc.ByteWidth = sizeof(uint) * 12 * MAX_CHUNK_QUADS;
     worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

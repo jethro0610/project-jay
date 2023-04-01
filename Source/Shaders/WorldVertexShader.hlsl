@@ -1,13 +1,14 @@
+#include "VertexOutput.hlsli"
 #include "WorldVertexInput.hlsli"
-#include "WorldVertOut.hlsli"
 #include "ConstantBuffers.hlsli"
 
-WorldVertOut main(WorldVertIn inVert) {
-    float2 coord = float2(inVert.vertexID&1, inVert.vertexID>>1);
-    float3 worldPos = inVert.position + float3(coord.x, 0.0f, coord.y);
-
-    WorldVertOut output;
-    output.pos = mul(worldViewProj, float4(worldPos, 1.0));
-    output.uv = coord;
+VertOut main(WorldVertIn inVert) {
+    VertOut output;
+    output.position = mul(worldViewProj, float4(inVert.position, 1.0));
+    output.worldPosition = float4(inVert.position, 1.0f);
+    output.normal = inVert.normal;
+    output.tangent = float3(0.0f, 0.0f, 0.0f);
+    output.bitangent = float3(0.0f, 0.0f, 0.0f);
+    output.uv = float2(0.0f, 0.0f);
     return output;
 }

@@ -1,5 +1,4 @@
 struct WorldVertIn {
-    float3 position : INST_POS;
-    float3 normal : INST_NORM;
-    uint vertexID : SV_VERTEXID;
+    float3 position : POS;
+    float3 normal : NORM;
 };

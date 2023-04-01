@@ -241,6 +241,14 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         false,
         &computeWIMapOutput_
     );
+    CreateStructuredBufferAndView(
+        sizeof(WorldVertex),
+        MAX_CHUNK_VERTICES,
+        &computeWVertsBufferA_,
+        &computeWVertsViewA_,
+        true,
+        &computeWVertsOutputA_
+    );
     ID3DBlob* computeWVertsBlob;
     HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeWVertsBlob));
     HRASSERT(device_->CreateComputeShader(

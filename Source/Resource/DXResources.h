@@ -86,6 +86,10 @@ public:
     ID3D11UnorderedAccessView* computeWVertsView_;
     ID3D11Buffer* computeWVertsOutput_;
 
+    ID3D11Buffer* computeWVertsBufferA_;
+    ID3D11UnorderedAccessView* computeWVertsViewA_;
+    ID3D11Buffer* computeWVertsOutputA_;
+
     ID3D11Buffer* computeWIMapBuffer_;
     ID3D11UnorderedAccessView* computeWIMapView_;
     ID3D11Buffer* computeWIMapOutput_;

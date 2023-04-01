@@ -33,8 +33,8 @@ void World::GetMeshVerticesGPU_P(ivec3 chunk, std::vector<WorldVertex>& outVerti
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* views[2] = {dxResources.computeWVertsView_, dxResources.computeWIMapView_};
-    context->CSSetUnorderedAccessViews(0, 2, views, nullptr);
+    ID3D11UnorderedAccessView* views[3] = {dxResources.computeWVertsView_, dxResources.computeWIMapView_, dxResources.computeWVertsViewA_};
+    context->CSSetUnorderedAccessViews(0, 3, views, nullptr);
     context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
 

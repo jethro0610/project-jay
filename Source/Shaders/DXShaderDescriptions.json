@@ -49,8 +49,8 @@
             "type": "ps"
         },
         {
-            "name": "ComputeWorldTris",
-            "type": "cs"
+            "name": "WorldPS",
+            "type": "ps"
         }
 	]
 }

@@ -23,6 +23,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("WorldGrassPS");
+    dxResources.LoadPixelShader("WorldPS");
     dxResources.LoadPixelShader("TextureOnly");
 
     dxResources.LoadTexture("grass_c");
@@ -34,11 +35,8 @@ Renderer::Renderer(ResourceManager& resourceManager):
 
     MaterialDesc worldMaterialDesc;
     worldMaterialDesc.vertexShader = "WorldVertexShader";
-    worldMaterialDesc.pixelShader = "WorldGrassPS";
-    worldMaterialDesc.textures[0] = "grass_c";
-    worldMaterialDesc.textures[1] = "grass_n";
-    worldMaterialDesc.textures[2] = "marble_c";
-    worldMaterialDesc.numOfTextures = 3;
+    worldMaterialDesc.pixelShader = "WorldPS";
+    worldMaterialDesc.numOfTextures = 0;
     resourceManager_.materials_["worldMaterial"] = worldMaterialDesc;
 
     MaterialDesc playerMaterial;
@@ -65,27 +63,26 @@ void Renderer::RenderWorld_P() {
 
     // OPTIMIZATION: Updating with subresource may be slower than using map
     // likely changing this later
-    PerObjectData objectData = {};
-    Transform defaultTransform;
-    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
-    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-    dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    // PerObjectData objectData = {};
+    // Transform defaultTransform;
+    // defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    // objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
+    // context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
+    // dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     SetMaterial_P("worldMaterial");
 
-    // Set the vertex and index buffers to be drawn
-    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    UINT vertexStride = sizeof(WorldVertex);
-    UINT vertexOffset = 0;
+    UINT strides[1] = { sizeof(WorldVertex) };
+    UINT offsets[1] = { 0 };
 
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
         DXMesh worldMeshResource = dxResources.worldMeshes_[x][y][z];
-        context->IASetVertexBuffers(0, 1, &worldMeshResource.vertexBuffer, &vertexStride, &vertexOffset);
-        context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        context->DrawIndexed(MAX_CHUNK_INDICES, 0, 0);
+        ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
+        context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+        context->DrawInstanced(4, 1024, 0, 0);
     }
 }
 

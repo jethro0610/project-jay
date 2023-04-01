@@ -1,6 +1,6 @@
 float GetNoise(float2 pos, Texture2D noiseTex, SamplerState noiseSamp) {
     float2 center = float2(0.5f, 0.5f);
-    return noiseTex.SampleLevel(noiseSamp, (pos / 8192.0f) + center, 0).r;
+    return noiseTex.SampleLevel(noiseSamp, (pos / 8192.0f) * 1.0f + center, 0).r;
 }
 
 float GetDistance(float3 pos, Texture2D noiseTex, SamplerState noiseSamp) {
@@ -9,6 +9,7 @@ float GetDistance(float3 pos, Texture2D noiseTex, SamplerState noiseSamp) {
     return pos.y - n * 4.0f;
 
     float2 noiseDir = normalize(pos2d) * 64.0f;
+    noiseDir = float2(noiseDir.y, noiseDir.x);
     float blobRadius = 0.0f;
     if (length(noiseDir) > 0.0f) {
         float blobRadius = GetNoise(noiseDir, noiseTex, noiseSamp) * 32.0f;
@@ -16,7 +17,7 @@ float GetDistance(float3 pos, Texture2D noiseTex, SamplerState noiseSamp) {
     }
 
     float radius = 160.0f + blobRadius;
-    float noiseHeight = GetNoise(pos2d, noiseTex, noiseSamp) * 8.0f + 8.0f;
+    float noiseHeight = GetNoise(pos2d * 0.75f, noiseTex, noiseSamp) * 8.0f + 8.0f;
     /* float noiseHeight = noiseTex.SampleLevel(noiseSamp, pos2d * 0.75f, 0).r * 8.0f + 8.0f; */
     float height = 32.0f + noiseHeight;
 

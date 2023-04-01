@@ -212,8 +212,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
     };
-    instancedVertexDescription_[5] =
-    worldVertexDescription_[0] = {
+    instancedVertexDescription_[5] = {
         "INST_POS",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
@@ -222,11 +221,20 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
+    worldVertexDescription_[0] = {
+        "INST_POS",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        0,
+        D3D11_INPUT_PER_INSTANCE_DATA,
+        1
+    };;
     worldVertexDescription_[1] = {
         "INST_NORM",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
-        1,
+        0,
         sizeof(glm::vec3),
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
@@ -250,14 +258,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         false,
         &computeWIMapOutput_
     );
-    CreateStructuredBufferAndView(
-        sizeof(uint),
-        MAX_CHUNK_INDICES,
-        &computeWTrisBuffer_,
-        &computeWTrisView_,
-        false,
-        &computeWTrisOutput_
-    );
 
     ID3DBlob* computeWVertsBlob;
     HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeWVertsBlob));
@@ -268,17 +268,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsShader_
     ));
     computeWVertsBlob->Release();
-
-    ID3DBlob* computeWTrisBlob;
-    HRASSERT(D3DReadFileToBlob(L"ComputeWorldTris.cso", &computeWTrisBlob));
-    HRASSERT(device_->CreateComputeShader(
-        computeWTrisBlob->GetBufferPointer(),
-        computeWTrisBlob->GetBufferSize(),
-        nullptr,
-        &computeWTrisShader_
-    ));
-    computeWTrisBlob->Release();
-
 
     D3D11_BLEND_DESC noBlendDesc = {};
     noBlendDesc.RenderTarget[0].BlendEnable = FALSE;

@@ -64,6 +64,7 @@ struct QuadInfo {
 
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
 RWStructuredBuffer<QuadInfo> quadInfo : register(u1);
+RWStructuredBuffer<uint> count : register(u2);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
@@ -100,6 +101,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         quadInfo[key].valid = -1; 
     }
     else {
+        InterlockedAdd(count[0], 1);
         vertices[key].pos = sumOfIntersections / (float)totalIntersections;
         vertices[key].norm = GetNormal(vertices[key].pos, 2.0f, noiseTex, noiseSamp);
         quadInfo[key].valid = 1; 

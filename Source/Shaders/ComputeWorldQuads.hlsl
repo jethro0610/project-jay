@@ -47,6 +47,7 @@ struct Quad {
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
 RWStructuredBuffer<QuadInfo> quadInfos : register(u1);
 AppendStructuredBuffer<Quad> indices : register(u2);
+RWStructuredBuffer<uint> count : register(u3);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
@@ -102,6 +103,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
                 newQuad.i4 = planeIndices[3];
                 newQuad.i5 = planeIndices[0];
             }
+            InterlockedAdd(count[0], 6);
             indices.Append(newQuad);
         }
     }

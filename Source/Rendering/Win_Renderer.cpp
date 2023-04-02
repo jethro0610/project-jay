@@ -66,12 +66,12 @@ void Renderer::RenderWorld_P() {
 
     // OPTIMIZATION: Updating with subresource may be slower than using map
     // likely changing this later
-    // PerObjectData objectData = {};
-    // Transform defaultTransform;
-    // defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
-    // objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    // context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-    // dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    PerObjectData objectData = {};
+    Transform defaultTransform;
+    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
+    context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
+    dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     SetMaterial_P("worldMaterial");
@@ -86,7 +86,7 @@ void Renderer::RenderWorld_P() {
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
         context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        context->DrawIndexed(3 * 1024, 0, 0);
+        context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
     }
 }
 

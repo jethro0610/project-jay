@@ -231,7 +231,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsBuffer_,
         &computeWVertsView_,
         false,
-        &computeWVertsOutput_ 
+        nullptr
     );
     CreateStructuredBufferAndView(
         sizeof(int) * 8,
@@ -239,7 +239,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWValidBuffer_,
         &computeWValidView_,
         false,
-        &computeWValidOutput_ 
+        nullptr
     );
     CreateStructuredBufferAndView(
         sizeof(uint) * 6,
@@ -248,6 +248,14 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWQuadsView_,
         true,
         nullptr
+    );
+    CreateStructuredBufferAndView(
+        sizeof(uint),
+        1,
+        &computeWCountBuffer_,
+        &computeWCountView_,
+        false,
+        &computeWCountOutput_
     );
 
     ID3DBlob* computeWVertsBlob;

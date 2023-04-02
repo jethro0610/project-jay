@@ -222,24 +222,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
-    splatVertexDescription_[0] = {
-        "INST_POS",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        0,
-        D3D11_INPUT_PER_INSTANCE_DATA,
-        1
-    }; 
-    splatVertexDescription_[1] = {
-        "INST_NORM",
-        0,
-        DXGI_FORMAT_R32G32B32_FLOAT,
-        0,
-        0,
-        D3D11_INPUT_PER_INSTANCE_DATA,
-        1
-    }; 
     LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
@@ -459,17 +441,6 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
             &inputLayout
         ));
         break;
-
-    case VertexShaderType::SPLAT:
-        HRASSERT(device_->CreateInputLayout(
-            splatVertexDescription_,
-            ARRAYSIZE(splatVertexDescription_),
-            vertexShaderBlob->GetBufferPointer(),
-            vertexShaderBlob->GetBufferSize(),
-            &inputLayout
-        ));
-        break;
-
 
     default:
         assert(true); // Should never default

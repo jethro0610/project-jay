@@ -21,12 +21,10 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources.LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
     dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
-    dxResources.LoadVertexShader("SplatVS", VertexShaderType::SPLAT);
 
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("WorldGrassPS");
     dxResources.LoadPixelShader("TextureOnly");
-    dxResources.LoadPixelShader("SplatPS");
 
     dxResources.LoadTexture("grass_c");
     dxResources.LoadTexture("grass_n");
@@ -59,12 +57,6 @@ Renderer::Renderer(ResourceManager& resourceManager):
     spreadMaterial.textures[1] = "bricks_n";
     spreadMaterial.numOfTextures = 2;
     resourceManager_.materials_["spreadMaterial"] = spreadMaterial;
-
-    MaterialDesc splatMaterial;
-    spreadMaterial.vertexShader = "SplatVS";
-    spreadMaterial.pixelShader = "SplatPS";
-    spreadMaterial.numOfTextures = 0;
-    resourceManager_.materials_["splatMaterial"] = spreadMaterial;
 }
 
 void Renderer::RenderWorld_P() {
@@ -94,35 +86,6 @@ void Renderer::RenderWorld_P() {
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
         context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
         context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
-    }
-}
-
-void Renderer::RenderWorldSplat_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    // OPTIMIZATION: Updating with subresource may be slower than using map
-    // likely changing this later
-    PerObjectData objectData = {};
-    Transform defaultTransform;
-    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
-    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
-    dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
-
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    SetMaterial_P("splatMaterial");
-
-    UINT strides[1] = { sizeof(WorldVertex) };
-    UINT offsets[1] = { 0 };
-
-    for (int x = 0; x < MAX_X_CHUNKS; x++)
-    for (int y = 0; y < MAX_Y_CHUNKS; y++)
-    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        DXMesh worldMeshResource = dxResources.worldMeshes_[x][y][z];
-        ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
-        context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-        context->DrawInstanced(4, MAX_CHUNK_VERTICES, 0, 0);
     }
 }
 

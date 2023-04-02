@@ -39,7 +39,6 @@ private:
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P();
-    void RenderWorldSplat_P();
     void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();

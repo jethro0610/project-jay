@@ -51,14 +51,6 @@
         {
             "name": "ComputeWorldQuads",
             "type": "cs"
-        },
-        {
-            "name": "SplatVS",
-            "type": "vs"
-        },
-        {
-            "name": "SplatPS",
-            "type": "ps"
         }
 	]
 }

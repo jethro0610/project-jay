@@ -186,10 +186,9 @@
 
 - Add some kind of action on hard turn
 
-=========================================
-- World modifier
-    - CPU noise texture
-    - Modifier objects (not component)
-    - Try splats
+- Store world WVP matrix off by a few frames so it appears behind in time 
 
+=========================================
+- Modifier objects (not component)
+- Seed meter
 - Slide off/strong slopes

@@ -26,6 +26,7 @@ void World::GenerateNoiseTexture_P() {
 
     memcpy(noiseTextureResouce.pData, noiseArray, NOISE_SIZE * NOISE_SIZE * sizeof(float));
     context->Unmap(dxResources.noiseTexture_, 0);
+    delete[] noiseArray;
 }
 
 void World::GenerateMeshGPU_P(ivec3 chunk) {

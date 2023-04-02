@@ -29,8 +29,7 @@ enum class VertexShaderType {
     STATIC,
     SKELETAL,
     WORLD,
-    INSTANCED,
-    SPLAT
+    INSTANCED
 };
 
 class DXResources {
@@ -73,7 +72,6 @@ public:
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
     D3D11_INPUT_ELEMENT_DESC instancedVertexDescription_[6];
-    D3D11_INPUT_ELEMENT_DESC splatVertexDescription_[2];
 
     ID3D11Buffer* perFrameCBuffer_;
     ID3D11Buffer* perObjectCBuffer_;

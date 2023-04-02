@@ -17,8 +17,7 @@ void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, Rend
     UpdateViewMatrix();
     Clear_P();
     SetFrameData_P();
-    // RenderWorld_P();
-    RenderWorldSplat_P();
+    RenderWorld_P();
     StaticModelRenderList staticModelRenderList;
     RenderEntities_P(entities, renderComponents);
     RenderSpread_P(spreadManager);

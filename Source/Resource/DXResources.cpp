@@ -242,7 +242,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWValidOutput_ 
     );
     CreateStructuredBufferAndView(
-        sizeof(uint) * 12,
+        sizeof(uint) * 6,
         MAX_CHUNK_QUADS,
         &computeWQuadsBuffer_,
         &computeWQuadsView_,
@@ -539,7 +539,7 @@ void DXResources::InitWorldMeshes() {
     worldVSrData.pSysMem = &chunkFillVertices_;
 
     D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint) * 12 * MAX_CHUNK_QUADS;
+    worldIBufferDesc.ByteWidth = sizeof(uint) * 6 * MAX_CHUNK_QUADS;
     worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
     worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

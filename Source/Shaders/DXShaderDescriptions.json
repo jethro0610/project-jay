@@ -49,10 +49,6 @@
             "type": "ps"
         },
         {
-            "name": "WorldPS",
-            "type": "ps"
-        },
-        {
             "name": "ComputeWorldQuads",
             "type": "cs"
         }

@@ -23,7 +23,6 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("WorldGrassPS");
-    dxResources.LoadPixelShader("WorldPS");
     dxResources.LoadPixelShader("TextureOnly");
 
     dxResources.LoadTexture("grass_c");

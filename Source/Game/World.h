@@ -71,11 +71,5 @@ public:
 
 private:
     FastNoiseLite* noise_;
-
-    // This data channel is necessary because it would otherwise be too big to work in the stack
-    int indexMap_[MAX_CHUNK_VERTICES];
-
-    void GetMeshVerticesCPU(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices);
-    void GetMeshIndices(glm::ivec3 chunk, std::vector<uint>& outInidices);
     void GenerateNoiseTexture_P();
 };

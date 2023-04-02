@@ -16,12 +16,10 @@ void World::GenerateNoiseTexture_P() {
     context->Map(dxResources.noiseTexture_, 0, D3D11_MAP_WRITE_DISCARD, 0, &noiseTextureResouce);
     float* noiseArray = new float[NOISE_SIZE * NOISE_SIZE];
 
-    uint16_t noiseDetail = 1;
-    uint16_t halfNoiseSize = NOISE_SIZE / noiseDetail / 2; 
     for (int x = 0; x < NOISE_SIZE; x++)
     for (int y = 0; y < NOISE_SIZE; y++) {
-        float xOffset = float(x) / noiseDetail - halfNoiseSize;
-        float yOffset = float(y) / noiseDetail - halfNoiseSize;
+        float xOffset = float(x) / NOISE_DETAIL - NOISE_OFFSET;
+        float yOffset = float(y) / NOISE_DETAIL - NOISE_OFFSET;
         float noiseVal = noise_->GetNoise(xOffset, yOffset);
         *(noiseArray + y * NOISE_SIZE + x) = noiseVal;
     }

@@ -85,8 +85,9 @@ public:
 
     ID3D11Buffer* computeWVertsBuffer_;
     ID3D11UnorderedAccessView* computeWVertsView_;
-    ID3D11Buffer* computeWValidBuffer_;
-    ID3D11UnorderedAccessView* computeWValidView_;
+
+    ID3D11Buffer* computeWVoxelsBuffer_;
+    ID3D11UnorderedAccessView* computeWVoxelsView_;
 
     ID3D11Buffer* computeWCountBuffer_;
     ID3D11UnorderedAccessView* computeWCountView_;

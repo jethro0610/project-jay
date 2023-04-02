@@ -236,8 +236,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     CreateStructuredBufferAndView(
         sizeof(int) * 8,
         MAX_CHUNK_VERTICES,
-        &computeWValidBuffer_,
-        &computeWValidView_,
+        &computeWVoxelsBuffer_,
+        &computeWVoxelsView_,
         false,
         nullptr
     );

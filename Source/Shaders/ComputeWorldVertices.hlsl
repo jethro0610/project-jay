@@ -56,14 +56,14 @@ struct WorldVertex {
     float3 norm;
 };
 
-struct QuadInfo {
+struct VoxelInfo {
     int valid;
     int hasQuad[3];
-    int forward[4];
+    int forward[3];
 };
 
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
-RWStructuredBuffer<QuadInfo> quadInfo : register(u1);
+RWStructuredBuffer<VoxelInfo> voxelInfos : register(u1);
 RWStructuredBuffer<uint> count : register(u2);
 
 [numthreads(8, 8, 8)]
@@ -98,13 +98,13 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         }
     }
     if (totalIntersections <= 0){
-        quadInfo[key].valid = -1; 
+        voxelInfos[key].valid = -1; 
     }
     else {
         InterlockedAdd(count[0], 1);
         vertices[key].pos = sumOfIntersections / (float)totalIntersections;
         vertices[key].norm = GetNormal(vertices[key].pos, 2.0f, noiseTex, noiseSamp);
-        quadInfo[key].valid = 1; 
+        voxelInfos[key].valid = 1; 
     }
 
     float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
@@ -113,14 +113,14 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
 
         if (edgeStartDistance * edgeEndDistance <= 0.0f)
-            quadInfo[key].hasQuad[e] = 1; 
+            voxelInfos[key].hasQuad[e] = 1; 
         else
-            quadInfo[key].hasQuad[e] = -1; 
+            voxelInfos[key].hasQuad[e] = -1; 
 
         if (edgeStartDistance > edgeEndDistance)
-            quadInfo[key].forward[e] = 1;
+            voxelInfos[key].forward[e] = 1;
         else
-            quadInfo[key].forward[e] = -1;
+            voxelInfos[key].forward[e] = -1;
     }
 
 }

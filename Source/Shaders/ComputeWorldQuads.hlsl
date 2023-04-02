@@ -29,10 +29,10 @@ struct WorldVertex {
     float3 norm;
 };
 
-struct QuadInfo {
+struct VoxelInfo {
     int valid;
     int hasQuad[3];
-    int forward[4];
+    int forward[3];
 };
 
 struct Quad {
@@ -45,7 +45,7 @@ struct Quad {
 };
 
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
-RWStructuredBuffer<QuadInfo> quadInfos : register(u1);
+RWStructuredBuffer<VoxelInfo> voxelInfos : register(u1);
 AppendStructuredBuffer<Quad> indices : register(u2);
 RWStructuredBuffer<uint> count : register(u3);
 
@@ -55,12 +55,12 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
     float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
     uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-    QuadInfo quadInfo = quadInfos[key];
-    if (quadInfo.valid != 1)
+    VoxelInfo voxelInfo = voxelInfos[key];
+    if (voxelInfo.valid != 1)
         return;
 
     for (int e = 0; e < 3; e++) {
-        if (quadInfo.hasQuad[e] != 1)
+        if (voxelInfo.hasQuad[e] != 1)
             continue;
         int indiceCount = 0;
         uint planeIndices[4]; 
@@ -78,7 +78,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
             }
 
             uint otherKey = (indexPosition.z) + (indexPosition.y * WORLD_RESOLUTION) + (indexPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-            if (quadInfos[otherKey].valid != 1)
+            if (voxelInfos[otherKey].valid != 1)
                 break;
 
             planeIndices[t] = otherKey;
@@ -87,7 +87,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
 
         if (indiceCount == 4) {
             Quad newQuad;
-            if (quadInfo.forward[e] == 1) {
+            if (voxelInfo.forward[e] == 1) {
                 newQuad.i0 = planeIndices[0];
                 newQuad.i1 = planeIndices[3];
                 newQuad.i2 = planeIndices[2];

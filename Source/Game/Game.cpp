@@ -45,12 +45,6 @@ void Game::Init() {
 
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
-    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
-    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
-        ivec3 chunk(x, y, z);
-        // world_.GenerateMeshGPU_P(chunk);
-    }
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(

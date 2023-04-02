@@ -234,7 +234,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         nullptr
     );
     CreateStructuredBufferAndView(
-        sizeof(int) * 8,
+        sizeof(uint) * 8,       // uint is used here since hlsl bools are 32-bits big
         MAX_CHUNK_VERTICES,
         &computeWVoxelsBuffer_,
         &computeWVoxelsView_,

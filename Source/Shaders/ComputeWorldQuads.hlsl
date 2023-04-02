@@ -30,9 +30,9 @@ struct WorldVertex {
 };
 
 struct VoxelInfo {
-    int valid;
-    int hasQuad[3];
-    int forward[3];
+    bool valid;
+    bool hasQuad[3];
+    bool forward[3];
 };
 
 struct Quad {
@@ -56,11 +56,11 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
     uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
     VoxelInfo voxelInfo = voxelInfos[key];
-    if (voxelInfo.valid != 1)
+    if (!voxelInfo.valid)
         return;
 
     for (int e = 0; e < 3; e++) {
-        if (voxelInfo.hasQuad[e] != 1)
+        if (!voxelInfo.hasQuad[e])
             continue;
         int indiceCount = 0;
         uint planeIndices[4]; 
@@ -78,7 +78,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
             }
 
             uint otherKey = (indexPosition.z) + (indexPosition.y * WORLD_RESOLUTION) + (indexPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-            if (voxelInfos[otherKey].valid != 1)
+            if (!voxelInfos[otherKey].valid)
                 break;
 
             planeIndices[t] = otherKey;
@@ -87,7 +87,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
 
         if (indiceCount == 4) {
             Quad newQuad;
-            if (voxelInfo.forward[e] == 1) {
+            if (voxelInfo.forward[e]) {
                 newQuad.i0 = planeIndices[0];
                 newQuad.i1 = planeIndices[3];
                 newQuad.i2 = planeIndices[2];

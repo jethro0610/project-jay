@@ -29,6 +29,12 @@ struct WorldVertex {
     float3 norm;
 };
 
+struct QuadInfo {
+    int valid;
+    int hasQuad[3];
+    int forward[4];
+};
+
 struct Quad {
     uint i0;
     uint i1;
@@ -36,17 +42,10 @@ struct Quad {
     uint i3;
     uint i4;
     uint i5;
-
-    uint pad0;
-    uint pad1;
-    uint pad2;
-    uint pad3;
-    uint pad4;
-    uint pad5;
 };
 
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
-RWStructuredBuffer<int> validity : register(u1);
+RWStructuredBuffer<QuadInfo> quadInfos : register(u1);
 AppendStructuredBuffer<Quad> indices : register(u2);
 
 [numthreads(8, 8, 8)]
@@ -54,79 +53,56 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
     float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
+    uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+    QuadInfo quadInfo = quadInfos[key];
+    if (quadInfo.valid != 1)
+        return;
 
     for (int e = 0; e < 3; e++) {
-        float3 edgeEnd = voxelPosition + triangleEdgeTable[e] * VOXEL_SIZE;
-        float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
-
-        if (edgeStartDistance * edgeEndDistance <= 0.0f) {
-            int indiceCount = 0;
-            int planeIndices[4]; 
-            for (int t = 0; t < 4; t++) {
-                int3 indexPosition = localVoxelIndex + triangulationTable[e][t];
-
-                if (indexPosition.x < 0 ||
-                    indexPosition.y < 0 ||
-                    indexPosition.z < 0) {
-                    break;
-                }
-
-                if (indexPosition.x >= WORLD_RESOLUTION ||
-                    indexPosition.y >= WORLD_RESOLUTION ||
-                    indexPosition.z >= WORLD_RESOLUTION) {
-                    break;
-                }
-
-                int key = (indexPosition.z) + (indexPosition.y * WORLD_RESOLUTION) + (indexPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
-                if (validity[key] != 1)
-                    break;
-
-                planeIndices[t] = key;
-                indiceCount++;
+        if (quadInfo.hasQuad[e] != 1)
+            continue;
+        int indiceCount = 0;
+        uint planeIndices[4]; 
+        for (int t = 0; t < 4; t++) {
+            int3 indexPosition = localVoxelIndex + triangulationTable[e][t];
+            if (indexPosition.x < 0 ||
+                indexPosition.y < 0 ||
+                indexPosition.z < 0) {
+                break;
+            }
+            if (indexPosition.x >= WORLD_RESOLUTION ||
+                indexPosition.y >= WORLD_RESOLUTION ||
+                indexPosition.z >= WORLD_RESOLUTION) {
+                break;
             }
 
-            if (indiceCount == 4) {
-                Quad newQuad;
-                newQuad.pad0 = 0;
-                newQuad.pad1 = 0;
-                newQuad.pad2 = 0;
-                newQuad.pad3 = 0;
-                newQuad.pad4 = 0;
-                newQuad.pad5 = 0;
-                if (edgeStartDistance > edgeEndDistance) {
-                    newQuad.i0 = planeIndices[0];
-                    newQuad.i1 = planeIndices[3];
-                    newQuad.i2 = planeIndices[2];
-                    newQuad.i3 = planeIndices[2];
-                    newQuad.i4 = planeIndices[1];
-                    newQuad.i5 = planeIndices[0];
-                }
-                else {
-                    newQuad.i0 = planeIndices[0];
-                    newQuad.i1 = planeIndices[1];
-                    newQuad.i2 = planeIndices[2];
-                    newQuad.i3 = planeIndices[2];
-                    newQuad.i4 = planeIndices[3];
-                    newQuad.i5 = planeIndices[0];
-                }
-                indices.Append(newQuad);
+            uint otherKey = (indexPosition.z) + (indexPosition.y * WORLD_RESOLUTION) + (indexPosition.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+            if (quadInfos[otherKey].valid != 1)
+                break;
+
+            planeIndices[t] = otherKey;
+            indiceCount++;
+        }
+
+        if (indiceCount == 4) {
+            Quad newQuad;
+            if (quadInfo.forward[e] == 1) {
+                newQuad.i0 = planeIndices[0];
+                newQuad.i1 = planeIndices[3];
+                newQuad.i2 = planeIndices[2];
+                newQuad.i3 = planeIndices[2];
+                newQuad.i4 = planeIndices[1];
+                newQuad.i5 = planeIndices[0];
             }
             else {
-                Quad noQ;
-                noQ.pad0 = 5;
-                noQ.pad1 = 0;
-                noQ.pad2 = 2;
-                noQ.pad3 = 3;
-                noQ.pad4 = 0;
-                noQ.pad5 = 1;
-                noQ.i0 = 7;
-                noQ.i1 = 7;
-                noQ.i2 = 7;
-                noQ.i3 = 7;
-                noQ.i4 = 7;
-                noQ.i5 = 7;
-                /* indices.Append(noQ); */
+                newQuad.i0 = planeIndices[0];
+                newQuad.i1 = planeIndices[1];
+                newQuad.i2 = planeIndices[2];
+                newQuad.i3 = planeIndices[2];
+                newQuad.i4 = planeIndices[3];
+                newQuad.i5 = planeIndices[0];
             }
+            indices.Append(newQuad);
         }
     }
 }

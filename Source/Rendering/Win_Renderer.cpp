@@ -86,7 +86,7 @@ void Renderer::RenderWorld_P() {
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
         context->IASetIndexBuffer(worldMeshResource.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-        context->DrawIndexed(worldMeshResource.indexCount, 0, 0);
+        context->DrawIndexed(3 * 1024, 0, 0);
     }
 }
 

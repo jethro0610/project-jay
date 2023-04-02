@@ -54,12 +54,20 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
     context->CopyResource(dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexBuffer, dxResources.computeWVertsBuffer_);
 
+    // context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
+    // ID3D11UnorderedAccessView* quadView[3] = {dxResources.computeWVertsView_, dxResources.computeWValidView_, dxResources.computeWQuadsView_};
+    // context->CSSetUnorderedAccessViews(0, 3, quadView, nullptr);
+    // context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
+    // context->CopyResource(dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexBuffer, dxResources.computeWQuadsBuffer_);
+    // return;
+
     D3D11_MAPPED_SUBRESOURCE quadInfosResource;
     context->CopyResource(dxResources.computeWValidOutput_, dxResources.computeWValidBuffer_);
     context->Map(dxResources.computeWValidOutput_, 0, D3D11_MAP_READ, 0, &quadInfosResource);
     QuadInfo* quadInfos = reinterpret_cast<QuadInfo*>(quadInfosResource.pData);
     
     std::vector<uint> indices;
+    indices.reserve(MAX_CHUNK_QUADS * 6);
 
     for (int x = 0; x < WORLD_RESOLUTION; x++)
     for (int y = 0; y < WORLD_RESOLUTION; y++)
@@ -122,9 +130,4 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     memcpy(indicesResource.pData, indices.data(), indices.size() * sizeof(uint));
     context->Unmap(dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexBuffer, 0);
     dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexCount = indices.size();
-    // context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
-    // ID3D11UnorderedAccessView* quadView[3] = {dxResources.computeWVertsView_, dxResources.computeWValidView_, dxResources.computeWQuadsView_};
-    // context->CSSetUnorderedAccessViews(0, 3, quadView, nullptr);
-    // context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
-    // context->CopyResource(dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexBuffer, dxResources.computeWQuadsBuffer_);
 }

@@ -236,7 +236,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
         0,
-        0,
+        sizeof(glm::vec3),
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     }; 

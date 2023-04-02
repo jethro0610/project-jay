@@ -231,10 +231,10 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &computeWVertsBuffer_,
         &computeWVertsView_,
         false,
-        nullptr
+        &computeWVertsOutput_ 
     );
     CreateStructuredBufferAndView(
-        sizeof(int),
+        sizeof(int) * 8,
         MAX_CHUNK_VERTICES,
         &computeWValidBuffer_,
         &computeWValidView_,

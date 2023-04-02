@@ -32,6 +32,18 @@ static int2 edgeTable[12] = {
     { 2, 6 },
 };
 
+static float3 triangleEdgeTable[3] = {
+    {1.0f, 0.0f, 0.0f},  // X
+    {0.0f, 1.0f, 0.0f},  // Y
+    {0.0f, 0.0f, 1.0f},  // Z
+};
+
+static int3 triangulationTable[3][4] = {
+    {{ 0,  0,  0}, { 0,  0, -1}, { 0, -1, -1}, { 0, -1,  0}},   // X; Why is this LHS and backwards tf.
+    {{ 0,  0,  0}, {-1,  0,  0}, {-1,  0, -1}, { 0,  0, -1}},   // Y
+    {{ 0,  0,  0}, { 0, -1,  0}, {-1, -1,  0}, {-1,  0,  0}},   // Z
+};
+
 static uint WORLD_RESOLUTION = 16;
 static uint WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
 static uint DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
@@ -44,13 +56,19 @@ struct WorldVertex {
     float3 norm;
 };
 
+struct QuadInfo {
+    int valid;
+    int hasQuad[3];
+    int forward[4];
+};
+
 RWStructuredBuffer<WorldVertex> vertices : register(u0);
-RWStructuredBuffer<int> validity : register(u1);
+RWStructuredBuffer<QuadInfo> quadInfo : register(u1);
 
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
-    int key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
+    uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
 
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
     float3 sumOfIntersections = float3(0.0f, 0.0f, 0.0f);
@@ -79,11 +97,28 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         }
     }
     if (totalIntersections <= 0){
-        validity[key] = -1; 
+        quadInfo[key].valid = -1; 
     }
     else {
         vertices[key].pos = sumOfIntersections / (float)totalIntersections;
         vertices[key].norm = GetNormal(vertices[key].pos, 2.0f, noiseTex, noiseSamp);
-        validity[key] = 1; 
+        quadInfo[key].valid = 1; 
     }
+
+    float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
+    for (int e = 0; e < 3; e++) {
+        float3 edgeEnd = voxelPosition + triangleEdgeTable[e] * VOXEL_SIZE;
+        float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
+
+        if (edgeStartDistance * edgeEndDistance <= 0.0f)
+            quadInfo[key].hasQuad[e] = 1; 
+        else
+            quadInfo[key].hasQuad[e] = -1; 
+
+        if (edgeStartDistance > edgeEndDistance)
+            quadInfo[key].forward[e] = 1;
+        else
+            quadInfo[key].forward[e] = -1;
+    }
+
 }

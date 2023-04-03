@@ -160,8 +160,6 @@
     - Cut forces you on a line path with little control, reflects?
         - Can exit and transfer velocity in any direction
 
-- Point cloud rendering for world?
-
 - Kickable that forms wall in the air, if anything hits the wall, dead
 
 - Attack that only shoots up from spread, have to cut
@@ -187,6 +185,8 @@
 - Add some kind of action on hard turn
 
 - Store world WVP matrix off by a few frames so it appears behind in time 
+
+- Somwthing you hit in air
 
 =========================================
 - Modifier objects (not component)

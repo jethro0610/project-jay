@@ -25,6 +25,15 @@ void Game::Init() {
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 
+    TerrainModifier testMod {
+        TerrainModType::Height,
+        vec2(0.0f, 0.0f),
+        2.0f,
+        3.0f,
+        32.0f
+    };
+    world_.terrainModifiers_.Append(testMod);
+
     // Create the testing terrain modifier entity
     /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */
     /* auto terrainModProps = entityManager_.RegisterComponent<TerrainModComponent>(terrainModEntity); */

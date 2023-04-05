@@ -190,5 +190,7 @@
 
 =========================================
 - Modifier objects (not component)
+    - Precompute modifier chunks for better performanc3
+    - Use FixedVector in SpreadManager
 - Seed meter
 - Slide off/strong slopes

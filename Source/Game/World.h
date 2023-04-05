@@ -8,6 +8,8 @@
 #include "Components/TerrainModComponent.h"
 #include "Entity/Entity.h"
 #include "../Resource/ResourceManager.h"
+#include "TerrainModifier.h"
+#include "../Types/FixedVector.h"
 
 const glm::float3 cornerTable[8] = {
     {0.0f, 0.0f, 0.0f},
@@ -48,11 +50,12 @@ const glm::ivec3 triangulationTable[3][4] = {
 
 class World {
 public:
-    World(Entity* entities, ResourceManager& resourceManager, TerrainModComponent& terrainModComponent);
+    World(Entity* entities, ResourceManager& resourceManager);
     ResourceManager& resourceManager_;
     Entity* entities_;
-    TerrainModComponent& terrainModComponent_;
+    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
 
+    float GetTerrainHeight(glm::vec2 position) const;
     float GetDistance(glm::vec3 position) const;
     // Higher epsilon = smoother
     glm::vec3 GetNormal(glm::vec3 position, float epsilon = 1.0f) const;

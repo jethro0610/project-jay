@@ -4,13 +4,30 @@
 #include <gtx/string_cast.hpp>
 using namespace glm;
 
-World::World(Entity* entities, ResourceManager& resourceManager, TerrainModComponent& terrainModComponent):
+World::World(Entity* entities, ResourceManager& resourceManager):
     noise_(new FastNoiseLite()),
     entities_(entities),
-    resourceManager_(resourceManager),
-    terrainModComponent_(terrainModComponent)
+    resourceManager_(resourceManager)
 {
     GenerateNoiseTexture_P();
+}
+
+float World::GetTerrainHeight(vec2 position) const {
+    float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
+    height += 32.0f;
+    for (int i = 0; i < terrainModifiers_.GetCount(); i++) {
+        const TerrainModifier& modifier = terrainModifiers_[i];
+        float distFromModifier = distance(modifier.position, position);
+        // Can probably precompute the chunk for faster performance
+        if (distFromModifier > modifier.range)
+            continue;
+
+        float t = (modifier.range - distFromModifier) / modifier.range;
+        float ease = t < 0.5f ? powf(2.0f, modifier.exponent - 1.0f) * powf(t , modifier.exponent) : 1 - powf(-2 * t + 2, modifier.exponent) / 2.0f; 
+        height += ease * 5.0f;
+    };
+
+    return height;
 }
 
 float World::GetDistance(vec3 position) const {
@@ -24,8 +41,7 @@ float World::GetDistance(vec3 position) const {
 
     float radius = 160.0f + blobRadius;
 
-    float noiseHeight = noise_->GetNoise(position2d.x * 0.75f, position2d.y * 0.75f) * 8.0f + 8.0f;
-    float height = 32.0f + noiseHeight;
+    float height = GetTerrainHeight(position2d);
 
     vec2 d = vec2(length(position2d), abs(position.y)) - vec2(radius, height) + height; 
     float blobDist = length(max(d, 0.0f)) + min(max(d.x, d.y), 0.0f) - height;

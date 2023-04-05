@@ -5,7 +5,6 @@
 #include "WorldConstants.h"
 #include <FastNoiseLite.h>
 #include <bitset>
-#include "Components/TerrainModComponent.h"
 #include "Entity/Entity.h"
 #include "../Resource/ResourceManager.h"
 #include "TerrainModifier.h"

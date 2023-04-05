@@ -12,7 +12,6 @@ file(GLOB SOURCES
 	Source/Game/Systems/GroundTraceSystem.cpp
 	Source/Game/Systems/MovementSystem.cpp
 	Source/Game/Systems/TransformSystem.cpp
-    Source/Game/Systems/TerrainModSystem.cpp
     Source/Game/Systems/SpreadActivatorSystem.cpp
     Source/Game/Systems/SpreadDetectSystem.cpp
     Source/Game/Systems/PickupSystem.cpp

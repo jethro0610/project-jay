@@ -63,10 +63,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.projectileComponent_,
             entityManager_.velocityComponent_
         );
-        TerrainModSystem::Execute(
-            entityManager_,
-            entityManager_.terrainModComponent_
-        );
         TransformSystem::UpdateLastTransforms(
             entityManager_,
             entityManager_.transformComponent_

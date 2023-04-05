@@ -6,7 +6,6 @@
 #include "VelocityComponent.h"
 #include "ProjectileComponent.h"
 
-#include "TerrainModComponent.h"
 #include "WorldColliderComponent.h"
 #include "SpreadActivatorComponent.h"
 #include "SpreadDetectComponent.h"
@@ -25,7 +24,6 @@
     COMPONENTVAR(GroundTraceComponent, groundTraceComponent_) \
     COMPONENTVAR(VelocityComponent, velocityComponent_) \
     COMPONENTVAR(ProjectileComponent, projectileComponent_) \
-    COMPONENTVAR(TerrainModComponent, terrainModComponent_) \
     COMPONENTVAR(WorldColliderComponent, worldColliderComponent_) \
     COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent_) \
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \

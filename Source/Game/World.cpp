@@ -24,7 +24,7 @@ float World::GetTerrainHeight(vec2 position) const {
 
         float t = (modifier.range - distFromModifier) / modifier.range;
         float ease = t < 0.5f ? powf(2.0f, modifier.exponent - 1.0f) * powf(t , modifier.exponent) : 1 - powf(-2 * t + 2, modifier.exponent) / 2.0f; 
-        height -= ease * modifier.height;
+        height += ease * modifier.height;
     };
 
     return height;

@@ -30,7 +30,7 @@ float GetTerrainHeight(float2 position) {
             pow(2.0f, modifier.exponent - 1.0f) * pow(t , modifier.exponent) : 
             1 - pow(-2 * t + 2, modifier.exponent) / 2.0f; 
 
-        height -= ease * modifier.height;
+        height += ease * modifier.height;
     };
 
     return height;

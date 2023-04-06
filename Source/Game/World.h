@@ -70,6 +70,7 @@ public:
 
     glm::vec3 GetNearestInDirection(glm::vec3 start, glm::vec3 direction, uint16_t maxSteps = 32);
     void GenerateMeshGPU_P(glm::ivec3 chunk);
+    void UpdateModifiersGPU_P();
 
 private:
     FastNoiseLite* noise_;

@@ -20,8 +20,9 @@ public:
         data_[index] = data_[count_--]; 
     }
     uint32_t GetCount() const { return count_; }
-
     T operator[](uint32_t index) const { return data_[index]; };
+    T* GetData() { return data_; }
+
 private:
     T* data_; 
     uint32_t count_;

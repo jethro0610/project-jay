@@ -28,11 +28,12 @@ void Game::Init() {
     TerrainModifier testMod {
         TerrainModType::Height,
         vec2(0.0f, 0.0f),
+        6.0f,
         2.0f,
-        3.0f,
-        32.0f
+        40.0f
     };
     world_.terrainModifiers_.Append(testMod);
+    world_.UpdateModifiersGPU_P();
 
     // Create the testing terrain modifier entity
     /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */

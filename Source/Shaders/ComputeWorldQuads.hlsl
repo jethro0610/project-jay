@@ -1,6 +1,4 @@
 #include "WorldFunctions.hlsli"
-Texture2D noiseTex : register(t0);
-SamplerState noiseSamp;
 
 cbuffer perChunkData : register(b0) {
     float4 chunkPos;
@@ -53,7 +51,7 @@ RWStructuredBuffer<uint> count : register(u3);
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos;
-    float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
+    /* float edgeStartDistance = GetDistance(voxelPosition); */
     uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION);
     VoxelInfo voxelInfo = voxelInfos[key];
     if (!voxelInfo.valid)

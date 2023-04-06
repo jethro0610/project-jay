@@ -1,5 +1,6 @@
 #include "DXResources.h"
 #include <assert.h>
+#include "../Game/TerrainModifier.h"
 #include "../Rendering/RenderTypes.h"
 
 #include "../Logging/Logger.h"
@@ -225,7 +226,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
-    CreateStructuredBufferAndView(
+    CreateRWStructuredBufferAndUAV(
         sizeof(WorldVertex),
         MAX_CHUNK_VERTICES,
         &computeWVertsBuffer_,
@@ -233,7 +234,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         false,
         nullptr
     );
-    CreateStructuredBufferAndView(
+    CreateRWStructuredBufferAndUAV(
         sizeof(uint) * 7,       // uint is used here since hlsl bools are 32-bits big
         MAX_CHUNK_VERTICES,
         &computeWVoxelsBuffer_,
@@ -241,7 +242,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         false,
         nullptr
     );
-    CreateStructuredBufferAndView(
+    CreateRWStructuredBufferAndUAV(
         sizeof(uint) * 6,
         MAX_CHUNK_QUADS,
         &computeWQuadsBuffer_,
@@ -249,13 +250,19 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         true,
         nullptr
     );
-    CreateStructuredBufferAndView(
+    CreateRWStructuredBufferAndUAV(
         sizeof(uint),
         1,
         &computeWCountBuffer_,
         &computeWCountView_,
         false,
         &computeWCountOutput_
+    );
+    CreateStructuredBufferAndSRV(
+        sizeof(TerrainModifier),
+        MAX_TERRAIN_MODIFIERS,
+        &terrainModBuffer_,
+        &terrainModSRV_
     );
 
     ID3DBlob* computeWVertsBlob;
@@ -323,7 +330,7 @@ void DXResources::CreateConstantBuffer(int size, ID3D11Buffer** outBuffer) {
     ));
 }
 
-void DXResources::CreateStructuredBufferAndView(
+void DXResources::CreateRWStructuredBufferAndUAV(
     int elementSize, 
     int numberOfElements, 
     ID3D11Buffer** outBuffer, 
@@ -331,13 +338,8 @@ void DXResources::CreateStructuredBufferAndView(
     bool append,
     ID3D11Buffer** outStagingBuffer
 ) {
-    std::string str = "Element size: " + std::to_string(elementSize) + '\n';
-    std::wstring wStr = std::wstring(str.begin(), str.end());
-    LPCWSTR outStr = wStr.c_str();
-    OutputDebugStringW(outStr);
-
     D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+    bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
     bufferDesc.ByteWidth = elementSize * numberOfElements;
     bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
     bufferDesc.StructureByteStride = elementSize;
@@ -356,10 +358,34 @@ void DXResources::CreateStructuredBufferAndView(
 
     if (outStagingBuffer != nullptr) {
         bufferDesc.Usage = D3D11_USAGE_STAGING;
+        bufferDesc.Usage = D3D11_USAGE_STAGING;
         bufferDesc.BindFlags = 0;
         bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
         HRASSERT(device_->CreateBuffer(&bufferDesc, 0, outStagingBuffer));
     }
+}
+
+void DXResources::CreateStructuredBufferAndSRV(
+    int elementSize, 
+    int numberOfElements, 
+    ID3D11Buffer** outBuffer, 
+    ID3D11ShaderResourceView** outView
+) {
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    bufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+    bufferDesc.ByteWidth = elementSize * numberOfElements;
+    bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+    bufferDesc.StructureByteStride = elementSize;
+    HRASSERT(device_->CreateBuffer(&bufferDesc, nullptr, outBuffer));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
+    viewDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    viewDesc.Buffer.FirstElement = 0;
+    viewDesc.Format = DXGI_FORMAT_UNKNOWN;
+    viewDesc.Buffer.NumElements = numberOfElements;
+    HRASSERT(device_->CreateShaderResourceView(*outBuffer, &viewDesc, outView));
 }
 
 void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {

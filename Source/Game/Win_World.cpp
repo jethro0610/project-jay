@@ -45,13 +45,18 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     memcpy(chunkDataResource.pData, &chunkPos, sizeof(vec4)); 
     context->Unmap(dxResources.perChunkCBuffer_, 0);
 
-    context->CSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
+    ID3D11ShaderResourceView* resources[2] = { dxResources.noiseTextureSRV_, dxResources.terrainModSRV_ };
+    context->CSSetShaderResources(0, 2, resources);
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     UINT zeroes[4] = {0, 0, 0, 0};
     D3D11_MAPPED_SUBRESOURCE countResource;
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* vertView[3] = {dxResources.computeWVertsView_, dxResources.computeWVoxelsView_, dxResources.computeWCountView_};
+    ID3D11UnorderedAccessView* vertView[3] = {
+        dxResources.computeWVertsView_, 
+        dxResources.computeWVoxelsView_, 
+        dxResources.computeWCountView_
+    };
     context->CSSetUnorderedAccessViews(0, 3, vertView, zeroes);
     context->ClearUnorderedAccessViewUint(dxResources.computeWVertsView_, zeroes);
     context->ClearUnorderedAccessViewUint(dxResources.computeWVoxelsView_, zeroes);
@@ -66,7 +71,12 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     // context->Unmap(dxResources.computeWCountOutput_, 0);
 
     context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* quadView[4] = {dxResources.computeWVertsView_, dxResources.computeWVoxelsView_, dxResources.computeWQuadsView_, dxResources.computeWCountView_};
+    ID3D11UnorderedAccessView* quadView[4] = {
+        dxResources.computeWVertsView_, 
+        dxResources.computeWVoxelsView_, 
+        dxResources.computeWQuadsView_, 
+        dxResources.computeWCountView_
+    };
     context->CSSetUnorderedAccessViews(0, 4, quadView, zeroes);
     context->ClearUnorderedAccessViewUint(dxResources.computeWQuadsView_, zeroes);
     context->ClearUnorderedAccessViewUint(dxResources.computeWCountView_, zeroes);
@@ -77,4 +87,14 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Map(dxResources.computeWCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
     chunkMesh.indexCount = reinterpret_cast<uint*>(countResource.pData)[0];
     context->Unmap(dxResources.computeWCountOutput_, 0);
+}
+
+void World::UpdateModifiersGPU_P() {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+
+    D3D11_MAPPED_SUBRESOURCE terrainModData;
+    context->Map(dxResources.terrainModBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &terrainModData);
+    memcpy(terrainModData.pData, terrainModifiers_.GetData(), sizeof(TerrainModifier) * 1);
+    context->Unmap(dxResources.terrainModBuffer_, 0);
 }

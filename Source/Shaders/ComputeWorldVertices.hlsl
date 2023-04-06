@@ -1,6 +1,4 @@
 #include "WorldFunctions.hlsli"
-Texture2D noiseTex : register(t0);
-SamplerState noiseSamp;
 
 cbuffer perChunkData : register(b0) {
     float4 chunkPos;
@@ -79,8 +77,8 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
         float3 edgeStart = voxelPosition + cornerTable[edgeTable[e][0]] * VOXEL_SIZE;
         float3 edgeEnd = voxelPosition + cornerTable[edgeTable[e][1]] * VOXEL_SIZE;
         
-        float edgeStartDistance = GetDistance(edgeStart, noiseTex, noiseSamp);
-        float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
+        float edgeStartDistance = GetDistance(edgeStart);
+        float edgeEndDistance = GetDistance(edgeEnd);
         
         // If the value is negative, it implies the two signs are different, 
         // so there must be an intersection on this edge
@@ -103,14 +101,14 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     else {
         InterlockedAdd(count[0], 1);
         vertices[key].pos = sumOfIntersections / (float)totalIntersections;
-        vertices[key].norm = GetNormal(vertices[key].pos, 2.0f, noiseTex, noiseSamp);
+        vertices[key].norm = GetNormal(vertices[key].pos, 2.0f);
         voxelInfos[key].valid = true; 
     }
 
-    float edgeStartDistance = GetDistance(voxelPosition, noiseTex, noiseSamp);
+    float edgeStartDistance = GetDistance(voxelPosition);
     for (int e = 0; e < 3; e++) {
         float3 edgeEnd = voxelPosition + triangleEdgeTable[e] * VOXEL_SIZE;
-        float edgeEndDistance = GetDistance(edgeEnd, noiseTex, noiseSamp);
+        float edgeEndDistance = GetDistance(edgeEnd);
 
         if (edgeStartDistance * edgeEndDistance <= 0.0f)
             voxelInfos[key].hasQuad[e] = true; 

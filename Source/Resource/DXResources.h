@@ -96,6 +96,9 @@ public:
     ID3D11Buffer* computeWQuadsBuffer_;
     ID3D11UnorderedAccessView* computeWQuadsView_;
 
+    ID3D11Buffer* terrainModBuffer_;
+    ID3D11ShaderResourceView* terrainModSRV_;
+
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadTexture(std::string textureName);
@@ -107,13 +110,19 @@ public:
     void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
 private:
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
-    void CreateStructuredBufferAndView(
+    void CreateRWStructuredBufferAndUAV(
         int elementSize, 
         int numberOfElements, 
         ID3D11Buffer** outBuffer, 
         ID3D11UnorderedAccessView** outView, 
         bool append,
         ID3D11Buffer** outStagingBuffer
+    );
+    void CreateStructuredBufferAndSRV(
+        int elementSize, 
+        int numberOfElements, 
+        ID3D11Buffer** outBuffer, 
+        ID3D11ShaderResourceView** outView
     );
 
     void LoadMesh(std::string modelName, RawMesh mesh, int meshIndex, bool skeletal);

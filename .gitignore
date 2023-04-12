@@ -410,3 +410,4 @@ FodyWeavers.xsd
 Build/
 Libraries/
 lastcompiletimes.json
+compile_commands.json

@@ -3,7 +3,7 @@ import os
 from termcolor import colored
 
 asset_dir = "Assets"
-output_dir = "Build/Debug"
+output_dir = "Build/Output"
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)

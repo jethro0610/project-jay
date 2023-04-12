@@ -57,6 +57,7 @@ file(GLOB SOURCES
 		Source/Resource/DXResources.cpp
 )
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Build/Output)
 include_directories("Libraries/glm")
 include_directories("Libraries/json")
 include_directories("Libraries/WICTextureLoader")

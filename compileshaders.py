@@ -4,15 +4,15 @@ import sys
 import subprocess
 from termcolor import colored
 
-input_path = ".\\Source\\Shaders\\"
-output_path = ".\\Build\\Debug\\"
+input_path = "./Source/Shaders/"
+output_path = "./Build/Output/"
 shader_desc_file = open(input_path + "DXShaderDescriptions.json")
 shader_dict = json.load(shader_desc_file)
 shader_model = "5_0"
 
 compile_times = None
 try:
-    compile_times_file = open(".\\lastcompiletimes.json") 
+    compile_times_file = open("lastcompiletimes.json")
     compile_times = json.load(compile_times_file)
 except:
     compile_times = dict()
@@ -82,10 +82,10 @@ for shader_desc in shader_dict["shaders"]:
     
     print(colored("Compiling %s..." % shader_name, "yellow"))
 
-    command = "fxc /T %s /E\"main\" /Fo %s %s" % (shader_type + "_" + shader_model, shader_output, shader_input)
-    result = subprocess.run(command)
-    
-    if result.returncode == 0:
+    executable = "/home/jet/projects/project-jay/Tools/bin/dxc"
+    result = subprocess.call([executable, '-T', shader_type + "_" + shader_model, '/E', 'main', "/Fo", shader_output, shader_input])
+
+    if result == 0:
         compile_times["shaders"][shader_name]["time"] = last_shader_write
         compile_times["shaders"][shader_name]["success"] = True
         print(colored("Finished compiling %s." % shader_name, "yellow"))
@@ -99,5 +99,5 @@ for shader_desc in shader_dict["shaders"]:
     print()
     print()
 
-with open(".\\lastcompiletimes.json", "w") as outfile:
+with open("lastcompiletimes.json", "w") as outfile:
     json.dump(compile_times, outfile)

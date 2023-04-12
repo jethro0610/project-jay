@@ -409,5 +409,6 @@ FodyWeavers.xsd
 *.swp
 Build/
 Libraries/
+Tools/
 lastcompiletimes.json
 compile_commands.json

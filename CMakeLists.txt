@@ -43,7 +43,7 @@ file(GLOB SOURCES
 	Source/Types/Gamepad.cpp
 	Source/Types/Transform.cpp
 
-    IF(WIN64 OR WIN32)
+    IF(WIN32)
 		Source/Game/Win_Game.cpp
 		Source/Game/Win_World.cpp
         Source/Game/Win_SpreadManager.cpp
@@ -62,8 +62,13 @@ include_directories("Libraries/json")
 include_directories("Libraries/WICTextureLoader")
 include_directories("Libraries/FastNoise")
 add_compile_definitions(_DEBUG)
-if(WIN64 OR WIN32)
+if(MINGW)
     add_compile_definitions(_WINDOWS)
 endif()
 add_executable(ProjectJay WIN32 ${SOURCES}) # Headers are added into the VS solution
-target_link_libraries(${PROJECT_NAME} PRIVATE d3d11.lib xinput.lib d3dcompiler.lib --static)
+
+if (MINGW)
+    target_link_libraries(${PROJECT_NAME} PRIVATE d3d11.lib xinput.lib d3dcompiler.lib --static)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE d3d11.lib xinput.lib d3dcompiler.lib)
+endif()

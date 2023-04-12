@@ -2,7 +2,10 @@
 -std=c++20
 -I./Libraries/glm
 -I./Libraries/FastNoise
--I./Libraries/DirectXTK/Inc
 -I./Libraries/json
+-I./Libraries/WICTextureLoader
 -D_WINDOWS
 -D_DEBUG
+-I/usr/i686-w64-mingw32/sys-root/mingw/include
+-I/usr/i686-w64-mingw32/sys-root/mingw/include/c++
+--target=x86_64-w64-mingw32

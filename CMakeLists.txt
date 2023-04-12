@@ -5,6 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(ProjectJay)
 
 file(GLOB SOURCES
+    Libraries/WICTextureLoader/WICTextureLoader11.cpp
 	Source/Game/Entity/Entity.cpp
 	Source/Game/Entity/EntityManager.cpp
 
@@ -42,7 +43,7 @@ file(GLOB SOURCES
 	Source/Types/Gamepad.cpp
 	Source/Types/Transform.cpp
 
-	IF(WIN32)
+    IF(WIN64 OR WIN32)
 		Source/Game/Win_Game.cpp
 		Source/Game/Win_World.cpp
         Source/Game/Win_SpreadManager.cpp
@@ -58,8 +59,11 @@ file(GLOB SOURCES
 
 include_directories("Libraries/glm")
 include_directories("Libraries/json")
+include_directories("Libraries/WICTextureLoader")
 include_directories("Libraries/FastNoise")
-add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/DirectXTK ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK)
 add_compile_definitions(_DEBUG)
+if(WIN64 OR WIN32)
+    add_compile_definitions(_WINDOWS)
+endif()
 add_executable(ProjectJay WIN32 ${SOURCES}) # Headers are added into the VS solution
-target_link_libraries(${PROJECT_NAME} PRIVATE DirectXTK d3d11.lib Xinput.lib d3dcompiler.lib)
+target_link_libraries(${PROJECT_NAME} PRIVATE d3d11.lib xinput.lib d3dcompiler.lib --static)

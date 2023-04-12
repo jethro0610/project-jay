@@ -2,7 +2,7 @@
 #include "../Windows/WindowsInc.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <WICTextureLoader.h>
+#include <WICTextureLoader11.h>
 #include <unordered_map>
 #include <string>
 #include "../Resource/RawModel.h"

@@ -16,4 +16,5 @@ int CALLBACK WinMain(
     ScreenText::Init();
 #endif
     Game* app = new Game(1280, 720);
+    return 0;
 }

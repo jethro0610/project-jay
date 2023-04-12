@@ -1,5 +1,5 @@
 #include "Game.h"
-#include <Xinput.h>
+#include <xinput.h>
 #include <sstream>
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"

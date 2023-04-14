@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <algorithm>
 
 struct WorldColliderComponent : public Component {
     bool colliding[MAX_ENTITIES];

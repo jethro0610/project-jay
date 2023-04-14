@@ -1,16 +1,15 @@
 #pragma once
-#include "../Types/Transform.h"
-#include "../Game/World.h"
-#include "../Resource/ResourceManager.h"
 #include <set>
 #include <glm.hpp>
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
-#include "SpreadConstants.h"
+#include "../../Resource/ResourceManager.h"
+#include "../../Constants/SpreadConstants.h"
+#include "World.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include "gtx/hash.hpp"
+#include <gtx/hash.hpp>
 
 struct AddSpreadInfo {
     bool added;

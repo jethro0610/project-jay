@@ -1,6 +1,6 @@
 #pragma once
-#include "./Entity/EntityManager.h"
-#include "./SpreadManager.h"
+#include "Entity/EntityManager.h"
+#include "World/SpreadManager.h"
 #include "Camera.h"
 
 const uint8_t TIME_TO_CUT = 15;

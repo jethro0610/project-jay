@@ -1,7 +1,6 @@
 #pragma once
-#include "Component.h"
 #include "../../Types/Transform.h"
-#include <algorithm>
+#include "Component.h"
 
 struct TransformComponent : public Component {
     Transform transform[MAX_ENTITIES];

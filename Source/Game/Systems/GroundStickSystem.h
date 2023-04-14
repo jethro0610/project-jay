@@ -2,7 +2,7 @@
 #include "../Entity/EntityManager.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
-#include "../World.h"
+#include "../World/World.h"
 
 namespace GroundStickSystem {
     void Step (

@@ -1,15 +1,17 @@
 #pragma once
-#include "../Windows/WindowsInc.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <WICTextureLoader.h>
 #include <unordered_map>
 #include <string>
+#include <assert.h>
 #include "../Resource/RawModel.h"
 #include "../Rendering/RenderTypes.h"
-#include "../Game/WorldConstants.h"
-#include "../Game/SpreadConstants.h"
+#include "../Constants/WorldConstants.h"
+#include "../Constants/SpreadConstants.h"
 #include "../Logging/LogConstants.h"
+#include "../Game/World/TerrainModifier.h"
+#include "../Windows/WindowsInc.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps

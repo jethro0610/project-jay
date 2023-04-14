@@ -1,8 +1,7 @@
 #pragma once
-#include "Component.h"
 #include <glm.hpp>
 #include <bitset>
-#include <algorithm>
+#include "Component.h"
 
 const float DEFAULT_MIN_SPEED = 12.0f;
 const float DEFAULT_MAX_SPEED = 120.0f;

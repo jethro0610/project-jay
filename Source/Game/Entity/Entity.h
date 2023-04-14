@@ -1,7 +1,7 @@
 #pragma once
-#include "../Components/Component.h"
 #include <bitset>
 #include <initializer_list> 
+#include "../Components/Component.h"
 const uint8_t PLAYER_ENTITY = 0;
 
 typedef std::bitset<MAX_COMPONENT_TYPES> ComponentMask;

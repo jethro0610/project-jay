@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../Constants/TimeConstants.h"
 #include "../Logging/Logger.h"
 
 using namespace std::chrono;
@@ -27,13 +28,14 @@ void Game::Init() {
 
     TerrainModifier testMod {
         TerrainModType::Height,
-        vec2(0.0f, 0.0f),
-        -4.0f,
+        vec2(-32.0f, -32.0f),
+        8.0f,
         2.0f,
-        32.0f
+        48.0f
     };
     world_.terrainModifiers_.Append(testMod);
     world_.UpdateModifiersGPU_P();
+    // world_.UpdateModifiersGPU_P();
 
     // Create the testing terrain modifier entity
     /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */

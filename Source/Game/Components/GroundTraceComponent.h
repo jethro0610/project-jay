@@ -1,7 +1,6 @@
 #pragma once
-#include "Component.h"
 #include <glm.hpp>
-#include <algorithm>
+#include "Component.h"
 
 const float STEP_UP_HEIGHT = 0.25f;
 

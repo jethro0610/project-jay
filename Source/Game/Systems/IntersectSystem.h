@@ -1,5 +1,5 @@
 #include "../Entity/EntityManager.h"
-#include "../SpreadManager.h"
+#include "../World/SpreadManager.h"
 
 namespace IntersectSystem {
     void Execute(

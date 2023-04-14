@@ -1,4 +1,5 @@
 #include "TransformSystem.h"
+#include "../../Constants/TimeConstants.h"
 
 void TransformSystem::UpdateLastTransforms(EntityManager& entityManager, TransformComponent& transformComponent) {
     for (int i = 0; i < MAX_ENTITIES; i++) {

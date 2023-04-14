@@ -1,5 +1,4 @@
 #include "SpreadDetectSystem.h"
-#include "../TimeConstants.h"
 using namespace glm;
 
 void SpreadDetectSystem::Execute(

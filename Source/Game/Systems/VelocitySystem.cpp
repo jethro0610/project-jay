@@ -1,5 +1,5 @@
 #include "VelocitySystem.h"
-#include "../TimeConstants.h"
+#include "../../Constants/TimeConstants.h"
 
 void VelocitySystem::Apply(
     EntityManager& entityManager,

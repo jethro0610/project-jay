@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <algorithm>
 
 const uint16_t PICKUP_DURATION = 10;
 

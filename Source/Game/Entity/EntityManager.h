@@ -1,13 +1,10 @@
 #pragma once
-#include "Entity.h"
-#include "EntityConstants.h"
-#include "../../Resource/ResourceManager.h"
-#include "../Components/ComponentInclude.h"
-#include <bitset>
-#include <tuple>
-#include <unordered_map>
 #include <deque>
 #include <string>
+#include "Entity.h"
+#include "../../Constants/EntityConstants.h"
+#include "../../Resource/ResourceManager.h"
+#include "../Components/ComponentInclude.h"
 
 class EntityManager {
 public:

@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <algorithm>
 
 struct SpreadActivatorComponent : public Component {
     bool groundOnly[MAX_ENTITIES];

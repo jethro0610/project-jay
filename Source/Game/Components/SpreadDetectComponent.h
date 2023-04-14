@@ -1,8 +1,7 @@
 #pragma once
-#include "Component.h"
 #include <glm.hpp>
 #include <queue>
-#include <algorithm>
+#include "Component.h"
 
 const uint8_t MAX_DETECT = 16;
 const uint8_t MAX_ADD_DISTANCE = 2;

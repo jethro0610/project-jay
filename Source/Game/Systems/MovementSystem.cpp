@@ -75,7 +75,7 @@ void MovementSystem::Execute(
 
         // Spread contanct speed decline
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
-        float planarLength = planarVelocity.length();
+        float planarLength = length(planarVelocity);
         if (
             entity.HasComponent(spreadDetectComponent) && 
             spreadDetectComponent.deteced[i] &&

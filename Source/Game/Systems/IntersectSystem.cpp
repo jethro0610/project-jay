@@ -1,4 +1,4 @@
-#include "../GameConstants.h"
+#include "../../Constants/GameConstants.h"
 #include "./IntersectSystem.h"
 #include "../Systems/PickupSystem.h"
 #include "../Systems/ProjectileSystem.h"

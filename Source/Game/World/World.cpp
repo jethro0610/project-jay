@@ -1,6 +1,5 @@
 #include "World.h"
 #include <cmath>
-#include "../Logging/Logger.h"
 #include <gtx/string_cast.hpp>
 using namespace glm;
 
@@ -15,7 +14,7 @@ World::World(Entity* entities, ResourceManager& resourceManager):
 float World::GetTerrainHeight(vec2 position) const {
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
-    for (int i = 0; i < terrainModifiers_.GetCount(); i++) {
+    for (uint32_t i = 0; i < terrainModifiers_.GetCount(); i++) {
         const TerrainModifier& modifier = terrainModifiers_[i];
         float distFromModifier = distance(modifier.position, position);
         // Can probably precompute the chunk for faster performance
@@ -60,20 +59,6 @@ vec3 World::GetNormal(vec3 position, float epsilon) const {
     return normalize(vec3(gradX, gradY, gradZ));
 }
 
-float World::Lerp(float a, float b, float t) {
-    return a + t * (b - a);
-}
-
-void World::MarkChunkDirty(ivec3 chunk) {
-    int index = (chunk.x) + (chunk.y * MAX_X_CHUNKS) + (chunk.z * MAX_X_CHUNKS * MAX_Y_CHUNKS); 
-    dirtyChunks_[index] = true;
-}
-
-bool World::ChunkIsDirty(ivec3 chunk) const {
-    int index = (chunk.x) + (chunk.y * MAX_X_CHUNKS) + (chunk.z * MAX_Y_CHUNKS * MAX_Z_CHUNKS); 
-    return dirtyChunks_[index];
-}
-
 vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps) {
     vec3 currentPosition = start;
     for (int i = 0; i < maxSteps; i++) {
@@ -83,4 +68,8 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
         currentPosition += direction * distance;
     }
     return currentPosition;
+}
+
+void World::AddTerrainModifier(TerrainModifier modifier) {
+    terrainModifiers_.Append(modifier);
 }

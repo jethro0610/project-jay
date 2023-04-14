@@ -1,7 +1,6 @@
 #pragma once
-#include "Component.h"
 #include <glm.hpp>
-#include <algorithm>
+#include "Component.h"
 
 struct VelocityComponent : public Component {
     glm::vec3 velocity[MAX_ENTITIES];

@@ -74,11 +74,11 @@ LRESULT WindowsLayer::HandleMsg(HWND winHdl, UINT msg, WPARAM wParam, LPARAM lPa
     }
 
     case WM_KEYDOWN: {
-        OnKeyDown(wParam);
+        OnKeyDown(uint16_t(wParam));
     } break;
 
     case WM_KEYUP: {
-        OnKeyUp(wParam);
+        OnKeyUp(uint16_t(wParam));
     } break;
 
     case WM_LBUTTONDOWN: {

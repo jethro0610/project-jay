@@ -1,6 +1,6 @@
 #pragma once
-#include "Component.h"
 #include <string>
+#include "Component.h"
 
 const uint8_t MAX_MESHES_PER_MODEL = 8;
 

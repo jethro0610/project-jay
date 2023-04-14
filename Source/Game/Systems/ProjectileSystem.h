@@ -2,7 +2,7 @@
 #include "../Components/ProjectileComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../Components/TransformComponent.h"
-#include "../World.h"
+#include "../World/World.h"
 
 namespace ProjectileSystem {
     void CalculateVelocities(

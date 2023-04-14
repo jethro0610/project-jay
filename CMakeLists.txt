@@ -21,12 +21,15 @@ file(GLOB SOURCES
     Source/Game/Systems/IntersectSystem.cpp
     Source/Game/Systems/IntervalSpawnSystem.cpp
 
-    Source/Game/LoadHelpers.cpp
+    Source/Helpers/ChunkHelpers.cpp
+    Source/Helpers/LoadHelpers.cpp
+
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp
-	Source/Game/World.cpp
-    Source/Game/SpreadManager.cpp
     Source/Game/PlayerController.cpp
+
+    Source/Game/World/World.cpp
+    Source/Game/World/SpreadManager.cpp
 
 	Source/Logging/Logger.cpp
     Source/Logging/ScreenText.cpp
@@ -43,8 +46,8 @@ file(GLOB SOURCES
 
 	IF(WIN32)
 		Source/Game/Win_Game.cpp
-		Source/Game/Win_World.cpp
-        Source/Game/Win_SpreadManager.cpp
+        Source/Game/World/Win_World.cpp
+        Source/Game/World/Win_SpreadManager.cpp
 		Source/Logging/Win_Logger.cpp
 		Source/Rendering/Win_Renderer.cpp
 		Source/Resource/Win_RawModel.cpp
@@ -60,5 +63,6 @@ include_directories("Libraries/json")
 include_directories("Libraries/FastNoise")
 add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/DirectXTK ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK)
 add_compile_definitions(_DEBUG)
+add_compile_definitions(NOMINMAX)
 add_executable(ProjectJay WIN32 ${SOURCES}) # Headers are added into the VS solution
 target_link_libraries(${PROJECT_NAME} PRIVATE DirectXTK d3d11.lib Xinput.lib d3dcompiler.lib)

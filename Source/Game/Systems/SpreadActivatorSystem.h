@@ -1,7 +1,7 @@
 #pragma once
 #include "../Entity/EntityManager.h"
-#include "../../Game/SpreadManager.h"
-#include "../../Game/World.h"
+#include "../World/SpreadManager.h"
+#include "../World/World.h"
 
 namespace SpreadActivatorSystem {
     void Execute(

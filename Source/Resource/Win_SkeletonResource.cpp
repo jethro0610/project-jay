@@ -11,7 +11,7 @@ SkeletonResource::SkeletonResource(std::string skeletonName) {
 
     // Convert the file stream to a byte vector
     infile.seekg(0, std::ios::end);
-    int bytesSize = infile.tellg();
+    int bytesSize = int(infile.tellg());
     rawBytes.reserve(bytesSize);
     infile.seekg(0, std::ios::beg);
     std::copy((std::istreambuf_iterator<char>(infile)), std::istreambuf_iterator<char>(), std::back_inserter(rawBytes));

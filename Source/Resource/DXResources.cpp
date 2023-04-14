@@ -1,9 +1,5 @@
 #include "DXResources.h"
 #include <assert.h>
-#include "../Game/TerrainModifier.h"
-#include "../Rendering/RenderTypes.h"
-
-#include "../Logging/Logger.h"
 
 #ifdef _DEBUG
 #define D3D_FLAGS D3D11_CREATE_DEVICE_DEBUG
@@ -406,8 +402,8 @@ void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& ve
     memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
     context_->Unmap(worldMesh.indexBuffer, 0);
 
-    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexCount = vertices.size();
-    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexCount = indices.size();
+    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexCount = UINT(vertices.size());
+    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexCount = UINT(indices.size());
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {

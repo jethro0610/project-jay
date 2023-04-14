@@ -1,5 +1,4 @@
 #include "Renderer.h"
-
 #include "../Logging/Logger.h"
 
 Renderer::Renderer(ResourceManager& resourceManager):

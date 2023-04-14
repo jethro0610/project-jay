@@ -1,6 +1,6 @@
 #pragma once
 #include "../Entity/EntityManager.h"
-#include "../SpreadManager.h"
+#include "../World/SpreadManager.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
 #include "../Components/SpreadDetectComponent.h"

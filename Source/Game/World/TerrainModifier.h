@@ -1,3 +1,4 @@
+#pragma once
 #include <glm.hpp>
 const uint16_t MAX_TERRAIN_MODIFIERS = 64;
 

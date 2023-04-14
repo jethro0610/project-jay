@@ -1,12 +1,12 @@
 #include "AnimationResource.h"
 
 Transform AnimationResource::GetJointTransformAtTime(int jointIndex, float time) const {
-    int startIndex = ((int)floor(time / ANIMATION_SAMPLE_RATE));
+    int startIndex = int(floorf(time / ANIMATION_SAMPLE_RATE));
     int endIndex = startIndex + 1;
     if (endIndex >= numOfKeyframes_)
         endIndex = 0;
 
-    float startTime = (startIndex * ANIMATION_SAMPLE_RATE);
+    float startTime = float(startIndex * ANIMATION_SAMPLE_RATE);
     float endTime = startTime + ANIMATION_SAMPLE_RATE; // Since the sample rate is constant, the end will be one sample later
 
     float lerpTime = (time - startTime) / (endTime - startTime);
@@ -19,5 +19,5 @@ Transform AnimationResource::GetJointTransformAtTime(int jointIndex, float time)
 }
 
 float AnimationResource::GetTotalTime() const {
-    return numOfKeyframes_ * ANIMATION_SAMPLE_RATE;
+    return float(numOfKeyframes_ * ANIMATION_SAMPLE_RATE);
 }

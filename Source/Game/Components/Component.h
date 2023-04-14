@@ -1,7 +1,8 @@
 #pragma once
 #include <json.hpp>
-#include "../LoadHelpers.h"
-#include "../Entity/EntityConstants.h"
+#include <algorithm>
+#include "../../Helpers/LoadHelpers.h"
+#include "../../Constants/EntityConstants.h"
 
 const uint8_t MAX_COMPONENT_TYPES = 32;
 struct Component {

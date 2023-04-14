@@ -1,14 +1,15 @@
 #pragma once
-
 #include "../Resource/ResourceManager.h"
 #include "RenderTypes.h"
-
 #include "../Game/Entity/Entity.h"
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
-#include "../Game/SpreadManager.h"
+#include "../Game/World/SpreadManager.h"
+
+#ifdef _DEBUG
 #include "../Logging/ScreenText.h"
+#endif
 
 typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
 

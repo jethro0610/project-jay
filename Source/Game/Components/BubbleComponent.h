@@ -1,8 +1,6 @@
 #pragma once
-#include "Component.h"
-#include <json.hpp>
-#include <algorithm>
 #include <bitset>
+#include "Component.h"
 
 enum BubbleProperties {
     Meteor,

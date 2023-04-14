@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 const float MAX_DELTA_TIME = 1.0f / 15.0f;
 
 // Changing the timestep will affect accelerations, but velocities will still have the same effect

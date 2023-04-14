@@ -1,7 +1,5 @@
 #pragma once
 #include "Component.h"
-#include "../../Types/Transform.h"
-#include <algorithm>
 
 struct HoldableComponent : public Component {
     HoldableComponent() {};

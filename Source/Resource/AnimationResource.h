@@ -3,7 +3,7 @@
 #include <vector>
 
 const uint8_t ANIMATION_HEADER_SIZE = sizeof(uint8_t) + sizeof(uint16_t);
-const uint8_t ANIMATION_SAMPLE_RATE = 1 / 60.0f;
+const uint8_t ANIMATION_SAMPLE_RATE = uint8_t(1 / 60.0f);
 const uint8_t KEYFRAME_SIZE = sizeof(Transform);
 
 struct JointChannel {

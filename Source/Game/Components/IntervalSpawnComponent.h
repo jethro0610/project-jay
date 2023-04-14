@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include <algorithm>
 
 struct IntervalSpawnComponent : public Component {
     uint16_t spawnInterval[MAX_ENTITIES];

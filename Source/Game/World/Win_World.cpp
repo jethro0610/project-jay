@@ -1,6 +1,5 @@
 #include "World.h"
-#include "../Resource/DXResources.h"
-#include "../Logging/Logger.h"
+#include "../../Resource/DXResources.h"
 
 struct QuadInfo {
     int valid;

@@ -1,5 +1,6 @@
-#include "DXResources.h"
 #include <assert.h>
+#include "DXResources.h"
+#include "../Helpers/ChunkHelpers.h"
 
 #ifdef _DEBUG
 #define D3D_FLAGS D3D11_CREATE_DEVICE_DEBUG
@@ -385,12 +386,9 @@ void DXResources::CreateStructuredBufferAndSRV(
 }
 
 void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
-    ivec3 normalizedChunk = chunk;
-    normalizedChunk.x += MAX_X_CHUNKS / 2;
-    normalizedChunk.y += MAX_Y_CHUNKS / 2;
-    normalizedChunk.z += MAX_Z_CHUNKS / 2;
+    chunk = GetNormalizedChunk(chunk);
 
-    DXMesh worldMesh = worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z];
+    DXMesh worldMesh = worldMeshes_[chunk.x][chunk.y][chunk.z];
 
     D3D11_MAPPED_SUBRESOURCE vertexResource;
     context_->Map(worldMesh.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
@@ -402,8 +400,8 @@ void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& ve
     memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
     context_->Unmap(worldMesh.indexBuffer, 0);
 
-    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].vertexCount = UINT(vertices.size());
-    worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z].indexCount = UINT(indices.size());
+    worldMeshes_[chunk.x][chunk.y][chunk.z].vertexCount = UINT(vertices.size());
+    worldMeshes_[chunk.x][chunk.y][chunk.z].indexCount = UINT(indices.size());
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {

@@ -1,6 +1,6 @@
 #include "World.h"
-#include <cmath>
-#include <gtx/string_cast.hpp>
+#include "../../Helpers/ChunkHelpers.h"
+
 using namespace glm;
 
 World::World(Entity* entities, ResourceManager& resourceManager):
@@ -72,4 +72,9 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
 
 void World::AddTerrainModifier(TerrainModifier modifier) {
     terrainModifiers_.Append(modifier);
+    ivec2 modifiedChunk = WorldPositionToChunk2D(modifier.position); 
+    for (int y = 0; y < MAX_Y_CHUNKS; y++) {
+        ivec3 chunkToFlag = ivec3(modifiedChunk.x, y, modifiedChunk.y);
+        dirtyChunks_.insert(chunkToFlag);
+    }
 }

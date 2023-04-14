@@ -6,3 +6,4 @@
 -I./Libraries/json
 -D_WINDOWS
 -D_DEBUG
+-DNOMINMAX

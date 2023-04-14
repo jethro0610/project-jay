@@ -1,5 +1,6 @@
 #include "World.h"
 #include "../../Resource/DXResources.h"
+#include "../../Helpers/ChunkHelpers.h"
 
 struct QuadInfo {
     int valid;
@@ -33,11 +34,8 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     ID3D11DeviceContext* context = dxResources.context_;
     vec4 chunkPos = vec4(vec3(chunk) * CHUNK_SIZE, 0.0f);
 
-    ivec3 normalizedChunk = chunk;
-    normalizedChunk.x += MAX_X_CHUNKS / 2;
-    normalizedChunk.y += MAX_Y_CHUNKS / 2;
-    normalizedChunk.z += MAX_Z_CHUNKS / 2;
-    DXMesh& chunkMesh = dxResources.worldMeshes_[normalizedChunk.x][normalizedChunk.y][normalizedChunk.z];
+    chunk = GetNormalizedChunk(chunk);
+    DXMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z];
 
     D3D11_MAPPED_SUBRESOURCE chunkDataResource;
     context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);

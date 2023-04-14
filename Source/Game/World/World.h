@@ -1,7 +1,7 @@
 #pragma once
 #include <glm.hpp>
 #include <vector>
-#include <set>
+#include <unordered_set>
 #include <FastNoiseLite.h>
 #include "../Entity/Entity.h"
 #include "../../Constants/WorldConstants.h"
@@ -9,42 +9,8 @@
 #include "../../Types/FixedVector.h"
 #include "TerrainModifier.h"
 
-const glm::float3 cornerTable[8] = {
-    {0.0f, 0.0f, 0.0f},
-    {1.0f, 0.0f, 0.0f},
-    {1.0f, 1.0f, 0.0f},
-    {0.0f, 1.0f, 0.0f},
-    {0.0f, 0.0f, 1.0f},
-    {1.0f, 0.0f, 1.0f},
-    {1.0f, 1.0f, 1.0f},
-    {0.0f, 1.0f, 1.0f},
-};
-const glm::ivec2 edgeTable[12] = {
-    {0, 1},
-    {3, 2},
-    {4, 5},
-    {7, 6},
-
-    {0, 3},
-    {1, 2},
-    {4, 7},
-    {5, 6},
-
-    {0, 4},
-    {3, 7},
-    {1, 5},
-    {2, 6},
-};
-const glm::vec3 triangleEdgeTable[3] = {
-    {1.0f, 0.0f, 0.0f},  // X
-    {0.0f, 1.0f, 0.0f},  // Y
-    {0.0f, 0.0f, 1.0f},  // Z
-};
-const glm::ivec3 triangulationTable[3][4] = {
-    {{ 0,  0,  0}, { 0,  0, -1}, { 0, -1, -1}, { 0, -1,  0}},   // X; Why is this LHS and backwards tf.
-    {{ 0,  0,  0}, {-1,  0,  0}, {-1,  0, -1}, { 0,  0, -1}},   // Y
-    {{ 0,  0,  0}, { 0, -1,  0}, {-1, -1,  0}, {-1,  0,  0}},   // Z
-};
+#define GLM_ENABLE_EXPERIMENTAL
+#include <gtx/hash.hpp>
 
 class World {
 public:
@@ -52,7 +18,7 @@ public:
     ResourceManager& resourceManager_;
     Entity* entities_;
     FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
-    std::set<glm::ivec3> dirtyChunks_;
+    std::unordered_set<ivec3> dirtyChunks_;
 
     float GetTerrainHeight(glm::vec2 position) const;
     float GetDistance(glm::vec3 position) const;

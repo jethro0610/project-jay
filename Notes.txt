@@ -194,6 +194,9 @@
     - Use FixedVector in SpreadManager
     - Use MAX_QUADS on world rendering, set unused quads to MAX_INT
     - Use set for dirty chunk
-    - Change everything to forward declarations
+
+- Change everything to forward declarations
+- Remove implicit conversions
+- Correct necessary types
 - Seed meter
 - Slide off/strong slopes

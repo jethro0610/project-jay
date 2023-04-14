@@ -1,4 +1,5 @@
 #include "SpreadManager.h"
+#include "../../Helpers/ChunkHelpers.h"
 using namespace glm;
 
 
@@ -18,10 +19,7 @@ ivec2 SpreadManager::WorldPositionToSpreadKey(vec3 position) const {
 
 ivec2 SpreadManager::SpreadKeyToChunk(ivec2 key) const {
     ivec2 chunkPos = (key * (int)SPREAD_DIST) / (int)CHUNK_SIZE;
-
-    // Normalize the chunk position
-    chunkPos.x += MAX_X_CHUNKS / 2;
-    chunkPos.y += MAX_Z_CHUNKS / 2;
+    chunkPos = GetNormalizedChunk2D(chunkPos);
     return chunkPos;
 }
 

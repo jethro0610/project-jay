@@ -128,7 +128,13 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.transformComponent_
     };
     world_.UpdateDirtyChunks();
-    renderer_.Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, spreadManager_);
+    renderer_.Render(
+        deltaTime, 
+        elapsedTime, 
+        entityManager_.entities_, 
+        renderComponents, spreadManager_,
+        world_
+    );
 }
 
 void Game::UpdateTime() {

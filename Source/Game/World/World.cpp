@@ -16,9 +16,12 @@ World::World(ResourceManager& resourceManager):
         dirtyChunks_[0].insert(chunk);
         dirtyChunks_[1].insert(chunk);
     }
+    backBuffer_ = 0;
 }
 
 float World::GetTerrainHeight(vec2 position) const {
+    uint8_t frontBuffer = GetFrontBuffer();
+
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
     for (uint32_t i = 0; i < terrainModifiers_.GetCount(); i++) {
@@ -97,20 +100,35 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
 }
 
 void World::UpdateDirtyChunks() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    uint8_t backBuffer = dxResources.GetWorldBackBuffer();
     UpdateModifiersGPU_P();
 
-    bool wasEmpty = dirtyChunks_[backBuffer].empty();
+    bool wasEmpty = dirtyChunks_[backBuffer_].empty();
+    if (wasEmpty)
+        return;
+
     int updates = 0;
-    auto it = dirtyChunks_[backBuffer].begin();
-    while (it != dirtyChunks_[backBuffer].end() && updates < 4){
+    auto it = dirtyChunks_[backBuffer_].begin();
+    while (it != dirtyChunks_[backBuffer_].end() && updates < 4){
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
-        it = dirtyChunks_[dxResources.GetWorldBackBuffer()].erase(it);
+        it = dirtyChunks_[backBuffer_].erase(it);
         updates++;
     }
 
-    if (!wasEmpty && dirtyChunks_[backBuffer].empty())
-        dxResources.PresentWorld();
+    if (!wasEmpty && dirtyChunks_[backBuffer_].empty())
+        SwapBuffers();
+}
+
+void World::SwapBuffers() {
+    uint8_t frontBuffer = GetFrontBuffer();
+    // terrainModifiers_[frontBuffer].CopyFrom(terrainModifiers_[backBuffer_]);
+    backBuffer_ = frontBuffer;
+}
+
+uint8_t World::GetBackBuffer() const {
+    return backBuffer_;
+}
+
+uint8_t World::GetFrontBuffer() const {
+    return 1 - backBuffer_;
 }

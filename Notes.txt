@@ -191,6 +191,10 @@
 - Object that explodes nearly instantly on contanct, harms player
     - Player can pivot away to avoid
 
+- World that swaps reveals based on where play leaped
+    - Two leap maps
+    - Each swaps on leap
+
 =========================================
 - Modifier objects (not component)
     - Precompute modifier chunks for better performanc3
@@ -199,6 +203,8 @@
     - Use set for dirty chunk
     - How to combine dirty chunks and spread?
         - Maybe make a struct for tracking dirties that is shared between chunk and spread
+    - Don't swap back to buffer unless a change was made to the back buffer
+        - dirtyChunks[backBuffer] != empty -> swap
 
 - Change everything to forward declarations
 - Remove implicit conversions

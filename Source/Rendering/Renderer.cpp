@@ -13,11 +13,18 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projMatrix_ * viewMatrix_ * worldMatrix;
 }
 
-void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, RenderComponents renderComponents, SpreadManager& spreadManager) {
+void Renderer::Render(
+    float deltaTime, 
+    float elapsedTime, 
+    Entity* entities, 
+    RenderComponents renderComponents, 
+    SpreadManager& spreadManager,
+    World& world
+) {
     UpdateViewMatrix();
     Clear_P();
     SetFrameData_P();
-    RenderWorld_P();
+    RenderWorld_P(world);
     StaticModelRenderList staticModelRenderList;
     RenderEntities_P(entities, renderComponents);
     // RenderSpread_P(spreadManager);

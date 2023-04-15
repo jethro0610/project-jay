@@ -35,7 +35,7 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     vec4 chunkPos = vec4(vec3(chunk) * CHUNK_SIZE, 0.0f);
 
     chunk = GetNormalizedChunk(chunk);
-    DXMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z][dxResources.GetWorldBackBuffer()];
+    DXMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z][backBuffer_];
 
     D3D11_MAPPED_SUBRESOURCE chunkDataResource;
     context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);

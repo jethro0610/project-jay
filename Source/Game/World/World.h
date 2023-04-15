@@ -26,8 +26,12 @@ public:
     void GetMesh(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
 
     void UpdateDirtyChunks();
+    void SwapBuffers();
+    uint8_t GetBackBuffer() const;
+    uint8_t GetFrontBuffer() const;
 
 private:
+    uint8_t backBuffer_;
     ResourceManager& resourceManager_;
 
     FastNoiseLite* noise_;

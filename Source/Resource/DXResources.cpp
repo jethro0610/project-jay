@@ -300,8 +300,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     HRASSERT(device_->CreateBlendState(&alphaBlendDesc, &alphaBlendState_));
 
     InitWorldMeshes();
-    worldBackBuffer_ = 0;
-
     InitSpreadBuffers();
     InitText();
     InitNoiseTexture();
@@ -650,16 +648,4 @@ void DXResources::InitNoiseTexture() {
     viewDesc.Texture2D.MostDetailedMip = 0;
     viewDesc.Texture2D.MipLevels= 1;
     device_->CreateShaderResourceView(noiseTexture_, &viewDesc, &noiseTextureSRV_);
-}
-
-void DXResources::PresentWorld() {
-    worldBackBuffer_ = 1 - worldBackBuffer_;
-}
-
-uint8_t DXResources::GetWorldBackBuffer() {
-    return worldBackBuffer_;
-}
-
-uint8_t DXResources::GetWorldFrontBuffer() {
-    return 1 - worldBackBuffer_; 
 }

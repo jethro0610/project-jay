@@ -110,13 +110,7 @@ public:
 
     void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
 
-    void PresentWorld();
-    uint8_t GetWorldBackBuffer();
-    uint8_t GetWorldFrontBuffer();
-    
 private:
-    uint8_t worldBackBuffer_;
-
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
     void CreateRWStructuredBufferAndUAV(
         int elementSize, 

@@ -24,8 +24,8 @@ float World::GetTerrainHeight(vec2 position) const {
 
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
-    for (uint32_t i = 0; i < terrainModifiers_.GetCount(); i++) {
-        const TerrainModifier& modifier = terrainModifiers_[i];
+    for (uint32_t i = 0; i < terrainModifiers_[frontBuffer].GetCount(); i++) {
+        const TerrainModifier& modifier = terrainModifiers_[frontBuffer][i];
         float distFromModifier = distance(modifier.position, position);
         // Can probably precompute the chunk for faster performance
         if (distFromModifier > modifier.range)
@@ -85,7 +85,7 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
 }
 
 void World::AddTerrainModifier(TerrainModifier modifier) {
-    terrainModifiers_.Append(modifier);
+    terrainModifiers_[backBuffer_].Append(modifier);
     ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
     int radius = int(ceilf(modifier.range / CHUNK_SIZE));
 
@@ -121,7 +121,7 @@ void World::UpdateDirtyChunks() {
 
 void World::SwapBuffers() {
     uint8_t frontBuffer = GetFrontBuffer();
-    // terrainModifiers_[frontBuffer].CopyFrom(terrainModifiers_[backBuffer_]);
+    terrainModifiers_[frontBuffer].CopyFrom(terrainModifiers_[backBuffer_]);
     backBuffer_ = frontBuffer;
 }
 

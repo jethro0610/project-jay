@@ -35,7 +35,7 @@ private:
     ResourceManager& resourceManager_;
 
     FastNoiseLite* noise_;
-    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
+    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_[2];
     std::unordered_set<ivec3> dirtyChunks_[2];
 
     void GenerateNoiseTexture_P();

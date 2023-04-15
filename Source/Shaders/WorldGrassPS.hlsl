@@ -27,7 +27,7 @@ float4 main(VertOut outVert) : SV_TARGET {
     lightDir = normalize(lightDir);
     float diffuse = max(-dot(normal, lightDir), 0.0f);
     float specular = GetSpecular(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 2.0f);
-    specular *= 0.15f;
+    specular *= 0.0f;
     float brightness = ambient + diffuse + specular;
 
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 1.0f, 16.0f);

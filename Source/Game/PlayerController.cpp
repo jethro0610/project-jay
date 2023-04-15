@@ -1,8 +1,9 @@
 #include "PlayerController.h"
 #include "../Logging/ScreenText.h"
 
-PlayerController::PlayerController(EntityManager& entityManager, SpreadManager& spreadManager, Camera& camera) :
+PlayerController::PlayerController(EntityManager& entityManager, World& world, SpreadManager& spreadManager, Camera& camera) :
     entityManager_(entityManager),
+    world_(world),
     spreadManager_(spreadManager),
     camera_(camera)
 {
@@ -16,6 +17,7 @@ void PlayerController::Execute(Inputs inputs) {
     SpreadActivatorComponent& spreadActivatorComponent = entityManager_.spreadActivatorComponent_; 
     GroundTraceComponent& groundTraceComponent = entityManager_.groundTraceComponent_;
 
+    vec3& position = transformComponent.transform[PLAYER_ENTITY].position_;
     quat cameraPlanarRotation = quat(vec3(0.0f, camera_.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
@@ -68,11 +70,21 @@ void PlayerController::Execute(Inputs inputs) {
         actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
+        // position.y += 4.0f;
         entityManager_.velocityComponent_.velocity[PLAYER_ENTITY].y = 50.0f;
-        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
         actionMeter_ = 0;
         if (length(desiredMovement) > 0.0001f)
             transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
+        TerrainModifier testMod {
+            TerrainModType::Height,
+            vec2(position.x, position.z),
+            4.0f,
+            2.0f,
+            40.0f
+        };
+        world_.AddTerrainModifier(testMod);
+        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

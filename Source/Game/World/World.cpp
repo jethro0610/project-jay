@@ -1,5 +1,6 @@
 #include "World.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Logging/Logger.h"
 
 using namespace glm;
 
@@ -82,21 +83,26 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
 void World::AddTerrainModifier(TerrainModifier modifier) {
     terrainModifiers_.Append(modifier);
     ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
-    int radius = int(floorf(modifier.range / MAX_X_CHUNKS));
+    int radius = int(ceilf(modifier.range / CHUNK_SIZE));
 
-    for (int x = origin.x - radius; x <= origin.x + radius; x++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
-    for (int z = origin.y - radius; z <= origin.y + radius; z++) {
-        ivec3 chunkToFlag = ivec3(x, y, z);
-        dirtyChunks_.insert(chunkToFlag);
+    for (int x = -radius; x <= radius; x++)
+    for (int z = -radius; z <= radius; z++) {
+        for (int y = 0; y < MAX_Y_CHUNKS / 2; y++) {
+            ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
+            dirtyChunks_.insert(chunkToFlag);
+        }
     }
 }
 
 void World::UpdateDirtyChunks() {
     UpdateModifiersGPU_P();
-    for (auto it = dirtyChunks_.begin(); it != dirtyChunks_.end(); it++) {
+
+    int updates = 0;
+    auto it = dirtyChunks_.begin();
+    while (it != dirtyChunks_.end() && updates < 8){
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
+        it = dirtyChunks_.erase(it);
+        updates++;
     }
-    dirtyChunks_.clear();
 }

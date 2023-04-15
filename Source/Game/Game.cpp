@@ -26,25 +26,11 @@ void Game::Init() {
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 
-    world_.UpdateDirtyChunks();
-    TerrainModifier testMod {
-        TerrainModType::Height,
-        vec2(-32.0f, -32.0f),
-        8.0f,
-        2.0f,
-        48.0f
-    };
-    world_.AddTerrainModifier(testMod);
-
-    // Create the testing terrain modifier entity
-    /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */
-    /* auto terrainModProps = entityManager_.RegisterComponent<TerrainModComponent>(terrainModEntity); */
-    /* terrainModProps.position = vec3(0.0f); */
-    /* terrainModProps.radius = 16.0f; */
-
     auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
     holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
     holdTransform.scale_ = vec3(2.0f);
+ 
+    world_.UpdateDirtyChunks();
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {

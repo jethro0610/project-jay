@@ -46,7 +46,6 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->CSSetShaderResources(0, 2, resources);
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     UINT zeroes[4] = {0, 0, 0, 0};
-    D3D11_MAPPED_SUBRESOURCE countResource;
 
     context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
     ID3D11UnorderedAccessView* vertView[3] = {
@@ -60,12 +59,6 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->ClearUnorderedAccessViewUint(dxResources.computeWCountView_, zeroes);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
     context->CopyResource(chunkMesh.vertexBuffer, dxResources.computeWVertsBuffer_);
-
-    // Get vertex count if necessary
-    // context->CopyResource(dxResources.computeWCountOutput_, dxResources.computeWCountBuffer_);
-    // context->Map(dxResources.computeWCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
-    // chunkMesh.vertexCount= reinterpret_cast<uint*>(countResource.pData)[0];
-    // context->Unmap(dxResources.computeWCountOutput_, 0);
 
     context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
     ID3D11UnorderedAccessView* quadView[4] = {
@@ -81,6 +74,8 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->CopyResource(chunkMesh.indexBuffer, dxResources.computeWQuadsBuffer_);
 
     context->CopyResource(dxResources.computeWCountOutput_, dxResources.computeWCountBuffer_);
+
+    D3D11_MAPPED_SUBRESOURCE countResource;
     context->Map(dxResources.computeWCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
     chunkMesh.indexCount = reinterpret_cast<uint*>(countResource.pData)[0];
     context->Unmap(dxResources.computeWCountOutput_, 0);

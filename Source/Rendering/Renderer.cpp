@@ -20,7 +20,7 @@ void Renderer::Render(float deltaTime, float elapsedTime, Entity* entities, Rend
     RenderWorld_P();
     StaticModelRenderList staticModelRenderList;
     RenderEntities_P(entities, renderComponents);
-    RenderSpread_P(spreadManager);
+    // RenderSpread_P(spreadManager);
     RenderPostProcess_P();
     #ifdef _DEBUG
     RenderScreenText_P();

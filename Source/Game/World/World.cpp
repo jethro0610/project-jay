@@ -13,7 +13,8 @@ World::World(ResourceManager& resourceManager):
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
     for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
         ivec3 chunk(x, y, z);
-        dirtyChunks_.insert(chunk);
+        dirtyChunks_[0].insert(chunk);
+        dirtyChunks_[1].insert(chunk);
     }
 }
 
@@ -89,25 +90,27 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
     for (int z = -radius; z <= radius; z++) {
         for (int y = 0; y < MAX_Y_CHUNKS / 2; y++) {
             ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-            dirtyChunks_.insert(chunkToFlag);
+            dirtyChunks_[0].insert(chunkToFlag);
+            dirtyChunks_[1].insert(chunkToFlag);
         }
     }
 }
 
 void World::UpdateDirtyChunks() {
     DXResources& dxResources = resourceManager_.dxResources_;
+    uint8_t backBuffer = dxResources.GetWorldBackBuffer();
     UpdateModifiersGPU_P();
 
-    bool wasEmpty = dirtyChunks_.empty();
+    bool wasEmpty = dirtyChunks_[backBuffer].empty();
     int updates = 0;
-    auto it = dirtyChunks_.begin();
-    while (it != dirtyChunks_.end() && updates < 8){
+    auto it = dirtyChunks_[backBuffer].begin();
+    while (it != dirtyChunks_[backBuffer].end() && updates < 4){
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
-        it = dirtyChunks_.erase(it);
+        it = dirtyChunks_[dxResources.GetWorldBackBuffer()].erase(it);
         updates++;
     }
 
-    if (!wasEmpty && dirtyChunks_.empty())
+    if (!wasEmpty && dirtyChunks_[backBuffer].empty())
         dxResources.PresentWorld();
 }

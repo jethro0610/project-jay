@@ -32,7 +32,7 @@ private:
 
     FastNoiseLite* noise_;
     FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
-    std::unordered_set<ivec3> dirtyChunks_;
+    std::unordered_set<ivec3> dirtyChunks_[2];
 
     void GenerateNoiseTexture_P();
     void GenerateMeshGPU_P(glm::ivec3 chunk);

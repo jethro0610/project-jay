@@ -70,6 +70,7 @@ void PlayerController::Execute(Inputs inputs) {
         actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
+        position.y += 4.0f;
         entityManager_.velocityComponent_.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
         if (length(desiredMovement) > 0.0001f)

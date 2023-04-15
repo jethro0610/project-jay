@@ -188,15 +188,21 @@
 
 - Somwthing you hit in air
 
+- Object that explodes nearly instantly on contanct, harms player
+    - Player can pivot away to avoid
+
 =========================================
 - Modifier objects (not component)
     - Precompute modifier chunks for better performanc3
     - Use FixedVector in SpreadManager
     - Use MAX_QUADS on world rendering, set unused quads to MAX_INT
     - Use set for dirty chunk
+    - How to combine dirty chunks and spread?
+        - Maybe make a struct for tracking dirties that is shared between chunk and spread
 
 - Change everything to forward declarations
 - Remove implicit conversions
 - Correct necessary types
 - Seed meter
 - Slide off/strong slopes
+- Rename chunkPos to chunk in SpreadManager

@@ -2,11 +2,11 @@
 #include "../Constants/WorldConstants.h"
 using namespace glm;
 
-ivec3 WorldPositionToChunk(vec3 position) {
+ivec3 GetChunkAtWorldPosition(vec3 position) {
     return ivec3(floor(position / CHUNK_SIZE));
 }
 
-ivec2 WorldPositionToChunk2D(vec2 position) {
+ivec2 GetChunkAtWorldPosition2D(vec2 position) {
     return ivec2(floor(position / CHUNK_SIZE));
 }
 

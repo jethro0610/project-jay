@@ -14,11 +14,7 @@
 
 class World {
 public:
-    World(Entity* entities, ResourceManager& resourceManager);
-    ResourceManager& resourceManager_;
-    Entity* entities_;
-    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
-    std::unordered_set<ivec3> dirtyChunks_;
+    World(ResourceManager& resourceManager);
 
     float GetTerrainHeight(glm::vec2 position) const;
     float GetDistance(glm::vec3 position) const;
@@ -28,10 +24,17 @@ public:
 
     void AddTerrainModifier(TerrainModifier modifier);
     void GetMesh(glm::ivec3 chunk, std::vector<WorldVertex>& outVertices, std::vector<uint16_t>& outIndices);
-    void GenerateMeshGPU_P(glm::ivec3 chunk);
-    void UpdateModifiersGPU_P();
+
+    void UpdateDirtyChunks();
 
 private:
+    ResourceManager& resourceManager_;
+
     FastNoiseLite* noise_;
+    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
+    std::unordered_set<ivec3> dirtyChunks_;
+
     void GenerateNoiseTexture_P();
+    void GenerateMeshGPU_P(glm::ivec3 chunk);
+    void UpdateModifiersGPU_P();
 };

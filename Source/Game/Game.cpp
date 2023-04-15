@@ -26,6 +26,7 @@ void Game::Init() {
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 
+    world_.UpdateDirtyChunks();
     TerrainModifier testMod {
         TerrainModType::Height,
         vec2(-32.0f, -32.0f),
@@ -33,9 +34,7 @@ void Game::Init() {
         2.0f,
         48.0f
     };
-    world_.terrainModifiers_.Append(testMod);
-    world_.UpdateModifiersGPU_P();
-    // world_.UpdateModifiersGPU_P();
+    world_.AddTerrainModifier(testMod);
 
     // Create the testing terrain modifier entity
     /* uint16_t terrainModEntity = entityManager_.CreateEntity(); */
@@ -46,17 +45,11 @@ void Game::Init() {
     auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
     holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
     holdTransform.scale_ = vec3(2.0f);
-
-    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
-    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
-        ivec3 chunk(x, y, z);
-        world_.GenerateMeshGPU_P(chunk);
-    }
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
+    // world_.UpdateDirtyChunks();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(
@@ -148,6 +141,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.staticModelComponent_,
         entityManager_.transformComponent_
     };
+    world_.UpdateDirtyChunks();
     renderer_.Render(deltaTime, elapsedTime, entityManager_.entities_, renderComponents, spreadManager_);
 }
 

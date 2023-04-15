@@ -3,12 +3,17 @@
 
 using namespace glm;
 
-World::World(Entity* entities, ResourceManager& resourceManager):
+World::World(ResourceManager& resourceManager):
     noise_(new FastNoiseLite()),
-    entities_(entities),
     resourceManager_(resourceManager)
 {
     GenerateNoiseTexture_P();
+    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
+    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
+        ivec3 chunk(x, y, z);
+        dirtyChunks_.insert(chunk);
+    }
 }
 
 float World::GetTerrainHeight(vec2 position) const {
@@ -22,7 +27,11 @@ float World::GetTerrainHeight(vec2 position) const {
             continue;
 
         float t = (modifier.range - distFromModifier) / modifier.range;
-        float ease = t < 0.5f ? powf(2.0f, modifier.exponent - 1.0f) * powf(t , modifier.exponent) : 1 - powf(-2 * t + 2, modifier.exponent) / 2.0f; 
+        float ease = 
+            t < 0.5f ? 
+            powf(2.0f, modifier.exponent - 1.0f) * powf(t , modifier.exponent) : 
+            1 - powf(-2 * t + 2, modifier.exponent) / 2.0f; 
+
         height += ease * modifier.height;
     };
 
@@ -72,9 +81,22 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
 
 void World::AddTerrainModifier(TerrainModifier modifier) {
     terrainModifiers_.Append(modifier);
-    ivec2 modifiedChunk = WorldPositionToChunk2D(modifier.position); 
-    for (int y = 0; y < MAX_Y_CHUNKS; y++) {
-        ivec3 chunkToFlag = ivec3(modifiedChunk.x, y, modifiedChunk.y);
+    ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
+    int radius = int(floorf(modifier.range / MAX_X_CHUNKS));
+
+    for (int x = origin.x - radius; x <= origin.x + radius; x++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
+    for (int z = origin.y - radius; z <= origin.y + radius; z++) {
+        ivec3 chunkToFlag = ivec3(x, y, z);
         dirtyChunks_.insert(chunkToFlag);
     }
+}
+
+void World::UpdateDirtyChunks() {
+    UpdateModifiersGPU_P();
+    for (auto it = dirtyChunks_.begin(); it != dirtyChunks_.end(); it++) {
+        ivec3 dirtyChunk = *it;
+        GenerateMeshGPU_P(dirtyChunk);
+    }
+    dirtyChunks_.clear();
 }

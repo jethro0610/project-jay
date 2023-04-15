@@ -92,6 +92,6 @@ void World::UpdateModifiersGPU_P() {
 
     D3D11_MAPPED_SUBRESOURCE terrainModData;
     context->Map(dxResources.terrainModBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &terrainModData);
-    memcpy(terrainModData.pData, terrainModifiers_.GetData(), sizeof(TerrainModifier) * 1);
+    memcpy(terrainModData.pData, terrainModifiers_.GetData(), sizeof(TerrainModifier) * MAX_TERRAIN_MODIFIERS);
     context->Unmap(dxResources.terrainModBuffer_, 0);
 }

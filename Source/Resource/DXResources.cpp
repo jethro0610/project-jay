@@ -587,6 +587,8 @@ void DXResources::InitWorldMeshes() {
             &worldISrData,
             &worldMeshes_[x][y][z].indexBuffer
         ));
+        worldMeshes_[x][y][z].indexCount = 0;
+        worldMeshes_[x][y][z].vertexCount = 0;
     }
 }
 

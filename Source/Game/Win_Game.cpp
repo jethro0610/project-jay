@@ -140,7 +140,3 @@ void Game::FlushInputs_P() {
     gamepad_.pressedButtons_.reset();
     gamepad_.releasedButtons_.reset();
 }
-
-void Game::SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices) {
-    dxResources_.WriteWorldMesh(chunk, vertices, indices);
-}

@@ -50,7 +50,6 @@ private:
     float elapsedTime_;
     float timeAccumlulator_;
 
-    void SendWorldMeshToGPU_P(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t> indices);
     void UpdateInputs_P(float deltaTime);
     void PollGamepadInputs_P();
     void FlushInputs_P();

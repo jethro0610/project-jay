@@ -95,8 +95,10 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
 }
 
 void World::UpdateDirtyChunks() {
+    DXResources& dxResources = resourceManager_.dxResources_;
     UpdateModifiersGPU_P();
 
+    bool wasEmpty = dirtyChunks_.empty();
     int updates = 0;
     auto it = dirtyChunks_.begin();
     while (it != dirtyChunks_.end() && updates < 8){
@@ -105,4 +107,7 @@ void World::UpdateDirtyChunks() {
         it = dirtyChunks_.erase(it);
         updates++;
     }
+
+    if (!wasEmpty && dirtyChunks_.empty())
+        dxResources.PresentWorld();
 }

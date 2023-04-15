@@ -58,7 +58,7 @@ public:
     std::unordered_map<std::string, DXMesh> skeletalMeshes_;
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
 
-    DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
+    DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS][2];
     ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
 
     ID3D11BlendState* noBlendState_;
@@ -104,13 +104,19 @@ public:
     void LoadVertexShader(std::string shaderName, VertexShaderType shaderType = VertexShaderType::STATIC);
     void LoadPixelShader(std::string shaderName);
     void LoadTexture(std::string textureName);
-    void WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices);
 
     // Should only be calling this from ResourceManager
     void LoadRawModel(RawModel& rawModel, std::string modelName, bool skeletal = false);
 
     void UpdateBuffer(ID3D11Buffer* buffer, void* data, int size);
+
+    void PresentWorld();
+    uint8_t GetWorldBackBuffer();
+    uint8_t GetWorldFrontBuffer();
+    
 private:
+    uint8_t worldBackBuffer_;
+
     void CreateConstantBuffer(int size, ID3D11Buffer** outBuffer);
     void CreateRWStructuredBufferAndUAV(
         int elementSize, 

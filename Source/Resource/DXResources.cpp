@@ -300,6 +300,8 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     HRASSERT(device_->CreateBlendState(&alphaBlendDesc, &alphaBlendState_));
 
     InitWorldMeshes();
+    worldBackBuffer_ = 0;
+
     InitSpreadBuffers();
     InitText();
     InitNoiseTexture();
@@ -383,25 +385,6 @@ void DXResources::CreateStructuredBufferAndSRV(
     viewDesc.Format = DXGI_FORMAT_UNKNOWN;
     viewDesc.Buffer.NumElements = numberOfElements;
     HRASSERT(device_->CreateShaderResourceView(*outBuffer, &viewDesc, outView));
-}
-
-void DXResources::WriteWorldMesh(ivec3 chunk, const std::vector<WorldVertex>& vertices, const std::vector<uint16_t>& indices) {
-    chunk = GetNormalizedChunk(chunk);
-
-    DXMesh worldMesh = worldMeshes_[chunk.x][chunk.y][chunk.z];
-
-    D3D11_MAPPED_SUBRESOURCE vertexResource;
-    context_->Map(worldMesh.vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &vertexResource);
-    memcpy(vertexResource.pData, vertices.data(), sizeof(WorldVertex) * vertices.size());
-    context_->Unmap(worldMesh.vertexBuffer, 0);
-
-    D3D11_MAPPED_SUBRESOURCE indexResource;
-    context_->Map(worldMesh.indexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &indexResource);
-    memcpy(indexResource.pData, indices.data(), sizeof(uint16_t) * indices.size());
-    context_->Unmap(worldMesh.indexBuffer, 0);
-
-    worldMeshes_[chunk.x][chunk.y][chunk.z].vertexCount = UINT(vertices.size());
-    worldMeshes_[chunk.x][chunk.y][chunk.z].indexCount = UINT(indices.size());
 }
 
 void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shaderType) {
@@ -576,19 +559,20 @@ void DXResources::InitWorldMeshes() {
 
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
-    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+    for (int z = 0; z < MAX_Z_CHUNKS; z++)
+    for (int i = 0; i < 2; i++) {
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,
-            &worldMeshes_[x][y][z].vertexBuffer
+            &worldMeshes_[x][y][z][i].vertexBuffer
         ));
         HRASSERT(device_->CreateBuffer(
             &worldIBufferDesc,
             &worldISrData,
-            &worldMeshes_[x][y][z].indexBuffer
+            &worldMeshes_[x][y][z][i].indexBuffer
         ));
-        worldMeshes_[x][y][z].indexCount = 0;
-        worldMeshes_[x][y][z].vertexCount = 0;
+        worldMeshes_[x][y][z][i].indexCount = 0;
+        worldMeshes_[x][y][z][i].vertexCount = 0;
     }
 }
 
@@ -666,4 +650,16 @@ void DXResources::InitNoiseTexture() {
     viewDesc.Texture2D.MostDetailedMip = 0;
     viewDesc.Texture2D.MipLevels= 1;
     device_->CreateShaderResourceView(noiseTexture_, &viewDesc, &noiseTextureSRV_);
+}
+
+void DXResources::PresentWorld() {
+    worldBackBuffer_ = 1 - worldBackBuffer_;
+}
+
+uint8_t DXResources::GetWorldBackBuffer() {
+    return worldBackBuffer_;
+}
+
+uint8_t DXResources::GetWorldFrontBuffer() {
+    return 1 - worldBackBuffer_; 
 }

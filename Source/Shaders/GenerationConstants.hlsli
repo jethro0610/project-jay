@@ -1,9 +1,9 @@
-static uint WORLD_RESOLUTION = 16;
-static uint WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
-static uint DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
-static float CHUNK_SIZE = 32.0f;
-static float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
-static float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
+static const uint WORLD_RESOLUTION = 8;
+static const uint WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
+static const uint DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
+static const float CHUNK_SIZE = 32.0f;
+static const float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
+static const float GROUP_OFFSET = WORLD_RESOLUTION / WORLD_COMPUTE_GROUPS;
 
 struct Vertex {
     float3 pos;

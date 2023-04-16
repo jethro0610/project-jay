@@ -107,7 +107,7 @@ void World::UpdateDirtyChunks() {
 
     int updates = 0;
     auto it = dirtyChunks_[backBuffer_].begin();
-    while (it != dirtyChunks_[backBuffer_].end() && updates < 4){
+    while (it != dirtyChunks_[backBuffer_].end() && updates < 32){
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
         it = dirtyChunks_[backBuffer_].erase(it);

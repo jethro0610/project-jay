@@ -27,6 +27,11 @@ struct DXMesh {
     UINT indexCount;
 };
 
+struct WorldMesh {
+    ID3D11Buffer* vertexBuffer;
+    UINT vertexCount;
+};
+
 enum class VertexShaderType {
     STATIC,
     SKELETAL,
@@ -58,7 +63,7 @@ public:
     std::unordered_map<std::string, DXMesh> skeletalMeshes_;
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
 
-    DXMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS][2];
+    WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS][2];
     ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
 
     ID3D11BlendState* noBlendState_;
@@ -82,21 +87,13 @@ public:
 
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;
-    ID3D11ComputeShader* computeWVertsShader_;
-    ID3D11ComputeShader* computeWQuadsShader_;
+    ID3D11ComputeShader* csWorldVertex_;
 
-    ID3D11Buffer* computeWVertsBuffer_;
-    ID3D11UnorderedAccessView* computeWVertsView_;
-
-    ID3D11Buffer* computeWVoxelsBuffer_;
-    ID3D11UnorderedAccessView* computeWVoxelsView_;
-
-    ID3D11Buffer* computeWCountBuffer_;
-    ID3D11UnorderedAccessView* computeWCountView_;
-    ID3D11Buffer* computeWCountOutput_;
-
-    ID3D11Buffer* computeWQuadsBuffer_;
-    ID3D11UnorderedAccessView* computeWQuadsView_;
+    ID3D11Buffer* csWorldVertexBuffer_;
+    ID3D11UnorderedAccessView* csWorldVertexView_;
+    ID3D11Buffer* csWorldCountBuffer_;
+    ID3D11UnorderedAccessView* csWorldCountView_;
+    ID3D11Buffer* csWorldCountOutput_;
 
     ID3D11Buffer* terrainModBuffer_;
     ID3D11ShaderResourceView* terrainModSRV_;
@@ -133,6 +130,5 @@ private:
     void InitText();
     void InitNoiseTexture();
 
-    WorldVertex chunkFillVertices_[MAX_CHUNK_VERTICES];
-    uint16_t chunkFillIndices_[MAX_CHUNK_QUADS];
+    WorldTri chunkFillTris_[MAX_CHUNK_TRIS];
 };

@@ -33,9 +33,8 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     vec4 chunkPos = vec4(vec3(chunk) * CHUNK_SIZE, 0.0f);
-
     chunk = GetNormalizedChunk(chunk);
-    DXMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z][backBuffer_];
+    WorldMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z][backBuffer_];
 
     D3D11_MAPPED_SUBRESOURCE chunkDataResource;
     context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);
@@ -47,38 +46,22 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
     UINT zeroes[4] = {0, 0, 0, 0};
 
-    context->CSSetShader(dxResources.computeWVertsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* vertView[3] = {
-        dxResources.computeWVertsView_, 
-        dxResources.computeWVoxelsView_, 
-        dxResources.computeWCountView_
+    context->CSSetShader(dxResources.csWorldVertex_, nullptr, 0);
+    ID3D11UnorderedAccessView* vertView[2] = {
+        dxResources.csWorldVertexView_, 
+        dxResources.csWorldCountView_
     };
-    context->CSSetUnorderedAccessViews(0, 3, vertView, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.computeWVertsView_, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.computeWVoxelsView_, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.computeWCountView_, zeroes);
+    context->CSSetUnorderedAccessViews(0, 2, vertView, zeroes);
+    context->ClearUnorderedAccessViewUint(dxResources.csWorldVertexView_, zeroes);
+    context->ClearUnorderedAccessViewUint(dxResources.csWorldCountView_, zeroes);
     context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
-    context->CopyResource(chunkMesh.vertexBuffer, dxResources.computeWVertsBuffer_);
+    context->CopyResource(chunkMesh.vertexBuffer, dxResources.csWorldVertexBuffer_);
 
-    context->CSSetShader(dxResources.computeWQuadsShader_, nullptr, 0);
-    ID3D11UnorderedAccessView* quadView[4] = {
-        dxResources.computeWVertsView_, 
-        dxResources.computeWVoxelsView_, 
-        dxResources.computeWQuadsView_, 
-        dxResources.computeWCountView_
-    };
-    context->CSSetUnorderedAccessViews(0, 4, quadView, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.computeWQuadsView_, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.computeWCountView_, zeroes);
-    context->Dispatch(WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS, WORLD_COMPUTE_GROUPS);
-    context->CopyResource(chunkMesh.indexBuffer, dxResources.computeWQuadsBuffer_);
-
-    context->CopyResource(dxResources.computeWCountOutput_, dxResources.computeWCountBuffer_);
-
+    context->CopyResource(dxResources.csWorldCountOutput_, dxResources.csWorldCountBuffer_);
     D3D11_MAPPED_SUBRESOURCE countResource;
-    context->Map(dxResources.computeWCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
-    chunkMesh.indexCount = reinterpret_cast<uint*>(countResource.pData)[0];
-    context->Unmap(dxResources.computeWCountOutput_, 0);
+    // context->Map(dxResources.csWorldCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
+    // chunkMesh.vertexCount = reinterpret_cast<uint*>(countResource.pData)[0];
+    // context->Unmap(dxResources.csWorldCountOutput_, 0);
 }
 
 void World::UpdateModifiersGPU_P() {

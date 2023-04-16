@@ -224,36 +224,20 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     
     // Setup the world vertex compute shader
     CreateRWStructuredBufferAndUAV(
-        sizeof(WorldVertex),
-        MAX_CHUNK_VERTICES,
-        &computeWVertsBuffer_,
-        &computeWVertsView_,
-        false,
-        nullptr
-    );
-    CreateRWStructuredBufferAndUAV(
-        sizeof(uint) * 7,       // uint is used here since hlsl bools are 32-bits big
-        MAX_CHUNK_VERTICES,
-        &computeWVoxelsBuffer_,
-        &computeWVoxelsView_,
-        false,
-        nullptr
-    );
-    CreateRWStructuredBufferAndUAV(
-        sizeof(uint) * 6,
-        MAX_CHUNK_QUADS,
-        &computeWQuadsBuffer_,
-        &computeWQuadsView_,
+        sizeof(WorldTri),
+        MAX_CHUNK_TRIS,
+        &csWorldVertexBuffer_,
+        &csWorldVertexView_,
         true,
         nullptr
     );
     CreateRWStructuredBufferAndUAV(
         sizeof(uint),
         1,
-        &computeWCountBuffer_,
-        &computeWCountView_,
+        &csWorldCountBuffer_,
+        &csWorldCountView_,
         false,
-        &computeWCountOutput_
+        &csWorldCountOutput_
     );
     CreateStructuredBufferAndSRV(
         sizeof(TerrainModifier),
@@ -262,26 +246,15 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &terrainModSRV_
     );
 
-    ID3DBlob* computeWVertsBlob;
-    HRASSERT(D3DReadFileToBlob(L"ComputeWorldVertices.cso", &computeWVertsBlob));
+    ID3DBlob* csWorldVertexBlob;
+    HRASSERT(D3DReadFileToBlob(L"MarchingCubes.cso", &csWorldVertexBlob));
     HRASSERT(device_->CreateComputeShader(
-        computeWVertsBlob->GetBufferPointer(),
-        computeWVertsBlob->GetBufferSize(),
+        csWorldVertexBlob->GetBufferPointer(),
+        csWorldVertexBlob->GetBufferSize(),
         nullptr,
-        &computeWVertsShader_
+        &csWorldVertex_
     ));
-    computeWVertsBlob->Release();
-
-    ID3DBlob* computeWQuadsBlob;
-    HRASSERT(D3DReadFileToBlob(L"ComputeWorldQuads.cso", &computeWQuadsBlob));
-    HRASSERT(device_->CreateComputeShader(
-        computeWQuadsBlob->GetBufferPointer(),
-        computeWQuadsBlob->GetBufferSize(),
-        nullptr,
-        &computeWQuadsShader_
-    ));
-    computeWQuadsBlob->Release();
-
+    csWorldVertexBlob->Release();
 
     D3D11_BLEND_DESC noBlendDesc = {};
     noBlendDesc.RenderTarget[0].BlendEnable = FALSE;
@@ -540,20 +513,11 @@ void DXResources::LoadTexture(std::string textureName) {
 
 void DXResources::InitWorldMeshes() {
     D3D11_BUFFER_DESC worldVBufferDesc = {};
-    worldVBufferDesc.ByteWidth = sizeof(WorldVertex) * MAX_CHUNK_VERTICES;
-    worldVBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    worldVBufferDesc.ByteWidth = sizeof(WorldTri) * MAX_CHUNK_TRIS;
+    worldVBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     worldVBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    worldVBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     D3D11_SUBRESOURCE_DATA worldVSrData = {};
-    worldVSrData.pSysMem = &chunkFillVertices_;
-
-    D3D11_BUFFER_DESC worldIBufferDesc = {};
-    worldIBufferDesc.ByteWidth = sizeof(uint) * 6 * MAX_CHUNK_QUADS;
-    worldIBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    worldIBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    worldIBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    D3D11_SUBRESOURCE_DATA worldISrData = {};
-    worldISrData.pSysMem = &chunkFillIndices_;
+    worldVSrData.pSysMem = &chunkFillTris_;
 
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
@@ -564,12 +528,6 @@ void DXResources::InitWorldMeshes() {
             &worldVSrData,
             &worldMeshes_[x][y][z][i].vertexBuffer
         ));
-        HRASSERT(device_->CreateBuffer(
-            &worldIBufferDesc,
-            &worldISrData,
-            &worldMeshes_[x][y][z][i].indexBuffer
-        ));
-        worldMeshes_[x][y][z][i].indexCount = 0;
         worldMeshes_[x][y][z][i].vertexCount = 0;
     }
 }

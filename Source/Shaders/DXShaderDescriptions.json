@@ -1,10 +1,6 @@
 {
 	"shaders": [
 		{
-			"name": "ComputeWorldVertices",
-			"type": "cs"
-		},
-		{
 			"name": "DefaultPS",
 			"type": "ps"
 		},
@@ -47,10 +43,6 @@
         {
             "name": "TextureOnly",
             "type": "ps"
-        },
-        {
-            "name": "ComputeWorldQuads",
-            "type": "cs"
         },
         {
             "name": "MarchingCubes",

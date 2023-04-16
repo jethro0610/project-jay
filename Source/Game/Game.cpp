@@ -114,6 +114,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.transformComponent_,
             entityManager_.worldColliderComponent_
         );
+        world_.UpdateDirtyChunks();
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -127,7 +128,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.staticModelComponent_,
         entityManager_.transformComponent_
     };
-    world_.UpdateDirtyChunks();
     renderer_.Render(
         deltaTime, 
         elapsedTime, 

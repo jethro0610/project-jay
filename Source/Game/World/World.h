@@ -32,6 +32,7 @@ public:
 
 private:
     uint8_t backBuffer_;
+    bool backBufferDirty_;
     ResourceManager& resourceManager_;
 
     FastNoiseLite* noise_;

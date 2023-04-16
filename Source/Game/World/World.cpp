@@ -1,6 +1,7 @@
 #include "World.h"
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Logging/Logger.h"
+#include "../../Logging/ScreenText.h"
 
 using namespace glm;
 
@@ -17,6 +18,7 @@ World::World(ResourceManager& resourceManager):
         dirtyChunks_[1].insert(chunk);
     }
     backBuffer_ = 0;
+    backBufferDirty_ = true;
 }
 
 float World::GetTerrainHeight(vec2 position) const {
@@ -90,21 +92,23 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
     int radius = int(ceilf(modifier.range / CHUNK_SIZE));
 
     for (int x = -radius; x <= radius; x++)
-    for (int z = -radius; z <= radius; z++) {
-        for (int y = 0; y < MAX_Y_CHUNKS / 2; y++) {
-            ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-            dirtyChunks_[0].insert(chunkToFlag);
-            dirtyChunks_[1].insert(chunkToFlag);
-        }
+    for (int z = -radius; z <= radius; z++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
+        ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
+        dirtyChunks_[0].insert(chunkToFlag);
+        dirtyChunks_[1].insert(chunkToFlag);
     }
+    backBufferDirty_ = true;
 }
 
 void World::UpdateDirtyChunks() {
     UpdateModifiersGPU_P();
 
-    bool wasEmpty = dirtyChunks_[backBuffer_].empty();
-    if (wasEmpty)
+    SCREENLINE(3, "");
+    SCREENLINE(4, "");
+    if (!backBufferDirty_)
         return;
+    SCREENLINE(3, "Back buffer is dirty");
 
     int updates = 0;
     auto it = dirtyChunks_[backBuffer_].begin();
@@ -115,8 +119,10 @@ void World::UpdateDirtyChunks() {
         updates++;
     }
 
-    if (!wasEmpty && dirtyChunks_[backBuffer_].empty())
+    if (backBufferDirty_ && dirtyChunks_[backBuffer_].empty()) {
+        backBufferDirty_ = false;
         SwapBuffers();
+    }
 }
 
 void World::SwapBuffers() {

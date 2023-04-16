@@ -50,7 +50,7 @@ void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
             curTri.v0.pos = vertexPos;
             curTri.v0.norm = vertexNorm;
             tris.Append(curTri);
-            /* InterlockedAdd(count[0], 3); */
+            InterlockedAdd(count[0], 3);
         }
     }
 }

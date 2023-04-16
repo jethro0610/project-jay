@@ -83,7 +83,7 @@ void Renderer::RenderWorld_P(World& world) {
         WorldMesh& worldMeshResource = dxResources.worldMeshes_[x][y][z][world.GetFrontBuffer()];
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-        context->Draw(MAX_CHUNK_TRIS * 3, 0);
+        context->Draw(worldMeshResource.vertexCount, 0);
     }
 }
 

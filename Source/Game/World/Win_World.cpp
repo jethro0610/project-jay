@@ -59,9 +59,9 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
 
     context->CopyResource(dxResources.csWorldCountOutput_, dxResources.csWorldCountBuffer_);
     D3D11_MAPPED_SUBRESOURCE countResource;
-    // context->Map(dxResources.csWorldCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
-    // chunkMesh.vertexCount = reinterpret_cast<uint*>(countResource.pData)[0];
-    // context->Unmap(dxResources.csWorldCountOutput_, 0);
+    context->Map(dxResources.csWorldCountOutput_, 0, D3D11_MAP_READ, 0, &countResource);
+    chunkMesh.vertexCount = reinterpret_cast<uint*>(countResource.pData)[0];
+    context->Unmap(dxResources.csWorldCountOutput_, 0);
 }
 
 void World::UpdateModifiersGPU_P() {

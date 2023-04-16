@@ -203,8 +203,7 @@
     - Use set for dirty chunk
     - How to combine dirty chunks and spread?
         - Maybe make a struct for tracking dirties that is shared between chunk and spread
-    - Don't swap back to buffer unless a change was made to the back buffer
-        - dirtyChunks[backBuffer] != empty -> swap
+    - Change FixedVector to DoubleBuffer
 
 - Change everything to forward declarations
 - Remove implicit conversions
@@ -212,3 +211,6 @@
 - Seed meter
 - Slide off/strong slopes
 - Rename chunkPos to chunk in SpreadManager
+==========================================
+- The buffer swap of World basically has to do the front buffer computation again
+    - Copy resource MIGHT fix this, have to test

@@ -18,7 +18,6 @@ World::World(ResourceManager& resourceManager):
         dirtyChunks_[1].insert(chunk);
     }
     backBuffer_ = 0;
-    backBufferDirty_ = true;
 }
 
 float World::GetTerrainHeight(vec2 position) const {
@@ -98,17 +97,13 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
         dirtyChunks_[0].insert(chunkToFlag);
         dirtyChunks_[1].insert(chunkToFlag);
     }
-    backBufferDirty_ = true;
 }
 
 void World::UpdateDirtyChunks() {
     UpdateModifiersGPU_P();
 
-    SCREENLINE(3, "");
-    SCREENLINE(4, "");
-    if (!backBufferDirty_)
+    if (dirtyChunks_[backBuffer_].empty())
         return;
-    SCREENLINE(3, "Back buffer is dirty");
 
     int updates = 0;
     auto it = dirtyChunks_[backBuffer_].begin();
@@ -119,10 +114,8 @@ void World::UpdateDirtyChunks() {
         updates++;
     }
 
-    if (backBufferDirty_ && dirtyChunks_[backBuffer_].empty()) {
-        backBufferDirty_ = false;
+    if (dirtyChunks_[backBuffer_].empty())
         SwapBuffers();
-    }
 }
 
 void World::SwapBuffers() {

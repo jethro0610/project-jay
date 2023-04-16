@@ -1,17 +1,17 @@
 #pragma once
 #include <stdint.h>
 
-const uint8_t WORLD_RESOLUTION = 8;
+const uint8_t WORLD_RESOLUTION = 16;
 const uint16_t VOXELS_PER_CHUNK = WORLD_RESOLUTION * WORLD_RESOLUTION * WORLD_RESOLUTION;
 const uint8_t WORLD_COMPUTE_GROUPS = WORLD_RESOLUTION / 8;
 
 const uint8_t DISTANCE_CACHE_SIZE = WORLD_RESOLUTION + 1;
-const float CHUNK_SIZE = 32.0f;
+const float CHUNK_SIZE = 64.0f;
 const float VOXEL_SIZE = CHUNK_SIZE / (WORLD_RESOLUTION - 1);
 
-const uint8_t MAX_X_CHUNKS = 12; 
-const uint8_t MAX_Y_CHUNKS = 4;
-const uint8_t MAX_Z_CHUNKS = 12; 
+const uint8_t MAX_X_CHUNKS = 6; 
+const uint8_t MAX_Y_CHUNKS = 2;
+const uint8_t MAX_Z_CHUNKS = 6; 
 
 const uint16_t MAX_CHUNK_TRIS = 4096;
 

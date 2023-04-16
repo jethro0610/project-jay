@@ -20,7 +20,7 @@ Game::Game(int width, int height):
     resourceManager_(dxResources_),
     entityManager_(resourceManager_),
     renderer_(resourceManager_),
-    camera_(entityManager_.transformComponent_, 15.0f),
+    camera_(entityManager_.transformComponent_, 18.0f),
     world_(resourceManager_),
     spreadManager_(resourceManager_, world_),
     playerController_(entityManager_, world_, spreadManager_, camera_),

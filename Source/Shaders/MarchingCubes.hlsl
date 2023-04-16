@@ -11,7 +11,6 @@ RWStructuredBuffer<uint> count : register(u1);
 [numthreads(8, 8, 8)]
 void main(uint3 groupId : SV_GroupID, uint3 threadId : SV_GroupThreadID) {
     int3 localVoxelIndex = groupId * GROUP_OFFSET + threadId;
-    /* uint key = (localVoxelIndex.z) + (localVoxelIndex.y * WORLD_RESOLUTION) + (localVoxelIndex.x * WORLD_RESOLUTION * WORLD_RESOLUTION); */
 
     float3 voxelPosition = float3(localVoxelIndex) * VOXEL_SIZE + chunkPos.xyz;
     float3 worldCornerPositions[8]; 

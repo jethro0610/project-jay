@@ -90,12 +90,20 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
     ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
     int radius = int(ceilf(modifier.range / CHUNK_SIZE));
 
-    for (int x = -radius; x <= radius; x++)
-    for (int z = -radius; z <= radius; z++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
-        ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-        dirtyChunks_[0].insert(chunkToFlag);
-        dirtyChunks_[1].insert(chunkToFlag);
+    // for (int x = -radius; x <= radius; x++)
+    // for (int z = -radius; z <= radius; z++)
+    // for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
+    //     ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
+    //     dirtyChunks_[0].insert(chunkToFlag);
+    //     dirtyChunks_[1].insert(chunkToFlag);
+    // }
+
+    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
+    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
+        ivec3 chunk(x, y, z);
+        dirtyChunks_[0].insert(chunk);
+        dirtyChunks_[1].insert(chunk);
     }
 }
 

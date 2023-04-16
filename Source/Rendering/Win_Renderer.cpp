@@ -68,7 +68,6 @@ void Renderer::RenderWorld_P(World& world) {
     Transform defaultTransform;
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    context->UpdateSubresource(dxResources.perObjectCBuffer_, 0, nullptr, &objectData, 0, 0);
     dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -125,7 +124,6 @@ void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderCompone
     }
     // OPTIMIZATION: Need to test whether setting the vertex/index buffers or updating subresources takes more time
 }
-
 
 void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     DXResources& dxResources = resourceManager_.dxResources_;
@@ -247,7 +245,11 @@ void Renderer::SetFrameData_P() {
     UINT sampleMask = 0xffffffff;
 
     context->OMSetBlendState(dxResources.noBlendState_, 0, sampleMask);
+
+    ID3D11ShaderResourceView *const pSRV[1] = { NULL };
+    context->PSSetShaderResources(0, 1, pSRV); // Unbind the render target from Post Process pixel shader
     context->OMSetRenderTargets(1, &dxResources.pRenderTarget_, dxResources.depthStencilBuffer_);
+
     PerFrameData frameData = {};
     frameData.aspectRatio = float(width_) / height_;
     frameData.cameraPos = camera_->transform_.position_;

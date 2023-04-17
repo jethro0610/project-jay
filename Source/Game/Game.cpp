@@ -33,7 +33,6 @@ void Game::Init() {
 
 void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
-    // world_.UpdateDirtyChunks();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(
@@ -112,7 +111,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
             entityManager_.transformComponent_,
             entityManager_.worldColliderComponent_
         );
-        world_.UpdateDirtyChunks();
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -120,6 +118,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_,
         entityManager_.transformComponent_
     );
+    world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(deltaTime, inputs_);
     RenderComponents renderComponents {

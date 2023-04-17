@@ -195,6 +195,10 @@
     - Two leap maps
     - Each swaps on leap
 
+- If there's artifcating on the modifiers, likely need to:
+    - Increase updates per tick
+    - Use double buffering
+
 =========================================
 - Modifier objects (not component)
     - Precompute modifier chunks for better performanc3

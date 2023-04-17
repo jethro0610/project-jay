@@ -51,19 +51,19 @@ void PlayerController::Execute(Inputs inputs) {
     }
     else if (cutTimer_ >= TIME_TO_CUT){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        // spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
         isDoingAction = true;
         actionMeter_ += 1;
     } 
     else if (inputs.flow) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        // spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
         actionMeter_ += 2;
     }
     else if (inputs.ski)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        // spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
 
     if (!isDoingAction && actionMeter_ > 0)
@@ -84,7 +84,6 @@ void PlayerController::Execute(Inputs inputs) {
             40.0f
         };
         world_.AddTerrainModifier(testMod);
-        // spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

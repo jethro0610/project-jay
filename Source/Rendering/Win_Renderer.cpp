@@ -79,7 +79,7 @@ void Renderer::RenderWorld_P(World& world) {
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        WorldMesh& worldMeshResource = dxResources.worldMeshes_[x][y][z][world.GetFrontBuffer()];
+        WorldMesh& worldMeshResource = dxResources.worldMeshes_[x][y][z];
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
         context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
         context->Draw(worldMeshResource.vertexCount, 0);

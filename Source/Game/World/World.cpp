@@ -14,19 +14,15 @@ World::World(ResourceManager& resourceManager):
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
     for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
         ivec3 chunk(x, y, z);
-        dirtyChunks_[0].insert(chunk);
-        dirtyChunks_[1].insert(chunk);
+        dirtyChunks_.insert(chunk);
     }
-    backBuffer_ = 0;
 }
 
 float World::GetTerrainHeight(vec2 position) const {
-    uint8_t frontBuffer = GetFrontBuffer();
-
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
-    for (uint32_t i = 0; i < terrainModifiers_[frontBuffer].GetCount(); i++) {
-        const TerrainModifier& modifier = terrainModifiers_[frontBuffer][i];
+    for (uint32_t i = 0; i < terrainModifiers_.GetCount(); i++) {
+        const TerrainModifier& modifier = terrainModifiers_[i];
         float distFromModifier = distance(modifier.position, position);
         // Can probably precompute the chunk for faster performance
         if (distFromModifier > modifier.range)
@@ -86,47 +82,26 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
 }
 
 void World::AddTerrainModifier(TerrainModifier modifier) {
-    terrainModifiers_[backBuffer_].Append(modifier);
+    terrainModifiers_.Append(modifier);
     ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
     int radius = int(ceilf(modifier.range / CHUNK_SIZE));
     for (int x = -radius; x <= radius; x++)
     for (int z = -radius; z <= radius; z++)
     for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
         ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-        dirtyChunks_[0].insert(chunkToFlag);
-        dirtyChunks_[1].insert(chunkToFlag);
+        dirtyChunks_.insert(chunkToFlag);
     }
 }
 
 void World::UpdateDirtyChunks() {
     UpdateModifiersGPU_P();
 
-    if (dirtyChunks_[backBuffer_].empty())
-        return;
-
     int updates = 0;
-    auto it = dirtyChunks_[backBuffer_].begin();
-    while (it != dirtyChunks_[backBuffer_].end() && updates < 16) {
+    auto it = dirtyChunks_.begin();
+    while (it != dirtyChunks_.end() && updates < 16) {
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
-        it = dirtyChunks_[backBuffer_].erase(it);
+        it = dirtyChunks_.erase(it);
         updates++;
     }
-
-    if (dirtyChunks_[backBuffer_].empty())
-        SwapBuffers();
-}
-
-void World::SwapBuffers() {
-    uint8_t frontBuffer = GetFrontBuffer();
-    terrainModifiers_[frontBuffer].CopyFrom(terrainModifiers_[backBuffer_]);
-    backBuffer_ = frontBuffer;
-}
-
-uint8_t World::GetBackBuffer() const {
-    return backBuffer_;
-}
-
-uint8_t World::GetFrontBuffer() const {
-    return 1 - backBuffer_;
 }

@@ -34,7 +34,7 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     ID3D11DeviceContext* context = dxResources.context_;
     vec4 chunkPos = vec4(vec3(chunk) * CHUNK_SIZE, 0.0f);
     chunk = GetNormalizedChunk(chunk);
-    WorldMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z][backBuffer_];
+    WorldMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z];
 
     D3D11_MAPPED_SUBRESOURCE chunkDataResource;
     context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);
@@ -70,6 +70,6 @@ void World::UpdateModifiersGPU_P() {
 
     D3D11_MAPPED_SUBRESOURCE terrainModData;
     context->Map(dxResources.terrainModBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &terrainModData);
-    memcpy(terrainModData.pData, terrainModifiers_[backBuffer_].GetData(), sizeof(TerrainModifier) * MAX_TERRAIN_MODIFIERS);
+    memcpy(terrainModData.pData, terrainModifiers_.GetData(), sizeof(TerrainModifier) * MAX_TERRAIN_MODIFIERS);
     context->Unmap(dxResources.terrainModBuffer_, 0);
 }

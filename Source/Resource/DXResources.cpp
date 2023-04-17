@@ -526,9 +526,9 @@ void DXResources::InitWorldMeshes() {
         HRASSERT(device_->CreateBuffer(
             &worldVBufferDesc,
             &worldVSrData,
-            &worldMeshes_[x][y][z][i].vertexBuffer
+            &worldMeshes_[x][y][z].vertexBuffer
         ));
-        worldMeshes_[x][y][z][i].vertexCount = 0;
+        worldMeshes_[x][y][z].vertexCount = 0;
     }
 }
 

@@ -199,6 +199,20 @@
     - Increase updates per tick
     - Use double buffering
 
+- Objects that activate when jumped off of
+    - Give seeds
+    - Modify world
+    - Bigger spread
+    - Temporary ability
+
+- Mole that lifts ground whenever popped out
+    - Hella big
+
+- Why dynamic world is bad
+    - Overcomplicates world generation
+    - Restritive while also being over centralizing
+    - Only a few use cases, limits the design of rest of game
+
 =========================================
 - Modifier objects (not component)
     - Precompute modifier chunks for better performanc3

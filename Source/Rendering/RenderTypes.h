@@ -47,7 +47,7 @@ struct WorldTri {
     WorldVertex v2;
 };
 
-struct InstanceData {
+struct SpreadInstance {
     glm::vec3 position;
 };
 

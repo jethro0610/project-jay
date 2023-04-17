@@ -19,7 +19,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("StaticVertexShader", VertexShaderType::STATIC);
     dxResources.LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
     dxResources.LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
-    dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::INSTANCED);
+    dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::SPREAD);
 
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("WorldGrassPS");
@@ -134,9 +134,9 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
     dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
-    
+
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
+    UINT strides[2] = { sizeof(StaticVertex), sizeof(SpreadInstance) };
     UINT offsets[2] = { 0, 0 };
 
     const std::string model = "st_sphere";
@@ -154,7 +154,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
         for (int z = 0; z < MAX_Z_CHUNKS; z++) {
             ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources.spreadBuffers_[x][z] };
             context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-            context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.chunks_[x][z].count, 0, 0, 0);
+            context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.spreadChunks_[x][z].count, 0, 0, 0);
         }
     }
 }

@@ -64,3 +64,14 @@ float3 GetNormal(float3 position, float epsilon) {
     float gradZ = GetDistance(dZ);
     return normalize(float3(gradX, gradY, gradZ));
 }
+
+float3 GetNearestInDirection(float3 start, float3 direction, uint maxSteps) {
+    float3 currentPosition = start;
+    for (uint i = 0; i < maxSteps; i++) {
+        float distance = GetDistance(currentPosition);
+        if (abs(distance) < 0.001f)
+            break;
+        currentPosition += direction * distance;
+    }
+    return currentPosition;
+}

@@ -7,15 +7,11 @@ using namespace glm;
 
 World::World(ResourceManager& resourceManager):
     noise_(new FastNoiseLite()),
-    resourceManager_(resourceManager)
+    resourceManager_(resourceManager),
+    spreadManager_(dirtyChunks2D_)
 {
     GenerateNoiseTexture_P();
-    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
-    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
-        ivec3 chunk(x, y, z);
-        dirtyChunks_.insert(chunk);
-    }
+    MarkAllDirty();
 }
 
 float World::GetTerrainHeight(vec2 position) const {
@@ -98,10 +94,26 @@ void World::UpdateDirtyChunks() {
 
     int updates = 0;
     auto it = dirtyChunks_.begin();
-    while (it != dirtyChunks_.end() && updates < 16) {
+    while (it != dirtyChunks_.end() && updates < 12) {
         ivec3 dirtyChunk = *it;
         GenerateMeshGPU_P(dirtyChunk);
         it = dirtyChunks_.erase(it);
         updates++;
+    }
+
+    auto it2D = dirtyChunks2D_.begin();
+    while (it2D != dirtyChunks2D_.end()) {
+        ivec2 dirtyChunk2D = *it2D;
+        it2D = dirtyChunks2D_.erase(it2D);
+        // CALCULATE SPREAD
+    }
+}
+
+void World::MarkAllDirty() {
+    for (int x = -MAX_X_CHUNKS / 2; x < MAX_X_CHUNKS / 2; x++)
+    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++)
+    for (int z = -MAX_Z_CHUNKS / 2; z < MAX_Z_CHUNKS / 2; z++) {
+        ivec3 chunk(x, y, z);
+        dirtyChunks_.insert(chunk);
     }
 }

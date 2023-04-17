@@ -35,8 +35,8 @@ private:
     Renderer renderer_;
     Camera camera_;
     World world_;
-    SpreadManager spreadManager_;
     PlayerController playerController_;
+    SpreadManager& spreadManager_;
 
     Gamepad gamepad_;
     Inputs inputs_;

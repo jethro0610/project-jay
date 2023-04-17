@@ -123,7 +123,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_.transformComponent_
     );
     camera_.Update(deltaTime, inputs_);
-    spreadManager_.UpdateRenderData_P();
     RenderComponents renderComponents {
         entityManager_.staticModelComponent_,
         entityManager_.transformComponent_

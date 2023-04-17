@@ -139,7 +139,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     worldVertexDescription_[0] = 
     skeletalVertexDescription_[0] = 
     staticVertexDescription_[0] = 
-    instancedVertexDescription_[0] = {
+    spreadVertexDescription_[0] = {
         "POS", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -151,7 +151,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     worldVertexDescription_[1] =
     skeletalVertexDescription_[1] = 
     staticVertexDescription_[1] = 
-    instancedVertexDescription_[1] = {
+    spreadVertexDescription_[1] = {
         "NORM", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -162,7 +162,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[2] = 
     staticVertexDescription_[2] =
-    instancedVertexDescription_[2] = {
+    spreadVertexDescription_[2] = {
         "TAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -173,7 +173,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[3] = 
     staticVertexDescription_[3] = 
-    instancedVertexDescription_[3] = {
+    spreadVertexDescription_[3] = {
         "BITAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -184,7 +184,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[4] = 
     staticVertexDescription_[4] = 
-    instancedVertexDescription_[4] = {
+    spreadVertexDescription_[4] = {
         "UV", 
         0, 
         DXGI_FORMAT_R32G32_FLOAT, 
@@ -211,7 +211,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
     };
-    instancedVertexDescription_[5] = {
+    spreadVertexDescription_[5] = {
         "INST_POS",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
@@ -406,10 +406,10 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
         ));
         break;
 
-    case VertexShaderType::INSTANCED:
+    case VertexShaderType::SPREAD:
         HRASSERT(device_->CreateInputLayout(
-            instancedVertexDescription_,
-            ARRAYSIZE(instancedVertexDescription_),
+            spreadVertexDescription_,
+            ARRAYSIZE(spreadVertexDescription_),
             vertexShaderBlob->GetBufferPointer(),
             vertexShaderBlob->GetBufferSize(),
             &inputLayout
@@ -535,7 +535,7 @@ void DXResources::InitWorldMeshes() {
 void DXResources::InitSpreadBuffers() {
     D3D11_BUFFER_DESC desc = {};
     desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = sizeof(InstanceData) * MAX_SPREAD; 
+    desc.ByteWidth = sizeof(SpreadInstance) * MAX_SPREAD; 
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;

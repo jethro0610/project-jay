@@ -5,7 +5,7 @@
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
-#include "../Game/World/SpreadManager.h"
+#include "../Game/World/World.h"
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"

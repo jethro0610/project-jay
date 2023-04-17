@@ -3,10 +3,9 @@
 using namespace glm;
 
 
-SpreadManager::SpreadManager(ResourceManager& resourceManager, World& world):
-    resourceManager_(resourceManager),
-    world_(world)
-{
+SpreadManager::SpreadManager(std::unordered_set<glm::ivec2>& dirtyChunks2D) :
+    dirtyChunks2D_(dirtyChunks2D)
+{ 
 
 }
 
@@ -18,34 +17,33 @@ ivec2 SpreadManager::WorldPositionToSpreadKey(vec3 position) const {
 }
 
 ivec2 SpreadManager::SpreadKeyToChunk(ivec2 key) const {
-    ivec2 chunkPos = (key * (int)SPREAD_DIST) / (int)CHUNK_SIZE;
-    chunkPos = GetNormalizedChunk2D(chunkPos);
-    return chunkPos;
+    ivec2 chunk = (key * (int)SPREAD_DIST) / (int)CHUNK_SIZE;
+    chunk = GetNormalizedChunk2D(chunk);
+    return chunk;
 }
 
 bool SpreadManager::SpreadIsActive(ivec2 key) const {
-    ivec2 chunkPos = SpreadKeyToChunk(key); 
-    const SpreadChunk& chunk = chunks_[chunkPos.x][chunkPos.y]; 
-    return chunk.keysToIndex.contains(key);
+    ivec2 chunk = SpreadKeyToChunk(key); 
+    const SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
+    return spreadChunk.keysToIndex.contains(key);
 }
 
 bool SpreadManager::AddSpread(ivec2 key, float height) {
-    ivec2 chunkPos = SpreadKeyToChunk(key); 
-    SpreadChunk& chunk = chunks_[chunkPos.x][chunkPos.y]; 
+    ivec2 chunk = SpreadKeyToChunk(key); 
+    SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
 
-    if (chunk.keysToIndex.contains(key))
+    if (spreadChunk.keysToIndex.contains(key))
         return false;
-    assert(chunk.count != MAX_SPREAD);
+    assert(spreadChunk.count != MAX_SPREAD);
 
     const float offset = SPREAD_DIST / 2.0f;
-    vec3 position = vec3(key.x * SPREAD_DIST + offset, height, key.y * SPREAD_DIST + offset);
-    position = world_.GetNearestInDirection(position, -Transform::worldUp);
-    chunk.positions[chunk.count] = position; 
-    chunk.keys[chunk.count] = key;
-    chunk.keysToIndex[key] = chunk.count;
-    chunk.count++;
+    vec2 position = vec2(key.x * SPREAD_DIST + offset,key.y * SPREAD_DIST + offset);
+    spreadChunk.positions[spreadChunk.count] = position; 
+    spreadChunk.keys[spreadChunk.count] = key;
+    spreadChunk.keysToIndex[key] = spreadChunk.count;
+    spreadChunk.count++;
 
-    dirtyChunks_.insert(chunkPos);
+    dirtyChunks2D_.insert(chunk);
 
     return true;
 }
@@ -72,22 +70,22 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
 }
 
 bool SpreadManager::RemoveSpread(ivec2 key) {
-    ivec2 chunkPos = SpreadKeyToChunk(key); 
-    SpreadChunk& chunk = chunks_[chunkPos.x][chunkPos.y]; 
+    ivec2 chunk = SpreadKeyToChunk(key); 
+    SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
 
-    if (!chunk.keysToIndex.contains(key))
+    if (!spreadChunk.keysToIndex.contains(key))
         return false;
 
-    chunk.count--;
-    uint16_t deletedIndex = chunk.keysToIndex[key];
-    vec3 lastPosition = chunk.positions[chunk.count];
-    ivec2 lastKey = chunk.keys[chunk.count];
+    spreadChunk.count--;
+    uint16_t deletedIndex = spreadChunk.keysToIndex[key];
+    vec2 lastPosition = spreadChunk.positions[spreadChunk.count];
+    ivec2 lastKey = spreadChunk.keys[spreadChunk.count];
 
-    chunk.positions[deletedIndex] = lastPosition;
-    chunk.keys[deletedIndex] = lastKey;
-    chunk.keysToIndex[lastKey] = deletedIndex;
-    chunk.keysToIndex.erase(key);
-    dirtyChunks_.insert(chunkPos);
+    spreadChunk.positions[deletedIndex] = lastPosition;
+    spreadChunk.keys[deletedIndex] = lastKey;
+    spreadChunk.keysToIndex[lastKey] = deletedIndex;
+    spreadChunk.keysToIndex.erase(key);
+    dirtyChunks2D_.insert(chunk);
     return true;
 }
 

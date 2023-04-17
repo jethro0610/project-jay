@@ -64,6 +64,10 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Unmap(dxResources.csWorldCountOutput_, 0);
 }
 
+void World::CalculateSpreadGPU_P() {
+
+}
+
 void World::UpdateModifiersGPU_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;

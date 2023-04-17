@@ -4,6 +4,6 @@ struct InstancedVertIn {
     float3 tangent : TAN;
     float3 bitangent: BITAN;
     float2 uv : UV;
-    float3 instancePosition : INST_POS;
+    float2 instancePosition : INST_POS;
     uint instanceID : SV_InstanceID;
 };

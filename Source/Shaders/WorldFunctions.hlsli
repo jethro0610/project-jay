@@ -18,7 +18,7 @@ float GetNoise(float2 position) {
 float GetTerrainHeight(float2 position) {
     float height = GetNoise(position * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 24; i++) {
         TerrainModifier modifier = terrainModifiers[i];
         float distFromModifier = distance(modifier.position, position);
         // Can probably precompute the chunk for faster performance

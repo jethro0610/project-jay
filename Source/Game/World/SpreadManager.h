@@ -32,6 +32,7 @@ struct SpreadChunk {
 class SpreadManager {
 public:
     SpreadManager(std::unordered_set<glm::ivec2>& dirtyChunks2D);
+    SpreadManager(const SpreadManager&) = delete;
 
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
     std::unordered_set<glm::ivec2>& dirtyChunks2D_;
@@ -40,7 +41,7 @@ public:
     glm::ivec2 SpreadKeyToChunk(glm::ivec2 key) const;
     bool SpreadIsActive(glm::ivec2 key) const;
 
-    bool AddSpread(glm::ivec2 key, float height); 
+    bool AddSpread(glm::ivec2 key); 
     AddSpreadInfo AddSpread(glm::vec3 position); 
     AddSpreadInfo AddSpread(glm::vec3 position, int radius); 
 

@@ -30,11 +30,10 @@ bool SpreadManager::SpreadIsActive(ivec2 key) const {
     return spreadChunk.keysToIndex.contains(key);
 }
 
-bool SpreadManager::AddSpread(ivec2 key, float height) {
+bool SpreadManager::AddSpread(ivec2 key) {
     ivec2 chunk = SpreadKeyToChunk(key); 
-    dirtyChunks2D_.insert(chunk);
-    chunk = GetNormalizedChunk2D(chunk);
-    SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
+    ivec2 normChunk = GetNormalizedChunk2D(chunk);
+    SpreadChunk& spreadChunk = spreadChunks_[normChunk.x][normChunk.y]; 
 
     if (spreadChunk.keysToIndex.contains(key))
         return false;
@@ -46,6 +45,7 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
     spreadChunk.keys[spreadChunk.count] = key;
     spreadChunk.keysToIndex[key] = spreadChunk.count;
     spreadChunk.count++;
+    dirtyChunks2D_.insert(chunk);
 
     return true;
 }
@@ -53,10 +53,9 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
 AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position) {
     AddSpreadInfo returnInfo;
     returnInfo.key = WorldPositionToSpreadKey(position);
-    returnInfo.added = AddSpread(returnInfo.key , position.y);
+    returnInfo.added = AddSpread(returnInfo.key);
     return returnInfo;
 }
-
 
 AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
     ivec2 origin = WorldPositionToSpreadKey(position);
@@ -65,7 +64,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (AddSpread(origin + ivec2(x, z), position.y))
+        if (AddSpread(origin + ivec2(x, z)))
             added = true;
     }
     return AddSpreadInfo{added, origin};
@@ -73,9 +72,8 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
 
 bool SpreadManager::RemoveSpread(ivec2 key) {
     ivec2 chunk = SpreadKeyToChunk(key); 
-    dirtyChunks2D_.insert(chunk);
-    chunk = GetNormalizedChunk2D(chunk);
-    SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
+    ivec2 normChunk = GetNormalizedChunk2D(chunk);
+    SpreadChunk& spreadChunk = spreadChunks_[normChunk.x][normChunk.y]; 
 
     if (!spreadChunk.keysToIndex.contains(key))
         return false;
@@ -89,6 +87,7 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     spreadChunk.keys[deletedIndex] = lastKey;
     spreadChunk.keysToIndex[lastKey] = deletedIndex;
     spreadChunk.keysToIndex.erase(key);
+    dirtyChunks2D_.insert(chunk);
     return true;
 }
 

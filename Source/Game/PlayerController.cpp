@@ -85,7 +85,7 @@ void PlayerController::Execute(Inputs inputs) {
             40.0f
         };
         world_.AddTerrainModifier(testMod);
-        // spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
+        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

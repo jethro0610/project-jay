@@ -23,7 +23,7 @@ Game::Game(int width, int height):
     camera_(entityManager_.transformComponent_, 18.0f),
     world_(resourceManager_),
     spreadManager_(world_.spreadManager_),
-    playerController_(entityManager_, world_, spreadManager_, camera_),
+    playerController_(entityManager_, world_, world_.spreadManager_, camera_),
     gamepad_(Gamepad()),
     running_(true)
 {

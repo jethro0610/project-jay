@@ -29,8 +29,6 @@ void Game::Init() {
     auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
     holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
     holdTransform.scale_ = vec3(2.0f);
- 
-    world_.UpdateDirtyChunks();
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
@@ -122,6 +120,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
         entityManager_,
         entityManager_.transformComponent_
     );
+    spreadManager_.UpdateRenderData_P();
     camera_.Update(deltaTime, inputs_);
     RenderComponents renderComponents {
         entityManager_.staticModelComponent_,

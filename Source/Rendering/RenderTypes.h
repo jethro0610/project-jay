@@ -18,6 +18,14 @@ struct PerSkeletonData {
     glm::mat4 jointMatrices[32];
 };
 
+struct PerChunkData {
+    glm::vec4 chunkPos;
+    uint32_t modifierCount;
+    uint32_t pad0;
+    uint32_t pad1;
+    uint32_t pad2;
+};
+
 struct StaticVertex {
     glm::vec3 position;
     glm::vec3 normal;

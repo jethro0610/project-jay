@@ -37,10 +37,8 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     chunk = GetNormalizedChunk(chunk);
     WorldMesh& chunkMesh = dxResources.worldMeshes_[chunk.x][chunk.y][chunk.z];
 
-    D3D11_MAPPED_SUBRESOURCE chunkDataResource;
-    context->Map(dxResources.perChunkCBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &chunkDataResource);
-    memcpy(chunkDataResource.pData, &chunkPos, sizeof(vec4)); 
-    context->Unmap(dxResources.perChunkCBuffer_, 0);
+    PerChunkData chunkData = { chunkPos, terrainModifiers_.GetCount() };
+    dxResources.UpdateBuffer(dxResources.perChunkCBuffer_, &chunkData, sizeof(PerChunkData));
 
     ID3D11ShaderResourceView* resources[2] = { dxResources.noiseTextureSRV_, dxResources.terrainModSRV_ };
     context->CSSetShaderResources(0, 2, resources);
@@ -65,38 +63,11 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Unmap(dxResources.csWorldCountOutput_, 0);
 }
 
-void World::CalculateSpreadGPU_P(ivec2 chunk) {
+void World::UpdateTerrainModifiersGPU_P() {
     DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-    chunk = GetNormalizedChunk2D(chunk);
-    SpreadChunk& spreadChunk = spreadManager_.spreadChunks_[chunk.x][chunk.y];
-
     dxResources.UpdateBuffer(
-        dxResources.csSpreadInBuffer_, 
-        spreadChunk.positions, 
-        sizeof(ivec2) * MAX_SPREAD
+        dxResources.terrainModBuffer_, 
+        terrainModifiers_.GetData(), 
+        sizeof(TerrainModifier) * terrainModifiers_.GetCount()
     );
-    ID3D11ShaderResourceView* resources[3] = { dxResources.noiseTextureSRV_, dxResources.terrainModSRV_, dxResources.csSpreadInSRV_ };
-    context->CSSetShaderResources(0, 3, resources);
-    context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
-    UINT zeroes[4] = {0, 0, 0, 0};
-
-    context->CSSetShader(dxResources.csSpread_, nullptr, 0);
-    ID3D11UnorderedAccessView* views[1] = {
-        dxResources.csSpreadOutView_, 
-    };
-    context->CSSetUnorderedAccessViews(0, 1, views, zeroes);
-    context->ClearUnorderedAccessViewUint(dxResources.csSpreadOutView_, zeroes);
-    context->Dispatch(64, 1, 1);
-    context->CopyResource(dxResources.spreadBuffers_[chunk.x][chunk.y], dxResources.csSpreadOutBuffer_);
-}
-
-void World::UpdateModifiersGPU_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    D3D11_MAPPED_SUBRESOURCE terrainModData;
-    context->Map(dxResources.terrainModBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &terrainModData);
-    memcpy(terrainModData.pData, terrainModifiers_.GetData(), sizeof(TerrainModifier) * MAX_TERRAIN_MODIFIERS);
-    context->Unmap(dxResources.terrainModBuffer_, 0);
 }

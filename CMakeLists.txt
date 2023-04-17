@@ -47,6 +47,7 @@ file(GLOB SOURCES
 	IF(WIN32)
 		Source/Game/Win_Game.cpp
         Source/Game/World/Win_World.cpp
+        Source/Game/World/Win_SpreadManager.cpp
 		Source/Logging/Win_Logger.cpp
 		Source/Rendering/Win_Renderer.cpp
 		Source/Resource/Win_RawModel.cpp

@@ -5,8 +5,9 @@
 using namespace glm;
 
 
-SpreadManager::SpreadManager(std::unordered_set<glm::ivec2>& dirtyChunks2D) :
-    dirtyChunks2D_(dirtyChunks2D)
+SpreadManager::SpreadManager(ResourceManager& resourceManager, World& world) :
+    resourceManager_(resourceManager),
+    world_(world)
 { 
 
 }
@@ -30,7 +31,7 @@ bool SpreadManager::SpreadIsActive(ivec2 key) const {
     return spreadChunk.keysToIndex.contains(key);
 }
 
-bool SpreadManager::AddSpread(ivec2 key) {
+bool SpreadManager::AddSpread(ivec2 key, float height) {
     ivec2 chunk = SpreadKeyToChunk(key); 
     ivec2 normChunk = GetNormalizedChunk2D(chunk);
     SpreadChunk& spreadChunk = spreadChunks_[normChunk.x][normChunk.y]; 
@@ -40,12 +41,13 @@ bool SpreadManager::AddSpread(ivec2 key) {
     assert(spreadChunk.count != MAX_SPREAD);
 
     const float offset = SPREAD_DIST / 2.0f;
-    vec2 position = vec2(key.x * SPREAD_DIST + offset,key.y * SPREAD_DIST + offset);
+    vec3 position = vec3(key.x * SPREAD_DIST + offset, height, key.y * SPREAD_DIST + offset);
+    position = world_.GetNearestInDirection(position, -Transform::worldUp, 16);
     spreadChunk.positions[spreadChunk.count] = position; 
     spreadChunk.keys[spreadChunk.count] = key;
     spreadChunk.keysToIndex[key] = spreadChunk.count;
     spreadChunk.count++;
-    dirtyChunks2D_.insert(chunk);
+    dirtyChunks_.insert(chunk);
 
     return true;
 }
@@ -53,7 +55,7 @@ bool SpreadManager::AddSpread(ivec2 key) {
 AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position) {
     AddSpreadInfo returnInfo;
     returnInfo.key = WorldPositionToSpreadKey(position);
-    returnInfo.added = AddSpread(returnInfo.key);
+    returnInfo.added = AddSpread(returnInfo.key, position.y);
     return returnInfo;
 }
 
@@ -64,7 +66,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (AddSpread(origin + ivec2(x, z)))
+        if (AddSpread(origin + ivec2(x, z), position.y))
             added = true;
     }
     return AddSpreadInfo{added, origin};
@@ -80,14 +82,14 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
 
     spreadChunk.count--;
     uint16_t deletedIndex = spreadChunk.keysToIndex[key];
-    vec2 lastPosition = spreadChunk.positions[spreadChunk.count];
+    vec3 lastPosition = spreadChunk.positions[spreadChunk.count];
     ivec2 lastKey = spreadChunk.keys[spreadChunk.count];
 
     spreadChunk.positions[deletedIndex] = lastPosition;
     spreadChunk.keys[deletedIndex] = lastKey;
     spreadChunk.keysToIndex[lastKey] = deletedIndex;
     spreadChunk.keysToIndex.erase(key);
-    dirtyChunks2D_.insert(chunk);
+    dirtyChunks_.insert(chunk);
     return true;
 }
 

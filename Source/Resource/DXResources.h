@@ -10,7 +10,6 @@
 #include "../Constants/WorldConstants.h"
 #include "../Constants/SpreadConstants.h"
 #include "../Logging/LogConstants.h"
-#include "../Game/World/TerrainModifier.h"
 #include "../Windows/WindowsInc.h"
 
 // Keep shader and layout together since they're accessed at the same time
@@ -86,19 +85,13 @@ public:
     ID3D11ShaderResourceView* noiseTextureSRV_;
 
     WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
+    ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
     ID3D11ComputeShader* csWorldVertex_;
     ID3D11Buffer* csWorldVertexBuffer_;
     ID3D11UnorderedAccessView* csWorldVertexView_;
     ID3D11Buffer* csWorldCountBuffer_;
     ID3D11UnorderedAccessView* csWorldCountView_;
     ID3D11Buffer* csWorldCountOutput_;
-
-    ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
-    ID3D11ComputeShader* csSpread_;
-    ID3D11Buffer* csSpreadInBuffer_;
-    ID3D11ShaderResourceView* csSpreadInSRV_;
-    ID3D11Buffer* csSpreadOutBuffer_;
-    ID3D11UnorderedAccessView* csSpreadOutView_;
 
     ID3D11Buffer* terrainModBuffer_;
     ID3D11ShaderResourceView* terrainModSRV_;

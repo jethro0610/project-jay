@@ -6,6 +6,7 @@
 #include "../Game/Components/TransformComponent.h"
 #include "../Game/Camera.h"
 #include "../Game/World/World.h"
+#include "../Game/World/SpreadManager.h"
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"

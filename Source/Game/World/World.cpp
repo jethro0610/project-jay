@@ -7,8 +7,7 @@ using namespace glm;
 
 World::World(ResourceManager& resourceManager):
     noise_(new FastNoiseLite()),
-    resourceManager_(resourceManager),
-    spreadManager_(dirtyChunks2D_)
+    resourceManager_(resourceManager)
 {
     GenerateNoiseTexture_P();
     MarkAllDirty();
@@ -16,7 +15,6 @@ World::World(ResourceManager& resourceManager):
 
 float World::GetTerrainHeight(vec2 position) const {
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
-    height += 32.0f;
     for (uint32_t i = 0; i < terrainModifiers_.GetCount(); i++) {
         const TerrainModifier& modifier = terrainModifiers_[i];
         float distFromModifier = distance(modifier.position, position);
@@ -31,8 +29,8 @@ float World::GetTerrainHeight(vec2 position) const {
             1 - powf(-2 * t + 2, modifier.exponent) / 2.0f; 
 
         height += ease * modifier.height;
-    };
-
+    }
+    height += 32.0f;
     return height;
 }
 
@@ -77,23 +75,7 @@ vec3 World::GetNearestInDirection(vec3 start, vec3 direction, uint16_t maxSteps)
     return currentPosition;
 }
 
-void World::AddTerrainModifier(TerrainModifier modifier) {
-    terrainModifiers_.Append(modifier);
-    ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
-    int radius = int(ceilf(modifier.range / CHUNK_SIZE));
-    for (int x = -radius; x <= radius; x++)
-    for (int z = -radius; z <= radius; z++) {
-        dirtyChunks2D_.insert(ivec2(origin.x + x, origin.y + z));
-        for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
-            ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-            dirtyChunks_.insert(chunkToFlag);
-        }
-    }
-}
-
 void World::UpdateDirtyChunks() {
-    UpdateModifiersGPU_P();
-
     int updates = 0;
     auto it = dirtyChunks_.begin();
     while (it != dirtyChunks_.end() && updates < 12) {
@@ -101,13 +83,6 @@ void World::UpdateDirtyChunks() {
         GenerateMeshGPU_P(dirtyChunk);
         it = dirtyChunks_.erase(it);
         updates++;
-    }
-
-    auto it2D = dirtyChunks2D_.begin();
-    while (it2D != dirtyChunks2D_.end()) {
-        ivec2 dirtyChunk2D = *it2D;
-        CalculateSpreadGPU_P(dirtyChunk2D);
-        it2D = dirtyChunks2D_.erase(it2D);
     }
 }
 

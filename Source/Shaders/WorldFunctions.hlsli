@@ -1,6 +1,14 @@
 Texture2D noiseTex : register(t0);
 SamplerState noiseSamp;
 
+cbuffer perChunkData : register(b0) {
+    float4 chunkPos;
+    uint modifierCount;
+    uint pad0;
+    uint pad1;
+    uint pad2;
+}
+
 struct TerrainModifier {
     uint type; 
     float2 position;
@@ -18,7 +26,7 @@ float GetNoise(float2 position) {
 float GetTerrainHeight(float2 position) {
     float height = GetNoise(position * 0.75f) * 8.0f + 8.0f;
     height += 32.0f;
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < modifierCount; i++) {
         TerrainModifier modifier = terrainModifiers[i];
         float distFromModifier = distance(modifier.position, position);
         // Can probably precompute the chunk for faster performance

@@ -1,10 +1,6 @@
 #include "WorldFunctions.hlsli"
 #include "GenerationConstants.hlsli"
 
-cbuffer perChunkData : register(b0) {
-    float4 chunkPos;
-}
-
 AppendStructuredBuffer<Triangle> tris : register(u0);
 RWStructuredBuffer<uint> count : register(u1);
 

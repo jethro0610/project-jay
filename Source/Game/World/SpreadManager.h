@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "../../Resource/ResourceManager.h"
 #include "../../Constants/SpreadConstants.h"
+#include "World.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/hash.hpp>
@@ -16,7 +17,7 @@ struct AddSpreadInfo {
 };
 
 struct SpreadChunk {
-    glm::vec2 positions[MAX_SPREAD];
+    glm::vec3 positions[MAX_SPREAD];
     glm::ivec2 keys[MAX_SPREAD];
     uint16_t count;
 
@@ -31,21 +32,25 @@ struct SpreadChunk {
 
 class SpreadManager {
 public:
-    SpreadManager(std::unordered_set<glm::ivec2>& dirtyChunks2D);
-    SpreadManager(const SpreadManager&) = delete;
-
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
-    std::unordered_set<glm::ivec2>& dirtyChunks2D_;
+    SpreadManager(ResourceManager& resourceManager, World& world);
+    SpreadManager(const SpreadManager&) = delete;
 
     glm::ivec2 WorldPositionToSpreadKey(glm::vec3 position) const;
     glm::ivec2 SpreadKeyToChunk(glm::ivec2 key) const;
     bool SpreadIsActive(glm::ivec2 key) const;
 
-    bool AddSpread(glm::ivec2 key); 
+    bool AddSpread(glm::ivec2 key, float height); 
     AddSpreadInfo AddSpread(glm::vec3 position); 
     AddSpreadInfo AddSpread(glm::vec3 position, int radius); 
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);
     void RemoveSpread(glm::vec3 position, int radius); 
+    void UpdateRenderData_P();
+
+private:
+    ResourceManager& resourceManager_;
+    World& world_;
+    std::unordered_set<glm::ivec2> dirtyChunks_;
 };

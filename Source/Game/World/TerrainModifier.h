@@ -1,9 +1,9 @@
 #pragma once
 #include <glm.hpp>
-const uint16_t MAX_TERRAIN_MODIFIERS = 24;
+const uint16_t MAX_TERRAIN_MODIFIERS = 16;
 
 enum TerrainModType {
-    Height 
+    TERRAINMOD_HEIGHT 
 };
 
 struct TerrainModifier {

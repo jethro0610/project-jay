@@ -246,6 +246,21 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &terrainModSRV_
     );
 
+    CreateRWStructuredBufferAndUAV(
+        sizeof(ivec3),
+        MAX_SPREAD,
+        &csSpreadOutBuffer_,
+        &csSpreadOutView_,
+        false,
+        nullptr
+    );
+    CreateStructuredBufferAndSRV(
+        sizeof(ivec2),
+        MAX_SPREAD,
+        &csSpreadInBuffer_,
+        &csSpreadInSRV_
+    );
+
     ID3DBlob* csWorldVertexBlob;
     HRASSERT(D3DReadFileToBlob(L"MarchingCubes.cso", &csWorldVertexBlob));
     HRASSERT(device_->CreateComputeShader(
@@ -255,6 +270,16 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         &csWorldVertex_
     ));
     csWorldVertexBlob->Release();
+
+    ID3DBlob* csSpreadBlob;
+    HRASSERT(D3DReadFileToBlob(L"CalculateSpreadBuffer.cso", &csSpreadBlob));
+    HRASSERT(device_->CreateComputeShader(
+        csSpreadBlob->GetBufferPointer(),
+        csSpreadBlob->GetBufferSize(),
+        nullptr,
+        &csSpread_
+    ));
+    csSpreadBlob->Release();
 
     D3D11_BLEND_DESC noBlendDesc = {};
     noBlendDesc.RenderTarget[0].BlendEnable = FALSE;

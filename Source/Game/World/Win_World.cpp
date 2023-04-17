@@ -1,6 +1,7 @@
 #include "World.h"
 #include "../../Resource/DXResources.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Logging/Logger.h"
 
 struct QuadInfo {
     int valid;
@@ -64,8 +65,30 @@ void World::GenerateMeshGPU_P(ivec3 chunk) {
     context->Unmap(dxResources.csWorldCountOutput_, 0);
 }
 
-void World::CalculateSpreadGPU_P() {
+void World::CalculateSpreadGPU_P(ivec2 chunk) {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
+    chunk = GetNormalizedChunk2D(chunk);
+    SpreadChunk& spreadChunk = spreadManager_.spreadChunks_[chunk.x][chunk.y];
 
+    dxResources.UpdateBuffer(
+        dxResources.csSpreadInBuffer_, 
+        spreadChunk.positions, 
+        sizeof(ivec2) * MAX_SPREAD
+    );
+    ID3D11ShaderResourceView* resources[3] = { dxResources.noiseTextureSRV_, dxResources.terrainModSRV_, dxResources.csSpreadInSRV_ };
+    context->CSSetShaderResources(0, 3, resources);
+    context->CSSetSamplers(0, 1, &dxResources.textureSampler_);
+    UINT zeroes[4] = {0, 0, 0, 0};
+
+    context->CSSetShader(dxResources.csSpread_, nullptr, 0);
+    ID3D11UnorderedAccessView* views[1] = {
+        dxResources.csSpreadOutView_, 
+    };
+    context->CSSetUnorderedAccessViews(0, 1, views, zeroes);
+    context->ClearUnorderedAccessViewUint(dxResources.csSpreadOutView_, zeroes);
+    context->Dispatch(64, 1, 1);
+    context->CopyResource(dxResources.spreadBuffers_[chunk.x][chunk.y], dxResources.csSpreadOutBuffer_);
 }
 
 void World::UpdateModifiersGPU_P() {

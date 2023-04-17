@@ -1,5 +1,7 @@
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Logging/Logger.h"
+#include <gtx/string_cast.hpp>
 using namespace glm;
 
 
@@ -17,19 +19,21 @@ ivec2 SpreadManager::WorldPositionToSpreadKey(vec3 position) const {
 }
 
 ivec2 SpreadManager::SpreadKeyToChunk(ivec2 key) const {
-    ivec2 chunk = (key * (int)SPREAD_DIST) / (int)CHUNK_SIZE;
-    chunk = GetNormalizedChunk2D(chunk);
-    return chunk;
+    vec2 keyPos = vec2(key) * SPREAD_DIST;
+    return GetChunkAtWorldPosition2D(keyPos);
 }
 
 bool SpreadManager::SpreadIsActive(ivec2 key) const {
     ivec2 chunk = SpreadKeyToChunk(key); 
+    chunk = GetNormalizedChunk2D(chunk);
     const SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
     return spreadChunk.keysToIndex.contains(key);
 }
 
 bool SpreadManager::AddSpread(ivec2 key, float height) {
     ivec2 chunk = SpreadKeyToChunk(key); 
+    dirtyChunks2D_.insert(chunk);
+    chunk = GetNormalizedChunk2D(chunk);
     SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
 
     if (spreadChunk.keysToIndex.contains(key))
@@ -42,8 +46,6 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
     spreadChunk.keys[spreadChunk.count] = key;
     spreadChunk.keysToIndex[key] = spreadChunk.count;
     spreadChunk.count++;
-
-    dirtyChunks2D_.insert(chunk);
 
     return true;
 }
@@ -71,6 +73,8 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
 
 bool SpreadManager::RemoveSpread(ivec2 key) {
     ivec2 chunk = SpreadKeyToChunk(key); 
+    dirtyChunks2D_.insert(chunk);
+    chunk = GetNormalizedChunk2D(chunk);
     SpreadChunk& spreadChunk = spreadChunks_[chunk.x][chunk.y]; 
 
     if (!spreadChunk.keysToIndex.contains(key))
@@ -85,7 +89,6 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     spreadChunk.keys[deletedIndex] = lastKey;
     spreadChunk.keysToIndex[lastKey] = deletedIndex;
     spreadChunk.keysToIndex.erase(key);
-    dirtyChunks2D_.insert(chunk);
     return true;
 }
 

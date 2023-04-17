@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 #include "../Logging/ScreenText.h"
+#include "../Helpers/ChunkHelpers.h"
 
 PlayerController::PlayerController(EntityManager& entityManager, World& world, SpreadManager& spreadManager, Camera& camera) :
     entityManager_(entityManager),
@@ -84,10 +85,11 @@ void PlayerController::Execute(Inputs inputs) {
             40.0f
         };
         world_.AddTerrainModifier(testMod);
-        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
+        // spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
     SCREENLINE(1, "Action: " + std::to_string(actionMeter_));
     SCREENLINE(2, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
+    SCREENLINE(3, "Chunk: " + glm::to_string(GetChunkAtWorldPosition(position)));
 }

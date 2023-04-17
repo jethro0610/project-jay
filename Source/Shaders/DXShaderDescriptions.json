@@ -47,6 +47,10 @@
         {
             "name": "MarchingCubes",
             "type": "cs"
+        },
+        {
+            "name": "CalculateSpreadBuffer",
+            "type": "cs"
         }
 	]
 }

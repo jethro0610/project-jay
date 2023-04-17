@@ -41,6 +41,6 @@ private:
 
     void GenerateNoiseTexture_P();
     void GenerateMeshGPU_P(glm::ivec3 chunk);
-    void CalculateSpreadGPU_P();
+    void CalculateSpreadGPU_P(glm::ivec2 chunk);
     void UpdateModifiersGPU_P();
 };

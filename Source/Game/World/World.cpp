@@ -82,10 +82,12 @@ void World::AddTerrainModifier(TerrainModifier modifier) {
     ivec2 origin = GetChunkAtWorldPosition2D(modifier.position); 
     int radius = int(ceilf(modifier.range / CHUNK_SIZE));
     for (int x = -radius; x <= radius; x++)
-    for (int z = -radius; z <= radius; z++)
-    for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
-        ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
-        dirtyChunks_.insert(chunkToFlag);
+    for (int z = -radius; z <= radius; z++) {
+        dirtyChunks2D_.insert(ivec2(x, z));
+        for (int y = -MAX_Y_CHUNKS / 2; y < MAX_Y_CHUNKS / 2; y++) {
+            ivec3 chunkToFlag = ivec3(origin.x + x, y, origin.y + z);
+            dirtyChunks_.insert(chunkToFlag);
+        }
     }
 }
 
@@ -104,8 +106,8 @@ void World::UpdateDirtyChunks() {
     auto it2D = dirtyChunks2D_.begin();
     while (it2D != dirtyChunks2D_.end()) {
         ivec2 dirtyChunk2D = *it2D;
+        CalculateSpreadGPU_P(dirtyChunk2D);
         it2D = dirtyChunks2D_.erase(it2D);
-        // CALCULATE SPREAD
     }
 }
 

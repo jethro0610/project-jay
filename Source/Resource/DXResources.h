@@ -63,9 +63,6 @@ public:
     std::unordered_map<std::string, DXMesh> skeletalMeshes_;
     std::unordered_map<std::string, ID3D11ShaderResourceView*> textures_;
 
-    WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
-    ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
-
     ID3D11BlendState* noBlendState_;
     ID3D11BlendState* alphaBlendState_;
 
@@ -87,13 +84,21 @@ public:
 
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;
-    ID3D11ComputeShader* csWorldVertex_;
 
+    WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
+    ID3D11ComputeShader* csWorldVertex_;
     ID3D11Buffer* csWorldVertexBuffer_;
     ID3D11UnorderedAccessView* csWorldVertexView_;
     ID3D11Buffer* csWorldCountBuffer_;
     ID3D11UnorderedAccessView* csWorldCountView_;
     ID3D11Buffer* csWorldCountOutput_;
+
+    ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
+    ID3D11ComputeShader* csSpread_;
+    ID3D11Buffer* csSpreadInBuffer_;
+    ID3D11ShaderResourceView* csSpreadInSRV_;
+    ID3D11Buffer* csSpreadOutBuffer_;
+    ID3D11UnorderedAccessView* csSpreadOutView_;
 
     ID3D11Buffer* terrainModBuffer_;
     ID3D11ShaderResourceView* terrainModSRV_;

@@ -57,7 +57,7 @@ void Camera::Update(float deltaTime, Inputs inputs) {
         vec3 up = lookRotation * Transform::worldUp;
 
         transform_.position_ = smoothTrackPosition_ - forward * trackDistance_;
-        transform_.position_ += vec3(0.0f, 4.0f, 0.0f);
+        transform_.position_ += vec3(0.0f, 2.0f, 0.0f);
         transform_.rotation_ = lookRotation;
     }
 }

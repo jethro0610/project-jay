@@ -1,11 +1,10 @@
 #include "GroundTraceSystem.h"
+#include "../Entity/EntityManager.h"
+#include "../World/World.h"
 #include "../../Logging/ScreenText.h"
 using namespace glm;
 
-void GroundTraceSystem::Execute(
-    EntityManager& entityManager,
-    World& world
-) {
+void GroundTraceSystem::Execute(EntityManager& entityManager, World& world) {
     TransformComponent& transformComponent = entityManager.transformComponent_;
     GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
     VelocityComponent& velocityComponent = entityManager.velocityComponent_;

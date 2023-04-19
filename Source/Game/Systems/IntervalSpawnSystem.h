@@ -1,15 +1,6 @@
-#include "../Entity/EntityManager.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/IntervalSpawnComponent.h"
-#include "../Components/ProjectileComponent.h"
-#include "../Components/VelocityComponent.h"
+#pragma once
+class EntityManager;
 
 namespace IntervalSpawnSystem {
-    void Execute (
-        EntityManager& entityManager,
-        TransformComponent& transformComponent,
-        IntervalSpawnComponent& intervalSpawnComponent,
-        ProjectileComponent& projectileComponent,
-        VelocityComponent& velocityComponent
-    );
+    void Execute (EntityManager& entityManager);
 };

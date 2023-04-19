@@ -1,10 +1,9 @@
 #include "SpreadDetectSystem.h"
+#include "../Entity/EntityManager.h"
+#include "../World/SpreadManager.h"
 using namespace glm;
 
-void SpreadDetectSystem::Execute(
-    EntityManager& entityManager, 
-    SpreadManager& spreadManager
-) {
+void SpreadDetectSystem::Execute(EntityManager& entityManager, SpreadManager& spreadManager) {
     SpreadDetectComponent& detectComponent = entityManager.spreadDetectComponent_;
     SpreadActivatorComponent& activatorComponent = entityManager.spreadActivatorComponent_;
     TransformComponent& transformComponent = entityManager.transformComponent_;

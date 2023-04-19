@@ -1,11 +1,9 @@
-#include "../Entity/EntityManager.h"
-#include "../World/SpreadManager.h"
+#include "../../Types/EntityTypes.h"
+class EntityManager;
+class SpreadManager;
 
 namespace IntersectSystem {
-    void Execute(
-        EntityManager& entityManager,
-        SpreadManager& spreadManager
-    ); 
+    void Execute(EntityManager& entityManager, SpreadManager& spreadManager); 
 
     void HandleIntersection(
         EntityManager& entityManager,

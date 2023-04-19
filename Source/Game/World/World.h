@@ -3,11 +3,10 @@
 #include <vector>
 #include <unordered_set>
 #include <FastNoiseLite.h>
-#include "../Entity/Entity.h"
-#include "../../Constants/WorldConstants.h"
-#include "../../Resource/ResourceManager.h"
 #include "../../Types/FixedVector.h"
 #include "TerrainModifier.h"
+#include "../../Constants/WorldConstants.h"
+class ResourceManager;
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/hash.hpp>

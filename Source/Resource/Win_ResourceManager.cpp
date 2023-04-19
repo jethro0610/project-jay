@@ -1,4 +1,5 @@
 #include "ResourceManager.h"
+#include "DXResources.h"
 
 ResourceManager::ResourceManager(DXResources& dxResources):
     dxResources_(dxResources)

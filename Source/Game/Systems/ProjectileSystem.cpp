@@ -1,13 +1,12 @@
 #include "ProjectileSystem.h"
+#include "../Entity/EntityManager.h"
+#include "../World/World.h"
 using namespace glm;
 
-void ProjectileSystem::CalculateVelocities(
-    EntityManager& entityManager,
-    World& world,
-    ProjectileComponent& projectileComponent,
-    VelocityComponent& velocityComponent,
-    TransformComponent& transformComponent
-) {
+void ProjectileSystem::CalculateVelocities(EntityManager& entityManager, World& world) {
+    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
     const vec3& playerPosition = transformComponent.transform[PLAYER_ENTITY].position_;
     const vec3& playerVelocity = velocityComponent.velocity[PLAYER_ENTITY];
     for (int i = 0; i < MAX_ENTITIES; i++) {
@@ -59,12 +58,10 @@ void ProjectileSystem::CalculateVelocities(
     }
 }
 
-void ProjectileSystem::Launch(
-    ProjectileComponent& projectileComponent,
-    VelocityComponent& velocityComponent,
-    TransformComponent& transformComponent,
-    EntityID projectileEntity
-) {
+void ProjectileSystem::Launch(EntityManager& entityManager, EntityID projectileEntity) {
+    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
     const float& param1 = projectileComponent.param1[projectileEntity];
     const float& param2 = projectileComponent.param2[projectileEntity];
     vec3& velocity = velocityComponent.velocity[projectileEntity];
@@ -95,13 +92,15 @@ void ProjectileSystem::Launch(
 }
 
 void ProjectileSystem::Throw(
-    ProjectileComponent& projectileComponent,
-    VelocityComponent& velocityComponent,
-    TransformComponent& transformComponent,
+    EntityManager& entityManager,
     EntityID projectileEntity,
     EntityID throwingEntity,
     float height
 ) {
+    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+
     vec3& velocity = velocityComponent.velocity[projectileEntity]; 
     velocity = vec3(0.0f, 30.0f, 0.0f);
     const vec3& throwerVelocity = velocityComponent.velocity[throwingEntity];

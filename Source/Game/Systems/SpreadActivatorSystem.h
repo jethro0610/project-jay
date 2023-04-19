@@ -1,12 +1,13 @@
 #pragma once
-#include "../Entity/EntityManager.h"
-#include "../World/SpreadManager.h"
-#include "../World/World.h"
+#include "../../Types/EntityTypes.h"
+class EntityManager;
+class SpreadManager;
+class World;
 
 namespace SpreadActivatorSystem {
     void Execute(
-        EntityManager& entities,
-        World& world,
+        EntityManager& entities, 
+        World& world, 
         SpreadManager& spreadManager
     );
 

@@ -1,8 +1,10 @@
 #pragma once
-#include "Entity/EntityManager.h"
-#include "World/World.h"
-#include "World/SpreadManager.h"
-#include "Camera.h"
+#include <stdint.h>
+#include "../Types/Inputs.h"
+class Camera;
+class EntityManager;
+class SpreadManager;
+class World;
 
 const uint8_t TIME_TO_CUT = 15;
 const uint16_t MAX_ACTION_METER = 250;

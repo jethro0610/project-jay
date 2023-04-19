@@ -1,6 +1,12 @@
+#include <glm.hpp>
 #include "PlayerController.h"
 #include "../Logging/ScreenText.h"
 #include "../Helpers/ChunkHelpers.h"
+#include "Entity/EntityManager.h"
+#include "World/World.h"
+#include "World/SpreadManager.h"
+#include "Camera.h"
+using namespace glm;
 
 PlayerController::PlayerController(EntityManager& entityManager, World& world, SpreadManager& spreadManager, Camera& camera) :
     entityManager_(entityManager),

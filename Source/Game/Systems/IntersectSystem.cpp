@@ -1,13 +1,12 @@
+#include "IntersectSystem.h"
+#include "../Entity/EntityManager.h"
+#include "../World/SpreadManager.h"
+#include "ProjectileSystem.h"
+#include "PickupSystem.h"
 #include "../../Constants/GameConstants.h"
-#include "./IntersectSystem.h"
-#include "../Systems/PickupSystem.h"
-#include "../Systems/ProjectileSystem.h"
 using namespace glm;
 
-void IntersectSystem::Execute(
-    EntityManager& entityManager,
-    SpreadManager& spreadManager
-) {
+void IntersectSystem::Execute(EntityManager& entityManager, SpreadManager& spreadManager) {
     const Entity* entities = entityManager.entities_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -40,19 +39,8 @@ void IntersectSystem::Execute(
             
             const float dist = distance(position, otherPosition);
             if (dist < radius + otherRadius) {
-                HandleIntersection(
-                    entityManager,
-                    spreadManager, 
-                    i, 
-                    j 
-                );
-
-                HandleIntersection(
-                    entityManager,
-                    spreadManager, 
-                    j, 
-                    i 
-                );
+                HandleIntersection(entityManager, spreadManager, i, j);
+                HandleIntersection(entityManager, spreadManager, j, i);
             }
         }
     }
@@ -75,7 +63,7 @@ void IntersectSystem::HandleIntersection(
     if (entities[entity1].HasComponent(pickupComponent) && 
         entities[entity2].HasComponent(holdableComponent)) 
     {
-        PickupSystem::TryPickup(entity1, entity2, pickupComponent);
+        PickupSystem::TryPickup(entityManager, entity1, entity2);
     }
     
     if (bubbleComponent.properties[entity1].test(BubbleProperties::Meteor)) {
@@ -86,7 +74,7 @@ void IntersectSystem::HandleIntersection(
             bubbleComponent.properties[entity2].test(BubbleProperties::ThrowOnMeteored) && 
             projectileComponent.state[entity2] == ProjectileState::Inactive
         ) {
-            ProjectileSystem::Throw(projectileComponent, velocityComponent, transformComponent, entity2, entity1, 30.0f); 
+            ProjectileSystem::Throw(entityManager, entity2, entity1, 30.0f); 
         }
     }
 }

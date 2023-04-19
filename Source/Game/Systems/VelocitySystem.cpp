@@ -1,11 +1,10 @@
 #include "VelocitySystem.h"
+#include "../Entity/EntityManager.h"
 #include "../../Constants/TimeConstants.h"
 
-void VelocitySystem::Apply(
-    EntityManager& entityManager,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
-) {
+void VelocitySystem::Apply(EntityManager& entityManager) {
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)

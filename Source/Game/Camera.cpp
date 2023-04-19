@@ -1,8 +1,9 @@
 #include "Camera.h"
+#include "../Game/Entity/EntityManager.h"
 using namespace glm;
 
-Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3 startPosition):
-    transformComponent_(transformComponent),
+Camera::Camera(EntityManager& entityManager, float trackDistance, vec3 startPosition):
+    entityManager_(entityManager),
     trackEntity_(-1),
     lookX_(0.0f),
     lookY_(0.0f),
@@ -11,8 +12,8 @@ Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3
     transform_.position_ = startPosition;
 }
 
-Camera::Camera(TransformComponent& transformComponent, float trackDistance, int trackEntity):
-    transformComponent_(transformComponent),
+Camera::Camera(EntityManager& entityManager, float trackDistance, int trackEntity):
+    entityManager_(entityManager),
     trackEntity_(trackEntity),
     lookX_(0.0f),
     lookY_(0.0f),
@@ -33,6 +34,7 @@ mat4 Camera::GetViewMatrix() const {
 }
 
 void Camera::Update(float deltaTime, Inputs inputs) {
+    TransformComponent& transformComponent = entityManager_.transformComponent_;
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));
@@ -45,7 +47,7 @@ void Camera::Update(float deltaTime, Inputs inputs) {
         transform_.position_ += forwardMovement + rightMovement;
     }
     else {
-        vec3 trackPosition = transformComponent_.renderTransform[trackEntity_].position_;
+        vec3 trackPosition = transformComponent.renderTransform[trackEntity_].position_;
         smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
         if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
             vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;

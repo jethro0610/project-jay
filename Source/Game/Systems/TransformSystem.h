@@ -1,8 +1,7 @@
 #pragma once
-#include "../Entity/EntityManager.h"
-#include "../Components/TransformComponent.h"
+class EntityManager;
 
 namespace TransformSystem {
-    void UpdateLastTransforms(EntityManager& entities, TransformComponent& transformComponent);
-    void UpdateRenderTransforms(float interpTime, EntityManager& entities, TransformComponent& transformComponent);
+    void UpdateLastTransforms(EntityManager& entityManager);
+    void UpdateRenderTransforms(EntityManager& entityManager, float interpTime);
 }

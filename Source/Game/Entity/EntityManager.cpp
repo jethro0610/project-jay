@@ -1,4 +1,5 @@
 #include "EntityManager.h"
+#include "../../Resource/ResourceManager.h"
 
 EntityManager::EntityManager (ResourceManager& resourceManager):
     resourceManager_(resourceManager)

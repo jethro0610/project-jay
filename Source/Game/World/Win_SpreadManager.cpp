@@ -1,5 +1,7 @@
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Resource/DXResources.h"
+#include "../../Resource/ResourceManager.h"
 
 void SpreadManager::UpdateRenderData_P() {
     DXResources& dxResources = resourceManager_.dxResources_;

@@ -1,4 +1,7 @@
 #include "SpreadActivatorSystem.h"
+#include "../Entity/EntityManager.h"
+#include "../World/SpreadManager.h"
+#include "../World/World.h"
 using namespace glm;
 
 void SpreadActivatorSystem::Execute(

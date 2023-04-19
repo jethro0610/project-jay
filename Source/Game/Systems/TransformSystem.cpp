@@ -1,7 +1,9 @@
 #include "TransformSystem.h"
+#include "../Entity/EntityManager.h"
 #include "../../Constants/TimeConstants.h"
 
-void TransformSystem::UpdateLastTransforms(EntityManager& entityManager, TransformComponent& transformComponent) {
+void TransformSystem::UpdateLastTransforms(EntityManager& entityManager) {
+    TransformComponent& transformComponent = entityManager.transformComponent_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)
@@ -13,7 +15,8 @@ void TransformSystem::UpdateLastTransforms(EntityManager& entityManager, Transfo
     }
 }
 
-void TransformSystem::UpdateRenderTransforms(float interpTime, EntityManager& entityManager, TransformComponent& transformComponent) {
+void TransformSystem::UpdateRenderTransforms(EntityManager& entityManager, float interpTime) {
+    TransformComponent& transformComponent = entityManager.transformComponent_;
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {

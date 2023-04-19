@@ -35,103 +35,27 @@ void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
-        IntervalSpawnSystem::Execute(
-            entityManager_,
-            entityManager_.transformComponent_,
-            entityManager_.intervalSpawnComponent_,
-            entityManager_.projectileComponent_,
-            entityManager_.velocityComponent_
-        );
-        TransformSystem::UpdateLastTransforms(
-            entityManager_,
-            entityManager_.transformComponent_
-        );
-        IntersectSystem::Execute(
-            entityManager_,
-            spreadManager_
-        );
-        PickupSystem::ExecuteHold(
-            entityManager_,
-            entityManager_.pickupComponent_,
-            entityManager_.transformComponent_,
-            entityManager_.velocityComponent_,
-            entityManager_.projectileComponent_
-        );
-        SpreadActivatorSystem::Execute(
-            entityManager_,
-            world_,
-            spreadManager_
-        );
-        SpreadDetectSystem::Execute(
-            entityManager_, 
-            spreadManager_
-        );
-        playerController_.Execute(
-            inputs_ 
-        );
-        MovementSystem::Execute(
-            entityManager_,
-            entityManager_.movementComponent_,
-            entityManager_.groundTraceComponent_,
-            entityManager_.transformComponent_,
-            entityManager_.velocityComponent_,
-            entityManager_.spreadDetectComponent_
-        );
-        ProjectileSystem::CalculateVelocities(
-            entityManager_,
-            world_,
-            entityManager_.projectileComponent_,
-            entityManager_.velocityComponent_,
-            entityManager_.transformComponent_
-        );
-        GroundStickSystem::Step(
-            entityManager_,
-            world_,
-            entityManager_.transformComponent_,
-            entityManager_.groundTraceComponent_
-        );
-        VelocitySystem::Apply(
-            entityManager_,
-            entityManager_.transformComponent_,
-            entityManager_.velocityComponent_
-        );
-        GroundTraceSystem::Execute(
-            entityManager_,
-            world_
-        );
-        GroundStickSystem::Stick(
-            entityManager_,
-            world_,
-            entityManager_.transformComponent_,
-            entityManager_.groundTraceComponent_
-        );
-        CollisionSystem::Execute(
-            entityManager_,
-            world_, 
-            entityManager_.transformComponent_,
-            entityManager_.worldColliderComponent_
-        );
+        IntervalSpawnSystem::Execute(entityManager_);
+        TransformSystem::UpdateLastTransforms(entityManager_);
+        IntersectSystem::Execute(entityManager_, spreadManager_);
+        PickupSystem::ExecuteHold(entityManager_);
+        SpreadActivatorSystem::Execute(entityManager_, world_, spreadManager_);
+        SpreadDetectSystem::Execute(entityManager_, spreadManager_);
+        playerController_.Execute(inputs_);
+        MovementSystem::Execute(entityManager_);
+        ProjectileSystem::CalculateVelocities(entityManager_, world_);
+        GroundStickSystem::Step(entityManager_, world_);
+        VelocitySystem::Apply(entityManager_);
+        GroundTraceSystem::Execute(entityManager_, world_);
+        GroundStickSystem::Stick(entityManager_, world_);
+        CollisionSystem::Execute(entityManager_, world_);
         timeAccumlulator_ -= TIMESTEP;
     }
-    TransformSystem::UpdateRenderTransforms(
-        timeAccumlulator_, 
-        entityManager_,
-        entityManager_.transformComponent_
-    );
+    TransformSystem::UpdateRenderTransforms(entityManager_, timeAccumlulator_);
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(deltaTime, inputs_);
-    RenderComponents renderComponents {
-        entityManager_.staticModelComponent_,
-        entityManager_.transformComponent_
-    };
-    renderer_.Render(
-        deltaTime, 
-        elapsedTime, 
-        entityManager_.entities_, 
-        renderComponents, spreadManager_,
-        world_
-    );
+    renderer_.Render(entityManager_, spreadManager_, world_, deltaTime, elapsedTime);
 }
 
 void Game::UpdateTime() {

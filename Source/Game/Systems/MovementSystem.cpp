@@ -1,15 +1,13 @@
 #include "MovementSystem.h"
-#include "../../Logging/Logger.h"
+#include "../Entity/EntityManager.h"
 using namespace glm;
 
-void MovementSystem::Execute(
-    EntityManager& entityManager,
-    MovementComponent& movementComponent,
-    GroundTraceComponent& groundTraceComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent,
-    SpreadDetectComponent& spreadDetectComponent
-) {
+void MovementSystem::Execute (EntityManager& entityManager) {
+    MovementComponent& movementComponent = entityManager.movementComponent_;
+    GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
+    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+    SpreadDetectComponent& spreadDetectComponent = entityManager.spreadDetectComponent_;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entityManager.entities_[i];
         if (!entity.alive_)

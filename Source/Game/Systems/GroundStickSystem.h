@@ -1,21 +1,8 @@
 #pragma once
-#include "../Entity/EntityManager.h"
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../World/World.h"
+class EntityManager;
+class World;
 
 namespace GroundStickSystem {
-    void Step (
-        EntityManager& entityManager,
-        World& world, 
-        TransformComponent& transformComponent, 
-        GroundTraceComponent& groundTraceComponent
-    );
-
-    void Stick (
-        EntityManager& entityManager,
-        World& world, 
-        TransformComponent& transformComponent, 
-        GroundTraceComponent& groundTraceComponent
-    );
+    void Step(EntityManager& entityManager, World& world);
+    void Stick(EntityManager& entityManager, World& world);
 }

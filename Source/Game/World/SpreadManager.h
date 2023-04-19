@@ -4,16 +4,19 @@
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
-#include "../../Resource/ResourceManager.h"
+#include <glm.hpp>
+#include "../../Constants/WorldConstants.h"
 #include "../../Constants/SpreadConstants.h"
-#include "World.h"
+class World;
+class ResourceManager;
+class SpreadManager;
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/hash.hpp>
 
 struct AddSpreadInfo {
     bool added;
-    ivec2 key;
+    glm::ivec2 key;
 };
 
 struct SpreadChunk {
@@ -25,8 +28,8 @@ struct SpreadChunk {
 
     SpreadChunk() {
         count = 0;
-        std::fill_n(positions, MAX_SPREAD, vec3(0.0f, 0.0f, 0.0f));
-        std::fill_n(keys, MAX_SPREAD, ivec2(0, 0));
+        std::fill_n(positions, MAX_SPREAD, glm::vec3(0.0f, 0.0f, 0.0f));
+        std::fill_n(keys, MAX_SPREAD, glm::ivec2(0, 0));
     }
 };
 

@@ -1,5 +1,5 @@
-#include "ResourceManager.h"
 #include <fstream>
+#include "ResourceManager.h"
 using json = nlohmann::json;
 
 void ResourceManager::LoadStaticModel(std::string modelName) {

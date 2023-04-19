@@ -1,23 +1,15 @@
 #pragma once
-#include "../Resource/ResourceManager.h"
+#include <glm.hpp>
 #include "RenderTypes.h"
-#include "../Game/Entity/Entity.h"
-#include "../Game/Components/StaticModelComponent.h"
-#include "../Game/Components/TransformComponent.h"
-#include "../Game/Camera.h"
-#include "../Game/World/World.h"
-#include "../Game/World/SpreadManager.h"
+class Camera;
+class EntityManager;
+class ResourceManager;
+class SpreadManager;
+class World;
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
 #endif
-
-typedef std::unordered_map<std::string, std::vector<int>> StaticModelRenderList;
-
-struct RenderComponents {
-    StaticModelComponent& staticMeshComponents;
-    TransformComponent& transformComponents;
-};
 
 class Renderer {
 public:
@@ -27,19 +19,18 @@ public:
     int width_;
     int height_;
 
-    mat4 viewMatrix_;
-    mat4 projMatrix_;
+    glm::mat4 viewMatrix_;
+    glm::mat4 projMatrix_;
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
 
-    mat4 GetWorldViewProjection(mat4 worldMatrix);
+    glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
-        float deltaTime, 
-        float elapsedTime, 
-        Entity* entities, 
-        RenderComponents renderComponents, 
+        EntityManager& entityManager, 
         SpreadManager& spreadManager,
-        World& world
+        World& world,
+        float deltaTime, 
+        float elapsedTime
     );
 private:
     ResourceManager& resourceManager_;
@@ -48,7 +39,7 @@ private:
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P(World& world);
-    void RenderEntities_P(Entity* entities, RenderComponents renderComponents);
+    void RenderEntities_P(EntityManager& entityManager);
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();
     #ifdef _DEBUG

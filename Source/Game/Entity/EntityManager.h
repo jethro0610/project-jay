@@ -2,9 +2,8 @@
 #include <deque>
 #include <string>
 #include "Entity.h"
-#include "../../Constants/EntityConstants.h"
-#include "../../Resource/ResourceManager.h"
 #include "../Components/ComponentInclude.h"
+class ResourceManager;
 
 class EntityManager {
 public:

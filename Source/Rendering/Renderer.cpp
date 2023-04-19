@@ -1,4 +1,6 @@
 #include "Renderer.h"
+#include "../Game/Camera.h"
+using namespace glm;
 
 void Renderer::UpdateViewMatrix() {
     assert(camera_ != nullptr);
@@ -14,19 +16,17 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 }
 
 void Renderer::Render(
-    float deltaTime, 
-    float elapsedTime, 
-    Entity* entities, 
-    RenderComponents renderComponents, 
+    EntityManager& entityManager, 
     SpreadManager& spreadManager,
-    World& world
+    World& world,
+    float deltaTime, 
+    float elapsedTime
 ) {
     UpdateViewMatrix();
     Clear_P();
     SetFrameData_P();
     RenderWorld_P(world);
-    StaticModelRenderList staticModelRenderList;
-    RenderEntities_P(entities, renderComponents);
+    RenderEntities_P(entityManager);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
     #ifdef _DEBUG

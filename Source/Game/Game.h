@@ -5,17 +5,17 @@
 #endif
 
 #include <chrono>
-#include "World/World.h"
-#include "../Resource/ResourceManager.h"
-#include "../Types/Gamepad.h"
-#include "../Types/Transform.h"
-#include "../Types/Inputs.h"
-#include "../Rendering/Renderer.h"
-#include "Components/ComponentInclude.h"
-#include "Systems/Systems.h"
-#include "World/SpreadManager.h"
+#include "Camera.h"
 #include "Entity/EntityManager.h"
+#include "../Types/Gamepad.h"
+#include "../Types/Inputs.h"
 #include "PlayerController.h"
+#include "World/SpreadManager.h"
+#include "Systems/Systems.h"
+#include "../Types/Transform.h"
+#include "../Rendering/Renderer.h"
+#include "../Resource/ResourceManager.h"
+#include "World/World.h"
 
 class Game {
 public:

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "../../Helpers/LoadHelpers.h"
 #include "../../Constants/EntityConstants.h"
+#include "../../Types/EntityTypes.h"
 
 const uint8_t MAX_COMPONENT_TYPES = 32;
 struct Component {

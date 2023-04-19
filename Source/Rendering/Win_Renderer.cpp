@@ -1,4 +1,10 @@
 #include "Renderer.h"
+#include "../Game/Camera.h"
+#include "../Resource/DXResources.h"
+#include "../Game/Entity/EntityManager.h"
+#include "../Resource/ResourceManager.h"
+#include "../Game/World/SpreadManager.h"
+#include "../Types/Transform.h"
 #include "../Logging/Logger.h"
 
 Renderer::Renderer(ResourceManager& resourceManager):
@@ -86,33 +92,37 @@ void Renderer::RenderWorld_P(World& world) {
     }
 }
 
-void Renderer::RenderEntities_P(Entity* entities, RenderComponents renderComponents) {
+void Renderer::RenderEntities_P(EntityManager& entityManager) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
+
+    StaticModelComponent& staticModelComponent = entityManager.staticModelComponent_;
+    TransformComponent& transformComponent = entityManager.transformComponent_;
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
+    const Entity* entities = entityManager.entities_;
     for (int e = 0; e < MAX_ENTITIES; e++) {
         const Entity& entity = entities[e];
         if (!entity.alive_)
             continue;
         if (!entities[e].HasComponents({
-            renderComponents.staticMeshComponents, 
-            renderComponents.transformComponents
+            staticModelComponent,
+            transformComponent 
         })) continue;
 
         PerObjectData objectData;
-        renderComponents.transformComponents.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+        transformComponent.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
         objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
         dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
-        std::string model = renderComponents.staticMeshComponents.model[e];
+        std::string model = staticModelComponent.model[e];
         StaticModelDesc modelDesc = resourceManager_.staticModels_[model];
         for (int m = 0; m < modelDesc.meshCount; m++) {
-            std::string material = renderComponents.staticMeshComponents.materials[e][m];
+            std::string material = staticModelComponent.materials[e][m];
             SetMaterial_P(material);
             std::string mesh = model + "_" + std::to_string(m);
             DXMesh dxMesh = dxResources.staticMeshes_[mesh];

@@ -2,10 +2,7 @@
 #include <json.hpp>
 #include <unordered_map>
 #include "RawModel.h"
-
-#ifdef _WINDOWS
-#include "DXResources.h"
-#endif
+class DXResources;
 
 struct StaticModelDesc {
     int meshCount;

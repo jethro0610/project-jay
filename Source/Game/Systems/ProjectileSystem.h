@@ -1,29 +1,14 @@
-#include "../Entity/EntityManager.h"
-#include "../Components/ProjectileComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../World/World.h"
+#pragma once
+#include "../../Types/EntityTypes.h"
+class EntityManager;
+class World;
 
 namespace ProjectileSystem {
-    void CalculateVelocities(
-        EntityManager& entityManager,
-        World& world,
-        ProjectileComponent& projectileComponent,
-        VelocityComponent& velocityComponent,
-        TransformComponent& transformComponent
-    );
-
-    void Launch(
-        ProjectileComponent& projectileComponent,
-        VelocityComponent& velocityComponent,
-        TransformComponent& transformComponent,
-        EntityID projectileEntity
-    );
+    void CalculateVelocities(EntityManager& entityManager, World& world);
+    void Launch(EntityManager& entityManager, EntityID projectileEntity);
 
     void Throw(
-        ProjectileComponent& projectileComponent,
-        VelocityComponent& velocityComponent,
-        TransformComponent& transformComponent,
+        EntityManager& entityManager,
         EntityID projectileEntity,
         EntityID throwingEntity,
         float height

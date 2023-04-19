@@ -1,5 +1,7 @@
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Types/Transform.h"
+#include "World.h"
 #include "../../Logging/Logger.h"
 #include <gtx/string_cast.hpp>
 using namespace glm;

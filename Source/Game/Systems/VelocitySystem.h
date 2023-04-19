@@ -1,11 +1,6 @@
-#include "../Entity/EntityManager.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
+#pragma once
+class EntityManager;
 
 namespace VelocitySystem {
-    void Apply(
-        EntityManager& entityManager,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
-    );
+    void Apply(EntityManager& entityManager);
 }

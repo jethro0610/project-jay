@@ -10,7 +10,8 @@ enum StickType {
     StepUp 
 };
 
-struct GroundTraceComponent : public Component {
+class GroundTraceComponent : public Component {
+public:
     float distance[MAX_ENTITIES];
     StickType stickType[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
@@ -33,7 +34,9 @@ struct GroundTraceComponent : public Component {
     GroundTraceComponent(const GroundTraceComponent&) = delete;
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
 
-    std::string GetName() const { return "ground_trace"; }
+    static constexpr std::string GetName() { return "ground_trace"; }
+    static constexpr uint8_t GetID() { return 1; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = data["distance"].get<float>();
         std::string stickTypeS = data["type"].get<std::string>();

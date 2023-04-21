@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 
-struct SpreadActivatorComponent : public Component {
+class SpreadActivatorComponent : public Component {
+public:
     bool groundOnly[MAX_ENTITIES];
     int16_t radius[MAX_ENTITIES]; 
 
@@ -12,7 +13,9 @@ struct SpreadActivatorComponent : public Component {
     SpreadActivatorComponent(const SpreadActivatorComponent&) = delete;
     SpreadActivatorComponent& operator=(const SpreadActivatorComponent&) = delete;
 
-    std::string GetName() const { return "spread_activator"; }
+    static constexpr std::string GetName() { return "spread_activator"; }
+    static constexpr uint8_t GetID() { return 7; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         groundOnly[entity] = data["ground_only"].get<bool>();
     }

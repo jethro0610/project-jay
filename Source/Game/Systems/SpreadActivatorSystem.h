@@ -1,31 +1,22 @@
 #pragma once
 #include "../../Types/EntityTypes.h"
-class EntityManager;
+class Entity;
 class SpreadManager;
 class World;
+class GroundTraceComponent;
+class SpreadActivatorComponent;
+class SpreadDetectComponent;
+class TransformComponent;
 
 namespace SpreadActivatorSystem {
     void Execute(
-        EntityManager& entities, 
-        World& world, 
-        SpreadManager& spreadManager
-    );
-
-    void AddSpread(
-        EntityManager& entityManager,
-        World& world,
+        Entity* entities, 
         SpreadManager& spreadManager,
-        EntityID entity,
-        bool hasDetect,
-        int16_t radius
-    );
-
-    void RemoveSpread(
-        EntityManager& entityManager,
         World& world,
-        SpreadManager& spreadManager,
-        EntityID entity,
-        int16_t radius
+        GroundTraceComponent& groundTraceComponent,
+        SpreadActivatorComponent& spreadActivatorComponent,
+        SpreadDetectComponent& spreadDetectComponent,
+        TransformComponent& transformComponent
     );
 }
 

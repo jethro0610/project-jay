@@ -2,10 +2,12 @@
 #include <glm.hpp>
 #include "RenderTypes.h"
 class Camera;
-class EntityManager;
+class Entity;
 class ResourceManager;
 class SpreadManager;
 class World;
+class TransformComponent;
+class StaticModelComponent;
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -26,9 +28,11 @@ public:
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
-        EntityManager& entityManager, 
+        Entity* entities,
         SpreadManager& spreadManager,
         World& world,
+        TransformComponent& transformComponent,
+        StaticModelComponent& staticModelComponent,
         float deltaTime, 
         float elapsedTime
     );
@@ -39,7 +43,11 @@ private:
     void Clear_P();
     void SetMaterial_P(std::string materialName);
     void RenderWorld_P(World& world);
-    void RenderEntities_P(EntityManager& entityManager);
+    void RenderEntities_P(
+        Entity* entities, 
+        TransformComponent& transformComponent, 
+        StaticModelComponent& staticModelComponent
+    );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();
     #ifdef _DEBUG

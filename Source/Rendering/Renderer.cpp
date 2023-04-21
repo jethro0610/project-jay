@@ -16,9 +16,11 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 }
 
 void Renderer::Render(
-    EntityManager& entityManager, 
+    Entity* entities,
     SpreadManager& spreadManager,
     World& world,
+    TransformComponent& transformComponent,
+    StaticModelComponent& staticModelComponent,
     float deltaTime, 
     float elapsedTime
 ) {
@@ -26,7 +28,7 @@ void Renderer::Render(
     Clear_P();
     SetFrameData_P();
     RenderWorld_P(world);
-    RenderEntities_P(entityManager);
+    RenderEntities_P(entities, transformComponent, staticModelComponent);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
     #ifdef _DEBUG

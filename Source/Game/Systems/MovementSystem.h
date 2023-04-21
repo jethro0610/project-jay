@@ -1,12 +1,24 @@
 #pragma once
 #include <glm.hpp>
-class EntityManager;
+class Entity;
+class GroundTraceComponent;
+class MovementComponent;
+class SpreadDetectComponent;
+class TransformComponent;
+class VelocityComponent;
 
 const float GRAVITY_ACCELERATION = 1.0f;
 const float MAX_GRAVITY = 60.0f;
 
 namespace MovementSystem {
-    void Execute(EntityManager& entityManager);
+    void Execute(
+        Entity* entities,
+        GroundTraceComponent& groundTraceComponent,
+        MovementComponent& movementComponent,
+        SpreadDetectComponent& spreadDetectComponent,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
+    );
 
     void CalculateDefaultMovement(
         const glm::vec3& desiredMovement, 

@@ -11,8 +11,6 @@
 #include "SpreadDetectComponent.h"
 
 #include "BubbleComponent.h"
-#include "PickupComponent.h"
-#include "HoldableComponent.h"
 
 #include "IntervalSpawnComponent.h"
 
@@ -28,7 +26,5 @@
     COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent_) \
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
     COMPONENTVAR(BubbleComponent, bubbleComponent_) \
-    COMPONENTVAR(PickupComponent, pickupComponent_) \
-    COMPONENTVAR(HoldableComponent, holdableComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
     COMPONENTVAR(StaticModelComponent, staticModelComponent_)

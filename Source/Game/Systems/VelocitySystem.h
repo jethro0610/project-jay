@@ -1,6 +1,12 @@
 #pragma once
-class EntityManager;
+class Entity;
+class TransformComponent;
+class VelocityComponent;
 
 namespace VelocitySystem {
-    void Apply(EntityManager& entityManager);
+    void Apply(
+        Entity* entities,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
+    );
 }

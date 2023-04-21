@@ -2,7 +2,8 @@
 #include <glm.hpp>
 #include "Component.h"
 
-struct VelocityComponent : public Component {
+class VelocityComponent : public Component {
+public:
     glm::vec3 velocity[MAX_ENTITIES];
 
     VelocityComponent() {
@@ -11,7 +12,9 @@ struct VelocityComponent : public Component {
     VelocityComponent(const VelocityComponent&) = delete;
     VelocityComponent& operator=(const VelocityComponent&) = delete;
 
-    std::string GetName() const { return "velocity"; }
+    static constexpr std::string GetName() { return "velocity"; }
+    static constexpr uint8_t GetID() { return 11; }
+
     void Load(nlohmann::json& data, EntityID entity) {
     }
 };

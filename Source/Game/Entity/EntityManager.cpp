@@ -8,8 +8,8 @@ EntityManager::EntityManager (ResourceManager& resourceManager):
     uint8_t idCounter = 0;
     
     #define COMPONENTVAR(TYPE, VAR) \
-        VAR.id = idCounter++; \
-        componentMap_[VAR.GetName()] = &VAR;   
+        componentMap_[TYPE::GetName()] = &std::get<TYPE>(components_); \
+        componentIds_[TYPE::GetName()] = TYPE::GetID();
         CREATECOMPONENTVARS  
     #undef COMPONENTVAR
 }
@@ -21,7 +21,7 @@ EntityReturn EntityManager::CreateEntity() {
         usableEntities_.push_front(createdEntity + 1);
 
     entities_[createdEntity].alive_ = true;
-    return { createdEntity, transformComponent_.transform[createdEntity] };
+    return { createdEntity, GetComponent<TransformComponent>().transform[createdEntity] };
 }
 
 EntityReturn EntityManager::CreateEntity(std::string entityName) {
@@ -30,7 +30,8 @@ EntityReturn EntityManager::CreateEntity(std::string entityName) {
     for (auto& componentData : entityData["components"].items()) {
         std::string name = componentData.key();
         Component* component = componentMap_[name];
-        entities_[entityId].componentMask_.set(component->id);
+        uint8_t componentId = componentIds_[name];
+        entities_[entityId].AddComponentById(componentId);
         component->Load(componentData.value(), entityId);
     }
     return { entityId, entityTransform };
@@ -38,6 +39,6 @@ EntityReturn EntityManager::CreateEntity(std::string entityName) {
 
 void EntityManager::DestroyEntity(EntityID entityToDestroy) {
     entities_[entityToDestroy].alive_ = false;
-    entities_[entityToDestroy].componentMask_ = 0;
+    entities_[entityToDestroy].key_ = 0;
     usableEntities_.push_front(entityToDestroy);
 }

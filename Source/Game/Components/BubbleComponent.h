@@ -10,7 +10,8 @@ enum BubbleProperties {
     BubblePropertyCount
 };
 
-struct BubbleComponent : public Component {
+class BubbleComponent : public Component {
+public:
     float radius[MAX_ENTITIES];
     std::bitset<BubblePropertyCount> properties[MAX_ENTITIES];
 
@@ -21,7 +22,9 @@ struct BubbleComponent : public Component {
     BubbleComponent(const BubbleComponent&) = delete;
     BubbleComponent& operator=(const BubbleComponent&) = delete;
 
-    std::string GetName() const { return "bubble"; }
+    static constexpr std::string GetName() { return "bubble"; }
+    static constexpr uint8_t GetID() { return 0; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         radius[entity] = data["radius"].get<float>();
 

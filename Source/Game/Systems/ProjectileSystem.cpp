@@ -1,24 +1,29 @@
 #include "ProjectileSystem.h"
-#include "../Entity/EntityManager.h"
+#include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
 #include "../World/World.h"
+#include "../Components/ProjectileComponent.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/VelocityComponent.h"
 using namespace glm;
 
-void ProjectileSystem::CalculateVelocities(EntityManager& entityManager, World& world) {
-    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
-    TransformComponent& transformComponent = entityManager.transformComponent_;
+constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
+
+void ProjectileSystem::CalculateVelocities(
+    Entity* entities, 
+    World& world,
+    ProjectileComponent& projectileComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent
+) {
     const vec3& playerPosition = transformComponent.transform[PLAYER_ENTITY].position_;
     const vec3& playerVelocity = velocityComponent.velocity[PLAYER_ENTITY];
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        
-        if (!entity.HasComponents({
-            projectileComponent, 
-            velocityComponent,
-            transformComponent
-        })) continue;
+        if (!entity.MatchesKey(key))
+            continue;
 
         ProjectileState& state = projectileComponent.state[i];
         if (state == Inactive)
@@ -58,10 +63,13 @@ void ProjectileSystem::CalculateVelocities(EntityManager& entityManager, World& 
     }
 }
 
-void ProjectileSystem::Launch(EntityManager& entityManager, EntityID projectileEntity) {
-    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
-    TransformComponent& transformComponent = entityManager.transformComponent_;
+void ProjectileSystem::Launch(
+    Entity* entities, 
+    ProjectileComponent& projectileComponent, 
+    TransformComponent& transformComponent, 
+    VelocityComponent& velocityComponent, 
+    EntityID projectileEntity
+) {
     const float& param1 = projectileComponent.param1[projectileEntity];
     const float& param2 = projectileComponent.param2[projectileEntity];
     vec3& velocity = velocityComponent.velocity[projectileEntity];
@@ -91,16 +99,16 @@ void ProjectileSystem::Launch(EntityManager& entityManager, EntityID projectileE
     }
 }
 
+// The function definiton is bigger than the function lmao
 void ProjectileSystem::Throw(
-    EntityManager& entityManager,
+    Entity* entities, 
+    ProjectileComponent& projectileComponent, 
+    TransformComponent& transformComponent, 
+    VelocityComponent& velocityComponent, 
     EntityID projectileEntity,
     EntityID throwingEntity,
     float height
 ) {
-    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
-    TransformComponent& transformComponent = entityManager.transformComponent_;
-
     vec3& velocity = velocityComponent.velocity[projectileEntity]; 
     velocity = vec3(0.0f, 30.0f, 0.0f);
     const vec3& throwerVelocity = velocityComponent.velocity[throwingEntity];

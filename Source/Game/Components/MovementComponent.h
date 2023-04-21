@@ -27,7 +27,8 @@ enum MoveMode {
     NumberOfModes
 };
 
-struct MovementComponent : public Component {
+class MovementComponent : public Component {
+public:
     glm::vec3 desiredMovement[MAX_ENTITIES];
     MoveMode moveMode[MAX_ENTITIES];
     float speed[MAX_ENTITIES];
@@ -52,7 +53,9 @@ struct MovementComponent : public Component {
     MovementComponent(const MovementComponent&) = delete;
     MovementComponent& operator=(const MovementComponent&) = delete;
 
-    std::string GetName() const { return "movement"; }
+    static constexpr std::string GetName() { return "movement"; }
+    static constexpr uint8_t GetID() { return 4; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         minSpeed[entity] = data["min_speed"].get<float>();
         maxSpeed[entity] = data["max_speed"].get<float>();

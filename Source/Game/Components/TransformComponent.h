@@ -2,7 +2,8 @@
 #include "../../Types/Transform.h"
 #include "Component.h"
 
-struct TransformComponent : public Component {
+class TransformComponent : public Component {
+public:
     Transform transform[MAX_ENTITIES];
     Transform transformLastUpdate[MAX_ENTITIES];
     Transform renderTransform[MAX_ENTITIES];
@@ -14,7 +15,9 @@ struct TransformComponent : public Component {
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;
 
-    std::string GetName() const { return "transform"; }
+    static constexpr std::string GetName() { return "transform"; }
+    static constexpr uint8_t GetID() { return 10; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         interpolate[entity] = data["interpolate"].get<bool>();
     }

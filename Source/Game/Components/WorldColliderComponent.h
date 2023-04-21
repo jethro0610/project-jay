@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 
-struct WorldColliderComponent : public Component {
+class WorldColliderComponent : public Component {
+public:
     bool colliding[MAX_ENTITIES];
 
     WorldColliderComponent(){
@@ -10,7 +11,9 @@ struct WorldColliderComponent : public Component {
     WorldColliderComponent(const WorldColliderComponent&) = delete;
     WorldColliderComponent& operator=(const WorldColliderComponent&) = delete;
 
-    std::string GetName() const { return "world_collider"; }
+    static constexpr std::string GetName() { return "world_collider"; }
+    static constexpr uint8_t GetID() { return 12; }
+
     void Load(nlohmann::json& data, EntityID entity) {
     }
 };

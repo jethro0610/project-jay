@@ -1,16 +1,24 @@
 #include "CollisionSystem.h"
-#include "../Entity/EntityManager.h"
+#include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
 #include "../World/World.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/WorldColliderComponent.h"
 using namespace glm;
 
-void CollisionSystem::Execute(EntityManager& entityManager, World& world) {
-    TransformComponent& transformComponent = entityManager.transformComponent_;
-    WorldColliderComponent& worldColliderComponent = entityManager.worldColliderComponent_;
+constexpr EntityKey key = GetEntityKey<TransformComponent, WorldColliderComponent>();
+
+void CollisionSystem::Execute(
+    Entity* entities, 
+    World& world, 
+    TransformComponent& transformComponent, 
+    WorldColliderComponent& worldColliderComponent
+) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents({transformComponent, worldColliderComponent}))
+        if (!entity.MatchesKey(key))
             continue;
 
         // Raymarch towards the nearest point on the surface

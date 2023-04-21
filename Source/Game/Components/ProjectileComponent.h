@@ -14,7 +14,8 @@ enum ProjectileState {
     Throw
 };
 
-struct ProjectileComponent : public Component {
+class ProjectileComponent : public Component {
+public:
     ProjectileType type[MAX_ENTITIES];
     ProjectileState state[MAX_ENTITIES];
     float param1[MAX_ENTITIES];
@@ -27,7 +28,9 @@ struct ProjectileComponent : public Component {
         std::fill_n(param2, MAX_ENTITIES, 0.0f);
     }
 
-    std::string GetName() const { return "projectile"; }
+    static constexpr std::string GetName() { return "projectile"; }
+    static constexpr uint8_t GetID() { return 6; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         std::string projectileTypeS = data["type"].get<std::string>();
         if (projectileTypeS == "random")

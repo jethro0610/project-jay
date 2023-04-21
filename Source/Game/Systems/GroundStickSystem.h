@@ -1,8 +1,21 @@
 #pragma once
-class EntityManager;
+class Entity;
+class GroundTraceComponent;
+class TransformComponent;
 class World;
 
 namespace GroundStickSystem {
-    void Step(EntityManager& entityManager, World& world);
-    void Stick(EntityManager& entityManager, World& world);
+    void Step(
+        Entity* entities, 
+        World& world, 
+        GroundTraceComponent& groundTraceComponent,
+        TransformComponent& transformComponent
+    );
+
+    void Stick(
+        Entity* entities, 
+        World& world, 
+        GroundTraceComponent& groundTraceComponent,
+        TransformComponent& transformComponent
+    );
 }

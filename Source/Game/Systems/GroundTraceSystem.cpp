@@ -1,21 +1,28 @@
 #include "GroundTraceSystem.h"
-#include "../Entity/EntityManager.h"
+#include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
 #include "../World/World.h"
-#include "../../Logging/ScreenText.h"
+#include "../Components/GroundTraceComponent.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/VelocityComponent.h"
 using namespace glm;
 
-void GroundTraceSystem::Execute(EntityManager& entityManager, World& world) {
-    TransformComponent& transformComponent = entityManager.transformComponent_;
-    GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
 
+void GroundTraceSystem::Execute(
+    Entity* entities,
+    World& world,
+    GroundTraceComponent& groundTraceComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent
+) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents({transformComponent, groundTraceComponent}))
+        if (!entity.MatchesKey(key))
             continue;
-        bool hasVelocity = entity.HasComponent(velocityComponent);
+        bool hasVelocity = entity.HasComponent<TransformComponent>();
         bool isRising = hasVelocity && velocityComponent.velocity[i].y > 0.0f;
 
         float traceDistance = groundTraceComponent.distance[i];

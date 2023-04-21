@@ -1,29 +1,35 @@
 #include "TransformSystem.h"
-#include "../Entity/EntityManager.h"
+#include "../Entity/Entity.h"
+#include "../Components/TransformComponent.h"
 #include "../../Constants/TimeConstants.h"
 
-void TransformSystem::UpdateLastTransforms(EntityManager& entityManager) {
-    TransformComponent& transformComponent = entityManager.transformComponent_;
+void TransformSystem::UpdateLastTransforms(
+    Entity* entities,
+    TransformComponent& transformComponent
+) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent(transformComponent))
+        if (!entity.HasComponent<TransformComponent>())
             continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
     }
 }
 
-void TransformSystem::UpdateRenderTransforms(EntityManager& entityManager, float interpTime) {
-    TransformComponent& transformComponent = entityManager.transformComponent_;
+void TransformSystem::UpdateRenderTransforms(
+    Entity* entities,
+    TransformComponent& transformComponent,
+    float interpTime
+) {
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent(transformComponent))
+        if (!entity.HasComponent<TransformComponent>())
             continue;
 
         if (transformComponent.interpolate[i]) {

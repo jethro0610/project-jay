@@ -1,11 +1,13 @@
 #include "Renderer.h"
 #include "../Game/Camera.h"
 #include "../Resource/DXResources.h"
-#include "../Game/Entity/EntityManager.h"
+#include "../Game/Entity/Entity.h"
+#include "../Helpers/EntityHelpers.h"
 #include "../Resource/ResourceManager.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Types/Transform.h"
-#include "../Logging/Logger.h"
+#include "../Game/Components/StaticModelComponent.h"
+#include "../Game/Components/TransformComponent.h"
 
 Renderer::Renderer(ResourceManager& resourceManager):
     resourceManager_(resourceManager),
@@ -92,27 +94,26 @@ void Renderer::RenderWorld_P(World& world) {
     }
 }
 
-void Renderer::RenderEntities_P(EntityManager& entityManager) {
+EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
+void Renderer::RenderEntities_P(
+    Entity* entities, 
+    TransformComponent& transformComponent, 
+    StaticModelComponent& staticModelComponent
+) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
-
-    StaticModelComponent& staticModelComponent = entityManager.staticModelComponent_;
-    TransformComponent& transformComponent = entityManager.transformComponent_;
 
     // Set the vertex and index buffers to be drawn
     context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
-    const Entity* entities = entityManager.entities_;
     for (int e = 0; e < MAX_ENTITIES; e++) {
         const Entity& entity = entities[e];
         if (!entity.alive_)
             continue;
-        if (!entities[e].HasComponents({
-            staticModelComponent,
-            transformComponent 
-        })) continue;
+        if (!entity.MatchesKey(key))
+            continue;
 
         PerObjectData objectData;
         transformComponent.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);

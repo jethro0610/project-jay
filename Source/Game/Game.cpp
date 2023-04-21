@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "../Constants/TimeConstants.h"
-#include "../Logging/Logger.h"
 
 using namespace std::chrono;
+#define GETCOMP(COMP) entityManager_.GetComponent<COMP>()
 
 void Game::Init() {
     // Initialize the time
@@ -35,27 +35,118 @@ void Game::Update(float deltaTime, float elapsedTime) {
     timeAccumlulator_ += deltaTime;
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
-        IntervalSpawnSystem::Execute(entityManager_);
-        TransformSystem::UpdateLastTransforms(entityManager_);
-        IntersectSystem::Execute(entityManager_, spreadManager_);
-        PickupSystem::ExecuteHold(entityManager_);
-        SpreadActivatorSystem::Execute(entityManager_, world_, spreadManager_);
-        SpreadDetectSystem::Execute(entityManager_, spreadManager_);
-        playerController_.Execute(inputs_);
-        MovementSystem::Execute(entityManager_);
-        ProjectileSystem::CalculateVelocities(entityManager_, world_);
-        GroundStickSystem::Step(entityManager_, world_);
-        VelocitySystem::Apply(entityManager_);
-        GroundTraceSystem::Execute(entityManager_, world_);
-        GroundStickSystem::Stick(entityManager_, world_);
-        CollisionSystem::Execute(entityManager_, world_);
+        IntervalSpawnSystem::Execute(
+            entityManager_.entities_,
+            entityManager_,
+            GETCOMP(IntervalSpawnComponent),
+            GETCOMP(ProjectileComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        TransformSystem::UpdateLastTransforms(
+            entityManager_.entities_,
+            GETCOMP(TransformComponent)
+        );
+        IntersectSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            GETCOMP(BubbleComponent),
+            GETCOMP(ProjectileComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        SpreadActivatorSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            world_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(SpreadActivatorComponent),
+            GETCOMP(SpreadDetectComponent),
+            GETCOMP(TransformComponent) 
+        );
+        SpreadDetectSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            GETCOMP(SpreadActivatorComponent),
+            GETCOMP(SpreadDetectComponent),
+            GETCOMP(TransformComponent)
+        );
+        playerController_.Execute(
+            world_,
+            spreadManager_,
+            camera_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(MovementComponent),
+            GETCOMP(SpreadActivatorComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent),
+            inputs_
+        );
+        MovementSystem::Execute(
+            entityManager_.entities_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(MovementComponent),
+            GETCOMP(SpreadDetectComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        ProjectileSystem::CalculateVelocities(
+            entityManager_.entities_,
+            world_,
+            GETCOMP(ProjectileComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent) 
+        );
+        GroundStickSystem::Step(
+            entityManager_.entities_,
+            world_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(TransformComponent)
+        );
+        VelocitySystem::Apply(
+            entityManager_.entities_,
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        GroundTraceSystem::Execute(
+            entityManager_.entities_,
+            world_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        GroundStickSystem::Stick(
+            entityManager_.entities_,
+            world_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(TransformComponent)
+        );
+        CollisionSystem::Execute(
+            entityManager_.entities_, 
+            world_, 
+            GETCOMP(TransformComponent),
+            GETCOMP(WorldColliderComponent)
+        );
+
         timeAccumlulator_ -= TIMESTEP;
     }
-    TransformSystem::UpdateRenderTransforms(entityManager_, timeAccumlulator_);
+    TransformSystem::UpdateRenderTransforms(
+        entityManager_.entities_,
+        GETCOMP(TransformComponent),
+        timeAccumlulator_
+    );
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(deltaTime, inputs_);
-    renderer_.Render(entityManager_, spreadManager_, world_, deltaTime, elapsedTime);
+    renderer_.Render(
+        entityManager_.entities_, 
+        spreadManager_, 
+        world_, 
+        GETCOMP(TransformComponent),
+        GETCOMP(StaticModelComponent),
+        deltaTime, 
+        elapsedTime
+    );
 }
 
 void Game::UpdateTime() {

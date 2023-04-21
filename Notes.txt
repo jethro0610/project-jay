@@ -214,21 +214,15 @@
     - Only a few use cases, limits the design of rest of game
 
 =========================================
-- Modifier objects (not component)
-    - Precompute modifier chunks for better performanc3
-    - Use FixedVector in SpreadManager
-    - Use MAX_QUADS on world rendering, set unused quads to MAX_INT
-    - Use set for dirty chunk
-    - How to combine dirty chunks and spread?
-        - Maybe make a struct for tracking dirties that is shared between chunk and spread
-    - Change FixedVector to DoubleBuffer
-
 - Change everything to forward declarations
-- Remove implicit conversions
 - Correct necessary types
 - Seed meter
 - Slide off/strong slopes
-- Rename chunkPos to chunk in SpreadManager
 ==========================================
-- The buffer swap of World basically has to do the front buffer computation again
-    - Copy resource MIGHT fix this, have to test
+- Should store the an array of intersections then process them in another function, rather than
+  handling them straight in the intersection call
+- Remove systems with more than one fucntion car
+- Remove activator from SpreadDetect
+- Collision list
+- Spawn list
+- Store loaded entities in resource manager and copy instead of reconstructing from json

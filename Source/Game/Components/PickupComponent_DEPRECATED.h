@@ -14,7 +14,9 @@ struct PickupComponent : public Component {
     PickupComponent(const PickupComponent&) = delete;
     PickupComponent& operator=(const PickupComponent&) = delete;
 
-    std::string GetName() const { return "pickup"; }
+    static constexpr std::string GetName() { return "pickup"; }
+    static constexpr uint8_t GetID() { return 5; }
+
     void Load(nlohmann::json& data, EntityID entity) {
     }
 };

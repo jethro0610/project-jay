@@ -7,7 +7,8 @@ const uint8_t MAX_DETECT = 16;
 const uint8_t MAX_ADD_DISTANCE = 2;
 const glm::ivec2 NO_ADD = glm::ivec2(-1024, -1024);
 
-struct SpreadDetectComponent : public Component {
+class SpreadDetectComponent : public Component {
+public:
     bool deteced[MAX_ENTITIES];
     glm::ivec2 lastAdd[MAX_ENTITIES];
     glm::ivec2 lastKey[MAX_ENTITIES];
@@ -19,7 +20,9 @@ struct SpreadDetectComponent : public Component {
     SpreadDetectComponent (const SpreadDetectComponent &) = delete;
     SpreadDetectComponent & operator=(const SpreadDetectComponent &) = delete;
 
-    std::string GetName() const { return "spread_detect"; }
+    static constexpr std::string GetName() { return "spread_detect"; }
+    static constexpr uint8_t GetID() { return 8; }
+
     void Load(nlohmann::json& data, EntityID entity) {
     }
 };

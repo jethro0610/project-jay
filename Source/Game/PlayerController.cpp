@@ -8,24 +8,23 @@
 #include "Camera.h"
 using namespace glm;
 
-PlayerController::PlayerController(EntityManager& entityManager, World& world, SpreadManager& spreadManager, Camera& camera) :
-    entityManager_(entityManager),
-    world_(world),
-    spreadManager_(spreadManager),
-    camera_(camera)
-{
+PlayerController::PlayerController() {
     actionMeter_ = 0; 
 }
 
-void PlayerController::Execute(Inputs inputs) {
-    MovementComponent& movementComponent = entityManager_.movementComponent_; 
-    TransformComponent& transformComponent = entityManager_.transformComponent_;
-    VelocityComponent& velocityComponent = entityManager_.velocityComponent_;
-    SpreadActivatorComponent& spreadActivatorComponent = entityManager_.spreadActivatorComponent_; 
-    GroundTraceComponent& groundTraceComponent = entityManager_.groundTraceComponent_;
-
+void PlayerController::Execute(
+    World& world, 
+    SpreadManager& spreadManager, 
+    Camera& camera,
+    GroundTraceComponent& groundTraceComponent,
+    MovementComponent& movementComponent,
+    SpreadActivatorComponent& spreadActivatorComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent,
+    Inputs inputs
+) {
     vec3& position = transformComponent.transform[PLAYER_ENTITY].position_;
-    quat cameraPlanarRotation = quat(vec3(0.0f, camera_.lookX_, 0.0f));
+    quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
 
@@ -77,12 +76,12 @@ void PlayerController::Execute(Inputs inputs) {
         actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
-        entityManager_.velocityComponent_.velocity[PLAYER_ENTITY].y = 50.0f;
+        velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
         if (length(desiredMovement) > 0.0001f)
             transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
-        spreadManager_.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
+        spreadManager.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

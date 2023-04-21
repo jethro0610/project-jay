@@ -1,7 +1,15 @@
 #pragma once
-class EntityManager;
+class Entity;
+class TransformComponent;
 
 namespace TransformSystem {
-    void UpdateLastTransforms(EntityManager& entityManager);
-    void UpdateRenderTransforms(EntityManager& entityManager, float interpTime);
+    void UpdateLastTransforms(
+        Entity* entities,
+        TransformComponent& transformComponent
+    );
+    void UpdateRenderTransforms(
+        Entity* entities,
+        TransformComponent& transformComponent,
+        float interpTime
+    );
 }

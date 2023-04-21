@@ -1,18 +1,26 @@
 #include "IntervalSpawnSystem.h"
-#include "../Entity/EntityManager.h"
 #include "ProjectileSystem.h"
+#include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
+#include "../Components/IntervalSpawnComponent.h"
+#include "../Components/ProjectileComponent.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/VelocityComponent.h"
 using namespace glm;
     
-void IntervalSpawnSystem::Execute (EntityManager& entityManager) {
-    TransformComponent& transformComponent = entityManager.transformComponent_;
-    IntervalSpawnComponent& intervalSpawnComponent = entityManager.intervalSpawnComponent_;
-    ProjectileComponent& projectileComponent = entityManager.projectileComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
+void IntervalSpawnSystem::Execute(
+    Entity* entities,
+    EntityManager& entityManager,
+    IntervalSpawnComponent& intervalSpawnComponent,
+    ProjectileComponent& projectileComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent
+) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent(intervalSpawnComponent))
+        if (!entity.HasComponent<IntervalSpawnComponent>())
             continue;
 
         uint16_t& spawnTimer = intervalSpawnComponent.spawnTimer[i];
@@ -20,7 +28,7 @@ void IntervalSpawnSystem::Execute (EntityManager& entityManager) {
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
             auto [entityId, transform] = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i]);
             transform.position_ = transformComponent.transform[i].position_;
-            ProjectileSystem::Launch(entityManager, entityId);
+            ProjectileSystem::Launch(entities, projectileComponent, transformComponent, velocityComponent, entityId);
 
             // Create the spawn entity
             spawnTimer = 0;

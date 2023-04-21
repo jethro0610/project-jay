@@ -1,8 +1,5 @@
 #include "World.h"
 #include "../../Helpers/ChunkHelpers.h"
-#include "../../Logging/Logger.h"
-#include "../../Logging/ScreenText.h"
-
 using namespace glm;
 
 World::World(ResourceManager& resourceManager):

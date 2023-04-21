@@ -1,7 +1,16 @@
 #pragma once
-class EntityManager;
+class Entity;
+class GroundTraceComponent;
+class TransformComponent;
 class World;
+class VelocityComponent;
 
 namespace GroundTraceSystem {
-    void Execute(EntityManager& entityManager, World& world);
+    void Execute(
+        Entity* entities,
+        World& world,
+        GroundTraceComponent& groundTraceComponent,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
+    );
 }

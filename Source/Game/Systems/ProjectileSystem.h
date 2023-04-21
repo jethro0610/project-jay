@@ -1,14 +1,37 @@
 #pragma once
 #include "../../Types/EntityTypes.h"
-class EntityManager;
+class Entity;
 class World;
+class ProjectileComponent;
+class TransformComponent;
+class VelocityComponent;
 
 namespace ProjectileSystem {
-    void CalculateVelocities(EntityManager& entityManager, World& world);
-    void Launch(EntityManager& entityManager, EntityID projectileEntity);
+    // TODO: Can maybe have a separate system for halting on world
+    // collision
+    void CalculateVelocities(
+        Entity* entities, 
+        World& world,
+        ProjectileComponent& projectileComponent,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
+    );
+
+    // TODO: Maybe set a flag instead of having these two functions,
+    // that way we're not calling a system in another system
+    void Launch(
+        Entity* entities, 
+        ProjectileComponent& projectileComponent, 
+        TransformComponent& transformComponent, 
+        VelocityComponent& velocityComponent, 
+        EntityID projectileEntity
+    );
 
     void Throw(
-        EntityManager& entityManager,
+        Entity* entities, 
+        ProjectileComponent& projectileComponent, 
+        TransformComponent& transformComponent, 
+        VelocityComponent& velocityComponent, 
         EntityID projectileEntity,
         EntityID throwingEntity,
         float height

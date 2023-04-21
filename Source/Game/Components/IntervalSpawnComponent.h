@@ -1,7 +1,8 @@
 #pragma once
 #include "Component.h"
 
-struct IntervalSpawnComponent : public Component {
+class IntervalSpawnComponent : public Component {
+public:
     uint16_t spawnInterval[MAX_ENTITIES];
     uint16_t spawnTimer[MAX_ENTITIES]; 
     std::string entityToSpawn[MAX_ENTITIES];
@@ -14,7 +15,9 @@ struct IntervalSpawnComponent : public Component {
     IntervalSpawnComponent(const IntervalSpawnComponent&) = delete;
     IntervalSpawnComponent& operator=(const IntervalSpawnComponent&) = delete;
 
-    std::string GetName() const { return "interval_spawner"; }
+    static constexpr std::string GetName() { return "interval_spawner"; }
+    static constexpr uint8_t GetID() { return 3; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         spawnInterval[entity] = data["interval"].get<int>();
         entityToSpawn[entity] = data["entity"].get<std::string>();

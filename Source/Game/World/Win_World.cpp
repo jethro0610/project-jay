@@ -2,7 +2,6 @@
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Resource/DXResources.h"
 #include "../../Resource/ResourceManager.h"
-#include "../../Logging/Logger.h"
 
 struct QuadInfo {
     int valid;

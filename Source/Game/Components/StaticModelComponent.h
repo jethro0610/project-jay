@@ -4,7 +4,8 @@
 
 const uint8_t MAX_MESHES_PER_MODEL = 8;
 
-struct StaticModelComponent : public Component {
+class StaticModelComponent : public Component {
+public:
     std::string model[MAX_ENTITIES];
     std::string materials[MAX_ENTITIES][MAX_MESHES_PER_MODEL];
 
@@ -15,7 +16,9 @@ struct StaticModelComponent : public Component {
     StaticModelComponent(const StaticModelComponent&) = delete;
     StaticModelComponent& operator=(const StaticModelComponent&) = delete;
 
-    std::string GetName() const { return "static_model"; }
+    static constexpr std::string GetName() { return "static_model"; }
+    static constexpr uint8_t GetID() { return 9; }
+
     void Load(nlohmann::json& data, EntityID entity) {
         model[entity] = data["model"].get<std::string>();
         materials[entity][0] = data["material0"].get<std::string>();

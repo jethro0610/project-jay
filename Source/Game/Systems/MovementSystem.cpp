@@ -1,23 +1,35 @@
 #include "MovementSystem.h"
-#include "../Entity/EntityManager.h"
+#include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
+#include "../Components/GroundTraceComponent.h"
+#include "../Components/MovementComponent.h"
+#include "../Components/SpreadDetectComponent.h"
+#include "../Components/TransformComponent.h"
+#include "../Components/VelocityComponent.h"
 using namespace glm;
 
-void MovementSystem::Execute (EntityManager& entityManager) {
-    MovementComponent& movementComponent = entityManager.movementComponent_;
-    GroundTraceComponent& groundTraceComponent = entityManager.groundTraceComponent_;
-    TransformComponent& transformComponent = entityManager.transformComponent_;
-    VelocityComponent& velocityComponent = entityManager.velocityComponent_;
-    SpreadDetectComponent& spreadDetectComponent = entityManager.spreadDetectComponent_;
+constexpr EntityKey key = GetEntityKey<
+    GroundTraceComponent,
+    MovementComponent,
+    SpreadDetectComponent,
+    TransformComponent,
+    VelocityComponent
+>();
+
+void MovementSystem::Execute (
+    Entity* entities,
+    GroundTraceComponent& groundTraceComponent,
+    MovementComponent& movementComponent,
+    SpreadDetectComponent& spreadDetectComponent,
+    TransformComponent& transformComponent,
+    VelocityComponent& velocityComponent
+) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager.entities_[i];
+        const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponents ({
-            movementComponent,
-            groundTraceComponent,
-            transformComponent,
-            velocityComponent
-        })) continue;
+        if (!entity.MatchesKey(key))
+            continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];
@@ -75,12 +87,13 @@ void MovementSystem::Execute (EntityManager& entityManager) {
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = length(planarVelocity);
         if (
-            entity.HasComponent(spreadDetectComponent) && 
+            entity.HasComponent<SpreadDetectComponent>() && 
             spreadDetectComponent.deteced[i] &&
             planarLength >= 0.0f &&
             onGround
         ) {
-            planarVelocity *= 0.9975f; // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
+            planarVelocity *= 0.9975f; 
+            // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
         }

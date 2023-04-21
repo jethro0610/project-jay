@@ -5,7 +5,6 @@
 #include "TransformSystem.h"
 #include "SpreadActivatorSystem.h"
 #include "SpreadDetectSystem.h"
-#include "PickupSystem.h"
 #include "GroundStickSystem.h"
 #include "VelocitySystem.h"
 #include "ProjectileSystem.h"

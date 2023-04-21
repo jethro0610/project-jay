@@ -15,6 +15,7 @@ constexpr EntityKey key = GetEntityKey<
     TransformComponent,
     VelocityComponent
 >();
+constexpr EntityKey spreadKey = GetEntityKey<SpreadDetectComponent>();
 
 void MovementSystem::Execute (
     Entity* entities,
@@ -87,7 +88,7 @@ void MovementSystem::Execute (
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = length(planarVelocity);
         if (
-            entity.HasComponent<SpreadDetectComponent>() && 
+            entity.MatchesKey(spreadKey) && 
             spreadDetectComponent.deteced[i] &&
             planarLength >= 0.0f &&
             onGround

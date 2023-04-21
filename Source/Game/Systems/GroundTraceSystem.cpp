@@ -8,6 +8,7 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
+constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 
 void GroundTraceSystem::Execute(
     Entity* entities,
@@ -22,7 +23,7 @@ void GroundTraceSystem::Execute(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        bool hasVelocity = entity.HasComponent<TransformComponent>();
+        bool hasVelocity = entity.MatchesKey(velocityKey);
         bool isRising = hasVelocity && velocityComponent.velocity[i].y > 0.0f;
 
         float traceDistance = groundTraceComponent.distance[i];

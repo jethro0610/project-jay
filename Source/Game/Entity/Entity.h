@@ -18,12 +18,6 @@ public:
         return (key_ & otherKey) == otherKey;
     }
 
-    template <class T>
-    bool HasComponent() const {
-        uint32_t componentBit = 1UL << T::GetID();
-        return (key_ & componentBit) != 0;
-    }
-
     void AddComponentById(uint8_t componentId) {
         uint32_t componentBit = 1UL << componentId; 
         key_ |= componentBit;

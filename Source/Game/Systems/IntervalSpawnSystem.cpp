@@ -1,12 +1,15 @@
 #include "IntervalSpawnSystem.h"
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
 #include "../Entity/EntityManager.h"
 #include "../Components/IntervalSpawnComponent.h"
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 using namespace glm;
+
+constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
     
 void IntervalSpawnSystem::Execute(
     Entity* entities,
@@ -20,7 +23,7 @@ void IntervalSpawnSystem::Execute(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<IntervalSpawnComponent>())
+        if (!entity.MatchesKey(key))
             continue;
 
         uint16_t& spawnTimer = intervalSpawnComponent.spawnTimer[i];

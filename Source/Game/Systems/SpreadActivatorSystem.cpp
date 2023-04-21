@@ -10,6 +10,8 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<SpreadActivatorComponent, TransformComponent>();
+constexpr EntityKey detectKey = GetEntityKey<SpreadDetectComponent>();
+constexpr EntityKey groundKey = GetEntityKey<GroundTraceComponent>();
 
 void SpreadActivatorSystem::Execute(
     Entity* entities, 
@@ -27,9 +29,8 @@ void SpreadActivatorSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        const bool hasDetect = entity.HasComponent<SpreadDetectComponent>();
         bool onGround = false;
-        if (entity.HasComponent<GroundTraceComponent>())
+        if (entity.MatchesKey(groundKey))
             onGround = groundTraceComponent.onGround[i];
         if (!onGround && spreadActivatorComponent.groundOnly[i])
             continue;
@@ -39,6 +40,7 @@ void SpreadActivatorSystem::Execute(
             continue;
 
         const vec3 position = transformComponent.transform[i].position_;
+        const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {
             const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius);
             if (!addSpreadInfo.added || !hasDetect)

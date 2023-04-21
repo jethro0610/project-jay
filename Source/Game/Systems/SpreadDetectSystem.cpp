@@ -8,6 +8,7 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<SpreadDetectComponent, TransformComponent>();
+constexpr EntityKey activatorKey = GetEntityKey<SpreadActivatorComponent>();
 
 void SpreadDetectSystem::Execute(
     Entity* entities,
@@ -36,7 +37,7 @@ void SpreadDetectSystem::Execute(
             continue;
         spreadDetectComponent.lastKey[i] = currentKey;
 
-        const bool hasActivator = entity.HasComponent<SpreadActivatorComponent>();
+        const bool hasActivator = entity.MatchesKey(activatorKey);
         if (hasActivator && distance(vec2(spreadDetectComponent.lastAdd[i]), vec2(currentKey)) <= MAX_ADD_DISTANCE)
             continue;
 

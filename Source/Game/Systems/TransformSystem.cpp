@@ -1,7 +1,10 @@
 #include "TransformSystem.h"
 #include "../Entity/Entity.h"
+#include "../../Helpers/EntityHelpers.h"
 #include "../Components/TransformComponent.h"
 #include "../../Constants/TimeConstants.h"
+
+constexpr EntityKey key = GetEntityKey<TransformComponent>();
 
 void TransformSystem::UpdateLastTransforms(
     Entity* entities,
@@ -11,7 +14,7 @@ void TransformSystem::UpdateLastTransforms(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<TransformComponent>())
+        if (!entity.MatchesKey(key))
             continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
@@ -29,7 +32,7 @@ void TransformSystem::UpdateRenderTransforms(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.HasComponent<TransformComponent>())
+        if (!entity.MatchesKey(key))
             continue;
 
         if (transformComponent.interpolate[i]) {

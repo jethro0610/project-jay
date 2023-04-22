@@ -1,11 +1,16 @@
 #include <glm.hpp>
 #include "PlayerController.h"
-#include "../Logging/ScreenText.h"
-#include "../Helpers/ChunkHelpers.h"
-#include "Entity/EntityManager.h"
-#include "World/World.h"
-#include "World/SpreadManager.h"
 #include "Camera.h"
+#include "../Constants/GameConstants.h"
+#include "../Helpers/ChunkHelpers.h"
+#include "World/SpreadManager.h"
+#include "World/World.h"
+#include "../Game/Components/GroundTraceComponent.h"
+#include "../Game/Components/MovementComponent.h"
+#include "../Game/Components/SpreadActivatorComponent.h"
+#include "../Game/Components/TransformComponent.h"
+#include "../Game/Components/VelocityComponent.h"
+#include "../Logging/ScreenText.h"
 using namespace glm;
 
 PlayerController::PlayerController() {
@@ -88,4 +93,5 @@ void PlayerController::Execute(
     SCREENLINE(1, "Action: " + std::to_string(actionMeter_));
     SCREENLINE(2, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
     SCREENLINE(3, "Chunk: " + glm::to_string(GetChunkAtWorldPosition(position)));
+    SCREENLINE(4, "Spread Meter: " + std::to_string(spreadActivatorComponent.meter[PLAYER_ENTITY]));
 }

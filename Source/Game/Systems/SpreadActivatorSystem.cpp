@@ -39,17 +39,25 @@ void SpreadActivatorSystem::Execute(
         if (radius == 0)
             continue;
 
+
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
+        uint32_t& meter = spreadActivatorComponent.meter[i];
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {
-            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius - 1);
-            if (!addSpreadInfo.added || !hasDetect)
+            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius);
+            if (!addSpreadInfo.added)
                 continue;
-            spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
+            if (meter > 0)
+                meter--;
+
+            if (hasDetect)
+                spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
         }
-        else if (radius < 0)
+        else if (radius < 0) {
             spreadManager.RemoveSpread(position, -radius);
+            meter++;
+        }
     }
 }

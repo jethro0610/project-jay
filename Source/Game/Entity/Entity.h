@@ -2,7 +2,6 @@
 #include <bitset>
 #include <initializer_list> 
 #include "../../Types/EntityTypes.h"
-const uint8_t PLAYER_ENTITY = 0;
 
 class Entity {
 public:

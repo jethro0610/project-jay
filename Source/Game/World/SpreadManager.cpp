@@ -1,3 +1,5 @@
+#include <array>
+#include <math.h>
 #include <numbers>
 #include <gtx/string_cast.hpp>
 #include "SpreadManager.h"
@@ -59,30 +61,33 @@ bool SpreadManager::AddSpread(glm::vec3 position) {
     return AddSpread(WorldPositionToSpreadKey(position), position.y);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, float density) {
+AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint32_t maxAdds) {
     radius--;
-    uint32_t maxAdds = uint32_t(std::numbers::pi * radius * radius * density);
-
     ivec2 origin = WorldPositionToSpreadKey(position);
-    std::unordered_set<ivec2> addAttempts;
     uint16_t count = 0;
 
-    while (addAttempts.size() <= maxAdds)
-    for (int x = -radius; x <= radius && addAttempts.size() <= maxAdds; x++)
-    for (int z = -radius; z <= radius && addAttempts.size() <= maxAdds; z++) {
-        float distance = sqrt(x*x + z*z);
+    // Get the spreads we can add in this radius
+    viableAddKeys_.Clear();
+    for (int x = -radius; x <= radius; x++) {
+    for (int z = -radius; z <= radius; z++) {
+        float distance = sqrtf(x*x + z*z);
         if (distance > radius)
             continue;
-
-        float addChance = 1 - powf(distance / radius, 0.35f);
-        float chance = (rand() % 100) / 100.0f;
-        if (addChance < chance)
-            continue;
         
-        addAttempts.insert(ivec2(x, z));
-        if (AddSpread(origin + ivec2(x, z), position.y))
-            count++;
+        ivec2 key = origin + ivec2(x, z);
+        if (!SpreadIsActive(key))
+            viableAddKeys_.Append(key);
+    } }
+
+    // Randomly select a spread from the viable ones and
+    // add it
+    while (viableAddKeys_.GetCount() > 0 && count < maxAdds) {
+        uint32_t index = std::rand() % viableAddKeys_.GetCount();
+        AddSpread(viableAddKeys_[index], position.y);
+        viableAddKeys_.Remove(index);
+        count++;
     }
+
     return AddSpreadInfo{count, origin};
 }
 

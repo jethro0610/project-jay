@@ -86,7 +86,7 @@ void PlayerController::Execute(
         if (length(desiredMovement) > 0.0001f)
             transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
-        spreadManager.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6, 0.5f);
+        spreadManager.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6, 24);
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

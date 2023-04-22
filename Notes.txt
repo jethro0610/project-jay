@@ -218,6 +218,11 @@
 - Seed meter
     - Add return number values to SpreadManager
     - Randomize what gets added in radius ie. 0.75 of radius 6
+    - Random add algo:
+        - Put all valid keys in a vector
+        - Get a random index in the vector to use as add position
+        - Repeat till vector is empty or we added the max amount
+
 - Slide off/strong slopes
 ==========================================
 - Should store the an array of intersections then process them in another function, rather than

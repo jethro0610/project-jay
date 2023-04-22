@@ -7,6 +7,7 @@
 #include <glm.hpp>
 #include "../../Constants/WorldConstants.h"
 #include "../../Constants/SpreadConstants.h"
+#include "../../Types/FixedVector.h"
 class World;
 class ResourceManager;
 class SpreadManager;
@@ -45,7 +46,7 @@ public:
 
     bool AddSpread(glm::ivec2 key, float height); 
     bool AddSpread(glm::vec3 position); 
-    AddSpreadInfo AddSpread(glm::vec3 position, int radius, float density); 
+    AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint32_t maxAdds = UINT32_MAX);
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);
@@ -56,4 +57,5 @@ private:
     ResourceManager& resourceManager_;
     World& world_;
     std::unordered_set<glm::ivec2> dirtyChunks_;
+    FixedVector<glm::ivec2, 512> viableAddKeys_; // Making this a member variable so its not reallocated every call
 };

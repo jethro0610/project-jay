@@ -44,12 +44,12 @@ void SpreadActivatorSystem::Execute(
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {
-            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius);
+            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius - 1);
             if (!addSpreadInfo.added || !hasDetect)
                 continue;
             spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
         }
-        else 
-            spreadManager.RemoveSpread(position, radius);
+        else if (radius < 0)
+            spreadManager.RemoveSpread(position, -radius);
     }
 }

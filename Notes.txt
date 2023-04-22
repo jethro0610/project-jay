@@ -222,7 +222,6 @@
 - Should store the an array of intersections then process them in another function, rather than
   handling them straight in the intersection call
 - Remove systems with more than one fucntion car
-- Remove activator from SpreadDetect
 - Collision list
 - Spawn list
 - Store loaded entities in resource manager and copy instead of reconstructing from json

@@ -215,8 +215,9 @@
 
 =========================================
 - Change everything to forward declarations
-- Correct necessary types
 - Seed meter
+    - Add return number values to SpreadManager
+    - Randomize what gets added in radius ie. 0.75 of radius 6
 - Slide off/strong slopes
 ==========================================
 - Should store the an array of intersections then process them in another function, rather than

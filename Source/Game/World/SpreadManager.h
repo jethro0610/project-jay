@@ -15,7 +15,7 @@ class SpreadManager;
 #include <gtx/hash.hpp>
 
 struct AddSpreadInfo {
-    bool added;
+    uint16_t count;
     glm::ivec2 key;
 };
 
@@ -44,8 +44,8 @@ public:
     bool SpreadIsActive(glm::ivec2 key) const;
 
     bool AddSpread(glm::ivec2 key, float height); 
-    AddSpreadInfo AddSpread(glm::vec3 position); 
-    AddSpreadInfo AddSpread(glm::vec3 position, int radius); 
+    bool AddSpread(glm::vec3 position); 
+    AddSpreadInfo AddSpread(glm::vec3 position, int radius, float density); 
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);

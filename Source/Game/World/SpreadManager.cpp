@@ -1,9 +1,10 @@
+#include <numbers>
+#include <gtx/string_cast.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Types/Transform.h"
 #include "World.h"
 #include "../../Logging/Logger.h"
-#include <gtx/string_cast.hpp>
 using namespace glm;
 
 
@@ -54,25 +55,35 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
     return true;
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position) {
-    AddSpreadInfo returnInfo;
-    returnInfo.key = WorldPositionToSpreadKey(position);
-    returnInfo.added = AddSpread(returnInfo.key, position.y);
-    return returnInfo;
+bool SpreadManager::AddSpread(glm::vec3 position) {
+    return AddSpread(WorldPositionToSpreadKey(position), position.y);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius) {
-    radius -= 1;
+AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, float density) {
+    radius--;
+    uint32_t maxAdds = uint32_t(std::numbers::pi * radius * radius * density);
+
     ivec2 origin = WorldPositionToSpreadKey(position);
-    bool added = false;
-    for (int x = -radius; x <= radius; x++)
-    for (int z = -radius; z <= radius; z++) {
-        if (sqrt(x*x + z*z) > radius)
+    std::unordered_set<ivec2> addAttempts;
+    uint16_t count = 0;
+
+    while (addAttempts.size() <= maxAdds)
+    for (int x = -radius; x <= radius && addAttempts.size() <= maxAdds; x++)
+    for (int z = -radius; z <= radius && addAttempts.size() <= maxAdds; z++) {
+        float distance = sqrt(x*x + z*z);
+        if (distance > radius)
             continue;
+
+        float addChance = 1 - powf(distance / radius, 0.35f);
+        float chance = (rand() % 100) / 100.0f;
+        if (addChance < chance)
+            continue;
+        
+        addAttempts.insert(ivec2(x, z));
         if (AddSpread(origin + ivec2(x, z), position.y))
-            added = true;
+            count++;
     }
-    return AddSpreadInfo{added, origin};
+    return AddSpreadInfo{count, origin};
 }
 
 bool SpreadManager::RemoveSpread(ivec2 key) {

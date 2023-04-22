@@ -67,7 +67,6 @@ void Game::Update(float deltaTime, float elapsedTime) {
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
             spreadManager_,
-            GETCOMP(SpreadActivatorComponent),
             GETCOMP(SpreadDetectComponent),
             GETCOMP(TransformComponent)
         );

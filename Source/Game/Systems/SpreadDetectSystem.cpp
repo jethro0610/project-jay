@@ -2,18 +2,15 @@
 #include "../Entity/Entity.h"
 #include "../../Helpers/EntityHelpers.h"
 #include "../World/SpreadManager.h"
-#include "../Components/SpreadActivatorComponent.h"
 #include "../Components/SpreadDetectComponent.h"
 #include "../Components/TransformComponent.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<SpreadDetectComponent, TransformComponent>();
-constexpr EntityKey activatorKey = GetEntityKey<SpreadActivatorComponent>();
 
 void SpreadDetectSystem::Execute(
     Entity* entities,
     SpreadManager& spreadManager,
-    SpreadActivatorComponent& spreadActivatorComponent,
     SpreadDetectComponent& spreadDetectComponent,
     TransformComponent& transformComponent
 ) {
@@ -37,9 +34,10 @@ void SpreadDetectSystem::Execute(
             continue;
         spreadDetectComponent.lastKey[i] = currentKey;
 
-        const bool hasActivator = entity.MatchesKey(activatorKey);
-        if (hasActivator && distance(vec2(spreadDetectComponent.lastAdd[i]), vec2(currentKey)) <= MAX_ADD_DISTANCE)
-            continue;
+        if (
+            spreadDetectComponent.lastAdd[i] != NO_ADD && 
+            distance(vec2(spreadDetectComponent.lastAdd[i]), vec2(currentKey)) <= MAX_ADD_DISTANCE
+        ) continue;
 
         detected = true;
         spreadDetectComponent.lastAdd[i] = NO_ADD;  

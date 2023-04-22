@@ -39,6 +39,8 @@ void SpreadActivatorSystem::Execute(
         if (radius == 0)
             continue;
 
+        // TODO : Is the has detect here necessary? Can maybe just assign it
+        // by default
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {

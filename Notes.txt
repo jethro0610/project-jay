@@ -214,7 +214,6 @@
     - Only a few use cases, limits the design of rest of game
 
 =========================================
-- Change everything to forward declarations
 - Seed meter
     - Add return number values to SpreadManager
     - Randomize what gets added in radius ie. 0.75 of radius 6
@@ -224,9 +223,12 @@
         - Repeat till vector is empty or we added the max amount
 
 - Slide off/strong slopes
+
 - Projectile ground sliding
     - Likely need to make a general grounding/friction system not apart
       of the projectile system
+
+- Organize shaders
 ==========================================
 - Should store the an array of intersections then process them in another function, rather than
   handling them straight in the intersection call

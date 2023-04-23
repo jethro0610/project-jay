@@ -4,15 +4,15 @@ import sys
 import subprocess
 from termcolor import colored
 
-input_path = ".\\Source\\Shaders\\"
-output_path = ".\\Build\\Debug\\"
+input_path = "./Source/Shaders/"
+output_path = "./Build/Debug/"
 shader_desc_file = open(input_path + "DXShaderDescriptions.json")
 shader_dict = json.load(shader_desc_file)
 shader_model = "5_0"
 
 compile_times = None
 try:
-    compile_times_file = open(".\\lastcompiletimes.json") 
+    compile_times_file = open("./lastcompiletimes.json") 
     compile_times = json.load(compile_times_file)
 except:
     compile_times = dict()
@@ -25,7 +25,15 @@ invalid_headers = []
 checked_headers = [] 
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
-    shader_input = input_path + shader_name + ".hlsl"
+    type_folder = ""
+    if shader_desc["type"] == "ps":
+        type_folder = "PixelShaders/";
+    elif shader_desc["type"] == "vs":
+        type_folder = "VertShaders/"
+    elif shader_desc["type"] == "cs":
+        type_folder = "ComputeShaders/"
+
+    shader_input = input_path + type_folder + shader_name + ".hlsl"
 
     if shader_name not in compile_times["shaders"]:
         compile_times["shaders"][shader_name] = dict()
@@ -40,6 +48,7 @@ for shader_desc in shader_dict["shaders"]:
             if "#include " in line:
                 line = line.replace("#include \"", "")
                 line = line.replace("\"", "")
+                line = line.replace("../", "")
                 compile_times["shaders"][shader_name]["headers"].append(line) 
 
                 if line not in checked_headers:
@@ -57,7 +66,14 @@ for shader_desc in shader_dict["shaders"]:
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
     shader_type = shader_desc["type"]
-    shader_input = input_path + shader_name + ".hlsl"
+    if shader_type == "ps":
+        type_folder = "PixelShaders/";
+    elif shader_type == "vs":
+        type_folder = "VertShaders/"
+    elif shader_type == "cs":
+        type_folder = "ComputeShaders/"
+
+    shader_input = input_path + type_folder + shader_name + ".hlsl"
     shader_output = output_path + shader_name + ".cso"
     last_shader_write = os.path.getmtime(shader_input)
 

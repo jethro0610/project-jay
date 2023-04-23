@@ -14,4 +14,3 @@ cbuffer perObjectData : register(b1){
 cbuffer perSkeletonData : register(b2){
     float4x4 jointMatrices[32];
 };
-

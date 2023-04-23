@@ -1,4 +1,4 @@
-#include "TextOut.hlsli"
+#include "../FragTypes/ScreenFrag.hlsli"
 Texture2D screenTex : register(t0);
 SamplerState screenSampler;
 
@@ -15,8 +15,8 @@ float smoothstep(float a, float b, float x) {
     return t * t * (3.0f - 2.0f * t);
 }
 
-float4 main(TextOut textOut) : SV_TARGET {
-    float a = screenTex.Sample(screenSampler, textOut.coord).r; 
+float4 main(ScreenFrag frag) : SV_TARGET {
+    float a = screenTex.Sample(screenSampler, frag.uv).r; 
     float textAlpha = smoothstep(1.0f - THICKNESS - SOFTNESS, 1.0f - THICKNESS + SOFTNESS, a);
     float shadowAlpha = smoothstep(1.0f - TOTAL_THICKNESS - SHADOW_BLUR, 1.0f - TOTAL_THICKNESS + SHADOW_BLUR, a);
 

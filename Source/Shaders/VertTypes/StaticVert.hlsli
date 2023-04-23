@@ -1,4 +1,4 @@
-struct StaticVertIn {
+struct StaticVert {
     float3 position : POS;
     float3 normal : NORM;
     float3 tangent : TAN;

@@ -1,4 +1,4 @@
-#include "ScreenQuadOutput.hlsli"
+#include "../FragTypes/ScreenFrag.hlsli"
 Texture2D screenTex : register(t0);
 SamplerState screenSampler;
 
@@ -28,11 +28,11 @@ float2 CalcSobelGradient(float2 coord) {
     return gradient;
 }
 
-float4 main(ScreenQuadOut screen) : SV_TARGET {
+float4 main(ScreenFrag frag) : SV_TARGET {
     float2 texelSize = float2(1.0f / 1600.0f, 1.0f / 900.0f);
     int2 radius = int2(3, 3);
 
-    float2 gradient = CalcSobelGradient(screen.coord);
+    float2 gradient = CalcSobelGradient(frag.uv);
     float angle = 0.0f;
     if (abs(gradient.x) > 0.001f)
         angle = atan(gradient.y / gradient.x);
@@ -64,7 +64,7 @@ float4 main(ScreenQuadOut screen) : SV_TARGET {
         for (int j = kernelRanges[i].x; j <= kernelRanges[i].y; j++) {
             for (int k = kernelRanges[i].z; k <= kernelRanges[i].w; k++) {
                 float2 offset = mul(float2(j, k) * texelSize, rotMat);
-                float3 color = screenTex.Sample(screenSampler, screen.coord + offset); 
+                float3 color = screenTex.Sample(screenSampler, frag.uv + offset); 
                 kernelMean[i] += color;
                 kernelVariance[i] += color * color;
                 totalSamples++;

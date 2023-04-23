@@ -2,6 +2,7 @@
 #include "../Game/Camera.h"
 #include "../Resource/DXResources.h"
 #include "../Game/Entity/Entity.h"
+#include "../Game/PlayerController.h"
 #include "../Helpers/EntityHelpers.h"
 #include "../Resource/ResourceManager.h"
 #include "../Game/World/SpreadManager.h"
@@ -23,15 +24,15 @@ Renderer::Renderer(ResourceManager& resourceManager):
     // Need width and height before updating this matrix;
     UpdateProjMatrix(70.0f, 0.5f, 1000.0f);
 
-    // These are all temporary testing for now
-    dxResources.LoadVertexShader("StaticVertexShader", VertexShaderType::STATIC);
-    dxResources.LoadVertexShader("SkeletalVertexShader", VertexShaderType::SKELETAL);
-    dxResources.LoadVertexShader("WorldVertexShader", VertexShaderType::WORLD);
-    dxResources.LoadVertexShader("InstancedVertexShader", VertexShaderType::SPREAD);
+    dxResources.LoadVertexShader("StaticVS", VertexShaderType::STATIC);
+    dxResources.LoadVertexShader("SkeletalVS", VertexShaderType::SKELETAL);
+    dxResources.LoadVertexShader("WorldVS", VertexShaderType::WORLD);
+    dxResources.LoadVertexShader("InstanceVS", VertexShaderType::INSTANCE);
+    dxResources.LoadVertexShader("ScreenQuadVS", VertexShaderType::STATIC);
 
     dxResources.LoadPixelShader("DefaultPS");
-    dxResources.LoadPixelShader("WorldGrassPS");
-    dxResources.LoadPixelShader("TextureOnly");
+    dxResources.LoadPixelShader("GrassPS");
+    dxResources.LoadPixelShader("PostProcessPS");
 
     dxResources.LoadTexture("grass_c");
     dxResources.LoadTexture("grass_n");
@@ -41,8 +42,8 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadTexture("grid_c");
 
     MaterialDesc worldMaterialDesc;
-    worldMaterialDesc.vertexShader = "WorldVertexShader";
-    worldMaterialDesc.pixelShader = "WorldGrassPS";
+    worldMaterialDesc.vertexShader = "WorldVS";
+    worldMaterialDesc.pixelShader = "GrassPS";
     worldMaterialDesc.textures[0] = "grass_c";
     worldMaterialDesc.textures[1] = "grass_n";
     worldMaterialDesc.textures[2] = "marble_c";
@@ -50,7 +51,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     resourceManager_.materials_["worldMaterial"] = worldMaterialDesc;
 
     MaterialDesc playerMaterial;
-    playerMaterial.vertexShader = "StaticVertexShader";
+    playerMaterial.vertexShader = "StaticVS";
     playerMaterial.pixelShader = "DefaultPS";
     playerMaterial.textures[0] = "bricks_c";
     playerMaterial.textures[1] = "bricks_n";
@@ -58,7 +59,7 @@ Renderer::Renderer(ResourceManager& resourceManager):
     resourceManager_.materials_["playerMaterial"] = playerMaterial;
 
     MaterialDesc spreadMaterial;
-    spreadMaterial.vertexShader = "InstancedVertexShader";
+    spreadMaterial.vertexShader = "InstanceVS";
     spreadMaterial.pixelShader = "DefaultPS";
     spreadMaterial.textures[0] = "bricks_c";
     spreadMaterial.textures[1] = "bricks_n";
@@ -176,18 +177,22 @@ void Renderer::RenderPostProcess_P() {
 
     context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["PostProcess"], nullptr, 0);
+    context->VSSetShader(dxResources.vertexShaders_["ScreenQuadVS"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["PostProcessPS"], nullptr, 0);
     context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
 
     context->Draw(4, 0);
+}
+
+void Renderer::RenderUI_P(PlayerController& playerController) {
+    DXResources& dxResources = resourceManager_.dxResources_;
+    ID3D11DeviceContext* context = dxResources.context_;
 }
 
 #ifdef _DEBUG
 void Renderer::RenderScreenText_P() {
     if (!ScreenText::IsEnabled())
         return;
-
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
     
@@ -266,16 +271,4 @@ void Renderer::SetFrameData_P() {
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = 0.0f; // TODO: Set the time with a function input
 	dxResources.UpdateBuffer(dxResources.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
-}
-
-void Renderer::RenderTextureToScreen_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["ScreenQuad"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["TextureOnly"], nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.noiseTextureSRV_);
-
-    context->Draw(4, 0);
 }

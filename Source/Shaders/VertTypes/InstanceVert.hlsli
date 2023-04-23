@@ -1,9 +1,9 @@
-struct SkeletalVertIn {
+struct InstanceVert {
     float3 position : POS;
     float3 normal : NORM;
     float3 tangent : TAN;
     float3 bitangent: BITAN;
     float2 uv : UV;
-    int4 joints : JOINTS;
-    float4 weights : WEIGHTS;
+    float3 instancePosition : INST_POS;
+    uint instanceID : SV_InstanceID;
 };

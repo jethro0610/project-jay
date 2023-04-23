@@ -60,7 +60,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     backBuffer->Release();
 
     // Create the post process render target texture
-    LoadPixelShader("PostProcess");
     D3D11_TEXTURE2D_DESC rtDesc = {};
     rtDesc.Width = width_;
     rtDesc.Height = height_;
@@ -140,7 +139,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     worldVertexDescription_[0] = 
     skeletalVertexDescription_[0] = 
     staticVertexDescription_[0] = 
-    spreadVertexDescription_[0] = {
+    instanceVertexDescription_[0] = {
         "POS", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -152,7 +151,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     worldVertexDescription_[1] =
     skeletalVertexDescription_[1] = 
     staticVertexDescription_[1] = 
-    spreadVertexDescription_[1] = {
+    instanceVertexDescription_[1] = {
         "NORM", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -163,7 +162,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[2] = 
     staticVertexDescription_[2] =
-    spreadVertexDescription_[2] = {
+    instanceVertexDescription_[2] = {
         "TAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -174,7 +173,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[3] = 
     staticVertexDescription_[3] = 
-    spreadVertexDescription_[3] = {
+    instanceVertexDescription_[3] = {
         "BITAN", 
         0, 
         DXGI_FORMAT_R32G32B32_FLOAT, 
@@ -185,7 +184,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     };
     skeletalVertexDescription_[4] = 
     staticVertexDescription_[4] = 
-    spreadVertexDescription_[4] = {
+    instanceVertexDescription_[4] = {
         "UV", 
         0, 
         DXGI_FORMAT_R32G32_FLOAT, 
@@ -212,7 +211,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_VERTEX_DATA, 
         0
     };
-    spreadVertexDescription_[5] = {
+    instanceVertexDescription_[5] = {
         "INST_POS",
         0,
         DXGI_FORMAT_R32G32B32_FLOAT,
@@ -221,7 +220,6 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
-    LoadVertexShader("ScreenQuad");
     
     // Setup the world vertex compute shader
     CreateRWStructuredBufferAndUAV(
@@ -407,10 +405,10 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
         ));
         break;
 
-    case VertexShaderType::SPREAD:
+    case VertexShaderType::INSTANCE:
         HRASSERT(device_->CreateInputLayout(
-            spreadVertexDescription_,
-            ARRAYSIZE(spreadVertexDescription_),
+            instanceVertexDescription_,
+            ARRAYSIZE(instanceVertexDescription_),
             vertexShaderBlob->GetBufferPointer(),
             vertexShaderBlob->GetBufferSize(),
             &inputLayout

@@ -7,7 +7,7 @@ cbuffer perChunkData : register(b0) {
     uint pad0;
     uint pad1;
     uint pad2;
-}
+};
 
 struct TerrainModifier {
     uint type; 

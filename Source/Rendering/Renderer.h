@@ -3,6 +3,7 @@
 #include "RenderTypes.h"
 class Camera;
 class Entity;
+class PlayerController;
 class ResourceManager;
 class SpreadManager;
 class World;
@@ -29,6 +30,7 @@ public:
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
         Entity* entities,
+        PlayerController& playerController,
         SpreadManager& spreadManager,
         World& world,
         TransformComponent& transformComponent,
@@ -50,11 +52,10 @@ private:
     );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();
+    void RenderUI_P(PlayerController& playerController);
     #ifdef _DEBUG
     void RenderScreenText_P();
     #endif
     void Present_P();
-
-    void RenderTextureToScreen_P();
 };
 

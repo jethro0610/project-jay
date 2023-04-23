@@ -17,6 +17,7 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 
 void Renderer::Render(
     Entity* entities,
+    PlayerController& playerController,
     SpreadManager& spreadManager,
     World& world,
     TransformComponent& transformComponent,
@@ -31,6 +32,7 @@ void Renderer::Render(
     RenderEntities_P(entities, transformComponent, staticModelComponent);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
+    RenderUI_P(playerController);
     #ifdef _DEBUG
     RenderScreenText_P();
     #endif

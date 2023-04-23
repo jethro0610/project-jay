@@ -1,5 +1,5 @@
-#include "WorldFunctions.hlsli"
-#include "GenerationConstants.hlsli"
+#include "../Functions/WorldFunctions.hlsli"
+#include "../Constants/GenerationConstants.hlsli"
 
 AppendStructuredBuffer<Triangle> tris : register(u0);
 RWStructuredBuffer<uint> count : register(u1);

@@ -140,6 +140,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
     camera_.Update(deltaTime, inputs_);
     renderer_.Render(
         entityManager_.entities_, 
+        playerController_,
         spreadManager_, 
         world_, 
         GETCOMP(TransformComponent),

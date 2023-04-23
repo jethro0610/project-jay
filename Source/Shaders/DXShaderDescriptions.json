@@ -5,31 +5,31 @@
 			"type": "ps"
 		},
 		{
-			"name": "SkeletalVertexShader",
+			"name": "SkeletalVS",
 			"type": "vs"
 		},
 		{
-			"name": "StaticVertexShader",
+			"name": "StaticVS",
 			"type": "vs"
 		},
 		{
-			"name": "WorldGrassPS",
+			"name": "GrassPS",
 			"type": "ps"
 		},
 		{
-			"name": "WorldVertexShader",
+			"name": "WorldVS",
 			"type": "vs"
 		},
         {
-            "name": "ScreenQuad",
+            "name": "ScreenQuadVS",
             "type": "vs"
         },
         {
-            "name": "PostProcess",
+            "name": "PostProcessPS",
             "type": "ps"
         },
         {
-            "name": "InstancedVertexShader",
+            "name": "InstanceVS",
             "type": "vs"
         },
         {
@@ -38,10 +38,6 @@
         },
         {
             "name": "TextPS",
-            "type": "ps"
-        },
-        {
-            "name": "TextureOnly",
             "type": "ps"
         },
         {

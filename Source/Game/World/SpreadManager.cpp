@@ -117,12 +117,15 @@ bool SpreadManager::RemoveSpread(vec3 position) {
     return RemoveSpread(key);
 }
 
-void SpreadManager::RemoveSpread(vec3 position, int radius) {
+uint32_t SpreadManager::RemoveSpread(vec3 position, int radius) {
+    uint32_t count = 0;
     ivec2 origin = WorldPositionToSpreadKey(position);
-    for (int x = -radius; x <= radius; x++)
+    for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        RemoveSpread(origin + ivec2(x, z)); 
-    }
+        if (RemoveSpread(origin + ivec2(x, z)))
+            count++;
+    } }
+    return count;
 }

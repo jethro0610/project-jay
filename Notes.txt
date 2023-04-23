@@ -224,6 +224,9 @@
         - Repeat till vector is empty or we added the max amount
 
 - Slide off/strong slopes
+- Projectile ground sliding
+    - Likely need to make a general grounding/friction system not apart
+      of the projectile system
 ==========================================
 - Should store the an array of intersections then process them in another function, rather than
   handling them straight in the intersection call
@@ -231,3 +234,6 @@
 - Collision list
 - Spawn list
 - Store loaded entities in resource manager and copy instead of reconstructing from json
+- Only use WICTextureLoader from git instead of whole DXTK
+- Fix glm headers and only include necessary glm headres
+    - Use glm forward header

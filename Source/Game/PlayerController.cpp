@@ -40,6 +40,7 @@ void PlayerController::Execute(
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
+    spreadActivatorComponent.amount[PLAYER_ENTITY] = UINT32_MAX;
 
     if (inputs.flow && inputs.ski) {
         // Have to check this to prevent overflow
@@ -48,7 +49,7 @@ void PlayerController::Execute(
     }
     else {
         if (cutTimer_ >= TIME_TO_CUT)
-            cutCooldown_ = TIME_TO_CUT;
+            cutCooldown_ = CUT_COOLDOWN_TIME;
         cutTimer_ = 0;
     }
 
@@ -64,15 +65,15 @@ void PlayerController::Execute(
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
         isDoingAction = true;
-        actionMeter_ += 1;
+        actionMeter_ += 2;
     } 
-    else if (inputs.flow) {
+    else if (inputs.flow && spreadActivatorComponent.meter[PLAYER_ENTITY] > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
         actionMeter_ += 2;
     }
-    else if (inputs.ski)  {
+    else if (inputs.ski && spreadActivatorComponent.meter[PLAYER_ENTITY] > 0)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
@@ -86,7 +87,8 @@ void PlayerController::Execute(
         if (length(desiredMovement) > 0.0001f)
             transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
-        spreadManager.AddSpread(transformComponent.transform[PLAYER_ENTITY].position_, 6, 24);
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;
+        spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;
     } 
 
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
@@ -94,4 +96,5 @@ void PlayerController::Execute(
     SCREENLINE(2, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
     SCREENLINE(3, "Chunk: " + glm::to_string(GetChunkAtWorldPosition(position)));
     SCREENLINE(4, "Spread Meter: " + std::to_string(spreadActivatorComponent.meter[PLAYER_ENTITY]));
+    SCREENLINE(5, "Spread Radius: " + std::to_string(spreadActivatorComponent.radius[PLAYER_ENTITY]));
 }

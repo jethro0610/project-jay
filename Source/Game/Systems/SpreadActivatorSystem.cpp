@@ -1,3 +1,4 @@
+#include <math.h>
 #include "SpreadActivatorSystem.h"
 #include "../Entity/Entity.h"
 #include "../../Helpers/EntityHelpers.h"
@@ -42,22 +43,26 @@ void SpreadActivatorSystem::Execute(
 
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
+        const uint32_t& amount = spreadActivatorComponent.amount[i];
         uint32_t& meter = spreadActivatorComponent.meter[i];
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {
-            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(position, radius);
+            const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(
+                position, 
+                radius, 
+                std::min(amount, meter)
+            );
             if (addSpreadInfo.count == 0)
                 continue;
             if (meter > 0)
-                meter--;
+                meter -= addSpreadInfo.count;
 
             if (hasDetect)
                 spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
         }
         else if (radius < 0) {
-            spreadManager.RemoveSpread(position, -radius);
-            meter++;
+            meter += spreadManager.RemoveSpread(position, -radius);
         }
     }
 }

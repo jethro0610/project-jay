@@ -50,7 +50,7 @@ public:
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);
-    void RemoveSpread(glm::vec3 position, int radius); 
+    uint32_t RemoveSpread(glm::vec3 position, int radius); 
     void UpdateRenderData_P();
 
 private:

@@ -10,7 +10,8 @@ class SpreadActivatorComponent;
 class TransformComponent;
 class VelocityComponent;
 
-const uint8_t TIME_TO_CUT = 15;
+const uint8_t TIME_TO_CUT = 16;
+const uint8_t CUT_COOLDOWN_TIME = 32;
 const uint16_t MAX_ACTION_METER = 250;
 
 class PlayerController {

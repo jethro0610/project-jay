@@ -29,10 +29,12 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources.LoadVertexShader("WorldVS", VertexShaderType::WORLD);
     dxResources.LoadVertexShader("InstanceVS", VertexShaderType::INSTANCE);
     dxResources.LoadVertexShader("ScreenQuadVS", VertexShaderType::STATIC);
+    dxResources.LoadVertexShader("ScreenBarVS", VertexShaderType::STATIC);
 
     dxResources.LoadPixelShader("DefaultPS");
     dxResources.LoadPixelShader("GrassPS");
     dxResources.LoadPixelShader("PostProcessPS");
+    dxResources.LoadPixelShader("BarPS");
 
     dxResources.LoadTexture("grass_c");
     dxResources.LoadTexture("grass_n");
@@ -187,6 +189,12 @@ void Renderer::RenderPostProcess_P() {
 void Renderer::RenderUI_P(PlayerController& playerController) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
+
+    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->VSSetShader(dxResources.vertexShaders_["ScreenBarVS"].shader, nullptr, 0);
+    context->PSSetShader(dxResources.pixelShaders_["BarPS"], nullptr, 0);
+    context->Draw(4, 0);
 }
 
 #ifdef _DEBUG

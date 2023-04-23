@@ -43,6 +43,14 @@
         {
             "name": "MarchingCubes",
             "type": "cs"
+        },
+        {
+            "name": "ScreenBarVS",
+            "type": "vs"
+        },
+        {
+            "name": "BarPS",
+            "type": "ps"
         }
 	]
 }

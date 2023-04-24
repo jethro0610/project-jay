@@ -216,22 +216,23 @@
 - Since each entity has some spread meter, have them release
   the meter on death to pickup
 
+- Spread meter is basically enemy HP
+
+- Balloon to pop that give spread meter
+
+- Enemies can break spread to gain meter
+
+- Converts meter to ie. homing thing
+
+- Meter particles falling from sky 
 =========================================
-- Seed meter
-    - Add return number values to SpreadManager
-    - Randomize what gets added in radius ie. 0.75 of radius 6
-    - Random add algo:
-        - Put all valid keys in a vector
-        - Get a random index in the vector to use as add position
-        - Repeat till vector is empty or we added the max amount
+- Seed particle pickup
 
 - Slide off/strong slopes
 
 - Projectile ground sliding
     - Likely need to make a general grounding/friction system not apart
       of the projectile system
-
-- Organize shaders
 ==========================================
 - Should store the an array of intersections then process them in another function, rather than
   handling them straight in the intersection call

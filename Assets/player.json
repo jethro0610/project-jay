@@ -23,7 +23,7 @@
             "ground_only": false
         },
         "meter": {
-            "initial_meter": 256,
+            "initial_meter": 512,
             "max_meter": 1024 
         },
         "bubble": {

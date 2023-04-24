@@ -60,7 +60,7 @@ void SpreadActivatorSystem::Execute(
             );
             if (addSpreadInfo.count == 0)
                 continue;
-            if (meter != nullptr)
+            if (meter != nullptr && *meter > 0)
                 *meter -= addSpreadInfo.count;
 
             if (hasDetect)
@@ -69,7 +69,7 @@ void SpreadActivatorSystem::Execute(
         else if (radius < 0) {
             uint16_t removeAmount = spreadManager.RemoveSpread(position, -radius);
             if (meter != nullptr)
-                *meter -= removeAmount;
+                *meter += removeAmount;
         }
     }
 }

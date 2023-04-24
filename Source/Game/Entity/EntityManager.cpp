@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 #include "../../Resource/ResourceManager.h"
+#include "../../Logging/Logger.h"
 
 EntityManager::EntityManager (ResourceManager& resourceManager):
     resourceManager_(resourceManager)

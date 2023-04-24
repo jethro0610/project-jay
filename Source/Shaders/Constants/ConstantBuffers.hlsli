@@ -2,7 +2,7 @@ cbuffer perFrameData : register(b0) {
     float3 cameraPos;
     float time;
     float aspectRatio;
-    float3 extra;
+    float3 fpad0;
 }
 
 cbuffer perObjectData : register(b1){
@@ -14,3 +14,16 @@ cbuffer perObjectData : register(b1){
 cbuffer perSkeletonData : register(b2){
     float4x4 jointMatrices[32];
 };
+
+cbuffer perChunkData : register(b3) {
+    float4 chunkPos;
+    uint modifierCount;
+    uint cpad0;
+    uint cpad1;
+    uint cpad2;
+};
+
+cbuffer perUIData : register(b4) {
+    float spreadMeter;
+    float3 upad0;
+}

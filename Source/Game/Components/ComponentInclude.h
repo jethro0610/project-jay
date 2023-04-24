@@ -13,6 +13,7 @@
 #include "BubbleComponent.h"
 
 #include "IntervalSpawnComponent.h"
+#include "MeterComponent.h"
 
 #include "StaticModelComponent.h"
 
@@ -27,4 +28,5 @@
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
     COMPONENTVAR(BubbleComponent, bubbleComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
-    COMPONENTVAR(StaticModelComponent, staticModelComponent_)
+    COMPONENTVAR(StaticModelComponent, staticModelComponent_) \
+    COMPONENTVAR(MeterComponent, meterComponent_)

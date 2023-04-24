@@ -17,11 +17,11 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 
 void Renderer::Render(
     Entity* entities,
-    PlayerController& playerController,
     SpreadManager& spreadManager,
     World& world,
-    TransformComponent& transformComponent,
+    MeterComponent& meterComponent,
     StaticModelComponent& staticModelComponent,
+    TransformComponent& transformComponent,
     float deltaTime, 
     float elapsedTime
 ) {
@@ -29,10 +29,10 @@ void Renderer::Render(
     Clear_P();
     SetFrameData_P();
     RenderWorld_P(world);
-    RenderEntities_P(entities, transformComponent, staticModelComponent);
+    RenderEntities_P(entities, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderPostProcess_P();
-    RenderUI_P(playerController);
+    RenderUI_P(meterComponent);
     #ifdef _DEBUG
     RenderScreenText_P();
     #endif

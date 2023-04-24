@@ -4,6 +4,7 @@ class Entity;
 class SpreadManager;
 class World;
 class GroundTraceComponent;
+class MeterComponent;
 class SpreadActivatorComponent;
 class SpreadDetectComponent;
 class TransformComponent;
@@ -14,6 +15,7 @@ namespace SpreadActivatorSystem {
         SpreadManager& spreadManager,
         World& world,
         GroundTraceComponent& groundTraceComponent,
+        MeterComponent& meterComponent,
         SpreadActivatorComponent& spreadActivatorComponent,
         SpreadDetectComponent& spreadDetectComponent,
         TransformComponent& transformComponent

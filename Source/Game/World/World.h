@@ -1,5 +1,6 @@
 #pragma once
 #include <glm.hpp>
+#include <gtx/hash.hpp>
 #include <vector>
 #include <unordered_set>
 #include <FastNoiseLite.h>
@@ -7,9 +8,6 @@
 #include "TerrainModifier.h"
 #include "../../Constants/WorldConstants.h"
 class ResourceManager;
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <gtx/hash.hpp>
 
 class World {
 public:

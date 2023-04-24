@@ -2,11 +2,13 @@
 #include "../Game/Camera.h"
 #include "../Resource/DXResources.h"
 #include "../Game/Entity/Entity.h"
+#include "../Constants/GameConstants.h"
 #include "../Game/PlayerController.h"
 #include "../Helpers/EntityHelpers.h"
 #include "../Resource/ResourceManager.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Types/Transform.h"
+#include "../Game/Components/MeterComponent.h"
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 
@@ -100,8 +102,8 @@ void Renderer::RenderWorld_P(World& world) {
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 void Renderer::RenderEntities_P(
     Entity* entities, 
-    TransformComponent& transformComponent, 
-    StaticModelComponent& staticModelComponent
+    StaticModelComponent& staticModelComponent,
+    TransformComponent& transformComponent
 ) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
@@ -186,12 +188,12 @@ void Renderer::RenderPostProcess_P() {
     context->Draw(4, 0);
 }
 
-void Renderer::RenderUI_P(PlayerController& playerController) {
+void Renderer::RenderUI_P(MeterComponent& meterComponent) {
     DXResources& dxResources = resourceManager_.dxResources_;
     ID3D11DeviceContext* context = dxResources.context_;
 
-    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    PerUIData uiData = { meterComponent.meter[PLAYER_ENTITY] / float(meterComponent.maxMeter[PLAYER_ENTITY]) };
+    dxResources.UpdateBuffer(dxResources.perUICBuffer_, &uiData, sizeof(PerUIData));
     context->VSSetShader(dxResources.vertexShaders_["ScreenBarVS"].shader, nullptr, 0);
     context->PSSetShader(dxResources.pixelShaders_["BarPS"], nullptr, 0);
     context->Draw(4, 0);

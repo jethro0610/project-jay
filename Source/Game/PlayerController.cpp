@@ -6,6 +6,7 @@
 #include "World/SpreadManager.h"
 #include "World/World.h"
 #include "../Game/Components/GroundTraceComponent.h"
+#include "../Game/Components/MeterComponent.h"
 #include "../Game/Components/MovementComponent.h"
 #include "../Game/Components/SpreadActivatorComponent.h"
 #include "../Game/Components/TransformComponent.h"
@@ -22,6 +23,7 @@ void PlayerController::Execute(
     SpreadManager& spreadManager, 
     Camera& camera,
     GroundTraceComponent& groundTraceComponent,
+    MeterComponent& meterComponent,
     MovementComponent& movementComponent,
     SpreadActivatorComponent& spreadActivatorComponent,
     TransformComponent& transformComponent,
@@ -40,7 +42,7 @@ void PlayerController::Execute(
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
-    spreadActivatorComponent.amount[PLAYER_ENTITY] = UINT32_MAX;
+    spreadActivatorComponent.amount[PLAYER_ENTITY] = UINT16_MAX;
 
     if (inputs.flow && inputs.ski) {
         // Have to check this to prevent overflow
@@ -67,13 +69,13 @@ void PlayerController::Execute(
         isDoingAction = true;
         actionMeter_ += 2;
     } 
-    else if (inputs.flow && spreadActivatorComponent.meter[PLAYER_ENTITY] > 0) {
+    else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
         actionMeter_ += 2;
     }
-    else if (inputs.ski && spreadActivatorComponent.meter[PLAYER_ENTITY] > 0)  {
+    else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
@@ -95,6 +97,6 @@ void PlayerController::Execute(
     SCREENLINE(1, "Action: " + std::to_string(actionMeter_));
     SCREENLINE(2, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
     SCREENLINE(3, "Chunk: " + glm::to_string(GetChunkAtWorldPosition(position)));
-    SCREENLINE(4, "Spread Meter: " + std::to_string(spreadActivatorComponent.meter[PLAYER_ENTITY]));
+    SCREENLINE(4, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));
     SCREENLINE(5, "Spread Radius: " + std::to_string(spreadActivatorComponent.radius[PLAYER_ENTITY]));
 }

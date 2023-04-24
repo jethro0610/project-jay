@@ -213,6 +213,9 @@
     - Restritive while also being over centralizing
     - Only a few use cases, limits the design of rest of game
 
+- Since each entity has some spread meter, have them release
+  the meter on death to pickup
+
 =========================================
 - Seed meter
     - Add return number values to SpreadManager

@@ -27,9 +27,9 @@ void Game::Init() {
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 
-    auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
-    holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
-    holdTransform.scale_ = vec3(2.0f);
+    // auto [holdEntityId, holdTransform] = entityManager_.CreateEntity("test_spawner");
+    // holdTransform.position_ = vec3(0.0f, 40.0f, 0.0f);
+    // holdTransform.scale_ = vec3(2.0f);
 }
 
 void Game::Update(float deltaTime, float elapsedTime) {
@@ -61,6 +61,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             spreadManager_,
             world_,
             GETCOMP(GroundTraceComponent),
+            GETCOMP(MeterComponent),
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(SpreadDetectComponent),
             GETCOMP(TransformComponent) 
@@ -76,6 +77,7 @@ void Game::Update(float deltaTime, float elapsedTime) {
             spreadManager_,
             camera_,
             GETCOMP(GroundTraceComponent),
+            GETCOMP(MeterComponent),
             GETCOMP(MovementComponent),
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(TransformComponent),
@@ -140,11 +142,11 @@ void Game::Update(float deltaTime, float elapsedTime) {
     camera_.Update(deltaTime, inputs_);
     renderer_.Render(
         entityManager_.entities_, 
-        playerController_,
         spreadManager_, 
         world_, 
-        GETCOMP(TransformComponent),
+        GETCOMP(MeterComponent),
         GETCOMP(StaticModelComponent),
+        GETCOMP(TransformComponent),
         deltaTime, 
         elapsedTime
     );

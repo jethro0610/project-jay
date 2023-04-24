@@ -80,6 +80,7 @@ public:
     ID3D11Buffer* perObjectCBuffer_;
     ID3D11Buffer* perSkeletonCBuffer_;
     ID3D11Buffer* perChunkCBuffer_;
+    ID3D11Buffer* perUICBuffer_;
 
     ID3D11Texture2D* noiseTexture_;
     ID3D11ShaderResourceView* noiseTextureSRV_;

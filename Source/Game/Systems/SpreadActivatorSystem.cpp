@@ -5,6 +5,7 @@
 #include "../World/SpreadManager.h"
 #include "../World/World.h"
 #include "../Components/GroundTraceComponent.h"
+#include "../Components/MeterComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
 #include "../Components/SpreadDetectComponent.h"
 #include "../Components/TransformComponent.h"
@@ -13,12 +14,14 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<SpreadActivatorComponent, TransformComponent>();
 constexpr EntityKey detectKey = GetEntityKey<SpreadDetectComponent>();
 constexpr EntityKey groundKey = GetEntityKey<GroundTraceComponent>();
+constexpr EntityKey meterKey = GetEntityKey<MeterComponent>();
 
 void SpreadActivatorSystem::Execute(
     Entity* entities, 
     SpreadManager& spreadManager,
     World& world,
     GroundTraceComponent& groundTraceComponent,
+    MeterComponent& meterComponent,
     SpreadActivatorComponent& spreadActivatorComponent,
     SpreadDetectComponent& spreadDetectComponent,
     TransformComponent& transformComponent
@@ -40,29 +43,33 @@ void SpreadActivatorSystem::Execute(
         if (radius == 0)
             continue;
 
+        uint16_t* meter = nullptr;
+        if (entity.MatchesKey(meterKey))
+            meter = &meterComponent.meter[i];
 
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
-        const uint32_t& amount = spreadActivatorComponent.amount[i];
-        uint32_t& meter = spreadActivatorComponent.meter[i];
+        const uint16_t& amount = spreadActivatorComponent.amount[i];
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         if (radius > 0) {
             const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(
                 position, 
                 radius, 
-                std::min(amount, meter)
+                std::min(amount, meter == nullptr ? UINT16_MAX : *meter)
             );
             if (addSpreadInfo.count == 0)
                 continue;
-            if (meter > 0)
-                meter -= addSpreadInfo.count;
+            if (meter != nullptr)
+                *meter -= addSpreadInfo.count;
 
             if (hasDetect)
                 spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
         }
         else if (radius < 0) {
-            meter += spreadManager.RemoveSpread(position, -radius);
+            uint16_t removeAmount = spreadManager.RemoveSpread(position, -radius);
+            if (meter != nullptr)
+                *meter -= removeAmount;
         }
     }
 }

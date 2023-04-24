@@ -1,6 +1,7 @@
 #pragma once
 #include <set>
 #include <glm.hpp>
+#include <gtx/hash.hpp>
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
@@ -11,9 +12,6 @@
 class World;
 class ResourceManager;
 class SpreadManager;
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <gtx/hash.hpp>
 
 struct AddSpreadInfo {
     uint16_t count;
@@ -46,11 +44,11 @@ public:
 
     bool AddSpread(glm::ivec2 key, float height); 
     bool AddSpread(glm::vec3 position); 
-    AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint32_t maxAdds = UINT32_MAX);
+    AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint16_t amount = UINT16_MAX);
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);
-    uint32_t RemoveSpread(glm::vec3 position, int radius); 
+    uint16_t RemoveSpread(glm::vec3 position, int radius); 
     void UpdateRenderData_P();
 
 private:

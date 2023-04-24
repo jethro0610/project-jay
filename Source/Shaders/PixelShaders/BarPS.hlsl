@@ -1,18 +1,11 @@
 #include "../FragTypes/ScreenFrag.hlsli"
 #include "../Constants/ConstantBuffers.hlsli"
 
-static const float BORDER_HEIGHT = 0.1f;
-static const float BORDER_WIDTH = 0.01f;
-
 float4 main(ScreenFrag frag) : SV_TARGET {
     float inverseRatio = 1.0f / aspectRatio;
 
-    if (
-        frag.uv.x < BORDER_WIDTH || 
-        frag.uv.x > 1.0f - BORDER_WIDTH ||
-        frag.uv.y < BORDER_HEIGHT || 
-        frag.uv.y > 1.0f - BORDER_HEIGHT 
-    ) return float4(0.0f, 0.0f, 0.0f, 1.0f);
-
-    return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    if (frag.uv.x < 1.0f - spreadMeter)
+        return float4(0.15f, 0.15f, 0.15f, 1.0f);
+    else
+        return float4(1.00f, 0.86f, 0.36f, 1.0f);
 }

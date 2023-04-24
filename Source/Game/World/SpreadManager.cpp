@@ -61,7 +61,7 @@ bool SpreadManager::AddSpread(glm::vec3 position) {
     return AddSpread(WorldPositionToSpreadKey(position), position.y);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint32_t maxAdds) {
+AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t amount) {
     radius--;
     ivec2 origin = WorldPositionToSpreadKey(position);
     uint16_t count = 0;
@@ -81,7 +81,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint32_t 
 
     // Randomly select a spread from the viable ones and
     // add it
-    while (viableAddKeys_.GetCount() > 0 && count < maxAdds) {
+    while (viableAddKeys_.GetCount() > 0 && count < amount) {
         uint32_t index = std::rand() % viableAddKeys_.GetCount();
         AddSpread(viableAddKeys_[index], position.y);
         viableAddKeys_.Remove(index);
@@ -117,7 +117,7 @@ bool SpreadManager::RemoveSpread(vec3 position) {
     return RemoveSpread(key);
 }
 
-uint32_t SpreadManager::RemoveSpread(vec3 position, int radius) {
+uint16_t SpreadManager::RemoveSpread(vec3 position, int radius) {
     uint32_t count = 0;
     ivec2 origin = WorldPositionToSpreadKey(position);
     for (int x = -radius; x <= radius; x++) {

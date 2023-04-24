@@ -20,8 +20,11 @@
             "momentum_decay": 0.1
         },
         "spread_activator": {
-            "ground_only": false,
-            "initial_meter": 512 
+            "ground_only": false
+        },
+        "meter": {
+            "initial_meter": 256,
+            "max_meter": 1024 
         },
         "bubble": {
             "radius": 2.0

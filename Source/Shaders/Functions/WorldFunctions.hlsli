@@ -1,14 +1,6 @@
 Texture2D noiseTex : register(t0);
 SamplerState noiseSamp;
 
-cbuffer perChunkData : register(b0) {
-    float4 chunkPos;
-    uint modifierCount;
-    uint pad0;
-    uint pad1;
-    uint pad2;
-};
-
 struct TerrainModifier {
     uint type; 
     float2 position;

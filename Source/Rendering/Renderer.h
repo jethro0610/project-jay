@@ -7,8 +7,9 @@ class PlayerController;
 class ResourceManager;
 class SpreadManager;
 class World;
-class TransformComponent;
+class MeterComponent;
 class StaticModelComponent;
+class TransformComponent;
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -30,11 +31,11 @@ public:
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
         Entity* entities,
-        PlayerController& playerController,
         SpreadManager& spreadManager,
         World& world,
-        TransformComponent& transformComponent,
+        MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
+        TransformComponent& transformComponent,
         float deltaTime, 
         float elapsedTime
     );
@@ -47,12 +48,12 @@ private:
     void RenderWorld_P(World& world);
     void RenderEntities_P(
         Entity* entities, 
-        TransformComponent& transformComponent, 
-        StaticModelComponent& staticModelComponent
+        StaticModelComponent& staticModelComponent,
+        TransformComponent& transformComponent
     );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderPostProcess_P();
-    void RenderUI_P(PlayerController& playerController);
+    void RenderUI_P(MeterComponent& meterComponent);
     #ifdef _DEBUG
     void RenderScreenText_P();
     #endif

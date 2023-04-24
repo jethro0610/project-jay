@@ -26,6 +26,11 @@ struct PerChunkData {
     uint32_t pad2;
 };
 
+struct PerUIData {
+    float spreadMeter;
+    glm::vec3 pad0;
+};
+
 struct StaticVertex {
     glm::vec3 position;
     glm::vec3 normal;

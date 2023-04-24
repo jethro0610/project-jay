@@ -5,6 +5,7 @@ class Camera;
 class SpreadManager;
 class World;
 class GroundTraceComponent;
+class MeterComponent;
 class MovementComponent;
 class SpreadActivatorComponent;
 class TransformComponent;
@@ -22,6 +23,7 @@ public:
         SpreadManager& spreadManager, 
         Camera& camera,
         GroundTraceComponent& groundTraceComponent,
+        MeterComponent& meterComponent,
         MovementComponent& movementComponent,
         SpreadActivatorComponent& spreadActivatorComponent,
         TransformComponent& transformComponent,
@@ -30,7 +32,6 @@ public:
     );
 
 private:
-    uint32_t seedMeter_;
     uint16_t actionMeter_;
     uint8_t cutTimer_;
     uint8_t cutCooldown_;

@@ -67,7 +67,7 @@ void PlayerController::Execute(
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
         isDoingAction = true;
-        actionMeter_ += 2;
+        actionMeter_ += 1;
     } 
     else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;

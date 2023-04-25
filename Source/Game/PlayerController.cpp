@@ -1,4 +1,6 @@
-#include <glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "PlayerController.h"
 #include "Camera.h"
 #include "../Constants/GameConstants.h"

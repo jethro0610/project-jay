@@ -1,14 +1,12 @@
 #include <array>
 #include <math.h>
 #include <numbers>
-#include <gtx/string_cast.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Types/Transform.h"
 #include "World.h"
 #include "../../Logging/Logger.h"
 using namespace glm;
-
 
 SpreadManager::SpreadManager(ResourceManager& resourceManager, World& world) :
     resourceManager_(resourceManager),

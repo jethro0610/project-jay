@@ -1,5 +1,5 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/mat4x4.hpp>
 #include "RenderTypes.h"
 class Camera;
 class Entity;

@@ -1,6 +1,8 @@
+#include <glm/vec3.hpp>
 #include "Game.h"
 #include "../Constants/GameConstants.h"
 #include "../Constants/TimeConstants.h"
+using namespace glm;
 
 using namespace std::chrono;
 #define GETCOMP(COMP) entityManager_.GetComponent<COMP>()

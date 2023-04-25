@@ -1,5 +1,5 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec2.hpp>
 #include <queue>
 #include "Component.h"
 

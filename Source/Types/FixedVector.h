@@ -1,5 +1,4 @@
 #pragma once
-#include <integer.hpp>
 #include <deque>
 
 template <typename T, uint32_t size>

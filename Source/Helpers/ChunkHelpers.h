@@ -1,5 +1,6 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 
 glm::ivec3 GetChunkAtWorldPosition(glm::vec3 position);
 glm::ivec2 GetChunkAtWorldPosition2D(glm::vec2 position);

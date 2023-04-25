@@ -1,5 +1,5 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec3.hpp>
 #include <bitset>
 #include "Component.h"
 

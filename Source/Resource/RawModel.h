@@ -1,13 +1,14 @@
 #pragma once
 #include <vector>
-#include <glm.hpp>
-using namespace glm;
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 const uint8_t MODEL_HEADER_SIZE = sizeof(uint8_t);
 const uint8_t MESH_HEADER_SIZE = 2 * sizeof(uint16_t);
 
-const uint8_t STATIC_VERTEX_SIZE = 4 * sizeof(vec3) + sizeof(vec2);
-const uint8_t SKELETAL_VERTEX_INFO_SIZE = sizeof(ivec4) + sizeof(vec4);
+const uint8_t STATIC_VERTEX_SIZE = 4 * sizeof(glm::vec3) + sizeof(glm::vec2);
+const uint8_t SKELETAL_VERTEX_INFO_SIZE = sizeof(glm::ivec4) + sizeof(glm::vec4);
 
 class RawMesh {
 public:

@@ -2,12 +2,7 @@
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Resource/DXResources.h"
 #include "../../Resource/ResourceManager.h"
-
-struct QuadInfo {
-    int valid;
-    int hasQuad[3];
-    int forward[4];
-};
+using namespace glm;
 
 void World::GenerateNoiseTexture_P() {
     DXResources& dxResources = resourceManager_.dxResources_;

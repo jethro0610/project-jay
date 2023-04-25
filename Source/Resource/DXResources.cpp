@@ -238,7 +238,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         nullptr
     );
     CreateRWStructuredBufferAndUAV(
-        sizeof(uint),
+        sizeof(uint32_t),
         1,
         &csWorldCountBuffer_,
         &csWorldCountView_,

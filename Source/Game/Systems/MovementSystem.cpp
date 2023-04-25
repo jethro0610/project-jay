@@ -1,3 +1,4 @@
+#include <glm/gtx/compatibility.hpp>
 #include "MovementSystem.h"
 #include "../Entity/Entity.h"
 #include "../../Helpers/EntityHelpers.h"

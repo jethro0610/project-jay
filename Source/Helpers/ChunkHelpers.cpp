@@ -1,3 +1,4 @@
+#include <glm/gtx/compatibility.hpp>
 #include "ChunkHelpers.h"
 #include "../Constants/WorldConstants.h"
 using namespace glm;

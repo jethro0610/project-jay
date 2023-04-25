@@ -1,3 +1,4 @@
+#include <glm/gtx/compatibility.hpp>
 #include "Camera.h"
 #include "../Game/Components/TransformComponent.h"
 using namespace glm;

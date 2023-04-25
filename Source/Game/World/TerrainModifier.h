@@ -1,5 +1,5 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec2.hpp>
 const uint16_t MAX_TERRAIN_MODIFIERS = 16;
 
 enum TerrainModType {

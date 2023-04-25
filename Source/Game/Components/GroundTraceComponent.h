@@ -1,5 +1,5 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec3.hpp>
 #include "Component.h"
 
 const float STEP_UP_HEIGHT = 0.25f;

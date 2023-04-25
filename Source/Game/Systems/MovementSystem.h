@@ -1,5 +1,6 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/quaternion.hpp>
 class Entity;
 class GroundTraceComponent;
 class MovementComponent;

@@ -1,8 +1,6 @@
 #pragma once
-#include <glm.hpp>
-#include <gtx/quaternion.hpp>
-#include <gtx/compatibility.hpp>
-#include <gtx/string_cast.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <string>
 
 class Transform {

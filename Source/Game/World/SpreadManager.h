@@ -1,11 +1,11 @@
 #pragma once
 #include <set>
-#include <glm.hpp>
-#include <gtx/hash.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/gtx/hash.hpp>
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
-#include <glm.hpp>
 #include "../../Constants/WorldConstants.h"
 #include "../../Constants/SpreadConstants.h"
 #include "../../Types/FixedVector.h"

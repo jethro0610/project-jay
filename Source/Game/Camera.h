@@ -1,5 +1,6 @@
 #pragma once
-#include <glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
 #include "../Types/Transform.h"
 #include "../Types/Inputs.h"
 class TransformComponent;

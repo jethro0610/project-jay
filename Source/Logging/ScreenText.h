@@ -1,5 +1,4 @@
 #pragma once
-#include <integer.hpp>
 #include <string>
 #include "LogConstants.h"
 

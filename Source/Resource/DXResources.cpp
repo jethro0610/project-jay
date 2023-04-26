@@ -227,6 +227,16 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
+
+    particleVertexDescription_[0] = {
+        "INST_POS",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        0,
+        D3D11_INPUT_PER_INSTANCE_DATA,
+        1
+    };
     
     // Setup the world vertex compute shader
     CreateRWStructuredBufferAndUAV(
@@ -416,6 +426,16 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
         HRASSERT(device_->CreateInputLayout(
             instanceVertexDescription_,
             ARRAYSIZE(instanceVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+        break;
+
+    case VertexShaderType::PARTICLE:
+        HRASSERT(device_->CreateInputLayout(
+            particleVertexDescription_,
+            ARRAYSIZE(particleVertexDescription_),
             vertexShaderBlob->GetBufferPointer(),
             vertexShaderBlob->GetBufferSize(),
             &inputLayout

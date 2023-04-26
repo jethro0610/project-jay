@@ -2,11 +2,10 @@ cbuffer perFrameData : register(b0) {
     float3 cameraPos;
 	float time;
     float aspectRatio;
-    float4x4 viewMatrix;
+    float3 cameraUp;
+    float3 cameraRight;
 
-    uint fpad0;
-    uint fpad1;
-    uint fpad2;
+    uint pad0;
 }
 
 cbuffer perObjectData : register(b1){

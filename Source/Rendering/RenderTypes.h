@@ -6,11 +6,10 @@ struct PerFrameData {
     glm::vec3 cameraPos;
     float time;
     float aspectRatio;
-    glm::mat4x4 viewMatrix;
+    glm::vec3 cameraUp;
+    glm::vec3 cameraRight;
 
     uint32_t pad0;
-    uint32_t pad1;
-    uint32_t pad2;
 };
 
 struct PerObjectData {

@@ -229,6 +229,10 @@
 - Moving enemies that follow different paths ie. circle, line, zigzag
 
 - Use heightmap only for terrain
+
+- Need to rewrite rendering and resource code
+    - Renderer puts stuff on screen
+    - Resource manager loads resources and wraps them
 =========================================
 - Seed particle pickup
 

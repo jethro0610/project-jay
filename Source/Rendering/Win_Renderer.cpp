@@ -33,11 +33,13 @@ Renderer::Renderer(ResourceManager& resourceManager):
     dxResources_.LoadVertexShader("InstanceVS", VertexShaderType::INSTANCE);
     dxResources_.LoadVertexShader("ScreenQuadVS", VertexShaderType::STATIC);
     dxResources_.LoadVertexShader("ScreenBarVS", VertexShaderType::STATIC);
+    dxResources_.LoadVertexShader("ParticleVS", VertexShaderType::PARTICLE);
 
     dxResources_.LoadPixelShader("DefaultPS");
     dxResources_.LoadPixelShader("GrassPS");
     dxResources_.LoadPixelShader("PostProcessPS");
     dxResources_.LoadPixelShader("BarPS");
+    dxResources_.LoadPixelShader("ParticlePS");
 
     dxResources_.LoadTexture("grass_c");
     dxResources_.LoadTexture("grass_n");
@@ -70,6 +72,12 @@ Renderer::Renderer(ResourceManager& resourceManager):
     spreadMaterial.textures[1] = "bricks_n";
     spreadMaterial.numOfTextures = 2;
     resourceManager_.materials_["spreadMaterial"] = spreadMaterial;
+
+    MaterialDesc particleMaterial;
+    particleMaterial.vertexShader = "ParticleVS";
+    particleMaterial.pixelShader = "ParticlePS";
+    particleMaterial.numOfTextures = 0;
+    resourceManager_.materials_["particleMaterial"] = particleMaterial;
 }
 
 void Renderer::RenderWorld_P(World& world) {
@@ -139,7 +147,8 @@ void Renderer::RenderEntities_P(
 }
 
 void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
-    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     PerObjectData objectData;
     Transform defaultTransform;
@@ -147,31 +156,53 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
     dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
-    UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
-    UINT offsets[2] = { 0, 0 };
+    // UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
+    // UINT offsets[2] = { 0, 0 };
 
-    const std::string model = "st_sphere";
-    StaticModelDesc modelDesc = resourceManager_.staticModels_["st_sphere"];
-    const std::string material = "spreadMaterial";  
+    UINT strides[1] = { sizeof(InstanceData) };
+    UINT offsets[1] = { 0 };
+
+    // const std::string model = "st_plane";
+    // StaticModelDesc modelDesc = resourceManager_.staticModels_[model];
+    const std::string material = "particleMaterial";  
     SetMaterial_P(material);
-
-    for (int m = 0; m < modelDesc.meshCount; m++) {
-        std::string mesh = model + "_" + std::to_string(m);
-        DXMesh dxMesh = dxResources_.staticMeshes_[mesh];
-        context_->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-
-        // TODO: Render only on visible chunks 
-        for (int x = 0; x < MAX_X_CHUNKS; x++)
-        for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-            ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources_.spreadBuffers_[x][z] };
-            context_->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-            context_->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.spreadChunks_[x][z].count, 0, 0, 0);
-        }
+    for (int x = 0; x < MAX_X_CHUNKS; x++)
+    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+        ID3D11Buffer* buffers[1] = { dxResources_.spreadBuffers_[x][z] };
+        context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+        context_->DrawInstanced(4, spreadManager.spreadChunks_[x][z].count, 0, 0);
     }
+
+    // for (int m = 0; m < modelDesc.meshCount; m++) {
+    //     std::string mesh = model + "_" + std::to_string(m);
+    //     DXMesh dxMesh = dxResources_.staticMeshes_[mesh];
+    //     context_->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    //
+    //     // TODO: Render only on visible chunks 
+    //     for (int x = 0; x < MAX_X_CHUNKS; x++)
+    //     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
+    //         ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources_.spreadBuffers_[x][z] };
+    //         context_->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+    //         context_->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.spreadChunks_[x][z].count, 0, 0, 0);
+    //     }
+    // }
 }
 
 void Renderer::RenderSpreadOrbs_P(SpreadManager& spreadManager) {
-
+    // context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    // PerObjectData objectData;
+    //
+    // Transform defaultTransform;
+    // defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    // objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
+    // dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    //
+    // SetMaterial_P("particleMaterial");
+    // DXMesh dxMesh = dxResources_.staticMeshes_["st_plane_0"];
+    // context_->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    // ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources_.spreadBuffers_[x][z] };
+    // context_->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+    // context_->DrawIndexedInstanced(dxMesh.indexCount, 1, 0, 0, 0);
 }
 
 void Renderer::RenderPostProcess_P() {
@@ -245,7 +276,8 @@ void Renderer::SetFrameData_P() {
     frameData.aspectRatio = float(width_) / height_;
     frameData.cameraPos = camera_->transform_.position_;
     frameData.time = Time::GetTime(); 
-    frameData.viewMatrix = viewMatrix_;
+    frameData.cameraUp = camera_->transform_.GetUpVector();
+    frameData.cameraRight = camera_->transform_.GetRightVector();
 	dxResources_.UpdateBuffer(dxResources_.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
 }
 

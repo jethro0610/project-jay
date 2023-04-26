@@ -1,19 +1,14 @@
 #include "Game.h"
 #include <Xinput.h>
 #include <sstream>
+#include "Time.h"
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
 #endif
 
-using namespace std::chrono;
-
 Game::Game(int width, int height):
     resolutionWidth_(width),
     resolutionHeight_(height),
-    lastTimeUSec_(0),
-    currentTimeUSec_(0),
-    deltaTime_(0),
-    elapsedTime_(0),
     timeAccumlulator_(0.0f),
     windowsLayer_(width, height, "Project Jay"),
     dxResources_(windowsLayer_.windowHandle_, width, height),
@@ -31,7 +26,7 @@ Game::Game(int width, int height):
 
     MSG msg;
     while (!windowsLayer_.closed_ && running_) {
-        UpdateTime();
+        Time::UpdateTime();
 
         windowsLayer_.ClearMouseMovement();
 
@@ -41,8 +36,8 @@ Game::Game(int width, int height):
         }
         windowsLayer_.UpdateMouseMovement();
         PollGamepadInputs_P();
-        UpdateInputs_P(deltaTime_);
-        Update(deltaTime_, elapsedTime_);
+        UpdateInputs_P();
+        Update();
     }
 }
 
@@ -95,7 +90,7 @@ void Game::PollGamepadInputs_P() {
     }
 }
 
-void Game::UpdateInputs_P(float deltaTime) {
+void Game::UpdateInputs_P() {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
@@ -124,8 +119,8 @@ void Game::UpdateInputs_P(float deltaTime) {
     inputs_.deltaLookY = 0.0f;
     inputs_.deltaLookX -= windowsLayer_.deltaMouseX_ * 0.005f;
     inputs_.deltaLookY -= windowsLayer_.deltaMouseY_ * 0.005f;
-    inputs_.deltaLookX -= gamepad_.rightStickX_ * deltaTime * 2.0f;
-    inputs_.deltaLookY += gamepad_.rightStickY_ * deltaTime * 2.0f;
+    inputs_.deltaLookX -= gamepad_.rightStickX_ * Time::GetDeltaTime() * 2.0f;
+    inputs_.deltaLookY += gamepad_.rightStickY_ * Time::GetDeltaTime() * 2.0f;
 }
 
 void Game::FlushInputs_P() {

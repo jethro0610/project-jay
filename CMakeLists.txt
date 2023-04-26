@@ -26,6 +26,7 @@ file(GLOB SOURCES
 	Source/Game/Camera.cpp
 	Source/Game/Game.cpp
     Source/Game/PlayerController.cpp
+    Source/Game/Time.cpp
 
     Source/Game/World/World.cpp
     Source/Game/World/SpreadManager.cpp

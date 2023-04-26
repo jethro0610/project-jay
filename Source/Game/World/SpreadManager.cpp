@@ -3,7 +3,9 @@
 #include <numbers>
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../Time.h"
 #include "../../Types/Transform.h"
+#include "../Components/TransformComponent.h"
 #include "World.h"
 #include "../../Logging/Logger.h"
 using namespace glm;
@@ -115,7 +117,7 @@ bool SpreadManager::RemoveSpread(vec3 position) {
     return RemoveSpread(key);
 }
 
-uint16_t SpreadManager::RemoveSpread(vec3 position, int radius) {
+uint16_t SpreadManager::RemoveSpread(vec3 position, int16_t radius) {
     uint32_t count = 0;
     ivec2 origin = WorldPositionToSpreadKey(position);
     for (int x = -radius; x <= radius; x++) {
@@ -126,4 +128,21 @@ uint16_t SpreadManager::RemoveSpread(vec3 position, int radius) {
             count++;
     } }
     return count;
+}
+
+void SpreadManager::CreateSpreadOrb(glm::ivec3 position) {
+    // float time = reciever == NO_ENTITY ? 0.0f : Time::GetTime();
+    SpreadOrb orb {
+        position,
+        -1,
+        Time::GetTime()
+    };
+    spreadOrbs_.Append(orb);
+}
+
+
+void SpreadManager::UpdateSpreadOrbs(TransformComponent& transformComponent) {
+    for (int i = 0; i < spreadOrbs_.GetCount(); i++) {
+         
+    }
 }

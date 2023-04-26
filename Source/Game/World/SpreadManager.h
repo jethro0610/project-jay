@@ -9,9 +9,11 @@
 #include "../../Constants/WorldConstants.h"
 #include "../../Constants/SpreadConstants.h"
 #include "../../Types/FixedVector.h"
+#include "../../Types/EntityTypes.h"
 class World;
 class ResourceManager;
 class SpreadManager;
+class TransformComponent;
 
 struct AddSpreadInfo {
     uint16_t count;
@@ -32,6 +34,12 @@ struct SpreadChunk {
     }
 };
 
+struct SpreadOrb {
+    glm::vec3 initialPosition;
+    EntityIDNullable targetEntity;
+    float startTime;
+};
+
 class SpreadManager {
 public:
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
@@ -48,12 +56,16 @@ public:
 
     bool RemoveSpread(glm::ivec2 key);
     bool RemoveSpread(glm::vec3 position);
-    uint16_t RemoveSpread(glm::vec3 position, int radius); 
+    uint16_t RemoveSpread(glm::vec3 position, int16_t radius); 
     void UpdateRenderData_P();
+
+    void CreateSpreadOrb(glm::ivec3 position);
+    void UpdateSpreadOrbs(TransformComponent& transformComponent);
 
 private:
     ResourceManager& resourceManager_;
     World& world_;
     std::unordered_set<glm::ivec2> dirtyChunks_;
     FixedVector<glm::ivec2, 512> viableAddKeys_; // Making this a member variable so its not reallocated every call
+    FixedVector<SpreadOrb, 512> spreadOrbs_;
 };

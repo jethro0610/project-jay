@@ -2,17 +2,13 @@
 #include "Game.h"
 #include "../Constants/GameConstants.h"
 #include "../Constants/TimeConstants.h"
+#include "Time.h"
 using namespace glm;
 
 using namespace std::chrono;
 #define GETCOMP(COMP) entityManager_.GetComponent<COMP>()
 
 void Game::Init() {
-    // Initialize the time
-    currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
-    lastTimeUSec_ = currentTimeUSec_;
-    elapsedTime_ = 0.0f;
-
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
@@ -34,8 +30,8 @@ void Game::Init() {
     // holdTransform.scale_ = vec3(2.0f);
 }
 
-void Game::Update(float deltaTime, float elapsedTime) {
-    timeAccumlulator_ += deltaTime;
+void Game::Update() {
+    timeAccumlulator_ += Time::GetDeltaTime();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(
@@ -141,23 +137,13 @@ void Game::Update(float deltaTime, float elapsedTime) {
     );
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
-    camera_.Update(deltaTime, inputs_);
+    camera_.Update(inputs_);
     renderer_.Render(
         entityManager_.entities_, 
         spreadManager_, 
         world_, 
         GETCOMP(MeterComponent),
         GETCOMP(StaticModelComponent),
-        GETCOMP(TransformComponent),
-        deltaTime, 
-        elapsedTime
+        GETCOMP(TransformComponent)
     );
-}
-
-void Game::UpdateTime() {
-    lastTimeUSec_ = currentTimeUSec_;
-    currentTimeUSec_ = duration_cast<microseconds>(system_clock::now().time_since_epoch()).count();
-    deltaTime_ = (currentTimeUSec_ - lastTimeUSec_) * 0.000001f;
-    elapsedTime_ += deltaTime_;
-    deltaTime_ = min<float>(MAX_DELTA_TIME, deltaTime_);
 }

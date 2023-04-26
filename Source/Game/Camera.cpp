@@ -1,5 +1,6 @@
 #include <glm/gtx/compatibility.hpp>
 #include "Camera.h"
+#include "Time.h"
 #include "../Game/Components/TransformComponent.h"
 using namespace glm;
 
@@ -34,7 +35,8 @@ mat4 Camera::GetViewMatrix() const {
     );
 }
 
-void Camera::Update(float deltaTime, Inputs inputs) {
+void Camera::Update(Inputs inputs) {
+    float deltaTime = Time::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));

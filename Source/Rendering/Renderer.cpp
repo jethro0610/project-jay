@@ -21,9 +21,7 @@ void Renderer::Render(
     World& world,
     MeterComponent& meterComponent,
     StaticModelComponent& staticModelComponent,
-    TransformComponent& transformComponent,
-    float deltaTime, 
-    float elapsedTime
+    TransformComponent& transformComponent
 ) {
     UpdateViewMatrix();
     Clear_P();

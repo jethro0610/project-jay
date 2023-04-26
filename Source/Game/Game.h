@@ -4,7 +4,6 @@
 #include "../Resource/DXResources.h"
 #endif
 
-#include <chrono>
 #include "Camera.h"
 #include "Entity/EntityManager.h"
 #include "../Types/Gamepad.h"
@@ -23,7 +22,7 @@ public:
     void Init();
 
     bool running_;
-    void Update(float deltaTime, float elapsedTime);
+    void Update();
 
 private:
 #ifdef _WINDOWS
@@ -44,14 +43,9 @@ private:
     int resolutionWidth_;
     int resolutionHeight_;
 
-    long long lastTimeUSec_;
-    long long currentTimeUSec_;
-    float deltaTime_;
-    float elapsedTime_;
     float timeAccumlulator_;
 
-    void UpdateInputs_P(float deltaTime);
+    void UpdateInputs_P();
     void PollGamepadInputs_P();
     void FlushInputs_P();
-    void UpdateTime();
 };

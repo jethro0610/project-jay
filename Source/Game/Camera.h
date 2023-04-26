@@ -20,7 +20,7 @@ public:
     int trackEntity_;
     float trackDistance_;
 
-    void Update(float deltaTime, Inputs inputs);
+    void Update(Inputs inputs);
     glm::mat4 GetViewMatrix() const;
 private:
     TransformComponent& transformComponent_;

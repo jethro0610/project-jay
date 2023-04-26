@@ -35,9 +35,7 @@ public:
         World& world,
         MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent,
-        float deltaTime, 
-        float elapsedTime
+        TransformComponent& transformComponent
     );
 private:
     ResourceManager& resourceManager_;

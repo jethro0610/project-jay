@@ -1,6 +1,6 @@
+#include "../Constants/ConstantBuffers.hlsli"
 #include "../FragTypes/ScreenFrag.hlsli"
 #include "../VertTypes/TextVert.hlsli"
-#include "../Constants/ConstantBuffers.hlsli"
 
 static const int CHARS_PER_LINE = 32;
 static const int MAP_CHARS = 16;
@@ -27,7 +27,7 @@ ScreenFrag main(TextVert vert) {
     float posY = originY - HEIGHT * curLine - MARGIN;
 
     frag.uv = coord * CHAR_SIZE;
-    frag.uv .x *= KERN_WIDTH;
+    frag.uv.x *= KERN_WIDTH;
     int charRow = floor(vert.charIndex / MAP_CHARS);
     int charCol = vert.charIndex % MAP_CHARS;
 

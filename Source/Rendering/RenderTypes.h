@@ -4,24 +4,29 @@
 
 struct PerFrameData {
     glm::vec3 cameraPos;
-	float time;
+    float time;
     float aspectRatio;
-    glm::vec3 extra;
+    glm::mat4x4 viewMatrix;
+
+    uint32_t pad0;
+    uint32_t pad1;
+    uint32_t pad2;
 };
 
 struct PerObjectData {
-    glm::mat4 worldMat;
-    glm::mat4 worldViewProj;
-    glm::mat4 normalMat;
+    glm::mat4x4 worldMat;
+    glm::mat4x4 worldViewProj;
+    glm::mat4x4 normalMat;
 };
 
 struct PerSkeletonData {
-    glm::mat4 jointMatrices[32];
+    glm::mat4x4 jointMatrices[32];
 };
 
 struct PerChunkData {
     glm::vec4 chunkPos;
     uint32_t modifierCount;
+
     uint32_t pad0;
     uint32_t pad1;
     uint32_t pad2;
@@ -61,7 +66,7 @@ struct WorldTri {
     WorldVertex v2;
 };
 
-struct SpreadInstance {
+struct InstanceData {
     glm::vec3 position;
 };
 

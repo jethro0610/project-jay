@@ -26,14 +26,22 @@ void Renderer::Render(
     UpdateViewMatrix();
     Clear_P();
     SetFrameData_P();
+
+    SetRenderTargetWorld_P();
     RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
+    RenderSpreadOrbs_P(spreadManager);
+
+    SetRenderTargetScreen_P();
     RenderPostProcess_P();
     RenderUI_P(meterComponent);
     #ifdef _DEBUG
+    EnableBlend_P();
     RenderScreenText_P();
+    DisableBlend_P();
     #endif
+
     // RenderTextureToScreen_P();
     Present_P();
 }

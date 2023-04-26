@@ -541,7 +541,7 @@ void DXResources::InitWorldMeshes() {
 void DXResources::InitSpreadBuffers() {
     D3D11_BUFFER_DESC desc = {};
     desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = sizeof(SpreadInstance) * MAX_SPREAD; 
+    desc.ByteWidth = sizeof(InstanceData) * MAX_SPREAD; 
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;

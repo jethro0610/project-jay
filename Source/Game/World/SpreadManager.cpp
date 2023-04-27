@@ -153,6 +153,7 @@ void SpreadManager::UpdateSpreadOrbs(TransformComponent& transformComponent) {
         vec3 upPosition = orb.initialPosition + vec3(0.0f, 12.0f, 0.0f);
 
         float timeSinceStart = Time::GetTime() - orb.startTime; 
+        timeSinceStart /= 0.7f;
         timeSinceStart = min(1.0f, timeSinceStart);
 
         orb.position = lerp(initialPosition, upPosition, timeSinceStart); 

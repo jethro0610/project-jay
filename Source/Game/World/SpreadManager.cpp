@@ -1,8 +1,10 @@
 #include <array>
 #include <math.h>
 #include <numbers>
+#include <glm/gtx/compatibility.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Constants/GameConstants.h"
 #include "../Time.h"
 #include "../../Types/Transform.h"
 #include "../Components/TransformComponent.h"
@@ -98,9 +100,10 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
 
     if (!spreadChunk.keysToIndex.contains(key))
         return false;
+    uint16_t deletedIndex = spreadChunk.keysToIndex[key];
+    CreateSpreadOrb(spreadChunk.positions[deletedIndex]);
 
     spreadChunk.count--;
-    uint16_t deletedIndex = spreadChunk.keysToIndex[key];
     vec3 lastPosition = spreadChunk.positions[spreadChunk.count];
     ivec2 lastKey = spreadChunk.keys[spreadChunk.count];
 
@@ -134,6 +137,7 @@ void SpreadManager::CreateSpreadOrb(glm::ivec3 position) {
     // float time = reciever == NO_ENTITY ? 0.0f : Time::GetTime();
     SpreadOrb orb {
         position,
+        position,
         -1,
         Time::GetTime()
     };
@@ -143,6 +147,16 @@ void SpreadManager::CreateSpreadOrb(glm::ivec3 position) {
 
 void SpreadManager::UpdateSpreadOrbs(TransformComponent& transformComponent) {
     for (int i = 0; i < spreadOrbs_.GetCount(); i++) {
-         
+        SpreadOrb& orb = spreadOrbs_[i];
+        vec3 initialPosition = orb.initialPosition;
+        vec3 targetPosition = transformComponent.renderTransform[PLAYER_ENTITY].position_;
+        vec3 upPosition = orb.initialPosition + vec3(0.0f, 12.0f, 0.0f);
+
+        float timeSinceStart = Time::GetTime() - orb.startTime; 
+        timeSinceStart = min(1.0f, timeSinceStart);
+
+        orb.position = lerp(initialPosition, upPosition, timeSinceStart); 
+        timeSinceStart *= timeSinceStart;
+        orb.position = lerp(orb.position, targetPosition, timeSinceStart); 
     }
 }

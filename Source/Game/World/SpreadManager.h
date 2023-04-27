@@ -36,6 +36,7 @@ struct SpreadChunk {
 
 struct SpreadOrb {
     glm::vec3 initialPosition;
+    glm::vec3 position;
     EntityIDNullable targetEntity;
     float startTime;
 };
@@ -43,6 +44,7 @@ struct SpreadOrb {
 class SpreadManager {
 public:
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
+    FixedVector<SpreadOrb, 512> spreadOrbs_;
     SpreadManager(ResourceManager& resourceManager, World& world);
     SpreadManager(const SpreadManager&) = delete;
 
@@ -67,5 +69,4 @@ private:
     World& world_;
     std::unordered_set<glm::ivec2> dirtyChunks_;
     FixedVector<glm::ivec2, 512> viableAddKeys_; // Making this a member variable so its not reallocated every call
-    FixedVector<SpreadOrb, 512> spreadOrbs_;
 };

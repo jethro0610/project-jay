@@ -22,7 +22,7 @@ public:
         count_ = 0;
     }
     uint32_t GetCount() const { return count_; }
-    T operator[](uint32_t index) const { return data_[index]; };
+    T& operator[](uint32_t index) const { return data_[index]; };
     T* GetData() { return data_; }
     void CopyFrom(FixedVector& source) {
         memcpy(data_, source.data_, sizeof(T) * source.count_);

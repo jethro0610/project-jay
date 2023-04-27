@@ -89,6 +89,8 @@ public:
 
     WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
     ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
+    ID3D11Buffer* orbBuffer_;
+
     ID3D11ComputeShader* csWorldVertex_;
     ID3D11Buffer* csWorldVertexBuffer_;
     ID3D11UnorderedAccessView* csWorldVertexView_;

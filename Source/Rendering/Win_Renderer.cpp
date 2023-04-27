@@ -12,6 +12,7 @@
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Time.h"
 #include "../Game/Components/TransformComponent.h"
+using namespace glm;
 
 Renderer::Renderer(ResourceManager& resourceManager):
     resourceManager_(resourceManager),
@@ -177,7 +178,6 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
 }
 
 void Renderer::RenderSpreadOrbs_P(SpreadManager& spreadManager) {
-    return;
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     PerObjectData objectData;
     Transform defaultTransform;
@@ -189,12 +189,14 @@ void Renderer::RenderSpreadOrbs_P(SpreadManager& spreadManager) {
 
     const std::string material = "particleMaterial";  
     SetMaterial_P(material);
-    for (int x = 0; x < MAX_X_CHUNKS; x++)
-    for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        ID3D11Buffer* buffers[1] = { dxResources_.spreadBuffers_[x][z] };
-        context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-        context_->DrawInstanced(4, spreadManager.spreadChunks_[x][z].count, 0, 0);
+    vec3 orbPos[512];
+    for (int i = 0; i < spreadManager.spreadOrbs_.GetCount(); i++) {
+        orbPos[i] = spreadManager.spreadOrbs_[i].position;
     }
+    dxResources_.UpdateBuffer(dxResources_.orbBuffer_, orbPos, sizeof(vec3) * spreadManager.spreadOrbs_.GetCount());
+    ID3D11Buffer* buffers[1] = { dxResources_.orbBuffer_ };
+    context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+    context_->DrawInstanced(4, spreadManager.spreadOrbs_.GetCount(), 0, 0);
 }
 
 void Renderer::RenderPostProcess_P() {

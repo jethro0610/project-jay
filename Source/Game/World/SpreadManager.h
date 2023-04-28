@@ -68,5 +68,5 @@ private:
     ResourceManager& resourceManager_;
     World& world_;
     std::unordered_set<glm::ivec2> dirtyChunks_;
-    FixedVector<glm::ivec2, 512> viableAddKeys_; // Making this a member variable so its not reallocated every call
+    FixedVector<glm::ivec2, 8192> viableAddKeys_; // Making this a member variable so its not reallocated every call
 };

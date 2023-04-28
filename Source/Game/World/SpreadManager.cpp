@@ -101,7 +101,7 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     if (!spreadChunk.keysToIndex.contains(key))
         return false;
     uint16_t deletedIndex = spreadChunk.keysToIndex[key];
-    CreateSpreadOrb(spreadChunk.positions[deletedIndex]);
+    CreateSpreadOrb(spreadChunk.positions[deletedIndex] + vec3(0.0f, 2.0f, 0.0f));
 
     spreadChunk.count--;
     vec3 lastPosition = spreadChunk.positions[spreadChunk.count];
@@ -148,16 +148,15 @@ void SpreadManager::CreateSpreadOrb(glm::ivec3 position) {
 void SpreadManager::UpdateSpreadOrbs(TransformComponent& transformComponent) {
     for (int i = 0; i < spreadOrbs_.GetCount(); i++) {
         SpreadOrb& orb = spreadOrbs_[i];
+        float timeSinceStart = Time::GetTime() - orb.startTime; 
+        timeSinceStart /= 0.3f;
+        if (timeSinceStart >= 1.0f) {
+            spreadOrbs_.Remove(i--);
+            continue;
+        }
         vec3 initialPosition = orb.initialPosition;
         vec3 targetPosition = transformComponent.renderTransform[PLAYER_ENTITY].position_;
-        vec3 upPosition = orb.initialPosition + vec3(0.0f, 12.0f, 0.0f);
-
-        float timeSinceStart = Time::GetTime() - orb.startTime; 
-        timeSinceStart /= 0.7f;
-        timeSinceStart = min(1.0f, timeSinceStart);
-
-        orb.position = lerp(initialPosition, upPosition, timeSinceStart); 
-        timeSinceStart *= timeSinceStart;
-        orb.position = lerp(orb.position, targetPosition, timeSinceStart); 
+        timeSinceStart = std::powf(timeSinceStart, 3.0f);
+        orb.position = lerp(initialPosition, targetPosition, timeSinceStart); 
     }
 }

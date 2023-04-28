@@ -291,7 +291,7 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
 
     D3D11_BUFFER_DESC vdesc = {};
     vdesc.Usage = D3D11_USAGE_DYNAMIC;
-    vdesc.ByteWidth = sizeof(glm::vec3) * 512; 
+    vdesc.ByteWidth = sizeof(glm::vec3) * 8192; 
     vdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     vdesc.MiscFlags = 0;

@@ -12,7 +12,7 @@
 #include "../../Types/EntityTypes.h"
 class World;
 class ResourceManager;
-class SpreadManager;
+class SeedManager;
 class TransformComponent;
 
 struct AddSpreadInfo {
@@ -34,18 +34,14 @@ struct SpreadChunk {
     }
 };
 
-struct SpreadOrb {
-    glm::vec3 initialPosition;
-    glm::vec3 position;
-    EntityIDNullable targetEntity;
-    float startTime;
-};
-
 class SpreadManager {
 public:
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
-    FixedVector<SpreadOrb, 512> spreadOrbs_;
-    SpreadManager(ResourceManager& resourceManager, World& world);
+    SpreadManager(
+        ResourceManager& resourceManager,
+        SeedManager& seedManager,
+        World& world
+    );
     SpreadManager(const SpreadManager&) = delete;
 
     glm::ivec2 WorldPositionToSpreadKey(glm::vec3 position) const;
@@ -61,12 +57,10 @@ public:
     uint16_t RemoveSpread(glm::vec3 position, int16_t radius); 
     void UpdateRenderData_P();
 
-    void CreateSpreadOrb(glm::ivec3 position);
-    void UpdateSpreadOrbs(TransformComponent& transformComponent);
-
 private:
     ResourceManager& resourceManager_;
     World& world_;
+    SeedManager& seedManager_;
     std::unordered_set<glm::ivec2> dirtyChunks_;
     FixedVector<glm::ivec2, 8192> viableAddKeys_; // Making this a member variable so its not reallocated every call
 };

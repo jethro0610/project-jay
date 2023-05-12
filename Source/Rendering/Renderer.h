@@ -7,6 +7,7 @@ class Entity;
 struct ID3D11DeviceContext;
 class PlayerController;
 class ResourceManager;
+class SeedManager;
 class SpreadManager;
 class World;
 class MeterComponent;
@@ -33,6 +34,7 @@ public:
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
         Entity* entities,
+        SeedManager& seedManager,
         SpreadManager& spreadManager,
         World& world,
         MeterComponent& meterComponent,
@@ -60,7 +62,7 @@ private:
         TransformComponent& transformComponent
     );
     void RenderSpread_P(SpreadManager& spreadManager);
-    void RenderSpreadOrbs_P(SpreadManager& spreadManager);
+    void RenderSeed_P(SeedManager& seedManager);
     void RenderPostProcess_P();
     void RenderUI_P(MeterComponent& meterComponent);
     #ifdef _DEBUG

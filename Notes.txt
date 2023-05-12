@@ -14,13 +14,7 @@
 
 -   Camera needs to collide with world
 
--   Camera interpolation fix
-
 -   Asset building
-
--   Remove new calls on Game member classes, creat Init functions instead
-
--	Right now every shader get compiled by the compiler script, need someway to log the last compile time and recompile when necessary
 
 -   The parameters below create a streaking effect on the terrain. Could be a cool visual later on.
     float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f);
@@ -30,14 +24,8 @@
 -   Player and other chars are blurry due to the paint filter. Skipping them in the filter may look better. This could be done with the
     stencil buffer.
 
--   Entity for base islands
-
 -   World Render Target
         - Might just use simple, position based plant movement instead. Simpler and more mem-efficient
-
--   Use bitmask comparison for entity ownership (bitmask & componentMask)
-
--   Rename Inputs.h to PlayerInputs.h, maybe rename variables to match with InputComponent
 
 -   Some kind of perma growth mechanic that grows and prevents spread from taking its space
 
@@ -233,6 +221,51 @@
 - Need to rewrite rendering and resource code
     - Renderer puts stuff on screen
     - Resource manager loads resources and wraps them
+
+- Have wrapper classes for each type of graphics piece
+    - Keep the abstraction RELEVANT TO THE GAME
+    - Vertex Buffer
+        - Probably make the buffers per type
+        - OR can have layouts pre-defined
+        - Should meshes be their own object holding a Buffer?
+        - Or should the meshes just include the buffers implicitly
+    - Instance Buffer
+    - Particle Buffer
+    - Vertex Shader
+    - Pixel Shader
+    - Input Layout
+    - Texture
+    - Constant Buffers
+    - Modifier Buffers
+    - Rewrite with bgfx?
+    - Some compute shader abstraction if necessary
+        - Input buffer
+        - Output buffer
+        - Compute buffer
+- What shoule be transparent:
+    - Allocation
+    - Deletion
+    - Layout definition
+    - Probably Constant Buffers
+    - Swap chain
+
+- API Goals:
+    - Load meshes into buffers
+    - Load animations and skeletal meshes
+    - Load multiple meshes into a single model object
+    - Render instances based on an instance buffer
+    - Post process
+    - Programmer defined constant buffers
+    - Programmer defined input layouts
+    - Render entities based on components
+    - One class for all buffers, textures, etc.
+    - Then each buffer holds a descriptor struct
+    - Have resource setting in platform specific code, actual rendering in generic
+- Sources:
+    https://alextardif.com/RenderingAbstractionLayers.html
+    https://www.gamedeveloper.com/programming/designing-a-modern-cross-platform-low-level-graphics-library
+- Use typedefs for rendering objects and go from there
+- Stay close to the actual rendering api
 =========================================
 - Seed particle pickup
 

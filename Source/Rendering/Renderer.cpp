@@ -17,6 +17,7 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 
 void Renderer::Render(
     Entity* entities,
+    SeedManager& seedManager,
     SpreadManager& spreadManager,
     World& world,
     MeterComponent& meterComponent,
@@ -31,7 +32,7 @@ void Renderer::Render(
     RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
-    RenderSpreadOrbs_P(spreadManager);
+    RenderSeed_P(seedManager);
 
     SetRenderTargetScreen_P();
     RenderPostProcess_P();

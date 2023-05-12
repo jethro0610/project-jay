@@ -9,6 +9,7 @@
 #include "../Types/Gamepad.h"
 #include "../Types/Inputs.h"
 #include "PlayerController.h"
+#include "World/SeedManager.h"
 #include "World/SpreadManager.h"
 #include "Systems/Systems.h"
 #include "../Types/Transform.h"
@@ -34,6 +35,7 @@ private:
     Renderer renderer_;
     Camera camera_;
     World world_;
+    SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
 

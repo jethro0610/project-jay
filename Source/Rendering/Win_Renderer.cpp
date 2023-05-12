@@ -6,6 +6,7 @@
 #include "../Game/PlayerController.h"
 #include "../Helpers/EntityHelpers.h"
 #include "../Resource/ResourceManager.h"
+#include "../Game/World/SeedManager.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Types/Transform.h"
 #include "../Game/Components/MeterComponent.h"
@@ -177,7 +178,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     }
 }
 
-void Renderer::RenderSpreadOrbs_P(SpreadManager& spreadManager) {
+void Renderer::RenderSeed_P(SeedManager& seedManager) {
     context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     PerObjectData objectData;
     Transform defaultTransform;
@@ -189,14 +190,14 @@ void Renderer::RenderSpreadOrbs_P(SpreadManager& spreadManager) {
 
     const std::string material = "particleMaterial";  
     SetMaterial_P(material);
-    vec3 orbPos[512];
-    for (int i = 0; i < spreadManager.spreadOrbs_.GetCount(); i++) {
-        orbPos[i] = spreadManager.spreadOrbs_[i].position;
-    }
-    dxResources_.UpdateBuffer(dxResources_.orbBuffer_, orbPos, sizeof(vec3) * spreadManager.spreadOrbs_.GetCount());
+    dxResources_.UpdateBuffer(
+        dxResources_.orbBuffer_, 
+        seedManager.seedPositions_, 
+        sizeof(vec3) * seedManager.seeds_.GetCount()
+    );
     ID3D11Buffer* buffers[1] = { dxResources_.orbBuffer_ };
     context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-    context_->DrawInstanced(4, spreadManager.spreadOrbs_.GetCount(), 0, 0);
+    context_->DrawInstanced(4, seedManager.seeds_.GetCount(), 0, 0);
 }
 
 void Renderer::RenderPostProcess_P() {

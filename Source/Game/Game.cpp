@@ -134,12 +134,13 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    spreadManager_.UpdateSpreadOrbs(GETCOMP(TransformComponent));
+    seedManager_.Execute(GETCOMP(TransformComponent));
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);
     renderer_.Render(
         entityManager_.entities_, 
+        seedManager_,
         spreadManager_, 
         world_, 
         GETCOMP(MeterComponent),

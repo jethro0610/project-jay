@@ -17,7 +17,8 @@ Game::Game(int width, int height):
     renderer_(resourceManager_),
     camera_(entityManager_.GetComponent<TransformComponent>(), 14.0f),
     world_(resourceManager_),
-    spreadManager_(resourceManager_, world_),
+    seedManager_(),
+    spreadManager_(resourceManager_, seedManager_, world_),
     playerController_(),
     gamepad_(Gamepad()),
     running_(true)

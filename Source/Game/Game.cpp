@@ -134,7 +134,10 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.Execute(GETCOMP(TransformComponent));
+    seedManager_.Execute(
+        GETCOMP(MeterComponent),
+        GETCOMP(TransformComponent)
+    );
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);

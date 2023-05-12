@@ -1,8 +1,11 @@
 #include <glm/gtx/compatibility.hpp>
 #include "SeedManager.h"
+#include "../Components/MeterComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Time.h"
 using namespace glm;
+
+// TODO: Track any entity that bubbles onto it
 
 void SeedManager::CreateSeed(glm::ivec3 position) {
     Seed seed {
@@ -13,13 +16,16 @@ void SeedManager::CreateSeed(glm::ivec3 position) {
     seeds_.Append(seed);
 }
 
-
-void SeedManager::Execute(TransformComponent& transformComponent) {
+void SeedManager::Execute(
+    MeterComponent& meterComponent, 
+    TransformComponent& transformComponent
+) {
     for (int i = 0; i < seeds_.GetCount(); i++) {
         Seed& seed = seeds_[i];
         float timeSinceStart = Time::GetTime() - seed.startTime; 
         timeSinceStart /= 0.3f;
         if (timeSinceStart >= 1.0f) {
+            meterComponent.meter[PLAYER_ENTITY] += 1;
             seeds_.Remove(i--);
             continue;
         }

@@ -3,6 +3,7 @@
 #include "../../Constants/GameConstants.h"
 #include "../../Types/FixedVector.h"
 #include "../../Types/EntityTypes.h"
+class MeterComponent;
 class TransformComponent;
 
 struct Seed {
@@ -17,5 +18,8 @@ public:
     glm::vec3 seedPositions_[MAX_SEED];
 
     void CreateSeed(glm::ivec3 position);
-    void Execute(TransformComponent& transformComponent);
+    void Execute(
+        MeterComponent& meterComponent, 
+        TransformComponent& transformComponent
+    );
 };

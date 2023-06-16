@@ -229,6 +229,8 @@
 - Moving enemies that follow different paths ie. circle, line, zigzag
 
 - Use heightmap only for terrain
+
+- Water gun that sprays meter
 =========================================
 - Seed particle pickup
 

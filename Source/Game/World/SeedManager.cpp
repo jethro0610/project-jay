@@ -10,7 +10,7 @@ using namespace glm;
 void SeedManager::CreateSeed(glm::ivec3 position) {
     Seed seed {
         position,
-        -1,
+        PLAYER_ENTITY,
         Time::GetTime()
     };
     seeds_.Append(seed);
@@ -25,7 +25,7 @@ void SeedManager::Execute(
         float timeSinceStart = Time::GetTime() - seed.startTime; 
         timeSinceStart /= 0.3f;
         if (timeSinceStart >= 1.0f) {
-            meterComponent.meter[PLAYER_ENTITY] += 1;
+            meterComponent.meter[seed.targetEntity] += 1;
             seeds_.Remove(i--);
             continue;
         }

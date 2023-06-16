@@ -97,5 +97,9 @@ void IntersectSystem::HandleIntersection(
         ) {
             ProjectileSystem::Throw(entities, projectileComponent, transformComponent, velocityComponent, entity2, entity1, 30.0f); 
         }
+
+        if (bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored)) {
+            
+        }
     }
 }

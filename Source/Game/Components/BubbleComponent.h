@@ -7,6 +7,8 @@ enum BubbleProperties {
     DestroyOnMeteored,
     SpreadOnMeteored,
     ThrowOnMeteored,
+    SeedOnMeteored,
+    AttractSeed,
     BubblePropertyCount
 };
 
@@ -32,5 +34,6 @@ public:
         properties[entity].set(DestroyOnMeteored, GetBoolean(data, "destroy_on_meteored"));
         properties[entity].set(SpreadOnMeteored, GetBoolean(data, "spread_on_meteored"));
         properties[entity].set(ThrowOnMeteored, GetBoolean(data, "throw_on_meteored"));
+        properties[entity].set(Meteor, GetBoolean(data, "attract_seed"));
     }
 };

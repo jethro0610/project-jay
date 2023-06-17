@@ -27,7 +27,8 @@
             "max_meter": 1024 
         },
         "bubble": {
-            "radius": 2.0
+            "radius": 2.0,
+            "meteor": true
         },
         "velocity": {},
         "spread_detect": {},

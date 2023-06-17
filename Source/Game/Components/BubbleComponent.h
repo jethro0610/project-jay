@@ -30,10 +30,11 @@ public:
     void Load(nlohmann::json& data, EntityID entity) {
         radius[entity] = data["radius"].get<float>();
 
-        properties[entity].set(Meteor, GetBoolean(data, "meteor", true));
+        properties[entity].set(Meteor, GetBoolean(data, "meteor"));
         properties[entity].set(DestroyOnMeteored, GetBoolean(data, "destroy_on_meteored"));
         properties[entity].set(SpreadOnMeteored, GetBoolean(data, "spread_on_meteored"));
         properties[entity].set(ThrowOnMeteored, GetBoolean(data, "throw_on_meteored"));
-        properties[entity].set(Meteor, GetBoolean(data, "attract_seed"));
+        properties[entity].set(SeedOnMeteored, GetBoolean(data, "seed_on_meteored"));
+        properties[entity].set(AttractSeed, GetBoolean(data, "attract_seed"));
     }
 };

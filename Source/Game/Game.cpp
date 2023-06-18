@@ -133,6 +133,11 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(WorldColliderComponent)
         );
+        seedManager_.UpdateSeeds(
+            world_,
+            GETCOMP(MeterComponent),
+            GETCOMP(TransformComponent)
+        );
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -140,10 +145,7 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.Execute(
-        GETCOMP(MeterComponent),
-        GETCOMP(TransformComponent)
-    );
+    seedManager_.UpdateSeedPositions(timeAccumlulator_);
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);

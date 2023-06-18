@@ -109,10 +109,9 @@ void IntersectSystem::HandleIntersection(
         }
 
         if (
-            bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored) &&
-            speed >= METEOR_SPEED
+            bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored)
         ) {
-            seedManager.CreateSeed(transformComponent.transform[entity2].position_ + vec3(0.0f, 3.0f, 0.0f));
+            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position_, 100);
             entityManager.DestroyEntity(entity2);
         }
     }

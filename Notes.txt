@@ -227,6 +227,10 @@
 
 - Use heightmap only for terrain
 
+- Add HP component, maybe store meter and when it runs out or reaches threshold,
+  do an action
+
+=============================================================
 - Need to rewrite rendering and resource code
     - Renderer puts stuff on screen
     - Resource manager loads resources and wraps them

@@ -52,9 +52,9 @@ public:
     bool AddSpread(glm::vec3 position); 
     AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint16_t amount = UINT16_MAX);
 
-    bool RemoveSpread(glm::ivec2 key);
-    bool RemoveSpread(glm::vec3 position);
-    uint16_t RemoveSpread(glm::vec3 position, int16_t radius); 
+    bool RemoveSpread(glm::ivec2 key, glm::vec3 seedOffset = glm::vec3(0.0f));
+    bool RemoveSpread(glm::vec3 position, glm::vec3 seedOffset = glm::vec3(0.0f));
+    uint16_t RemoveSpread(glm::vec3 position, int16_t radius, glm::vec3 seedOffset = glm::vec3(0.0f)); 
     void UpdateRenderData_P();
 
 private:

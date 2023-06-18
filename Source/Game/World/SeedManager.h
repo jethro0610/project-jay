@@ -8,11 +8,16 @@
 class MeterComponent;
 class TransformComponent;
 
+const float SEED_GRAVITY_SCALE = 24.0f;
+const float SEED_EASE_SPEED = 10.0f;
+
 struct Seed {
     glm::vec3 position;
-    glm::vec3 lastPosition;
-    glm::vec3 velocity;
+    glm::vec3 offset;
+    float gravityOffset;
     EntityIDNullable targetEntity;
+    float startTime;
+    float captureTime;
 };
 
 class SeedManager {
@@ -29,5 +34,10 @@ public:
         TransformComponent& transformComponent
     );
 
-    void UpdateSeedPositions(float interpTime);
+    void UpdateSeedPositions(
+        World& world,
+        MeterComponent& meterComponent,
+        TransformComponent& transformComponent,
+        float interpTime
+    );
 };

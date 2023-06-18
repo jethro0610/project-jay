@@ -68,7 +68,7 @@ void Game::Update() {
             GETCOMP(MeterComponent),
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(SpreadDetectComponent),
-            GETCOMP(TransformComponent) 
+            GETCOMP(TransformComponent)
         );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
@@ -145,7 +145,12 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.UpdateSeedPositions(timeAccumlulator_);
+    seedManager_.UpdateSeedPositions(
+        world_,
+        GETCOMP(MeterComponent),
+        GETCOMP(TransformComponent),
+        timeAccumlulator_
+    );
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);

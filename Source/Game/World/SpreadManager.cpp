@@ -99,7 +99,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
     return AddSpreadInfo{count, origin};
 }
 
-bool SpreadManager::RemoveSpread(ivec2 key) {
+bool SpreadManager::RemoveSpread(ivec2 key, vec3 seedOffset) {
     ivec2 chunk = SpreadKeyToChunk(key); 
     ivec2 normChunk = GetNormalizedChunk2D(chunk);
     SpreadChunk& spreadChunk = spreadChunks_[normChunk.x][normChunk.y]; 
@@ -107,8 +107,8 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     if (!spreadChunk.keysToIndex.contains(key))
         return false;
     uint16_t deletedIndex = spreadChunk.keysToIndex[key];
-    vec3 seedPosition = spreadChunk.positions[deletedIndex] + vec3(0.0f, 2.0f, 0.0f);
-    seedManager_.CreateSeed(seedPosition);
+    vec3 seedPosition = spreadChunk.positions[deletedIndex] + vec3(0.0f, 0.25f, 0.0f);
+    seedManager_.CreateSeed(seedPosition, seedOffset);
 
     spreadChunk.count--;
     vec3 lastPosition = spreadChunk.positions[spreadChunk.count];
@@ -122,19 +122,19 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     return true;
 }
 
-bool SpreadManager::RemoveSpread(vec3 position) {
+bool SpreadManager::RemoveSpread(vec3 position, vec3 seedOffset) {
     ivec2 key = WorldPositionToSpreadKey(position);
-    return RemoveSpread(key);
+    return RemoveSpread(key, seedOffset);
 }
 
-uint16_t SpreadManager::RemoveSpread(vec3 position, int16_t radius) {
+uint16_t SpreadManager::RemoveSpread(vec3 position, int16_t radius, vec3 seedOffset) {
     uint32_t count = 0;
     ivec2 origin = WorldPositionToSpreadKey(position);
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z)))
+        if (RemoveSpread(origin + ivec2(x, z), seedOffset))
             count++;
     } }
     return count;

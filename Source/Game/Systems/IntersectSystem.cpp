@@ -111,7 +111,7 @@ void IntersectSystem::HandleIntersection(
         if (
             bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored)
         ) {
-            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position_ + vec3(0.0f, 1.0f, 0.0f), 100);
+            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position_ + vec3(0.0f, 0.25f, 0.0f), 64);
             entityManager.DestroyEntity(entity2);
         }
     }

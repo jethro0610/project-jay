@@ -133,11 +133,6 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(WorldColliderComponent)
         );
-        seedManager_.UpdateSeeds(
-            world_,
-            GETCOMP(MeterComponent),
-            GETCOMP(TransformComponent)
-        );
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -145,7 +140,7 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.UpdateSeedPositions(
+    seedManager_.Execute(
         world_,
         GETCOMP(MeterComponent),
         GETCOMP(TransformComponent),

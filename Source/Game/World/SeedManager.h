@@ -9,7 +9,7 @@ class MeterComponent;
 class TransformComponent;
 
 const float SEED_GRAVITY_SCALE = 24.0f;
-const float SEED_EASE_SPEED = 10.0f;
+const float SEED_EASE_SPEED = 16.0f;
 
 struct Seed {
     glm::vec3 position;
@@ -28,13 +28,7 @@ public:
     void CreateSeed(glm::vec3 position, glm::vec3 velocity = glm::vec3(0.0f));
     void CreateMultipleSeed(glm::ivec3 position, uint32_t amount, float radius = 2.0f);
 
-    void UpdateSeeds(
-        World& world,
-        MeterComponent& meterComponent, 
-        TransformComponent& transformComponent
-    );
-
-    void UpdateSeedPositions(
+    void Execute(
         World& world,
         MeterComponent& meterComponent,
         TransformComponent& transformComponent,

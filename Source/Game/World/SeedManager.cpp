@@ -19,32 +19,7 @@ void SeedManager::CreateSeed(glm::vec3 position, glm::vec3 offset) {
     seeds_.Append(seed);
 }
 
-void SeedManager::UpdateSeeds(
-    World& world,
-    MeterComponent& meterComponent, 
-    TransformComponent& transformComponent
-) {
-    for (int i = 0; i < seeds_.GetCount(); i++) {
-        // Seed& seed = seeds_[i];
-        // seed.lastPosition = seed.position;
-        //
-        // // TODO: Move GRAVITY_ACCELERATION to game constants
-        // seed.velocity.y -= 1.0f;
-        // seed.velocity.y = max(seed.velocity.y, -25.0f);
-        // seed.position += seed.velocity * TIMESTEP;
-        //
-        // vec3 nearestDown = world.GetNearestInDirection(seed.position, -Transform::worldUp);
-        // float distFromGround = distance(seed.position, nearestDown);
-        // if (distFromGround < 0.25f) {
-        //     seed.position = nearestDown + Transform::worldUp * 0.25f;
-        //     seed.velocity.x *= 0.75f;
-        //     seed.velocity.y *= -0.75f;
-        //     seed.velocity.z *= 0.75f;
-        // }
-    }
-}
-
-void SeedManager::UpdateSeedPositions(
+void SeedManager::Execute(
     World& world,
     MeterComponent& meterComponent,
     TransformComponent& transformComponent,
@@ -87,6 +62,12 @@ void SeedManager::UpdateSeedPositions(
 
 void SeedManager::CreateMultipleSeed(glm::ivec3 position, uint32_t amount, float radius) {
     for (int i = 0; i < amount; i++) {
-        CreateSeed(position);
+        // TODO: Add variable to control range of offset
+        vec3 offset = vec3(
+            rand() % 2000 * 0.01f - 10.0f,
+            rand() % 2000 * 0.01f - 10.0f,
+            rand() % 2000 * 0.01f - 10.0f
+        );
+        CreateSeed(position, offset);
     }
 }

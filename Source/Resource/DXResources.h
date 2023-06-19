@@ -35,7 +35,8 @@ enum class VertexShaderType {
     STATIC,
     SKELETAL,
     WORLD,
-    INSTANCE
+    INSTANCE,
+    PARTICLE
 };
 
 class DXResources {
@@ -75,6 +76,7 @@ public:
     D3D11_INPUT_ELEMENT_DESC staticVertexDescription_[5];
     D3D11_INPUT_ELEMENT_DESC skeletalVertexDescription_[7];
     D3D11_INPUT_ELEMENT_DESC instanceVertexDescription_[6];
+    D3D11_INPUT_ELEMENT_DESC particleVertexDescription_[1];
 
     ID3D11Buffer* perFrameCBuffer_;
     ID3D11Buffer* perObjectCBuffer_;
@@ -87,6 +89,8 @@ public:
 
     WorldMesh worldMeshes_[MAX_X_CHUNKS][MAX_Y_CHUNKS][MAX_Z_CHUNKS];
     ID3D11Buffer* spreadBuffers_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
+    ID3D11Buffer* orbBuffer_;
+
     ID3D11ComputeShader* csWorldVertex_;
     ID3D11Buffer* csWorldVertexBuffer_;
     ID3D11UnorderedAccessView* csWorldVertexView_;

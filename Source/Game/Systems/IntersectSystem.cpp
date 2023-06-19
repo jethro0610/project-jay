@@ -1,7 +1,9 @@
 #include "IntersectSystem.h"
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
+#include "../Entity/EntityManager.h"
 #include "../../Helpers/EntityHelpers.h"
+#include "../World/SeedManager.h"
 #include "../World/SpreadManager.h"
 #include "../Components/BubbleComponent.h"
 #include "../Components/ProjectileComponent.h"
@@ -14,6 +16,8 @@ constexpr EntityKey key = GetEntityKey<BubbleComponent, TransformComponent>();
 
 void IntersectSystem::Execute(
     Entity* entities,
+    EntityManager& entityManager,
+    SeedManager& seedManager,
     SpreadManager& spreadManager,
     BubbleComponent& bubbleComponent,
     ProjectileComponent& projectileComponent,
@@ -52,6 +56,8 @@ void IntersectSystem::Execute(
                 // TODO: Store the intersections instead
                 HandleIntersection(
                     entities, 
+                    entityManager,
+                    seedManager,
                     spreadManager, 
                     bubbleComponent, 
                     projectileComponent, 
@@ -62,6 +68,8 @@ void IntersectSystem::Execute(
                 );
                 HandleIntersection(
                     entities, 
+                    entityManager,
+                    seedManager,
                     spreadManager, 
                     bubbleComponent, 
                     projectileComponent, 
@@ -79,6 +87,8 @@ constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent, VelocityCo
 
 void IntersectSystem::HandleIntersection(
     Entity* entities,
+    EntityManager& entityManager,
+    SeedManager& seedManager,
     SpreadManager& spreadManager,
     BubbleComponent& bubbleComponent,
     ProjectileComponent& projectileComponent,
@@ -96,6 +106,13 @@ void IntersectSystem::HandleIntersection(
             projectileComponent.state[entity2] == ProjectileState::Inactive
         ) {
             ProjectileSystem::Throw(entities, projectileComponent, transformComponent, velocityComponent, entity2, entity1, 30.0f); 
+        }
+
+        if (
+            bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored)
+        ) {
+            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position_ + vec3(0.0f, 0.25f, 0.0f), 64, 30);
+            entityManager.DestroyEntity(entity2);
         }
     }
 }

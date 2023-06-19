@@ -51,6 +51,14 @@
         {
             "name": "BarPS",
             "type": "ps"
+        },
+        {
+            "name": "ParticleVS",
+            "type": "vs"
+        },
+        {
+            "name": "ParticlePS",
+            "type": "ps"
         }
 	]
 }

@@ -1,6 +1,7 @@
 #include "../../Types/EntityTypes.h"
 class Entity;
 class EntityManager;
+class SeedManager;
 class SpreadManager;
 class BubbleComponent;
 class ProjectileComponent;
@@ -10,6 +11,8 @@ class VelocityComponent;
 namespace IntersectSystem {
     void Execute(
         Entity* entities,
+        EntityManager& entityManager,
+        SeedManager& seedManager,
         SpreadManager& spreadManager,
         BubbleComponent& bubbleComponent,
         ProjectileComponent& projectileComponent,
@@ -19,6 +22,8 @@ namespace IntersectSystem {
 
     void HandleIntersection(
         Entity* entities,
+        EntityManager& entityManager,
+        SeedManager& seedManager,
         SpreadManager& spreadManager,
         BubbleComponent& bubbleComponent,
         ProjectileComponent& projectileComponent,

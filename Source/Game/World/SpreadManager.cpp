@@ -1,15 +1,25 @@
 #include <array>
 #include <math.h>
 #include <numbers>
+#include <glm/gtx/compatibility.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include "../../Constants/GameConstants.h"
+#include "SeedManager.h"
+#include "../Time.h"
 #include "../../Types/Transform.h"
+#include "../Components/TransformComponent.h"
 #include "World.h"
 #include "../../Logging/Logger.h"
 using namespace glm;
 
-SpreadManager::SpreadManager(ResourceManager& resourceManager, World& world) :
+SpreadManager::SpreadManager(
+    ResourceManager& resourceManager, 
+    SeedManager& seedManager,
+    World& world
+) :
     resourceManager_(resourceManager),
+    seedManager_(seedManager),
     world_(world)
 { 
 
@@ -89,16 +99,22 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
     return AddSpreadInfo{count, origin};
 }
 
-bool SpreadManager::RemoveSpread(ivec2 key) {
+bool SpreadManager::RemoveSpread(
+    ivec2 key, 
+    EntityIDNullable remover,
+    vec3 seedOffset
+) {
     ivec2 chunk = SpreadKeyToChunk(key); 
     ivec2 normChunk = GetNormalizedChunk2D(chunk);
     SpreadChunk& spreadChunk = spreadChunks_[normChunk.x][normChunk.y]; 
 
     if (!spreadChunk.keysToIndex.contains(key))
         return false;
+    uint16_t deletedIndex = spreadChunk.keysToIndex[key];
+    vec3 seedPosition = spreadChunk.positions[deletedIndex] + vec3(0.0f, 0.25f, 0.0f);
+    seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
     spreadChunk.count--;
-    uint16_t deletedIndex = spreadChunk.keysToIndex[key];
     vec3 lastPosition = spreadChunk.positions[spreadChunk.count];
     ivec2 lastKey = spreadChunk.keys[spreadChunk.count];
 
@@ -110,19 +126,28 @@ bool SpreadManager::RemoveSpread(ivec2 key) {
     return true;
 }
 
-bool SpreadManager::RemoveSpread(vec3 position) {
+bool SpreadManager::RemoveSpread(
+    vec3 position, 
+    EntityIDNullable remover,
+    vec3 seedOffset
+) {
     ivec2 key = WorldPositionToSpreadKey(position);
-    return RemoveSpread(key);
+    return RemoveSpread(key, remover, seedOffset);
 }
 
-uint16_t SpreadManager::RemoveSpread(vec3 position, int radius) {
+uint16_t SpreadManager::RemoveSpread(
+    vec3 position, 
+    int16_t radius, 
+    EntityIDNullable remover,
+    vec3 seedOffset
+) {
     uint32_t count = 0;
     ivec2 origin = WorldPositionToSpreadKey(position);
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z)))
+        if (RemoveSpread(origin + ivec2(x, z), remover, seedOffset))
             count++;
     } }
     return count;

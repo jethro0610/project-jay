@@ -1,4 +1,5 @@
 #include "../Game/Game.h"
+#include "../Game/Time.h"
 
 #ifdef _DEBUG
 #include "../Logging/Logger.h"
@@ -15,5 +16,6 @@ int CALLBACK WinMain(
     Logger::InitLogger();
     ScreenText::Init();
 #endif
+    Time::Init();
     Game* app = new Game(1280, 720);
 }

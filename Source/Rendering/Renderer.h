@@ -2,9 +2,12 @@
 #include <glm/mat4x4.hpp>
 #include "RenderTypes.h"
 class Camera;
+class DXResources;
 class Entity;
+struct ID3D11DeviceContext;
 class PlayerController;
 class ResourceManager;
+class SeedManager;
 class SpreadManager;
 class World;
 class MeterComponent;
@@ -31,20 +34,27 @@ public:
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
         Entity* entities,
+        SeedManager& seedManager,
         SpreadManager& spreadManager,
         World& world,
         MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent,
-        float deltaTime, 
-        float elapsedTime
+        TransformComponent& transformComponent
     );
 private:
     ResourceManager& resourceManager_;
-	
+    #ifdef _WINDOWS
+    DXResources& dxResources_;
+    ID3D11DeviceContext* context_; 
+    #endif
+    void SetMaterial_P(std::string materialName);
+    void EnableBlend_P();
+    void DisableBlend_P();
+    void SetRenderTargetWorld_P();
+    void SetRenderTargetScreen_P();
+
     void SetFrameData_P();
     void Clear_P();
-    void SetMaterial_P(std::string materialName);
     void RenderWorld_P(World& world);
     void RenderEntities_P(
         Entity* entities, 
@@ -52,6 +62,7 @@ private:
         TransformComponent& transformComponent
     );
     void RenderSpread_P(SpreadManager& spreadManager);
+    void RenderSeed_P(SeedManager& seedManager);
     void RenderPostProcess_P();
     void RenderUI_P(MeterComponent& meterComponent);
     #ifdef _DEBUG

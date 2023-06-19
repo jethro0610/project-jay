@@ -1,45 +1,41 @@
--   Assets are being linked using their actual filenames. It'll probably be better to use indexes per level 
-    to link the assets. Either that or just use mapped IDs.
-    -   The main thing with per level indexing is keeping loaded assets between levels and keeping their index
+-   Assets are being linked using their actual filenames. It'll probably be
+    better to use indexes per level to link the assets. Either that or just use
+    mapped IDs.
+    -   The main thing with per level indexing is keeping loaded assets between
+        levels and keeping their index
 
--   Indices may actually be fine, but texture arrays are going to use indexes. Maybe have a map of strings to index?
--   If the string mapping is too slow, the asset manager can just generate indices that the models themselves hold
-    or the strings can be hashed at runtime and only store the indices
+-   Indices may actually be fine, but texture arrays are going to use indexes.
+    Maybe have a map of strings to index?
+-   If the string mapping is too slow, the asset manager can just generate
+    indices that the models themselves hold or the strings can be hashed at
+    runtime and only store the indices
 
--   TextureArrays per level can be implemented instead of switching resources every render
+-   TextureArrays per level can be implemented instead of switching resources
+    every render
 
--   Sparse Arrays for the ECS is likely necessary to safe on memory and prevent updating unused components
-    -   Tracking the active entity indices would be helpful in preventing unecessary updates as well if Sparse Arrays 
-        will not be used
+-   Sparse Arrays for the ECS is likely necessary to safe on memory and prevent
+    updating unused components
+    -   Tracking the active entity indices would be helpful in preventing
+        unecessary updates as well if Sparse Arrays will not be used
 
 -   Camera needs to collide with world
 
--   Camera interpolation fix
-
 -   Asset building
 
--   Remove new calls on Game member classes, creat Init functions instead
+-   The parameters below create a streaking effect on the terrain. Could be a
+    cool visual later on. float fresnel = GetFresnel(cameraPos,
+    outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f); fresnel =
+    min(fresnel, 1.0f); fresnel *= 0.9f;     
 
--	Right now every shader get compiled by the compiler script, need someway to log the last compile time and recompile when necessary
-
--   The parameters below create a streaking effect on the terrain. Could be a cool visual later on.
-    float fresnel = GetFresnel(cameraPos, outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f);
-    fresnel = min(fresnel, 1.0f);
-    fresnel *= 0.9f;     
-
--   Player and other chars are blurry due to the paint filter. Skipping them in the filter may look better. This could be done with the
-    stencil buffer.
-
--   Entity for base islands
+-   Player and other chars are blurry due to the paint filter. Skipping them in
+    the filter may look better. This could be done with the stencil buffer.
 
 -   World Render Target
-        - Might just use simple, position based plant movement instead. Simpler and more mem-efficient
+        - Might just use simple, position based plant movement instead. Simpler
+          and more mem-efficient
 
--   Use bitmask comparison for entity ownership (bitmask & componentMask)
-
--   Rename Inputs.h to PlayerInputs.h, maybe rename variables to match with InputComponent
-
--   Some kind of perma growth mechanic that grows and prevents spread from taking its space
+-   Some kind of perma growth mechanic that grows and prevents spread from
+    taking its space
 
 -   Rivers?
 
@@ -54,18 +50,17 @@
     -   Separate component or apart of MovementComponent?
 
 -   Hitbox system
-    -   Hitboxes have flags that indicate behavior (RecieveKick, SpreadOnKick, DestroyOnKick, StopProjectileOnWorld, etc.)
+    -   Hitboxes have flags that indicate behavior (RecieveKick, SpreadOnKick,
+        DestroyOnKick, StopProjectileOnWorld, etc.)
     -   Some kind of behavior system based on those flags
-    -   Remove radius from ProjectileComponent, maybe add radius to world collider?
+    -   Remove radius from ProjectileComponent, maybe add radius to world
+        collider?
     -   Rename to interaction bubble?
 
 -   Need some way to sleep components
 
-- Should holds be linked to hitbox?
-
-- Move holds and projectile states to hitbox
-
-- For components that are a single variable, just use a general state and properties component
+- For components that are a single variable, just use a general state and
+  properties component
 
 - Fire spread
 
@@ -73,7 +68,8 @@
 
 - Enemy that launches fireballs that rain down and destroy spread
 
-- Some constant properties on holdable so they move with the property ie. spreading
+- Some constant properties on holdable so they move with the property ie.
+  spreading
 
 - Should kick be a button or automatic
 
@@ -136,7 +132,8 @@
 
 - Wind waker style light and shadow colors (lerp to values)
 
-- Bouncy ball projectile that has to be dodged (super low gravity and movement, high count)
+- Bouncy ball projectile that has to be dodged (super low gravity and movement,
+  high count)
 
 - Tunicate squirter
 
@@ -203,7 +200,7 @@
     - Give seeds
     - Modify world
     - Bigger spread
-    - Temporary ability
+    - Temporary ability (magent)
 
 - Mole that lifts ground whenever popped out
     - Hella big
@@ -213,8 +210,8 @@
     - Restritive while also being over centralizing
     - Only a few use cases, limits the design of rest of game
 
-- Since each entity has some spread meter, have them release
-  the meter on death to pickup
+- Since each entity has some spread meter, have them release the meter on death
+  to pickup
 
 - Spread meter is basically enemy HP
 
@@ -231,21 +228,78 @@
 - Use heightmap only for terrain
 
 - Water gun that sprays meter
-=========================================
+
+- Add HP component, maybe store meter and when it runs out or reaches threshold,
+  do an action
+
+- Some way to stop captures as they happen, so seeds are left floating
+
+- On seed touch ground, re-randomize bounce
+
+=============================================================
+- Need to rewrite rendering and resource code
+    - Renderer puts stuff on screen
+    - Resource manager loads resources and wraps them
+
+- Have wrapper classes for each type of graphics piece
+    - Keep the abstraction RELEVANT TO THE GAME
+    - Vertex Buffer
+        - Probably make the buffers per type
+        - OR can have layouts pre-defined
+        - Should meshes be their own object holding a Buffer?
+        - Or should the meshes just include the buffers implicitly
+    - Instance Buffer
+    - Particle Buffer
+    - Vertex Shader
+    - Pixel Shader
+    - Input Layout
+    - Texture
+    - Constant Buffers
+    - Modifier Buffers
+    - Rewrite with bgfx?
+    - Some compute shader abstraction if necessary
+        - Input buffer
+        - Output buffer
+        - Compute buffer
+- What shoule be transparent:
+    - Allocation
+    - Deletion
+    - Layout definition
+    - Probably Constant Buffers
+    - Swap chain
+
+- API Goals:
+    - Load meshes into buffers
+    - Load animations and skeletal meshes
+    - Load multiple meshes into a single model object
+    - Render instances based on an instance buffer
+    - Post process
+    - Programmer defined constant buffers
+    - Programmer defined input layouts
+    - Render entities based on components
+    - One class for all buffers, textures, etc.
+    - Then each buffer holds a descriptor struct
+    - Have resource setting in platform specific code, actual rendering in
+      generic
+- Sources: https://alextardif.com/RenderingAbstractionLayers.html
+  https://www.gamedeveloper.com/programming/designing-a-modern-cross-platform-low-level-graphics-library
+- Use typedefs for rendering objects and go from there
+- Stay close to the actual rendering api
+  =========================================
 - Seed particle pickup
 
 - Slide off/strong slopes
 
 - Projectile ground sliding
-    - Likely need to make a general grounding/friction system not apart
-      of the projectile system
-==========================================
-- Should store the an array of intersections then process them in another function, rather than
-  handling them straight in the intersection call
+    - Likely need to make a general grounding/friction system not apart of the
+      projectile system ==========================================
+- Should store the an array of intersections then process them in another
+  function, rather than handling them straight in the intersection call
 - Remove systems with more than one fucntion car
 - Collision list
 - Spawn list
-- Store loaded entities in resource manager and copy instead of reconstructing from json
+- Store loaded entities in resource manager and copy instead of reconstructing
+  from json
 - Only use WICTextureLoader from git instead of whole DXTK
 - Fix glm headers and only include necessary glm headres
     - Use glm forward header

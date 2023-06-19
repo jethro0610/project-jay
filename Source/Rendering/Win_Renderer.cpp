@@ -6,44 +6,49 @@
 #include "../Game/PlayerController.h"
 #include "../Helpers/EntityHelpers.h"
 #include "../Resource/ResourceManager.h"
+#include "../Game/World/SeedManager.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Types/Transform.h"
 #include "../Game/Components/MeterComponent.h"
 #include "../Game/Components/StaticModelComponent.h"
+#include "../Game/Time.h"
 #include "../Game/Components/TransformComponent.h"
+using namespace glm;
 
 Renderer::Renderer(ResourceManager& resourceManager):
     resourceManager_(resourceManager),
+    dxResources_(resourceManager_.dxResources_),
+    context_(dxResources_.context_),
     viewMatrix_(0),
     projMatrix_(0),
     camera_(nullptr)
 {
-    DXResources& dxResources = resourceManager_.dxResources_;
-
-    width_ = dxResources.width_;
-    height_ = dxResources.height_;
+    width_ = dxResources_.width_;
+    height_ = dxResources_.height_;
 
     // Need width and height before updating this matrix;
     UpdateProjMatrix(70.0f, 0.5f, 1000.0f);
 
-    dxResources.LoadVertexShader("StaticVS", VertexShaderType::STATIC);
-    dxResources.LoadVertexShader("SkeletalVS", VertexShaderType::SKELETAL);
-    dxResources.LoadVertexShader("WorldVS", VertexShaderType::WORLD);
-    dxResources.LoadVertexShader("InstanceVS", VertexShaderType::INSTANCE);
-    dxResources.LoadVertexShader("ScreenQuadVS", VertexShaderType::STATIC);
-    dxResources.LoadVertexShader("ScreenBarVS", VertexShaderType::STATIC);
+    dxResources_.LoadVertexShader("StaticVS", VertexShaderType::STATIC);
+    dxResources_.LoadVertexShader("SkeletalVS", VertexShaderType::SKELETAL);
+    dxResources_.LoadVertexShader("WorldVS", VertexShaderType::WORLD);
+    dxResources_.LoadVertexShader("InstanceVS", VertexShaderType::INSTANCE);
+    dxResources_.LoadVertexShader("ScreenQuadVS", VertexShaderType::STATIC);
+    dxResources_.LoadVertexShader("ScreenBarVS", VertexShaderType::STATIC);
+    dxResources_.LoadVertexShader("ParticleVS", VertexShaderType::PARTICLE);
 
-    dxResources.LoadPixelShader("DefaultPS");
-    dxResources.LoadPixelShader("GrassPS");
-    dxResources.LoadPixelShader("PostProcessPS");
-    dxResources.LoadPixelShader("BarPS");
+    dxResources_.LoadPixelShader("DefaultPS");
+    dxResources_.LoadPixelShader("GrassPS");
+    dxResources_.LoadPixelShader("PostProcessPS");
+    dxResources_.LoadPixelShader("BarPS");
+    dxResources_.LoadPixelShader("ParticlePS");
 
-    dxResources.LoadTexture("grass_c");
-    dxResources.LoadTexture("grass_n");
-    dxResources.LoadTexture("bricks_c");
-    dxResources.LoadTexture("bricks_n");
-    dxResources.LoadTexture("marble_c");
-    dxResources.LoadTexture("grid_c");
+    dxResources_.LoadTexture("grass_c");
+    dxResources_.LoadTexture("grass_n");
+    dxResources_.LoadTexture("bricks_c");
+    dxResources_.LoadTexture("bricks_n");
+    dxResources_.LoadTexture("marble_c");
+    dxResources_.LoadTexture("grid_c");
 
     MaterialDesc worldMaterialDesc;
     worldMaterialDesc.vertexShader = "WorldVS";
@@ -69,21 +74,25 @@ Renderer::Renderer(ResourceManager& resourceManager):
     spreadMaterial.textures[1] = "bricks_n";
     spreadMaterial.numOfTextures = 2;
     resourceManager_.materials_["spreadMaterial"] = spreadMaterial;
+
+    MaterialDesc particleMaterial;
+    particleMaterial.vertexShader = "ParticleVS";
+    particleMaterial.pixelShader = "ParticlePS";
+    particleMaterial.numOfTextures = 0;
+    resourceManager_.materials_["particleMaterial"] = particleMaterial;
 }
 
 void Renderer::RenderWorld_P(World& world) {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    // OPTIMIZATION: Updating with subresource may be slower than using map
-    // likely changing this later
+    // Since no transformations are being done, just use a 
+    // transform initailized to 0
     PerObjectData objectData = {};
     Transform defaultTransform;
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     SetMaterial_P("worldMaterial");
 
     UINT strides[1] = { sizeof(WorldVertex) };
@@ -92,10 +101,10 @@ void Renderer::RenderWorld_P(World& world) {
     for (int x = 0; x < MAX_X_CHUNKS; x++)
     for (int y = 0; y < MAX_Y_CHUNKS; y++)
     for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-        WorldMesh& worldMeshResource = dxResources.worldMeshes_[x][y][z];
+        WorldMesh& worldMeshResource = dxResources_.worldMeshes_[x][y][z];
         ID3D11Buffer* buffers[1] = { worldMeshResource.vertexBuffer };
-        context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-        context->Draw(worldMeshResource.vertexCount, 0);
+        context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+        context_->Draw(worldMeshResource.vertexCount, 0);
     }
 }
 
@@ -105,11 +114,9 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Set the vertex and index buffers to be drawn
-    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     UINT vertexStride = sizeof(StaticVertex);
     UINT vertexOffset = 0;
 
@@ -123,7 +130,7 @@ void Renderer::RenderEntities_P(
         PerObjectData objectData;
         transformComponent.renderTransform[e].GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
         objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-        dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+        dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
 
         std::string model = staticModelComponent.model[e];
         StaticModelDesc modelDesc = resourceManager_.staticModels_[model];
@@ -131,154 +138,161 @@ void Renderer::RenderEntities_P(
             std::string material = staticModelComponent.materials[e][m];
             SetMaterial_P(material);
             std::string mesh = model + "_" + std::to_string(m);
-            DXMesh dxMesh = dxResources.staticMeshes_[mesh];
+            DXMesh dxMesh = dxResources_.staticMeshes_[mesh];
 
-            context->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
-            context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
-            context->DrawIndexed(dxMesh.indexCount, 0, 0);
+            context_->IASetVertexBuffers(0, 1, &dxMesh.vertexBuffer, &vertexStride, &vertexOffset);
+            context_->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+            context_->DrawIndexed(dxMesh.indexCount, 0, 0);
         }
     }
     // OPTIMIZATION: Need to test whether setting the vertex/index buffers or updating subresources takes more time
 }
 
 void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     PerObjectData objectData;
     Transform defaultTransform;
     defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
     objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
-    dxResources.UpdateBuffer(dxResources.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
-
-    context->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    UINT strides[2] = { sizeof(StaticVertex), sizeof(SpreadInstance) };
+    dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    UINT strides[2] = { sizeof(StaticVertex), sizeof(InstanceData) };
     UINT offsets[2] = { 0, 0 };
 
     const std::string model = "st_sphere";
-    StaticModelDesc modelDesc = resourceManager_.staticModels_["st_sphere"];
+    StaticModelDesc modelDesc = resourceManager_.staticModels_[model];
     const std::string material = "spreadMaterial";  
     SetMaterial_P(material);
 
     for (int m = 0; m < modelDesc.meshCount; m++) {
         std::string mesh = model + "_" + std::to_string(m);
-        DXMesh dxMesh = dxResources.staticMeshes_[mesh];
-        context->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        DXMesh dxMesh = dxResources_.staticMeshes_[mesh];
+        context_->IASetIndexBuffer(dxMesh.indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
         // TODO: Render only on visible chunks 
         for (int x = 0; x < MAX_X_CHUNKS; x++)
         for (int z = 0; z < MAX_Z_CHUNKS; z++) {
-            ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources.spreadBuffers_[x][z] };
-            context->IASetVertexBuffers(0, 2, buffers, strides, offsets);
-            context->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.spreadChunks_[x][z].count, 0, 0, 0);
+            ID3D11Buffer* buffers[2] = { dxMesh.vertexBuffer, dxResources_.spreadBuffers_[x][z] };
+            context_->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+            context_->DrawIndexedInstanced(dxMesh.indexCount, spreadManager.spreadChunks_[x][z].count, 0, 0, 0);
         }
     }
 }
 
+void Renderer::RenderSeed_P(SeedManager& seedManager) {
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    PerObjectData objectData;
+    Transform defaultTransform;
+    defaultTransform.GetWorldAndNormalMatrix(objectData.worldMat, objectData.normalMat);
+    objectData.worldViewProj = GetWorldViewProjection(objectData.worldMat);
+    dxResources_.UpdateBuffer(dxResources_.perObjectCBuffer_, &objectData, sizeof(PerObjectData));
+    UINT strides[1] = { sizeof(InstanceData) };
+    UINT offsets[1] = { 0 };
+
+    const std::string material = "particleMaterial";  
+    SetMaterial_P(material);
+    dxResources_.UpdateBuffer(
+        dxResources_.orbBuffer_, 
+        seedManager.seedPositions_, 
+        sizeof(vec3) * seedManager.seeds_.GetCount()
+    );
+    ID3D11Buffer* buffers[1] = { dxResources_.orbBuffer_ };
+    context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+    context_->DrawInstanced(4, seedManager.seeds_.GetCount(), 0, 0);
+}
+
 void Renderer::RenderPostProcess_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
-    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.vertexShaders_["ScreenQuadVS"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["PostProcessPS"], nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.pRenderTextureResource_);
-
-    context->Draw(4, 0);
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context_->VSSetShader(dxResources_.vertexShaders_["ScreenQuadVS"].shader, nullptr, 0);
+    context_->PSSetShader(dxResources_.pixelShaders_["PostProcessPS"], nullptr, 0);
+    context_->PSSetShaderResources(0, 1, &dxResources_.pRenderTextureResource_);
+    context_->Draw(4, 0);
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     PerUIData uiData = { meterComponent.meter[PLAYER_ENTITY] / float(meterComponent.maxMeter[PLAYER_ENTITY]) };
-    dxResources.UpdateBuffer(dxResources.perUICBuffer_, &uiData, sizeof(PerUIData));
-    context->VSSetShader(dxResources.vertexShaders_["ScreenBarVS"].shader, nullptr, 0);
-    context->PSSetShader(dxResources.pixelShaders_["BarPS"], nullptr, 0);
-    context->Draw(4, 0);
+    dxResources_.UpdateBuffer(dxResources_.perUICBuffer_, &uiData, sizeof(PerUIData));
+    context_->VSSetShader(dxResources_.vertexShaders_["ScreenBarVS"].shader, nullptr, 0);
+    context_->PSSetShader(dxResources_.pixelShaders_["BarPS"], nullptr, 0);
+    context_->Draw(4, 0);
 }
 
 #ifdef _DEBUG
 void Renderer::RenderScreenText_P() {
     if (!ScreenText::IsEnabled())
         return;
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-    
-    dxResources.UpdateBuffer(dxResources.textBuffer_, ScreenText::GetLines(), sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
+    context_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    dxResources_.UpdateBuffer(dxResources_.textBuffer_, ScreenText::GetLines(), sizeof(TextData) * MAX_LINES * CHARS_PER_LINE); 
 
-    UINT sampleMask = 0xffffffff;
-    float blendFactor[] = {0.75f, 0.75f, 0.75f, 1.0f};
-
-    context->OMSetBlendState(dxResources.alphaBlendState_, blendFactor, sampleMask);
-    context->OMSetRenderTargets(1, &dxResources.renderTarget_, nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->VSSetShader(dxResources.textVS_, nullptr, 0);
-    context->IASetInputLayout(dxResources.textVSLayout_);
-    context->PSSetShader(dxResources.textPS_, nullptr, 0);
-    context->PSSetShaderResources(0, 1, &dxResources.textTexture_);
+    context_->VSSetShader(dxResources_.textVS_, nullptr, 0);
+    context_->IASetInputLayout(dxResources_.textVSLayout_);
+    context_->PSSetShader(dxResources_.textPS_, nullptr, 0);
+    context_->PSSetShaderResources(0, 1, &dxResources_.textTexture_);
 
     UINT strides[1] = { sizeof(TextData) };
     UINT offsets[1] = { 0 };
-    ID3D11Buffer* buffers[1] = { dxResources.textBuffer_ };
-    context->IASetVertexBuffers(0, 1, buffers, strides, offsets);
-
-    context->DrawInstanced(4, MAX_LINES * CHARS_PER_LINE, 0, 0);
+    ID3D11Buffer* buffers[1] = { dxResources_.textBuffer_ };
+    context_->IASetVertexBuffers(0, 1, buffers, strides, offsets);
+    context_->DrawInstanced(4, MAX_LINES * CHARS_PER_LINE, 0, 0);
 }
 #endif
 
 void Renderer::Clear_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-
     // Clear the render target and depth stencil buffer
     float background_colour[4] = { 0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(dxResources.pRenderTarget_, background_colour);
-    context->ClearDepthStencilView(dxResources.depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
+    context_->ClearRenderTargetView(dxResources_.pRenderTarget_, background_colour);
+    context_->ClearDepthStencilView(dxResources_.depthStencilBuffer_, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0, 0);
 }
 
 void Renderer::Present_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    dxResources.swapChain_->Present(0, 0);
+    dxResources_.swapChain_->Present(0, 0);
 }
 
 void Renderer::SetMaterial_P(std::string materialName) {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
     MaterialDesc material = resourceManager_.materials_[materialName];
 
-    VSLayout vsLayout = dxResources.vertexShaders_[material.vertexShader];
-    context->VSSetShader(vsLayout.shader, nullptr, 0);
-    context->IASetInputLayout(vsLayout.layout);
+    VSLayout vsLayout = dxResources_.vertexShaders_[material.vertexShader];
+    context_->VSSetShader(vsLayout.shader, nullptr, 0);
+    context_->IASetInputLayout(vsLayout.layout);
 
-    ID3D11PixelShader* pixelShader = dxResources.pixelShaders_[material.pixelShader];
-    context->PSSetShader(pixelShader, nullptr, 0);
+    ID3D11PixelShader* pixelShader = dxResources_.pixelShaders_[material.pixelShader];
+    context_->PSSetShader(pixelShader, nullptr, 0);
 
     ID3D11ShaderResourceView* textures[MAX_MATERIAL_TEXTURES];
     for (int i = 0; i < material.numOfTextures; i++)
-        textures[i] = dxResources.textures_[material.textures[i]];
+        textures[i] = dxResources_.textures_[material.textures[i]];
 
-    context->PSSetShaderResources(0, material.numOfTextures, textures);
-    context->PSSetSamplers(0, 1, &dxResources.textureSampler_);
+    context_->PSSetShaderResources(0, material.numOfTextures, textures);
+    context_->PSSetSamplers(0, 1, &dxResources_.textureSampler_);
 }
 
 void Renderer::SetFrameData_P() {
-    DXResources& dxResources = resourceManager_.dxResources_;
-    ID3D11DeviceContext* context = dxResources.context_;
-    
-    float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    UINT sampleMask = 0xffffffff;
-
-    context->OMSetBlendState(dxResources.noBlendState_, 0, sampleMask);
-
-    ID3D11ShaderResourceView *const pSRV[1] = { NULL };
-    context->PSSetShaderResources(0, 1, pSRV); // Unbind the render target from Post Process pixel shader
-    context->OMSetRenderTargets(1, &dxResources.pRenderTarget_, dxResources.depthStencilBuffer_);
-
     PerFrameData frameData = {};
     frameData.aspectRatio = float(width_) / height_;
     frameData.cameraPos = camera_->transform_.position_;
-    frameData.time = 0.0f; // TODO: Set the time with a function input
-	dxResources.UpdateBuffer(dxResources.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
+    frameData.time = Time::GetTime(); 
+    frameData.cameraUp = camera_->transform_.GetUpVector();
+    frameData.cameraRight = camera_->transform_.GetRightVector();
+	dxResources_.UpdateBuffer(dxResources_.perFrameCBuffer_, &frameData, sizeof(PerFrameData)); 
+}
+
+void Renderer::EnableBlend_P() {
+    UINT sampleMask = 0xffffffff;
+    float blendFactor[] = {0.75f, 0.75f, 0.75f, 1.0f};
+    context_->OMSetBlendState(dxResources_.alphaBlendState_, blendFactor, sampleMask);
+}
+
+void Renderer::DisableBlend_P() {
+    UINT sampleMask = 0xffffffff;
+    context_->OMSetBlendState(dxResources_.noBlendState_, 0, sampleMask);
+}
+
+void Renderer::SetRenderTargetWorld_P() {
+    ID3D11ShaderResourceView *const pSRV[1] = { NULL };
+    context_->PSSetShaderResources(0, 1, pSRV); // Unbind the render target from Post Process pixel shader
+    context_->OMSetRenderTargets(1, &dxResources_.pRenderTarget_, dxResources_.depthStencilBuffer_);
+}
+
+void Renderer::SetRenderTargetScreen_P() {
+    context_->OMSetRenderTargets(1, &dxResources_.renderTarget_, nullptr);
 }

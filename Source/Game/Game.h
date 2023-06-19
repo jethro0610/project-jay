@@ -4,12 +4,12 @@
 #include "../Resource/DXResources.h"
 #endif
 
-#include <chrono>
 #include "Camera.h"
 #include "Entity/EntityManager.h"
 #include "../Types/Gamepad.h"
 #include "../Types/Inputs.h"
 #include "PlayerController.h"
+#include "World/SeedManager.h"
 #include "World/SpreadManager.h"
 #include "Systems/Systems.h"
 #include "../Types/Transform.h"
@@ -23,7 +23,7 @@ public:
     void Init();
 
     bool running_;
-    void Update(float deltaTime, float elapsedTime);
+    void Update();
 
 private:
 #ifdef _WINDOWS
@@ -35,6 +35,7 @@ private:
     Renderer renderer_;
     Camera camera_;
     World world_;
+    SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
 
@@ -44,14 +45,9 @@ private:
     int resolutionWidth_;
     int resolutionHeight_;
 
-    long long lastTimeUSec_;
-    long long currentTimeUSec_;
-    float deltaTime_;
-    float elapsedTime_;
     float timeAccumlulator_;
 
-    void UpdateInputs_P(float deltaTime);
+    void UpdateInputs_P();
     void PollGamepadInputs_P();
     void FlushInputs_P();
-    void UpdateTime();
 };

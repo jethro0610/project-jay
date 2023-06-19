@@ -227,6 +227,16 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
         D3D11_INPUT_PER_INSTANCE_DATA,
         1
     };
+
+    particleVertexDescription_[0] = {
+        "INST_POS",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        0,
+        D3D11_INPUT_PER_INSTANCE_DATA,
+        1
+    };
     
     // Setup the world vertex compute shader
     CreateRWStructuredBufferAndUAV(
@@ -277,6 +287,15 @@ DXResources::DXResources(HWND windowHandle, int width, int height) {
     alphaBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
     alphaBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     HRASSERT(device_->CreateBlendState(&alphaBlendDesc, &alphaBlendState_));
+
+
+    D3D11_BUFFER_DESC vdesc = {};
+    vdesc.Usage = D3D11_USAGE_DYNAMIC;
+    vdesc.ByteWidth = sizeof(glm::vec3) * 8192; 
+    vdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vdesc.MiscFlags = 0;
+    HRASSERT(device_->CreateBuffer(&vdesc, nullptr, &orbBuffer_));
 
     InitWorldMeshes();
     InitSpreadBuffers();
@@ -422,6 +441,16 @@ void DXResources::LoadVertexShader(std::string shaderName, VertexShaderType shad
         ));
         break;
 
+    case VertexShaderType::PARTICLE:
+        HRASSERT(device_->CreateInputLayout(
+            particleVertexDescription_,
+            ARRAYSIZE(particleVertexDescription_),
+            vertexShaderBlob->GetBufferPointer(),
+            vertexShaderBlob->GetBufferSize(),
+            &inputLayout
+        ));
+        break;
+
     default:
         assert(true); // Should never default
         break;
@@ -541,7 +570,7 @@ void DXResources::InitWorldMeshes() {
 void DXResources::InitSpreadBuffers() {
     D3D11_BUFFER_DESC desc = {};
     desc.Usage = D3D11_USAGE_DYNAMIC;
-    desc.ByteWidth = sizeof(SpreadInstance) * MAX_SPREAD; 
+    desc.ByteWidth = sizeof(InstanceData) * MAX_SPREAD; 
     desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     desc.MiscFlags = 0;

@@ -10,14 +10,14 @@
 using namespace glm;
 
 // TODO: Track any entity that bubbles onto it
-void SeedManager::CreateSeed(glm::vec3 position, glm::vec3 offset) {
+void SeedManager::CreateSeed(glm::vec3 position, EntityIDNullable capturer, glm::vec3 offset) {
     Seed seed {
         position,
         offset,
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
-        NO_ENTITY,
+        capturer,
         Time::GetTime(),
-        0.0f
+        Time::GetTime() + MIN_REMOVE_TIME
     };
     seeds_.Append(seed);
 }
@@ -29,7 +29,7 @@ void SeedManager::CreateMultipleSeed(glm::ivec3 position, uint32_t amount, uint1
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f
         );
-        CreateSeed(position, offset);
+        CreateSeed(position, NO_ENTITY, offset);
     }
 }
 
@@ -53,10 +53,10 @@ void SeedManager::CalculatePositions(
 
         // TODO: When using pure heightmaps, check distance and set height to that
 
-        if (seed.targetEntity == NO_ENTITY)
+        float timeSinceCapture = Time::GetTime() - seed.captureTime;
+        if (seed.targetEntity == NO_ENTITY || timeSinceCapture < 0.0f)
             continue;
 
-        float timeSinceCapture = Time::GetTime() - seed.captureTime;
         timeSinceCapture *= 3.0f;
         if (timeSinceCapture >= 1.0f) {
             meterComponent.meter[seed.targetEntity] += 1;

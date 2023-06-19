@@ -230,6 +230,10 @@
 - Add HP component, maybe store meter and when it runs out or reaches threshold,
   do an action
 
+- Some way to stop captures as they happen, so seeds are left floating
+
+- On seed touch ground, re-randomize bounce
+
 =============================================================
 - Need to rewrite rendering and resource code
     - Renderer puts stuff on screen

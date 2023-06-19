@@ -140,11 +140,16 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.Execute(
+    seedManager_.CalculatePositions(
         world_,
         GETCOMP(MeterComponent),
         GETCOMP(TransformComponent),
         timeAccumlulator_
+    );
+    seedManager_.GetCaptures(
+        entityManager_.entities_,
+        GETCOMP(BubbleComponent),
+        GETCOMP(TransformComponent)
     );
     world_.UpdateDirtyChunks();
     spreadManager_.UpdateRenderData_P();

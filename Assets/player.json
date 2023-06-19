@@ -28,7 +28,9 @@
         },
         "bubble": {
             "radius": 2.0,
-            "meteor": true
+            "large_radius": 15.0,
+            "meteor": true,
+            "capture_seed": true
         },
         "velocity": {},
         "spread_detect": {},

@@ -69,7 +69,7 @@ void SpreadActivatorSystem::Execute(
                 spreadDetectComponent.lastAdd[i] = addSpreadInfo.key;
         }
         else if (radius < 0) {
-            spreadManager.RemoveSpread(position, i-radius, vec3(0.0f, (rand() % 200) * 0.01f, 0.0f));
+            spreadManager.RemoveSpread(position, i-radius, vec3(0.0f, (rand() % 1000) * 0.01f, 0.0f));
         }
     }
 }

@@ -10,7 +10,6 @@
 #include "../Constants/WorldConstants.h"
 #include "../Constants/SpreadConstants.h"
 #include "../Logging/LogConstants.h"
-#include "../Windows/WindowsInc.h"
 
 // Keep shader and layout together since they're accessed at the same time
 // Redundant resource structs with single elements are used for consistency with the maps

@@ -1,8 +1,7 @@
 #pragma once
-#ifdef _WINDOWS
-#include "../Windows/WindowsLayer.h"
+#include <GLFW/glfw3.h>
+
 #include "../Resource/DXResources.h"
-#endif
 
 #include "Camera.h"
 #include "Entity/EntityManager.h"
@@ -17,19 +16,22 @@
 #include "../Resource/ResourceManager.h"
 #include "World/World.h"
 
+#ifdef _PC
+#include "../PC_Platform.h"
+#endif
+
 class Game {
 public:
-    Game(int width, int height);
+    Game();
     void Init();
 
     bool running_;
     void Update();
 
 private:
-#ifdef _WINDOWS
-    WindowsLayer windowsLayer_;
+    Platform platform_;
     DXResources dxResources_;
-#endif
+
     ResourceManager resourceManager_;
     EntityManager entityManager_;
     Renderer renderer_;
@@ -41,9 +43,6 @@ private:
 
     Gamepad gamepad_;
     Inputs inputs_;
-
-    int resolutionWidth_;
-    int resolutionHeight_;
 
     float timeAccumlulator_;
 

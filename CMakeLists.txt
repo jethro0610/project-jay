@@ -54,16 +54,23 @@ file(GLOB SOURCES
 		Source/Resource/Win_RawModel.cpp
 		Source/Resource/Win_ResourceManager.cpp
 		Source/Resource/Win_SkeletonResource.cpp
-		Source/Windows/Win_Main.cpp
-		Source/Windows/WindowsLayer.cpp
 		Source/Resource/DXResources.cpp
+
+    Source/PC_Platform.cpp
+    Source/PC_Main.cpp
 )
 
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+include_directories("Libraries/FastNoise")
+include_directories("Libraries/glfw/include")
 include_directories("Libraries/glm")
 include_directories("Libraries/json")
-include_directories("Libraries/FastNoise")
 add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/DirectXTK ${CMAKE_BINARY_DIR}/bin/CMake/DirectXTK)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/glfw)
 add_compile_definitions(_DEBUG)
-add_compile_definitions(NOMINMAX)
-add_executable(ProjectJay WIN32 ${SOURCES}) # Headers are added into the VS solution
-target_link_libraries(${PROJECT_NAME} PRIVATE DirectXTK d3d11.lib Xinput.lib d3dcompiler.lib)
+add_compile_definitions(_PC)
+add_executable(ProjectJay ${SOURCES}) # Headers are added into the VS solution
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw DirectXTK d3d11.lib Xinput.lib d3dcompiler.lib)

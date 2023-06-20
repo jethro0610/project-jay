@@ -4,6 +4,8 @@
 -I./Libraries/FastNoise
 -I./Libraries/DirectXTK/Inc
 -I./Libraries/json
+-I./Libraries/glfw/include
 -D_WINDOWS
 -D_DEBUG
 -DNOMINMAX
+-D_PC

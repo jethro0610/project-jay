@@ -101,3 +101,43 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
             break;
     }
 }
+
+void Platform::PollGamepad() {
+    if (!glfwJoystickPresent(0))
+        return;
+
+    gamepad_.leftStickX_ = 0.0f;
+    gamepad_.leftStickY_ = 0.0f;
+    gamepad_.rightStickX_ = 0.0f;
+    gamepad_.rightStickY_ = 0.0f;
+    gamepad_.leftTrigger_ = 0.0f;
+    gamepad_.rightTrigger_ = 0.0f;
+
+    int axesCount;
+    const float* axes = glfwGetJoystickAxes(0, &axesCount);
+
+    gamepad_.leftStickX_ = axes[0];
+    gamepad_.leftStickY_ = -axes[1];
+    gamepad_.rightStickX_ = axes[2];
+    gamepad_.rightStickY_ = -axes[3];
+
+    if (gamepad_.leftStickX_ < 0.1f && gamepad_.leftStickX_ > -0.1f)
+        gamepad_.leftStickX_ = 0.0f;
+    if (gamepad_.leftStickY_ < 0.1f && gamepad_.leftStickY_ > -0.1f)
+        gamepad_.leftStickY_ = 0.0f;
+    if (gamepad_.rightStickX_ < 0.1f && gamepad_.rightStickX_ > -0.1f)
+        gamepad_.rightStickX_ = 0.0f;
+    if (gamepad_.rightStickY_ < 0.1f && gamepad_.rightStickY_ > -0.1f)
+        gamepad_.rightStickY_ = 0.0f;
+
+    gamepad_.leftTrigger_ = (axes[4] + 1.0f) / 2.0f;
+    gamepad_.rightTrigger_ = (axes[5] + 1.0f) / 2.0f;
+    gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, gamepad_.leftTrigger_ > TRIGGER_LIMIT);
+    gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, gamepad_.rightTrigger_ > TRIGGER_LIMIT);
+
+    int buttonCount;
+    const unsigned char* buttons = glfwGetJoystickButtons(0, &buttonCount);
+
+    for (int i = 0; i < buttonCount; i++)
+        gamepad_.SetButtonHeld(i, buttons[i] == GLFW_TRUE);
+}

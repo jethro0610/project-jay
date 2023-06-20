@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <bitset>
+#include "./Types/Gamepad.h"
 
 const uint16_t NUM_KEYS = 349;
 const uint16_t LEFT_MOUSE_KEY = NUM_KEYS;
@@ -16,6 +17,7 @@ public:
     std::bitset<NUM_KEYS + 2> pressedKeys_;
     std::bitset<NUM_KEYS + 2> releasedKeys_;
 
+    Gamepad gamepad_;
     double mouseX_;
     double mouseY_;
     double lastMouseX_;
@@ -32,6 +34,8 @@ public:
 
     void UpdateMouseMovement();
     void FlushMouse();
+
+    void PollGamepad();
 
 private:
     static Platform* platform_;

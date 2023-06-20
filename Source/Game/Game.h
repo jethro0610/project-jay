@@ -41,7 +41,6 @@ private:
     SpreadManager spreadManager_;
     PlayerController playerController_;
 
-    Gamepad gamepad_;
     Inputs inputs_;
 
     float timeAccumlulator_;

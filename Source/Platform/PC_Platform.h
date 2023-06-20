@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <bitset>
-#include "./Types/Gamepad.h"
+#include "../Types/Gamepad.h"
 
 const uint16_t NUM_KEYS = 349;
 const uint16_t LEFT_MOUSE_KEY = NUM_KEYS;

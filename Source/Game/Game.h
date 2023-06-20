@@ -17,7 +17,7 @@
 #include "World/World.h"
 
 #ifdef _PC
-#include "../PC_Platform.h"
+#include "../Platform/PC_Platform.h"
 #endif
 
 class Game {

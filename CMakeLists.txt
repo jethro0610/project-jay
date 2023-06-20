@@ -56,8 +56,8 @@ file(GLOB SOURCES
 		Source/Resource/Win_SkeletonResource.cpp
 		Source/Resource/DXResources.cpp
 
-    Source/PC_Platform.cpp
-    Source/PC_Main.cpp
+    Source/Platform/PC_Platform.cpp
+    Source/Entry/PC_Main.cpp
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

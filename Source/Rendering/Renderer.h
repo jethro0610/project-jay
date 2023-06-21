@@ -1,12 +1,15 @@
 #pragma once
+#ifdef _PC
+#include <GLFW/glfw3.h>
+#include "PC_RenderDefs.h"
+#endif
+
 #include <glm/mat4x4.hpp>
 #include "RenderTypes.h"
 class Camera;
-class DXResources;
 class Entity;
-struct ID3D11DeviceContext;
 class PlayerController;
-class ResourceManager;
+// class ResourceManager;
 class SeedManager;
 class SpreadManager;
 class World;
@@ -20,16 +23,25 @@ class TransformComponent;
 
 class Renderer {
 public:
-    Renderer(ResourceManager& resourceManager);
+    #ifdef _PC
+    Renderer(GLFWwindow* window);
+    #endif
+
     Camera* camera_;
 
     int width_;
     int height_;
 
+    Uniform worldViewProjU_;
     glm::mat4 viewMatrix_;
     glm::mat4 projMatrix_;
     void UpdateViewMatrix();
     void UpdateProjMatrix(float fov, float nearClip, float farClip);
+
+    Uniform timeResolutionU_;
+    Uniform cameraPosU_;
+    Uniform cameraUpU_;
+    Uniform cameraRightU_;
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
@@ -41,19 +53,15 @@ public:
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );
+
 private:
-    ResourceManager& resourceManager_;
-    #ifdef _WINDOWS
-    DXResources& dxResources_;
-    ID3D11DeviceContext* context_; 
-    #endif
     void SetMaterial_P(std::string materialName);
     void EnableBlend_P();
     void DisableBlend_P();
     void SetRenderTargetWorld_P();
     void SetRenderTargetScreen_P();
 
-    void SetFrameData_P();
+    void StartFrame_P();
     void Clear_P();
     void RenderWorld_P(World& world);
     void RenderEntities_P(
@@ -68,6 +76,6 @@ private:
     #ifdef _DEBUG
     void RenderScreenText_P();
     #endif
-    void Present_P();
+    void PresentFrame_P();
 };
 

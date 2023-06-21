@@ -5,7 +5,9 @@
 -I./Libraries/DirectXTK/Inc
 -I./Libraries/json
 -I./Libraries/glfw/include
+-I./Libraries/bgfx.cmake/bgfx/include
 -D_WINDOWS
 -D_DEBUG
 -DNOMINMAX
 -D_PC
+-DBX_PLATFORM_WINDOWS

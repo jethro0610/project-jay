@@ -2,7 +2,6 @@
 #include <json.hpp>
 #include <unordered_map>
 #include "RawModel.h"
-class DXResources;
 
 struct StaticModelDesc {
     int meshCount;
@@ -19,10 +18,7 @@ struct MaterialDesc {
 
 class ResourceManager {
 public:
-#ifdef _WINDOWS
-    ResourceManager(DXResources& dxResources);
-    DXResources& dxResources_;
-#endif
+    ResourceManager();
     std::unordered_map<std::string, StaticModelDesc> staticModels_;
     std::unordered_map<std::string, MaterialDesc> materials_;
     std::unordered_map<std::string, nlohmann::json> entities_;

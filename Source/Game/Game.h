@@ -1,8 +1,4 @@
 #pragma once
-#include <GLFW/glfw3.h>
-
-#include "../Resource/DXResources.h"
-
 #include "Camera.h"
 #include "Entity/EntityManager.h"
 #include "../Types/Gamepad.h"
@@ -30,7 +26,6 @@ public:
 
 private:
     Platform platform_;
-    DXResources dxResources_;
 
     ResourceManager resourceManager_;
     EntityManager entityManager_;

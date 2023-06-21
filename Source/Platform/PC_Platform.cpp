@@ -103,15 +103,15 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 }
 
 void Platform::PollGamepad() {
-    if (!glfwJoystickPresent(0))
-        return;
-
     gamepad_.leftStickX_ = 0.0f;
     gamepad_.leftStickY_ = 0.0f;
     gamepad_.rightStickX_ = 0.0f;
     gamepad_.rightStickY_ = 0.0f;
     gamepad_.leftTrigger_ = 0.0f;
     gamepad_.rightTrigger_ = 0.0f;
+
+    if (!glfwJoystickPresent(0))
+        return;
 
     int axesCount;
     const float* axes = glfwGetJoystickAxes(0, &axesCount);

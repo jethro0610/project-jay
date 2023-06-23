@@ -39,10 +39,11 @@ public:
     glm::mat4 projectionMatrix_;
     void InitProjMatrix(float fov, float nearClip, float farClip);
 
-    TextureSampler sampler_;
+    TextureSampler samplers_[8];
 
+    Uniform normalU_;
     Uniform timeResolutionU_;
-    Uniform cameraPosU_;
+    Uniform cameraPositionU_;
     Uniform cameraUpU_;
     Uniform cameraRightU_;
 

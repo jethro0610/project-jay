@@ -31,10 +31,14 @@ Renderer::Renderer(GLFWwindow* window) {
 
     InitProjMatrix(70.0f, 0.5f, 1000.0f);
 
-    sampler_ = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+    for (int i = 0; i < 8; i++) {
+        std::string samplerName = "s_sampler" + std::to_string(i);
+        samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
+    }
 
+    normalU_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat4);
     timeResolutionU_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
-    cameraPosU_ = bgfx::createUniform("u_cameraPos", bgfx::UniformType::Vec4);
+    cameraPositionU_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     cameraUpU_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     cameraRightU_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
 }
@@ -44,12 +48,12 @@ void Renderer::StartFrame_P() {
     bgfx::setViewTransform(0, &viewMatrix ,&projectionMatrix_);
 
     vec4 timeResolution = vec4(Time::GetTime(), 1280, 720, 0.0f);
-    vec4 cameraPos = vec4(camera_->transform_.position_, 0.0f);
+    vec4 cameraPosition = vec4(camera_->transform_.position_, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
 
     bgfx::setUniform(timeResolutionU_, &timeResolution);
-    bgfx::setUniform(cameraPosU_, &cameraPos);
+    bgfx::setUniform(cameraPositionU_, &cameraPosition);
     bgfx::setUniform(cameraUpU_, &cameraUp);
     bgfx::setUniform(cameraRightU_, &cameraRight);
 }
@@ -82,6 +86,7 @@ void Renderer::RenderEntities_P(
 
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
         bgfx::setTransform(&worldMatrix);
+        bgfx::setUniform(normalU_, &normalMatrix);
 
         Model model = models_[staticModelComponent.model[i]];
         for (int m = 0; m < model.numMeshes; m++) {
@@ -89,7 +94,7 @@ void Renderer::RenderEntities_P(
             Mesh mesh = model.meshes[m];
 
             for (int t = 0; t < material.numTextures; i++)
-                bgfx::setTexture(t, sampler_, material.textures[t]);
+                bgfx::setTexture(t, samplers_[t], material.textures[t]);
 
             bgfx::setVertexBuffer(0, mesh.vertexBuffer);
             bgfx::setIndexBuffer(mesh.indexBuffer);
@@ -179,7 +184,6 @@ bool Renderer::LoadModel_P(std::string name) {
             )
         );
         mesh.indexCount = rawMesh.indexCount_;
-
         model.meshes[i] = mesh;
     }
 

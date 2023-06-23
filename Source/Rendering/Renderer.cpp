@@ -2,17 +2,12 @@
 #include "../Game/Camera.h"
 using namespace glm;
 
-void Renderer::UpdateViewMatrix() {
-    assert(camera_ != nullptr);
-    viewMatrix_ = camera_->GetViewMatrix();
-}
-
-void Renderer::UpdateProjMatrix(float fov, float nearClip, float farClip) {
+void Renderer::InitProjMatrix(float fov, float nearClip, float farClip) {
     projMatrix_ = perspectiveFovRH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
 }
 
 mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
-    return projMatrix_ * viewMatrix_ * worldMatrix;
+    return projMatrix_ * camera_->GetViewMatrix() * worldMatrix;
 }
 
 void Renderer::Render(
@@ -24,9 +19,8 @@ void Renderer::Render(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    UpdateViewMatrix();
     Clear_P();
-    SetFrameData_P();
+    StartFrame_P();
 
     SetRenderTargetWorld_P();
     RenderWorld_P(world);
@@ -44,5 +38,5 @@ void Renderer::Render(
     #endif
 
     // RenderTextureToScreen_P();
-    Present_P();
+    PresentFrame_P();
 }

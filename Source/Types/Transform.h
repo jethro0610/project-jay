@@ -3,6 +3,8 @@
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
+typedef std::tuple<glm::mat4, glm::mat4> WorldNormalReturn;
+
 class Transform {
 public:
     Transform();
@@ -10,7 +12,7 @@ public:
     glm::quat rotation_;
     glm::vec3 scale_;
 
-    void GetWorldAndNormalMatrix(glm::mat4& outWorld, glm::mat4& outNormal) const;
+    WorldNormalReturn GetWorldAndNormalMatrix() const;
     glm::mat4 GetWorldMatrix() const;
     std::string ToString() const;
     static Transform Lerp(const Transform& a, const Transform& b, float t);

@@ -11,3 +11,10 @@
 #endif
 
 typedef bgfx::UniformHandle Uniform;
+typedef bgfx::ShaderHandle Shader;
+typedef bgfx::VertexBufferHandle VertexBuffer;
+typedef bgfx::IndexBufferHandle IndexBuffer;
+typedef bgfx::ProgramHandle MaterialShader;
+
+typedef bgfx::TextureHandle Texture;
+typedef bgfx::UniformHandle TextureSampler;

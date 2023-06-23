@@ -1,11 +1,15 @@
 #pragma once
 #ifdef _PC
 #include <GLFW/glfw3.h>
-#include "PC_RenderDefs.h"
 #endif
 
 #include <glm/mat4x4.hpp>
-#include "RenderTypes.h"
+#include <string>
+#include <unordered_map>
+#include "RenderDefs.h"
+#include "Model.h"
+#include "Material.h"
+
 class Camera;
 class Entity;
 class PlayerController;
@@ -32,16 +36,21 @@ public:
     int width_;
     int height_;
 
-    Uniform worldViewProjU_;
-    glm::mat4 viewMatrix_;
-    glm::mat4 projMatrix_;
-    void UpdateViewMatrix();
-    void UpdateProjMatrix(float fov, float nearClip, float farClip);
+    glm::mat4 projectionMatrix_;
+    void InitProjMatrix(float fov, float nearClip, float farClip);
+
+    TextureSampler sampler_;
 
     Uniform timeResolutionU_;
     Uniform cameraPosU_;
     Uniform cameraUpU_;
     Uniform cameraRightU_;
+
+    std::unordered_map<std::string, Shader> vertexShaders_;
+    std::unordered_map<std::string, Shader> fragmentShaders_;
+    std::unordered_map<std::string, Model> models_;
+    std::unordered_map<std::string, Texture> textures_;
+    std::unordered_map<std::string, Material> materials_;
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
     void Render(
@@ -53,6 +62,11 @@ public:
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );
+
+    bool LoadVertexShader_P(std::string name);
+    bool LoadFragmentShader_P(std::string name);
+    bool LoadModel_P(std::string name);
+    bool LoadTexture_P(std::string name);
 
 private:
     void SetMaterial_P(std::string materialName);

@@ -2,11 +2,11 @@
 #include <fstream>
 #include <assert.h>
 
-RawModel::RawModel(const char* modelName, bool skeletal):
+RawModel::RawModel(std::string path, bool skeletal):
     skeletal_(skeletal)
 {
     std::ifstream infile;
-    infile.open(modelName, std::ios::in | std::ios::binary);
+    infile.open(path, std::ios::in | std::ios::binary);
     assert(infile.is_open());
 
     // Convert the file stream to a byte vector

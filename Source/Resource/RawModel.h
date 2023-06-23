@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <vector>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -25,7 +26,7 @@ public:
 
 class RawModel {
 public:
-    RawModel(const char* modelName, bool skeletal = false);
+    RawModel(std::string path, bool skeletal = false);
 
     bool skeletal_;
     std::vector<unsigned char> rawBytes;

@@ -13,9 +13,13 @@ Transform::Transform() {
     scale_ = vec3(1.0f, 1.0f, 1.0f);
 }
 
-void Transform::GetWorldAndNormalMatrix(mat4& outWorld, mat4& outNormal) const {
-    outWorld = GetWorldMatrix();
-    outNormal = transpose(inverse(mat3(outWorld)));
+WorldNormalReturn Transform::GetWorldAndNormalMatrix() const {
+    mat4 world = GetWorldMatrix();
+    mat4 normal = mat3(world);
+    normal = inverse(normal);
+    normal = transpose(normal);
+
+    return WorldNormalReturn(world, normal);
 }
 
 mat4 Transform::GetWorldMatrix() const {

@@ -1,9 +1,19 @@
 #include "Renderer.h"
+#include <fstream>
 #include <GLFW/glfw3native.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include "../Game/Camera.h"
+#include "../Helpers/EntityHelpers.h"
+#include "../Logging/Logger.h"
 #include "../Game/Time.h"
+#include "../Resource/RawModel.h"
+
+#include "../Game/Entity/Entity.h"
+#include "../Game/Components/StaticModelComponent.h"
+#include "../Game/Components/TransformComponent.h"
+
+#include "PC_VertexTypes.h"
 
 using namespace glm;
 
@@ -19,7 +29,10 @@ Renderer::Renderer(GLFWwindow* window) {
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
 
-    worldViewProjU_ = bgfx::createUniform("u_worldViewProj", bgfx::UniformType::Mat4);
+    InitProjMatrix(70.0f, 0.5f, 1000.0f);
+
+    sampler_ = bgfx::createUniform("s_texture", bgfx::UniformType::Sampler);
+
     timeResolutionU_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
     cameraPosU_ = bgfx::createUniform("u_cameraPos", bgfx::UniformType::Vec4);
     cameraUpU_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
@@ -27,6 +40,9 @@ Renderer::Renderer(GLFWwindow* window) {
 }
 
 void Renderer::StartFrame_P() {
+    mat4 viewMatrix = camera_->GetViewMatrix();
+    bgfx::setViewTransform(0, &viewMatrix ,&projectionMatrix_);
+
     vec4 timeResolution = vec4(Time::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPos = vec4(camera_->transform_.position_, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
@@ -51,12 +67,35 @@ void RenderWorld_P(World& world) {
     // Take the world vertices and present them
 }
 
-void RenderEntities_P(
+EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
+void Renderer::RenderEntities_P(
     Entity* entities, 
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    // Take the entity models and present them
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+        if (!entity.MatchesKey(key))
+            continue;
+
+        auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
+        bgfx::setTransform(&worldMatrix);
+
+        Model model = models_[staticModelComponent.model[i]];
+        for (int m = 0; m < model.numMeshes; m++) {
+            Material material = materials_[staticModelComponent.materials[i][m]];
+            Mesh mesh = model.meshes[m];
+
+            for (int t = 0; t < material.numTextures; i++)
+                bgfx::setTexture(t, sampler_, material.textures[t]);
+
+            bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+            bgfx::setIndexBuffer(mesh.indexBuffer);
+            bgfx::submit(0, material.shader);
+        }
+    }
 }
 
 void RenderSpread_P(SpreadManager& spreadManager) {
@@ -77,4 +116,81 @@ void RenderUI_P(MeterComponent& meterComponent) {
 
 void RenderScreenText_P() {
     // Create plane and present (instanced)
+}
+
+const bgfx::Memory* LoadFileToBGFXMem(std::string path) {
+    std::ifstream file;
+    file.open(path);
+    if (!file.is_open()) {
+        DEBUGLOG("Failed to open bgfx file: " + path);
+        return nullptr;
+    }
+    
+    file.seekg(0, file.end);
+    size_t fileSize = file.tellg();
+    file.seekg(0, file.beg); 
+
+    const bgfx::Memory* memory = bgfx::alloc(fileSize + 1);
+    file.read((char*)memory->data, fileSize);
+    file.close();
+
+    return memory;
+}
+
+bool Renderer::LoadVertexShader_P(std::string name) {
+    const bgfx::Memory* shaderMem = LoadFileToBGFXMem("./shaders/" + name + ".bin");
+    if (shaderMem == nullptr)
+        return false;
+
+    vertexShaders_[name] = bgfx::createShader(shaderMem);
+    return true;
+}
+
+bool Renderer::LoadFragmentShader_P(std::string name) {
+    const bgfx::Memory* shaderMem = LoadFileToBGFXMem("./shaders/" + name + ".bin");
+    if (shaderMem == nullptr)
+        return false;
+
+    fragmentShaders_[name] = bgfx::createShader(shaderMem);
+    return true;
+}
+
+bool Renderer::LoadModel_P(std::string name) {
+    Model model;
+    RawModel rawModel("./" + name + ".jmd", false);
+    model.numMeshes = rawModel.meshes_.size();
+
+    for (int i = 0; i < rawModel.meshes_.size(); i++) {
+        RawMesh& rawMesh = rawModel.meshes_[i];
+        Mesh mesh;
+        mesh.vertexBuffer = bgfx::createVertexBuffer(
+            bgfx::makeRef(
+                rawMesh.vertexBuffer_, 
+                rawMesh.vertexCount_ * sizeof(StaticVertex)
+            ), 
+            StaticVertex::layout
+        );
+        mesh.vertexCount = rawMesh.vertexCount_;
+
+        mesh.indexBuffer = bgfx::createIndexBuffer(
+            bgfx::makeRef(
+                rawModel.meshes_[i].indexBuffer_,
+                rawMesh.indexCount_ * sizeof(uint16_t)
+            )
+        );
+        mesh.indexCount = rawMesh.indexCount_;
+
+        model.meshes[i] = mesh;
+    }
+
+    return true;
+}
+
+bool Renderer::LoadTexture_P(std::string name) {
+    const bgfx::Memory* textureMem = LoadFileToBGFXMem("./textures/" + name + ".tex"); 
+    if (textureMem == nullptr)
+        return false;
+
+    textures_[name] = bgfx::createTexture(textureMem);
+    return true;
 }

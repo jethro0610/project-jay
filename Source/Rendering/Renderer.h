@@ -69,12 +69,14 @@ public:
     bool LoadModel_P(std::string name);
     bool LoadTexture_P(std::string name);
 
+    void TEMP_LoadTestData();
+
 private:
-    void SetMaterial_P(std::string materialName);
-    void EnableBlend_P();
-    void DisableBlend_P();
-    void SetRenderTargetWorld_P();
-    void SetRenderTargetScreen_P();
+    // void SetMaterial_P(std::string materialName);
+    // void EnableBlend_P();
+    // void DisableBlend_P();
+    // void SetRenderTargetWorld_P();
+    // void SetRenderTargetScreen_P();
 
     void StartFrame_P();
     void Clear_P();

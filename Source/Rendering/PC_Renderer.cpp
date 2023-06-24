@@ -17,6 +17,8 @@
 
 using namespace glm;
 
+bgfx::VertexLayout StaticVertex::layout;
+
 Renderer::Renderer(GLFWwindow* window) {
     bgfx::Init init; 
     init.type = bgfx::RendererType::Count;
@@ -25,6 +27,9 @@ Renderer::Renderer(GLFWwindow* window) {
     init.resolution.reset = BGFX_RESET_VSYNC;
     init.platformData.nwh = GETHANDLE(window);
     bgfx::init(init);
+
+    width_ = 1280;
+    height_ = 720;
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
@@ -41,6 +46,27 @@ Renderer::Renderer(GLFWwindow* window) {
     cameraPositionU_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     cameraUpU_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     cameraRightU_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
+
+    StaticVertex::Init();
+    TEMP_LoadTestData();
+}
+
+void Renderer::TEMP_LoadTestData() {
+    LoadVertexShader_P("StaticVS");
+    LoadFragmentShader_P("DefaultFS");
+    //
+    // LoadTexture_P("grass_c");
+    // LoadTexture_P("grass_n");
+    // LoadTexture_P("bricks_c");
+    // LoadTexture_P("marble_c");
+    // LoadTexture_P("grid_c");
+    //
+    // Material playerMaterial;
+    // playerMaterial.shader = bgfx::createProgram(vertexShaders_["StaticVS"], fragmentShaders_["DefaultFS"]);
+    // playerMaterial.textures[0] = textures_["bricks_c"];
+    // playerMaterial.textures[1] = textures_["bricks_n"];
+    // playerMaterial.numTextures = 2;
+    // materials_["playerMaterial"] = playerMaterial;
 }
 
 void Renderer::StartFrame_P() {
@@ -67,7 +93,7 @@ void Renderer::PresentFrame_P() {
     bgfx::frame(); 
 }
 
-void RenderWorld_P(World& world) {
+void Renderer::RenderWorld_P(World& world) {
     // Take the world vertices and present them
 }
 
@@ -77,6 +103,7 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
+    return;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -103,66 +130,65 @@ void Renderer::RenderEntities_P(
     }
 }
 
-void RenderSpread_P(SpreadManager& spreadManager) {
+void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     // Take the spread buffers and present them (instanced)
 }
 
-void RenderSeed_P(SeedManager& seedManager) {
+void Renderer::RenderSeed_P(SeedManager& seedManager) {
     // Take the seed buffers and present them (instanced)
 }
 
-void RenderPostProcess_P() {
+void Renderer::RenderPostProcess_P() {
     // Kuwahara
 }
 
-void RenderUI_P(MeterComponent& meterComponent) {
+void Renderer::RenderUI_P(MeterComponent& meterComponent) {
     // Create plane and present
 }
 
-void RenderScreenText_P() {
+void Renderer::RenderScreenText_P() {
     // Create plane and present (instanced)
 }
 
-const bgfx::Memory* LoadFileToBGFXMem(std::string path) {
-    std::ifstream file;
-    file.open(path);
-    if (!file.is_open()) {
-        DEBUGLOG("Failed to open bgfx file: " + path);
-        return nullptr;
-    }
-    
-    file.seekg(0, file.end);
-    size_t fileSize = file.tellg();
-    file.seekg(0, file.beg); 
+#define MEMORYFROMFILE(path)                                \
+    const bgfx::Memory* memory = nullptr;                   \
+    std::ifstream file;                                     \
+    file.open(path, std::ios::binary);                      \
+    if (!file.is_open())                                    \
+        DEBUGLOG("Failed to open bgfx file: " + path);      \
+                                                            \
+    file.seekg(0, file.end);                                \
+    size_t fileSize = file.tellg();                         \
+    file.seekg(0, file.beg);                                \
+                                                            \
+    memory = bgfx::alloc(fileSize + 1);                     \
+    file.read((char*)memory->data, fileSize);               \
+    file.close()
 
-    const bgfx::Memory* memory = bgfx::alloc(fileSize + 1);
-    file.read((char*)memory->data, fileSize);
-    file.close();
-
-    return memory;
-}
 
 bool Renderer::LoadVertexShader_P(std::string name) {
-    const bgfx::Memory* shaderMem = LoadFileToBGFXMem("./shaders/" + name + ".bin");
-    if (shaderMem == nullptr)
+    std::string path = "./shaders/" + name + ".bin";
+    MEMORYFROMFILE(path);
+    if (memory == nullptr)
         return false;
 
-    vertexShaders_[name] = bgfx::createShader(shaderMem);
+    bgfx::createShader(memory);
     return true;
 }
 
 bool Renderer::LoadFragmentShader_P(std::string name) {
-    const bgfx::Memory* shaderMem = LoadFileToBGFXMem("./shaders/" + name + ".bin");
-    if (shaderMem == nullptr)
+    std::string path = "./shaders/" + name + ".bin";
+    MEMORYFROMFILE(path);
+    if (memory == nullptr)
         return false;
 
-    fragmentShaders_[name] = bgfx::createShader(shaderMem);
+    fragmentShaders_[name] = bgfx::createShader(memory);
     return true;
 }
 
 bool Renderer::LoadModel_P(std::string name) {
     Model model;
-    RawModel rawModel("./" + name + ".jmd", false);
+    RawModel rawModel("./models/" + name + ".jmd", false);
     model.numMeshes = rawModel.meshes_.size();
 
     for (int i = 0; i < rawModel.meshes_.size(); i++) {
@@ -191,10 +217,11 @@ bool Renderer::LoadModel_P(std::string name) {
 }
 
 bool Renderer::LoadTexture_P(std::string name) {
-    const bgfx::Memory* textureMem = LoadFileToBGFXMem("./textures/" + name + ".tex"); 
-    if (textureMem == nullptr)
+    std::string path = "./textures/" + name + ".tex";
+    MEMORYFROMFILE(path);
+    if (memory == nullptr)
         return false;
 
-    textures_[name] = bgfx::createTexture(textureMem);
+    textures_[name] = bgfx::createTexture(memory);
     return true;
 }

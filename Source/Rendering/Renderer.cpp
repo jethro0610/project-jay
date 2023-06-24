@@ -3,11 +3,11 @@
 using namespace glm;
 
 void Renderer::InitProjMatrix(float fov, float nearClip, float farClip) {
-    projMatrix_ = perspectiveFovRH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
+    projectionMatrix_ = perspectiveFovRH_NO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
 }
 
 mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
-    return projMatrix_ * camera_->GetViewMatrix() * worldMatrix;
+    return projectionMatrix_ * camera_->GetViewMatrix() * worldMatrix;
 }
 
 void Renderer::Render(
@@ -22,20 +22,20 @@ void Renderer::Render(
     Clear_P();
     StartFrame_P();
 
-    SetRenderTargetWorld_P();
-    RenderWorld_P(world);
+    // SetRenderTargetWorld_P();
+    // RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
-    RenderSpread_P(spreadManager);
-    RenderSeed_P(seedManager);
+    // RenderSpread_P(spreadManager);
+    // RenderSeed_P(seedManager);
 
-    SetRenderTargetScreen_P();
-    RenderPostProcess_P();
-    RenderUI_P(meterComponent);
-    #ifdef _DEBUG
-    EnableBlend_P();
-    RenderScreenText_P();
-    DisableBlend_P();
-    #endif
+    // SetRenderTargetScreen_P();
+    // RenderPostProcess_P();
+    // RenderUI_P(meterComponent);
+    // #ifdef _DEBUG
+    // EnableBlend_P();
+    // RenderScreenText_P();
+    // DisableBlend_P();
+    // #endif
 
     // RenderTextureToScreen_P();
     PresentFrame_P();

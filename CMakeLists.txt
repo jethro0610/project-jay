@@ -46,7 +46,6 @@ file(GLOB SOURCES
     Source/Types/Transform.cpp
 
     IF(WIN32)
-        Source/Game/Win_Game.cpp
         Source/Game/World/Win_World.cpp
         Source/Game/World/Win_SpreadManager.cpp
         Source/Logging/Win_Logger.cpp
@@ -54,7 +53,9 @@ file(GLOB SOURCES
         Source/Resource/Win_RawModel.cpp
         Source/Resource/Win_ResourceManager.cpp
         Source/Resource/Win_SkeletonResource.cpp
-        Source/Resource/DXResources.cpp
+
+    Source/Rendering/PC_Renderer.cpp
+    Source/Game/PC_Game.cpp
 
     Source/Platform/PC_Platform.cpp
     Source/Entry/PC_Main.cpp
@@ -71,7 +72,7 @@ set(BGFX_USE_OVR            OFF CACHE INTERNAL "" FORCE)
 set(BUILD_SHARED_LIBS       OFF CACHE INTERNAL "" FORCE)
 set(BX_AMALGAMATED          OFF CACHE INTERNAL "" FORCE)
 set(BGFX_BUILD_TOOLS        OFF CACHE INTERNAL "" FORCE)
-add_subdirectory(${CMAKE_SOURCE_DIR}/libs/bgfx.cmake)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/bgfx.cmake)
 include_directories("Libraries/bgfx.cmake/include")
 
 set(GLFW_BUILD_DOCS         OFF CACHE INTERNAL "" FORCE)
@@ -80,7 +81,7 @@ set(GLFW_BUILD_TESTS        OFF CACHE INTERNAL "" FORCE)
 set(GLFW_INSTALL            OFF CACHE INTERNAL "" FORCE)
 set(GLFW_USE_OSMESA         OFF CACHE INTERNAL "" FORCE)
 set(GLFW_VULKAN_STATIC      OFF CACHE INTERNAL "" FORCE)
-add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glfw)
+add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/glfw)
 include_directories("Libraries/glfw/include")
 
 include_directories("Libraries/FastNoise")

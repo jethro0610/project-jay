@@ -103,7 +103,6 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    return;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -113,7 +112,7 @@ void Renderer::RenderEntities_P(
 
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
         bgfx::setTransform(&worldMatrix);
-        bgfx::setUniform(normalU_, &normalMatrix);
+        // bgfx::setUniform(normalU_, &normalMatrix);
 
         Model model = models_[staticModelComponent.model[i]];
         for (int m = 0; m < model.numMeshes; m++) {

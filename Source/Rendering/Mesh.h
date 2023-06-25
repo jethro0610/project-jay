@@ -1,8 +1,11 @@
 #include "RenderDefs.h"
 
+struct MeshFileHeader {
+    int numVertices;
+    int numIndices;
+};
+
 struct Mesh {
     VertexBuffer vertexBuffer;
     IndexBuffer indexBuffer;
-    uint16_t vertexCount;
-    uint16_t indexCount;
 };

@@ -12,7 +12,6 @@ void Game::Init() {
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
-    renderer_.LoadModel_P("st_sphere");
     // Create the player entity
     Transform spawnTransform;
     spawnTransform.position_ = vec3(0.0f, 50.0f, 0.0f);

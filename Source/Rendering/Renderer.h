@@ -36,6 +36,7 @@ public:
     int width_;
     int height_;
 
+    glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
     void InitProjMatrix(float fov, float nearClip, float farClip);
 

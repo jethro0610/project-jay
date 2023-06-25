@@ -3,7 +3,7 @@
 using namespace glm;
 
 void Renderer::InitProjMatrix(float fov, float nearClip, float farClip) {
-    projectionMatrix_ = perspectiveFovRH_NO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
 }
 
 mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
@@ -19,7 +19,7 @@ void Renderer::Render(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    Clear_P();
+    //Clear_P();
     StartFrame_P();
 
     // SetRenderTargetWorld_P();

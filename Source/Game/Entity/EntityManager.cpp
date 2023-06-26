@@ -1,6 +1,5 @@
 #include "EntityManager.h"
 #include "../../Helpers/MapCheck.h"
-#include "../../Helpers/Assert.h"
 #include "../../Logging/Logger.h"
 
 EntityManager::EntityManager() {
@@ -18,7 +17,7 @@ void EntityManager::LoadEntity(std::string entityName) {
     ForceMapUnique(entityData_, entityName, "Entity " + entityName + " is already loaded");
 
     std::ifstream inFile("entities/" + entityName + ".json");
-    ASSERT(inFile.is_open(), "Error: Failed to load entity " + entityName);
+    ASSERT(inFile.is_open(), "Failed to load entity " + entityName);
 
     nlohmann::json data = nlohmann::json::parse(inFile);
     entityData_[entityName] = data;

@@ -6,7 +6,7 @@ template <class T, class M>
 T GetFromMap(M map, std::string key, std::string error) {
     auto element = map.find(key);
     if (element == map.end()) {
-        DEBUGLOG("Error: " << error);
+        ERRORLOG(error);
         abort();
     }
     return element->second;
@@ -15,7 +15,7 @@ T GetFromMap(M map, std::string key, std::string error) {
 template <class M>
 void ForceMapUnique(M map, std::string key, std::string error) {
     if (map.contains(key)) {
-        DEBUGLOG("Error: " << error);
+        ERRORLOG(error);
         abort();
     }
 }

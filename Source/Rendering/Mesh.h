@@ -1,3 +1,4 @@
+#pragma once
 #include "RenderDefs.h"
 
 struct MeshFileHeader {

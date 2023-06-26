@@ -35,7 +35,7 @@ Renderer::Renderer(GLFWwindow* window) {
     height_ = 720;
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
@@ -112,7 +112,6 @@ void Renderer::RenderEntities_P(
 
         Model model = models_[staticModelComponent.model[i]];
         for (int m = 0; m < model.numMeshes; m++) {
-            assert(materials_.contains("playerMaterial"));
             Material material = materials_[staticModelComponent.materials[i][m]];
             Mesh mesh = model.meshes[m];
 
@@ -151,7 +150,7 @@ void Renderer::RenderScreenText_P() {
     std::ifstream file;                                         \
     file.open(path, std::ios::binary);                          \
     if (!file.is_open())                                        \
-        DEBUGLOG("Error: BGFX failed to open file: " << path);  \
+        ERRORLOG("BGFX failed to open file: " << path);         \
                                                                 \
     file.seekg(0, file.end);                                    \
     size_t fileSize = file.tellg();                             \
@@ -190,7 +189,7 @@ void Renderer::LoadModel_P(std::string name) {
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
     if (!file.is_open()) {
-        DEBUGLOG("Error: failed to load model " << name);
+        ERRORLOG("Failed to load model " << name);
         abort();
     }
 
@@ -231,7 +230,7 @@ void Renderer::MakeMaterial_P(
     std::string name, 
     std::string vertex, 
     std::string fragment, 
-    std::string textures[8], 
+    std::string textures[MAX_TEXTURES_PER_MATERIAL], 
     uint8_t numTextures
 ) {
     ForceMapUnique(materials_, name, "Material " + name + " is already loaded");

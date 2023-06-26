@@ -13,7 +13,6 @@
 class Camera;
 class Entity;
 class PlayerController;
-// class ResourceManager;
 class SeedManager;
 class SpreadManager;
 class World;
@@ -50,7 +49,7 @@ public:
         std::string name, 
         std::string vertex, 
         std::string fragment, 
-        std::string textures[8], 
+        std::string textures[MAX_TEXTURES_PER_MATERIAL], 
         uint8_t numTextures
     );
 
@@ -69,7 +68,7 @@ private:
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
 
-    TextureSampler samplers_[8];
+    TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
     Uniform normalU_;
     Uniform timeResolutionU_;

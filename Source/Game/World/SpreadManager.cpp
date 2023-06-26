@@ -2,7 +2,9 @@
 #include <math.h>
 #include <numbers>
 #include <glm/gtx/compatibility.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "SpreadManager.h"
+#include "../../Helpers/Assert.h"
 #include "../../Helpers/ChunkHelpers.h"
 #include "../../Constants/GameConstants.h"
 #include "SeedManager.h"
@@ -49,7 +51,7 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
 
     if (spreadChunk.keysToIndex.contains(key))
         return false;
-    assert(spreadChunk.count != MAX_SPREAD);
+    ASSERT((spreadChunk.count <= MAX_SPREAD), "Spread count exceeds max for chunk " + glm::to_string(chunk));
 
     const float offset = SPREAD_DIST / 2.0f;
     vec3 position = vec3(key.x * SPREAD_DIST + offset, height, key.y * SPREAD_DIST + offset);

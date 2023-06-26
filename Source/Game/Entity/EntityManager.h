@@ -4,6 +4,8 @@
 #include <string>
 #include <tuple>
 #include "Entity.h"
+#include "../../Helpers/Assert.h"
+#include "../../Logging/Logger.h"
 #include "../Components/ComponentInclude.h"
 
 class EntityManager {
@@ -20,7 +22,7 @@ public:
 
     template <class T>
     void RegisterComponent(EntityID targetEntity) {
-        assert(entities_[targetEntity].alive_);
+        ASSERT(entities_[targetEntity].alive_, "Registered component to dead entity");
         entities_[targetEntity].AddComponent<T>();
     }
 

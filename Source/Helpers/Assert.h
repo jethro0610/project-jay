@@ -1,8 +1,8 @@
 #pragma once
 #ifdef _DEBUG
-#define ASSERT(condition, message) do {  \
+#define ASSERT(condition, message) do {     \
     if (!condition) {                       \
-        DEBUGLOG("Error: " << message);     \
+        ERRORLOG(message);                  \
         abort();                            \
     }                                       \
 } while(0)

@@ -42,10 +42,10 @@ public:
         TransformComponent& transformComponent
     );
 
-    bool LoadVertexShader_P(std::string name);
-    bool LoadFragmentShader_P(std::string name);
-    bool LoadModel_P(std::string name);
-    bool LoadTexture_P(std::string name);
+    void LoadVertexShader_P(std::string name);
+    void LoadFragmentShader_P(std::string name);
+    void LoadModel_P(std::string name);
+    void LoadTexture_P(std::string name);
     void MakeMaterial(
         std::string name, 
         std::string vertex, 
@@ -55,6 +55,12 @@ public:
     );
 
     void TEMP_LoadTestData();
+
+    Shader GetVertexShader(std::string name);
+    Shader GetFragmentShader(std::string name);
+    Model GetModel(std::string name);
+    Texture GetTexture(std::string name);
+    Material GetMaterial(std::string name);
 
 private:
     int width_;

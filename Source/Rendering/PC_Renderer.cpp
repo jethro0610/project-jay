@@ -6,6 +6,7 @@
 #include <iostream>
 #include "../Game/Camera.h"
 #include "../Helpers/EntityHelpers.h"
+#include "../Helpers/MapCheck.h"
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
 
@@ -20,6 +21,7 @@ using namespace glm;
 bgfx::VertexLayout StaticVertex::layout;
 
 Renderer::Renderer(GLFWwindow* window) {
+    DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
     init.type = bgfx::RendererType::Count;
     init.resolution.width = 1280;
@@ -27,7 +29,7 @@ Renderer::Renderer(GLFWwindow* window) {
     init.resolution.reset = BGFX_RESET_VSYNC;
     init.platformData.nwh = GETHANDLE(window);
     bgfx::init(init);
-    DEBUGLOG("Initialized BGFX");
+    DEBUGLOG("Succsefully started BGFX");
 
     width_ = 1280;
     height_ = 720;
@@ -51,11 +53,11 @@ Renderer::Renderer(GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
-    assert(LoadVertexShader_P("StaticVS"));
-    assert(LoadFragmentShader_P("DefaultFS"));
-    assert(LoadModel_P("st_sphere"));
-    assert(LoadTexture_P("bricks_c"));
-    assert(LoadTexture_P("bricks_n"));
+    LoadVertexShader_P("StaticVS");
+    LoadFragmentShader_P("DefaultFS");
+    LoadModel_P("st_sphere");
+    LoadTexture_P("bricks_c");
+    LoadTexture_P("bricks_n");
 
     std::string textures[] = {"bricks_c", "bricks_n"};
     MakeMaterial("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
@@ -144,50 +146,53 @@ void Renderer::RenderScreenText_P() {
     // Create plane and present (instanced)
 }
 
-#define MEMORYFROMFILE(path)                                \
-    const bgfx::Memory* memory = nullptr;                   \
-    std::ifstream file;                                     \
-    file.open(path, std::ios::binary);                      \
-    if (!file.is_open())                                    \
-        DEBUGLOG("Failed to open bgfx file: " << path);     \
-                                                            \
-    file.seekg(0, file.end);                                \
-    size_t fileSize = file.tellg();                         \
-    file.seekg(0, file.beg);                                \
-                                                            \
-    memory = bgfx::alloc(fileSize);                         \
-    file.read((char*)memory->data, fileSize);               \
+#define MEMORYFROMFILE(path)                                    \
+    const bgfx::Memory* memory = nullptr;                       \
+    std::ifstream file;                                         \
+    file.open(path, std::ios::binary);                          \
+    if (!file.is_open())                                        \
+        DEBUGLOG("Error: BGFX failed to open file: " << path);  \
+                                                                \
+    file.seekg(0, file.end);                                    \
+    size_t fileSize = file.tellg();                             \
+    file.seekg(0, file.beg);                                    \
+                                                                \
+    memory = bgfx::alloc(fileSize);                             \
+    file.read((char*)memory->data, fileSize);                   \
     file.close()
 
 
-bool Renderer::LoadVertexShader_P(std::string name) {
+void Renderer::LoadVertexShader_P(std::string name) {
+    ForceMapUnique(vertexShaders_, name, "Vertex shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
-        return false;
+        abort();
 
     vertexShaders_[name] = bgfx::createShader(memory);
-    DEBUGLOG("Loaded vertex shader: " << name);
-    return true;
+    DEBUGLOG("Loaded vertex shader " << name);
 }
 
-bool Renderer::LoadFragmentShader_P(std::string name) {
+void Renderer::LoadFragmentShader_P(std::string name) {
+    ForceMapUnique(fragmentShaders_, name, "Fragment shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
-        return false;
+        abort();
 
     fragmentShaders_[name] = bgfx::createShader(memory);
-    DEBUGLOG("Loaded fragment shader: " << name);
-    return true;
+    DEBUGLOG("Loaded fragment shader " << name);
 }
 
-bool Renderer::LoadModel_P(std::string name) {
+void Renderer::LoadModel_P(std::string name) {
+    ForceMapUnique(models_, name, "Model " + name + " is already loaded");
     Model model;
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
-    if (!file.is_open())
-        return false;
+    if (!file.is_open()) {
+        DEBUGLOG("Error: failed to load model " << name);
+        abort();
+    }
 
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
@@ -208,19 +213,18 @@ bool Renderer::LoadModel_P(std::string name) {
     }
     models_[name] = model;
 
-    DEBUGLOG("Loaded model: " << name << " with " << (int)model.numMeshes << " meshes");
-    return true;
+    DEBUGLOG("Loaded model " << name << " with " << (int)model.numMeshes << " meshes");
 }
 
-bool Renderer::LoadTexture_P(std::string name) {
+void Renderer::LoadTexture_P(std::string name) {
+    ForceMapUnique(textures_, name, "Texture " + name + " is already loaded");
     std::string path = "./textures/" + name + ".dds";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
-        return false;
+        abort();
 
     textures_[name] = bgfx::createTexture(memory);
-    DEBUGLOG("Loaded texture: " << name);
-    return true;
+    DEBUGLOG("Loaded texture " << name);
 }
 
 void Renderer::MakeMaterial(
@@ -230,19 +234,20 @@ void Renderer::MakeMaterial(
     std::string textures[8], 
     uint8_t numTextures
 ) {
+    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     Material material;
-    bgfx::ShaderHandle vertexShader = vertexShaders_[vertex];
-    bgfx::ShaderHandle fragmentShader = fragmentShaders_[fragment];
+    bgfx::ShaderHandle vertexShader = GetVertexShader(vertex);
+    bgfx::ShaderHandle fragmentShader = GetFragmentShader(fragment);
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)
-        material.textures[i] = textures_[textures[i]];
+        material.textures[i] = GetTexture(textures[i]);
     materials_[name] = material;
 
     DEBUGLOG(
-        "Created material: " << name << 
-        " with VS: " << vertex << 
-        " and FS: " << fragment << 
-        " and " << (int)numTextures << " textures"
+        "Created material " << name << '\n' << 
+        "\tVertex Shader: " << vertex << '\n' <<
+        "\tFragment Shader: " << fragment << '\n' <<
+        "\tNumber of textures: " << (int)numTextures
     );
 }

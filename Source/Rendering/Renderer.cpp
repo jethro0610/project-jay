@@ -20,7 +20,7 @@ void Renderer::Render(
     StartFrame_P();
 
     // SetRenderTargetWorld_P();
-    // RenderWorld_P(world);
+    RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
     // RenderSpread_P(spreadManager);
     // RenderSeed_P(seedManager);

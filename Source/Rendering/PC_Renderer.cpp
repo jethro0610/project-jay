@@ -19,6 +19,23 @@
 using namespace glm;
 
 bgfx::VertexLayout StaticVertex::layout;
+bgfx::VertexLayout WorldVertex::layout;
+
+// static WorldVertex worldPlane[] = {
+//     {vec3(-1.0f, 0.0f,-1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
+//     {vec3( 1.0f, 0.0f,-1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
+//     {vec3( 1.0f, 0.0f, 1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
+//     {vec3(-1.0f, 0.0f, 1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
+// };
+//
+// static uint16_t worldVertices[] = {
+//     0, 2, 1,
+//     0, 3, 2,
+// };
+
+const uint16_t PLANE_SIZE = 64;
+static WorldVertex worldPlane[PLANE_SIZE * PLANE_SIZE ];
+static uint16_t worldIndices[(PLANE_SIZE - 1) * (PLANE_SIZE -1) * 6];
 
 Renderer::Renderer(GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
@@ -48,7 +65,36 @@ Renderer::Renderer(GLFWwindow* window) {
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
+
     StaticVertex::Init();
+    WorldVertex::Init();
+
+    for (int x = 0; x < PLANE_SIZE; x++)
+    for (int y = 0; y < PLANE_SIZE; y++) {
+        uint16_t index = y * PLANE_SIZE + x;
+        worldPlane[index] = {vec3(x, 0.0f, y), vec3(0.0f, 0.0f,0.0f)};
+    };
+
+    uint32_t count = 0;
+    for (int x = 0; x < PLANE_SIZE - 1; x++)
+    for (int y = 0; y < PLANE_SIZE - 1; y++) {
+        uint16_t i0 = (y + 0) * PLANE_SIZE + (x + 0);
+        uint16_t i1 = (y + 1) * PLANE_SIZE + (x + 0);
+        uint16_t i2 = (y + 1) * PLANE_SIZE + (x + 1);
+        uint16_t i3 = (y + 0) * PLANE_SIZE + (x + 1);
+        
+        worldIndices[count++] = i0;
+        worldIndices[count++] = i1;
+        worldIndices[count++] = i2;
+
+        worldIndices[count++] = i2;
+        worldIndices[count++] = i3;
+        worldIndices[count++] = i0;
+    };
+
+    worldVertexBuffer_ = bgfx::createVertexBuffer(bgfx::makeRef(worldPlane, sizeof(worldPlane)), WorldVertex::layout);
+    worldIndexBuffer_= bgfx::createIndexBuffer(bgfx::makeRef(worldIndices, sizeof(worldIndices)));
+
     TEMP_LoadTestData();
 }
 
@@ -62,6 +108,11 @@ void Renderer::TEMP_LoadTestData() {
     std::string textures[] = {"bricks_c", "bricks_n"};
     MakeMaterial_P("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
     DEBUGLOG("Succesfully loaded all test assets");
+
+    LoadVertexShader_P("WorldVS");
+    LoadFragmentShader_P("WorldFS");
+    MakeMaterial_P("worldMaterial", "WorldVS", "WorldFS", nullptr, 0);
+    DEBUGLOG("Create world material");
 }
 
 void Renderer::StartFrame_P() {
@@ -90,7 +141,13 @@ void Renderer::PresentFrame_P() {
 }
 
 void Renderer::RenderWorld_P(World& world) {
-    // Take the world vertices and present them
+    Transform emptyTransform;
+    mat4 worldMatrix = emptyTransform.GetWorldMatrix();
+    bgfx::setTransform(&worldMatrix);
+
+    bgfx::setVertexBuffer(0, worldVertexBuffer_);
+    bgfx::setIndexBuffer(worldIndexBuffer_);
+    bgfx::submit(0, GetMaterial("worldMaterial").shader);
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();

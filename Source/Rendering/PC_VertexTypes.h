@@ -21,3 +21,16 @@ struct StaticVertex {
             .end();
     }
 };
+
+struct WorldVertex {
+    glm::vec3 position;
+    glm::vec3 normal;
+    static bgfx::VertexLayout layout;
+    static void Init() {
+        layout
+            .begin()
+            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
+            .end();
+    }
+};

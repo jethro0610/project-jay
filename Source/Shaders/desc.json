@@ -7,6 +7,14 @@
 		{
 			"name": "DefaultFS",
 			"type": "fragment"
+		},
+		{
+			"name": "WorldVS",
+			"type": "vertex"
+		},
+		{
+			"name": "WorldFS",
+			"type": "fragment"
 		}
 	]
 }

@@ -11,7 +11,7 @@ World::World():
 
 float World::GetHeight(vec2 position) const {
     float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
-    return height + 32.0f;
+    return height;
 }
 
 float World::GetHeight(vec3 position) const {

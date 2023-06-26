@@ -2,10 +2,6 @@
 #include "../Game/Camera.h"
 using namespace glm;
 
-void Renderer::InitProjMatrix(float fov, float nearClip, float farClip) {
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(fov), (float)width_, (float)height_, nearClip, farClip);
-}
-
 mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
     return projectionMatrix_ * camera_->GetViewMatrix() * worldMatrix;
 }

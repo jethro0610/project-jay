@@ -38,7 +38,6 @@ public:
 
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
-    void InitProjMatrix(float fov, float nearClip, float farClip);
 
     TextureSampler samplers_[8];
 

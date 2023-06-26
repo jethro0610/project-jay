@@ -16,8 +16,8 @@ Transform::Transform() {
 WorldNormalReturn Transform::GetWorldAndNormalMatrix() const {
     mat4 world = GetWorldMatrix();
     mat4 normal = mat3(world);
-    normal = inverse(normal);
     normal = transpose(normal);
+    normal = inverse(normal);
 
     return WorldNormalReturn(world, normal);
 }

@@ -3,7 +3,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include <string>
 
-typedef std::tuple<glm::mat4, glm::mat4> WorldNormalReturn;
+typedef std::tuple<glm::mat4, glm::mat3> WorldNormalReturn;
 
 class Transform {
 public:

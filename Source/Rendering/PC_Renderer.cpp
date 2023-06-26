@@ -31,7 +31,18 @@ Renderer::Renderer(GLFWwindow* window) {
 
     width_ = 1280;
     height_ = 720;
-    InitProjMatrix(70.0f, 0.5, 1000.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
+
+    for (int i = 0; i < 8; i++) {
+        std::string samplerName = "s_sampler" + std::to_string(i);
+        samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
+    }
+
+    normalU_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
+    timeResolutionU_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
+    cameraPositionU_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
+    cameraUpU_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
+    cameraRightU_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
@@ -43,9 +54,11 @@ void Renderer::TEMP_LoadTestData() {
     assert(LoadVertexShader_P("StaticVS"));
     assert(LoadFragmentShader_P("DefaultFS"));
     assert(LoadModel_P("st_sphere"));
+    assert(LoadTexture_P("bricks_c"));
     Material playerMaterial;
     playerMaterial.shader = bgfx::createProgram(vertexShaders_["StaticVS"], fragmentShaders_["DefaultFS"]);
-    playerMaterial.numTextures = 0;
+    playerMaterial.textures[0] = textures_["bricks_c"];
+    playerMaterial.numTextures = 1;
     materials_["playerMaterial"] = playerMaterial;
 }
 
@@ -53,16 +66,16 @@ void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
     bgfx::setViewTransform(0, &viewMatrix_,&projectionMatrix_);
 
-    //
-    // vec4 timeResolution = vec4(Time::GetTime(), 1280, 720, 0.0f);
-    // vec4 cameraPosition = vec4(camera_->transform_.position_, 0.0f);
-    // vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
-    // vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
+    vec4 timeResolution = vec4(Time::GetTime(), 1280, 720, 0.0f);
+    vec4 cameraPosition = vec4(camera_->transform_.position_, 0.0f);
+    vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
+    vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
 
-    // bgfx::setUniform(timeResolutionU_, &timeResolution);
-    // bgfx::setUniform(cameraPositionU_, &cameraPosition);
-    // bgfx::setUniform(cameraUpU_, &cameraUp);
-    // bgfx::setUniform(cameraRightU_, &cameraRight);
+    bgfx::setUniform(timeResolutionU_, &timeResolution);
+    bgfx::setUniform(cameraPositionU_, &cameraPosition);
+    bgfx::setUniform(cameraUpU_, &cameraUp);
+    bgfx::setUniform(cameraRightU_, &cameraRight);
+
     bgfx::touch(0);
 }
 
@@ -93,15 +106,16 @@ void Renderer::RenderEntities_P(
 
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
         bgfx::setTransform(&worldMatrix);
-        // bgfx::setUniform(normalU_, &normalMatrix);
+        bgfx::setUniform(normalU_, &normalMatrix);
 
         Model model = models_[staticModelComponent.model[i]];
         for (int m = 0; m < model.numMeshes; m++) {
+            assert(materials_.contains("playerMaterial"));
             Material material = materials_[staticModelComponent.materials[i][m]];
             Mesh mesh = model.meshes[m];
 
-            // for (int t = 0; t < material.numTextures; i++)
-            //     bgfx::setTexture(t, samplers_[t], material.textures[t]);
+            for (int t = 0; t < material.numTextures; t++)
+                bgfx::setTexture(t, samplers_[t], material.textures[t]);
 
             bgfx::setVertexBuffer(0, mesh.vertexBuffer);
             bgfx::setIndexBuffer(mesh.indexBuffer);

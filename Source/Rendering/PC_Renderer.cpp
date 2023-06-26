@@ -55,10 +55,12 @@ void Renderer::TEMP_LoadTestData() {
     assert(LoadFragmentShader_P("DefaultFS"));
     assert(LoadModel_P("st_sphere"));
     assert(LoadTexture_P("bricks_c"));
+    assert(LoadTexture_P("bricks_n"));
     Material playerMaterial;
     playerMaterial.shader = bgfx::createProgram(vertexShaders_["StaticVS"], fragmentShaders_["DefaultFS"]);
     playerMaterial.textures[0] = textures_["bricks_c"];
-    playerMaterial.numTextures = 1;
+    playerMaterial.textures[1] = textures_["bricks_n"];
+    playerMaterial.numTextures = 2;
     materials_["playerMaterial"] = playerMaterial;
 }
 

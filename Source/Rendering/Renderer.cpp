@@ -15,7 +15,7 @@ void Renderer::Render(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    //Clear_P();
+    // Clear_P();
     StartFrame_P();
 
     // SetRenderTargetWorld_P();

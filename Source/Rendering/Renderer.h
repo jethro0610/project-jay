@@ -46,7 +46,7 @@ public:
     void LoadFragmentShader_P(std::string name);
     void LoadModel_P(std::string name);
     void LoadTexture_P(std::string name);
-    void MakeMaterial(
+    void MakeMaterial_P(
         std::string name, 
         std::string vertex, 
         std::string fragment, 

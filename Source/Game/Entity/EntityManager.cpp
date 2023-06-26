@@ -1,4 +1,6 @@
 #include "EntityManager.h"
+#include "../../Helpers/MapCheck.h"
+#include "../../Helpers/Assert.h"
 #include "../../Logging/Logger.h"
 
 EntityManager::EntityManager() {
@@ -13,11 +15,14 @@ EntityManager::EntityManager() {
 }
 
 void EntityManager::LoadEntity(std::string entityName) {
-    assert(entityData_.count(entityName) == 0);
+    ForceMapUnique(entityData_, entityName, "Entity " + entityName + " is already loaded");
+
     std::ifstream inFile("entities/" + entityName + ".json");
-    assert(inFile.is_open());
+    ASSERT(inFile.is_open(), "Error: Failed to load entity " + entityName);
+
     nlohmann::json data = nlohmann::json::parse(inFile);
     entityData_[entityName] = data;
+    DEBUGLOG("Loaded entity " << entityName);
 }
 
 EntityReturn EntityManager::CreateEntity() {
@@ -32,9 +37,7 @@ EntityReturn EntityManager::CreateEntity() {
 
 EntityReturn EntityManager::CreateEntity(std::string entityName) {
     auto [entityId, entityTransform] = CreateEntity();
-    auto data = entityData_.find(entityName);
-    assert(data != entityData_.end());
-    nlohmann::json entityData = data->second;
+    auto entityData = GetFromMap<nlohmann::json>(entityData_, entityName, "Tried creating unloaded entity " + entityName);
 
     for (auto& componentData : entityData["components"].items()) {
         std::string name = componentData.key();

@@ -60,7 +60,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadTexture_P("bricks_n");
 
     std::string textures[] = {"bricks_c", "bricks_n"};
-    MakeMaterial("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
+    MakeMaterial_P("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
     DEBUGLOG("Succesfully loaded all test assets");
 }
 
@@ -227,7 +227,7 @@ void Renderer::LoadTexture_P(std::string name) {
     DEBUGLOG("Loaded texture " << name);
 }
 
-void Renderer::MakeMaterial(
+void Renderer::MakeMaterial_P(
     std::string name, 
     std::string vertex, 
     std::string fragment, 
@@ -236,8 +236,8 @@ void Renderer::MakeMaterial(
 ) {
     ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     Material material;
-    bgfx::ShaderHandle vertexShader = GetVertexShader(vertex);
-    bgfx::ShaderHandle fragmentShader = GetFragmentShader(fragment);
+    Shader vertexShader = GetVertexShader(vertex);
+    Shader fragmentShader = GetFragmentShader(fragment);
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)

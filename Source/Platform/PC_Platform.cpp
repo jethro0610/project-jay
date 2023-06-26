@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include "../Logging/Logger.h"
 
 Platform* Platform::platform_ = nullptr;
 
@@ -11,7 +12,7 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
 Platform::Platform() {
     assert(platform_ == nullptr);
-
+    DEBUGLOG("Starting PC platform w/ GLFW...");
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     window_ = glfwCreateWindow(1280, 720, "Project Jay", NULL, NULL);
@@ -26,6 +27,7 @@ Platform::Platform() {
     glfwSetCursorPosCallback(window_, CursorCallback);
     glfwSetMouseButtonCallback(window_, MouseButtonCallback);
 
+    DEBUGLOG("Succesfully started platform");
     platform_ = this;
 }
 

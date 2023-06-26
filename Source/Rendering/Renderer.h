@@ -30,9 +30,33 @@ public:
     #ifdef _PC
     Renderer(GLFWwindow* window);
     #endif
-
     Camera* camera_;
 
+    void Render(
+        Entity* entities,
+        SeedManager& seedManager,
+        SpreadManager& spreadManager,
+        World& world,
+        MeterComponent& meterComponent,
+        StaticModelComponent& staticModelComponent,
+        TransformComponent& transformComponent
+    );
+
+    bool LoadVertexShader_P(std::string name);
+    bool LoadFragmentShader_P(std::string name);
+    bool LoadModel_P(std::string name);
+    bool LoadTexture_P(std::string name);
+    void MakeMaterial(
+        std::string name, 
+        std::string vertex, 
+        std::string fragment, 
+        std::string textures[8], 
+        uint8_t numTextures
+    );
+
+    void TEMP_LoadTestData();
+
+private:
     int width_;
     int height_;
 
@@ -54,24 +78,7 @@ public:
     std::unordered_map<std::string, Material> materials_;
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
-    void Render(
-        Entity* entities,
-        SeedManager& seedManager,
-        SpreadManager& spreadManager,
-        World& world,
-        MeterComponent& meterComponent,
-        StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent
-    );
 
-    bool LoadVertexShader_P(std::string name);
-    bool LoadFragmentShader_P(std::string name);
-    bool LoadModel_P(std::string name);
-    bool LoadTexture_P(std::string name);
-
-    void TEMP_LoadTestData();
-
-private:
     // void SetMaterial_P(std::string materialName);
     // void EnableBlend_P();
     // void DisableBlend_P();

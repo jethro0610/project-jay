@@ -8,7 +8,6 @@
 #include "../Helpers/EntityHelpers.h"
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
-#include "../Resource/RawModel.h"
 
 #include "../Game/Entity/Entity.h"
 #include "../Game/Components/StaticModelComponent.h"
@@ -56,12 +55,9 @@ void Renderer::TEMP_LoadTestData() {
     assert(LoadModel_P("st_sphere"));
     assert(LoadTexture_P("bricks_c"));
     assert(LoadTexture_P("bricks_n"));
-    Material playerMaterial;
-    playerMaterial.shader = bgfx::createProgram(vertexShaders_["StaticVS"], fragmentShaders_["DefaultFS"]);
-    playerMaterial.textures[0] = textures_["bricks_c"];
-    playerMaterial.textures[1] = textures_["bricks_n"];
-    playerMaterial.numTextures = 2;
-    materials_["playerMaterial"] = playerMaterial;
+
+    std::string textures[] = {"bricks_c", "bricks_n"};
+    MakeMaterial("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
 }
 
 void Renderer::StartFrame_P() {
@@ -219,4 +215,23 @@ bool Renderer::LoadTexture_P(std::string name) {
 
     textures_[name] = bgfx::createTexture(memory);
     return true;
+}
+
+void Renderer::MakeMaterial(
+    std::string name, 
+    std::string vertex, 
+    std::string fragment, 
+    std::string textures[8], 
+    uint8_t numTextures
+) {
+    Material material;
+    bgfx::ShaderHandle vertexShader = vertexShaders_[vertex];
+    bgfx::ShaderHandle fragmentShader = fragmentShaders_[fragment];
+    material.shader = bgfx::createProgram(vertexShader, fragmentShader);
+    material.numTextures = numTextures;
+    for (int i = 0; i < numTextures; i++) {
+        std::cout << textures[i] << '\n';
+        material.textures[i] = textures_[textures[i]];
+    }
+    materials_[name] = material;
 }

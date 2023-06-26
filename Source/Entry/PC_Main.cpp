@@ -13,6 +13,8 @@ int main() {
     ScreenText::Init();
 #endif
     Time::Init();
+    DEBUGLOG("Starting Project Jay...");
     Game* game = new Game();
+    DEBUGLOG("Closing Project Jay");
     Logger::Close();
 }

@@ -27,6 +27,7 @@ Renderer::Renderer(GLFWwindow* window) {
     init.resolution.reset = BGFX_RESET_VSYNC;
     init.platformData.nwh = GETHANDLE(window);
     bgfx::init(init);
+    DEBUGLOG("Initialized BGFX");
 
     width_ = 1280;
     height_ = 720;
@@ -58,6 +59,7 @@ void Renderer::TEMP_LoadTestData() {
 
     std::string textures[] = {"bricks_c", "bricks_n"};
     MakeMaterial("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
+    DEBUGLOG("Succesfully loaded all test assets");
 }
 
 void Renderer::StartFrame_P() {
@@ -165,6 +167,7 @@ bool Renderer::LoadVertexShader_P(std::string name) {
         return false;
 
     vertexShaders_[name] = bgfx::createShader(memory);
+    DEBUGLOG("Loaded vertex shader: " << name);
     return true;
 }
 
@@ -175,6 +178,7 @@ bool Renderer::LoadFragmentShader_P(std::string name) {
         return false;
 
     fragmentShaders_[name] = bgfx::createShader(memory);
+    DEBUGLOG("Loaded fragment shader: " << name);
     return true;
 }
 
@@ -204,6 +208,7 @@ bool Renderer::LoadModel_P(std::string name) {
     }
     models_[name] = model;
 
+    DEBUGLOG("Loaded model: " << name << " with " << (int)model.numMeshes << " meshes");
     return true;
 }
 
@@ -214,6 +219,7 @@ bool Renderer::LoadTexture_P(std::string name) {
         return false;
 
     textures_[name] = bgfx::createTexture(memory);
+    DEBUGLOG("Loaded texture: " << name);
     return true;
 }
 
@@ -232,4 +238,11 @@ void Renderer::MakeMaterial(
     for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures_[textures[i]];
     materials_[name] = material;
+
+    DEBUGLOG(
+        "Created material: " << name << 
+        " with VS: " << vertex << 
+        " and FS: " << fragment << 
+        " and " << (int)numTextures << " textures"
+    );
 }

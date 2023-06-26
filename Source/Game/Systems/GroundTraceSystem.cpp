@@ -40,26 +40,14 @@ void GroundTraceSystem::Execute(
 
         // Raymarch towards the ground
         vec3 position = transformComponent.transform[i].position_;
-        float distanceToSurface = 0;
-        for (int d = 0; d < 8; d++) {
-            float distanceSample = world.GetDistance(position - Transform::worldUp * distanceToSurface);
-            if (abs(distanceSample) < 0.001f)
-                break;
-
-            distanceToSurface += distanceSample;
-
-            if (distanceToSurface > traceDistance) {
-                distanceToSurface = INFINITY;
-                break;
-            }
-        }
+        float worldHeight = world.GetHeight(position);
+        float distanceToSurface = position.y - worldHeight;
 
         // Hit solving
         if (distanceToSurface < traceDistance) {
             groundTraceComponent.onGround[i] = true;
-            vec3 groundPosition = position - Transform::worldUp * distanceToSurface;
-            vec3 groundNormal = world.GetNormal(groundPosition);
-            groundTraceComponent.groundPosition[i] = groundPosition.y;
+            vec3 groundNormal = world.GetNormal(position);
+            groundTraceComponent.groundPosition[i] = worldHeight;
             groundTraceComponent.groundNormal[i] = groundNormal;
         }
         else {

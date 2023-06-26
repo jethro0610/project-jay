@@ -55,11 +55,12 @@ void ProjectileSystem::CalculateVelocities(
 
         // Ground inactivate
         // TODO: Move this to generic world intersect component
-        const float distance = world.GetDistance(position);
+        const float worldHeight = world.GetHeight(position);
+        const float distance = position.y - worldHeight;
         if (distance < 0.2f) {
             projectileComponent.state[i] = ProjectileState::Inactive;
             velocity = vec3(0.0f);
-            position.y -= distance;
+            position.y = worldHeight;
         }
     }
 }

@@ -55,7 +55,8 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
 
     const float offset = SPREAD_DIST / 2.0f;
     vec3 position = vec3(key.x * SPREAD_DIST + offset, height, key.y * SPREAD_DIST + offset);
-    position = world_.GetNearestInDirection(position, -Transform::worldUp, 16);
+    float worldHeight = world_.GetHeight(position);
+    position = vec3(position.x, worldHeight, position.y);
     spreadChunk.positions[spreadChunk.count] = position; 
     spreadChunk.keys[spreadChunk.count] = key;
     spreadChunk.keysToIndex[key] = spreadChunk.count;

@@ -14,12 +14,10 @@ public:
     FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
     World();
 
-    float GetTerrainHeight(glm::vec2 position) const;
-    float GetDistance(glm::vec3 position) const;
+    float GetHeight(glm::vec2 position) const;
+    float GetHeight(glm::vec3 position) const;
 
-    // Higher epsilon = smoother
-    glm::vec3 GetNormal(glm::vec3 position, float epsilon = 1.0f) const;
-    glm::vec3 GetNearestInDirection(glm::vec3 start, glm::vec3 direction, uint16_t maxSteps = 32);
+    glm::vec3 GetNormal(glm::vec2 position, float epsilon = 1.0f) const;
 
     void UpdateDirtyChunks();
     void MarkAllDirty();

@@ -9,7 +9,6 @@
 #include "Systems/Systems.h"
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
-#include "../Resource/ResourceManager.h"
 #include "World/World.h"
 
 #ifdef _PC
@@ -27,7 +26,6 @@ public:
 private:
     Platform platform_;
 
-    ResourceManager resourceManager_;
     EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;

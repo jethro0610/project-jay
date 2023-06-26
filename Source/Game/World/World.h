@@ -8,12 +8,11 @@
 #include "../../Types/FixedVector.h"
 #include "TerrainModifier.h"
 #include "../../Constants/WorldConstants.h"
-class ResourceManager;
 
 class World {
 public:
     FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
-    World(ResourceManager& resourceManager);
+    World();
 
     float GetTerrainHeight(glm::vec2 position) const;
     float GetDistance(glm::vec3 position) const;
@@ -27,7 +26,6 @@ public:
     void UpdateTerrainModifiersGPU_P();
 
 private:
-    ResourceManager& resourceManager_;
     FastNoiseLite* noise_;
     std::unordered_set<glm::ivec3> dirtyChunks_;
 

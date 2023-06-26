@@ -1,6 +1,5 @@
 #include "World.h"
 #include "../../Helpers/ChunkHelpers.h"
-#include "../../Resource/ResourceManager.h"
 using namespace glm;
 
 void World::GenerateNoiseTexture_P() {

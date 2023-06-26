@@ -1,10 +1,7 @@
 #include "EntityManager.h"
-#include "../../Resource/ResourceManager.h"
 #include "../../Logging/Logger.h"
 
-EntityManager::EntityManager (ResourceManager& resourceManager):
-    resourceManager_(resourceManager)
-{
+EntityManager::EntityManager() {
     usableEntities_.push_front(0);
     uint8_t idCounter = 0;
     
@@ -13,6 +10,14 @@ EntityManager::EntityManager (ResourceManager& resourceManager):
         componentIds_[TYPE::GetName()] = TYPE::GetID();
         CREATECOMPONENTVARS  
     #undef COMPONENTVAR
+}
+
+void EntityManager::LoadEntity(std::string entityName) {
+    assert(entityData_.count(entityName) == 0);
+    std::ifstream inFile("entities/" + entityName + ".json");
+    assert(inFile.is_open());
+    nlohmann::json data = nlohmann::json::parse(inFile);
+    entityData_[entityName] = data;
 }
 
 EntityReturn EntityManager::CreateEntity() {
@@ -27,7 +32,10 @@ EntityReturn EntityManager::CreateEntity() {
 
 EntityReturn EntityManager::CreateEntity(std::string entityName) {
     auto [entityId, entityTransform] = CreateEntity();
-    nlohmann::json entityData = resourceManager_.entities_[entityName];
+    auto data = entityData_.find(entityName);
+    assert(data != entityData_.end());
+    nlohmann::json entityData = data->second;
+
     for (auto& componentData : entityData["components"].items()) {
         std::string name = componentData.key();
         Component* component = componentMap_[name];

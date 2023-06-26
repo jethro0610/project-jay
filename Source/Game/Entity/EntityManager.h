@@ -1,17 +1,19 @@
 #pragma once
 #include <deque>
+#include <json.hpp>
 #include <string>
 #include <tuple>
 #include "Entity.h"
 #include "../Components/ComponentInclude.h"
-class ResourceManager;
 
 class EntityManager {
 public:
     Entity entities_[MAX_ENTITIES];
     std::deque<EntityID> usableEntities_;
+    std::unordered_map<std::string, nlohmann::json> entityData_;
 
-    EntityManager (ResourceManager& resourceManager);
+    EntityManager();
+    void LoadEntity(std::string entityName);
     EntityReturn CreateEntity();
     EntityReturn CreateEntity(std::string entityName);
     void DestroyEntity(EntityID entityToDestroy);
@@ -19,7 +21,6 @@ public:
     template <class T>
     void RegisterComponent(EntityID targetEntity) {
         assert(entities_[targetEntity].alive_);
-        // assert(entities_[targetEntity].HasComponent<T>());
         entities_[targetEntity].AddComponent<T>();
     }
 
@@ -34,7 +35,6 @@ public:
     }
 
 private:
-    ResourceManager& resourceManager_;
     std::tuple<
         #define COMPONENTVAR(TYPE, VAR) TYPE,
             CREATECOMPONENTVARS  

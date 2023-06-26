@@ -14,11 +14,9 @@
 using namespace glm;
 
 SpreadManager::SpreadManager(
-    ResourceManager& resourceManager, 
     SeedManager& seedManager,
     World& world
 ) :
-    resourceManager_(resourceManager),
     seedManager_(seedManager),
     world_(world)
 { 

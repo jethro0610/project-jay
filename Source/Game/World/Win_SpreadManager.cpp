@@ -1,6 +1,5 @@
 #include "SpreadManager.h"
 #include "../../Helpers/ChunkHelpers.h"
-#include "../../Resource/ResourceManager.h"
 using namespace glm;
 
 void SpreadManager::UpdateRenderData_P() {

@@ -11,7 +11,6 @@
 #include "../../Types/FixedVector.h"
 #include "../../Types/EntityTypes.h"
 class World;
-class ResourceManager;
 class SeedManager;
 class TransformComponent;
 
@@ -38,7 +37,6 @@ class SpreadManager {
 public:
     SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
     SpreadManager(
-        ResourceManager& resourceManager,
         SeedManager& seedManager,
         World& world
     );
@@ -71,7 +69,6 @@ public:
     void UpdateRenderData_P();
 
 private:
-    ResourceManager& resourceManager_;
     World& world_;
     SeedManager& seedManager_;
     std::unordered_set<glm::ivec2> dirtyChunks_;

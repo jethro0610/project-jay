@@ -2,9 +2,8 @@
 #include "../../Helpers/ChunkHelpers.h"
 using namespace glm;
 
-World::World(ResourceManager& resourceManager):
-    noise_(new FastNoiseLite()),
-    resourceManager_(resourceManager)
+World::World():
+    noise_(new FastNoiseLite())
 {
     GenerateNoiseTexture_P();
     MarkAllDirty();

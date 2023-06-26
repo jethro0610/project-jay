@@ -1,4 +1,5 @@
 import os
+import platform
 import json
 import sys
 import subprocess
@@ -8,6 +9,15 @@ input_path = "./Source/Shaders/"
 output_path = "./Output/shaders/"
 shader_desc_file = open(input_path + "desc.json")
 shader_dict = json.load(shader_desc_file)
+shader_platform = ""
+shader_profile = ""
+
+if platform.system() == "Windows":
+    shader_platform = "windows"
+    shader_profile = "s_5_0"
+elif platform.system() == "Linux":
+    shader_platform = "linux"
+    shader_profile = "spirv"
 
 compile_times = None
 try:
@@ -107,10 +117,10 @@ for shader_desc in shader_dict["shaders"]:
         '-f %s '
         '-o %s '
         '--type %s '
-        '--platform windows '
-        '--profile s_5_0'
+        '--platform %s '
+        '--profile %s'
     )
-    command = command % (shader_input, shader_output, shader_type)
+    command = command % (shader_input, shader_output, shader_type, shader_platform, shader_profile)
     result = subprocess.run(command)
     
     if result.returncode == 0:

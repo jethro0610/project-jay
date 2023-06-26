@@ -7,10 +7,10 @@ shader_success = subprocess.run("python compileshaders.py")
 if shader_success.returncode != 0:
     exit()
 
-os.chdir(".\\Build")
+os.chdir("./Build")
 build_success = subprocess.run("cmake --build .")
 if build_success.returncode != 0:
     exit()
 
-os.chdir(".\\Debug")
+os.chdir("../Output")
 subprocess.call("ProjectJay.exe")

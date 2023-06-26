@@ -5,10 +5,9 @@ import subprocess
 from termcolor import colored
 
 input_path = "./Source/Shaders/"
-output_path = "./Build/Debug/"
-shader_desc_file = open(input_path + "DXShaderDescriptions.json")
+output_path = "./Output/shaders/"
+shader_desc_file = open(input_path + "desc.json")
 shader_dict = json.load(shader_desc_file)
-shader_model = "5_0"
 
 compile_times = None
 try:
@@ -26,14 +25,14 @@ checked_headers = []
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
     type_folder = ""
-    if shader_desc["type"] == "ps":
-        type_folder = "PixelShaders/";
-    elif shader_desc["type"] == "vs":
-        type_folder = "VertShaders/"
-    elif shader_desc["type"] == "cs":
-        type_folder = "ComputeShaders/"
+    if shader_desc["type"] == "fragment":
+        type_folder = "Fragment/";
+    elif shader_desc["type"] == "vertex":
+        type_folder = "Vertex/"
+    elif shader_desc["type"] == "compute":
+        type_folder = "Compute/"
 
-    shader_input = input_path + type_folder + shader_name + ".hlsl"
+    shader_input = input_path + type_folder + shader_name + ".sc"
 
     if shader_name not in compile_times["shaders"]:
         compile_times["shaders"][shader_name] = dict()
@@ -45,6 +44,9 @@ for shader_desc in shader_dict["shaders"]:
         lines = file.readlines()
         for i in range(len(lines)):
             line = lines[i].strip()
+            if "bgfx_shader.sh" in line:
+                continue
+
             if "#include " in line:
                 line = line.replace("#include \"", "")
                 line = line.replace("\"", "")
@@ -66,15 +68,15 @@ for shader_desc in shader_dict["shaders"]:
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
     shader_type = shader_desc["type"]
-    if shader_type == "ps":
-        type_folder = "PixelShaders/";
-    elif shader_type == "vs":
-        type_folder = "VertShaders/"
-    elif shader_type == "cs":
-        type_folder = "ComputeShaders/"
+    if shader_type == "fragment":
+        type_folder = "Fragment/";
+    elif shader_type == "vertex":
+        type_folder = "Vertex/"
+    elif shader_type == "compute":
+        type_folder = "Compute/"
 
-    shader_input = input_path + type_folder + shader_name + ".hlsl"
-    shader_output = output_path + shader_name + ".cso"
+    shader_input = input_path + type_folder + shader_name + ".sc"
+    shader_output = output_path + shader_name + ".bin"
     last_shader_write = os.path.getmtime(shader_input)
 
     last_compile_time = compile_times["shaders"][shader_name]["time"] 
@@ -98,7 +100,17 @@ for shader_desc in shader_dict["shaders"]:
     
     print(colored("Compiling %s..." % shader_name, "yellow"))
 
-    command = "fxc /T %s /E\"main\" /Fo %s %s" % (shader_type + "_" + shader_model, shader_output, shader_input)
+    command = (
+        './Tools/shaderc.exe '
+        '-i ./Tools/include/ '
+        '--varyingdef ./Source/Shaders/varying.def.sc '
+        '-f %s '
+        '-o %s '
+        '--type %s '
+        '--platform windows '
+        '--profile s_5_0'
+    )
+    command = command % (shader_input, shader_output, shader_type)
     result = subprocess.run(command)
     
     if result.returncode == 0:

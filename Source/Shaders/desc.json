@@ -1,0 +1,12 @@
+{
+	"shaders": [
+		{
+			"name": "StaticVS",
+			"type": "vertex"
+		},
+		{
+			"name": "DefaultFS",
+			"type": "fragment"
+		}
+	]
+}

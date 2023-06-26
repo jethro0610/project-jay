@@ -1,18 +1,24 @@
 #pragma once
 #include <string>
 #include "Component.h"
-
-const uint8_t MAX_MESHES_PER_MODEL = 8;
+#include "../../Helpers/Assert.h"
+#include "../../Rendering/Material.h"
+#include "../../Rendering/Model.h"
+#include "../../Rendering/Renderer.h"
 
 class StaticModelComponent : public Component {
 public:
-    std::string model[MAX_ENTITIES];
-    std::string materials[MAX_ENTITIES][MAX_MESHES_PER_MODEL];
+    // Kind of a hack, but we need to assign this renderer before
+    // loading any models
+    Renderer* renderer;
+
+    Model model[MAX_ENTITIES];
+    Material materials[MAX_ENTITIES][MAX_MESHES_PER_MODEL];
 
     StaticModelComponent() {
-        std::fill_n(model, MAX_ENTITIES, "NONE_MODEL");
-        std::fill_n(&materials[0][0], MAX_ENTITIES * MAX_MESHES_PER_MODEL, "NONE_MATERIAL");
+
     };
+
     StaticModelComponent(const StaticModelComponent&) = delete;
     StaticModelComponent& operator=(const StaticModelComponent&) = delete;
 
@@ -20,7 +26,8 @@ public:
     static constexpr uint8_t GetID() { return 9; }
 
     void Load(nlohmann::json& data, EntityID entity) {
-        model[entity] = data["model"].get<std::string>();
-        materials[entity][0] = data["material0"].get<std::string>();
+        ASSERT((renderer != nullptr), "Static Model Component has no access to renderer");
+        model[entity] = renderer->GetModel(data["model"].get<std::string>());
+        materials[entity][0] = renderer->GetMaterial(data["material0"].get<std::string>());
     }
 };

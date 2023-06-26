@@ -9,6 +9,8 @@ using namespace std::chrono;
 #define GETCOMP(COMP) entityManager_.GetComponent<COMP>()
 
 void Game::Init() {
+    GETCOMP(StaticModelComponent).renderer = &renderer_;
+
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 

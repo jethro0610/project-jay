@@ -110,9 +110,9 @@ void Renderer::RenderEntities_P(
         bgfx::setTransform(&worldMatrix);
         bgfx::setUniform(normalU_, &normalMatrix);
 
-        Model model = models_[staticModelComponent.model[i]];
+        Model model = staticModelComponent.model[i];
         for (int m = 0; m < model.numMeshes; m++) {
-            Material material = materials_[staticModelComponent.materials[i][m]];
+            Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
 
             for (int t = 0; t < material.numTextures; t++)

@@ -147,7 +147,7 @@ void Renderer::RenderScreenText_P() {
     std::ifstream file;                                     \
     file.open(path, std::ios::binary);                      \
     if (!file.is_open())                                    \
-        DEBUGLOG("Failed to open bgfx file: " + path);      \
+        DEBUGLOG("Failed to open bgfx file: " << path);     \
                                                             \
     file.seekg(0, file.end);                                \
     size_t fileSize = file.tellg();                         \
@@ -229,9 +229,7 @@ void Renderer::MakeMaterial(
     bgfx::ShaderHandle fragmentShader = fragmentShaders_[fragment];
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
     material.numTextures = numTextures;
-    for (int i = 0; i < numTextures; i++) {
-        std::cout << textures[i] << '\n';
+    for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures_[textures[i]];
-    }
     materials_[name] = material;
 }

@@ -9,9 +9,10 @@
 
 int main() {
 #ifdef _DEBUG
-    Logger::InitLogger();
+    Logger::Init();
     ScreenText::Init();
 #endif
     Time::Init();
     Game* game = new Game();
+    Logger::Close();
 }

@@ -1,7 +1,6 @@
 #pragma once
 #include <json.hpp>
 #include <unordered_map>
-#include "RawModel.h"
 
 class ResourceManager {
 public:

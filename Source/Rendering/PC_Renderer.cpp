@@ -192,12 +192,10 @@ bool Renderer::LoadModel_P(std::string name) {
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
     model.numMeshes = modelHeader.numMeshes;
-    std::cout << "Model has " << (int)model.numMeshes << " meshes\n";
 
     for (int i = 0; i < model.numMeshes; i++) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
-        std::cout << "Mesh has " << meshHeader.numVertices << " vertices and " << meshHeader.numIndices << " indices\n";
         
         const bgfx::Memory* vertexMem = bgfx::alloc(sizeof(StaticVertex) * meshHeader.numVertices);
         file.read((char*)vertexMem->data, sizeof(StaticVertex) * meshHeader.numVertices);

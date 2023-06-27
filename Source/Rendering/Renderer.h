@@ -76,8 +76,9 @@ private:
     Uniform cameraUpU_;
     Uniform cameraRightU_;
 
-    VertexBuffer worldVertexBuffer_;
-    IndexBuffer worldIndexBuffer_;
+    Mesh worldMesh_;
+    Material worldMaterial_;
+    Texture noiseTexture_;
 
     std::unordered_map<std::string, Shader> vertexShaders_;
     std::unordered_map<std::string, Shader> fragmentShaders_;

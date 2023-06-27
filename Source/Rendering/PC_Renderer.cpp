@@ -37,6 +37,9 @@ const uint16_t PLANE_SIZE = 64;
 static WorldVertex worldPlane[PLANE_SIZE * PLANE_SIZE ];
 static uint16_t worldIndices[(PLANE_SIZE - 1) * (PLANE_SIZE -1) * 6];
 
+const uint16_t NOISE_SIZE = 4096;
+static float textureData[NOISE_SIZE][NOISE_SIZE];
+
 Renderer::Renderer(GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
@@ -72,7 +75,7 @@ Renderer::Renderer(GLFWwindow* window) {
     for (int x = 0; x < PLANE_SIZE; x++)
     for (int y = 0; y < PLANE_SIZE; y++) {
         uint16_t index = y * PLANE_SIZE + x;
-        worldPlane[index] = {vec3(x, 0.0f, y), vec3(0.0f, 0.0f,0.0f)};
+        worldPlane[index] = {vec3(x, 0.0f, y), vec3(0.0f, 0.0f, 0.0f)};
     };
 
     uint32_t count = 0;
@@ -92,8 +95,23 @@ Renderer::Renderer(GLFWwindow* window) {
         worldIndices[count++] = i0;
     };
 
-    worldVertexBuffer_ = bgfx::createVertexBuffer(bgfx::makeRef(worldPlane, sizeof(worldPlane)), WorldVertex::layout);
-    worldIndexBuffer_= bgfx::createIndexBuffer(bgfx::makeRef(worldIndices, sizeof(worldIndices)));
+    for (int x = 0; x < NOISE_SIZE; x++) 
+    for (int y = 0; y < NOISE_SIZE; y++)  {
+        float x2 = (NOISE_SIZE / 2.0f - x);
+        x2 *= x2;
+        float y2 = (NOISE_SIZE / 2.0f - y);
+        y2 *= y2;
+        textureData[x][y] = glm::sqrt(x2 + y2) / NOISE_SIZE;
+    };
+
+    noiseTexture_ = bgfx::createTexture2D(NOISE_SIZE, NOISE_SIZE, false, 1, 
+        bgfx::TextureFormat::R32F, 
+        BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
+        bgfx::makeRef(textureData, sizeof(textureData))
+    );
+
+    worldMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(worldPlane, sizeof(worldPlane)), WorldVertex::layout);
+    worldMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(worldIndices, sizeof(worldIndices)));
 
     TEMP_LoadTestData();
 }
@@ -111,7 +129,10 @@ void Renderer::TEMP_LoadTestData() {
 
     LoadVertexShader_P("WorldVS");
     LoadFragmentShader_P("WorldFS");
-    MakeMaterial_P("worldMaterial", "WorldVS", "WorldFS", nullptr, 0);
+    worldMaterial_.textures[0] = noiseTexture_;
+    worldMaterial_.numTextures = 1;
+    worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
+
     DEBUGLOG("Create world material");
 }
 
@@ -145,9 +166,12 @@ void Renderer::RenderWorld_P(World& world) {
     mat4 worldMatrix = emptyTransform.GetWorldMatrix();
     bgfx::setTransform(&worldMatrix);
 
-    bgfx::setVertexBuffer(0, worldVertexBuffer_);
-    bgfx::setIndexBuffer(worldIndexBuffer_);
-    bgfx::submit(0, GetMaterial("worldMaterial").shader);
+    for (int i = 0; i < worldMaterial_.numTextures; i++)
+        bgfx::setTexture(i, samplers_[i], worldMaterial_.textures[i]);
+
+    bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
+    bgfx::setIndexBuffer(worldMesh_.indexBuffer);
+    bgfx::submit(0, worldMaterial_.shader);
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();

@@ -4,14 +4,24 @@ $output v_wposition, v_normal
 
 SAMPLER2D(s_sampler0, 0);
 
+static float MAX_NOISE_POS = 256.0f;
+static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
+
+float getHeight(vec3 position) {
+    vec2 samplePos = vec2(position.x * SAMPLE_SCALE * 0.75f, position.z * SAMPLE_SCALE * 0.75f);
+    samplePos += vec2(0.5f, 0.5f);
+    return texture2DLod(s_sampler0, samplePos, 0) * 8.0f;
+}
+
 void main() {
-    // float val = texture2D(s_sampler0, vec2(a_position.x / 64.0f, a_position.z / 64.0f));
-    vec2 samplePos = vec2(a_position.x / 64.0f, a_position.z / 64.0f);
-    float val = texture2DLod(s_sampler0, samplePos, 0);
+    float height = getHeight(a_position);
+    v_wposition = vec3(a_position.x, height, a_position.z);
 
-
-    // v_wposition = vec3(a_position.x, 8.0f * (1.0f - test), a_position.z);
-    v_wposition = vec3(a_position.x, 12.0f * (1.0f - val), a_position.z);
+    vec3 dx = a_position - vec3(1.0f, 0.0f, 0.0f);
+    vec3 dz = a_position - vec3(0.0f, 0.0f, 1.0f);
+    float gradX = getHeight(dx) - height;
+    float gradZ = getHeight(dz) - height;
+    v_normal = normalize(vec3(gradX, 1.0f, gradZ));
 
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

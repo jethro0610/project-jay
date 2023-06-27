@@ -7,6 +7,7 @@
 #include "../Components/SpreadDetectComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../../Logging/Logger.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<
@@ -64,11 +65,11 @@ void MovementSystem::Execute (
             break;
 
         case MoveMode::Flow:
-            CalculateFlowMovement(desiredMovement, groundNormal, speed, velocity, rotation);
+            CalculateFlowMovement(desiredMovement, speed, velocity, rotation);
             break;
 
         case MoveMode::Line:
-            CalculateLineMovement(desiredMovement, groundNormal, speed, velocity, rotation);
+            CalculateLineMovement(desiredMovement, speed, velocity, rotation);
             break;
 
         default:
@@ -99,6 +100,8 @@ void MovementSystem::Execute (
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
         }
+        // DEBUGLOG("Speed: " << speed);
+        // DEBUGLOG("Y Normal: " << groundNormal.y);
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.
@@ -154,7 +157,9 @@ void MovementSystem::CalculateSkiMovement(
         skiRotation = rotation;
 
     vec3 skiDirection = skiRotation * Transform::worldForward;
-    float skiBoost = SKI_ACCELERATION * dot(skiDirection, groundNormal) * (speed / maxSpeed);
+    float skiBoost = 
+        (SKI_ACCELERATION + (1 - groundNormal.y) * SKI_DOWNSLOPE_SCALING) *
+        dot(skiDirection, vec3(groundNormal.x, 0.0f, groundNormal.z)) * (speed / maxSpeed);
     float skiMultiplier = 1.0f;
     if (skiBoost >= 0.0f) {
         skiMultiplier = (maxSpeed - min(speed, maxSpeed)) / maxSpeed;
@@ -172,7 +177,6 @@ void MovementSystem::CalculateSkiMovement(
 
 void MovementSystem::CalculateFlowMovement(
     const glm::vec3& desiredMovement,
-    const glm::vec3& groundNormal,
     const float& speed,
     glm::vec3& velocity,
     glm::quat& rotation
@@ -189,7 +193,6 @@ void MovementSystem::CalculateFlowMovement(
 
 void MovementSystem::CalculateLineMovement(
     const glm::vec3& desiredMovement,
-    const glm::vec3& groundNormal,
     const float& speed,
     glm::vec3& velocity,
     glm::quat& rotation

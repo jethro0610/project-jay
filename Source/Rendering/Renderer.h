@@ -12,6 +12,7 @@
 
 class Camera;
 class Entity;
+class FastNoiseLite;
 class PlayerController;
 class SeedManager;
 class SpreadManager;
@@ -27,7 +28,7 @@ class TransformComponent;
 class Renderer {
 public:
     #ifdef _PC
-    Renderer(GLFWwindow* window);
+    Renderer(FastNoiseLite& noise, GLFWwindow* window);
     #endif
     Camera* camera_;
 

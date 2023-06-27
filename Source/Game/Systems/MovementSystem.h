@@ -45,7 +45,6 @@ namespace MovementSystem {
 
     void CalculateFlowMovement(
         const glm::vec3& desiredMovement,
-        const glm::vec3& groundNormal,
         const float& speed,
         glm::vec3& velocity,
         glm::quat& rotation
@@ -53,7 +52,6 @@ namespace MovementSystem {
 
     void CalculateLineMovement(
         const glm::vec3& desiredMovement,
-        const glm::vec3& groundNormal,
         const float& speed,
         glm::vec3& velocity,
         glm::quat& rotation

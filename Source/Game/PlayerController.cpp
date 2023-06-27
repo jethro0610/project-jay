@@ -73,13 +73,13 @@ void PlayerController::Execute(
         isDoingAction = true;
         actionMeter_ += 1;
     } 
-    else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
+    else if (inputs.flow) { // && meterComponent.meter[PLAYER_ENTITY] > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
         actionMeter_ += 2;
     }
-    else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
+    else if (inputs.ski) { // && meterComponent.meter[PLAYER_ENTITY] > 0)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }

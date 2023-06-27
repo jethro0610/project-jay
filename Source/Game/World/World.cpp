@@ -1,16 +1,17 @@
 #include "World.h"
 #include "../../Helpers/ChunkHelpers.h"
+#include <FastNoiseLite.h>
 using namespace glm;
 
-World::World():
-    noise_(new FastNoiseLite())
+World::World(FastNoiseLite& noise):
+    noise_(noise)
 {
     GenerateNoiseTexture_P();
     MarkAllDirty();
 }
 
 float World::GetHeight(vec2 position) const {
-    float height = noise_->GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f + 8.0f;
+    float height = noise_.GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f;
     return height;
 }
 
@@ -19,12 +20,18 @@ float World::GetHeight(vec3 position) const {
 }
 
 vec3 World::GetNormal(vec2 position, float epsilon) const {
-    vec2 dX = position + vec2(epsilon, 0.0f);
-    vec2 dZ = position + vec2(0.0f, epsilon);
+    vec2 dX = position - vec2(1.0f, 0.0f);
+    vec2 dZ = position - vec2(0.0f, 1.0f);
 
-    float gradX = GetHeight(dX);
-    float gradZ = GetHeight(dZ);
+    float height = GetHeight(position);
+    float gradX = GetHeight(dX) - height;
+    float gradZ = GetHeight(dZ) - height;
+
     return normalize(vec3(gradX, 1.0f, gradZ));
+}
+
+vec3 World::GetNormal(vec3 position, float epsilon) const {
+    return GetNormal(vec2(position.x, position.z), epsilon);
 }
 
 void World::UpdateDirtyChunks() {

@@ -4,6 +4,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <iostream>
+#include <FastNoiseLite.h>
 #include "../Game/Camera.h"
 #include "../Helpers/EntityHelpers.h"
 #include "../Helpers/MapCheck.h"
@@ -33,14 +34,18 @@ bgfx::VertexLayout WorldVertex::layout;
 //     0, 3, 2,
 // };
 
-const uint16_t PLANE_SIZE = 64;
+const uint16_t PLANE_SIZE = 256;
 static WorldVertex worldPlane[PLANE_SIZE * PLANE_SIZE ];
 static uint16_t worldIndices[(PLANE_SIZE - 1) * (PLANE_SIZE -1) * 6];
 
-const uint16_t NOISE_SIZE = 4096;
-static float textureData[NOISE_SIZE][NOISE_SIZE];
+const uint16_t NOISE_RESOLUTION = 4096;
+const uint16_t HALF_NOISE_RESOLUTION = NOISE_RESOLUTION / 2;
+const uint16_t MAX_NOISE_POS = 256;
+const float NOISE_SCALE = MAX_NOISE_POS / (float)HALF_NOISE_RESOLUTION;
 
-Renderer::Renderer(GLFWwindow* window) {
+static float textureData[NOISE_RESOLUTION][NOISE_RESOLUTION];
+
+Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
     init.type = bgfx::RendererType::Count;
@@ -75,7 +80,7 @@ Renderer::Renderer(GLFWwindow* window) {
     for (int x = 0; x < PLANE_SIZE; x++)
     for (int y = 0; y < PLANE_SIZE; y++) {
         uint16_t index = y * PLANE_SIZE + x;
-        worldPlane[index] = {vec3(x, 0.0f, y), vec3(0.0f, 0.0f, 0.0f)};
+        worldPlane[index] = {vec3(x - PLANE_SIZE / 2.0f, 0.0f, y - PLANE_SIZE / 2.0f), vec3(0.0f, 0.0f, 0.0f)};
     };
 
     uint32_t count = 0;
@@ -95,16 +100,15 @@ Renderer::Renderer(GLFWwindow* window) {
         worldIndices[count++] = i0;
     };
 
-    for (int x = 0; x < NOISE_SIZE; x++) 
-    for (int y = 0; y < NOISE_SIZE; y++)  {
-        float x2 = (NOISE_SIZE / 2.0f - x);
-        x2 *= x2;
-        float y2 = (NOISE_SIZE / 2.0f - y);
-        y2 *= y2;
-        textureData[x][y] = glm::sqrt(x2 + y2) / NOISE_SIZE;
+    for (int x = 0; x < NOISE_RESOLUTION; x++) 
+    for (int y = 0; y < NOISE_RESOLUTION; y++)  {
+        float offsetX = (x - HALF_NOISE_RESOLUTION) * NOISE_SCALE;
+        float offsetY = (y - HALF_NOISE_RESOLUTION) * NOISE_SCALE;
+
+        textureData[y][x] = noise.GetNoise(offsetX, offsetY);
     };
 
-    noiseTexture_ = bgfx::createTexture2D(NOISE_SIZE, NOISE_SIZE, false, 1, 
+    noiseTexture_ = bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F, 
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
         bgfx::makeRef(textureData, sizeof(textureData))
@@ -130,7 +134,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("WorldVS");
     LoadFragmentShader_P("WorldFS");
     worldMaterial_.textures[0] = noiseTexture_;
-    worldMaterial_.numTextures = 1;
+    worldMaterial_.textures[1] = GetTexture("bricks_c");
+    worldMaterial_.numTextures = 2;
     worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
 
     DEBUGLOG("Create world material");

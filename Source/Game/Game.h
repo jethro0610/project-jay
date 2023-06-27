@@ -10,6 +10,7 @@
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
 #include "World/World.h"
+#include <FastNoiseLite.h>
 
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
@@ -25,7 +26,7 @@ public:
 
 private:
     Platform platform_;
-
+    FastNoiseLite noise_;
     EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;

@@ -60,11 +60,11 @@ Renderer::Renderer(GLFWwindow* window) {
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
 
-    normalU_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
-    timeResolutionU_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
-    cameraPositionU_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
-    cameraUpU_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
-    cameraRightU_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
+    u_normal_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
+    u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
+    u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
+    u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
+    u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
 
     bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
@@ -145,10 +145,10 @@ void Renderer::StartFrame_P() {
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
 
-    bgfx::setUniform(timeResolutionU_, &timeResolution);
-    bgfx::setUniform(cameraPositionU_, &cameraPosition);
-    bgfx::setUniform(cameraUpU_, &cameraUp);
-    bgfx::setUniform(cameraRightU_, &cameraRight);
+    bgfx::setUniform(u_timeResolution_, &timeResolution);
+    bgfx::setUniform(u_cameraPosition_, &cameraPosition);
+    bgfx::setUniform(u_cameraUp_, &cameraUp);
+    bgfx::setUniform(u_cameraRight_, &cameraRight);
 
     bgfx::touch(0);
 }
@@ -189,7 +189,7 @@ void Renderer::RenderEntities_P(
 
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
         bgfx::setTransform(&worldMatrix);
-        bgfx::setUniform(normalU_, &normalMatrix);
+        bgfx::setUniform(u_normal_, &normalMatrix);
 
         Model model = staticModelComponent.model[i];
         for (int m = 0; m < model.numMeshes; m++) {

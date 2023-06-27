@@ -70,11 +70,11 @@ private:
 
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
-    Uniform normalU_;
-    Uniform timeResolutionU_;
-    Uniform cameraPositionU_;
-    Uniform cameraUpU_;
-    Uniform cameraRightU_;
+    Uniform u_normal_;
+    Uniform u_timeResolution_;
+    Uniform u_cameraPosition_;
+    Uniform u_cameraUp_;
+    Uniform u_cameraRight_;
 
     Mesh worldMesh_;
     Material worldMaterial_;

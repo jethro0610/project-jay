@@ -71,7 +71,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x443355FF, 1.0f, 0);
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
 
     StaticVertex::Init();
@@ -126,6 +126,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadModel_P("st_sphere");
     LoadTexture_P("bricks_c");
     LoadTexture_P("bricks_n");
+    LoadTexture_P("grass_c");
+    LoadTexture_P("grass_n");
 
     std::string textures[] = {"bricks_c", "bricks_n"};
     MakeMaterial_P("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
@@ -134,7 +136,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("WorldVS");
     LoadFragmentShader_P("WorldFS");
     worldMaterial_.textures[0] = noiseTexture_;
-    worldMaterial_.textures[1] = GetTexture("bricks_c");
+    worldMaterial_.textures[1] = GetTexture("grass_c");
     worldMaterial_.numTextures = 2;
     worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
 

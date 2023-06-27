@@ -1,22 +1,11 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 #include <bgfx_shader.sh>
+#include <Lighting.sh>
 
 uniform vec4 u_cameraPosition;
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
-
-
-float getSpecular(vec3 cameraPosition, vec3 wposition, vec3 lightDir, vec3 normal, float power) {
-    vec3 viewDir = normalize(cameraPosition - wposition);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    return pow(max(dot(-viewDir, reflectDir), 0.0f), power);
-}
-
-float getFresnel(vec3 cameraPosition, vec3 wposition, vec3 normal, float scale, float power) {
-    vec3 viewDir = normalize(cameraPosition - wposition);
-    return saturate(scale * pow(1.0f + dot(-viewDir, normal), power));
-}
 
 void main() {
     vec3 color = texture2D(s_sampler0, v_texcoord0).rgb;

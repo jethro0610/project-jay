@@ -128,6 +128,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadTexture_P("bricks_n");
     LoadTexture_P("grass_c");
     LoadTexture_P("grass_n");
+    LoadTexture_P("marble_c");
 
     std::string textures[] = {"bricks_c", "bricks_n"};
     MakeMaterial_P("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
@@ -137,7 +138,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadFragmentShader_P("WorldFS");
     worldMaterial_.textures[0] = noiseTexture_;
     worldMaterial_.textures[1] = GetTexture("grass_c");
-    worldMaterial_.numTextures = 2;
+    worldMaterial_.textures[2] = GetTexture("marble_c");
+    worldMaterial_.numTextures = 3;
     worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
 
     DEBUGLOG("Create world material");

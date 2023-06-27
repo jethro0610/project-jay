@@ -58,9 +58,11 @@ for shader_desc in shader_dict["shaders"]:
                 continue
 
             if "#include " in line:
-                line = line.replace("#include \"", "")
+                line = line.replace("#include ", "")
                 line = line.replace("\"", "")
                 line = line.replace("../", "")
+                line = line.replace("<", "")
+                line = line.replace(">", "")
                 compile_times["shaders"][shader_name]["headers"].append(line) 
 
                 if line not in checked_headers:
@@ -70,10 +72,10 @@ for shader_desc in shader_dict["shaders"]:
                         last_compile_time = compile_times["headers"][line]
                     except:
                         pass
-                    last_header_write = os.path.getmtime(input_path + line)
+                    last_header_write = os.path.getmtime(input_path + '/Include/' + line)
                     if last_header_write != last_compile_time:
                         invalid_headers.append(line)
-                        compile_times["headers"][line] = os.path.getmtime(input_path + line) 
+                        compile_times["headers"][line] = os.path.getmtime(input_path + '/Include/' + line) 
                     
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
@@ -113,6 +115,7 @@ for shader_desc in shader_dict["shaders"]:
     command = (
         './Tools/shaderc.exe '
         '-i ./Tools/include/ '
+        '-i ./Source/Shaders/Include/ '
         '--varyingdef ./Source/Shaders/varying.def.sc '
         '-f %s '
         '-o %s '

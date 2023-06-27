@@ -138,8 +138,9 @@ void Renderer::TEMP_LoadTestData() {
     LoadFragmentShader_P("WorldFS");
     worldMaterial_.textures[0] = noiseTexture_;
     worldMaterial_.textures[1] = GetTexture("grass_c");
-    worldMaterial_.textures[2] = GetTexture("marble_c");
-    worldMaterial_.numTextures = 3;
+    worldMaterial_.textures[2] = GetTexture("grass_n");
+    worldMaterial_.textures[3] = GetTexture("marble_c");
+    worldMaterial_.numTextures = 4;
     worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
 
     DEBUGLOG("Create world material");

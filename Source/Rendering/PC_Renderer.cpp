@@ -91,6 +91,7 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
+    Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
     postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 

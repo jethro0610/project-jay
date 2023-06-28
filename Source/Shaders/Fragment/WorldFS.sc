@@ -33,7 +33,7 @@ void main() {
 
     float fresnel = getFresnel(u_cameraPosition, v_wposition, normal, 1.0f, 16.0f);
     fresnel = min(fresnel, 1.0f);
-    fresnel *= 0.3f;     
+    fresnel *= 0.15f;     
 
     // Skew brightness towards the given focus for harder shadows
     float focus = 0.6f;

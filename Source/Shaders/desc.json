@@ -23,6 +23,10 @@
         {
             "name": "PostProcessFS",
             "type": "fragment"
+        },
+        {
+            "name": "BlitFS",
+            "type": "fragment"
         }
 	]
 }

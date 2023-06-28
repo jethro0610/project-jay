@@ -49,9 +49,6 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
 
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(0, 0, 0, 1280, 720);
-
     StaticVertex::Init();
     WorldVertex::Init();
     ScreenQuadVertex::Init();
@@ -60,14 +57,16 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     worldMesh_ = MakeWorldMesh_P(256);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
+    InitScreenQuad_P();
     InitRenderBuffer_P();
 
-    // postProcessBuffer_ = bgfx::createFrameBuffer(width_, height_, bgfx::TextureFormat::BGRA8);
-    // bgfx::setViewFrameBuffer(1, 
-    // postProcessBuffer_ = backBuffer_;
-    // bgfx::setViewFrameBuffer(1, backBuffer_);
-    // bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    // bgfx::setViewRect(1, 0, 0, 1280, 720);
+    bgfx::setViewFrameBuffer(0, renderBuffer_);
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(0, 0, 0, 1280, 720);
+
+    bgfx::setViewFrameBuffer(1, backBuffer_);
+    bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(1, 0, 0, 1280, 720);
 
     TEMP_LoadTestData();
 }
@@ -83,17 +82,17 @@ void Renderer::TEMP_LoadTestData() {
     Texture marbleC = LoadTexture_P("marble_c");
 
     Texture playerTextures[] = {bricksC, bricksN};
-    Material playerMaterial = MakeMaterial_P("playerMaterial", staticVS, defaultFS, playerTextures, 2);
+    Material playerMaterial = MakeMaterial_P("player", staticVS, defaultFS, playerTextures, 2);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
     Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
-    worldMaterial_ = MakeMaterial_P("worldMaterial", worldVS, worldFS, worldTextures, 4);
+    worldMaterial_ = MakeMaterial_P("world", worldVS, worldFS, worldTextures, 4);
 
-    LoadVertexShader_P("ScreenQuadVS");
-    LoadFragmentShader_P("PostProcessFS");
-    // postProcessMaterial_.numTextures = 0;
-    // postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
+    Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
+    Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
+    Texture postProcessTextures[] = { renderBufferTextures_[0] };
+    postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
     DEBUGLOG("Create world material");
     DEBUGLOG("Succesfully loaded all test assets");
@@ -101,10 +100,10 @@ void Renderer::TEMP_LoadTestData() {
 
 void Renderer::InitScreenQuad_P() {
     ScreenQuadVertex screenQuadVertices[4];
-    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
-    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
-    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
-    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
+    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 1.0f) };
+    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 1.0f) };
+    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 0.0f) };
+    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 0.0f) };
     screenQuad_.vertexBuffer = bgfx::createVertexBuffer(bgfx::copy(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
     
     uint16_t screenQuadIndices[6];
@@ -135,7 +134,6 @@ void Renderer::InitRenderBuffer_P() {
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     );
     renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
-    // bgfx::setViewFrameBuffer(0, renderBuffer_);
 }
 
 Mesh Renderer::MakeWorldMesh_P(int size) {
@@ -293,12 +291,12 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderPostProcess_P() {
     // Kuwahara
-    // for (int i = 0; i < postProcessMaterial_.numTextures; i++)
-    //     bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
-    //
-    // bgfx::setVertexBuffer(0, screenQuadMesh_.vertexBuffer);
-    // bgfx::setIndexBuffer(screenQuadMesh_.indexBuffer);
-    // bgfx::submit(1, postProcessMaterial_.shader);
+    for (int i = 0; i < postProcessMaterial_.numTextures; i++)
+        bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
+
+    bgfx::setVertexBuffer(0, screenQuad_.vertexBuffer);
+    bgfx::setIndexBuffer(screenQuad_.indexBuffer);
+    bgfx::submit(1, postProcessMaterial_.shader);
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {

@@ -5,7 +5,7 @@
         },
         "static_model": {
             "model": "st_sphere",
-            "material0": "playerMaterial"
+            "material0": "player"
         },
         "bubble": {
             "radius": 2.0,

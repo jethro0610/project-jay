@@ -79,13 +79,11 @@ private:
     void InitScreenQuad_P();
     void InitRenderBuffer_P();
     Mesh screenQuad_;
-    // Material postProcessMaterial_;
+    Material postProcessMaterial_;
 
     FrameBuffer backBuffer_;
     FrameBuffer renderBuffer_;
     Texture renderBufferTextures_[2];
-    // FrameBuffer postProcessBuffer_;
-    // Texture postProcessTexture_;
 
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 

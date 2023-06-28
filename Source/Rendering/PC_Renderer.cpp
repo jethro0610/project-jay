@@ -23,9 +23,6 @@ bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout ScreenQuadVertex::layout;
 
-static ScreenQuadVertex screenQuadVertices[4];
-static uint16_t screenQuadIndices[6];
-
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
@@ -59,29 +56,11 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     WorldVertex::Init();
     ScreenQuadVertex::Init();
 
-    worldMesh_ = MakeWorldMesh_P(256);
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 256);
+    worldMesh_ = MakeWorldMesh_P(256);
 
-    // backBuffer_ = BGFX_INVALID_HANDLE;
-    //
-    // renderBufferTextures_[0] = bgfx::createTexture2D(
-    //     width_,
-    //     height_,
-    //     false,
-    //     1,
-    //     bgfx::TextureFormat::BGRA8,
-    //     BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
-    // );
-    // renderBufferTextures_[1] = bgfx::createTexture2D(
-    //     width_,
-    //     height_,
-    //     false,
-    //     1,
-    //     bgfx::TextureFormat::D16,
-    //     BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
-    // );
-    // renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
-    // bgfx::setViewFrameBuffer(0, renderBuffer_);
+    backBuffer_ = BGFX_INVALID_HANDLE;
+    InitRenderBuffer_P();
 
     // postProcessBuffer_ = bgfx::createFrameBuffer(width_, height_, bgfx::TextureFormat::BGRA8);
     // bgfx::setViewFrameBuffer(1, 
@@ -89,20 +68,6 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     // bgfx::setViewFrameBuffer(1, backBuffer_);
     // bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     // bgfx::setViewRect(1, 0, 0, 1280, 720);
-    //
-    // screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
-    // screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
-    // screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
-    // screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
-    // screenQuadMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
-    // 
-    // screenQuadIndices[0] = 0;
-    // screenQuadIndices[1] = 1;
-    // screenQuadIndices[2] = 2;
-    // screenQuadIndices[3] = 2;
-    // screenQuadIndices[4] = 3;
-    // screenQuadIndices[5] = 0;
-    // screenQuadMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(screenQuadIndices, sizeof(screenQuadIndices)));
 
     TEMP_LoadTestData();
 }
@@ -136,6 +101,45 @@ void Renderer::TEMP_LoadTestData() {
     // postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
 
     DEBUGLOG("Create world material");
+}
+
+void Renderer::InitScreenQuad_P() {
+    ScreenQuadVertex screenQuadVertices[4];
+    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
+    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
+    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
+    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
+    screenQuad_.vertexBuffer = bgfx::createVertexBuffer(bgfx::copy(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
+    
+    uint16_t screenQuadIndices[6];
+    screenQuadIndices[0] = 0;
+    screenQuadIndices[1] = 1;
+    screenQuadIndices[2] = 2;
+    screenQuadIndices[3] = 2;
+    screenQuadIndices[4] = 3;
+    screenQuadIndices[5] = 0;
+    screenQuad_.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(screenQuadIndices, sizeof(screenQuadIndices)));
+}
+
+void Renderer::InitRenderBuffer_P() {
+    renderBufferTextures_[0] = bgfx::createTexture2D(
+        width_,
+        height_,
+        false,
+        1,
+        bgfx::TextureFormat::BGRA8,
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
+    );
+    renderBufferTextures_[1] = bgfx::createTexture2D(
+        width_,
+        height_,
+        false,
+        1,
+        bgfx::TextureFormat::D16,
+        BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
+    );
+    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
+    // bgfx::setViewFrameBuffer(0, renderBuffer_);
 }
 
 Mesh Renderer::MakeWorldMesh_P(int size) {
@@ -325,29 +329,33 @@ void Renderer::RenderScreenText_P() {
     file.close()
 
 
-void Renderer::LoadVertexShader_P(std::string name) {
+Shader Renderer::LoadVertexShader_P(std::string name) {
     ForceMapUnique(vertexShaders_, name, "Vertex shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    vertexShaders_[name] = bgfx::createShader(memory);
+    Shader shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded vertex shader " << name);
+    vertexShaders_[name] = shader;
+    return shader;
 }
 
-void Renderer::LoadFragmentShader_P(std::string name) {
+Shader Renderer::LoadFragmentShader_P(std::string name) {
     ForceMapUnique(fragmentShaders_, name, "Fragment shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    fragmentShaders_[name] = bgfx::createShader(memory);
+    Shader shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded fragment shader " << name);
+    fragmentShaders_[name] = shader;
+    return shader;
 }
 
-void Renderer::LoadModel_P(std::string name) {
+Model Renderer::LoadModel_P(std::string name) {
     ForceMapUnique(models_, name, "Model " + name + " is already loaded");
     Model model;
     std::ifstream file;
@@ -374,43 +382,54 @@ void Renderer::LoadModel_P(std::string name) {
         model.meshes[i].vertexBuffer = bgfx::createVertexBuffer(vertexMem, StaticVertex::layout);
         model.meshes[i].indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
-    models_[name] = model;
 
     DEBUGLOG("Loaded model " << name << " with " << (int)model.numMeshes << " meshes");
+    models_[name] = model;
+    return model;
 }
 
-void Renderer::LoadTexture_P(std::string name) {
+Texture Renderer::LoadTexture_P(std::string name) {
     ForceMapUnique(textures_, name, "Texture " + name + " is already loaded");
     std::string path = "./textures/" + name + ".dds";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    textures_[name] = bgfx::createTexture(memory);
+    Texture texture = bgfx::createTexture(memory);
     DEBUGLOG("Loaded texture " << name);
+    textures_[name] = texture;
+    return texture;
 }
 
-void Renderer::MakeMaterial_P(
+Material Renderer::MakeMaterial_P(
+    std::string name, 
+    Shader vertex, 
+    Shader fragment, 
+    Texture textures[MAX_TEXTURES_PER_MATERIAL], 
+    int numTextures
+) {
+    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
+    Material material;
+    material.shader = bgfx::createProgram(vertex, fragment);
+    material.numTextures = numTextures;
+    for (int i = 0; i < numTextures; i++)
+        material.textures[i] = textures[i];
+    materials_[name] = material;
+
+    DEBUGLOG("Created material " << name);
+    return material;
+}
+
+Material Renderer::MakeMaterial_P(
     std::string name, 
     std::string vertex, 
     std::string fragment, 
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-    uint8_t numTextures
+    int numTextures
 ) {
-    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
-    Material material;
-    Shader vertexShader = GetVertexShader(vertex);
-    Shader fragmentShader = GetFragmentShader(fragment);
-    material.shader = bgfx::createProgram(vertexShader, fragmentShader);
-    material.numTextures = numTextures;
+    Texture textureList[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < numTextures; i++)
-        material.textures[i] = GetTexture(textures[i]);
-    materials_[name] = material;
+        textureList[i] = GetTexture(textures[i]);
 
-    DEBUGLOG(
-        "Created material " << name << '\n' << 
-        "\tVertex Shader: " << vertex << '\n' <<
-        "\tFragment Shader: " << fragment << '\n' <<
-        "\tNumber of textures: " << (int)numTextures
-    );
+    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures);
 }

@@ -42,16 +42,23 @@ public:
         TransformComponent& transformComponent
     );
 
-    void LoadVertexShader_P(std::string name);
-    void LoadFragmentShader_P(std::string name);
-    void LoadModel_P(std::string name);
-    void LoadTexture_P(std::string name);
-    void MakeMaterial_P(
+    Shader LoadVertexShader_P(std::string name);
+    Shader LoadFragmentShader_P(std::string name);
+    Model LoadModel_P(std::string name);
+    Texture LoadTexture_P(std::string name);
+    Material MakeMaterial_P(
+        std::string name, 
+        Shader vertex, 
+        Shader fragment, 
+        Texture textures[MAX_TEXTURES_PER_MATERIAL], 
+        int numTextures
+    );
+    Material MakeMaterial_P(
         std::string name, 
         std::string vertex, 
         std::string fragment, 
         std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-        uint8_t numTextures
+        int numTextures
     );
 
     void TEMP_LoadTestData();
@@ -69,12 +76,14 @@ private:
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
 
-    // Mesh screenQuadMesh_;
+    void InitScreenQuad_P();
+    void InitRenderBuffer_P();
+    Mesh screenQuad_;
     // Material postProcessMaterial_;
 
-    // FrameBuffer backBuffer_;
-    // FrameBuffer renderBuffer_;
-    // Texture renderBufferTextures_[2];
+    FrameBuffer backBuffer_;
+    FrameBuffer renderBuffer_;
+    Texture renderBufferTextures_[2];
     // FrameBuffer postProcessBuffer_;
     // Texture postProcessTexture_;
 
@@ -87,10 +96,12 @@ private:
     Uniform u_cameraRight_;
 
     Mesh MakeWorldMesh_P(int size);
+    Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
+
+    // These are temporary and will likely be moved to
+    // the world class
     Mesh worldMesh_;
     Material worldMaterial_;
-
-    Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
     Texture noiseTexture_;
 
     std::unordered_map<std::string, Shader> vertexShaders_;

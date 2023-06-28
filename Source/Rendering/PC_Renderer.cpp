@@ -23,25 +23,6 @@ bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout ScreenQuadVertex::layout;
 
-// static WorldVertex worldPlane[] = {
-//     {vec3(-1.0f, 0.0f,-1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
-//     {vec3( 1.0f, 0.0f,-1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
-//     {vec3( 1.0f, 0.0f, 1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
-//     {vec3(-1.0f, 0.0f, 1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
-// };
-//
-// static uint16_t worldVertices[] = {
-//     0, 2, 1,
-//     0, 3, 2,
-// };
-
-const uint16_t NOISE_RESOLUTION = 4096;
-const uint16_t HALF_NOISE_RESOLUTION = NOISE_RESOLUTION / 2;
-const uint16_t MAX_NOISE_POS = 256;
-const float NOISE_SCALE = MAX_NOISE_POS / (float)HALF_NOISE_RESOLUTION;
-
-static float textureData[NOISE_RESOLUTION][NOISE_RESOLUTION];
-
 static ScreenQuadVertex screenQuadVertices[4];
 static uint16_t screenQuadIndices[6];
 
@@ -78,21 +59,8 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     WorldVertex::Init();
     ScreenQuadVertex::Init();
 
-    worldMesh_ = MakeWorldMesh(256);
-
-    for (int x = 0; x < NOISE_RESOLUTION; x++) 
-    for (int y = 0; y < NOISE_RESOLUTION; y++)  {
-        float offsetX = (x - HALF_NOISE_RESOLUTION) * NOISE_SCALE;
-        float offsetY = (y - HALF_NOISE_RESOLUTION) * NOISE_SCALE;
-
-        textureData[y][x] = noise.GetNoise(offsetX, offsetY);
-    };
-
-    noiseTexture_ = bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
-        bgfx::TextureFormat::R32F, 
-        BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
-        bgfx::makeRef(textureData, sizeof(textureData))
-    );
+    worldMesh_ = MakeWorldMesh_P(256);
+    noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 256);
 
     // backBuffer_ = BGFX_INVALID_HANDLE;
     //
@@ -170,7 +138,7 @@ void Renderer::TEMP_LoadTestData() {
     DEBUGLOG("Create world material");
 }
 
-Mesh Renderer::MakeWorldMesh(int size) {
+Mesh Renderer::MakeWorldMesh_P(int size) {
     Mesh mesh;
 
     int numVertices = size * size;
@@ -218,6 +186,31 @@ Mesh Renderer::MakeWorldMesh(int size) {
     delete[] worldIndices;
 
     return mesh;
+}
+
+Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance) {
+    Texture texture;
+    float halfResolution = resolution /  2.0f;
+    float scale = distance / halfResolution;
+
+    float* textureData = new float[resolution * resolution];
+    for (int x = 0; x < resolution; x++) 
+    for (int y = 0; y < resolution; y++)  {
+        float offsetX = (x - halfResolution) * scale;
+        float offsetY = (y - halfResolution) * scale;
+        int index = y * resolution + x;
+
+        textureData[index] = noise.GetNoise(offsetX, offsetY);
+    };
+
+    texture = bgfx::createTexture2D(resolution, resolution, false, 1, 
+        bgfx::TextureFormat::R32F, 
+        BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
+        bgfx::copy(textureData, sizeof(float) * resolution * resolution)
+    );
+    delete[] textureData;
+
+    return texture;
 }
 
 void Renderer::StartFrame_P() {

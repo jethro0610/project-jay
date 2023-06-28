@@ -86,9 +86,11 @@ private:
     Uniform u_cameraUp_;
     Uniform u_cameraRight_;
 
-    Mesh MakeWorldMesh(int size);
+    Mesh MakeWorldMesh_P(int size);
     Mesh worldMesh_;
     Material worldMaterial_;
+
+    Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
     Texture noiseTexture_;
 
     std::unordered_map<std::string, Shader> vertexShaders_;

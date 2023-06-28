@@ -15,6 +15,14 @@
 		{
 			"name": "WorldFS",
 			"type": "fragment"
-		}
+		},
+        {
+            "name": "ScreenQuadVS",
+            "type": "vertex"
+        },
+        {
+            "name": "PostProcessFS",
+            "type": "fragment"
+        }
 	]
 }

@@ -34,3 +34,16 @@ struct WorldVertex {
             .end();
     }
 };
+
+struct ScreenQuadVertex {
+    glm::vec2 position;
+    glm::vec2 uv;
+    static bgfx::VertexLayout layout;
+    static void Init() {
+        layout
+            .begin()
+            .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .end();
+    }
+};

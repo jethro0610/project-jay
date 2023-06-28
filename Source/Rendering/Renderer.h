@@ -69,6 +69,15 @@ private:
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
 
+    Mesh screenQuadMesh_;
+    Material postProcessMaterial_;
+
+    FrameBuffer backBuffer_;
+    FrameBuffer renderBuffer_;
+    Texture renderBufferTextures_[2];
+    // FrameBuffer postProcessBuffer_;
+    // Texture postProcessTexture_;
+
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
     Uniform u_normal_;

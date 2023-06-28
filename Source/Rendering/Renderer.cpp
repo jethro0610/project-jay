@@ -26,7 +26,7 @@ void Renderer::Render(
     // RenderSeed_P(seedManager);
 
     // SetRenderTargetScreen_P();
-    // RenderPostProcess_P();
+    RenderPostProcess_P();
     // RenderUI_P(meterComponent);
     // #ifdef _DEBUG
     // EnableBlend_P();

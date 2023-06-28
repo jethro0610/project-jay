@@ -21,6 +21,7 @@ using namespace glm;
 
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
+bgfx::VertexLayout ScreenQuadVertex::layout;
 
 // static WorldVertex worldPlane[] = {
 //     {vec3(-1.0f, 0.0f,-1.0f) * 4.0f, vec3(0.0f, 1.0f, 0.0f)},
@@ -44,6 +45,9 @@ const uint16_t MAX_NOISE_POS = 256;
 const float NOISE_SCALE = MAX_NOISE_POS / (float)HALF_NOISE_RESOLUTION;
 
 static float textureData[NOISE_RESOLUTION][NOISE_RESOLUTION];
+
+static ScreenQuadVertex screenQuadVertices[4];
+static uint16_t screenQuadIndices[6];
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
@@ -76,6 +80,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 
     StaticVertex::Init();
     WorldVertex::Init();
+    ScreenQuadVertex::Init();
 
     for (int x = 0; x < PLANE_SIZE; x++)
     for (int y = 0; y < PLANE_SIZE; y++) {
@@ -117,6 +122,48 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     worldMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(worldPlane, sizeof(worldPlane)), WorldVertex::layout);
     worldMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(worldIndices, sizeof(worldIndices)));
 
+    backBuffer_ = BGFX_INVALID_HANDLE;
+
+    renderBufferTextures_[0] = bgfx::createTexture2D(
+        width_,
+        height_,
+        false,
+        1,
+        bgfx::TextureFormat::BGRA8,
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
+    );
+    renderBufferTextures_[1] = bgfx::createTexture2D(
+        width_,
+        height_,
+        false,
+        1,
+        bgfx::TextureFormat::D16,
+        BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
+    );
+    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
+    bgfx::setViewFrameBuffer(0, renderBuffer_);
+
+    // postProcessBuffer_ = bgfx::createFrameBuffer(width_, height_, bgfx::TextureFormat::BGRA8);
+    // bgfx::setViewFrameBuffer(1, 
+    // postProcessBuffer_ = backBuffer_;
+    bgfx::setViewFrameBuffer(1, backBuffer_);
+    bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(1, 0, 0, 1280, 720);
+
+    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
+    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
+    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
+    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
+    screenQuadMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
+    
+    screenQuadIndices[0] = 0;
+    screenQuadIndices[1] = 1;
+    screenQuadIndices[2] = 2;
+    screenQuadIndices[3] = 2;
+    screenQuadIndices[4] = 3;
+    screenQuadIndices[5] = 0;
+    screenQuadMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(screenQuadIndices, sizeof(screenQuadIndices)));
+
     TEMP_LoadTestData();
 }
 
@@ -142,6 +189,11 @@ void Renderer::TEMP_LoadTestData() {
     worldMaterial_.textures[3] = GetTexture("marble_c");
     worldMaterial_.numTextures = 4;
     worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
+
+    LoadVertexShader_P("ScreenQuadVS");
+    LoadFragmentShader_P("PostProcessFS");
+    postProcessMaterial_.numTextures = 0;
+    postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
 
     DEBUGLOG("Create world material");
 }
@@ -226,6 +278,12 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderPostProcess_P() {
     // Kuwahara
+    for (int i = 0; i < postProcessMaterial_.numTextures; i++)
+        bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
+
+    bgfx::setVertexBuffer(0, screenQuadMesh_.vertexBuffer);
+    bgfx::setIndexBuffer(screenQuadMesh_.indexBuffer);
+    bgfx::submit(1, postProcessMaterial_.shader);
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {

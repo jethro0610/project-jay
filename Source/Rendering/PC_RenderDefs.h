@@ -19,3 +19,5 @@ typedef bgfx::ProgramHandle MaterialShader;
 
 typedef bgfx::TextureHandle Texture;
 typedef bgfx::UniformHandle TextureSampler;
+
+typedef bgfx::FrameBufferHandle FrameBuffer;

@@ -73,27 +73,22 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
-    LoadVertexShader_P("StaticVS");
-    LoadFragmentShader_P("DefaultFS");
-    LoadModel_P("st_sphere");
-    LoadTexture_P("bricks_c");
-    LoadTexture_P("bricks_n");
-    LoadTexture_P("grass_c");
-    LoadTexture_P("grass_n");
-    LoadTexture_P("marble_c");
+    Shader staticVS = LoadVertexShader_P("StaticVS");
+    Shader defaultFS = LoadFragmentShader_P("DefaultFS");
+    Model sphere = LoadModel_P("st_sphere");
+    Texture bricksC = LoadTexture_P("bricks_c");
+    Texture bricksN = LoadTexture_P("bricks_n");
+    Texture grassC = LoadTexture_P("grass_c");
+    Texture grassN = LoadTexture_P("grass_n");
+    Texture marbleC = LoadTexture_P("marble_c");
 
-    std::string textures[] = {"bricks_c", "bricks_n"};
-    MakeMaterial_P("playerMaterial", "StaticVS", "DefaultFS", textures, 2);
-    DEBUGLOG("Succesfully loaded all test assets");
+    Texture playerTextures[] = {bricksC, bricksN};
+    Material playerMaterial = MakeMaterial_P("playerMaterial", staticVS, defaultFS, playerTextures, 2);
 
-    LoadVertexShader_P("WorldVS");
-    LoadFragmentShader_P("WorldFS");
-    worldMaterial_.textures[0] = noiseTexture_;
-    worldMaterial_.textures[1] = GetTexture("grass_c");
-    worldMaterial_.textures[2] = GetTexture("grass_n");
-    worldMaterial_.textures[3] = GetTexture("marble_c");
-    worldMaterial_.numTextures = 4;
-    worldMaterial_.shader = bgfx::createProgram(GetVertexShader("WorldVS"), GetFragmentShader("WorldFS"));
+    Shader worldVS = LoadVertexShader_P("WorldVS");
+    Shader worldFS = LoadFragmentShader_P("WorldFS");
+    Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
+    worldMaterial_ = MakeMaterial_P("worldMaterial", worldVS, worldFS, worldTextures, 4);
 
     LoadVertexShader_P("ScreenQuadVS");
     LoadFragmentShader_P("PostProcessFS");
@@ -101,6 +96,7 @@ void Renderer::TEMP_LoadTestData() {
     // postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
 
     DEBUGLOG("Create world material");
+    DEBUGLOG("Succesfully loaded all test assets");
 }
 
 void Renderer::InitScreenQuad_P() {

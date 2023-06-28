@@ -45,12 +45,6 @@ file(GLOB SOURCES
     Source/Types/Gamepad.cpp
     Source/Types/Transform.cpp
 
-    IF(WIN32)
-        Source/Game/World/Win_World.cpp
-        Source/Game/World/Win_SpreadManager.cpp
-        Source/Logging/Win_Logger.cpp
-        Source/Resource/Win_SkeletonResource.cpp
-
     Source/Rendering/PC_Renderer.cpp
     Source/Game/PC_Game.cpp
     Source/Platform/PC_Platform.cpp

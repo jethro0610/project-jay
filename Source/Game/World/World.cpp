@@ -6,7 +6,7 @@ using namespace glm;
 World::World(FastNoiseLite& noise):
     noise_(noise)
 {
-    GenerateNoiseTexture_P();
+    // GenerateNoiseTexture_P();
     MarkAllDirty();
 }
 
@@ -39,7 +39,7 @@ void World::UpdateDirtyChunks() {
     auto it = dirtyChunks_.begin();
     while (it != dirtyChunks_.end() && updates < 12) {
         ivec3 dirtyChunk = *it;
-        GenerateMeshGPU_P(dirtyChunk);
+        // GenerateMeshGPU_P(dirtyChunk);
         it = dirtyChunks_.erase(it);
         updates++;
     }

@@ -148,7 +148,7 @@ void Game::Update() {
         GETCOMP(TransformComponent)
     );
     world_.UpdateDirtyChunks();
-    spreadManager_.UpdateRenderData_P();
+    // spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);
     renderer_.Render(
         entityManager_.entities_, 

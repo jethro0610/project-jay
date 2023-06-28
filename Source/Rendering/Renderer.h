@@ -110,12 +110,6 @@ private:
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
 
-    // void SetMaterial_P(std::string materialName);
-    // void EnableBlend_P();
-    // void DisableBlend_P();
-    // void SetRenderTargetWorld_P();
-    // void SetRenderTargetScreen_P();
-
     void StartFrame_P();
     void Clear_P();
     void RenderWorld_P(World& world);

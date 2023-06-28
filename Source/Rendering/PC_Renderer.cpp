@@ -32,7 +32,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     init.resolution.reset = BGFX_RESET_VSYNC;
     init.platformData.nwh = GETHANDLE(window);
     bgfx::init(init);
-    DEBUGLOG("Succsefully started BGFX");
+    DEBUGLOG("Succesfully started BGFX");
 
     width_ = 1280;
     height_ = 720;
@@ -72,8 +72,6 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
-    Shader staticVS = LoadVertexShader_P("StaticVS");
-    Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Model sphere = LoadModel_P("st_sphere");
     Texture bricksC = LoadTexture_P("bricks_c");
     Texture bricksN = LoadTexture_P("bricks_n");
@@ -81,7 +79,9 @@ void Renderer::TEMP_LoadTestData() {
     Texture grassN = LoadTexture_P("grass_n");
     Texture marbleC = LoadTexture_P("marble_c");
 
-    Texture playerTextures[] = {bricksC, bricksN};
+    Shader staticVS = LoadVertexShader_P("StaticVS");
+    Shader defaultFS = LoadFragmentShader_P("DefaultFS");
+    Texture playerTextures[] = { bricksC, bricksN };
     Material playerMaterial = MakeMaterial_P("player", staticVS, defaultFS, playerTextures, 2);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
@@ -94,7 +94,6 @@ void Renderer::TEMP_LoadTestData() {
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
     postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
-    DEBUGLOG("Create world material");
     DEBUGLOG("Succesfully loaded all test assets");
 }
 

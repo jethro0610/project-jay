@@ -35,10 +35,6 @@ bgfx::VertexLayout ScreenQuadVertex::layout;
 //     0, 3, 2,
 // };
 
-const uint16_t PLANE_SIZE = 256;
-static WorldVertex worldPlane[PLANE_SIZE * PLANE_SIZE ];
-static uint16_t worldIndices[(PLANE_SIZE - 1) * (PLANE_SIZE -1) * 6];
-
 const uint16_t NOISE_RESOLUTION = 4096;
 const uint16_t HALF_NOISE_RESOLUTION = NOISE_RESOLUTION / 2;
 const uint16_t MAX_NOISE_POS = 256;
@@ -82,28 +78,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     WorldVertex::Init();
     ScreenQuadVertex::Init();
 
-    for (int x = 0; x < PLANE_SIZE; x++)
-    for (int y = 0; y < PLANE_SIZE; y++) {
-        uint16_t index = y * PLANE_SIZE + x;
-        worldPlane[index] = {vec3(x - PLANE_SIZE / 2.0f, 0.0f, y - PLANE_SIZE / 2.0f), vec3(0.0f, 0.0f, 0.0f)};
-    };
-
-    uint32_t count = 0;
-    for (int x = 0; x < PLANE_SIZE - 1; x++)
-    for (int y = 0; y < PLANE_SIZE - 1; y++) {
-        uint16_t i0 = (y + 0) * PLANE_SIZE + (x + 0);
-        uint16_t i1 = (y + 1) * PLANE_SIZE + (x + 0);
-        uint16_t i2 = (y + 1) * PLANE_SIZE + (x + 1);
-        uint16_t i3 = (y + 0) * PLANE_SIZE + (x + 1);
-        
-        worldIndices[count++] = i0;
-        worldIndices[count++] = i1;
-        worldIndices[count++] = i2;
-
-        worldIndices[count++] = i2;
-        worldIndices[count++] = i3;
-        worldIndices[count++] = i0;
-    };
+    worldMesh_ = MakeWorldMesh(256);
 
     for (int x = 0; x < NOISE_RESOLUTION; x++) 
     for (int y = 0; y < NOISE_RESOLUTION; y++)  {
@@ -119,50 +94,47 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
         bgfx::makeRef(textureData, sizeof(textureData))
     );
 
-    worldMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(worldPlane, sizeof(worldPlane)), WorldVertex::layout);
-    worldMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(worldIndices, sizeof(worldIndices)));
-
-    backBuffer_ = BGFX_INVALID_HANDLE;
-
-    renderBufferTextures_[0] = bgfx::createTexture2D(
-        width_,
-        height_,
-        false,
-        1,
-        bgfx::TextureFormat::BGRA8,
-        BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
-    );
-    renderBufferTextures_[1] = bgfx::createTexture2D(
-        width_,
-        height_,
-        false,
-        1,
-        bgfx::TextureFormat::D16,
-        BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
-    );
-    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
-    bgfx::setViewFrameBuffer(0, renderBuffer_);
+    // backBuffer_ = BGFX_INVALID_HANDLE;
+    //
+    // renderBufferTextures_[0] = bgfx::createTexture2D(
+    //     width_,
+    //     height_,
+    //     false,
+    //     1,
+    //     bgfx::TextureFormat::BGRA8,
+    //     BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
+    // );
+    // renderBufferTextures_[1] = bgfx::createTexture2D(
+    //     width_,
+    //     height_,
+    //     false,
+    //     1,
+    //     bgfx::TextureFormat::D16,
+    //     BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
+    // );
+    // renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
+    // bgfx::setViewFrameBuffer(0, renderBuffer_);
 
     // postProcessBuffer_ = bgfx::createFrameBuffer(width_, height_, bgfx::TextureFormat::BGRA8);
     // bgfx::setViewFrameBuffer(1, 
     // postProcessBuffer_ = backBuffer_;
-    bgfx::setViewFrameBuffer(1, backBuffer_);
-    bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(1, 0, 0, 1280, 720);
-
-    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
-    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
-    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
-    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
-    screenQuadMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
-    
-    screenQuadIndices[0] = 0;
-    screenQuadIndices[1] = 1;
-    screenQuadIndices[2] = 2;
-    screenQuadIndices[3] = 2;
-    screenQuadIndices[4] = 3;
-    screenQuadIndices[5] = 0;
-    screenQuadMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(screenQuadIndices, sizeof(screenQuadIndices)));
+    // bgfx::setViewFrameBuffer(1, backBuffer_);
+    // bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    // bgfx::setViewRect(1, 0, 0, 1280, 720);
+    //
+    // screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 0.0f) };
+    // screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 0.0f) };
+    // screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 1.0f) };
+    // screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 1.0f) };
+    // screenQuadMesh_.vertexBuffer = bgfx::createVertexBuffer(bgfx::makeRef(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
+    // 
+    // screenQuadIndices[0] = 0;
+    // screenQuadIndices[1] = 1;
+    // screenQuadIndices[2] = 2;
+    // screenQuadIndices[3] = 2;
+    // screenQuadIndices[4] = 3;
+    // screenQuadIndices[5] = 0;
+    // screenQuadMesh_.indexBuffer = bgfx::createIndexBuffer(bgfx::makeRef(screenQuadIndices, sizeof(screenQuadIndices)));
 
     TEMP_LoadTestData();
 }
@@ -192,10 +164,60 @@ void Renderer::TEMP_LoadTestData() {
 
     LoadVertexShader_P("ScreenQuadVS");
     LoadFragmentShader_P("PostProcessFS");
-    postProcessMaterial_.numTextures = 0;
-    postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
+    // postProcessMaterial_.numTextures = 0;
+    // postProcessMaterial_.shader = bgfx::createProgram(GetVertexShader("ScreenQuadVS"), GetFragmentShader("PostProcessFS"));
 
     DEBUGLOG("Create world material");
+}
+
+Mesh Renderer::MakeWorldMesh(int size) {
+    Mesh mesh;
+
+    int numVertices = size * size;
+    WorldVertex* vertices =  new WorldVertex[numVertices];
+    for (int x = 0; x < size; x++)
+    for (int y = 0; y < size; y++) {
+        uint16_t index = y * size+ x;
+        vec3 position = vec3(x - size / 2.0f, 0.0f, y - size / 2.0f);
+        vec3 normal = vec3(0.0f, 0.0f, 0.0f); // TODO: Remove normal from world vertex and use 2D position
+        vertices[index] = { position, normal};
+    };
+    mesh.vertexBuffer = bgfx::createVertexBuffer(
+        bgfx::copy(
+            vertices, 
+            sizeof(WorldVertex) * numVertices
+        ), 
+        WorldVertex::layout
+    );
+    delete[] vertices;
+    
+    int numIndices = (size - 1) * (size -1) * 6;
+    uint16_t* worldIndices = new uint16_t[numIndices];
+    uint32_t count = 0;
+    for (int x = 0; x < size - 1; x++)
+    for (int y = 0; y < size - 1; y++) {
+        uint16_t i0 = (y + 0) * size + (x + 0);
+        uint16_t i1 = (y + 1) * size + (x + 0);
+        uint16_t i2 = (y + 1) * size + (x + 1);
+        uint16_t i3 = (y + 0) * size + (x + 1);
+        
+        worldIndices[count++] = i0;
+        worldIndices[count++] = i1;
+        worldIndices[count++] = i2;
+
+        worldIndices[count++] = i2;
+        worldIndices[count++] = i3;
+        worldIndices[count++] = i0;
+    };
+    mesh.indexBuffer = bgfx::createIndexBuffer(
+        bgfx::copy(
+            worldIndices, 
+            sizeof(uint16_t) * numIndices
+        )
+    );
+    delete[] worldIndices;
+
+    return mesh;
 }
 
 void Renderer::StartFrame_P() {
@@ -278,12 +300,12 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderPostProcess_P() {
     // Kuwahara
-    for (int i = 0; i < postProcessMaterial_.numTextures; i++)
-        bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
-
-    bgfx::setVertexBuffer(0, screenQuadMesh_.vertexBuffer);
-    bgfx::setIndexBuffer(screenQuadMesh_.indexBuffer);
-    bgfx::submit(1, postProcessMaterial_.shader);
+    // for (int i = 0; i < postProcessMaterial_.numTextures; i++)
+    //     bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
+    //
+    // bgfx::setVertexBuffer(0, screenQuadMesh_.vertexBuffer);
+    // bgfx::setIndexBuffer(screenQuadMesh_.indexBuffer);
+    // bgfx::submit(1, postProcessMaterial_.shader);
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {

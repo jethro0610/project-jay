@@ -113,7 +113,7 @@ for shader_desc in shader_dict["shaders"]:
     print(colored("Compiling %s..." % shader_name, "yellow"))
 
     command = (
-        './Tools/shaderc.exe '
+        './Tools/shaderc '
         '-i ./Tools/include/ '
         '-i ./Source/Shaders/Include/ '
         '--varyingdef ./Source/Shaders/varying.def.sc '
@@ -124,7 +124,7 @@ for shader_desc in shader_dict["shaders"]:
         '--profile %s'
     )
     command = command % (shader_input, shader_output, shader_type, shader_platform, shader_profile)
-    result = subprocess.run(command)
+    result = subprocess.run(command, shell = True)
     
     if result.returncode == 0:
         compile_times["shaders"][shader_name]["time"] = last_shader_write
@@ -140,5 +140,5 @@ for shader_desc in shader_dict["shaders"]:
     print()
     print()
 
-with open(".\\lastcompiletimes.json", "w") as outfile:
+with open("lastcompiletimes.json", "w+") as outfile:
     json.dump(compile_times, outfile)

@@ -11,7 +11,7 @@ bool ScreenText::IsEnabled() {
     return screenText_->enabled_;
 }
 
-Glyph* ScreenText::GetText() {
+TextGlyph* ScreenText::GetText() {
     return screenText_->text_[0];
 }
 

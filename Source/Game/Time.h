@@ -1,6 +1,6 @@
 #pragma once
 
-class Time {
+class GlobalTime {
 public:
     static void Init();
     static void UpdateTime();
@@ -8,7 +8,7 @@ public:
     static float GetTime();
 
 private:
-    static Time* time_;
+    static GlobalTime* time_;
     long long lastTimeUSec_;
     long long currentTimeUSec_;
     float deltaTime_;

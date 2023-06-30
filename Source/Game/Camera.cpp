@@ -36,7 +36,7 @@ mat4 Camera::GetViewMatrix() const {
 }
 
 void Camera::Update(Inputs inputs) {
-    float deltaTime = Time::GetDeltaTime();
+    float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));

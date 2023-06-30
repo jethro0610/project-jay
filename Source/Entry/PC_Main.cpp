@@ -12,7 +12,7 @@ int main() {
     Logger::Init();
     ScreenText::Init();
 #endif
-    Time::Init();
+    GlobalTime::Init();
     DEBUGLOG("Starting Project Jay...");
     Game* game = new Game();
     DEBUGLOG("Closing Project Jay");

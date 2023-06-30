@@ -1,6 +1,5 @@
 #include "Renderer.h"
 #include <fstream>
-#include <GLFW/glfw3native.h>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <iostream>
@@ -29,13 +28,14 @@ bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
-    DEBUGLOG("Starting BGFX...");
+    DEBUGLOG("Starting BGFX again...");
     bgfx::Init init; 
     init.type = bgfx::RendererType::Count;
     init.resolution.width = 1280;
     init.resolution.height = 720;
     init.resolution.reset = BGFX_RESET_VSYNC;
-    init.platformData.nwh = GETHANDLE(window);
+    init.platformData.nwh = (void*)glfwGetX11Window(window);
+    init.platformData.ndt = (void*)glfwGetX11Display();
     bgfx::init(init);
     DEBUGLOG("Succesfully started BGFX");
 
@@ -55,12 +55,15 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
+    DEBUGLOG("Created uniforms");
 
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
+    DEBUGLOG("Set light");
 
     StaticVertex::Init();
     WorldVertex::Init();
     TextureQuadVertex::Init();
+    DEBUGLOG("Init vertices");
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 256);
     worldMesh_ = MakeWorldMesh_P(256);
@@ -70,6 +73,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     InitRenderBuffer_P();
     InitPostProcessBuffer_P();
     InitUIBuffer_P();
+    DEBUGLOG("Init buffers");
 
     TEMP_LoadTestData();
 }
@@ -264,7 +268,7 @@ void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
     bgfx::setViewTransform(0, &viewMatrix_,&projectionMatrix_);
 
-    vec4 timeResolution = vec4(Time::GetTime(), 1280, 720, 0.0f);
+    vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position_, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
@@ -455,6 +459,7 @@ Shader Renderer::LoadFragmentShader_P(std::string name) {
 }
 
 Model Renderer::LoadModel_P(std::string name) {
+    DEBUGLOG("Starting load model " << name); 
     ForceMapUnique(models_, name, "Model " + name + " is already loaded");
     Model model;
     std::ifstream file;
@@ -463,10 +468,14 @@ Model Renderer::LoadModel_P(std::string name) {
         ERRORLOG("Failed to load model " << name);
         abort();
     }
+    DEBUGLOG("Opened model " << name); 
 
+    DEBUGLOG("Header size: " << sizeof(ModelFileHeader));
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
     model.numMeshes = modelHeader.numMeshes;
+    DEBUGLOG("Header has this many meshes: " << modelHeader.numMeshes); 
+    DEBUGLOG("Model has this many meshes: " << model.numMeshes); 
 
     for (int i = 0; i < model.numMeshes; i++) {
         MeshFileHeader meshHeader;

@@ -24,7 +24,7 @@ Game::Game():
     Init();
 
     while (running_) {
-        Time::UpdateTime();
+        GlobalTime::UpdateTime();
 
         platform_.FlushMouse();
         glfwPollEvents();
@@ -63,8 +63,8 @@ void Game::UpdateInputs_P() {
     inputs_.deltaLookY = 0.0f;
     inputs_.deltaLookX -= platform_.deltaMouseX_ * 0.005f;
     inputs_.deltaLookY -= platform_.deltaMouseY_ * 0.005f;
-    inputs_.deltaLookX -= platform_.gamepad_.rightStickX_ * Time::GetDeltaTime() * 2.0f;
-    inputs_.deltaLookY += platform_.gamepad_.rightStickY_ * Time::GetDeltaTime() * 2.0f;
+    inputs_.deltaLookX -= platform_.gamepad_.rightStickX_ * GlobalTime::GetDeltaTime() * 2.0f;
+    inputs_.deltaLookY += platform_.gamepad_.rightStickY_ * GlobalTime::GetDeltaTime() * 2.0f;
 }
 
 void Game::FlushInputs_P() {

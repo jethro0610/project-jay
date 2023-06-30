@@ -1,5 +1,6 @@
 #pragma once
 #include <bitset>
+#include <stdint.h>
 
 const uint8_t GAMEPAD_A = 0;
 const uint8_t GAMEPAD_B = 1;

@@ -9,5 +9,5 @@ struct ModelFileHeader {
 
 struct Model {
     Mesh meshes[MAX_MESHES_PER_MODEL];
-    uint8_t numMeshes;
+    int numMeshes;
 };

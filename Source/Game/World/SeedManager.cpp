@@ -16,8 +16,8 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityIDNullable capturer, glm:
         offset,
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
         capturer,
-        Time::GetTime(),
-        Time::GetTime() + MIN_REMOVE_TIME
+        GlobalTime::GetTime(),
+        GlobalTime::GetTime() + MIN_REMOVE_TIME
     };
     seeds_.Append(seed);
 }
@@ -42,7 +42,7 @@ void SeedManager::CalculatePositions(
     for (int i = 0; i < seeds_.GetCount(); i++) {
         Seed& seed = seeds_[i];
 
-        float timeSinceStart = Time::GetTime() - seed.startTime;
+        float timeSinceStart = GlobalTime::GetTime() - seed.startTime;
         vec3 physicsOffset;
 
         float logisitic = 1 + expf(-SEED_EASE_SPEED * timeSinceStart);
@@ -53,7 +53,7 @@ void SeedManager::CalculatePositions(
 
         // TODO: When using pure heightmaps, check distance and set height to that
 
-        float timeSinceCapture = Time::GetTime() - seed.captureTime;
+        float timeSinceCapture = GlobalTime::GetTime() - seed.captureTime;
         if (seed.targetEntity == NO_ENTITY || timeSinceCapture < 0.0f)
             continue;
 
@@ -65,7 +65,7 @@ void SeedManager::CalculatePositions(
         }
         vec3 initialPosition = seed.position;
         vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position_, 0.0f);
-        timeSinceCapture = std::powf(timeSinceCapture, 3.0f);
+        timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
         positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
     }
 }
@@ -77,7 +77,7 @@ void SeedManager::GetCaptures(
     BubbleComponent& bubbleComponent, 
     TransformComponent& transformComponent
 ) {
-    float time = Time::GetTime();
+    float time = GlobalTime::GetTime();
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)

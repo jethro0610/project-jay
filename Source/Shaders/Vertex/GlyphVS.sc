@@ -18,9 +18,9 @@ void main() {
 
     gl_Position = vec4(a_position.x, a_position.y, 0.0f, 1.0f);
 
-    int char = (int)i_data0.w;
-    int charRow = floor(char / MAP_CHARS);
-    int charCol = char % MAP_CHARS;
+    int character = (int)i_data0.w;
+    int charRow = floor(character / MAP_CHARS);
+    int charCol = character % MAP_CHARS;
 
     v_texcoord0 = a_texcoord0 * CHAR_SIZE;
     v_texcoord0.x += charCol * CHAR_SIZE; 

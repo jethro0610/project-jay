@@ -31,7 +31,7 @@ void Game::Init() {
 }
 
 void Game::Update() {
-    timeAccumlulator_ += Time::GetDeltaTime();
+    timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
         IntervalSpawnSystem::Execute(

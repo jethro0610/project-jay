@@ -58,7 +58,7 @@ void SpreadActivatorSystem::Execute(
             const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(
                 position, 
                 radius, 
-                std::min(amount, meter == nullptr ? UINT16_MAX : *meter)
+                std::min(amount, meter == nullptr ? (uint16_t)UINT16_MAX : *meter)
             );
             if (addSpreadInfo.count == 0)
                 continue;

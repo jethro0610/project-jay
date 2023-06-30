@@ -49,9 +49,10 @@ public:
     uint32_t GetCount() const { return count_; }
     glm::vec4* GetPositions() const { return positions_.GetData(); }
     SpreadKey GetKey(glm::vec2 position) const;
+    SpreadKey GetKey(glm::vec3 position) const;
 
 private:
-    bool AddSpread(SpreadKey key, float height); 
+    bool AddSpread(SpreadKey key); 
     bool RemoveSpread(
         SpreadKey key,
         EntityIDNullable remover = NO_ENTITY,

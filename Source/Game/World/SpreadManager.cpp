@@ -32,6 +32,10 @@ SpreadKey SpreadManager::GetKey(vec2 position) const {
     return ivec2(position);
 }
 
+SpreadKey SpreadManager::GetKey(vec3 position) const {
+    return GetKey(vec2(position.x, position.z));
+}
+
 bool SpreadManager::SpreadIsActive(vec2 position) const {
     SpreadKey key = GetKey(position);
     return keyIndices_.contains(key);
@@ -41,7 +45,7 @@ bool SpreadManager::SpreadIsActive(vec3 position) const {
     return SpreadIsActive(vec2(position.x, position.z));
 }
 
-bool SpreadManager::AddSpread(ivec2 key, float height) {
+bool SpreadManager::AddSpread(ivec2 key) {
     if (keyIndices_.contains(key))
         return false;
     ASSERT((positions_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
@@ -58,7 +62,7 @@ bool SpreadManager::AddSpread(ivec2 key, float height) {
 }
 
 bool SpreadManager::AddSpread(glm::vec3 position) {
-    return AddSpread(GetKey(position), position.y);
+    return AddSpread(GetKey(position));
 }
 
 AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t amount) {
@@ -83,7 +87,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
     // add it
     while (viableAddKeys_.GetCount() > 0 && count < amount) {
         uint32_t index = std::rand() % viableAddKeys_.GetCount();
-        AddSpread(viableAddKeys_[index], position.y);
+        AddSpread(viableAddKeys_[index]);
         viableAddKeys_.Remove(index);
         count++;
     }
@@ -92,7 +96,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
 }
 
 bool SpreadManager::RemoveSpread(
-    ivec2 key, 
+    SpreadKey key, 
     EntityIDNullable remover,
     vec3 seedOffset
 ) {
@@ -101,14 +105,15 @@ bool SpreadManager::RemoveSpread(
         return false;
 
     uint32_t deleteIndex = foundKey->second;
+
     vec3 seedPosition = vec3(positions_[deleteIndex]) + vec3(0.0f, 0.25f, 0.0f);
     seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
     vec4 swappedPosition = positions_.Remove(deleteIndex);
     SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x , swappedPosition.z));
 
-    keyIndices_.erase(key);
     keyIndices_[keyToSwap] = deleteIndex;
+    keyIndices_.erase(key);
     count_--;
 
     return true;

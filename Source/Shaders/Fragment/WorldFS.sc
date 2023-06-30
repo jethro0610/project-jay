@@ -3,6 +3,7 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <Lighting.sh>
 
 uniform vec4 u_cameraPosition;
+uniform vec4 u_lightDirection;
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
@@ -13,7 +14,7 @@ static float MAX_NOISE_POS = 256.0f;
 static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
 
 void main() {
-    vec3 lightDir = normalize(vec3(1.0f, -1.0f, -1.0f));
+    vec3 lightDirection = u_lightDirection.xyz; 
 
     vec3 color = texture2D(s_sampler1, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     float macroStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;
@@ -28,7 +29,7 @@ void main() {
     // normal = v_normal;
 
     float ambient = 0.2f;
-    float diffuse = max(-dot(normal, lightDir), 0.0f);
+    float diffuse = max(-dot(normal, lightDirection), 0.0f);
     float brightness = ambient + diffuse;
 
     float fresnel = getFresnel(u_cameraPosition, v_wposition, normal, 1.0f, 16.0f);

@@ -50,6 +50,9 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
+    u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
+
+    SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
 
     StaticVertex::Init();
     WorldVertex::Init();
@@ -451,4 +454,9 @@ Material Renderer::MakeMaterial_P(
         textureList[i] = GetTexture(textures[i]);
 
     return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures);
+}
+
+void Renderer::SetLightDirection_P(vec3 direction) {
+    vec4 lightDirection = normalize(vec4(direction, 0.0f));
+    bgfx::setUniform(u_lightDirection_, &lightDirection);
 }

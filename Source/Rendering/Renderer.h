@@ -69,6 +69,8 @@ public:
     Texture GetTexture(std::string name);
     Material GetMaterial(std::string name);
 
+    void SetLightDirection_P(glm::vec3 direction);
+
 private:
     int width_;
     int height_;
@@ -97,6 +99,7 @@ private:
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
     Uniform u_normal_;
+    Uniform u_lightDirection_;
     Uniform u_timeResolution_;
     Uniform u_cameraPosition_;
     Uniform u_cameraUp_;

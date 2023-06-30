@@ -39,6 +39,14 @@
         {
             "name": "SeedFS",
             "type": "fragment"
+        },
+        {
+            "name": "GlyphVS",
+            "type": "vertex"
+        },
+        {
+            "name": "TextFS",
+            "type": "fragment"
         }
 	]
 }

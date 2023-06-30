@@ -69,8 +69,6 @@ public:
     Texture GetTexture(std::string name);
     Material GetMaterial(std::string name);
 
-    void SetLightDirection_P(glm::vec3 direction);
-
 private:
     int width_;
     int height_;
@@ -87,6 +85,7 @@ private:
     Material worldMaterial_;
     Material spreadMaterial_;
     Material seedMaterial_;
+    Material textMaterial_;
 
     Texture noiseTexture_;
 
@@ -133,5 +132,7 @@ private:
     void RenderScreenText_P();
     #endif
     void PresentFrame_P();
+
+    void SetLightDirection_P(glm::vec3 direction);
 };
 

@@ -17,6 +17,7 @@ void Renderer::Render(
     TransformComponent& transformComponent
 ) {
     StartFrame_P();
+
     RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
@@ -24,9 +25,7 @@ void Renderer::Render(
     RenderPostProcess_P();
     // RenderUI_P(meterComponent);
     // #ifdef _DEBUG
-    // EnableBlend_P();
-    // RenderScreenText_P();
-    // DisableBlend_P();
+    RenderScreenText_P();
     // #endif
 
     PresentFrame_P();

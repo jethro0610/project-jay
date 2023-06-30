@@ -49,6 +49,7 @@ file(GLOB SOURCES
     Source/Game/PC_Game.cpp
     Source/Platform/PC_Platform.cpp
     Source/Entry/PC_Main.cpp
+    Source/Logging/PC_ScreenText.cpp
 )
 
 set(BGFX_AMALGAMATED        OFF CACHE INTERNAL "" FORCE)

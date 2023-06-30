@@ -8,19 +8,24 @@
 #define SCREENLINE(text)
 #endif
 
+#ifdef _PC
+#include <glm/vec4.hpp>
+typedef glm::vec4 Glyph;
+#endif
+
 class ScreenText {
 private:
     ScreenText();
     ~ScreenText();
     static ScreenText* screenText_;
-    uint32_t lines_[MAX_LINES][CHARS_PER_LINE];
+    Glyph text_[MAX_LINES][CHARS_PER_LINE];
     bool enabled_;
 
 public:
     static ScreenText* Get();
     static bool IsEnabled();
     static void SetLine(uint32_t line, std::string text);
-    static uint32_t* GetLines();
+    static Glyph* GetText();
     static void Toggle();
     static void Init();
 };

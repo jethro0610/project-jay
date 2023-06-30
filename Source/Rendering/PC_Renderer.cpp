@@ -109,15 +109,20 @@ void Renderer::TEMP_LoadTestData() {
     Shader seedFS = LoadFragmentShader_P("SeedFS");
     seedMaterial_ = MakeMaterial_P("seed", instBillboardVS, seedFS, nullptr, 0);
 
+    Shader glyphVS = LoadVertexShader_P("GlyphVS");
+    Shader textFS = LoadFragmentShader_P("TextFS");
+    Texture fontTextures[] = { LoadTexture_P("font") };
+    textMaterial_ = MakeMaterial_P("text", glyphVS, textFS, fontTextures, 1);
+
     DEBUGLOG("Succesfully loaded all test assets");
 }
 
 void Renderer::InitQuad_P() {
     TextureQuadVertex vertices[4];
-    vertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 1.0f) };
-    vertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 1.0f) };
-    vertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 0.0f) };
-    vertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 0.0f) };
+    vertices[0] = { glm::vec2(-0.5f, -0.5f), glm::vec2( 0.0f, 1.0f) };
+    vertices[1] = { glm::vec2( 0.5f, -0.5f), glm::vec2( 1.0f, 1.0f) };
+    vertices[2] = { glm::vec2( 0.5f,  0.5f), glm::vec2( 1.0f, 0.0f) };
+    vertices[3] = { glm::vec2(-0.5f,  0.5f), glm::vec2( 0.0f, 0.0f) };
     quad_.vertexBuffer = bgfx::createVertexBuffer(bgfx::copy(vertices, sizeof(vertices)), TextureQuadVertex::layout);
     
     uint16_t indices[6];
@@ -347,7 +352,23 @@ void Renderer::RenderUI_P(MeterComponent& meterComponent) {
 }
 
 void Renderer::RenderScreenText_P() {
-    // Create plane and present (instanced)
+    if (!ScreenText::IsEnabled())
+        return;
+
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+    uint32_t count = MAX_LINES * CHARS_PER_LINE;
+    
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
+    memcpy(instanceBuffer.data, ScreenText::GetText(), sizeof(vec4) * count);
+    bgfx::setInstanceDataBuffer(&instanceBuffer);
+
+    bgfx::setTexture(0, samplers_[0], textMaterial_.textures[0]);
+
+    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+    bgfx::setIndexBuffer(quad_.indexBuffer);
+    bgfx::submit(1, textMaterial_.shader);
+    bgfx::setState(BGFX_STATE_DEFAULT);
 }
 
 #define MEMORYFROMFILE(path)                                    \

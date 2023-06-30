@@ -18,6 +18,8 @@
 #include "../Game/World/SpreadManager.h"
 #include "../Game/World/SeedManager.h"
 
+#include "../Game/Components/MeterComponent.h"
+
 #include "PC_VertexTypes.h"
 
 using namespace glm;
@@ -52,6 +54,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
+    u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
 
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
 
@@ -66,6 +69,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     InitQuad_P();
     InitRenderBuffer_P();
     InitPostProcessBuffer_P();
+    InitUIBuffer_P();
 
     TEMP_LoadTestData();
 }
@@ -90,7 +94,6 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
-    Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
     postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
@@ -110,6 +113,10 @@ void Renderer::TEMP_LoadTestData() {
     Shader barVS = LoadVertexShader_P("BarVS");
     Shader barFS = LoadFragmentShader_P("BarFS");
     barMaterial_ = MakeMaterial_P("bar", barVS, barFS, nullptr, 0);
+
+    Shader blitFS = LoadFragmentShader_P("BlitFS");
+    Texture blitTextures[] = { postProcessTexture_ };
+    blitMaterial_ = MakeMaterial_P("blit", screenQuadVS, blitFS, blitTextures, 1);
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -157,7 +164,17 @@ void Renderer::InitRenderBuffer_P() {
 }
 
 void Renderer::InitPostProcessBuffer_P() {
-    bgfx::setViewFrameBuffer(1, backBuffer_);
+    postProcessTexture_ = bgfx::createTexture2D(
+        width_,
+        height_,
+        false,
+        1,
+        bgfx::TextureFormat::BGRA8,
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
+    );
+
+    postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture_);
+    bgfx::setViewFrameBuffer(1, postProcessBuffer_);
     bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(1, 0, 0, 1280, 720);
 }
@@ -359,7 +376,20 @@ void Renderer::RenderPostProcess_P() {
     bgfx::submit(1, postProcessMaterial_.shader);
 }
 
+void Renderer::RenderBlit_P() {
+    bgfx::setTexture(0, samplers_[0], blitMaterial_.textures[0]);
+    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+    bgfx::setIndexBuffer(quad_.indexBuffer);
+    bgfx::submit(2, blitMaterial_.shader);
+}
+
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {
+    vec4 meter = vec4((float)meterComponent.meter[PLAYER_ENTITY] / meterComponent.maxMeter[PLAYER_ENTITY]); 
+    bgfx::setUniform(u_meter_, &meter);
+
+    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+    bgfx::setIndexBuffer(quad_.indexBuffer);
+    bgfx::submit(2, barMaterial_.shader);
 }
 
 void Renderer::RenderScreenText_P() {
@@ -378,7 +408,7 @@ void Renderer::RenderScreenText_P() {
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(1, textMaterial_.shader);
+    bgfx::submit(2, textMaterial_.shader);
     bgfx::setState(BGFX_STATE_DEFAULT);
 }
 

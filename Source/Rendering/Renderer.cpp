@@ -23,6 +23,7 @@ void Renderer::Render(
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
     RenderPostProcess_P();
+    RenderBlit_P();
     RenderUI_P(meterComponent);
     RenderScreenText_P();
 

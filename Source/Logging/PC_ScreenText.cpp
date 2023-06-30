@@ -5,7 +5,7 @@ ScreenText::ScreenText() {
     enabled_ = false;
     for (int i = 0; i < MAX_LINES; i++) 
     for (int j = 0; j < CHARS_PER_LINE; j++) {
-        text_[i][j] = vec4(j * 50.0f, i * 96.0f, 96.0f, (float)' ' - 32);
+        text_[i][j] = vec4(j * 24.0f, i * 48.0f, 48.0f, (float)' ' - 32);
     }
 }
 

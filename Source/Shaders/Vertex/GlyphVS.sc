@@ -6,20 +6,15 @@ static const int MAP_CHARS = 16;
 static const float CHAR_SIZE = 1.0f / float(MAP_CHARS);
 
 void main() {
-    float invTexel = u_viewTexel.x / u_viewTexel.y;
+    vec2 scale = i_data0.z;
 
-    float x = i_data0.x; 
-    float y = i_data0.y; 
-    float scale = i_data0.z;
+    a_position.x *= 2.0f * scale * u_viewTexel.x; 
+    a_position.y *= 2.0f * scale * u_viewTexel.y; 
+    a_position.x -= 1.0f - scale * u_viewTexel.x;
+    a_position.y += 1.0f - scale * u_viewTexel.y;
 
-    x *= u_viewTexel.x;
-    y *= u_viewTexel.y;
-    scale *= u_viewTexel.y;
-
-    a_position.x *= scale * invTexel;
-    a_position.y *= scale;
-    a_position.x -= 1.0f - scale * invTexel * 0.5f - x;
-    a_position.y += 1.0f - scale * 0.5f - y;
+    a_position.x += i_data0.x * u_viewTexel.x * 2.0f;
+    a_position.y -= i_data0.y * u_viewTexel.y * 2.0f;
 
     gl_Position = vec4(a_position.x, a_position.y, 0.0f, 1.0f);
 
@@ -28,6 +23,6 @@ void main() {
     int charCol = char % MAP_CHARS;
 
     v_texcoord0 = a_texcoord0 * CHAR_SIZE;
-    v_texcoord0.x += CHAR_SIZE * charCol; 
-    v_texcoord0.y += CHAR_SIZE * charRow; 
+    v_texcoord0.x += charCol * CHAR_SIZE; 
+    v_texcoord0.y += charRow * CHAR_SIZE; 
 }

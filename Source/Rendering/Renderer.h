@@ -87,18 +87,21 @@ private:
     Material seedMaterial_;
     Material textMaterial_;
     Material barMaterial_;
+    Material blitMaterial_;
 
     Texture noiseTexture_;
 
-    void Blit_P();
     void InitQuad_P();
+
     void InitRenderBuffer_P();
     void InitPostProcessBuffer_P();
     void InitUIBuffer_P();
 
     FrameBuffer backBuffer_;
     FrameBuffer renderBuffer_;
+    FrameBuffer postProcessBuffer_;
     Texture renderBufferTextures_[2];
+    Texture postProcessTexture_;
 
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
@@ -108,6 +111,7 @@ private:
     Uniform u_cameraPosition_;
     Uniform u_cameraUp_;
     Uniform u_cameraRight_;
+    Uniform u_meter_;
 
     Mesh MakeWorldMesh_P(int size);
     Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
@@ -131,6 +135,7 @@ private:
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderSeed_P(SeedManager& seedManager);
     void RenderPostProcess_P();
+    void RenderBlit_P();
     void RenderUI_P(MeterComponent& meterComponent);
     #ifdef _DEBUG
     void RenderScreenText_P();

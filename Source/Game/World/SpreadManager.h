@@ -16,45 +16,23 @@ class TransformComponent;
 
 struct AddSpreadInfo {
     uint16_t count;
-    glm::ivec2 key;
-};
-
-struct SpreadChunk {
-    glm::vec3 positions[MAX_SPREAD];
-    glm::ivec2 keys[MAX_SPREAD];
-    uint16_t count;
-
-    std::unordered_map<glm::ivec2, uint16_t> keysToIndex;
-
-    SpreadChunk() {
-        count = 0;
-        std::fill_n(positions, MAX_SPREAD, glm::vec3(0.0f, 0.0f, 0.0f));
-        std::fill_n(keys, MAX_SPREAD, glm::ivec2(0, 0));
-    }
+    SpreadKey key;
 };
 
 class SpreadManager {
 public:
-    SpreadChunk spreadChunks_[MAX_X_CHUNKS][MAX_Z_CHUNKS];
     SpreadManager(
         SeedManager& seedManager,
         World& world
     );
     SpreadManager(const SpreadManager&) = delete;
 
-    glm::ivec2 WorldPositionToSpreadKey(glm::vec3 position) const;
-    glm::ivec2 SpreadKeyToChunk(glm::ivec2 key) const;
-    bool SpreadIsActive(glm::ivec2 key) const;
+    bool SpreadIsActive(glm::vec2 position) const;
+    bool SpreadIsActive(glm::vec3 position) const;
 
-    bool AddSpread(glm::ivec2 key, float height); 
     bool AddSpread(glm::vec3 position); 
     AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint16_t amount = UINT16_MAX);
 
-    bool RemoveSpread(
-        glm::ivec2 key,
-        EntityIDNullable remover = NO_ENTITY,
-        glm::vec3 seedOffset = glm::vec3(0.0f)
-    );
     bool RemoveSpread(
         glm::vec3 position, 
         EntityIDNullable remover = NO_ENTITY, 
@@ -68,9 +46,23 @@ public:
     ); 
     void UpdateRenderData_P();
 
+    uint32_t GetCount() const { return count_; }
+    glm::vec4* GetPositions() const { return positions_.GetData(); }
+    SpreadKey GetKey(glm::vec2 position) const;
+
 private:
+    bool AddSpread(SpreadKey key, float height); 
+    bool RemoveSpread(
+        SpreadKey key,
+        EntityIDNullable remover = NO_ENTITY,
+        glm::vec3 seedOffset = glm::vec3(0.0f)
+    );
+
     World& world_;
     SeedManager& seedManager_;
-    std::unordered_set<glm::ivec2> dirtyChunks_;
-    FixedVector<glm::ivec2, 8192> viableAddKeys_; // Making this a member variable so its not reallocated every call
+    FixedVector<SpreadKey, 8192> viableAddKeys_;
+
+    FixedVector<glm::vec4, MAX_SPREAD> positions_;
+    std::unordered_map<SpreadKey, uint32_t> keyIndices_;
+    uint32_t count_;
 };

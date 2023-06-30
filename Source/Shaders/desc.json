@@ -27,6 +27,10 @@
         {
             "name": "BlitFS",
             "type": "fragment"
+        },
+        {
+            "name": "InstanceVS",
+            "type": "vertex"
         }
 	]
 }

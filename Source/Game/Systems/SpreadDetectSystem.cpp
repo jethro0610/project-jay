@@ -24,7 +24,7 @@ void SpreadDetectSystem::Execute(
         bool& detected = spreadDetectComponent.deteced[i];
         detected = false;
 
-        ivec2 currentKey = spreadManager.WorldPositionToSpreadKey(transformComponent.transform[i].position_);
+        SpreadKey currentKey = spreadManager.GetKey(transformComponent.transform[i].position_);
         if (!spreadManager.SpreadIsActive(currentKey)) {
             spreadDetectComponent.lastAdd[i] = NO_ADD;
             continue;

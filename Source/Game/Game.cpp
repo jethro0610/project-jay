@@ -23,9 +23,9 @@ void Game::Init() {
     auto [playerEntityId, playerTransform] = entityManager_.CreateEntity("player");
     playerTransform = spawnTransform;
 
-    spawnTransform.position_ = vec3(5.0f, 42.5f, 5.0f);
-    auto [testEntityId, testTransform] = entityManager_.CreateEntity("test_entity");
-    testTransform = spawnTransform;
+    // spawnTransform.position_ = vec3(5.0f, 42.5f, 5.0f);
+    // auto [testEntityId, testTransform] = entityManager_.CreateEntity("test_entity");
+    // testTransform = spawnTransform;
 
     camera_.trackEntity_ = PLAYER_ENTITY;
 }

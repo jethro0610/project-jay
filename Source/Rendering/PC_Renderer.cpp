@@ -15,6 +15,8 @@
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 
+#include "../Game/World/SpreadManager.h"
+
 #include "PC_VertexTypes.h"
 
 using namespace glm;
@@ -94,6 +96,11 @@ void Renderer::TEMP_LoadTestData() {
     Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
     postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
+
+    Shader instanceVS = LoadVertexShader_P("InstanceVS");
+    spreadMaterial_ = MakeMaterial_P("spread", instanceVS, defaultFS, playerTextures, 2); 
+
+    spreadModel_ = sphere;
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -202,7 +209,7 @@ Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float
     };
 
     texture = bgfx::createTexture2D(resolution, resolution, false, 1, 
-        bgfx::TextureFormat::R32F, 
+        bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
         bgfx::copy(textureData, sizeof(float) * resolution * resolution)
     );
@@ -282,7 +289,25 @@ void Renderer::RenderEntities_P(
 }
 
 void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
-    // Take the spread buffers and present them (instanced)
+    uint32_t count = spreadManager.GetCount();
+    if (count == 0)
+        return;
+
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
+    memcpy(instanceBuffer.data, spreadManager.GetPositions(), sizeof(vec4) * count);
+    bgfx::setInstanceDataBuffer(&instanceBuffer);
+
+    for (int m = 0; m < spreadModel_.numMeshes; m++) {
+        Mesh mesh = spreadModel_.meshes[m];
+
+        for (int t = 0; t < spreadMaterial_.numTextures; t++)
+            bgfx::setTexture(t, samplers_[t], spreadMaterial_.textures[t]);
+
+        bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+        bgfx::setIndexBuffer(mesh.indexBuffer);
+        bgfx::submit(0, spreadMaterial_.shader);
+    }
 }
 
 void Renderer::RenderSeed_P(SeedManager& seedManager) {

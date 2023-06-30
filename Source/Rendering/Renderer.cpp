@@ -16,16 +16,11 @@ void Renderer::Render(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    // Clear_P();
     StartFrame_P();
-
-    // SetRenderTargetWorld_P();
     RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
-    // RenderSpread_P(spreadManager);
+    RenderSpread_P(spreadManager);
     // RenderSeed_P(seedManager);
-
-    // SetRenderTargetScreen_P();
     RenderPostProcess_P();
     // RenderUI_P(meterComponent);
     // #ifdef _DEBUG
@@ -34,8 +29,7 @@ void Renderer::Render(
     // DisableBlend_P();
     // #endif
 
-    // RenderTextureToScreen_P();
-        PresentFrame_P();
+    PresentFrame_P();
 }
 
 Shader Renderer::GetVertexShader(std::string name) {

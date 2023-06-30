@@ -76,10 +76,19 @@ private:
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
 
+    Model spreadModel_;
+
+    Mesh screenQuad_;
+    Mesh worldMesh_;
+
+    Material postProcessMaterial_;
+    Material worldMaterial_;
+    Material spreadMaterial_;
+
+    Texture noiseTexture_;
+
     void InitScreenQuad_P();
     void InitRenderBuffer_P();
-    Mesh screenQuad_;
-    Material postProcessMaterial_;
 
     FrameBuffer backBuffer_;
     FrameBuffer renderBuffer_;
@@ -95,12 +104,6 @@ private:
 
     Mesh MakeWorldMesh_P(int size);
     Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
-
-    // These are temporary and will likely be moved to
-    // the world class
-    Mesh worldMesh_;
-    Material worldMaterial_;
-    Texture noiseTexture_;
 
     std::unordered_map<std::string, Shader> vertexShaders_;
     std::unordered_map<std::string, Shader> fragmentShaders_;

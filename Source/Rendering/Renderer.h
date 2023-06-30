@@ -80,16 +80,17 @@ private:
 
     Model spreadModel_;
 
-    Mesh screenQuad_;
+    Mesh quad_;
     Mesh worldMesh_;
 
     Material postProcessMaterial_;
     Material worldMaterial_;
     Material spreadMaterial_;
+    Material seedMaterial_;
 
     Texture noiseTexture_;
 
-    void InitScreenQuad_P();
+    void InitQuad_P();
     void InitRenderBuffer_P();
 
     FrameBuffer backBuffer_;

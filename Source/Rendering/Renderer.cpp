@@ -20,7 +20,7 @@ void Renderer::Render(
     RenderWorld_P(world);
     RenderEntities_P(entities, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
-    // RenderSeed_P(seedManager);
+    RenderSeed_P(seedManager);
     RenderPostProcess_P();
     // RenderUI_P(meterComponent);
     // #ifdef _DEBUG

@@ -12,7 +12,7 @@ using namespace glm;
 // TODO: Track any entity that bubbles onto it
 void SeedManager::CreateSeed(glm::vec3 position, EntityIDNullable capturer, glm::vec3 offset) {
     Seed seed {
-        position,
+        vec4(position, 0.0f),
         offset,
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
         capturer,
@@ -49,7 +49,7 @@ void SeedManager::CalculatePositions(
         physicsOffset.x = seed.offset.x * 2 / logisitic - seed.offset.x;
         physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y - timeSinceStart * SEED_FALL_SPEED;
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
-        seedPositions_[i] = seed.position + physicsOffset;
+        positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
         // TODO: When using pure heightmaps, check distance and set height to that
 
@@ -64,9 +64,9 @@ void SeedManager::CalculatePositions(
             continue;
         }
         vec3 initialPosition = seed.position;
-        vec3 targetPosition = transformComponent.renderTransform[seed.targetEntity].position_;
+        vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position_, 0.0f);
         timeSinceCapture = std::powf(timeSinceCapture, 3.0f);
-        seedPositions_[i] = lerp(seedPositions_[i], targetPosition, timeSinceCapture); 
+        positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
     }
 }
 
@@ -93,7 +93,7 @@ void SeedManager::GetCaptures(
             if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
                 continue;
 
-            if (distance(transformComponent.transform[i].position_, seedPositions_[j]) < bubbleComponent.largeRadius[i]) {
+            if (distance(vec4(transformComponent.transform[i].position_, 0.0f), positions_[j]) < bubbleComponent.largeRadius[i]) {
                 seeds_[j].targetEntity = i;
                 seeds_[j].captureTime = time;
             }

@@ -16,6 +16,7 @@
 #include "../Game/Components/TransformComponent.h"
 
 #include "../Game/World/SpreadManager.h"
+#include "../Game/World/SeedManager.h"
 
 #include "PC_VertexTypes.h"
 
@@ -23,7 +24,7 @@ using namespace glm;
 
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
-bgfx::VertexLayout ScreenQuadVertex::layout;
+bgfx::VertexLayout TextureQuadVertex::layout;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX...");
@@ -56,13 +57,13 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 
     StaticVertex::Init();
     WorldVertex::Init();
-    ScreenQuadVertex::Init();
+    TextureQuadVertex::Init();
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 256);
     worldMesh_ = MakeWorldMesh_P(256);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
-    InitScreenQuad_P();
+    InitQuad_P();
     InitRenderBuffer_P();
 
     bgfx::setViewFrameBuffer(0, renderBuffer_);
@@ -102,28 +103,31 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
     spreadMaterial_ = MakeMaterial_P("spread", instanceVS, defaultFS, playerTextures, 2); 
-
     spreadModel_ = sphere;
+
+    Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
+    Shader seedFS = LoadFragmentShader_P("SeedFS");
+    seedMaterial_ = MakeMaterial_P("seed", instBillboardVS, seedFS, nullptr, 0);
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
 
-void Renderer::InitScreenQuad_P() {
-    ScreenQuadVertex screenQuadVertices[4];
-    screenQuadVertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 1.0f) };
-    screenQuadVertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 1.0f) };
-    screenQuadVertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 0.0f) };
-    screenQuadVertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 0.0f) };
-    screenQuad_.vertexBuffer = bgfx::createVertexBuffer(bgfx::copy(screenQuadVertices, sizeof(screenQuadVertices)), ScreenQuadVertex::layout);
+void Renderer::InitQuad_P() {
+    TextureQuadVertex vertices[4];
+    vertices[0] = { glm::vec2(-1.0f, -1.0f), glm::vec2( 0.0f, 1.0f) };
+    vertices[1] = { glm::vec2( 1.0f, -1.0f), glm::vec2( 1.0f, 1.0f) };
+    vertices[2] = { glm::vec2( 1.0f,  1.0f), glm::vec2( 1.0f, 0.0f) };
+    vertices[3] = { glm::vec2(-1.0f,  1.0f), glm::vec2( 0.0f, 0.0f) };
+    quad_.vertexBuffer = bgfx::createVertexBuffer(bgfx::copy(vertices, sizeof(vertices)), TextureQuadVertex::layout);
     
-    uint16_t screenQuadIndices[6];
-    screenQuadIndices[0] = 0;
-    screenQuadIndices[1] = 1;
-    screenQuadIndices[2] = 2;
-    screenQuadIndices[3] = 2;
-    screenQuadIndices[4] = 3;
-    screenQuadIndices[5] = 0;
-    screenQuad_.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(screenQuadIndices, sizeof(screenQuadIndices)));
+    uint16_t indices[6];
+    indices[0] = 0;
+    indices[1] = 1;
+    indices[2] = 2;
+    indices[3] = 2;
+    indices[4] = 3;
+    indices[5] = 0;
+    quad_.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
 }
 
 void Renderer::InitRenderBuffer_P() {
@@ -314,7 +318,18 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
 }
 
 void Renderer::RenderSeed_P(SeedManager& seedManager) {
-    // Take the seed buffers and present them (instanced)
+    uint32_t count = seedManager.seeds_.GetCount();
+    if (count == 0)
+        return;
+    
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
+    memcpy(instanceBuffer.data, seedManager.positions_, sizeof(vec4) * count);
+    bgfx::setInstanceDataBuffer(&instanceBuffer);
+
+    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+    bgfx::setIndexBuffer(quad_.indexBuffer);
+    bgfx::submit(0, seedMaterial_.shader);
 }
 
 void Renderer::RenderPostProcess_P() {
@@ -322,8 +337,8 @@ void Renderer::RenderPostProcess_P() {
     for (int i = 0; i < postProcessMaterial_.numTextures; i++)
         bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
 
-    bgfx::setVertexBuffer(0, screenQuad_.vertexBuffer);
-    bgfx::setIndexBuffer(screenQuad_.indexBuffer);
+    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+    bgfx::setIndexBuffer(quad_.indexBuffer);
     bgfx::submit(1, postProcessMaterial_.shader);
 }
 

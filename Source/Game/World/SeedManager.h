@@ -28,7 +28,7 @@ struct Seed {
 class SeedManager {
 public:
     FixedVector<Seed, MAX_SEED> seeds_;
-    glm::vec3 seedPositions_[MAX_SEED];
+    glm::vec4 positions_[MAX_SEED];
 
     void CreateSeed(glm::vec3 position, EntityIDNullable capturer = NO_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
     void CreateMultipleSeed(glm::ivec3 position, uint32_t amount, uint16_t radius = 2);

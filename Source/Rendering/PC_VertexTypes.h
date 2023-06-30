@@ -35,7 +35,7 @@ struct WorldVertex {
     }
 };
 
-struct ScreenQuadVertex {
+struct TextureQuadVertex {
     glm::vec2 position;
     glm::vec2 uv;
     static bgfx::VertexLayout layout;

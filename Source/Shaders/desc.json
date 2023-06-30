@@ -47,6 +47,14 @@
         {
             "name": "TextFS",
             "type": "fragment"
+        },
+        {
+            "name": "BarVS",
+            "type": "vertex"
+        },
+        {
+            "name": "BarFS",
+            "type": "fragment"
         }
 	]
 }

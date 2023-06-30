@@ -65,14 +65,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     backBuffer_ = BGFX_INVALID_HANDLE;
     InitQuad_P();
     InitRenderBuffer_P();
-
-    bgfx::setViewFrameBuffer(0, renderBuffer_);
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(0, 0, 0, 1280, 720);
-
-    bgfx::setViewFrameBuffer(1, backBuffer_);
-    bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(1, 0, 0, 1280, 720);
+    InitPostProcessBuffer_P();
 
     TEMP_LoadTestData();
 }
@@ -114,6 +107,10 @@ void Renderer::TEMP_LoadTestData() {
     Texture fontTextures[] = { LoadTexture_P("font") };
     textMaterial_ = MakeMaterial_P("text", glyphVS, textFS, fontTextures, 1);
 
+    Shader barVS = LoadVertexShader_P("BarVS");
+    Shader barFS = LoadFragmentShader_P("BarFS");
+    barMaterial_ = MakeMaterial_P("bar", barVS, barFS, nullptr, 0);
+
     DEBUGLOG("Succesfully loaded all test assets");
 }
 
@@ -153,6 +150,22 @@ void Renderer::InitRenderBuffer_P() {
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     );
     renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
+
+    bgfx::setViewFrameBuffer(0, renderBuffer_);
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(0, 0, 0, 1280, 720);
+}
+
+void Renderer::InitPostProcessBuffer_P() {
+    bgfx::setViewFrameBuffer(1, backBuffer_);
+    bgfx::setViewClear(1, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(1, 0, 0, 1280, 720);
+}
+
+void Renderer::InitUIBuffer_P() {
+    bgfx::setViewFrameBuffer(2, backBuffer_);
+    bgfx::setViewClear(2, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(2, 0, 0, 1280, 720);
 }
 
 Mesh Renderer::MakeWorldMesh_P(int size) {
@@ -338,7 +351,6 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 }
 
 void Renderer::RenderPostProcess_P() {
-    // Kuwahara
     for (int i = 0; i < postProcessMaterial_.numTextures; i++)
         bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
 
@@ -348,7 +360,6 @@ void Renderer::RenderPostProcess_P() {
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {
-    // Create plane and present
 }
 
 void Renderer::RenderScreenText_P() {

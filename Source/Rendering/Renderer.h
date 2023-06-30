@@ -86,11 +86,15 @@ private:
     Material spreadMaterial_;
     Material seedMaterial_;
     Material textMaterial_;
+    Material barMaterial_;
 
     Texture noiseTexture_;
 
+    void Blit_P();
     void InitQuad_P();
     void InitRenderBuffer_P();
+    void InitPostProcessBuffer_P();
+    void InitUIBuffer_P();
 
     FrameBuffer backBuffer_;
     FrameBuffer renderBuffer_;

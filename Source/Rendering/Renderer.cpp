@@ -23,10 +23,8 @@ void Renderer::Render(
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
     RenderPostProcess_P();
-    // RenderUI_P(meterComponent);
-    // #ifdef _DEBUG
+    RenderUI_P(meterComponent);
     RenderScreenText_P();
-    // #endif
 
     PresentFrame_P();
 }

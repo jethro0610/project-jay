@@ -1,7 +1,5 @@
 #pragma once
 #include <bgfx/bgfx.h>
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
 #ifdef __linux__ 
     #define GLFW_EXPOSE_NATIVE_X11
     #define GETHANDLE(window) (void*)(uintptr_t)glfwGetX11Window(window)

@@ -113,16 +113,36 @@ void Platform::PollGamepad() {
     gamepad_.leftTrigger_ = 0.0f;
     gamepad_.rightTrigger_ = 0.0f;
 
-    if (!glfwJoystickPresent(0))
+    if (!glfwJoystickPresent(GLFW_JOYSTICK_1)) {
+        DEBUGLOG("No joystick");
         return;
+    }
+    else {
+        DEBUGLOG(glfwGetJoystickName(GLFW_JOYSTICK_1));
+    }
 
     GLFWgamepadstate state;
-    glfwGetGamepadState(GLFW_JOYSTICK_1, &state);
+    if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) == GLFW_FALSE) {
+        DEBUGLOG("Not a joystick");
+        return;
+    }
+
+    // int joystick = -1;
+    // for (int i = 0; i < GLFW_JOYSTICK_LAST + 1; i++) {
+    //     if (glfwJoystickIsGamepad(i))
+    //         joystick = i;
+    // }
+    //
+    // if (joystick = -1) {
+    //     DEBUGLOG("No joystick");
+    //     return;
+    // }
+
 
     gamepad_.leftStickX_ = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
     gamepad_.leftStickY_ = -state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
     gamepad_.rightStickX_ = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
-    gamepad_.rightStickY_ = state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+    gamepad_.rightStickY_ = -state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
 
     if (gamepad_.leftStickX_ < 0.1f && gamepad_.leftStickX_ > -0.1f)
         gamepad_.leftStickX_ = 0.0f;
@@ -133,10 +153,10 @@ void Platform::PollGamepad() {
     if (gamepad_.rightStickY_ < 0.1f && gamepad_.rightStickY_ > -0.1f)
         gamepad_.rightStickY_ = 0.0f;
 
-    gamepad_.leftTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] + 1.0f) / 2.0f;
-    gamepad_.rightTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0f) / 2.0f;
-    gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, gamepad_.leftTrigger_ > TRIGGER_LIMIT);
-    gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, gamepad_.rightTrigger_ > TRIGGER_LIMIT);
+    // gamepad_.leftTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] + 1.0f) / 2.0f;
+    // gamepad_.rightTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0f) / 2.0f;
+    gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, false);
+    gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, false);
 
     for (int i = 0; i < GAMEPAD_BUTTONS; i++)
         gamepad_.SetButtonHeld(i, state.buttons[i]);

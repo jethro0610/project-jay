@@ -153,11 +153,11 @@ void Platform::PollGamepad() {
     if (gamepad_.rightStickY_ < 0.1f && gamepad_.rightStickY_ > -0.1f)
         gamepad_.rightStickY_ = 0.0f;
 
-    // gamepad_.leftTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] + 1.0f) / 2.0f;
-    // gamepad_.rightTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0f) / 2.0f;
-    gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, false);
-    gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, false);
+    gamepad_.leftTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER] + 1.0f) / 2.0f;
+    gamepad_.rightTrigger_ = (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER] + 1.0f) / 2.0f;
+    gamepad_.SetButtonHeld(GAMEPAD_LTRIGGER, gamepad_.leftTrigger_ > TRIGGER_LIMIT);
+    gamepad_.SetButtonHeld(GAMEPAD_RTRIGGER, gamepad_.rightTrigger_ > TRIGGER_LIMIT);
 
-    for (int i = 0; i < GAMEPAD_BUTTONS; i++)
+    for (int i = 0; i < GAMEPAD_BUTTONS - 2; i++)
         gamepad_.SetButtonHeld(i, state.buttons[i]);
 }

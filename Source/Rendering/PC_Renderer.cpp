@@ -34,8 +34,8 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     init.resolution.width = 1280;
     init.resolution.height = 720;
     init.resolution.reset = BGFX_RESET_NONE;
-    init.platformData.nwh = (void*)glfwGetX11Window(window);
-    init.platformData.ndt = (void*)glfwGetX11Display();
+    init.platformData.nwh = GETHANDLE(window);
+    init.platformData.ndt = GETDISPLAY();
     bgfx::init(init);
     DEBUGLOG("Succesfully started BGFX");
 

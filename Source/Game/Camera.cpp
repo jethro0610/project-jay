@@ -44,8 +44,8 @@ void Camera::Update(Inputs inputs) {
     if (target_ == NULL_ENTITY) {
         // Move and use first person look when there is no entity to track
         transform_.rotation = quat(vec3(lookY_, lookX_, 0.0f));
-        vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 15.0f * deltaTime;
-        vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 15.0f * deltaTime;
+        vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime;
+        vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 32.0f * deltaTime;
         transform_.position += forwardMovement + rightMovement;
     }
     else {

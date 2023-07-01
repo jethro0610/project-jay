@@ -192,10 +192,10 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
     WorldVertex* vertices =  new WorldVertex[numVertices];
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++) {
-        uint16_t index = y * size+ x;
+        uint16_t index = y * size + x;
         vec3 position = vec3(x - size / 2.0f, 0.0f, y - size / 2.0f);
-        vec3 normal = vec3(0.0f, 0.0f, 0.0f); // TODO: Remove normal from world vertex and use 2D position
-        vertices[index] = { position, normal};
+        vec3 normal = vec3(0.0f, 0.0f, 0.0f);
+        vertices[index] = { position, normal };
     };
     mesh.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
@@ -204,6 +204,7 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
         ), 
         WorldVertex::layout
     );
+    DEBUGLOG("Created world mesh with " << numVertices << " vertices");
     delete[] vertices;
     
     int numIndices = (size - 1) * (size -1) * 6;

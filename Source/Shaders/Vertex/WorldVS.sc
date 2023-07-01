@@ -8,9 +8,21 @@ static float MAX_NOISE_POS = 256.0f;
 static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
 
 float getHeight(vec3 position) {
-    vec2 samplePos = vec2(position.x * SAMPLE_SCALE * 0.75f, position.z * SAMPLE_SCALE * 0.75f);
-    samplePos += vec2(0.5f, 0.5f);
-    return texture2DLod(s_sampler0, samplePos, 0) * 8.0f;
+    vec2 position2d = vec2(position.x, position.z);
+    float BLOB_SAMPLE_RADIUS = 64.0f;
+
+    vec2 blobSamplePos = normalize(position2d) * SAMPLE_SCALE * BLOB_SAMPLE_RADIUS;
+    blobSamplePos += vec2(0.5f, 0.5f);
+    float blobVal = texture2DLod(s_sampler0, blobSamplePos, 0);
+    blobVal = (blobVal + 1.0f) * 0.5f;
+
+    float blobRadius = 32.0f + blobVal * 64.0f;
+    float curRadius = length(position2d);
+    float edgeCloseness = max(1.0f - (blobRadius - curRadius) * 0.25f, 0.0f);
+    edgeCloseness = pow(edgeCloseness, 1.5f);
+
+    // return texture2DLod(s_sampler0, samplePos, 0) * 8.0f;
+    return 0.0f - edgeCloseness;
 }
 
 void main() {

@@ -11,7 +11,6 @@ class FastNoiseLite;
 
 class World {
 public:
-    FixedVector<TerrainModifier, MAX_TERRAIN_MODIFIERS> terrainModifiers_;
     World(FastNoiseLite& noise);
 
     float GetHeight(glm::vec2 position) const;
@@ -22,5 +21,4 @@ public:
 
 private:
     FastNoiseLite& noise_;
-    std::unordered_set<glm::ivec3> dirtyChunks_;
 };

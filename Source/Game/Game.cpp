@@ -22,7 +22,7 @@ void Game::Init() {
     entityManager_.LoadEntity("player");
     entityManager_.CreateEntity("player", spawnTransform);
 
-    camera_.target_ = PLAYER_ENTITY;
+    // camera_.target_ = PLAYER_ENTITY;
 }
 
 void Game::Update() {
@@ -77,7 +77,7 @@ void Game::Update() {
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent),
-            inputs_
+            Inputs()
         );
         MovementSystem::Execute(
             entityManager_.entities_,

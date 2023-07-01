@@ -12,6 +12,7 @@ shader_dict = json.load(shader_desc_file)
 shader_platform = ""
 shader_profile = ""
 executable_extension = ""
+use_shell = False
 
 if platform.system() == "Windows":
     shader_platform = "windows"
@@ -20,6 +21,7 @@ if platform.system() == "Windows":
 elif platform.system() == "Linux":
     shader_platform = "linux"
     shader_profile = "spirv"
+    use_shell = True
 
 compile_times = None
 try:
@@ -126,7 +128,7 @@ for shader_desc in shader_dict["shaders"]:
         '--profile %s'
     )
     command = command % (shader_input, shader_output, shader_type, shader_platform, shader_profile)
-    result = subprocess.run(command, shell = True)
+    result = subprocess.run(command, shell = use_shell)
     
     if result.returncode == 0:
         compile_times["shaders"][shader_name]["time"] = last_shader_write

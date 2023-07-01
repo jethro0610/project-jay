@@ -17,7 +17,7 @@ float getHeight(vec3 position) {
 
     float terrainVal = noiseSample(position2d, 0.75f);
     terrainVal = (terrainVal + 1.0f) * 0.5f;
-    float terrainHeight = terrainVal * 16.0f;
+    float terrainHeight = terrainVal * 12.0f;
 
     return u_minHeight + terrainHeight + edgeHeight;
 }

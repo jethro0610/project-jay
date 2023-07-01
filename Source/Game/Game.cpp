@@ -3,6 +3,7 @@
 #include "../Constants/GameConstants.h"
 #include "../Constants/TimeConstants.h"
 #include "Time.h"
+#include "../Logging/Logger.h"
 using namespace glm;
 
 using namespace std::chrono;

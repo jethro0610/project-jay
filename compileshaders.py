@@ -11,10 +11,12 @@ shader_desc_file = open(input_path + "desc.json")
 shader_dict = json.load(shader_desc_file)
 shader_platform = ""
 shader_profile = ""
+executable_extension = ""
 
 if platform.system() == "Windows":
     shader_platform = "windows"
     shader_profile = "s_5_0"
+    executable_extension = ".exe"
 elif platform.system() == "Linux":
     shader_platform = "linux"
     shader_profile = "spirv"
@@ -113,7 +115,7 @@ for shader_desc in shader_dict["shaders"]:
     print(colored("Compiling %s..." % shader_name, "yellow"))
 
     command = (
-        './Tools/shaderc '
+        './Tools/shaderc' + executable_extension + ' '
         '-i ./Tools/include/ '
         '-i ./Source/Shaders/Include/ '
         '--varyingdef ./Source/Shaders/varying.def.sc '

@@ -19,7 +19,15 @@ float getHeight(vec3 position) {
     terrainVal = (terrainVal + 1.0f) * 0.5f;
     float terrainHeight = terrainVal * 12.0f;
 
-    return u_minHeight + terrainHeight + edgeHeight;
+    float d = 0;
+    for (int i = 0; i < 128; i++) {
+        float modifier = noiseSample(position2d, 1.0f);
+        d += distance(vec2(0.0f, 0.0f), vec2(modifier, modifier));
+        d *= 0.25f;
+        d = pow(d, 6.0f);
+    }
+
+    return u_minHeight + terrainHeight + edgeHeight + d - d;
 }
 
 void main() {

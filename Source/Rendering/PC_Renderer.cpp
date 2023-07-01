@@ -305,6 +305,13 @@ void Renderer::PresentFrame_P() {
 }
 
 void Renderer::RenderWorld_P(World& world) {
+    // int dimensions = (WORLD_MAX_RADIUS + WORLD_PADDING) * WORLD_VERTEX_DENSITY;
+    // int numVertices = dimensions * dimensions;
+    // for (int i = 0; i < numVertices; i++) {
+    //     world.GetHeight(vec2(0.0f));
+    // }
+
+
     vec4 worldProps[2];
     worldProps[0].x = 0.0f;
     worldProps[0].y = WORLD_MIN_RADIUS;
@@ -324,7 +331,10 @@ void Renderer::RenderWorld_P(World& world) {
 
     bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
     bgfx::setIndexBuffer(worldMesh_.indexBuffer);
-    bgfx::submit(0, worldMaterial_.shader);
+
+    for (int i = 0; i < 8; i++) {
+        bgfx::submit(0, worldMaterial_.shader);
+    }
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();

@@ -66,6 +66,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_worldProps_ = bgfx::createUniform("u_worldProps", bgfx::UniformType::Vec4, 2);
+    u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
 
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
 
@@ -74,6 +75,11 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     TextureQuadVertex::Init();
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
+    vec4 noiseProps;
+    noiseProps.x = 1024;
+    noiseProps.y = 1.0f / (1024 * 2.0f);
+    bgfx::setUniform(u_noiseProps_, &noiseProps);
+
     worldMesh_ = MakeWorldMesh_P((WORLD_MAX_RADIUS + WORLD_PADDING) * 2);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
@@ -300,14 +306,12 @@ void Renderer::PresentFrame_P() {
 
 void Renderer::RenderWorld_P(World& world) {
     vec4 worldProps[2];
-
-    worldProps[0].x = 1024.0f;
-    worldProps[0].y = 0.0f;
-    worldProps[0].z = WORLD_MIN_RADIUS;
-    worldProps[0].w = WORLD_MAX_RADIUS;
-    worldProps[1].x = WORLD_EDGE_JAGGEDNESS;
-    worldProps[1].y = WORLD_EDGE_FALLOFF;
-    worldProps[1].z = WORLD_EDGE_POWER;
+    worldProps[0].x = 0.0f;
+    worldProps[0].y = WORLD_MIN_RADIUS;
+    worldProps[0].z = WORLD_MAX_RADIUS;
+    worldProps[0].w = WORLD_EDGE_JAGGEDNESS;
+    worldProps[1].x = WORLD_EDGE_FALLOFF;
+    worldProps[1].y = WORLD_EDGE_POWER;
     // worldProps[0][2] = world.minRadius_;
     // worldProps[1][0] = world.maxRadius_;
     // worldProps[1][1] = world.edgeSmoothness_;

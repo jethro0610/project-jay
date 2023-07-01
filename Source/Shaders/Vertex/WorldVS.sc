@@ -1,35 +1,21 @@
 $input a_position, a_normal
 $output v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
+#include <NoiseSample.sh>
+#include <WorldUniform.sh>
 
-uniform vec4 u_worldProps[2];
-#define u_maxNoiseDistance u_worldProps[0].x
-#define u_minHeight u_worldProps[0].y
-#define u_minRadius u_worldProps[0].z
-#define u_maxRadius u_worldProps[0].w
-#define u_edgeJaggedness u_worldProps[1].x
-#define u_edgeFalloff u_worldProps[1].y
-#define u_edgePower u_worldProps[1].z
-#define sampleScale (1.0f / (u_maxNoiseDistance * 2.0f))
-
-SAMPLER2D(s_sampler0, 0);
 
 float getHeight(vec3 position) {
     vec2 position2d = vec2(position.x, position.z);
 
-    vec2 blobSamplePos = normalize(position2d) * sampleScale * u_edgeJaggedness;
-    blobSamplePos += vec2(0.5f, 0.5f);
-    float blobVal = texture2DLod(s_sampler0, blobSamplePos, 0);
+    float blobVal = noiseSampleBlob(position2d, u_edgeJaggedness);
     blobVal = (blobVal + 1.0f) * 0.5f;
-
     float blobRadius = u_minRadius + blobVal * (u_maxRadius - u_minRadius);
     float curRadius = length(position2d);
     float edgeCloseness = max(1.0f - (blobRadius - curRadius) * u_edgeFalloff, 0.0f);
     float edgeHeight = -pow(edgeCloseness, u_edgePower);
 
-    vec2 terrainSamplePos = position2d * sampleScale * 0.75f;
-    terrainSamplePos += vec2(0.5f, 0.5f); 
-    float terrainVal = texture2DLod(s_sampler0, terrainSamplePos, 0);
+    float terrainVal = noiseSample(position2d, 0.75f);
     terrainVal = (terrainVal + 1.0f) * 0.5f;
     float terrainHeight = terrainVal * 16.0f;
 

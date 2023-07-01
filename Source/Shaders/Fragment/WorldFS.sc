@@ -1,11 +1,10 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
+#include <WorldUniform.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
-uniform vec4 u_worldProps[2];
-#define u_minHeight u_worldProps[0].y
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);

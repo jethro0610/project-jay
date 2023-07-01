@@ -64,7 +64,7 @@ void SeedManager::CalculatePositions(
             continue;
         }
         vec3 initialPosition = seed.position;
-        vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position_, 0.0f);
+        vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position, 0.0f);
         timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
         positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
     }
@@ -93,7 +93,7 @@ void SeedManager::GetCaptures(
             if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
                 continue;
 
-            if (distance(vec4(transformComponent.transform[i].position_, 0.0f), positions_[j]) < bubbleComponent.largeRadius[i]) {
+            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < bubbleComponent.largeRadius[i]) {
                 seeds_[j].targetEntity = i;
                 seeds_[j].captureTime = time;
             }

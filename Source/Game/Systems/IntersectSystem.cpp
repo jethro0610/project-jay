@@ -31,7 +31,7 @@ void IntersectSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        const vec3 position = transformComponent.transform[i].position_;
+        const vec3 position = transformComponent.transform[i].position;
         const float radius = bubbleComponent.radius[i];
 
         // TODO: Only check components within the same chunk
@@ -48,7 +48,7 @@ void IntersectSystem::Execute(
             if (!otherEntity.MatchesKey(key))
                 continue;
 
-            const vec3 otherPosition = transformComponent.transform[j].position_;    
+            const vec3 otherPosition = transformComponent.transform[j].position;    
             const float otherRadius = bubbleComponent.radius[j]; 
             
             const float dist = distance(position, otherPosition);
@@ -111,7 +111,7 @@ void IntersectSystem::HandleIntersection(
         if (
             bubbleComponent.properties[entity2].test(BubbleProperties::SeedOnMeteored)
         ) {
-            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position_ + vec3(0.0f, 0.25f, 0.0f), 64, 30);
+            seedManager.CreateMultipleSeed(transformComponent.transform[entity2].position + vec3(0.0f, 0.25f, 0.0f), 64, 30);
             entityManager.DestroyEntity(entity2);
         }
     }

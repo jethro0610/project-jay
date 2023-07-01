@@ -265,7 +265,7 @@ void Renderer::StartFrame_P() {
     bgfx::setViewTransform(0, &viewMatrix_,&projectionMatrix_);
 
     vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
-    vec4 cameraPosition = vec4(camera_->transform_.position_, 0.0f);
+    vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
 

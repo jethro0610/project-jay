@@ -8,7 +8,7 @@ public:
 
     MeterComponent() {
         std::fill_n(meter, MAX_ENTITIES, 0);
-        std::fill_n(maxMeter, MAX_ENTITIES, UINT16_MAX);
+        std::fill_n(maxMeter, MAX_ENTITIES, INT_MAX);
     };
     MeterComponent(const MeterComponent&) = delete;
     MeterComponent& operator=(const MeterComponent&) = delete;

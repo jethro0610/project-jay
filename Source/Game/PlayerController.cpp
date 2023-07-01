@@ -33,7 +33,7 @@ void PlayerController::Execute(
     VelocityComponent& velocityComponent,
     Inputs inputs
 ) {
-    vec3& position = transformComponent.transform[PLAYER_ENTITY].position_;
+    vec3& position = transformComponent.transform[PLAYER_ENTITY].position;
     quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
@@ -90,7 +90,7 @@ void PlayerController::Execute(
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
         if (length(desiredMovement) > 0.0001f)
-            transformComponent.transform[PLAYER_ENTITY].rotation_ = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+            transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;
         spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;

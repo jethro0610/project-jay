@@ -17,7 +17,7 @@ void Game::Init() {
 
     // Create the player entity
     Transform spawnTransform;
-    spawnTransform.position_ = vec3(0.0f, 50.0f, 0.0f);
+    spawnTransform.position = vec3(0.0f, 50.0f, 0.0f);
 
     entityManager_.LoadEntity("player");
     entityManager_.CreateEntity("player", spawnTransform);

@@ -22,7 +22,7 @@ void CollisionSystem::Execute(
             continue;
 
         // Raymarch towards the nearest point on the surface
-        vec3 position = transformComponent.transform[i].position_;
+        vec3 position = transformComponent.transform[i].position;
         float worldHeight = world.GetHeight(position);
         float distance = position.y - worldHeight;
 
@@ -31,7 +31,7 @@ void CollisionSystem::Execute(
         // // Hit solving
         // if (distance <= 0.001f) {
         //     vec3 hitNormal = world.GetNormal(position);
-        //     transformComponent.transform[i].position_ += hitNormal * abs(distance);
+        //     transformComponent.transform[i].position += hitNormal * abs(distance);
         // }
     }
 }

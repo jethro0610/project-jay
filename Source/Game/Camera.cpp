@@ -11,7 +11,7 @@ Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3
     lookY_(0.0f),
     trackDistance_(trackDistance)
 {
-    transform_.position_ = startPosition;
+    transform_.position = startPosition;
 }
 
 Camera::Camera(TransformComponent& transformComponent, float trackDistance, EntityID target):
@@ -25,12 +25,12 @@ Camera::Camera(TransformComponent& transformComponent, float trackDistance, Enti
 }
 
 mat4 Camera::GetViewMatrix() const {
-    vec3 forward = rotate(transform_.rotation_, Transform::worldForward);
-    vec3 up = rotate(transform_.rotation_, Transform::worldUp);
+    vec3 forward = rotate(transform_.rotation, Transform::worldForward);
+    vec3 up = rotate(transform_.rotation, Transform::worldUp);
 
     return lookAtRH(
-        transform_.position_,
-        transform_.position_ + forward,
+        transform_.position,
+        transform_.position + forward,
         up
     );
 }
@@ -43,13 +43,13 @@ void Camera::Update(Inputs inputs) {
 
     if (target_ == NULL_ENTITY) {
         // Move and use first person look when there is no entity to track
-        transform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
+        transform_.rotation = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 15.0f * deltaTime;
         vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 15.0f * deltaTime;
-        transform_.position_ += forwardMovement + rightMovement;
+        transform_.position += forwardMovement + rightMovement;
     }
     else {
-        vec3 trackPosition = transformComponent_.renderTransform[target_].position_;
+        vec3 trackPosition = transformComponent_.renderTransform[target_].position;
         smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
         if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
             vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;
@@ -60,8 +60,8 @@ void Camera::Update(Inputs inputs) {
         vec3 forward = lookRotation * Transform::worldForward;
         vec3 up = lookRotation * Transform::worldUp;
 
-        transform_.position_ = smoothTrackPosition_ - forward * trackDistance_;
-        transform_.position_ += vec3(0.0f, 2.0f, 0.0f);
-        transform_.rotation_ = lookRotation;
+        transform_.position = smoothTrackPosition_ - forward * trackDistance_;
+        transform_.position += vec3(0.0f, 2.0f, 0.0f);
+        transform_.rotation = lookRotation;
     }
 }

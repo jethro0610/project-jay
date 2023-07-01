@@ -5,12 +5,11 @@
 
 typedef std::tuple<glm::mat4, glm::mat3> WorldNormalReturn;
 
-class Transform {
-public:
+struct Transform {
     Transform();
-    glm::vec3 position_;
-    glm::quat rotation_;
-    glm::vec3 scale_;
+    glm::vec3 position;
+    glm::quat rotation;
+    glm::vec3 scale;
 
     WorldNormalReturn GetWorldAndNormalMatrix() const;
     glm::mat4 GetWorldMatrix() const;

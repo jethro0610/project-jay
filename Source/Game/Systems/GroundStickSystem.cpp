@@ -21,7 +21,7 @@ void GroundStickSystem::Step(
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StepUp)
-            transformComponent.transform[i].position_.y += 1.0f;
+            transformComponent.transform[i].position.y += 1.0f;
     }
 }
 
@@ -39,6 +39,6 @@ void GroundStickSystem::Stick(
             continue;
 
         if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StickOnly)
-            transformComponent.transform[i].position_.y = groundTraceComponent.groundPosition[i];
+            transformComponent.transform[i].position.y = groundTraceComponent.groundPosition[i];
     }
 }

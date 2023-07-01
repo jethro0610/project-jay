@@ -39,7 +39,7 @@ void GroundTraceSystem::Execute(
             traceDistance = 0.0f;
 
         // Raymarch towards the ground
-        vec3 position = transformComponent.transform[i].position_;
+        vec3 position = transformComponent.transform[i].position;
         float worldHeight = world.GetHeight(position);
         float distanceToSurface = position.y - worldHeight;
 

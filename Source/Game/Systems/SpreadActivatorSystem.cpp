@@ -51,7 +51,7 @@ void SpreadActivatorSystem::Execute(
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
         const int& amount = spreadActivatorComponent.amount[i];
-        const vec3 position = transformComponent.transform[i].position_;
+        const vec3 position = transformComponent.transform[i].position;
         const bool hasDetect = entity.MatchesKey(detectKey);
         
         if (radius > 0) {

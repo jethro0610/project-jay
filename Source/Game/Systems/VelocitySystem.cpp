@@ -19,6 +19,6 @@ void VelocitySystem::Apply(
         if (!entity.MatchesKey(key))
             continue;
 
-        transformComponent.transform[i].position_ += velocityComponent.velocity[i] * TIMESTEP;
+        transformComponent.transform[i].position += velocityComponent.velocity[i] * TIMESTEP;
     }
 }

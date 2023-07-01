@@ -37,7 +37,7 @@ void MovementSystem::Execute (
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];
         float& friction = movementComponent.friction[i];
-        quat& rotation = transformComponent.transform[i].rotation_;
+        quat& rotation = transformComponent.transform[i].rotation;
 
         const MoveMode moveMode = movementComponent.moveMode[i];
         const float minSpeed = movementComponent.minSpeed[i];

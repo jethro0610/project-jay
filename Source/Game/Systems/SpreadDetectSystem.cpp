@@ -24,7 +24,7 @@ void SpreadDetectSystem::Execute(
         bool& detected = spreadDetectComponent.deteced[i];
         detected = false;
 
-        SpreadKey currentKey = spreadManager.GetKey(transformComponent.transform[i].position_);
+        SpreadKey currentKey = spreadManager.GetKey(transformComponent.transform[i].position);
         if (!spreadManager.SpreadIsActive(currentKey)) {
             spreadDetectComponent.lastAdd[i] = NO_ADD;
             continue;

@@ -30,7 +30,7 @@ void IntervalSpawnSystem::Execute(
         spawnTimer += 1;
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
             Transform spawnTransform;
-            spawnTransform.position_ = transformComponent.transform[i].position_;
+            spawnTransform.position = transformComponent.transform[i].position;
             EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
             ProjectileSystem::Launch(entities, projectileComponent, transformComponent, velocityComponent, entityId);
 

@@ -17,7 +17,7 @@ void ProjectileSystem::CalculateVelocities(
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent
 ) {
-    const vec3& playerPosition = transformComponent.transform[PLAYER_ENTITY].position_;
+    const vec3& playerPosition = transformComponent.transform[PLAYER_ENTITY].position;
     const vec3& playerVelocity = velocityComponent.velocity[PLAYER_ENTITY];
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -32,7 +32,7 @@ void ProjectileSystem::CalculateVelocities(
         const float& param1 = projectileComponent.param1[i];
         const float& param2 = projectileComponent.param2[i];
         vec3& velocity = velocityComponent.velocity[i];
-        vec3& position = transformComponent.transform[i].position_;
+        vec3& position = transformComponent.transform[i].position;
 
         // Gravity
         if (state == ProjectileState::Launch || state == ProjectileState::Throw)
@@ -78,7 +78,7 @@ void ProjectileSystem::Launch(
 
     switch (projectileComponent.type[projectileEntity]) {
         case ProjectileType::Random: {
-            transformComponent.transform[projectileEntity].position_.y += 0.5f; // Ensures projectiles on ground dont get stuck 
+            transformComponent.transform[projectileEntity].position.y += 0.5f; // Ensures projectiles on ground dont get stuck 
             velocity.y = param2;
             const float randAngle = float(rand());
             const float randSpeed = (rand() % (int)(param1 * 100)) * 0.01f;
@@ -115,6 +115,6 @@ void ProjectileSystem::Throw(
     velocity = vec3(0.0f, 30.0f, 0.0f);
     const vec3& throwerVelocity = velocityComponent.velocity[throwingEntity];
     velocity = vec3(throwerVelocity.x, height, throwerVelocity.z);
-    transformComponent.transform[projectileEntity].position_.y += 0.5f;
+    transformComponent.transform[projectileEntity].position.y += 0.5f;
     projectileComponent.state[projectileEntity] = ProjectileState::Throw;
 }

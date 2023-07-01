@@ -8,9 +8,9 @@ vec3 Transform::worldRight = vec3(1.0f, 0.0f, 0.0f);
 vec3 Transform::worldUp = vec3(0.0f, 1.0f, 0.0f);
 
 Transform::Transform() {
-    position_ = vec3(0.0f, 0.0f, 0.0f);
-    rotation_ = quat(vec3(0.0f, 0.0f, 0.0f));
-    scale_ = vec3(1.0f, 1.0f, 1.0f);
+    position = vec3(0.0f, 0.0f, 0.0f);
+    rotation = quat(vec3(0.0f, 0.0f, 0.0f));
+    scale = vec3(1.0f, 1.0f, 1.0f);
 }
 
 WorldNormalReturn Transform::GetWorldAndNormalMatrix() const {
@@ -25,9 +25,9 @@ WorldNormalReturn Transform::GetWorldAndNormalMatrix() const {
 mat4 Transform::GetWorldMatrix() const {
     mat4 outWorld;
     outWorld = mat4(1.0f);
-    outWorld = translate(outWorld, position_);
-    outWorld *= toMat4(rotation_);
-    outWorld = scale(outWorld, scale_);
+    outWorld = translate(outWorld, position);
+    outWorld *= toMat4(rotation);
+    outWorld = glm::scale(outWorld, scale);
 
     return outWorld;
 }
@@ -35,29 +35,29 @@ mat4 Transform::GetWorldMatrix() const {
 std::string Transform::ToString() const{
     std::stringstream sstrream;
     
-    sstrream << "Position: X: " << position_.x << " Y: " << position_.y << " Z: " << position_.z << '\n';
-    sstrream << "Rotation: X: " << degrees(eulerAngles(rotation_).x) << " Y: " << degrees(eulerAngles(rotation_).y) << " Z: " << degrees(eulerAngles(rotation_).z) << '\n';
-    sstrream << "Scale: X: " << scale_.x << " Y: " << scale_.y << " Z: " << scale_.z << '\n';
+    sstrream << "Position: X: " << position.x << " Y: " << position.y << " Z: " << position.z << '\n';
+    sstrream << "Rotation: X: " << degrees(eulerAngles(rotation).x) << " Y: " << degrees(eulerAngles(rotation).y) << " Z: " << degrees(eulerAngles(rotation).z) << '\n';
+    sstrream << "Scale: X: " << scale.x << " Y: " << scale.y << " Z: " << scale.z << '\n';
     return sstrream.str();
 }
 
 Transform Transform::Lerp(const Transform& a, const Transform& b, float t) {
     Transform lerpTransform;
-    lerpTransform.position_ = lerp(a.position_, b.position_, t);
-    lerpTransform.rotation_ = slerp(a.rotation_, b.rotation_, t);
-    lerpTransform.scale_ = lerp(a.scale_, b.scale_, t);
+    lerpTransform.position = lerp(a.position, b.position, t);
+    lerpTransform.rotation = slerp(a.rotation, b.rotation, t);
+    lerpTransform.scale = lerp(a.scale, b.scale, t);
 
     return lerpTransform;
 }
 
 vec3 Transform::GetForwardVector() const {
-    return rotation_ * worldForward;
+    return rotation * worldForward;
 }
 
 vec3 Transform::GetRightVector() const {
-    return rotation_ * worldRight;
+    return rotation * worldRight;
 }
 
 vec3 Transform::GetUpVector() const {
-    return rotation_ * worldUp;
+    return rotation * worldUp;
 }

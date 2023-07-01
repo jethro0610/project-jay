@@ -40,9 +40,6 @@ file(GLOB SOURCES
 
     Source/Rendering/Renderer.cpp
 
-    Source/Resource/AnimationResource.cpp
-    Source/Resource/SkeletonResource.cpp
-
     Source/Types/Gamepad.cpp
     Source/Types/Transform.cpp
 

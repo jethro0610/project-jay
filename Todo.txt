@@ -1,0 +1,4 @@
+- Remove _P
+- Privatize some variables
+- Fix Xbox Series controller on Linux
+- Clean up dependencies

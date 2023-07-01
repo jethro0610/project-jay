@@ -77,7 +77,7 @@ void Game::Update() {
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent),
-            Inputs()
+            inputs_
         );
         MovementSystem::Execute(
             entityManager_.entities_,

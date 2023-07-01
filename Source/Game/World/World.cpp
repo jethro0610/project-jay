@@ -9,7 +9,8 @@ World::World(FastNoiseLite& noise):
 }
 
 float World::GetHeight(vec2 position) const {
-    float height = noise_.GetNoise(position.x * 0.75f, position.y * 0.75f) * 8.0f;
+    float height = noise_.GetNoise(position.x * 0.75f, position.y * 0.75f);
+    height = (height + 1.0f) * 0.5f * 16.0f;
     return height;
 }
 

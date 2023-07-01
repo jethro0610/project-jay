@@ -2,11 +2,11 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <WorldUniform.sh>
+#include <NoiseSample.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
 
-SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
 SAMPLER2D(s_sampler2, 2);
 SAMPLER2D(s_sampler3, 3);
@@ -49,10 +49,12 @@ void main() {
     float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     color = lerp(color, fresnelColor, fresnel);
     
-    float distToBottom = v_wposition.y - (u_minHeight - 16.0f);
-    distToBottom *= 0.25f;
-    distToBottom = clamp(distToBottom, 0.0f, 1.0f);
-    color = lerp(vec3(0.0f, 0.0f, 0.0f), color, distToBottom);
+    vec2 position2d = v_wposition.xz;
+    float fadeHeight = u_minHeight + noiseSampleBlob(position2d, 256.0f) * 8.0f;
+    float fade = v_wposition.y - (fadeHeight - 16.0f);
+    fade *= 0.1f;
+    fade = clamp(fade, 0.0f, 1.0f);
+    color = lerp(vec3(0.0f, 0.0f, 0.0f), color, fade);
 
     gl_FragColor = vec4(color * brightness, 1.0f);
 }

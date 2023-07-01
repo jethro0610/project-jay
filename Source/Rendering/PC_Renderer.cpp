@@ -29,9 +29,9 @@ bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
-const float WORLD_VERTEX_DENSITY = 0.5f;
-const float WORLD_MIN_RADIUS = 100.0f;
-const float WORLD_MAX_RADIUS = 128.0f;
+const float WORLD_VERTEX_DENSITY = 0.25f;
+const float WORLD_MIN_RADIUS = 64.0f;
+const float WORLD_MAX_RADIUS = 256.0f;
 const float WORLD_EDGE_JAGGEDNESS = 128.0f;
 const float WORLD_EDGE_FALLOFF = 0.1f;
 const float WORLD_EDGE_POWER = 2.0f;

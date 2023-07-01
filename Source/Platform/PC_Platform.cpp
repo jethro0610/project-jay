@@ -113,31 +113,12 @@ void Platform::PollGamepad() {
     gamepad_.leftTrigger_ = 0.0f;
     gamepad_.rightTrigger_ = 0.0f;
 
-    if (!glfwJoystickPresent(GLFW_JOYSTICK_1)) {
-        DEBUGLOG("No joystick");
+    if (!glfwJoystickPresent(GLFW_JOYSTICK_1))
         return;
-    }
-    else {
-        DEBUGLOG(glfwGetJoystickName(GLFW_JOYSTICK_1));
-    }
 
     GLFWgamepadstate state;
-    if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) == GLFW_FALSE) {
-        DEBUGLOG("Not a joystick");
+    if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) == GLFW_FALSE)
         return;
-    }
-
-    // int joystick = -1;
-    // for (int i = 0; i < GLFW_JOYSTICK_LAST + 1; i++) {
-    //     if (glfwJoystickIsGamepad(i))
-    //         joystick = i;
-    // }
-    //
-    // if (joystick = -1) {
-    //     DEBUGLOG("No joystick");
-    //     return;
-    // }
-
 
     gamepad_.leftStickX_ = state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
     gamepad_.leftStickY_ = -state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];

@@ -112,6 +112,7 @@ private:
     Uniform u_cameraUp_;
     Uniform u_cameraRight_;
     Uniform u_meter_;
+    Uniform u_worldProps_;
 
     Mesh MakeWorldMesh_P(int size);
     Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);

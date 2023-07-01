@@ -4,6 +4,8 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
+uniform vec4 u_worldProps[2];
+#define u_minHeight u_worldProps[0].y
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
@@ -47,8 +49,11 @@ void main() {
 
     float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     color = lerp(color, fresnelColor, fresnel);
+    
+    float distToBottom = v_wposition.y - (u_minHeight - 16.0f);
+    distToBottom *= 0.25f;
+    distToBottom = clamp(distToBottom, 0.0f, 1.0f);
+    color = lerp(vec3(0.0f, 0.0f, 0.0f), color, distToBottom);
 
-    // gl_FragColor = vec4(normal, 1.0f);
-    // gl_FragColor = diffuse;
     gl_FragColor = vec4(color * brightness, 1.0f);
 }

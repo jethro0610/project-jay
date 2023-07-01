@@ -2,6 +2,8 @@
 #include <fstream>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <glm/mat3x3.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <FastNoiseLite.h>
 #include "../Game/Camera.h"
@@ -26,6 +28,14 @@ using namespace glm;
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
+
+const float WORLD_VERTEX_DENSITY = 0.5f;
+const float WORLD_MIN_RADIUS = 100.0f;
+const float WORLD_MAX_RADIUS = 128.0f;
+const float WORLD_EDGE_JAGGEDNESS = 128.0f;
+const float WORLD_EDGE_FALLOFF = 0.1f;
+const float WORLD_EDGE_POWER = 2.0f;
+const float WORLD_PADDING = 128.0f;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
@@ -55,6 +65,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
+    u_worldProps_ = bgfx::createUniform("u_worldProps", bgfx::UniformType::Vec4, 2);
 
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
 
@@ -62,8 +73,8 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     WorldVertex::Init();
     TextureQuadVertex::Init();
 
-    noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 256);
-    worldMesh_ = MakeWorldMesh_P(256);
+    noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
+    worldMesh_ = MakeWorldMesh_P((WORLD_MAX_RADIUS + WORLD_PADDING) * 2);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
     InitQuad_P();
@@ -187,13 +198,14 @@ void Renderer::InitUIBuffer_P() {
 
 Mesh Renderer::MakeWorldMesh_P(int size) {
     Mesh mesh;
+    int dimensions = size * WORLD_VERTEX_DENSITY;
 
-    int numVertices = size * size;
+    int numVertices = dimensions * dimensions;
     WorldVertex* vertices =  new WorldVertex[numVertices];
-    for (int x = 0; x < size; x++)
-    for (int y = 0; y < size; y++) {
-        uint16_t index = y * size + x;
-        vec3 position = vec3(x - size / 2.0f, 0.0f, y - size / 2.0f);
+    for (int x = 0; x < dimensions; x++)
+    for (int y = 0; y < dimensions; y++) {
+        uint16_t index = y * dimensions + x;
+        vec3 position = vec3(x / WORLD_VERTEX_DENSITY - size / 2.0f, 0.0f, y / WORLD_VERTEX_DENSITY - size / 2.0f);
         vec3 normal = vec3(0.0f, 0.0f, 0.0f);
         vertices[index] = { position, normal };
     };
@@ -207,15 +219,15 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
     DEBUGLOG("Created world mesh with " << numVertices << " vertices");
     delete[] vertices;
     
-    int numIndices = (size - 1) * (size -1) * 6;
+    int numIndices = (dimensions - 1) * (dimensions - 1) * 6;
     uint16_t* worldIndices = new uint16_t[numIndices];
     int count = 0;
-    for (int x = 0; x < size - 1; x++)
-    for (int y = 0; y < size - 1; y++) {
-        uint16_t i0 = (y + 0) * size + (x + 0);
-        uint16_t i1 = (y + 1) * size + (x + 0);
-        uint16_t i2 = (y + 1) * size + (x + 1);
-        uint16_t i3 = (y + 0) * size + (x + 1);
+    for (int x = 0; x < dimensions - 1; x++)
+    for (int y = 0; y < dimensions - 1; y++) {
+        uint16_t i0 = (y + 0) * dimensions + (x + 0);
+        uint16_t i1 = (y + 1) * dimensions + (x + 0);
+        uint16_t i2 = (y + 1) * dimensions + (x + 1);
+        uint16_t i3 = (y + 0) * dimensions + (x + 1);
         
         worldIndices[count++] = i0;
         worldIndices[count++] = i1;
@@ -287,9 +299,21 @@ void Renderer::PresentFrame_P() {
 }
 
 void Renderer::RenderWorld_P(World& world) {
-    Transform emptyTransform;
-    mat4 worldMatrix = emptyTransform.GetWorldMatrix();
-    bgfx::setTransform(&worldMatrix);
+    vec4 worldProps[2];
+
+    worldProps[0].x = 1024.0f;
+    worldProps[0].y = 0.0f;
+    worldProps[0].z = WORLD_MIN_RADIUS;
+    worldProps[0].w = WORLD_MAX_RADIUS;
+    worldProps[1].x = WORLD_EDGE_JAGGEDNESS;
+    worldProps[1].y = WORLD_EDGE_FALLOFF;
+    worldProps[1].z = WORLD_EDGE_POWER;
+    // worldProps[0][2] = world.minRadius_;
+    // worldProps[1][0] = world.maxRadius_;
+    // worldProps[1][1] = world.edgeSmoothness_;
+    // worldProps[1][2] = world.edgeFalloff_;
+    // worldProps[2][0] = world.edgePower_;
+    bgfx::setUniform(u_worldProps_, worldProps, 2);
 
     for (int i = 0; i < worldMaterial_.numTextures; i++)
         bgfx::setTexture(i, samplers_[i], worldMaterial_.textures[i]);

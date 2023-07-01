@@ -1,6 +1,6 @@
 #include "GroundTraceSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../World/World.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"

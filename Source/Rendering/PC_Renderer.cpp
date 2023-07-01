@@ -5,7 +5,7 @@
 #include <iostream>
 #include <FastNoiseLite.h>
 #include "../Game/Camera.h"
-#include "../Helpers/EntityHelpers.h"
+#include "../Game/Entity/EntityKey.h"
 #include "../Helpers/MapCheck.h"
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
@@ -208,7 +208,7 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
     
     int numIndices = (size - 1) * (size -1) * 6;
     uint16_t* worldIndices = new uint16_t[numIndices];
-    uint32_t count = 0;
+    int count = 0;
     for (int x = 0; x < size - 1; x++)
     for (int y = 0; y < size - 1; y++) {
         uint16_t i0 = (y + 0) * size + (x + 0);

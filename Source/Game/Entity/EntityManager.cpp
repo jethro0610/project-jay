@@ -4,7 +4,7 @@
 
 EntityManager::EntityManager() {
     usableEntities_.push_front(0);
-    uint8_t idCounter = 0;
+    int idCounter = 0;
     
     #define COMPONENTVAR(TYPE, VAR) \
         componentMap_[TYPE::GetName()] = &std::get<TYPE>(components_); \
@@ -13,39 +13,42 @@ EntityManager::EntityManager() {
     #undef COMPONENTVAR
 }
 
-void EntityManager::LoadEntity(std::string entityName) {
-    ForceMapUnique(entityData_, entityName, "Entity " + entityName + " is already loaded");
+void EntityManager::LoadEntity(std::string name) {
+    ForceMapUnique(entityData_, name, "Entity " + name + " is already loaded");
 
-    std::ifstream inFile("entities/" + entityName + ".json");
-    ASSERT(inFile.is_open(), "Failed to load entity " + entityName);
+    std::ifstream inFile("entities/" + name + ".json");
+    ASSERT(inFile.is_open(), "Failed to load entity " + name);
 
     nlohmann::json data = nlohmann::json::parse(inFile);
-    entityData_[entityName] = data;
-    DEBUGLOG("Loaded entity " << entityName);
+    entityData_[name] = data;
+    DEBUGLOG("Loaded entity " << name);
 }
 
-EntityReturn EntityManager::CreateEntity() {
+EntityID EntityManager::CreateEntity(Transform transform) {
     EntityID createdEntity = usableEntities_.front();
     usableEntities_.pop_front();
     if (usableEntities_.size() <= 0)
         usableEntities_.push_front(createdEntity + 1);
 
     entities_[createdEntity].alive_ = true;
-    return { createdEntity, GetComponent<TransformComponent>().transform[createdEntity] };
+    GetComponent<TransformComponent>().transform[createdEntity] = transform;
+    GetComponent<TransformComponent>().transformLastUpdate[createdEntity] = transform;
+    GetComponent<TransformComponent>().renderTransform[createdEntity] = transform;
+    return createdEntity;
 }
 
-EntityReturn EntityManager::CreateEntity(std::string entityName) {
-    auto [entityId, entityTransform] = CreateEntity();
-    auto entityData = GetFromMap<nlohmann::json>(entityData_, entityName, "Tried creating unloaded entity " + entityName);
+EntityID EntityManager::CreateEntity(std::string name, Transform transform) {
+    EntityID createdEntity = CreateEntity(transform);
+    auto entityData = GetFromMap<nlohmann::json>(entityData_, name, "Tried creating unloaded entity " + name);
 
     for (auto& componentData : entityData["components"].items()) {
         std::string name = componentData.key();
         Component* component = componentMap_[name];
-        uint8_t componentId = componentIds_[name];
-        entities_[entityId].AddComponentById(componentId);
-        component->Load(componentData.value(), entityId);
+        int componentId = componentIds_[name];
+        entities_[createdEntity].AddComponentById(componentId);
+        component->Load(componentData.value(), createdEntity);
     }
-    return { entityId, entityTransform };
+    return createdEntity;
 }
 
 void EntityManager::DestroyEntity(EntityID entityToDestroy) {

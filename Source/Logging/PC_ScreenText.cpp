@@ -9,7 +9,7 @@ ScreenText::ScreenText() {
     }
 }
 
-void ScreenText::SetLine(uint32_t line, std::string text) {
+void ScreenText::SetLine(int line, std::string text) {
     const int textLength = int(text.size());
     for (int i = 0; i < CHARS_PER_LINE; i++) {
         if (i < textLength)

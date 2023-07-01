@@ -1,6 +1,6 @@
 #include "VelocitySystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../../Constants/TimeConstants.h"

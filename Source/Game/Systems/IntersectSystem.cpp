@@ -2,7 +2,7 @@
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityManager.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../World/SeedManager.h"
 #include "../World/SpreadManager.h"
 #include "../Components/BubbleComponent.h"

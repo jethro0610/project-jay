@@ -1,7 +1,7 @@
 #pragma once
 #include <bitset>
 #include <initializer_list> 
-#include "../../Types/EntityTypes.h"
+#include "EntityKey.h"
 
 class Entity {
 public:
@@ -17,7 +17,7 @@ public:
         return (key_ & otherKey) == otherKey;
     }
 
-    void AddComponentById(uint8_t componentId) {
+    void AddComponentById(int componentId) {
         uint32_t componentBit = 1UL << componentId; 
         key_ |= componentBit;
     }

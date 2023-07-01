@@ -1,6 +1,6 @@
 #include "TransformSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../Components/TransformComponent.h"
 #include "../../Constants/TimeConstants.h"
 

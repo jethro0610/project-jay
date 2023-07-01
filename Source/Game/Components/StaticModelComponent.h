@@ -23,7 +23,7 @@ public:
     StaticModelComponent& operator=(const StaticModelComponent&) = delete;
 
     static constexpr std::string GetName() { return "static_model"; }
-    static constexpr uint8_t GetID() { return 9; }
+    static constexpr int GetID() { return 9; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         ASSERT((renderer != nullptr), "Static Model Component has no access to renderer");

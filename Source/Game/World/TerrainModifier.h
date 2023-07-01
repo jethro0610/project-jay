@@ -1,6 +1,6 @@
 #pragma once
 #include <glm/vec2.hpp>
-const uint16_t MAX_TERRAIN_MODIFIERS = 16;
+const int MAX_TERRAIN_MODIFIERS = 16;
 
 enum TerrainModType {
     TERRAINMOD_HEIGHT 

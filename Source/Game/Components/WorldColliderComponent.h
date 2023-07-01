@@ -12,7 +12,7 @@ public:
     WorldColliderComponent& operator=(const WorldColliderComponent&) = delete;
 
     static constexpr std::string GetName() { return "world_collider"; }
-    static constexpr uint8_t GetID() { return 12; }
+    static constexpr int GetID() { return 12; }
 
     void Load(nlohmann::json& data, EntityID entity) {
     }

@@ -2,10 +2,10 @@
 #include <json.hpp>
 #include <algorithm>
 #include "../../Helpers/LoadHelpers.h"
-#include "../../Constants/EntityConstants.h"
-#include "../../Types/EntityTypes.h"
+#include "../Entity/EntityLimits.h"
+#include "../Entity/EntityID.h"
 
-const uint8_t MAX_COMPONENT_TYPES = 32;
+const int MAX_COMPONENT_TYPES = 32;
 struct Component {
     Component(){};
 

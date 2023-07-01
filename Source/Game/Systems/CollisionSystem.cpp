@@ -1,6 +1,6 @@
 #include "CollisionSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../World/World.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/WorldColliderComponent.h"

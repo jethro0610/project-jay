@@ -3,7 +3,7 @@
 #include "World.h"
 #include "../../Constants/GameConstants.h"
 #include "../../Types/FixedVector.h"
-#include "../../Types/EntityTypes.h"
+#include "../Entity/EntityID.h"
 #include "../../Types/Transform.h"
 class Entity;
 class BubbleComponent;
@@ -20,7 +20,7 @@ struct Seed {
     glm::vec3 position;
     glm::vec3 offset;
     float gravityOffset;
-    EntityIDNullable targetEntity;
+    EntityID targetEntity;
     float startTime;
     float captureTime;
 };
@@ -30,8 +30,8 @@ public:
     FixedVector<Seed, MAX_SEED> seeds_;
     glm::vec4 positions_[MAX_SEED];
 
-    void CreateSeed(glm::vec3 position, EntityIDNullable capturer = NO_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::ivec3 position, uint32_t amount, uint16_t radius = 2);
+    void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
+    void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2);
 
     void CalculatePositions(
         World& world,

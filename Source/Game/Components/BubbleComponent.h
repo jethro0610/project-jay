@@ -27,7 +27,7 @@ public:
     BubbleComponent& operator=(const BubbleComponent&) = delete;
 
     static constexpr std::string GetName() { return "bubble"; }
-    static constexpr uint8_t GetID() { return 0; }
+    static constexpr int GetID() { return 0; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         radius[entity] = data["radius"].get<float>();

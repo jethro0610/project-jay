@@ -15,7 +15,7 @@ Gamepad::Gamepad() {
     releasedButtons_ = 0;
 }
 
-void Gamepad::SetButtonHeld(uint8_t btn, bool held) {
+void Gamepad::SetButtonHeld(int btn, bool held) {
     if (heldButtons_[btn] == false && held == true) {
         pressedButtons_[btn] = true;
     }

@@ -3,10 +3,10 @@
 #include "../Types/Gamepad.h"
 class GLFWwindow;
 
-const uint16_t NUM_KEYS = 349;
-const uint16_t LEFT_MOUSE_KEY = NUM_KEYS;
-const uint16_t RIGHT_MOUSE_KEY = NUM_KEYS + 1;
-const uint16_t MOUSE_KEYS[] = { LEFT_MOUSE_KEY, RIGHT_MOUSE_KEY };
+const int NUM_KEYS = 349;
+const int LEFT_MOUSE_KEY = NUM_KEYS;
+const int RIGHT_MOUSE_KEY = NUM_KEYS + 1;
+const int MOUSE_KEYS[] = { LEFT_MOUSE_KEY, RIGHT_MOUSE_KEY };
 
 class Platform {
 public:
@@ -28,8 +28,8 @@ public:
     static Platform* Get();
     static GLFWwindow* GetWindow();
 
-    void OnKeyDown(uint16_t key);
-    void OnKeyUp(uint16_t key);
+    void OnKeyDown(int key);
+    void OnKeyUp(int key);
     void FlushKeys();
 
     void UpdateMouseMovement();

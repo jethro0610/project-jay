@@ -6,7 +6,7 @@ using namespace glm;
 
 Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3 startPosition):
     transformComponent_(transformComponent),
-    trackEntity_(-1),
+    target_(NULL_ENTITY),
     lookX_(0.0f),
     lookY_(0.0f),
     trackDistance_(trackDistance)
@@ -14,9 +14,9 @@ Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3
     transform_.position_ = startPosition;
 }
 
-Camera::Camera(TransformComponent& transformComponent, float trackDistance, int trackEntity):
+Camera::Camera(TransformComponent& transformComponent, float trackDistance, EntityID target):
     transformComponent_(transformComponent),
-    trackEntity_(trackEntity),
+    target_(target),
     lookX_(0.0f),
     lookY_(0.0f),
     trackDistance_(trackDistance)
@@ -41,7 +41,7 @@ void Camera::Update(Inputs inputs) {
     lookY_ += inputs.deltaLookY;
     lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));
 
-    if (trackEntity_ == NO_TRACK) {
+    if (target_ == NULL_ENTITY) {
         // Move and use first person look when there is no entity to track
         transform_.rotation_ = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 15.0f * deltaTime;
@@ -49,7 +49,7 @@ void Camera::Update(Inputs inputs) {
         transform_.position_ += forwardMovement + rightMovement;
     }
     else {
-        vec3 trackPosition = transformComponent_.renderTransform[trackEntity_].position_;
+        vec3 trackPosition = transformComponent_.renderTransform[target_].position_;
         smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
         if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
             vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;

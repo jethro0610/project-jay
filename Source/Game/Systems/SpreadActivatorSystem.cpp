@@ -1,7 +1,7 @@
 #include <math.h>
 #include "SpreadActivatorSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../World/SpreadManager.h"
 #include "../World/World.h"
 #include "../Components/GroundTraceComponent.h"
@@ -40,17 +40,17 @@ void SpreadActivatorSystem::Execute(
         if (!onGround && spreadActivatorComponent.groundOnly[i])
             continue;
 
-        const int16_t radius = spreadActivatorComponent.radius[i]; 
+        const int radius = spreadActivatorComponent.radius[i]; 
         if (radius == 0)
             continue;
 
-        uint16_t* meter = nullptr;
+        int* meter = nullptr;
         if (entity.MatchesKey(meterKey))
             meter = &meterComponent.meter[i];
 
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
-        const uint16_t& amount = spreadActivatorComponent.amount[i];
+        const int& amount = spreadActivatorComponent.amount[i];
         const vec3 position = transformComponent.transform[i].position_;
         const bool hasDetect = entity.MatchesKey(detectKey);
         
@@ -58,7 +58,7 @@ void SpreadActivatorSystem::Execute(
             const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(
                 position, 
                 radius, 
-                std::min(amount, meter == nullptr ? (uint16_t)UINT16_MAX : *meter)
+                std::min(amount, meter == nullptr ? INT_MAX : *meter)
             );
             if (addSpreadInfo.count == 0)
                 continue;

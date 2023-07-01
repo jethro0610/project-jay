@@ -55,7 +55,7 @@ public:
     MovementComponent& operator=(const MovementComponent&) = delete;
 
     static constexpr std::string GetName() { return "movement"; }
-    static constexpr uint8_t GetID() { return 4; }
+    static constexpr int GetID() { return 4; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         minSpeed[entity] = data["min_speed"].get<float>();

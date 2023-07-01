@@ -1,6 +1,6 @@
 #include "SpreadDetectSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../World/SpreadManager.h"
 #include "../Components/SpreadDetectComponent.h"
 #include "../Components/TransformComponent.h"

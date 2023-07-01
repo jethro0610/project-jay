@@ -1,7 +1,7 @@
 #include <glm/gtx/compatibility.hpp>
 #include "MovementSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/SpreadDetectComponent.h"

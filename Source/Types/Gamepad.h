@@ -2,24 +2,24 @@
 #include <bitset>
 #include <stdint.h>
 
-const uint8_t GAMEPAD_A = 0;
-const uint8_t GAMEPAD_B = 1;
-const uint8_t GAMEPAD_X = 2;
-const uint8_t GAMEPAD_Y = 3;
-const uint8_t GAMEPAD_UP = 11;
-const uint8_t GAMEPAD_DOWN = 13;
-const uint8_t GAMEPAD_LEFT = 14;
-const uint8_t GAMEPAD_RIGHT = 12;
-const uint8_t GAMEPAD_LSHOULDER = 4;
-const uint8_t GAMEPAD_RSHOULDER = 5;
-const uint8_t GAMEPAD_RTRIGGER = 15;
-const uint8_t GAMEPAD_LTRIGGER = 16;
-const uint8_t GAMEPAD_LTHUMB = 9;
-const uint8_t GAMEPAD_RTHUMB = 10;
-const uint8_t GAMEPAD_START = 7;
-const uint8_t GAMEPAD_SELECT = 6;
-const uint8_t GAMEPAD_BUTTONS = 17;
-const float TRIGGER_LIMIT = 0.5f;
+const int GAMEPAD_A = 0;
+const int GAMEPAD_B = 1;
+const int GAMEPAD_X = 2;
+const int GAMEPAD_Y = 3;
+const int GAMEPAD_UP = 11;
+const int GAMEPAD_DOWN = 13;
+const int GAMEPAD_LEFT = 14;
+const int GAMEPAD_RIGHT = 12;
+const int GAMEPAD_LSHOULDER = 4;
+const int GAMEPAD_RSHOULDER = 5;
+const int GAMEPAD_RTRIGGER = 15;
+const int GAMEPAD_LTRIGGER = 16;
+const int GAMEPAD_LTHUMB = 9;
+const int GAMEPAD_RTHUMB = 10;
+const int GAMEPAD_START = 7;
+const int GAMEPAD_SELECT = 6;
+const int GAMEPAD_BUTTONS = 17;
+const int TRIGGER_LIMIT = 0.5f;
 
 class Gamepad {
 public:
@@ -38,6 +38,6 @@ public:
     std::bitset<GAMEPAD_BUTTONS> pressedButtons_;
     std::bitset<GAMEPAD_BUTTONS> releasedButtons_;
 
-    void SetButtonHeld(uint8_t btn, bool held);
+    void SetButtonHeld(int btn, bool held);
 };
 

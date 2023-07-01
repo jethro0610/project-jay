@@ -1,4 +1,4 @@
-#include "../../Types/EntityTypes.h"
+#include "../Entity/EntityID.h"
 class Entity;
 class EntityManager;
 class SeedManager;

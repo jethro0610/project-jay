@@ -5,7 +5,6 @@
 #include <glm/gtx/string_cast.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/Assert.h"
-#include "../../Helpers/ChunkHelpers.h"
 #include "../../Constants/GameConstants.h"
 #include "SeedManager.h"
 #include "../Time.h"
@@ -65,10 +64,10 @@ bool SpreadManager::AddSpread(glm::vec3 position) {
     return AddSpread(GetKey(position));
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t amount) {
+AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, int amount) {
     radius--;
     ivec2 origin = GetKey(position);
-    uint16_t count = 0;
+    int count = 0;
 
     // Get the spreads we can add in this radius
     viableAddKeys_.Clear();
@@ -86,7 +85,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
     // Randomly select a spread from the viable ones and
     // add it
     while (viableAddKeys_.GetCount() > 0 && count < amount) {
-        uint32_t index = std::rand() % viableAddKeys_.GetCount();
+        int index = std::rand() % viableAddKeys_.GetCount();
         AddSpread(viableAddKeys_[index]);
         viableAddKeys_.Remove(index);
         count++;
@@ -97,14 +96,14 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, uint16_t 
 
 bool SpreadManager::RemoveSpread(
     SpreadKey key, 
-    EntityIDNullable remover,
+    EntityID remover,
     vec3 seedOffset
 ) {
     auto foundKey = keyIndices_.find(key);
     if (foundKey == keyIndices_.end())
         return false;
 
-    uint32_t deleteIndex = foundKey->second;
+    int deleteIndex = foundKey->second;
 
     vec3 seedPosition = vec3(positions_[deleteIndex]) + vec3(0.0f, 0.25f, 0.0f);
     seedManager_.CreateSeed(seedPosition, remover, seedOffset);
@@ -121,20 +120,20 @@ bool SpreadManager::RemoveSpread(
 
 bool SpreadManager::RemoveSpread(
     vec3 position, 
-    EntityIDNullable remover,
+    EntityID remover,
     vec3 seedOffset
 ) {
     SpreadKey key = GetKey(position);
     return RemoveSpread(key, remover, seedOffset);
 }
 
-uint16_t SpreadManager::RemoveSpread(
+int SpreadManager::RemoveSpread(
     vec3 position, 
-    int16_t radius, 
-    EntityIDNullable remover,
+    int radius, 
+    EntityID remover,
     vec3 seedOffset
 ) {
-    uint32_t count = 0;
+    int count = 0;
     ivec2 origin = GetKey(position);
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {

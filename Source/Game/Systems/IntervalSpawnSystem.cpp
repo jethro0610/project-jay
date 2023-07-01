@@ -1,7 +1,7 @@
 #include "IntervalSpawnSystem.h"
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../Entity/EntityManager.h"
 #include "../Components/IntervalSpawnComponent.h"
 #include "../Components/ProjectileComponent.h"
@@ -26,11 +26,12 @@ void IntervalSpawnSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        uint16_t& spawnTimer = intervalSpawnComponent.spawnTimer[i];
+        int& spawnTimer = intervalSpawnComponent.spawnTimer[i];
         spawnTimer += 1;
         if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
-            auto [entityId, transform] = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i]);
-            transform.position_ = transformComponent.transform[i].position_;
+            Transform spawnTransform;
+            spawnTransform.position_ = transformComponent.transform[i].position_;
+            EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
             ProjectileSystem::Launch(entities, projectileComponent, transformComponent, velocityComponent, entityId);
 
             // Create the spawn entity

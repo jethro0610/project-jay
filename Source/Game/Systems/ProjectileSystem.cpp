@@ -1,6 +1,6 @@
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../../Constants/GameConstants.h"
 #include "../World/World.h"
 #include "../Components/ProjectileComponent.h"

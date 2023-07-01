@@ -56,12 +56,12 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     }
 }
 
-void Platform::OnKeyDown(uint16_t key) {
+void Platform::OnKeyDown(int key) {
     heldKeys_[key] = true;
     pressedKeys_[key] = true;
 }
 
-void Platform::OnKeyUp(uint16_t key) {
+void Platform::OnKeyUp(int key) {
     heldKeys_[key] = false;
     releasedKeys_[key] = true;
 }

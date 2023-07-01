@@ -1,7 +1,7 @@
 #include <glm/gtx/compatibility.hpp>
 #include "SeedManager.h"
 #include "../Entity/Entity.h"
-#include "../../Helpers/EntityHelpers.h"
+#include "../Entity/EntityKey.h"
 #include "../Components/BubbleComponent.h"
 #include "../Components/MeterComponent.h"
 #include "../Components/TransformComponent.h"
@@ -10,7 +10,7 @@
 using namespace glm;
 
 // TODO: Track any entity that bubbles onto it
-void SeedManager::CreateSeed(glm::vec3 position, EntityIDNullable capturer, glm::vec3 offset) {
+void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 offset) {
     Seed seed {
         vec4(position, 0.0f),
         offset,
@@ -22,14 +22,14 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityIDNullable capturer, glm:
     seeds_.Append(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::ivec3 position, uint32_t amount, uint16_t radius) {
+void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius) {
     for (int i = 0; i < amount; i++) {
         vec3 offset = vec3(
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f
         );
-        CreateSeed(position, NO_ENTITY, offset);
+        CreateSeed(position, NULL_ENTITY, offset);
     }
 }
 
@@ -54,7 +54,7 @@ void SeedManager::CalculatePositions(
         // TODO: When using pure heightmaps, check distance and set height to that
 
         float timeSinceCapture = GlobalTime::GetTime() - seed.captureTime;
-        if (seed.targetEntity == NO_ENTITY || timeSinceCapture < 0.0f)
+        if (seed.targetEntity == NULL_ENTITY || timeSinceCapture < 0.0f)
             continue;
 
         timeSinceCapture *= 3.0f;
@@ -88,7 +88,7 @@ void SeedManager::GetCaptures(
             continue;
 
         for (int j = 0; j < seeds_.GetCount(); j++) {
-            if (seeds_[j].targetEntity != NO_ENTITY)
+            if (seeds_[j].targetEntity != NULL_ENTITY)
                 continue;
             if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
                 continue;

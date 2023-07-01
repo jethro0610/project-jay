@@ -35,7 +35,7 @@ public:
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
 
     static constexpr std::string GetName() { return "ground_trace"; }
-    static constexpr uint8_t GetID() { return 1; }
+    static constexpr int GetID() { return 1; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = data["distance"].get<float>();

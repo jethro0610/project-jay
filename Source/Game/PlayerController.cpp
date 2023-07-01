@@ -4,7 +4,6 @@
 #include "PlayerController.h"
 #include "Camera.h"
 #include "../Constants/GameConstants.h"
-#include "../Helpers/ChunkHelpers.h"
 #include "World/SpreadManager.h"
 #include "World/World.h"
 #include "../Game/Components/GroundTraceComponent.h"
@@ -46,7 +45,7 @@ void PlayerController::Execute(
     movementComponent.desiredMovement[PLAYER_ENTITY] = desiredMovement;
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
-    spreadActivatorComponent.amount[PLAYER_ENTITY] = UINT16_MAX;
+    spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
 
     if (inputs.flow && inputs.ski) {
         // Have to check this to prevent overflow

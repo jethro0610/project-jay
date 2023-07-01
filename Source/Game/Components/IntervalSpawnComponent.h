@@ -3,8 +3,8 @@
 
 class IntervalSpawnComponent : public Component {
 public:
-    uint16_t spawnInterval[MAX_ENTITIES];
-    uint16_t spawnTimer[MAX_ENTITIES]; 
+    int spawnInterval[MAX_ENTITIES];
+    int spawnTimer[MAX_ENTITIES]; 
     std::string entityToSpawn[MAX_ENTITIES];
 
     IntervalSpawnComponent() {
@@ -16,7 +16,7 @@ public:
     IntervalSpawnComponent& operator=(const IntervalSpawnComponent&) = delete;
 
     static constexpr std::string GetName() { return "interval_spawner"; }
-    static constexpr uint8_t GetID() { return 3; }
+    static constexpr int GetID() { return 3; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         spawnInterval[entity] = data["interval"].get<int>();

@@ -6,16 +6,17 @@
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
-#include "../../Constants/WorldConstants.h"
 #include "../../Constants/SpreadConstants.h"
 #include "../../Types/FixedVector.h"
-#include "../../Types/EntityTypes.h"
+#include "../Entity/EntityID.h"
+#include "SpreadKey.h"
 class World;
 class SeedManager;
 class TransformComponent;
 
+
 struct AddSpreadInfo {
-    uint16_t count;
+    int count;
     SpreadKey key;
 };
 
@@ -31,22 +32,22 @@ public:
     bool SpreadIsActive(glm::vec3 position) const;
 
     bool AddSpread(glm::vec3 position); 
-    AddSpreadInfo AddSpread(glm::vec3 position, int radius, uint16_t amount = UINT16_MAX);
+    AddSpreadInfo AddSpread(glm::vec3 position, int radius, int amount = INT_MAX);
 
     bool RemoveSpread(
         glm::vec3 position, 
-        EntityIDNullable remover = NO_ENTITY, 
+        EntityID remover = NULL_ENTITY, 
         glm::vec3 seedOffset = glm::vec3(0.0f)
     );
-    uint16_t RemoveSpread(
+    int RemoveSpread(
         glm::vec3 position, 
-        int16_t radius, 
-        EntityIDNullable remover = NO_ENTITY, 
+        int radius, 
+        EntityID remover = NULL_ENTITY, 
         glm::vec3 seedOffset = glm::vec3(0.0f)
     ); 
     void UpdateRenderData_P();
 
-    uint32_t GetCount() const { return count_; }
+    int GetCount() const { return count_; }
     glm::vec4* GetPositions() const { return positions_.GetData(); }
     SpreadKey GetKey(glm::vec2 position) const;
     SpreadKey GetKey(glm::vec3 position) const;
@@ -55,7 +56,7 @@ private:
     bool AddSpread(SpreadKey key); 
     bool RemoveSpread(
         SpreadKey key,
-        EntityIDNullable remover = NO_ENTITY,
+        EntityID remover = NULL_ENTITY,
         glm::vec3 seedOffset = glm::vec3(0.0f)
     );
 
@@ -64,6 +65,6 @@ private:
     FixedVector<SpreadKey, 8192> viableAddKeys_;
 
     FixedVector<glm::vec4, MAX_SPREAD> positions_;
-    std::unordered_map<SpreadKey, uint32_t> keyIndices_;
-    uint32_t count_;
+    std::unordered_map<SpreadKey, int> keyIndices_;
+    int count_;
 };

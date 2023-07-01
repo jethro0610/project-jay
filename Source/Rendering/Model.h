@@ -1,7 +1,7 @@
 #pragma once
 #include "Mesh.h"
 
-const uint8_t MAX_MESHES_PER_MODEL = 8;
+const int MAX_MESHES_PER_MODEL = 8;
 
 struct ModelFileHeader {
     int numMeshes;

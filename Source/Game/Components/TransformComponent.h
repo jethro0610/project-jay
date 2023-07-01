@@ -16,7 +16,7 @@ public:
     TransformComponent& operator=(const TransformComponent&) = delete;
 
     static constexpr std::string GetName() { return "transform"; }
-    static constexpr uint8_t GetID() { return 10; }
+    static constexpr int GetID() { return 10; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         interpolate[entity] = data["interpolate"].get<bool>();

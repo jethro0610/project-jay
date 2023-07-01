@@ -29,7 +29,7 @@ public:
     }
 
     static constexpr std::string GetName() { return "projectile"; }
-    static constexpr uint8_t GetID() { return 6; }
+    static constexpr int GetID() { return 6; }
 
     void Load(nlohmann::json& data, EntityID entity) {
         std::string projectileTypeS = data["type"].get<std::string>();

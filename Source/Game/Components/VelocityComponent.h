@@ -13,7 +13,7 @@ public:
     VelocityComponent& operator=(const VelocityComponent&) = delete;
 
     static constexpr std::string GetName() { return "velocity"; }
-    static constexpr uint8_t GetID() { return 11; }
+    static constexpr int GetID() { return 11; }
 
     void Load(nlohmann::json& data, EntityID entity) {
     }

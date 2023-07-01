@@ -20,15 +20,9 @@ void Game::Init() {
     spawnTransform.position_ = vec3(0.0f, 50.0f, 0.0f);
 
     entityManager_.LoadEntity("player");
-    entityManager_.LoadEntity("test_entity");
-    auto [playerEntityId, playerTransform] = entityManager_.CreateEntity("player");
-    playerTransform = spawnTransform;
+    entityManager_.CreateEntity("player", spawnTransform);
 
-    // spawnTransform.position_ = vec3(5.0f, 42.5f, 5.0f);
-    // auto [testEntityId, testTransform] = entityManager_.CreateEntity("test_entity");
-    // testTransform = spawnTransform;
-
-    camera_.trackEntity_ = PLAYER_ENTITY;
+    camera_.target_ = PLAYER_ENTITY;
 }
 
 void Game::Update() {
@@ -148,8 +142,6 @@ void Game::Update() {
         GETCOMP(BubbleComponent),
         GETCOMP(TransformComponent)
     );
-    world_.UpdateDirtyChunks();
-    // spreadManager_.UpdateRenderData_P();
     camera_.Update(inputs_);
     renderer_.Render(
         entityManager_.entities_, 

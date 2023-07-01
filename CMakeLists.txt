@@ -24,7 +24,6 @@ file(GLOB SOURCES
     Source/Game/Systems/IntersectSystem.cpp
     Source/Game/Systems/IntervalSpawnSystem.cpp
 
-    Source/Helpers/ChunkHelpers.cpp
     Source/Helpers/LoadHelpers.cpp
 
     Source/Game/Camera.cpp

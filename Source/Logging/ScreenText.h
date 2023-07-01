@@ -24,7 +24,7 @@ private:
 public:
     static ScreenText* Get();
     static bool IsEnabled();
-    static void SetLine(uint32_t line, std::string text);
+    static void SetLine(int line, std::string text);
     static TextGlyph* GetText();
     static void Toggle();
     static void Init();

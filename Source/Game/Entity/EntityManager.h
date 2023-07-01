@@ -4,6 +4,7 @@
 #include <string>
 #include <tuple>
 #include "Entity.h"
+#include "EntityID.h"
 #include "../../Helpers/Assert.h"
 #include "../../Logging/Logger.h"
 #include "../Components/ComponentInclude.h"
@@ -15,9 +16,9 @@ public:
     std::unordered_map<std::string, nlohmann::json> entityData_;
 
     EntityManager();
-    void LoadEntity(std::string entityName);
-    EntityReturn CreateEntity();
-    EntityReturn CreateEntity(std::string entityName);
+    void LoadEntity(std::string name);
+    EntityID CreateEntity(Transform transform = Transform());
+    EntityID CreateEntity(std::string name, Transform transform = Transform());
     void DestroyEntity(EntityID entityToDestroy);
 
     template <class T>
@@ -41,9 +42,9 @@ private:
         #define COMPONENTVAR(TYPE, VAR) TYPE,
             CREATECOMPONENTVARS  
         #undef COMPONENTVAR
-        uint8_t 
+        int 
     > components_;
 
     std::unordered_map<std::string, Component*> componentMap_;
-    std::unordered_map<std::string, uint8_t> componentIds_;
+    std::unordered_map<std::string, int> componentIds_;
 };

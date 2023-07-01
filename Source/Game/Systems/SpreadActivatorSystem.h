@@ -1,5 +1,4 @@
 #pragma once
-#include "../../Types/EntityTypes.h"
 class Entity;
 class SpreadManager;
 class World;

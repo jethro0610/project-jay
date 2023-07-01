@@ -11,9 +11,9 @@ class SpreadActivatorComponent;
 class TransformComponent;
 class VelocityComponent;
 
-const uint8_t TIME_TO_CUT = 16;
-const uint8_t CUT_COOLDOWN_TIME = 32;
-const uint16_t MAX_ACTION_METER = 250;
+const int TIME_TO_CUT = 16;
+const int CUT_COOLDOWN_TIME = 32;
+const int MAX_ACTION_METER = 250;
 
 class PlayerController {
 public:
@@ -32,7 +32,7 @@ public:
     );
 
 private:
-    uint16_t actionMeter_;
-    uint8_t cutTimer_;
-    uint8_t cutCooldown_;
+    int actionMeter_;
+    int cutTimer_;
+    int cutCooldown_;
 };

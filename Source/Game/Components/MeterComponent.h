@@ -3,8 +3,8 @@
 
 class MeterComponent : public Component {
 public:
-    uint16_t meter[MAX_ENTITIES];
-    uint16_t maxMeter[MAX_ENTITIES];
+    int meter[MAX_ENTITIES];
+    int maxMeter[MAX_ENTITIES];
 
     MeterComponent() {
         std::fill_n(meter, MAX_ENTITIES, 0);
@@ -14,11 +14,11 @@ public:
     MeterComponent& operator=(const MeterComponent&) = delete;
 
     static constexpr std::string GetName() { return "meter"; }
-    static constexpr uint8_t GetID() { return 13; }
+    static constexpr int GetID() { return 13; }
 
     void Load(nlohmann::json& data, EntityID entity) {
-        meter[entity] = data["initial_meter"].get<uint16_t>();
+        meter[entity] = data["initial_meter"].get<int>();
         if (data.contains("max_meter"))
-            maxMeter[entity] = data["max_meter"].get<uint16_t>();
+            maxMeter[entity] = data["max_meter"].get<int>();
     }
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Types/EntityTypes.h"
+#include "../Entity/EntityID.h"
 class Entity;
 class World;
 class ProjectileComponent;

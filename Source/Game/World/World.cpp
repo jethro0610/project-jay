@@ -5,7 +5,11 @@ using namespace glm;
 World::World(FastNoiseLite& noise):
     noise_(noise)
 {
-
+    minRadius_ = 64.0f;
+    maxRadius_ = 256.0f;
+    edgeJaggedness_ = 128.0f;
+    edgeFalloff_ = 0.1f;
+    edgePower_ = 2.0f;
 }
 
 float World::GetHeight(vec2 position) const {

@@ -22,7 +22,7 @@ void Game::Init() {
     entityManager_.LoadEntity("player");
     entityManager_.CreateEntity("player", spawnTransform);
 
-    // camera_.target_ = PLAYER_ENTITY;
+    camera_.target_ = PLAYER_ENTITY;
 }
 
 void Game::Update() {

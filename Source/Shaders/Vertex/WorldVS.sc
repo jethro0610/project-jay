@@ -23,7 +23,9 @@ float getHeight(vec3 position) {
 }
 
 void main() {
+    a_position += u_worldMeshOffset;
     float height = getHeight(a_position);
+    // float height = 0.0f;
     v_wposition = vec3(a_position.x, height, a_position.z);
 
     vec3 dx = a_position - vec3(1.0f, 0.0f, 0.0f);

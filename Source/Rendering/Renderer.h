@@ -92,6 +92,7 @@ private:
     Texture noiseTexture_;
 
     void InitQuad_P();
+    void InitWorldMesh_P();
 
     void InitRenderBuffer_P();
     void InitPostProcessBuffer_P();
@@ -113,9 +114,9 @@ private:
     Uniform u_cameraRight_;
     Uniform u_meter_;
     Uniform u_worldProps_;
+    Uniform u_worldMeshOffset_;
     Uniform u_noiseProps_;
 
-    Mesh MakeWorldMesh_P(int size);
     Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
 
     std::unordered_map<std::string, Shader> vertexShaders_;

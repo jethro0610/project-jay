@@ -5,3 +5,5 @@ uniform vec4 u_worldProps[2];
 #define u_edgeJaggedness u_worldProps[0].w
 #define u_edgeFalloff u_worldProps[1].x
 #define u_edgePower u_worldProps[1].y
+
+uniform vec4 u_worldMeshOffset;

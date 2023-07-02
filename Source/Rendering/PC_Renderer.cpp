@@ -29,13 +29,8 @@ bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
-const float WORLD_VERTEX_DENSITY = 0.25f;
-const float WORLD_MIN_RADIUS = 64.0f;
-const float WORLD_MAX_RADIUS = 256.0f;
-const float WORLD_EDGE_JAGGEDNESS = 128.0f;
-const float WORLD_EDGE_FALLOFF = 0.1f;
-const float WORLD_EDGE_POWER = 2.0f;
-const float WORLD_PADDING = 128.0f;
+const float WORLD_MESH_SIZE = 64.0f;
+const float WORLD_MESH_DENSITY = 0.25f;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
@@ -66,6 +61,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_worldProps_ = bgfx::createUniform("u_worldProps", bgfx::UniformType::Vec4, 2);
+    u_worldMeshOffset_= bgfx::createUniform("u_worldMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
 
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
@@ -80,9 +76,9 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     noiseProps.y = 1.0f / (1024 * 2.0f);
     bgfx::setUniform(u_noiseProps_, &noiseProps);
 
-    worldMesh_ = MakeWorldMesh_P((WORLD_MAX_RADIUS + WORLD_PADDING) * 2);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
+    InitWorldMesh_P();
     InitQuad_P();
     InitRenderBuffer_P();
     InitPostProcessBuffer_P();
@@ -202,20 +198,18 @@ void Renderer::InitUIBuffer_P() {
     bgfx::setViewRect(2, 0, 0, 1280, 720);
 }
 
-Mesh Renderer::MakeWorldMesh_P(int size) {
-    Mesh mesh;
-    int dimensions = size * WORLD_VERTEX_DENSITY;
+void Renderer::InitWorldMesh_P() {
+    int size = WORLD_MESH_SIZE * WORLD_MESH_DENSITY;
 
-    int numVertices = dimensions * dimensions;
+    int numVertices = size * size;
     WorldVertex* vertices =  new WorldVertex[numVertices];
-    for (int x = 0; x < dimensions; x++)
-    for (int y = 0; y < dimensions; y++) {
-        uint16_t index = y * dimensions + x;
-        vec3 position = vec3(x / WORLD_VERTEX_DENSITY - size / 2.0f, 0.0f, y / WORLD_VERTEX_DENSITY - size / 2.0f);
-        vec3 normal = vec3(0.0f, 0.0f, 0.0f);
-        vertices[index] = { position, normal };
+    for (int x = 0; x < size; x++)
+    for (int y = 0; y < size; y++) {
+        uint16_t index = y * size + x;
+        vec3 position = vec3(x / WORLD_MESH_DENSITY, 0.0f, y / WORLD_MESH_DENSITY);
+        vertices[index] = { position };
     };
-    mesh.vertexBuffer = bgfx::createVertexBuffer(
+    worldMesh_.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
             vertices, 
             sizeof(WorldVertex) * numVertices
@@ -225,15 +219,15 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
     DEBUGLOG("Created world mesh with " << numVertices << " vertices");
     delete[] vertices;
     
-    int numIndices = (dimensions - 1) * (dimensions - 1) * 6;
+    int numIndices = (size - 1) * (size - 1) * 6;
     uint16_t* worldIndices = new uint16_t[numIndices];
     int count = 0;
-    for (int x = 0; x < dimensions - 1; x++)
-    for (int y = 0; y < dimensions - 1; y++) {
-        uint16_t i0 = (y + 0) * dimensions + (x + 0);
-        uint16_t i1 = (y + 1) * dimensions + (x + 0);
-        uint16_t i2 = (y + 1) * dimensions + (x + 1);
-        uint16_t i3 = (y + 0) * dimensions + (x + 1);
+    for (int x = 0; x < size - 1; x++)
+    for (int y = 0; y < size - 1; y++) {
+        uint16_t i0 = (y + 0) * size + (x + 0);
+        uint16_t i1 = (y + 1) * size + (x + 0);
+        uint16_t i2 = (y + 1) * size + (x + 1);
+        uint16_t i3 = (y + 0) * size + (x + 1);
         
         worldIndices[count++] = i0;
         worldIndices[count++] = i1;
@@ -243,15 +237,13 @@ Mesh Renderer::MakeWorldMesh_P(int size) {
         worldIndices[count++] = i3;
         worldIndices[count++] = i0;
     };
-    mesh.indexBuffer = bgfx::createIndexBuffer(
+    worldMesh_.indexBuffer = bgfx::createIndexBuffer(
         bgfx::copy(
             worldIndices, 
             sizeof(uint16_t) * numIndices
         )
     );
     delete[] worldIndices;
-
-    return mesh;
 }
 
 Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance) {
@@ -307,16 +299,11 @@ void Renderer::PresentFrame_P() {
 void Renderer::RenderWorld_P(World& world) {
     vec4 worldProps[2];
     worldProps[0].x = 0.0f;
-    worldProps[0].y = WORLD_MIN_RADIUS;
-    worldProps[0].z = WORLD_MAX_RADIUS;
-    worldProps[0].w = WORLD_EDGE_JAGGEDNESS;
-    worldProps[1].x = WORLD_EDGE_FALLOFF;
-    worldProps[1].y = WORLD_EDGE_POWER;
-    // worldProps[0][2] = world.minRadius_;
-    // worldProps[1][0] = world.maxRadius_;
-    // worldProps[1][1] = world.edgeSmoothness_;
-    // worldProps[1][2] = world.edgeFalloff_;
-    // worldProps[2][0] = world.edgePower_;
+    worldProps[0].y = world.minRadius_;
+    worldProps[0].z = world.maxRadius_;
+    worldProps[0].w = world.edgeJaggedness_;
+    worldProps[1].x = world.edgeFalloff_;
+    worldProps[1].y = world.edgePower_;
     bgfx::setUniform(u_worldProps_, worldProps, 2);
 
     for (int i = 0; i < worldMaterial_.numTextures; i++)

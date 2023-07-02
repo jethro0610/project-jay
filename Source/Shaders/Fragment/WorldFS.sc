@@ -1,8 +1,8 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
-#include <WorldUniform.sh>
-#include <NoiseSample.sh>
+#define SHARED_SHADER
+#include <WorldShared.h>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -27,7 +27,6 @@ void main() {
     vec3 normal = texture2D(s_sampler2, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     normal = normal * 2.0f - 1.0f;
     normal = normalize(mul(normal, v_tbn));
-    // normal = v_normal;
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
@@ -50,7 +49,7 @@ void main() {
     color = lerp(color, fresnelColor, fresnel);
     
     vec2 position2d = v_wposition.xz;
-    float fadeHeight = u_minHeight + noiseSampleBlob(position2d, 256.0f) * 8.0f;
+    float fadeHeight = u_minHeight + sampleNoiseBlob(position2d, 256.0f, 0) * 8.0f;
     float fade = v_wposition.y - (fadeHeight - 16.0f);
     fade *= 0.1f;
     fade = clamp(fade, 0.0f, 1.0f);

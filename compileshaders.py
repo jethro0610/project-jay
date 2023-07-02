@@ -76,10 +76,15 @@ for shader_desc in shader_dict["shaders"]:
                         last_compile_time = compile_times["headers"][line]
                     except:
                         pass
-                    last_header_write = os.path.getmtime(input_path + '/Include/' + line)
+
+                    include_path = input_path + "Include/"
+                    if line == "WorldShared.h":
+                        include_path = "./Source/Game/World/"
+
+                    last_header_write = os.path.getmtime(include_path + line)
                     if last_header_write != last_compile_time:
                         invalid_headers.append(line)
-                        compile_times["headers"][line] = os.path.getmtime(input_path + '/Include/' + line) 
+                        compile_times["headers"][line] = os.path.getmtime(include_path + line) 
                     
 for shader_desc in shader_dict["shaders"]:
     shader_name = shader_desc["name"]
@@ -120,6 +125,7 @@ for shader_desc in shader_dict["shaders"]:
         './Tools/shaderc' + executable_extension + ' '
         '-i ./Tools/include/ '
         '-i ./Source/Shaders/Include/ '
+        '-i ./Source/Game/World/ '
         '--varyingdef ./Source/Shaders/varying.def.sc '
         '-f %s '
         '-o %s '

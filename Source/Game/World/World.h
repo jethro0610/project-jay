@@ -16,8 +16,8 @@ public:
     float GetHeight(glm::vec2 position) const;
     float GetHeight(glm::vec3 position) const;
 
-    glm::vec3 GetNormal(glm::vec2 position, float epsilon = 1.0f) const;
-    glm::vec3 GetNormal(glm::vec3 position, float epsilon = 1.0f) const;
+    glm::vec3 GetNormal(glm::vec2 position) const;
+    glm::vec3 GetNormal(glm::vec3 position) const;
 
     float minRadius_;
     float maxRadius_;

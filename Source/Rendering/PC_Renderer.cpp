@@ -30,7 +30,7 @@ bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
 const float WORLD_MESH_SIZE = 64.0f;
-const float WORLD_MESH_DENSITY = 0.25f;
+const float WORLD_MESH_DENSITY = 0.5f;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
@@ -199,7 +199,7 @@ void Renderer::InitUIBuffer_P() {
 }
 
 void Renderer::InitWorldMesh_P() {
-    int size = WORLD_MESH_SIZE * WORLD_MESH_DENSITY;
+    int size = ceil(WORLD_MESH_SIZE * WORLD_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
     WorldVertex* vertices =  new WorldVertex[numVertices];
@@ -305,6 +305,7 @@ void Renderer::RenderWorld_P(World& world) {
     worldProps[1].x = world.edgeFalloff_;
     worldProps[1].y = world.edgePower_;
 
+    // Can use instancing here if necessary
     int radius = world.maxRadius_ / WORLD_MESH_SIZE;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 

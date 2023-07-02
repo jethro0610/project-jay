@@ -1,8 +1,9 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
+
 #define SHARED_SHADER
-#include <WorldShared.h>
+#include <Shared_WorldFuncs.h>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;

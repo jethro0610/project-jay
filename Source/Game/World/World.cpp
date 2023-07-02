@@ -1,32 +1,26 @@
 #include "World.h"
 #include <FastNoiseLite.h>
-#include "WorldShared.h"
+#include "Shared_WorldFuncs.h"
 
 using namespace glm;
 
 World::World(FastNoiseLite& noise):
-    noise_(noise)
+    properties_({
+        0.0f,
+        128.0f,
+        256.0f,
+        128.0f,
+        0.075f,
+        2.0f,
+        noise
+    })
 {
-    minRadius_ = 128.0f;
-    maxRadius_ = 256.0f;
-    edgeJaggedness_ = 128.0f;
-    edgeFalloff_ = 0.075f;
-    edgePower_ = 2.0f;
 }
 
 float World::GetHeight(vec2 position) const {
-    WorldProperties props = { 
-        0.0f, 
-        minRadius_, 
-        maxRadius_, 
-        edgeJaggedness_, 
-        edgeFalloff_, 
-        edgePower_, 
-        noise_ 
-    };
-    return getHeight(
+    return getWorldHeight(
         position,
-        props
+        properties_ 
     );
 }
 
@@ -35,17 +29,7 @@ float World::GetHeight(vec3 position) const {
 }
 
 vec3 World::GetNormal(vec2 position) const {
-    WorldProperties props = { 
-        0.0f, 
-        minRadius_, 
-        maxRadius_, 
-        edgeJaggedness_, 
-        edgeFalloff_, 
-        edgePower_, 
-        noise_ 
-    };
-
-    return getNormal(position, props);
+    return getWorldNormal(position, properties_);
 }
 
 vec3 World::GetNormal(vec3 position) const {

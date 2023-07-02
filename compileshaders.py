@@ -78,7 +78,7 @@ for shader_desc in shader_dict["shaders"]:
                         pass
 
                     include_path = input_path + "Include/"
-                    if line == "WorldShared.h":
+                    if line == "Shared_WorldFuncs.h":
                         include_path = "./Source/Game/World/"
 
                     last_header_write = os.path.getmtime(include_path + line)

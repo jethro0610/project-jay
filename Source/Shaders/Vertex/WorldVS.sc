@@ -1,8 +1,9 @@
 $input a_position, a_normal
 $output v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
+
 #define SHARED_SHADER
-#include <WorldShared.h>
+#include <Shared_WorldFuncs.h>
 
 void main() {
     WorldProperties props = {
@@ -18,10 +19,10 @@ void main() {
     a_position += u_worldMeshOffset;
     vec2 position2d = a_position.xz;
 
-    float height = getHeight(position2d, props);
+    float height = getWorldHeight(position2d, props);
     v_wposition = vec3(a_position.x, height, a_position.z);
-    v_normal = getNormal(position2d, props);
-
+    
+    v_normal = getWorldNormal(position2d, props);
     v_tangent = -normalize(cross(vec3(1, 0, 0), v_normal));
     v_bitangent = normalize(cross(v_tangent, v_normal));
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);

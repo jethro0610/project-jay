@@ -299,14 +299,14 @@ void Renderer::PresentFrame_P() {
 void Renderer::RenderWorld_P(World& world) {
     vec4 worldProps[2];
     worldProps[0].x = 0.0f;
-    worldProps[0].y = world.minRadius_;
-    worldProps[0].z = world.maxRadius_;
-    worldProps[0].w = world.edgeJaggedness_;
-    worldProps[1].x = world.edgeFalloff_;
-    worldProps[1].y = world.edgePower_;
+    worldProps[0].y = world.properties_.minRadius;
+    worldProps[0].z = world.properties_.maxRadius;
+    worldProps[0].w = world.properties_.edgeJaggedness;
+    worldProps[1].x = world.properties_.edgeFalloff;
+    worldProps[1].y = world.properties_.edgePower;
 
     // Can use instancing here if necessary
-    int radius = world.maxRadius_ / WORLD_MESH_SIZE;
+    int radius = world.properties_.maxRadius / WORLD_MESH_SIZE;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
         bgfx::setUniform(u_worldProps_, worldProps, 2);

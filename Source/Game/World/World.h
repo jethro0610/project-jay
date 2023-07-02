@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include "../../Types/FixedVector.h"
 #include "TerrainModifier.h"
+#include "Shared_WorldProperties.h"
 
 class FastNoiseLite;
 
@@ -19,12 +20,5 @@ public:
     glm::vec3 GetNormal(glm::vec2 position) const;
     glm::vec3 GetNormal(glm::vec3 position) const;
 
-    float minRadius_;
-    float maxRadius_;
-    float edgeJaggedness_;
-    float edgeFalloff_;
-    float edgePower_;
-
-private:
-    FastNoiseLite& noise_;
+    WorldProperties properties_;
 };

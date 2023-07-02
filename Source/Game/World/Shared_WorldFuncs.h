@@ -1,10 +1,12 @@
 #ifndef SHARED_SHADER 
 
+#pragma once
 #include <glm/vec2.hpp> 
 #include <glm/gtx/compatibility.hpp> 
 #include <FastNoiseLite.h>
 #include "../../Logging/Logger.h"
 #include "../../Logging/ScreenText.h"
+#include "Shared_WorldProperties.h"
 #define NOISE_TYPE FastNoiseLite&
 #define SAMPLENOISE(noisePos) noise.GetNoise(noisePos.x, noisePos.y)
 using namespace glm;
@@ -12,27 +14,13 @@ using namespace glm;
 #else
 
 #include <WorldUniform.sh>
+#include <Shared_WorldProperties.h>
 uniform vec4 u_noiseProps;
 SAMPLER2D(s_sampler0, 0);
 #define NOISE_TYPE float
 #define SAMPLENOISE(noisePos) texture2DLod(s_sampler0, noisePos * u_noiseProps.y + vec2(0.5f, 0.5f), 0)
 
 #endif
-
-struct WorldProperties {
-    float minHeight;
-    float minRadius;
-    float maxRadius;
-    float edgeJaggedness;
-    float edgeFalloff;
-    float edgePower;
-
-    #ifndef SHARED_SHADER
-    FastNoiseLite& noise;
-    #else
-    int noise;
-    #endif
-};
 
 float sampleNoise(vec2 position, NOISE_TYPE noise) {
     return SAMPLENOISE(position);
@@ -49,7 +37,7 @@ float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) {
     return sampleNoise(position, noise);
 }
 
-float getHeight(vec2 position, WorldProperties props) {
+float getWorldHeight(vec2 position, WorldProperties props) {
     float blobVal = sampleNoiseBlob(position, props.edgeJaggedness, props.noise);
     blobVal = (blobVal + 1.0f) * 0.5f;
 
@@ -65,13 +53,13 @@ float getHeight(vec2 position, WorldProperties props) {
     return terrainHeight + edgeHeight;
 }
 
-vec3 getNormal(vec2 position, WorldProperties props) {
+vec3 getWorldNormal(vec2 position, WorldProperties props) {
     vec2 dX = position - vec2(1.0f, 0.0f);
     vec2 dZ = position - vec2(0.0f, 1.0f);
 
-    float height = getHeight(position, props);
-    float gradX = getHeight(dX, props) - height;
-    float gradZ = getHeight(dZ, props) - height;
+    float height = getWorldHeight(position, props);
+    float gradX = getWorldHeight(dX, props) - height;
+    float gradZ = getWorldHeight(dZ, props) - height;
 
     return normalize(vec3(gradX, 1.0f, gradZ));
 }

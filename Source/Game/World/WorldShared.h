@@ -1,0 +1,77 @@
+#ifndef SHARED_SHADER 
+
+#include <glm/vec2.hpp> 
+#include <glm/gtx/compatibility.hpp> 
+#include <FastNoiseLite.h>
+#include "../../Logging/Logger.h"
+#include "../../Logging/ScreenText.h"
+#define NOISE_TYPE FastNoiseLite&
+#define SAMPLENOISE(noisePos) noise.GetNoise(noisePos.x, noisePos.y)
+using namespace glm;
+
+#else
+
+#include <WorldUniform.sh>
+uniform vec4 u_noiseProps;
+SAMPLER2D(s_sampler0, 0);
+#define NOISE_TYPE float
+#define SAMPLENOISE(noisePos) texture2DLod(s_sampler0, noisePos * u_noiseProps.y + vec2(0.5f, 0.5f), 0)
+
+#endif
+
+struct WorldProperties {
+    float minHeight;
+    float minRadius;
+    float maxRadius;
+    float edgeJaggedness;
+    float edgeFalloff;
+    float edgePower;
+
+    #ifndef SHARED_SHADER
+    FastNoiseLite& noise;
+    #else
+    int noise;
+    #endif
+};
+
+float sampleNoise(vec2 position, NOISE_TYPE noise) {
+    return SAMPLENOISE(position);
+}
+
+float sampleNoise(vec2 position, float scale, NOISE_TYPE noise) {
+    vec2 samplePos = position * scale;
+    return sampleNoise(samplePos, noise);
+}
+
+float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) {
+    if (position.x != 0.0f || position.y != 0.0f)
+        position = normalize(position) * jaggedness;
+    return sampleNoise(position, noise);
+}
+
+float getHeight(vec2 position, WorldProperties props) {
+    float blobVal = sampleNoiseBlob(position, props.edgeJaggedness, props.noise);
+    blobVal = (blobVal + 1.0f) * 0.5f;
+
+    float blobRadius = props.minRadius + blobVal * (props.maxRadius - props.minRadius);
+    float curRadius = length(position);
+    float edgeCloseness = max(1.0f - (blobRadius - curRadius) * props.edgeFalloff, 0.0f);
+    float edgeHeight = -pow(edgeCloseness, props.edgePower);
+
+    float terrainVal = sampleNoise(position, 0.75f, props.noise);
+    terrainVal = (terrainVal + 1.0f) * 0.5f;
+    float terrainHeight = terrainVal * 12.0f;
+
+    return terrainHeight + edgeHeight;
+}
+
+vec3 getNormal(vec2 position, WorldProperties props) {
+    vec2 dX = position - vec2(1.0f, 0.0f);
+    vec2 dZ = position - vec2(0.0f, 1.0f);
+
+    float height = getHeight(position, props);
+    float gradX = getHeight(dX, props) - height;
+    float gradZ = getHeight(dZ, props) - height;
+
+    return normalize(vec3(gradX, 1.0f, gradZ));
+}

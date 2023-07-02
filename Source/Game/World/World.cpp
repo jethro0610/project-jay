@@ -6,7 +6,7 @@ World::World(FastNoiseLite& noise):
     noise_(noise)
 {
     minRadius_ = 128.0f;
-    maxRadius_ = 1024.0f;
+    maxRadius_ = 256.0f;
     edgeJaggedness_ = 128.0f;
     edgeFalloff_ = 0.075f;
     edgePower_ = 2.0f;

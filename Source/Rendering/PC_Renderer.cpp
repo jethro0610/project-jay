@@ -304,14 +304,21 @@ void Renderer::RenderWorld_P(World& world) {
     worldProps[0].w = world.edgeJaggedness_;
     worldProps[1].x = world.edgeFalloff_;
     worldProps[1].y = world.edgePower_;
-    bgfx::setUniform(u_worldProps_, worldProps, 2);
 
-    for (int i = 0; i < worldMaterial_.numTextures; i++)
-        bgfx::setTexture(i, samplers_[i], worldMaterial_.textures[i]);
+    int radius = world.maxRadius_ / WORLD_MESH_SIZE;
+    for (int x = -radius; x < radius; x++)
+    for (int y = -radius; y < radius; y++) { 
+        bgfx::setUniform(u_worldProps_, worldProps, 2);
+        vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
+        bgfx::setUniform(u_worldMeshOffset_, &offset);
 
-    bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
-    bgfx::setIndexBuffer(worldMesh_.indexBuffer);
-    bgfx::submit(0, worldMaterial_.shader);
+        for (int i = 0; i < worldMaterial_.numTextures; i++)
+            bgfx::setTexture(i, samplers_[i], worldMaterial_.textures[i]);
+
+        bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
+        bgfx::setIndexBuffer(worldMesh_.indexBuffer);
+        bgfx::submit(0, worldMaterial_.shader);
+    };
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();

@@ -28,7 +28,7 @@ SAMPLER2D(s_sampler0, 0);
 #define NOISE_TYPE float
 #define SAMPLENOISE(noisePos) texture2DLod(s_sampler0, noisePos * u_noiseProps.y + vec2(0.5f, 0.5f), 0)
 #define INLINE 
-#define blah
+
 #endif
 
 INLINE float sampleNoise(vec2 position, NOISE_TYPE noise) {

@@ -2,5 +2,11 @@
 - Privatize some variables
 - Fix Xbox Series controller on Linux
 - Clean up dependencies
-- Handle shared headers in shader compiler
+
 - Dithering
+
+- Breakable round stone (gives meter)
+- Breakable bush
+- Holes (terrain modification)
+- Enemy
+- Player model

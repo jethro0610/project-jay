@@ -21,15 +21,15 @@ World::World(FastNoiseLite& noise):
 }
 
 float World::GetHeight(vec2 position) const {
-    float height = getWorldDistance(
+    vec2 worldDistance = getWorldDistance(
         position,
         properties_ 
-    ).y;
+    );
 
-    if (height < properties_.minHeight + END_HEIGHT)
+    if (worldDistance.x < -32.0f)
         return -INFINITY;
 
-    return height;
+    return worldDistance.y;
 }
 
 float World::GetHeight(vec3 position) const {

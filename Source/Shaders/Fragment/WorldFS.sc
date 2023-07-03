@@ -56,5 +56,8 @@ void main() {
     if (dither(gl_FragCoord, u_viewTexel, fade))
         discard;
 
+    // Should also fade if height is lower than a certain threshhold
+    // for holes
+
     gl_FragColor = vec4(color * brightness, 1.0f);
 }

@@ -35,7 +35,7 @@ void main() {
         angle = atan(gradient.y / gradient.x);
     float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 
-    vec2 radius = vec2(2.0f, 2.0f);
+    vec2 radius = vec2(3.0f, 3.0f);
     float sampleRate = 1.0f;
 
     vec3 kernelMean[4] = {

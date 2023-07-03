@@ -6,6 +6,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
 #include <FastNoiseLite.h>
+#include <random>
 #include "../Game/Camera.h"
 #include "../Game/Entity/EntityKey.h"
 #include "../Helpers/MapCheck.h"
@@ -54,11 +55,12 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     }
 
     u_normal_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
+    u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
-    u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
+    u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_worldProps_ = bgfx::createUniform("u_worldProps", bgfx::UniformType::Vec4, 2);
     u_worldMeshOffset_= bgfx::createUniform("u_worldMeshOffset", bgfx::UniformType::Vec4);
@@ -107,6 +109,7 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
+    Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
     postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
@@ -127,7 +130,6 @@ void Renderer::TEMP_LoadTestData() {
     Shader barFS = LoadFragmentShader_P("BarFS");
     barMaterial_ = MakeMaterial_P("bar", barVS, barFS, nullptr, 0);
 
-    Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture blitTextures[] = { postProcessTexture_ };
     blitMaterial_ = MakeMaterial_P("blit", screenQuadVS, blitFS, blitTextures, 1);
 
@@ -279,11 +281,13 @@ void Renderer::StartFrame_P() {
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
+    vec4 randomVec = vec4(rand());
 
     bgfx::setUniform(u_timeResolution_, &timeResolution);
     bgfx::setUniform(u_cameraPosition_, &cameraPosition);
     bgfx::setUniform(u_cameraUp_, &cameraUp);
     bgfx::setUniform(u_cameraRight_, &cameraRight);
+    bgfx::setUniform(u_randomVec_, &randomVec);
 
     bgfx::touch(0);
 }
@@ -307,6 +311,7 @@ void Renderer::RenderWorld_P(World& world) {
 
     // Can use instancing here if necessary
     int radius = world.properties_.maxRadius / WORLD_MESH_SIZE;
+    radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
         bgfx::setUniform(u_worldProps_, worldProps, 2);

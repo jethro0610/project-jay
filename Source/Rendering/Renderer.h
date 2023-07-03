@@ -112,6 +112,7 @@ private:
     Uniform u_cameraPosition_;
     Uniform u_cameraUp_;
     Uniform u_cameraRight_;
+    Uniform u_randomVec_;
     Uniform u_meter_;
     Uniform u_worldProps_;
     Uniform u_worldMeshOffset_;

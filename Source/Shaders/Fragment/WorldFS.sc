@@ -1,6 +1,7 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
+#include <Dither.sh>
 
 #define SHARED_SHADER
 #include <Shared_WorldFuncs.h>
@@ -50,11 +51,12 @@ void main() {
     color = lerp(color, fresnelColor, fresnel);
     
     vec2 position2d = v_wposition.xz;
-    float fadeHeight = u_minHeight + sampleNoiseBlob(position2d, 256.0f, 0) * 8.0f;
-    float fade = v_wposition.y - (fadeHeight - 16.0f);
-    fade *= 0.1f;
+    float fadeHeight = u_minHeight + (sampleNoiseBlob(position2d, 256.0f, 0)) + 1.0f * 4.0f;
+    float fade = (fadeHeight - 4.0f) - v_wposition.y;
+    fade *= 0.05f;
     fade = clamp(fade, 0.0f, 1.0f);
-    color = lerp(vec3(0.0f, 0.0f, 0.0f), color, fade);
+    if (dither(gl_FragCoord, u_viewTexel, fade))
+        discard;
 
     gl_FragColor = vec4(color * brightness, 1.0f);
 }

@@ -157,7 +157,8 @@ for desc in shader_descriptions.values():
         '--platform %s '
         '--profile %s'
     )
-    command = command % (desc.path, output_path + desc.name, desc.shader_type, shader_platform, shader_profile)
+    output_name = os.path.splitext(desc.name)[0] + '.bin';
+    command = command % (desc.path, output_path + output_name, desc.shader_type, shader_platform, shader_profile)
     result = subprocess.run(command, shell = use_shell)
 
     if result.returncode == 0:

@@ -1,5 +1,5 @@
 $input a_position, a_normal
-$output v_wposition, v_normal, v_tangent, v_bitangent, v_tbn
+$output v_wposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 
 #define SHARED_SHADER
@@ -19,8 +19,9 @@ void main() {
     a_position += u_worldMeshOffset;
     vec2 position2d = a_position.xz;
 
-    float height = getWorldHeight(position2d, props);
-    v_wposition = vec3(a_position.x, height, a_position.z);
+    vec2 worldDistance = getWorldDistance(position2d, props);
+    v_wposition = vec3(a_position.x, worldDistance.y, a_position.z);
+    v_edgeDistance = worldDistance.x;
     
     v_normal = getWorldNormal(position2d, props);
     v_tangent = -normalize(cross(vec3(1, 0, 0), v_normal));

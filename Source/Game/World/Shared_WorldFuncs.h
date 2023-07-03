@@ -46,29 +46,30 @@ INLINE float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) 
     return sampleNoise(position, noise);
 }
 
-INLINE float getWorldHeight(vec2 position, WorldProperties props) {
+INLINE vec2 getWorldDistance(vec2 position, WorldProperties props) {
     float blobVal = sampleNoiseBlob(position, props.edgeJaggedness, props.noise);
     blobVal = (blobVal + 1.0f) * 0.5f;
 
     float blobRadius = props.minRadius + blobVal * (props.maxRadius - props.minRadius);
     float curRadius = length(position);
-    float edgeCloseness = max(1.0f - (blobRadius - curRadius) * props.edgeFalloff, 0.0f);
+    float edgeDistance = blobRadius - curRadius;
+    float edgeCloseness = max(1.0f - (edgeDistance) * props.edgeFalloff, 0.0f);
     float edgeHeight = -pow(edgeCloseness, props.edgePower);
 
     float terrainVal = sampleNoise(position, 0.75f, props.noise);
     terrainVal = (terrainVal + 1.0f) * 0.5f;
     float terrainHeight = terrainVal * 12.0f;
 
-    return terrainHeight + edgeHeight;
+    return vec2(edgeDistance, terrainHeight + edgeHeight);
 }
 
 INLINE vec3 getWorldNormal(vec2 position, WorldProperties props) {
     vec2 dX = position - vec2(1.0f, 0.0f);
     vec2 dZ = position - vec2(0.0f, 1.0f);
 
-    float height = getWorldHeight(position, props);
-    float gradX = getWorldHeight(dX, props) - height;
-    float gradZ = getWorldHeight(dZ, props) - height;
+    float height = getWorldDistance(position, props).y;
+    float gradX = getWorldDistance(dX, props).y - height;
+    float gradZ = getWorldDistance(dZ, props).y - height;
 
     return normalize(vec3(gradX, 1.0f, gradZ));
 }

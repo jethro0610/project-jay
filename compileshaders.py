@@ -3,129 +3,153 @@ import platform
 import json
 import sys
 import subprocess
+import re
+import glob
 from termcolor import colored
 
-input_path = "./Source/Shaders/"
-output_path = "./Output/shaders/"
-shader_desc_file = open(input_path + "desc.json")
-shader_dict = json.load(shader_desc_file)
-shader_platform = ""
-shader_profile = ""
-executable_extension = ""
+input_path = './Source/Shaders/'
+include_path = input_path + 'Include/'
+output_path = './Output/shaders/'
+shader_platform = ''
+shader_profile = ''
+executable_extension = ''
 use_shell = False
+recompile = False
+if '-r' in sys.argv:
+    recompile = True
 
-if platform.system() == "Windows":
-    shader_platform = "windows"
-    shader_profile = "s_5_0"
-    executable_extension = ".exe"
-elif platform.system() == "Linux":
-    shader_platform = "linux"
-    shader_profile = "spirv"
+if platform.system() == 'Windows':
+    shader_platform = 'windows'
+    shader_profile = 's_5_0'
+    executable_extension = '.exe'
+elif platform.system() == 'Linux':
+    shader_platform = 'linux'
+    shader_profile = 'spirv'
     use_shell = True
 
-compile_times = None
+shader_descriptions = dict()
+shared_file_paths = dict()
+
+compile_times = dict()
+last_compile_times = None
 try:
-    compile_times_file = open("./lastcompiletimes.json") 
-    compile_times = json.load(compile_times_file)
+    compile_file = open("./lastcompiletimes.json") 
+    last_compile_times = json.load(compile_file)
 except:
-    compile_times = dict()
-    compile_times["shaders"] = dict()
-    compile_times["headers"] = dict()
-    print(colored("Creating new compile time file", "cyan"))
-    print()
+    last_compile_times = dict()
 
-invalid_headers = []
-checked_headers = [] 
-for shader_desc in shader_dict["shaders"]:
-    shader_name = shader_desc["name"]
-    type_folder = ""
-    if shader_desc["type"] == "fragment":
-        type_folder = "Fragment/";
-    elif shader_desc["type"] == "vertex":
-        type_folder = "Vertex/"
-    elif shader_desc["type"] == "compute":
-        type_folder = "Compute/"
+path_glob = glob.glob('./**/Shared_*', recursive = True)
+for path in path_glob:
+    shared_file_paths[os.path.basename(path)] = path
 
-    shader_input = input_path + type_folder + shader_name + ".sc"
+include_string = ''
+included_paths = set()
+for path in shared_file_paths.values():
+    dir = os.path.dirname(path)
+    if dir in included_paths:
+        continue
 
-    if shader_name not in compile_times["shaders"]:
-        compile_times["shaders"][shader_name] = dict()
-        compile_times["shaders"][shader_name]["success"] = False
-        compile_times["shaders"][shader_name]["time"] = 0
-    compile_times["shaders"][shader_name]["headers"] = []
+    include_string += '-i ' + dir + ' '
+    included_paths.add(dir)
 
-    with open(shader_input) as file:
-        lines = file.readlines()
-        for i in range(len(lines)):
-            line = lines[i].strip()
-            if "bgfx_shader.sh" in line:
+class ShaderDesc:
+    def __init__(self):
+        self.path = '' 
+        self.name = ''
+        self.shader_type = '' 
+        self.includes = [] 
+        self.last_compile = 0 
+
+    def should_compile(self):
+        if self.last_compile != os.path.getmtime(self.path):
+            return True
+        
+        for include in self.includes:
+            if include.should_compile() == True:
+                return True 
+
+        return False 
+        
+
+def get_include_names(path):
+    include_names = []
+    file = open(path, 'r')
+    lines = file.readlines()
+    file.close()
+
+    # If we're in a shared file, then we have to wait to
+    # till we're at the #else directive for us to be 
+    # in the shader code
+    in_shader_code = True
+
+    for line in lines:
+        if '#ifndef SHARED_SHADER' in line:
+            in_shader_code = False
+            continue
+
+        if '#else' in line or '#endif' in line:
+            in_shader_code = True
+            continue
+
+        if not in_shader_code:
+            continue
+
+        if '#include' in line:
+            name = line.replace('#include ', '')
+            name = name.replace('<', '')
+            name = name.replace('>', '')
+            name = name.replace('>', '')
+            name = name.replace('\n', '')
+            if name == 'bgfx_shader.sh':
                 continue
+            include_names.append(name)
 
-            if "#include " in line:
-                line = line.replace("#include ", "")
-                line = line.replace("\"", "")
-                line = line.replace("../", "")
-                line = line.replace("<", "")
-                line = line.replace(">", "")
-                compile_times["shaders"][shader_name]["headers"].append(line) 
+    return include_names
 
-                if line not in checked_headers:
-                    checked_headers.append(line)
-                    last_compile_time = 0
-                    try:
-                        last_compile_time = compile_times["headers"][line]
-                    except:
-                        pass
+def make_shaderdesc(path, shader_type):
+    desc = ShaderDesc()
+    desc.path = path 
+    desc.name = os.path.basename(path)
+    desc.shader_type = shader_type
+    if desc.name in last_compile_times:
+        desc.last_compile = last_compile_times[desc.name]
 
-                    include_path = input_path + "Include/"
-                    if line == "Shared_WorldFuncs.h":
-                        include_path = "./Source/Game/World/"
+    include_names = get_include_names(path)
 
-                    last_header_write = os.path.getmtime(include_path + line)
-                    if last_header_write != last_compile_time:
-                        invalid_headers.append(line)
-                        compile_times["headers"][line] = os.path.getmtime(include_path + line) 
-                    
-for shader_desc in shader_dict["shaders"]:
-    shader_name = shader_desc["name"]
-    shader_type = shader_desc["type"]
-    if shader_type == "fragment":
-        type_folder = "Fragment/";
-    elif shader_type == "vertex":
-        type_folder = "Vertex/"
-    elif shader_type == "compute":
-        type_folder = "Compute/"
+    for include_name in include_names:
+        if include_name not in shader_descriptions:
+            if include_name in shared_file_paths:
+                make_shaderdesc(shared_file_paths[include_name], 'header')
+            else:
+                make_shaderdesc(include_path + include_name, 'header')
 
-    shader_input = input_path + type_folder + shader_name + ".sc"
-    shader_output = output_path + shader_name + ".bin"
-    last_shader_write = os.path.getmtime(shader_input)
+        desc.includes.append(shader_descriptions[include_name])
 
-    last_compile_time = compile_times["shaders"][shader_name]["time"] 
-    try:
-        if sys.argv[1] == "--all":
-            last_compile_time = 0            
-    except:
-        pass
-    
-    for header in compile_times["shaders"][shader_name]["headers"]:
-        if header in invalid_headers:
-            last_compile_time = 0
+    shader_descriptions[desc.name] = desc
 
-    if compile_times["shaders"][shader_name]["success"] == False:
-        last_compile_time = 0
+def make_shaderdescs_in_folder(path, shader_type):
+    filenames = os.listdir(path)
+    for filename in filenames:
+        make_shaderdesc(path + filename, shader_type)
 
-    if (last_shader_write == last_compile_time):
-        print(colored("%s is up to date." % shader_name, "green"))
-        print()
-        continue;
-    
-    print(colored("Compiling %s..." % shader_name, "yellow"))
+make_shaderdescs_in_folder(input_path + 'Vertex/', 'vertex')
+make_shaderdescs_in_folder(input_path + 'Fragment/', 'fragment')
+
+for desc in shader_descriptions.values():
+    compile_times[desc.name] = os.path.getmtime(desc.path)
+    if desc.shader_type == 'header':
+        continue
+
+    if desc.should_compile() == False and recompile == False:
+        continue
+
+    print(colored("Compiling %s..." % desc.name, "yellow"))
 
     command = (
         './Tools/shaderc' + executable_extension + ' '
         '-i ./Tools/include/ '
-        '-i ./Source/Shaders/Include/ '
-        '-i ./Source/Game/World/ '
+        '-i ./Source/Shaders/Include/ ' +
+        include_string +
         '--varyingdef ./Source/Shaders/varying.def.sc '
         '-f %s '
         '-o %s '
@@ -133,22 +157,17 @@ for shader_desc in shader_dict["shaders"]:
         '--platform %s '
         '--profile %s'
     )
-    command = command % (shader_input, shader_output, shader_type, shader_platform, shader_profile)
+    command = command % (desc.path, output_path + desc.name, desc.shader_type, shader_platform, shader_profile)
     result = subprocess.run(command, shell = use_shell)
-    
+
     if result.returncode == 0:
-        compile_times["shaders"][shader_name]["time"] = last_shader_write
-        compile_times["shaders"][shader_name]["success"] = True
-        print(colored("Finished compiling %s." % shader_name, "yellow"))
-    else:
-        compile_times["shaders"][shader_name]["success"] = False 
-        print(colored("Failed to compile %s." % shader_name, "red")) 
+        print(colored("Finished compiling %s." % desc.name, "yellow"))
         print()
+    else:
+        compile_times[desc.name] = 0
+        print(colored("Failed to compile %s." % desc.name, "red")) 
         print()
         sys.exit(1)
-
-    print()
-    print()
 
 with open("lastcompiletimes.json", "w+") as outfile:
     json.dump(compile_times, outfile)

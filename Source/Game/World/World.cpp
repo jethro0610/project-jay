@@ -4,6 +4,8 @@
 
 using namespace glm;
 
+const float END_HEIGHT = -16.0f;
+
 World::World(FastNoiseLite& noise):
     properties_({
         0.0f,
@@ -15,13 +17,19 @@ World::World(FastNoiseLite& noise):
         noise
     })
 {
+
 }
 
 float World::GetHeight(vec2 position) const {
-    return getWorldHeight(
+    float height = getWorldHeight(
         position,
         properties_ 
     );
+
+    if (height < properties_.minHeight + END_HEIGHT)
+        return -INFINITY;
+
+    return height;
 }
 
 float World::GetHeight(vec3 position) const {

@@ -9,35 +9,44 @@
 #include "Shared_WorldProperties.h"
 #define NOISE_TYPE FastNoiseLite&
 #define SAMPLENOISE(noisePos) noise.GetNoise(noisePos.x, noisePos.y)
+#define INLINE inline
 using namespace glm;
 
 #else
 
-#include <WorldUniform.sh>
 #include <Shared_WorldProperties.h>
+uniform vec4 u_worldProps[2];
+#define u_minHeight u_worldProps[0].x
+#define u_minRadius u_worldProps[0].y
+#define u_maxRadius u_worldProps[0].z
+#define u_edgeJaggedness u_worldProps[0].w
+#define u_edgeFalloff u_worldProps[1].x
+#define u_edgePower u_worldProps[1].y
 uniform vec4 u_noiseProps;
+uniform vec4 u_worldMeshOffset;
 SAMPLER2D(s_sampler0, 0);
 #define NOISE_TYPE float
 #define SAMPLENOISE(noisePos) texture2DLod(s_sampler0, noisePos * u_noiseProps.y + vec2(0.5f, 0.5f), 0)
-
+#define INLINE 
+#define blah
 #endif
 
-float sampleNoise(vec2 position, NOISE_TYPE noise) {
+INLINE float sampleNoise(vec2 position, NOISE_TYPE noise) {
     return SAMPLENOISE(position);
 }
 
-float sampleNoise(vec2 position, float scale, NOISE_TYPE noise) {
+INLINE float sampleNoise(vec2 position, float scale, NOISE_TYPE noise) {
     vec2 samplePos = position * scale;
     return sampleNoise(samplePos, noise);
 }
 
-float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) {
+INLINE float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) {
     if (position.x != 0.0f || position.y != 0.0f)
         position = normalize(position) * jaggedness;
     return sampleNoise(position, noise);
 }
 
-float getWorldHeight(vec2 position, WorldProperties props) {
+INLINE float getWorldHeight(vec2 position, WorldProperties props) {
     float blobVal = sampleNoiseBlob(position, props.edgeJaggedness, props.noise);
     blobVal = (blobVal + 1.0f) * 0.5f;
 
@@ -53,7 +62,7 @@ float getWorldHeight(vec2 position, WorldProperties props) {
     return terrainHeight + edgeHeight;
 }
 
-vec3 getWorldNormal(vec2 position, WorldProperties props) {
+INLINE vec3 getWorldNormal(vec2 position, WorldProperties props) {
     vec2 dX = position - vec2(1.0f, 0.0f);
     vec2 dZ = position - vec2(0.0f, 1.0f);
 

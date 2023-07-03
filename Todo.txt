@@ -9,5 +9,7 @@
 - Breakable bush
 - Holes (terrain modification)
 - Enemy
-- Player model
 - Flower model
+- Shadow mapping
+- Player model
+    - Animation

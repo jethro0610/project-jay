@@ -87,11 +87,14 @@ void PlayerController::Execute(
         actionMeter_ = max(actionMeter_ - 3, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
+        if (length(desiredMovement) > 0.0001f) {
+            transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+            velocityComponent.velocity[PLAYER_ENTITY] = normalize(desiredMovement) * movementComponent.speed[PLAYER_ENTITY];
+        }
+
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         groundTraceComponent.forceNoGroundThisFrame[PLAYER_ENTITY] = true;
         actionMeter_ = 0;
-        // if (length(desiredMovement) > 0.0001f)
-        //     transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;
         spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;

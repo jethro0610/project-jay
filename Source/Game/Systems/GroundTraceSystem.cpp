@@ -32,15 +32,14 @@ void GroundTraceSystem::Execute(
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
 
         vec3 position = transformComponent.transform[i].position;
-        vec2 worldDistance = world.GetDistance(position);
-        groundTraceComponent.groundPosition[i] = worldDistance.y;
+        float groundHeight = world.GetHeight(position);
+        groundTraceComponent.groundPosition[i] = groundHeight;
         groundTraceComponent.groundNormal[i] = world.GetNormal(position);
-        float distanceToSurface = position.y - worldDistance.y;
+        float distanceToSurface = position.y - groundHeight;
 
         if (
             !groundTraceComponent.forceNoGroundThisFrame[i]  &&
-            distanceToSurface < traceDistance && 
-            worldDistance.x > -32.0f
+            distanceToSurface < traceDistance
         )
             groundTraceComponent.onGround[i] = true;
         else

@@ -2,9 +2,8 @@
 - Privatize some variables
 - Fix Xbox Series controller on Linux
 - Clean up dependencies
-
-- Edge falloff velocity
 - Rename to World to Terrain
+
 - Breakable round stone (gives meter)
 - Breakable bush
 - Holes (terrain modification)

@@ -32,11 +32,18 @@ float World::GetHeight(vec2 position) const {
         properties_ 
     );
 
+    if (worldDistance.x < -32.0f)
+        return -INFINITY;
+
     return worldDistance.y;
 }
 
 float World::GetHeight(vec3 position) const {
-    return GetHeight(vec2(position.x, position.z));
+    float height = GetHeight(vec2(position.x, position.z));
+    if (position.y < height - 1.0f)
+        return -INFINITY;
+
+    return height;
 }
 
 vec3 World::GetNormal(vec2 position) const {

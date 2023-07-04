@@ -14,6 +14,7 @@ class GroundTraceComponent : public Component {
 public:
     float distance[MAX_ENTITIES];
     StickType stickType[MAX_ENTITIES];
+    bool forceNoGroundThisFrame[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
     bool onGroundLastFrame[MAX_ENTITIES];
     bool enteredGround[MAX_ENTITIES];
@@ -24,6 +25,7 @@ public:
     GroundTraceComponent() {
         std::fill_n(distance, MAX_ENTITIES, 0.0f);
         std::fill_n(stickType, MAX_ENTITIES, StickType::None);
+        std::fill_n(forceNoGroundThisFrame, MAX_ENTITIES, false);
         std::fill_n(onGround, MAX_ENTITIES, false);
         std::fill_n(enteredGround, MAX_ENTITIES, false);
         std::fill_n(exitedGround, MAX_ENTITIES, false);

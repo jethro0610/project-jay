@@ -88,9 +88,10 @@ void PlayerController::Execute(
 
     if (actionMeter_ >= MAX_ACTION_METER) {
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
+        groundTraceComponent.forceNoGroundThisFrame[PLAYER_ENTITY] = true;
         actionMeter_ = 0;
-        if (length(desiredMovement) > 0.0001f)
-            transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+        // if (length(desiredMovement) > 0.0001f)
+        //     transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;
         spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;
@@ -99,4 +100,10 @@ void PlayerController::Execute(
     SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
     SCREENLINE(1, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));
     SCREENLINE(2, "Action: " + std::to_string(actionMeter_));
+    SCREENLINE(3, "X-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].x));
+    SCREENLINE(4, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
+    SCREENLINE(5, "Z-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].z));
+    SCREENLINE(6, "X: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.x));
+    SCREENLINE(7, "Y: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.y));
+    SCREENLINE(8, "Z: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.z));
 }

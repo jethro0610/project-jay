@@ -31,17 +31,17 @@ void GroundTraceSystem::Execute(
         float traceDistance = groundTraceComponent.distance[i];
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
 
-        // Zero out the y velocity and trace far down if on ground
-        if (groundTraceComponent.onGroundLastFrame[i])
-            traceDistance = 100.0f;
-
         vec3 position = transformComponent.transform[i].position;
         vec2 worldDistance = world.GetDistance(position);
         groundTraceComponent.groundPosition[i] = worldDistance.y;
         groundTraceComponent.groundNormal[i] = world.GetNormal(position);
         float distanceToSurface = position.y - worldDistance.y;
 
-        if (distanceToSurface < traceDistance && worldDistance.x > -32.0f)
+        if (
+            !groundTraceComponent.forceNoGroundThisFrame[i]  &&
+            distanceToSurface < traceDistance && 
+            worldDistance.x > -32.0f
+        )
             groundTraceComponent.onGround[i] = true;
         else
             groundTraceComponent.onGround[i] = false;
@@ -57,5 +57,7 @@ void GroundTraceSystem::Execute(
         }
         else
             groundTraceComponent.exitedGround[i] = false;
+
+        groundTraceComponent.forceNoGroundThisFrame[i] = false;
     }
 }

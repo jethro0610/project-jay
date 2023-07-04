@@ -13,25 +13,8 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
-void GroundStickSystem::Step(
-    Entity* entities, 
-    World& world, 
-    GroundTraceComponent& groundTraceComponent,
-    TransformComponent& transformComponent
-) {
-    for (int i = 0 ; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.alive_)
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
-
-        if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StepUp)
-            transformComponent.transform[i].position.y += 1.0f;
-    }
-}
-
 constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
+
 void GroundStickSystem::Stick(
     Entity* entities, 
     World& world, 

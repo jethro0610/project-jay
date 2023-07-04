@@ -98,8 +98,7 @@ void Game::Update() {
             entityManager_.entities_,
             world_,
             GETCOMP(GroundTraceComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            GETCOMP(TransformComponent)
         );
         GroundStickSystem::Stick(
             entityManager_.entities_,

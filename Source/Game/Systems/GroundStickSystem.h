@@ -6,13 +6,6 @@ class VelocityComponent;
 class World;
 
 namespace GroundStickSystem {
-    void Step(
-        Entity* entities, 
-        World& world, 
-        GroundTraceComponent& groundTraceComponent,
-        TransformComponent& transformComponent
-    );
-
     void Stick(
         Entity* entities, 
         World& world, 

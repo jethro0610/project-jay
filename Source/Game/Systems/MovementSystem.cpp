@@ -77,10 +77,8 @@ void MovementSystem::Execute (
         }
 
         // Calculate gravity
-        if (!onGround) {
-            velocity.y -= GRAVITY_ACCELERATION;
-            velocity.y = -min(-velocity.y, MAX_GRAVITY);
-        }
+        velocity.y -= GRAVITY_ACCELERATION;
+        velocity.y = -min(-velocity.y, MAX_GRAVITY);
 
         // Calculate friction 
         const float frictionLerp = 1.0f - (min(speed, frictionCapSpeed) - minSpeed) / (frictionCapSpeed - minSpeed);

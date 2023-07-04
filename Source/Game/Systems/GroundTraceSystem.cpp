@@ -4,21 +4,16 @@
 #include "../World/World.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
 #include "../../Logging/Logger.h"
-#include <glm/gtx/projection.hpp>
-#include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
-constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 
 void GroundTraceSystem::Execute(
     Entity* entities,
     World& world,
     GroundTraceComponent& groundTraceComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    TransformComponent& transformComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -26,7 +21,6 @@ void GroundTraceSystem::Execute(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        bool hasVelocity = entity.MatchesKey(velocityKey);
 
         float traceDistance = groundTraceComponent.distance[i];
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];

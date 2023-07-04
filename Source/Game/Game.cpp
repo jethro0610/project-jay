@@ -94,17 +94,6 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent) 
         );
-        GroundStickSystem::Step(
-            entityManager_.entities_,
-            world_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(TransformComponent)
-        );
-        VelocitySystem::Apply(
-            entityManager_.entities_,
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
-        );
         GroundTraceSystem::Execute(
             entityManager_.entities_,
             world_,
@@ -116,7 +105,13 @@ void Game::Update() {
             entityManager_.entities_,
             world_,
             GETCOMP(GroundTraceComponent),
-            GETCOMP(TransformComponent)
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
+        VelocitySystem::Apply(
+            entityManager_.entities_,
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
         );
         CollisionSystem::Execute(
             entityManager_.entities_, 

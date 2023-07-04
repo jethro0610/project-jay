@@ -1,9 +1,12 @@
 #include "VelocitySystem.h"
+#include <glm/vec3.hpp>
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../../Constants/TimeConstants.h"
+#include "../../Logging/ScreenText.h"
+using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent, VelocityComponent>();
 

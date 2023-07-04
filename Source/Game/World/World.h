@@ -14,6 +14,8 @@ class World {
 public:
     World(FastNoiseLite& noise);
 
+    glm::vec2 GetDistance(glm::vec2 position) const;
+    glm::vec2 GetDistance(glm::vec3 position) const;
     float GetHeight(glm::vec2 position) const;
     float GetHeight(glm::vec3 position) const;
 

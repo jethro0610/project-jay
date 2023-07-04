@@ -5,6 +5,9 @@
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../../Logging/Logger.h"
+#include <glm/gtx/projection.hpp>
+#include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
@@ -38,21 +41,16 @@ void GroundTraceSystem::Execute(
         else if (isRising) // If its rising then don't trace
             traceDistance = 0.0f;
 
-        // Raymarch towards the ground
         vec3 position = transformComponent.transform[i].position;
-        float worldHeight = world.GetHeight(position);
-        float distanceToSurface = position.y - worldHeight;
+        vec2 worldDistance = world.GetDistance(position);
+        groundTraceComponent.groundPosition[i] = worldDistance.y;
+        groundTraceComponent.groundNormal[i] = world.GetNormal(position);
+        float distanceToSurface = position.y - worldDistance.y;
 
-        // Hit solving
-        if (distanceToSurface < traceDistance) {
+        if (distanceToSurface < traceDistance && worldDistance.x > -32.0f)
             groundTraceComponent.onGround[i] = true;
-            vec3 groundNormal = world.GetNormal(position);
-            groundTraceComponent.groundPosition[i] = worldHeight;
-            groundTraceComponent.groundNormal[i] = groundNormal;
-        }
-        else {
+        else
             groundTraceComponent.onGround[i] = false;
-        }
 
         // Check if the entity entered/exited the ground on this frame
         if (!groundTraceComponent.onGroundLastFrame[i] && groundTraceComponent.onGround[i])
@@ -60,8 +58,9 @@ void GroundTraceSystem::Execute(
         else
             groundTraceComponent.enteredGround[i] = false;
 
-        if (groundTraceComponent.onGroundLastFrame[i] && !groundTraceComponent.onGround[i])
+        if (groundTraceComponent.onGroundLastFrame[i] && !groundTraceComponent.onGround[i]) {
             groundTraceComponent.exitedGround[i] = true;
+        }
         else
             groundTraceComponent.exitedGround[i] = false;
     }

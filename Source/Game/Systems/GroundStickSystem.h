@@ -2,6 +2,7 @@
 class Entity;
 class GroundTraceComponent;
 class TransformComponent;
+class VelocityComponent;
 class World;
 
 namespace GroundStickSystem {
@@ -16,6 +17,7 @@ namespace GroundStickSystem {
         Entity* entities, 
         World& world, 
         GroundTraceComponent& groundTraceComponent,
-        TransformComponent& transformComponent
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
     );
 }

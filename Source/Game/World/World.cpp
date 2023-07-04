@@ -4,8 +4,6 @@
 
 using namespace glm;
 
-const float END_HEIGHT = -16.0f;
-
 World::World(FastNoiseLite& noise):
     properties_({
         0.0f,
@@ -20,14 +18,19 @@ World::World(FastNoiseLite& noise):
 
 }
 
+vec2 World::GetDistance(vec2 position) const {
+    return getWorldDistance(position, properties_);
+}
+
+vec2 World::GetDistance(vec3 position) const {
+    return GetDistance(vec2(position.x, position.z));
+}
+
 float World::GetHeight(vec2 position) const {
     vec2 worldDistance = getWorldDistance(
         position,
         properties_ 
     );
-
-    if (worldDistance.x < -32.0f)
-        return -INFINITY;
 
     return worldDistance.y;
 }

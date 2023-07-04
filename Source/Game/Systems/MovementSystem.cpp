@@ -195,11 +195,19 @@ void MovementSystem::CalculateLineMovement(
     glm::vec3& velocity,
     glm::quat& rotation
 ) {
-    quat desiredRotation = rotation;
+    quat rotationToUse = rotation;
+    vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
+    if (length(planarVelocity) > 0.1f)
+        rotationToUse = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
+
+    quat desiredRotation = rotationToUse;
+
     if (length(desiredMovement) > 0.001f) 
         desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
     rotation = slerp(rotation, desiredRotation, LINE_ROTATION_SPEED);
-    vec3 lineDirection = rotation * Transform::worldForward;
+    rotationToUse = slerp(rotationToUse, desiredRotation, LINE_ROTATION_SPEED);
+    vec3 lineDirection = rotationToUse * Transform::worldForward;
     
     velocity.x = lineDirection.x * speed;
     velocity.z = lineDirection.z * speed;

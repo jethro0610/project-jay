@@ -27,19 +27,13 @@ void GroundTraceSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
         bool hasVelocity = entity.MatchesKey(velocityKey);
-        bool isRising = hasVelocity && velocityComponent.velocity[i].y > 0.0f;
 
         float traceDistance = groundTraceComponent.distance[i];
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
 
         // Zero out the y velocity and trace far down if on ground
-        if (groundTraceComponent.onGroundLastFrame[i] && !isRising) {
+        if (groundTraceComponent.onGroundLastFrame[i])
             traceDistance = 100.0f;
-            if (hasVelocity)
-                velocityComponent.velocity[i].y = 0.0f;
-        }
-        else if (isRising) // If its rising then don't trace
-            traceDistance = 0.0f;
 
         vec3 position = transformComponent.transform[i].position;
         vec2 worldDistance = world.GetDistance(position);

@@ -31,7 +31,6 @@ void GroundStickSystem::Step(
     }
 }
 
-
 constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 void GroundStickSystem::Stick(
     Entity* entities, 
@@ -46,22 +45,19 @@ void GroundStickSystem::Stick(
             continue;
         if (!entity.MatchesKey(key))
             continue;
+        if (groundTraceComponent.stickType[i] < StickType::StickOnly)
+            continue;
+        if (!groundTraceComponent.onGround[i])
+            continue;
         bool hasVelocity = entity.MatchesKey(velocityKey);
 
-        if (groundTraceComponent.onGround[i] && groundTraceComponent.stickType[i] >= StickType::StickOnly)
+        if (!hasVelocity) {
             transformComponent.transform[i].position.y = groundTraceComponent.groundPosition[i];
-        else if (hasVelocity && groundTraceComponent.exitedGround[i] && velocityComponent.velocity[i].y <= 0.0f) {
+        }
+        else {
             vec3& velocity = velocityComponent.velocity[i];
-
-            // Calculate what the velocity should be if the object were to continue sticking
-            vec3 deltaPosition = transformComponent.transform[i].position; 
-            deltaPosition.y = groundTraceComponent.groundPosition[i];
-            deltaPosition += velocity * TIMESTEP;
-            vec3 trueVelocity = deltaPosition - transformComponent.transform[i].position;
-            trueVelocity /= TIMESTEP;
-            velocity = trueVelocity;
-
-            transformComponent.transform[i].rotation = quatLookAtRH(normalize(vec3(velocity.x, 0.0f, velocity.z)), Transform::worldUp);
+            float distanceToGround = groundTraceComponent.groundPosition[i] - transformComponent.transform[i].position.y;  
+            velocity.y = distanceToGround / TIMESTEP;
         }
     }
 }

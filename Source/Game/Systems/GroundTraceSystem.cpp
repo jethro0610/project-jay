@@ -22,7 +22,7 @@ void GroundTraceSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        float traceDistance = groundTraceComponent.distance[i];
+        float traceDistance = groundTraceComponent.distance[i] + groundTraceComponent.stickOffset[i];
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
 
         vec3 position = transformComponent.transform[i].position;

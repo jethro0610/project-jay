@@ -28,7 +28,7 @@ void GroundStickSystem::Stick(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (groundTraceComponent.stickType[i] < StickType::StickOnly)
+        if (!groundTraceComponent.stickToGround[i])
             continue;
         if (!groundTraceComponent.onGround[i])
             continue;
@@ -39,7 +39,7 @@ void GroundStickSystem::Stick(
         }
         else {
             vec3& velocity = velocityComponent.velocity[i];
-            float distanceToGround = groundTraceComponent.groundPosition[i] - transformComponent.transform[i].position.y;  
+            float distanceToGround = (groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i]) - transformComponent.transform[i].position.y;  
             velocity.y = distanceToGround / TIMESTEP;
         }
     }

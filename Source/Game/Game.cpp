@@ -16,11 +16,15 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
 
     // Create the player entity
-    Transform spawnTransform;
-    spawnTransform.position = vec3(0.0f, 50.0f, 0.0f);
-
+    Transform playerTransform;
+    playerTransform.position = vec3(0.0f, 50.0f, 0.0f);
     entityManager_.LoadEntity("player");
-    entityManager_.CreateEntity("player", spawnTransform);
+    entityManager_.CreateEntity("player", playerTransform);
+
+    Transform rockTransform;
+    rockTransform.position = vec3(2.0f, 50.0f, 0.0f);
+    entityManager_.LoadEntity("rock");
+    entityManager_.CreateEntity("rock", rockTransform);
 
     camera_.target_ = PLAYER_ENTITY;
 }

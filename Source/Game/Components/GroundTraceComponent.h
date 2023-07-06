@@ -1,19 +1,15 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include "Component.h"
+#include "../../Helpers/LoadHelpers.h"
 
 const float STEP_UP_HEIGHT = 0.25f;
-
-enum StickType {
-    None,
-    StickOnly,
-    StepUp 
-};
 
 class GroundTraceComponent : public Component {
 public:
     float distance[MAX_ENTITIES];
-    StickType stickType[MAX_ENTITIES];
+    bool stickToGround[MAX_ENTITIES];
+    float stickOffset[MAX_ENTITIES];
     bool forceNoGroundThisFrame[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
     bool onGroundLastFrame[MAX_ENTITIES];
@@ -24,7 +20,9 @@ public:
 
     GroundTraceComponent() {
         std::fill_n(distance, MAX_ENTITIES, 0.0f);
-        std::fill_n(stickType, MAX_ENTITIES, StickType::None);
+        std::fill_n(stickToGround, MAX_ENTITIES, false);
+        std::fill_n(stickOffset, MAX_ENTITIES, 0.0f);
+
         std::fill_n(forceNoGroundThisFrame, MAX_ENTITIES, false);
         std::fill_n(onGround, MAX_ENTITIES, false);
         std::fill_n(enteredGround, MAX_ENTITIES, false);
@@ -41,12 +39,7 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = data["distance"].get<float>();
-        std::string stickTypeS = data["type"].get<std::string>();
-        if (stickTypeS == "no_stick")
-            stickType[entity] = None;
-        else if (stickTypeS == "stick_only")
-            stickType[entity] = StickOnly;
-        else if (stickTypeS == "step_up")
-            stickType[entity] = StepUp;
+        stickToGround[entity] = GetBoolean(data, "stick_to_ground", false);
+        stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
     }
 };

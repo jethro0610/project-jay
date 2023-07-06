@@ -4,12 +4,13 @@
             "interpolate": true
         },
         "static_model": {
-            "model": "st_rock",
-            "material0": "rock"
+            "model": "st_sphere",
+            "material0": "player"
         },
         "ground_trace": {
-            "type": "step_up",
-            "distance": 0.5
+            "distance": 0.5,
+            "stick_to_ground": true,
+            "stick_offset": 1.0
         },
         "movement": {
             "min_speed": 12.0,

@@ -16,15 +16,26 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
 
     // Create the player entity
+    entityManager_.LoadEntity("player");
     Transform playerTransform;
     playerTransform.position = vec3(0.0f, 50.0f, 0.0f);
-    entityManager_.LoadEntity("player");
     entityManager_.CreateEntity("player", playerTransform);
 
-    Transform rockTransform;
-    rockTransform.position = vec3(2.0f, 50.0f, 0.0f);
     entityManager_.LoadEntity("rock");
+    Transform rockTransform;
+    rockTransform.position = vec3(-10.0f, 50.0f, -0.0f);
     entityManager_.CreateEntity("rock", rockTransform);
+
+    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
+    entityManager_.CreateEntity("rock", rockTransform);
+    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
+    entityManager_.CreateEntity("rock", rockTransform);
+    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
+    entityManager_.CreateEntity("rock", rockTransform);
+    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
+    entityManager_.CreateEntity("rock", rockTransform);
+
+    // GETCOMP(VelocityComponent).velocity[rock] = vec3(30.0f, 50.0f, 30.0f);
 
     camera_.target_ = PLAYER_ENTITY;
 }

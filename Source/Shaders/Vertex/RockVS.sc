@@ -20,6 +20,7 @@ void main() {
 
     vec4 crackColor = texture2DLod(s_sampler2, a_texcoord0, 0);
     float crackDepth = crackColor.r + crackColor.g;
+    crackDepth = 0.0f;
     a_position += a_normal * pow(crackDepth, 0.25f) * -0.1f;
 
     v_texcoord0 = a_texcoord0;

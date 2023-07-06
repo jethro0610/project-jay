@@ -37,6 +37,7 @@ void main() {
     vec4 crackColor = texture2DLod(s_sampler2, v_texcoord0, 0);
     float crackDepth = min(1.0f, crackColor.r + crackColor.g);
     crackDepth = pow(crackDepth, 2.0f);
+    crackDepth = 0.0f;
     brightness = lerp(brightness, 0.15f, crackDepth);
 
     gl_FragColor = vec4(color * (brightness), 1.0f);

@@ -10,6 +10,8 @@ public:
     float distance[MAX_ENTITIES];
     bool stickToGround[MAX_ENTITIES];
     float stickOffset[MAX_ENTITIES];
+    bool slideOnSlopes[MAX_ENTITIES];
+
     bool forceNoGroundThisFrame[MAX_ENTITIES];
     bool onGround[MAX_ENTITIES];
     bool onGroundLastFrame[MAX_ENTITIES];
@@ -22,6 +24,7 @@ public:
         std::fill_n(distance, MAX_ENTITIES, 0.0f);
         std::fill_n(stickToGround, MAX_ENTITIES, false);
         std::fill_n(stickOffset, MAX_ENTITIES, 0.0f);
+        std::fill_n(slideOnSlopes, MAX_ENTITIES, false);
 
         std::fill_n(forceNoGroundThisFrame, MAX_ENTITIES, false);
         std::fill_n(onGround, MAX_ENTITIES, false);
@@ -41,5 +44,6 @@ public:
         distance[entity] = data["distance"].get<float>();
         stickToGround[entity] = GetBoolean(data, "stick_to_ground", false);
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
+        slideOnSlopes[entity] = GetBoolean(data, "slide_on_slopes", false);
     }
 };

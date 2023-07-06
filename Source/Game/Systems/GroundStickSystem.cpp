@@ -1,7 +1,6 @@
 #include "GroundStickSystem.h"
 #include <glm/vec3.hpp>
-#include <glm/gtx/projection.hpp>
-#include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/compatibility.hpp>
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
@@ -39,7 +38,26 @@ void GroundStickSystem::Stick(
         }
         else {
             vec3& velocity = velocityComponent.velocity[i];
-            float distanceToGround = (groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i]) - transformComponent.transform[i].position.y;  
+            if (groundTraceComponent.slideOnSlopes[i]) {
+                vec3 planarNormal = groundTraceComponent.groundNormal[i];
+                planarNormal.y = 0.0f;
+                velocity += planarNormal * -velocity.y * 0.4f;
+                
+                vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
+                if (length(planarVelocity) > 0.15f)
+                    planarVelocity *= 0.99f;
+                else
+                    planarVelocity = vec3(0.0f);
+
+                velocity.x = planarVelocity.x;
+                velocity.z = planarVelocity.z;
+
+                quat addRot = quat(cross(Transform::worldUp, planarVelocity * 0.015f));
+                transformComponent.transform[i].rotation = addRot * transformComponent.transform[i].rotation;
+            }
+
+            float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
+            float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
             velocity.y = distanceToGround / TIMESTEP;
         }
     }

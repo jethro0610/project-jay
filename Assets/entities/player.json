@@ -31,7 +31,9 @@
             "meteor": true,
             "capture_seed": true
         },
-        "velocity": {},
+        "velocity": {
+            "use_gravity": true
+        },
         "spread_detect": {},
         "world_collider": {}
     }

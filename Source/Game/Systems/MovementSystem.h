@@ -8,9 +8,6 @@ class SpreadDetectComponent;
 class TransformComponent;
 class VelocityComponent;
 
-const float GRAVITY_ACCELERATION = 1.0f;
-const float MAX_GRAVITY = 60.0f;
-
 namespace MovementSystem {
     void Execute(
         Entity* entities,

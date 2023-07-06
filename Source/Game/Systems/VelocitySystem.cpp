@@ -10,6 +10,25 @@ using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent, VelocityComponent>();
 
+void VelocitySystem::CalculateGravity(
+    Entity* entities,
+    VelocityComponent& velocityComponent
+) {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+        if (!entity.MatchesKey(key))
+            continue;
+
+        vec3& velocity = velocityComponent.velocity[i];
+        if (velocityComponent.useGravity[i]) {
+            velocity.y -= GRAVITY_ACCELERATION;
+            velocity.y = -min(-velocity.y, MAX_GRAVITY);
+        }
+    }
+}
+
 void VelocitySystem::Apply(
     Entity* entities,
     TransformComponent& transformComponent,
@@ -22,6 +41,7 @@ void VelocitySystem::Apply(
         if (!entity.MatchesKey(key))
             continue;
 
-        transformComponent.transform[i].position += velocityComponent.velocity[i] * TIMESTEP;
+        vec3& velocity = velocityComponent.velocity[i];
+        transformComponent.transform[i].position += velocity * TIMESTEP;
     }
 }

@@ -79,6 +79,10 @@ void Game::Update() {
             GETCOMP(VelocityComponent),
             inputs_
         );
+        VelocitySystem::CalculateGravity(
+            entityManager_.entities_,
+            GETCOMP(VelocityComponent)
+        );
         MovementSystem::Execute(
             entityManager_.entities_,
             GETCOMP(GroundTraceComponent),

@@ -17,7 +17,7 @@ static const int bayerMatrix[16][16] = {
     {255, 127, 223,  95, 247, 119, 215,  87, 253, 125, 221,  93, 245, 117, 213,  85},
 }; 
 
-bool dither(vec2 coords, vec2 texelSize, float a) {
+bool dither(vec2 coords, float a) {
     int x = (coords.x) % 16;
     int y = (coords.y) % 16;
 

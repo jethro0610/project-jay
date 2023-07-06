@@ -53,7 +53,7 @@ void main() {
     float fade = max(-v_edgeDistance, 0.0f);
     fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
     fade *= 0.05f;
-    if (dither(gl_FragCoord, u_viewTexel, fade))
+    if (dither(gl_FragCoord, fade))
         discard;
 
     // Should also fade if height is lower than a certain threshhold

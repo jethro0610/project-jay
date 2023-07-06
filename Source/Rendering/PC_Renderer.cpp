@@ -91,16 +91,26 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 
 void Renderer::TEMP_LoadTestData() {
     Model sphere = LoadModel_P("st_sphere");
+    Model rock = LoadModel_P("st_rock");
+
     Texture bricksC = LoadTexture_P("bricks_c");
     Texture bricksN = LoadTexture_P("bricks_n");
     Texture grassC = LoadTexture_P("grass_c");
     Texture grassN = LoadTexture_P("grass_n");
     Texture marbleC = LoadTexture_P("marble_c");
+    Texture rockC = LoadTexture_P("rock_c");
+    Texture rockN = LoadTexture_P("rock_n");
+    Texture crackM = LoadTexture_P("crack_m");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Texture playerTextures[] = { bricksC, bricksN };
     Material playerMaterial = MakeMaterial_P("player", staticVS, defaultFS, playerTextures, 2);
+
+    Shader rockVS = LoadVertexShader_P("RockVS");
+    Shader rockFS = LoadFragmentShader_P("RockFS");
+    Texture rockTextures[] = { rockC, rockN, crackM };
+    Material rockMaterial = MakeMaterial_P("rock", rockVS, rockFS, rockTextures, 3);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");

@@ -4,9 +4,8 @@
             "interpolate": true
         },
         "static_model": {
-            "name": "static_model",
-            "model": "st_sphere",
-            "material0": "player"
+            "model": "st_rock",
+            "material0": "rock"
         },
         "ground_trace": {
             "type": "step_up",

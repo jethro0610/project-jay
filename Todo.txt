@@ -12,3 +12,18 @@
 - Shadow mapping
 - Player model
     - Animation
+
+- Should store the an array of intersections then process them in another
+  function, rather than handling them straight in the intersection call
+- Collision list
+- Spawn list
+- Store loaded entities in resource manager and copy instead of reconstructing
+  from json
+
+- Assets are being linked using their actual filenames. It'll probably be
+    better to use indexes per level to link the assets. Either that or just use
+    mapped IDs.
+    - The main thing with per level indexing is keeping loaded assets between
+      levels and keeping their index
+
+- Camera needs to collide with world

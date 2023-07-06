@@ -1,0 +1,18 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": true
+        },
+        "static_model": {
+            "model": "st_rock",
+            "material0": "rock"
+        },
+        "ground_trace": {
+            "distance": 0.5,
+            "stick_to_ground": true
+        },
+        "velocity": {
+            "use_gravity": true
+        }
+    }
+}

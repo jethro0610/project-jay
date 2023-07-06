@@ -38,24 +38,6 @@ void GroundStickSystem::Stick(
         }
         else {
             vec3& velocity = velocityComponent.velocity[i];
-            if (groundTraceComponent.slideOnSlopes[i]) {
-                vec3 planarNormal = groundTraceComponent.groundNormal[i];
-                planarNormal.y = 0.0f;
-                velocity += planarNormal * -velocity.y * 0.4f;
-                
-                vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
-                if (length(planarVelocity) > 0.15f)
-                    planarVelocity *= 0.99f;
-                else
-                    planarVelocity = vec3(0.0f);
-
-                velocity.x = planarVelocity.x;
-                velocity.z = planarVelocity.z;
-
-                quat addRot = quat(cross(Transform::worldUp, planarVelocity * 0.015f));
-                transformComponent.transform[i].rotation = addRot * transformComponent.transform[i].rotation;
-            }
-
             float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
             float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
             velocity.y = distanceToGround / TIMESTEP;

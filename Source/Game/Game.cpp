@@ -1,4 +1,5 @@
 #include <glm/vec3.hpp>
+#include <ctime>
 #include "Game.h"
 #include "../Constants/GameConstants.h"
 #include "../Constants/TimeConstants.h"
@@ -10,6 +11,7 @@ using namespace std::chrono;
 #define GETCOMP(COMP) entityManager_.GetComponent<COMP>()
 
 void Game::Init() {
+    srand(time(0));
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
     // Create the camera and assign it to the renderer
@@ -23,19 +25,27 @@ void Game::Init() {
 
     entityManager_.LoadEntity("rock");
     Transform rockTransform;
-    rockTransform.position = vec3(-10.0f, 50.0f, -0.0f);
-    entityManager_.CreateEntity("rock", rockTransform);
 
-    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
-    entityManager_.CreateEntity("rock", rockTransform);
-    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
-    entityManager_.CreateEntity("rock", rockTransform);
-    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
-    entityManager_.CreateEntity("rock", rockTransform);
-    rockTransform.position -= vec3(-10.0f, 0.0f, 0.0f);
-    entityManager_.CreateEntity("rock", rockTransform);
+    for (int j = 0; j < 8; j++) {
+        float x0 = (rand() % 200) - 100;
+        float z0 = (rand() % 200) - 100;
+        for (int i = 0; i < 8; i++) {
+            float x = (rand() % 20) - 10;
+            float z = (rand() % 20) - 10;
+            rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
 
-    // GETCOMP(VelocityComponent).velocity[rock] = vec3(30.0f, 50.0f, 30.0f);
+            float rx = (rand() % 360);
+            float ry = (rand() % 360);
+            float rz = (rand() % 360);
+            rockTransform.rotation = quat(vec3(rx, ry, rz));
+
+            float sx = 1.0f + (rand() % 150) * 0.01f;
+            // float sy = 1.0f + (rand() % 300) * 0.01f;
+            // float sz = 1.0f + (rand() % 300) * 0.01f;
+            rockTransform.scale = vec3(sx);
+            entityManager_.CreateEntity("rock", rockTransform);
+        }
+    }
 
     camera_.target_ = PLAYER_ENTITY;
 }

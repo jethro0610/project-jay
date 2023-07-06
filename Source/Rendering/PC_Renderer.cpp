@@ -109,8 +109,8 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
-    Texture rockTextures[] = { rockC, rockN, crackM };
-    Material rockMaterial = MakeMaterial_P("rock", rockVS, rockFS, rockTextures, 3);
+    Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
+    Material rockMaterial = MakeMaterial_P("rock", rockVS, rockFS, rockTextures, 4);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");

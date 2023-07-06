@@ -6,15 +6,15 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
 
-SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
 SAMPLER2D(s_sampler2, 2);
+SAMPLER2D(s_sampler3, 3);
 
 void main() {
-    vec3 color = texture2D(s_sampler0, v_texcoord0);
+    vec3 color = texture2D(s_sampler1, v_texcoord0);
     vec3 lightDirection = u_lightDirection.xyz;
 
-    vec3 normal = texture2D(s_sampler1, v_texcoord0).rgb;
+    vec3 normal = texture2D(s_sampler2, v_texcoord0).rgb;
     normal = normal * 2.0f - 1.0f;
     normal = normalize(mul(normal, v_tbn));
 
@@ -34,7 +34,7 @@ void main() {
     if (specular >= 0.3f)
         brightness = 1.5f;
 
-    vec4 crackColor = texture2DLod(s_sampler2, v_texcoord0, 0);
+    vec4 crackColor = texture2DLod(s_sampler3, v_texcoord0, 0);
     float crackDepth = min(1.0f, crackColor.r + crackColor.g);
     crackDepth = pow(crackDepth, 2.0f);
     crackDepth = 0.0f;

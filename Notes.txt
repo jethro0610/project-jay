@@ -1,3 +1,13 @@
+- EVERYTHING needs to be big due to the filter and terrain
+- Rocks will NOT roll/slide, just dig back into the ground when they throw
+- The level design will use large "pillars" that the player weaves around
+  unitl they want to interact with it. ie. rock clusters
+
+- On light level: pillar that absorbs seed when near (has priority)
+  lights up area
+    - Maybe just force any spread to break near it in intervals
+    - Can design a boss around this mechanic too
+
 - The parameters below create a streaking effect on the terrain. Could be a
 cool visual later on. float fresnel = GetFresnel(cameraPos,
 outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f); fresnel =

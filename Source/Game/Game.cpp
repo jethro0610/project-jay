@@ -66,12 +66,12 @@ void Game::Update() {
             entityManager_.entities_,
             GETCOMP(TransformComponent)
         );
-        IntersectSystem::Execute(
+        CollisionSystem::Execute(
             entityManager_.entities_,
             entityManager_,
             seedManager_,
             spreadManager_,
-            GETCOMP(BubbleComponent),
+            GETCOMP(ColliderComponent),
             GETCOMP(ProjectileComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
@@ -141,12 +141,6 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
         );
-        CollisionSystem::Execute(
-            entityManager_.entities_, 
-            world_, 
-            GETCOMP(TransformComponent),
-            GETCOMP(WorldColliderComponent)
-        );
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -162,7 +156,7 @@ void Game::Update() {
     );
     seedManager_.GetCaptures(
         entityManager_.entities_,
-        GETCOMP(BubbleComponent),
+        GETCOMP(ColliderComponent),
         GETCOMP(TransformComponent)
     );
     camera_.Update(inputs_);

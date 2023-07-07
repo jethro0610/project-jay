@@ -26,16 +26,15 @@
             "initial_meter": 512,
             "max_meter": 1024 
         },
-        "bubble": {
-            "radius": 2.0,
-            "large_radius": 15.0,
+        "collider": {
+            "radius0": 2.0,
+            "radius1": 15.0,
             "meteor": true,
             "capture_seed": true
         },
         "velocity": {
             "use_gravity": true
         },
-        "spread_detect": {},
-        "world_collider": {}
+        "spread_detect": {}
     }
 }

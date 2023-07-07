@@ -6,7 +6,7 @@
 #include "../Entity/EntityID.h"
 #include "../../Types/Transform.h"
 class Entity;
-class BubbleComponent;
+class ColliderComponent;
 class MeterComponent;
 class TransformComponent;
 
@@ -42,7 +42,7 @@ public:
 
     void GetCaptures(
         Entity* entities,
-        BubbleComponent& bubbleComponent, 
+        ColliderComponent& colliderComponent, 
         TransformComponent& transformComponent
     );
 };

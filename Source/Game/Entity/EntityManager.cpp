@@ -42,9 +42,13 @@ EntityID EntityManager::CreateEntity(std::string name, Transform transform) {
     auto entityData = GetFromMap<nlohmann::json>(entityData_, name, "Tried creating unloaded entity " + name);
 
     for (auto& componentData : entityData["components"].items()) {
-        std::string name = componentData.key();
-        Component* component = componentMap_[name];
-        int componentId = componentIds_[name];
+        std::string componentName = componentData.key();
+        Component* component = GetFromMap<Component*>(
+            componentMap_, 
+            componentName, 
+            "Tried assigning non-existent component \"" + componentName + "\""
+        );
+        int componentId = componentIds_[componentName];
         entities_[createdEntity].AddComponentById(componentId);
         component->Load(componentData.value(), createdEntity);
     }

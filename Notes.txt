@@ -8,6 +8,13 @@
     - Maybe just force any spread to break near it in intervals
     - Can design a boss around this mechanic too
 
+- Enemy that stomps, steps on rock like legos to damage
+    - How to get it to target on spot, should player stop and boost somehow?
+
+- Enemy that only gets defeated when spread is placed in area
+
+- When a meteor occurs, shockwave happens on collision, this is what actually deals the damage
+
 - The parameters below create a streaking effect on the terrain. Could be a
 cool visual later on. float fresnel = GetFresnel(cameraPos,
 outVert.worldPosition.xyz, lightDir, normal, 4.0f, 64.0f); fresnel =

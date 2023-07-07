@@ -2,7 +2,7 @@
 #include "SeedManager.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../Components/BubbleComponent.h"
+#include "../Components/ColliderComponent.h"
 #include "../Components/MeterComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Time.h"
@@ -70,11 +70,11 @@ void SeedManager::CalculatePositions(
     }
 }
 
-constexpr EntityKey key = GetEntityKey<BubbleComponent, TransformComponent>();
+constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
 
 void SeedManager::GetCaptures(
     Entity* entities,
-    BubbleComponent& bubbleComponent, 
+    ColliderComponent& colliderComponent, 
     TransformComponent& transformComponent
 ) {
     float time = GlobalTime::GetTime();
@@ -84,7 +84,7 @@ void SeedManager::GetCaptures(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (!bubbleComponent.properties[i].test(BubbleProperties::CaptureSeed))
+        if (!colliderComponent.properties[i].test(ColliderProperties::CaptureSeed))
             continue;
 
         for (int j = 0; j < seeds_.GetCount(); j++) {
@@ -93,7 +93,7 @@ void SeedManager::GetCaptures(
             if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
                 continue;
 
-            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < bubbleComponent.largeRadius[i]) {
+            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < colliderComponent.radius1[i]) {
                 seeds_[j].targetEntity = i;
                 seeds_[j].captureTime = time;
             }

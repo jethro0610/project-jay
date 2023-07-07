@@ -8,5 +8,5 @@
 #include "GroundStickSystem.h"
 #include "VelocitySystem.h"
 #include "ProjectileSystem.h"
-#include "IntersectSystem.h"
+#include "CollisionSystem.h"
 #include "IntervalSpawnSystem.h"

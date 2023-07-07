@@ -21,7 +21,6 @@ file(GLOB SOURCES
     Source/Game/Systems/GroundStickSystem.cpp
     Source/Game/Systems/VelocitySystem.cpp
     Source/Game/Systems/ProjectileSystem.cpp
-    Source/Game/Systems/IntersectSystem.cpp
     Source/Game/Systems/IntervalSpawnSystem.cpp
 
     Source/Helpers/LoadHelpers.cpp

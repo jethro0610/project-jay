@@ -6,11 +6,10 @@
 #include "VelocityComponent.h"
 #include "ProjectileComponent.h"
 
-#include "WorldColliderComponent.h"
 #include "SpreadActivatorComponent.h"
 #include "SpreadDetectComponent.h"
 
-#include "BubbleComponent.h"
+#include "ColliderComponent.h"
 
 #include "IntervalSpawnComponent.h"
 #include "MeterComponent.h"
@@ -23,10 +22,9 @@
     COMPONENTVAR(GroundTraceComponent, groundTraceComponent_) \
     COMPONENTVAR(VelocityComponent, velocityComponent_) \
     COMPONENTVAR(ProjectileComponent, projectileComponent_) \
-    COMPONENTVAR(WorldColliderComponent, worldColliderComponent_) \
     COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent_) \
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
-    COMPONENTVAR(BubbleComponent, bubbleComponent_) \
+    COMPONENTVAR(ColliderComponent, colliderComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
     COMPONENTVAR(StaticModelComponent, staticModelComponent_) \
     COMPONENTVAR(MeterComponent, meterComponent_)

@@ -1,17 +1,35 @@
-#pragma once
-#include <tuple>
+#include "../Entity/EntityID.h"
 class Entity;
 class EntityManager;
+class SeedManager;
+class SpreadManager;
+class ColliderComponent;
+class ProjectileComponent;
 class TransformComponent;
-class World;
-class WorldColliderComponent;
+class VelocityComponent;
 
-const float GROUND_CUTOFF_SCALE = 0.25f;
 namespace CollisionSystem {
     void Execute(
         Entity* entities,
-        World& world, 
+        EntityManager& entityManager,
+        SeedManager& seedManager,
+        SpreadManager& spreadManager,
+        ColliderComponent& bubbleComponent,
+        ProjectileComponent& projectileComponent,
         TransformComponent& transformComponent,
-        WorldColliderComponent& worldColliderComponent
+        VelocityComponent& velocityComponent
+    ); 
+
+    void HandleIntersection(
+        Entity* entities,
+        EntityManager& entityManager,
+        SeedManager& seedManager,
+        SpreadManager& spreadManager,
+        ColliderComponent& bubbleComponent,
+        ProjectileComponent& projectileComponent,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent,
+        EntityID entity1,
+        EntityID entity2 
     );
-}
+};

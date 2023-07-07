@@ -39,10 +39,8 @@ void Game::Init() {
             float rz = (rand() % 360);
             rockTransform.rotation = quat(vec3(rx, ry, rz));
 
-            float sx = 1.0f + (rand() % 150) * 0.01f;
-            // float sy = 1.0f + (rand() % 300) * 0.01f;
-            // float sz = 1.0f + (rand() % 300) * 0.01f;
-            rockTransform.scale = vec3(sx);
+            float scale = 1.0f + (rand() % 150) * 0.01f;
+            rockTransform.scale = vec3(scale);
             entityManager_.CreateEntity("rock", rockTransform);
         }
     }
@@ -68,7 +66,6 @@ void Game::Update() {
         );
         CollisionSystem::Execute(
             entityManager_.entities_,
-            entityManager_,
             seedManager_,
             spreadManager_,
             GETCOMP(ColliderComponent),

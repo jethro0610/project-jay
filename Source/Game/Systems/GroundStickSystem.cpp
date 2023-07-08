@@ -27,7 +27,7 @@ void GroundStickSystem::Stick(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (!groundTraceComponent.stickToGround[i])
+        if (groundTraceComponent.stickType[i] == NoStick)
             continue;
         if (!groundTraceComponent.onGround[i])
             continue;
@@ -40,7 +40,9 @@ void GroundStickSystem::Stick(
             vec3& velocity = velocityComponent.velocity[i];
             float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
             float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
-            velocity.y = distanceToGround / TIMESTEP;
+            float stickVelocity = distanceToGround / TIMESTEP;
+            if (velocity.y <= stickVelocity)
+                velocity.y = stickVelocity;
         }
     }
 }

@@ -17,11 +17,11 @@
         "projectile": {
             "type": "target",
             "param1": 50.0,
-            "param2": 100.0
+            "param2": 50.0
         },
         "ground_trace": {
             "distance": 1.0,
-            "stick_to_ground": true,
+            "stick_type": "falling_only",
             "stick_offset": 0.0
         }
     }

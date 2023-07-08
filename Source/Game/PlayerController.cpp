@@ -93,7 +93,6 @@ void PlayerController::Execute(
         }
 
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
-        groundTraceComponent.forceNoGroundThisFrame[PLAYER_ENTITY] = true;
         actionMeter_ = 0;
 
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;

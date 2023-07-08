@@ -31,10 +31,7 @@ void GroundTraceSystem::Execute(
         groundTraceComponent.groundNormal[i] = world.GetNormal(position);
         float distanceToSurface = position.y - groundHeight;
 
-        if (
-            !groundTraceComponent.forceNoGroundThisFrame[i]  &&
-            distanceToSurface < traceDistance
-        )
+        if (distanceToSurface < traceDistance && !groundTraceComponent.forceNoGroundThisFrame[i])
             groundTraceComponent.onGround[i] = true;
         else
             groundTraceComponent.onGround[i] = false;

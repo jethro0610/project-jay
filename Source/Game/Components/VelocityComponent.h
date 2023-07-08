@@ -4,7 +4,7 @@
 #include "../../Helpers/LoadHelpers.h"
 
 const float GRAVITY_ACCELERATION = 1.0f;
-const float MAX_GRAVITY = 60.0f;
+const float MAX_GRAVITY = 120.0f;
 
 class VelocityComponent : public Component {
 public:

@@ -7,6 +7,7 @@
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../Systems/ProjectileSystem.h"
 #include "../../Constants/GameConstants.h"
 #include "../../Helpers/Assert.h"
 using namespace glm;
@@ -24,8 +25,9 @@ int CollisionSystem::GetCollisions(
             continue;
         if (!entity1.MatchesKey(key))
             continue;
-        const vec3 entity1Pos = args.transformComponent.transform[i].position;
-        const float entity1Radius = args.colliderComponent.radius0[i];
+        vec3 entity1Pos = args.transformComponent.transform[i].position;
+        float entity1Radius = args.colliderComponent.radius0[i];
+        entity1Radius *= args.transformComponent.transform[i].scale.x;
 
         // TODO: Only check components within the same chunk
         for (int j = i + 1; j < MAX_ENTITIES; j++) {
@@ -37,10 +39,11 @@ int CollisionSystem::GetCollisions(
             if (!entity2.MatchesKey(key))
                 continue;
 
-            const vec3 entity2Pos = args.transformComponent.transform[j].position;    
-            const float entity2Radius = args.colliderComponent.radius0[j]; 
+            vec3 entity2Pos = args.transformComponent.transform[j].position;    
+            float entity2Radius = args.colliderComponent.radius0[j]; 
+            entity2Radius *= args.transformComponent.transform[j].scale.x;
             
-            const float dist = distance(entity1Pos, entity2Pos);
+            float dist = distance(entity1Pos, entity2Pos);
             if (dist < entity1Radius + entity2Radius) {
                 Collision collision = { i, j };
                 collisions[numCollisions++] = collision;
@@ -51,12 +54,38 @@ int CollisionSystem::GetCollisions(
     return numCollisions;
 }
 
-void CollisionSystem::HandleCollisions(
-    CollisionArgs args,
-    Collision* collisions,
-    int numCollisions
-) {
+typedef void (MeteoredBehaviorFunc)(CollisionArgs args, EntityID sender, EntityID reciever);
+void MeteoredLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
+    DEBUGLOG("Launching entity " << reciever);
+    ProjectileSystem::Launch(
+        args.projectileComponent, 
+        args.transformComponent, 
+        args.velocityComponent, 
+        reciever, 
+        NULL_ENTITY
+    );
+}
+MeteoredBehaviorFunc* meteorBehaviorFuncs[MAX_METEORED_BEHAVIORS] = {
+    &MeteoredLaunch
+};
 
+void HandleCollision(
+    CollisionArgs args,
+    EntityID sender,
+    EntityID reciever 
+) {
+    std::bitset<MAX_COLLIDER_PROPERTIES> senderProps = args.colliderComponent.properties[sender];
+    std::bitset<MAX_METEORED_BEHAVIORS> recieverBehaviors = args.colliderComponent.meteoredBehaviors[reciever];
+    int& recieverCooldown = args.colliderComponent.meteoredCooldown[reciever]; 
+
+    if (senderProps.test(Meteor) && recieverCooldown == MAX_METEORED_COOLDOWN) {
+        for (int j = 0; j < MAX_METEORED_BEHAVIORS; j++) {
+            if (recieverBehaviors.test(j)) {
+                meteorBehaviorFuncs[j](args, sender, reciever);
+                recieverCooldown = 0;
+            }
+        }
+    } 
 }
 
 void CollisionSystem::Execute(
@@ -68,6 +97,18 @@ void CollisionSystem::Execute(
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent
 ) {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+        if (!entity.MatchesKey(key))
+            continue;
+
+        int& cooldown = colliderComponent.meteoredCooldown[i];
+        if (cooldown < MAX_METEORED_COOLDOWN)
+            cooldown++;
+    }
+
     CollisionArgs args = {
         entities, 
         seedManager, 
@@ -79,5 +120,9 @@ void CollisionSystem::Execute(
     };
     Collision collisions[MAX_COLLISIONS];
     int numCollisions = GetCollisions(args, collisions);
-    HandleCollisions(args, collisions, numCollisions);
+
+    for (int i = 0; i < numCollisions; i++) {
+        HandleCollision(args, collisions[i].entity1, collisions[i].entity2);
+        HandleCollision(args, collisions[i].entity2, collisions[i].entity1);
+    }
 }

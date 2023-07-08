@@ -6,6 +6,8 @@
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../../Logging/Logger.h"
+#include "../../Helpers/Assert.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
@@ -17,90 +19,58 @@ void ProjectileSystem::CalculateVelocities(
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent
 ) {
-    const vec3& playerPosition = transformComponent.transform[PLAYER_ENTITY].position;
-    const vec3& playerVelocity = velocityComponent.velocity[PLAYER_ENTITY];
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
         if (!entity.MatchesKey(key))
             continue;
-
-        // ProjectileState& state = projectileComponent.state[i];
-        // if (state == Inactive)
-        //     continue;
-        // const float& param1 = projectileComponent.param1[i];
-        // const float& param2 = projectileComponent.param2[i];
-        // vec3& velocity = velocityComponent.velocity[i];
-        // vec3& position = transformComponent.transform[i].position;
-        //
-        // // Gravity
-        // if (state == ProjectileState::Launch || state == ProjectileState::Throw)
-        //     velocity.y -= 1.0f;
-        //
-        // // Rise
-        // if (position.y >= 200.0f && state == ProjectileState::Rise) {
-        //     velocity.y = -param2;
-        //
-        //     position.x = playerPosition.x;
-        //     position.z = playerPosition.z;
-        //     state = ProjectileState::Fall;
-        // }
-        //
-        // // Fall
-        // if (abs(position.y - playerPosition.y) >= 50.0f && state == ProjectileState::Fall) {
-        //     position.x = playerPosition.x;
-        //     position.z = playerPosition.z;
-        // }
-        //
-        // // Ground inactivate
-        // // TODO: Move this to generic world intersect component
-        // const float worldHeight = world.GetHeight(position);
-        // const float distance = position.y - worldHeight;
-        // if (distance < 0.2f) {
-        //     projectileComponent.state[i] = ProjectileState::Inactive;
-        //     velocity = vec3(0.0f);
-        //     position.y = worldHeight;
-        // }
     }
 }
 
+typedef void (LaunchFunction)(const float& param1, const float& param2, vec3& velocity);  
+
+void LaunchRandom (
+    const float& speed,
+    const float& height,
+    vec3& velocity
+) {
+
+}
+
+void LaunchRiseAndFall(
+    const float& speed,
+    const float& height,
+    vec3& velocity
+) {
+
+}
+
+void LaunchTarget(
+    const float& speed,
+    const float& height,
+    vec3& velocity
+) {
+   velocity.y = height; 
+}
+
+LaunchFunction* launchFunctions[NumOfProjectileTypes] = {
+    &LaunchRandom,
+    &LaunchRiseAndFall,
+    &LaunchTarget
+};
+
 void ProjectileSystem::Launch(
-    Entity* entities, 
     ProjectileComponent& projectileComponent, 
     TransformComponent& transformComponent, 
     VelocityComponent& velocityComponent, 
-    EntityID projectileEntity
+    EntityID projectile,
+    EntityID target
 ) {
-    // const float& param1 = projectileComponent.param1[projectileEntity];
-    // const float& param2 = projectileComponent.param2[projectileEntity];
-    // vec3& velocity = velocityComponent.velocity[projectileEntity];
-    //
-    // switch (projectileComponent.type[projectileEntity]) {
-    //     case ProjectileType::Random: {
-    //         transformComponent.transform[projectileEntity].position.y += 0.5f; // Ensures projectiles on ground dont get stuck 
-    //         velocity.y = param2;
-    //         const float randAngle = float(rand());
-    //         const float randSpeed = (rand() % (int)(param1 * 100)) * 0.01f;
-    //         const float x = cosf(randAngle); 
-    //         const float y = cosf(randAngle); 
-    //         velocity.x = x * randSpeed;
-    //         velocity.z = y * randSpeed;
-    //         projectileComponent.state[projectileEntity] = ProjectileState::Launch;
-    //         break;
-    //      }
-    // 
-    //     case ProjectileType::RiseAndFall: {
-    //         velocity.y = param1;
-    //         projectileComponent.state[projectileEntity] = ProjectileState::Rise;
-    //         break;
-    //     }
-    //
-    //     case ProjectileType::TargetArc: {
-    //         velocity.y = param1;
-    //     }
-    //
-    //     default:
-    //         break;
-    // }
+    const float& param1 = projectileComponent.param1[projectile];
+    const float& param2 = projectileComponent.param2[projectile];
+    vec3& velocity = velocityComponent.velocity[projectile];
+
+    ASSERT((projectileComponent.type[projectile] != NumOfProjectileTypes), "Attempt to launch non-projectile entity");
+    launchFunctions[projectileComponent.type[projectile]](param1, param2, velocity);
 }

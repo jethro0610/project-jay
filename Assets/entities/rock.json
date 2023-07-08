@@ -7,12 +7,22 @@
             "model": "st_rock",
             "material0": "rock"
         },
-        "ground_trace": {
-            "distance": 0.5,
-            "stick_to_ground": true
-        },
         "velocity": {
-            "use_gravity": true
+            "use_gravity": true 
+        },
+        "collider": {
+            "radius0": 1.0,
+            "launch_on_meteor": true
+        },
+        "projectile": {
+            "type": "target",
+            "param1": 50.0,
+            "param2": 100.0
+        },
+        "ground_trace": {
+            "distance": 1.0,
+            "stick_to_ground": true,
+            "stick_offset": 0.0
         }
     }
 }

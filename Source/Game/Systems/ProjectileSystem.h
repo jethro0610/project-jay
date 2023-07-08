@@ -20,20 +20,10 @@ namespace ProjectileSystem {
     // TODO: Maybe set a flag instead of having these two functions,
     // that way we're not calling a system in another system
     void Launch(
-        Entity* entities, 
         ProjectileComponent& projectileComponent, 
         TransformComponent& transformComponent, 
         VelocityComponent& velocityComponent, 
-        EntityID projectileEntity
-    );
-
-    void Throw(
-        Entity* entities, 
-        ProjectileComponent& projectileComponent, 
-        TransformComponent& transformComponent, 
-        VelocityComponent& velocityComponent, 
-        EntityID projectileEntity,
-        EntityID throwingEntity,
-        float height
+        EntityID projectile,
+        EntityID target
     );
 }

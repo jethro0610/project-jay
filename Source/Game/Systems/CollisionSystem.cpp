@@ -56,7 +56,6 @@ int CollisionSystem::GetCollisions(
 
 typedef void (MeteoredBehaviorFunc)(CollisionArgs args, EntityID sender, EntityID reciever);
 void MeteoredLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
-    DEBUGLOG("Launching entity " << reciever);
     ProjectileSystem::Launch(
         args.projectileComponent, 
         args.transformComponent, 
@@ -69,6 +68,18 @@ MeteoredBehaviorFunc* meteorBehaviorFuncs[MAX_METEORED_BEHAVIORS] = {
     &MeteoredLaunch
 };
 
+void MeteorSlowdown(vec3& senderVeloicty, int& senderCooldown, int& consecutiveSends) {
+    senderCooldown = 10;
+    consecutiveSends++;
+    if (consecutiveSends < 3)
+        return;
+
+    vec3 planarSenderVelocity = vec3(senderVeloicty.x, 0.0f, senderVeloicty.z);
+    planarSenderVelocity *= 0.6f;
+    senderVeloicty.x = planarSenderVelocity.x;
+    senderVeloicty.z = planarSenderVelocity.z;
+}
+
 void HandleCollision(
     CollisionArgs args,
     EntityID sender,
@@ -76,15 +87,20 @@ void HandleCollision(
 ) {
     std::bitset<MAX_COLLIDER_PROPERTIES> senderProps = args.colliderComponent.properties[sender];
     std::bitset<MAX_METEORED_BEHAVIORS> recieverBehaviors = args.colliderComponent.meteoredBehaviors[reciever];
-    int& recieverCooldown = args.colliderComponent.meteoredCooldown[reciever]; 
+    int& recieverCooldown = args.colliderComponent.recieveMeteorCooldown[reciever]; 
 
-    if (senderProps.test(Meteor) && recieverCooldown == MAX_METEORED_COOLDOWN) {
-        args.entities[sender].stunTimer_ = 1;
+    if (senderProps.test(Meteor) && recieverCooldown == 0) {
+        args.entities[sender].stunTimer_ = 2;
         for (int j = 0; j < MAX_METEORED_BEHAVIORS; j++) {
             if (recieverBehaviors.test(j)) {
-                args.entities[reciever].stunTimer_ = 1;
+                args.entities[reciever].stunTimer_ = 2;
                 meteorBehaviorFuncs[j](args, sender, reciever);
-                recieverCooldown = 0;
+                recieverCooldown = 30;
+                MeteorSlowdown(
+                    args.velocityComponent.velocity[sender],
+                    args.colliderComponent.sendMeteorCooldown[sender],
+                    args.colliderComponent.consecutiveMeteorSends[sender]
+                );
             }
         }
     } 
@@ -106,9 +122,16 @@ void CollisionSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        int& cooldown = colliderComponent.meteoredCooldown[i];
-        if (cooldown < MAX_METEORED_COOLDOWN)
-            cooldown++;
+        int& recieveCooldown = colliderComponent.recieveMeteorCooldown[i];
+        if (recieveCooldown > 0)
+            recieveCooldown--;
+
+        int& sendCooldown = colliderComponent.sendMeteorCooldown[i];
+        if (sendCooldown > 0)
+            sendCooldown--;
+
+        if (sendCooldown == 0)
+            colliderComponent.consecutiveMeteorSends[i] = 0;
     }
 
     CollisionArgs args = {

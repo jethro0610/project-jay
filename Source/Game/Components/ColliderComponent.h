@@ -13,20 +13,24 @@ enum MeteoredBehaviors {
     Launch    
 };
 
-const int MAX_METEORED_COOLDOWN = 30;
+const int MA= 30;
 
 class ColliderComponent : public Component {
 public:
     float radius0[MAX_ENTITIES];
     float radius1[MAX_ENTITIES];
-    int meteoredCooldown[MAX_ENTITIES];
+    int recieveMeteorCooldown[MAX_ENTITIES];
+    int sendMeteorCooldown[MAX_ENTITIES];
+    int consecutiveMeteorSends[MAX_ENTITIES];
     std::bitset<MAX_COLLIDER_PROPERTIES> properties[MAX_ENTITIES];
     std::bitset<MAX_METEORED_BEHAVIORS> meteoredBehaviors[MAX_ENTITIES];
 
     ColliderComponent() {
         std::fill_n(radius0, MAX_ENTITIES, 0.0f);
         std::fill_n(radius1, MAX_ENTITIES, 0.0f);
-        std::fill_n(meteoredCooldown, MAX_ENTITIES, MAX_METEORED_COOLDOWN);
+        std::fill_n(recieveMeteorCooldown, MAX_ENTITIES, 0);
+        std::fill_n(sendMeteorCooldown, MAX_ENTITIES, 0);
+        std::fill_n(consecutiveMeteorSends, MAX_ENTITIES, 0);
         std::fill_n(properties, MAX_ENTITIES, 0);
         std::fill_n(meteoredBehaviors, MAX_ENTITIES, 0);
     };

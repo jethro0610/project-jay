@@ -4,6 +4,7 @@
 #include "../World/SeedManager.h"
 #include "../World/SpreadManager.h"
 #include "../Components/ColliderComponent.h"
+#include "../Components/MeterComponent.h"
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
@@ -54,8 +55,8 @@ int CollisionSystem::GetCollisions(
     return numCollisions;
 }
 
-typedef void (MeteoredBehaviorFunc)(CollisionArgs args, EntityID sender, EntityID reciever);
-void MeteoredLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
+typedef void (RecieveMeteorFunc)(CollisionArgs args, EntityID sender, EntityID reciever);
+void RecieveMeteorLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
     ProjectileSystem::Launch(
         args.projectileComponent, 
         args.transformComponent, 
@@ -64,8 +65,23 @@ void MeteoredLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
         sender
     );
 }
-MeteoredBehaviorFunc* meteorBehaviorFuncs[MAX_METEORED_BEHAVIORS] = {
-    &MeteoredLaunch
+
+void RecieveMeteorDamage(CollisionArgs args, EntityID sender, EntityID reciever) {
+    args.meterComponent.meter[reciever] -= args.colliderComponent.recieveMeteorDamage[reciever];
+}
+void RecieveMeteorReleaseSeed(CollisionArgs args, EntityID sender, EntityID reciever) {
+    args.seedManager.CreateMultipleSeed(
+        args.transformComponent.transform[reciever].position, 
+        args.colliderComponent.recieveMeteorSeedAmount[reciever], 
+        10,
+        sender
+    );
+}
+
+RecieveMeteorFunc* meteorBehaviorFuncs[MAX_RECIEVE_METEOR_BEHAVIORS] = {
+    &RecieveMeteorLaunch,
+    &RecieveMeteorDamage,
+    &RecieveMeteorReleaseSeed
 };
 
 void MeteorSlowdown(vec3& senderVeloicty, int& senderCooldown, int& consecutiveSends) {
@@ -86,22 +102,22 @@ void HandleCollision(
     EntityID reciever 
 ) {
     std::bitset<MAX_COLLIDER_PROPERTIES> senderProps = args.colliderComponent.properties[sender];
-    std::bitset<MAX_METEORED_BEHAVIORS> recieverBehaviors = args.colliderComponent.meteoredBehaviors[reciever];
+    std::bitset<MAX_COLLIDER_PROPERTIES> recieveProps = args.colliderComponent.properties[reciever];
+    std::bitset<MAX_RECIEVE_METEOR_BEHAVIORS> recieverBehaviors = args.colliderComponent.recieveMeteorBehaviors[reciever];
     int& recieverCooldown = args.colliderComponent.recieveMeteorCooldown[reciever]; 
 
-    if (senderProps.test(Meteor) && recieverCooldown == 0) {
+    if (senderProps.test(SendMeteor) && recieveProps.test(RecieveMeteor) && recieverCooldown == 0) {
         args.entities[sender].stunTimer_ = 2;
-        for (int j = 0; j < MAX_METEORED_BEHAVIORS; j++) {
-            if (recieverBehaviors.test(j)) {
-                args.entities[reciever].stunTimer_ = 2;
+        args.entities[reciever].stunTimer_ = 2;
+        recieverCooldown = 30;
+        MeteorSlowdown(
+            args.velocityComponent.velocity[sender],
+            args.colliderComponent.sendMeteorCooldown[sender],
+            args.colliderComponent.consecutiveMeteorSends[sender]
+        );
+        for (int j = 0; j < MAX_RECIEVE_METEOR_BEHAVIORS; j++) {
+            if (recieverBehaviors.test(j))
                 meteorBehaviorFuncs[j](args, sender, reciever);
-                recieverCooldown = 30;
-                MeteorSlowdown(
-                    args.velocityComponent.velocity[sender],
-                    args.colliderComponent.sendMeteorCooldown[sender],
-                    args.colliderComponent.consecutiveMeteorSends[sender]
-                );
-            }
         }
     } 
 }
@@ -111,6 +127,7 @@ void CollisionSystem::Execute(
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     ColliderComponent& colliderComponent,
+    MeterComponent& meterComponent,
     ProjectileComponent& projectileComponent,
     TransformComponent& transformComponent,
     VelocityComponent& velocityComponent
@@ -139,6 +156,7 @@ void CollisionSystem::Execute(
         seedManager, 
         spreadManager, 
         colliderComponent, 
+        meterComponent,
         projectileComponent, 
         transformComponent, 
         velocityComponent

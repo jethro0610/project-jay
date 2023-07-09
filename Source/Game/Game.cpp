@@ -70,6 +70,7 @@ void Game::Update() {
             seedManager_,
             spreadManager_,
             GETCOMP(ColliderComponent),
+            GETCOMP(MeterComponent),
             GETCOMP(ProjectileComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)

@@ -5,7 +5,7 @@
 - Rename to World to Terrain
 
 - Breakable round stone (gives meter)
-    - Next up: kicking
+    - Cone based targeting
 
 - Breakable bush
 - Holes (terrain modification)

@@ -10,9 +10,18 @@
         "velocity": {
             "use_gravity": true 
         },
+        "meter": {
+            "max_meter": 150,
+            "initial_meter": 150
+        },
         "collider": {
             "radius0": 1.25,
-            "launch_on_meteor": true
+            "recieve_meteor": true,
+            "launch_on_meteor": true,
+            "damage_on_meteor": true,
+            "meteor_damage": 30,
+            "release_seed_on_meteor": true,
+            "num_seeds": 30
         },
         "projectile": {
             "type": "target",

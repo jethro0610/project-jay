@@ -4,6 +4,7 @@ class Entity;
 class SeedManager;
 class SpreadManager;
 class ColliderComponent;
+class MeterComponent;
 class ProjectileComponent;
 class TransformComponent;
 class VelocityComponent;
@@ -15,6 +16,7 @@ struct CollisionArgs {
     SeedManager& seedManager;
     SpreadManager& spreadManager;
     ColliderComponent& colliderComponent;
+    MeterComponent& meterComponent;
     ProjectileComponent& projectileComponent;
     TransformComponent& transformComponent;
     VelocityComponent& velocityComponent;
@@ -42,6 +44,7 @@ namespace CollisionSystem {
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         ColliderComponent& colliderComponent,
+        MeterComponent& meterComponent,
         ProjectileComponent& projectileComponent,
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent

@@ -5,6 +5,7 @@ class MeterComponent : public Component {
 public:
     int meter[MAX_ENTITIES];
     int maxMeter[MAX_ENTITIES];
+    bool destroyOnNone[MAX_ENTITIES];
 
     MeterComponent() {
         std::fill_n(meter, MAX_ENTITIES, 0);
@@ -20,5 +21,7 @@ public:
         meter[entity] = data["initial_meter"].get<int>();
         if (data.contains("max_meter"))
             maxMeter[entity] = data["max_meter"].get<int>();
+
+        destroyOnNone[entity] = GetBoolean(data, "destroy_on_none");
     }
 };

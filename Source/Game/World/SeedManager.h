@@ -31,7 +31,7 @@ public:
     glm::vec4 positions_[MAX_SEED];
 
     void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2);
+    void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2, EntityID capturer = NULL_ENTITY);
 
     void CalculatePositions(
         World& world,

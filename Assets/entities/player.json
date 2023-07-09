@@ -23,13 +23,13 @@
             "ground_only": false
         },
         "meter": {
-            "initial_meter": 512,
+            "initial_meter": 384,
             "max_meter": 1024 
         },
         "collider": {
             "radius0": 2.0,
             "radius1": 15.0,
-            "meteor": true,
+            "send_meteor": true,
             "capture_seed": true
         },
         "velocity": {

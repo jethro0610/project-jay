@@ -22,14 +22,14 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
     seeds_.Append(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius) {
+void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius, EntityID capturer) {
     for (int i = 0; i < amount; i++) {
         vec3 offset = vec3(
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
             (rand() % (radius * 100)) * 0.01f - radius / 2.0f
         );
-        CreateSeed(position, NULL_ENTITY, offset);
+        CreateSeed(position, capturer, offset);
     }
 }
 

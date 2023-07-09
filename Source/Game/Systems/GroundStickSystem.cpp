@@ -23,11 +23,11 @@ void GroundStickSystem::Stick(
 ) {
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.alive_)
+        if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (groundTraceComponent.stickType[i] == NoStick)
+        if (!groundTraceComponent.stick[i])
             continue;
         if (!groundTraceComponent.onGround[i])
             continue;
@@ -41,8 +41,16 @@ void GroundStickSystem::Stick(
             float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
             float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
             float stickVelocity = distanceToGround / TIMESTEP;
-            if (velocity.y <= stickVelocity)
+            if (velocity.y <= stickVelocity + 5.0f) {
                 velocity.y = stickVelocity;
+                if (i == PLAYER_ENTITY)
+                    continue;
+
+                vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
+                planarVelocity *= 0.75f;
+                velocity.x = planarVelocity.x;
+                velocity.z = planarVelocity.z;
+            }
         }
     }
 }

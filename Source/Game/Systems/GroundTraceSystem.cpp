@@ -17,7 +17,7 @@ void GroundTraceSystem::Execute(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.alive_)
+        if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
             continue;
@@ -31,7 +31,7 @@ void GroundTraceSystem::Execute(
         groundTraceComponent.groundNormal[i] = world.GetNormal(position);
         float distanceToSurface = position.y - groundHeight;
 
-        if (distanceToSurface < traceDistance && !groundTraceComponent.forceNoGroundThisFrame[i])
+        if (distanceToSurface < traceDistance)
             groundTraceComponent.onGround[i] = true;
         else
             groundTraceComponent.onGround[i] = false;
@@ -47,7 +47,5 @@ void GroundTraceSystem::Execute(
         }
         else
             groundTraceComponent.exitedGround[i] = false;
-
-        groundTraceComponent.forceNoGroundThisFrame[i] = false;
     }
 }

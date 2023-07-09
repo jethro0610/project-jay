@@ -52,6 +52,7 @@ void Game::Update() {
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
+        FreezeSytem::Execute(entityManager_.entities_);
         IntervalSpawnSystem::Execute(
             entityManager_.entities_,
             entityManager_,

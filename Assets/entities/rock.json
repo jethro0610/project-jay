@@ -11,17 +11,17 @@
             "use_gravity": true 
         },
         "collider": {
-            "radius0": 1.0,
+            "radius0": 1.25,
             "launch_on_meteor": true
         },
         "projectile": {
             "type": "target",
-            "param1": 50.0,
-            "param2": 50.0
+            "param1": 25.0,
+            "param2": 35.0
         },
         "ground_trace": {
             "distance": 1.0,
-            "stick_type": "falling_only",
+            "stick": true,
             "stick_offset": 0.0
         }
     }

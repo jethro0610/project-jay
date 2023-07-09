@@ -9,7 +9,7 @@
         },
         "ground_trace": {
             "distance": 1.0,
-            "stick_type": "falling_only",
+            "stick": true,
             "stick_offset": 1.0
         },
         "movement": {

@@ -5,16 +5,10 @@
 
 const float STEP_UP_HEIGHT = 0.25f;
 
-enum StickType {
-    NoStick,
-    FallingStick,
-    AlwaysStick
-};
-
 class GroundTraceComponent : public Component {
 public:
     float distance[MAX_ENTITIES];
-    StickType stickType[MAX_ENTITIES];
+    bool stick[MAX_ENTITIES];
     float stickOffset[MAX_ENTITIES];
     bool forceNoGroundThisFrame[MAX_ENTITIES];
 
@@ -27,7 +21,7 @@ public:
 
     GroundTraceComponent() {
         std::fill_n(distance, MAX_ENTITIES, 0.0f);
-        std::fill_n(stickType, MAX_ENTITIES, NoStick);
+        std::fill_n(stick, MAX_ENTITIES, false);
         std::fill_n(stickOffset, MAX_ENTITIES, 0.0f);
         std::fill_n(forceNoGroundThisFrame, MAX_ENTITIES, false);
 
@@ -46,16 +40,7 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = data["distance"].get<float>();
-
-        std::string stickTypeS = GetString(data, "stick_type", "none");
-
-        if (stickTypeS == "none")
-            stickType[entity] = NoStick;
-        else if (stickTypeS == "falling_only")
-            stickType[entity] = FallingStick;
-        else if (stickTypeS== "always")
-            stickType[entity] = AlwaysStick;
-
+        stick[entity] = GetBoolean(data, "stick", false);
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
     }
 };

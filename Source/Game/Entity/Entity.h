@@ -7,10 +7,15 @@ class Entity {
 public:
     bool alive_;
     EntityKey key_;
+    int stunTimer_;
 
     Entity() {
         alive_ = false;
         key_ = 0;
+    }
+
+    bool ShouldUpdate() const {
+        return (alive_ && stunTimer_ == 0);
     }
 
     bool MatchesKey(EntityKey otherKey) const {

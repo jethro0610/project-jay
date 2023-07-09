@@ -21,7 +21,7 @@ int CollisionSystem::GetCollisions(
     int numCollisions = 0;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity1 = args.entities[i];
-        if (!entity1.alive_)
+        if (!entity1.ShouldUpdate())
             continue;
         if (!entity1.MatchesKey(key))
             continue;
@@ -34,7 +34,7 @@ int CollisionSystem::GetCollisions(
             if (j == i)
                 continue;
             const Entity& entity2 = args.entities[j];
-            if (!entity2.alive_)
+            if (!entity2.ShouldUpdate())
                 continue;
             if (!entity2.MatchesKey(key))
                 continue;
@@ -62,7 +62,7 @@ void MeteoredLaunch(CollisionArgs args, EntityID sender, EntityID reciever) {
         args.transformComponent, 
         args.velocityComponent, 
         reciever, 
-        NULL_ENTITY
+        sender
     );
 }
 MeteoredBehaviorFunc* meteorBehaviorFuncs[MAX_METEORED_BEHAVIORS] = {
@@ -79,8 +79,10 @@ void HandleCollision(
     int& recieverCooldown = args.colliderComponent.meteoredCooldown[reciever]; 
 
     if (senderProps.test(Meteor) && recieverCooldown == MAX_METEORED_COOLDOWN) {
+        args.entities[sender].stunTimer_ = 1;
         for (int j = 0; j < MAX_METEORED_BEHAVIORS; j++) {
             if (recieverBehaviors.test(j)) {
+                args.entities[reciever].stunTimer_ = 1;
                 meteorBehaviorFuncs[j](args, sender, reciever);
                 recieverCooldown = 0;
             }
@@ -99,7 +101,7 @@ void CollisionSystem::Execute(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.alive_)
+        if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
             continue;

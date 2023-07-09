@@ -12,7 +12,7 @@ void TransformSystem::UpdateLastTransforms(
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.alive_)
+        if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
             continue;
@@ -30,7 +30,7 @@ void TransformSystem::UpdateRenderTransforms(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.alive_)
+        if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
             continue;

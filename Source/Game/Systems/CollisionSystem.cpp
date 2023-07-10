@@ -95,6 +95,8 @@ void MeteorSlowdown(vec3& senderVeloicty, int& senderCooldown, int& consecutiveS
     senderVeloicty.z = planarSenderVelocity.z;
 }
 
+constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
+
 void HandleCollision(
     CollisionArgs args,
     EntityID sender,
@@ -119,6 +121,22 @@ void HandleCollision(
                 meteorBehaviorFuncs[j](args, sender, reciever);
         }
     } 
+
+    if (
+        args.entities[sender].MatchesKey(projectileKey) &&
+        args.projectileComponent.active[sender] &&
+        recieveProps.test(RecieveProjectile)
+    ) {
+        args.projectileComponent.active[sender] = false;
+        args.projectileComponent.target[sender] = NULL_ENTITY;
+        vec3& velocity = args.velocityComponent.velocity[sender];
+        vec3 direction = normalize(vec3(velocity.x, 0.0f, velocity.z));
+        velocity.x = -direction.x * 20.0f;
+        velocity.y = 30.0f;
+        velocity.z = -direction.z * 20.0f;
+
+        args.meterComponent.meter[reciever] -= 1;  
+    }
 }
 
 void CollisionSystem::Execute(

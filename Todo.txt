@@ -5,7 +5,9 @@
 - Rename to World to Terrain
 
 - Breakable round stone (gives meter)
-    - Cone based targeting
+    - Damage on projectile
+        - Last/previous hit detection
+        - Projectile bounce off
 
 - Breakable bush
 - Holes (terrain modification)

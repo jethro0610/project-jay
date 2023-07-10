@@ -7,6 +7,16 @@
         "static_model": {
             "model": "st_sphere",
             "material0": "player"
+        },
+        "collider": {
+            "radius0": 1.0,
+            "recieve_projectile": true
+        },
+        "meter": {
+            "initial_meter": 5,
+            "max_meter": 5,
+            "destroy_on_none": true,
+            "num_destroy_seeds": 500
         }
     }
 }

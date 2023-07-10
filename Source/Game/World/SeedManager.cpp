@@ -47,11 +47,11 @@ void SeedManager::CalculatePositions(
 
         float logisitic = 1 + expf(-SEED_EASE_SPEED * timeSinceStart);
         physicsOffset.x = seed.offset.x * 2 / logisitic - seed.offset.x;
-        physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y - timeSinceStart * SEED_FALL_SPEED;
+        physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y;// - timeSinceStart * SEED_FALL_SPEED;
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
-        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z)) + 1.0f;
+        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z))  + 0.25f;
         if (positions_[i].y < height)
             positions_[i].y = height;
 

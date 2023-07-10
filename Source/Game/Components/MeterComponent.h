@@ -6,7 +6,7 @@ public:
     int meter[MAX_ENTITIES];
     int maxMeter[MAX_ENTITIES];
     bool destroyOnNone[MAX_ENTITIES];
-    int numSeeds[MAX_ENTITIES];
+    int numDestroySeeds[MAX_ENTITIES];
 
     MeterComponent() {
         std::fill_n(meter, MAX_ENTITIES, 0);
@@ -24,6 +24,6 @@ public:
             maxMeter[entity] = data["max_meter"].get<int>();
 
         destroyOnNone[entity] = GetBoolean(data, "destroy_on_none");
-        numSeeds[entity] = GetInt(data, "num_seeds", 0);
+        numDestroySeeds[entity] = GetInt(data, "num_destroy_seeds", 0);
     }
 };

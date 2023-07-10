@@ -7,16 +7,6 @@ class TransformComponent;
 class VelocityComponent;
 
 namespace ProjectileSystem {
-    // TODO: Can maybe have a separate system for halting on world
-    // collision
-    void CalculateVelocities(
-        Entity* entities, 
-        World& world,
-        ProjectileComponent& projectileComponent,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
-    );
-
     // TODO: Maybe set a flag instead of having these two functions,
     // that way we're not calling a system in another system
     void Launch(
@@ -25,5 +15,12 @@ namespace ProjectileSystem {
         VelocityComponent& velocityComponent, 
         EntityID projectile,
         EntityID target
+    );
+
+    void Execute(
+        Entity* entities, 
+        ProjectileComponent& projectileComponent,
+        TransformComponent& transformComponent,
+        VelocityComponent& velocityComponent
     );
 }

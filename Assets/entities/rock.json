@@ -11,10 +11,10 @@
             "use_gravity": true 
         },
         "meter": {
-            "max_meter": 80,
-            "initial_meter": 80,
+            "max_meter": 60,
+            "initial_meter": 60,
             "destroy_on_none": true,
-            "num_seeds": 100
+            "num_destroy_seeds": 150
         },
         "collider": {
             "radius0": 1.25,
@@ -27,8 +27,8 @@
         },
         "projectile": {
             "type": "target",
-            "param1": 25.0,
-            "param2": 35.0
+            "tracking_strength": 0.05,
+            "height": 35.0
         },
         "ground_trace": {
             "distance": 1.0,

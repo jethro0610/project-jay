@@ -13,7 +13,7 @@ const float DEFAULT_ROTATION_SPEED = 0.25f;
 const float FLOW_ROTATION_SPEED = 0.06f;
 const float LINE_ROTATION_SPEED = 0.025f;
 
-const float SKI_ACCELERATION = 3.5f;
+const float SKI_ACCELERATION = 4.0f;
 const float SKI_ROTATION_SPEED = 0.02f;
 const float SKI_DOWNSLOPE_SCALING = 3.0f;
 const float SKI_UPSLOPE_SCALING = 1.5f;

@@ -24,7 +24,7 @@
         },
         "meter": {
             "initial_meter": 512,
-            "max_meter": 1024 
+            "max_meter": 2048 
         },
         "collider": {
             "radius0": 2.0,

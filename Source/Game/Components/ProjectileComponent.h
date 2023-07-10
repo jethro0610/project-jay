@@ -8,18 +8,26 @@ enum ProjectileType {
     NumOfProjectileTypes
 };
 
+union ProjParam1 {
+    float speed;
+    float trackingStrength;
+};
+
+union ProjParam2 {
+    float height;
+};
+
 class ProjectileComponent : public Component {
 public:
     ProjectileType type[MAX_ENTITIES];
     EntityID target[MAX_ENTITIES];
-    float param1[MAX_ENTITIES];
-    float param2[MAX_ENTITIES];
+    ProjParam1 param1[MAX_ENTITIES];
+    ProjParam2 param2[MAX_ENTITIES];
+    bool active[MAX_ENTITIES];
 
     ProjectileComponent() {
-        std::fill_n(type, MAX_ENTITIES, NumOfProjectileTypes);
         std::fill_n(target, MAX_ENTITIES, NULL_ENTITY);
-        std::fill_n(param1, MAX_ENTITIES, 0.0f);
-        std::fill_n(param2, MAX_ENTITIES, 0.0f);
+        std::fill_n(active, MAX_ENTITIES, false);
     }
 
     static constexpr std::string GetName() { return "projectile"; }
@@ -35,7 +43,9 @@ public:
         else if (projectileTypeS == "target")
             type[entity] = Target;
 
-        param1[entity] = data["param1"].get<float>();
-        param2[entity] = data["param2"].get<float>();
+        param1[entity].speed = GetFloat(data, "speed", 0.0f);
+        param1[entity].trackingStrength = GetFloat(data, "tracking_strength", param1[entity].speed);
+
+        param2[entity].height = GetFloat(data, "height", param2[entity].height);
     }
 };

@@ -29,7 +29,7 @@ void Game::Init() {
     for (int j = 0; j < 8; j++) {
         float x0 = (rand() % 200) - 100;
         float z0 = (rand() % 200) - 100;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 5; i++) {
             float x = (rand() % 20) - 10;
             float z = (rand() % 20) - 10;
             rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
@@ -44,6 +44,12 @@ void Game::Init() {
             entityManager_.CreateEntity("rock", rockTransform);
         }
     }
+
+    entityManager_.LoadEntity("target_test");
+    Transform targetTransform;
+    targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    targetTransform.scale = vec3(3.0f);
+    entityManager_.CreateEntity("target_test", targetTransform);
 
     camera_.target_ = PLAYER_ENTITY;
 }
@@ -115,9 +121,8 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
         );
-        ProjectileSystem::CalculateVelocities(
+        ProjectileSystem::Execute(
             entityManager_.entities_,
-            world_,
             GETCOMP(ProjectileComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent) 

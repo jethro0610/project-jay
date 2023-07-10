@@ -73,8 +73,7 @@ void RecieveMeteorReleaseSeed(CollisionArgs args, EntityID sender, EntityID reci
     args.seedManager.CreateMultipleSeed(
         args.transformComponent.transform[reciever].position, 
         args.colliderComponent.recieveMeteorSeedAmount[reciever], 
-        10,
-        sender
+        10
     );
 }
 

@@ -140,6 +140,13 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
         );
+        DestroyMeterSystem::Execute(
+            entityManager_.entities_,
+            entityManager_,
+            seedManager_,
+            GETCOMP(MeterComponent),
+            GETCOMP(TransformComponent)
+        );
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(

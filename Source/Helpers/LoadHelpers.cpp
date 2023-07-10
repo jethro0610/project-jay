@@ -6,6 +6,13 @@ bool GetBoolean(nlohmann::json& data, std::string property, bool defaultReturn) 
     return data[property].get<bool>();
 }
 
+int GetInt(nlohmann::json& data, std::string property, int defaultReturn) {
+    if (!data[property].is_number())
+        return defaultReturn;
+
+    return data[property].get<int>();
+}
+
 float GetFloat(nlohmann::json& data, std::string property, float defaultReturn) {
     if (!data[property].is_number())
         return defaultReturn;

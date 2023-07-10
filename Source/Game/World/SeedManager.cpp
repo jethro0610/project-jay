@@ -51,6 +51,10 @@ void SeedManager::CalculatePositions(
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
+        float worldHeight = world.GetHeight(positions_[i]);
+        if (worldHeight > positions_[i].y)
+            positions_[i].y = worldHeight
+
         // TODO: When using pure heightmaps, check distance and set height to that
 
         float timeSinceCapture = GlobalTime::GetTime() - seed.captureTime;

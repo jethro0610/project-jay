@@ -11,17 +11,19 @@
             "use_gravity": true 
         },
         "meter": {
-            "max_meter": 150,
-            "initial_meter": 150
+            "max_meter": 80,
+            "initial_meter": 80,
+            "destroy_on_none": true,
+            "num_seeds": 100
         },
         "collider": {
             "radius0": 1.25,
             "recieve_meteor": true,
             "launch_on_meteor": true,
             "damage_on_meteor": true,
-            "meteor_damage": 30,
+            "meteor_damage": 20,
             "release_seed_on_meteor": true,
-            "num_seeds": 30
+            "num_seeds": 20
         },
         "projectile": {
             "type": "target",

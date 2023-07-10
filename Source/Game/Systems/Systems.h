@@ -1,5 +1,6 @@
 #pragma once
 #include "CollisionSystem.h"
+#include "DestroyMeterSystem.h"
 #include "MovementSystem.h"
 #include "FreezeSystem.h"
 #include "GroundTraceSystem.h"

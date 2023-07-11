@@ -8,6 +8,8 @@ enum ColliderProperties {
     RecieveMeteor,
     RecieveProjectile,
     CaptureSeed,
+    SendPush,
+    RecievePush
 };
 
 const int MAX_RECIEVE_METEOR_BEHAVIORS = 32;
@@ -59,6 +61,8 @@ public:
         properties[entity].set(RecieveMeteor, GetBoolean(data, "recieve_meteor"));
         properties[entity].set(RecieveProjectile, GetBoolean(data, "recieve_projectile"));
         properties[entity].set(CaptureSeed, GetBoolean(data, "capture_seed"));
+        properties[entity].set(SendPush, GetBoolean(data, "send_push"));
+        properties[entity].set(RecievePush, GetBoolean(data, "recieve_push"));
 
         recieveMeteorBehaviors[entity].set(Launch, GetBoolean(data, "launch_on_meteor"));
         recieveMeteorBehaviors[entity].set(Damage, GetBoolean(data, "damage_on_meteor"));

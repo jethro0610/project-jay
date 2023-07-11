@@ -45,8 +45,10 @@ int CollisionSystem::GetCollisions(
             entity2Radius *= args.transformComponent.transform[j].scale.x;
             
             float dist = distance(entity1Pos, entity2Pos);
-            if (dist < entity1Radius + entity2Radius) {
-                Collision collision = { i, j };
+            vec3 direction = normalize(entity2Pos - entity1Pos);
+            float maxDist = entity1Radius + entity2Radius;
+            if (dist < maxDist) {
+                Collision collision = { i, j, direction * (maxDist - dist)};
                 collisions[numCollisions++] = collision;
             }
         }
@@ -100,14 +102,15 @@ constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
 void HandleCollision(
     CollisionArgs args,
     EntityID sender,
-    EntityID reciever 
+    EntityID reciever,
+    vec3 resolutionVec
 ) {
     std::bitset<MAX_COLLIDER_PROPERTIES> senderProps = args.colliderComponent.properties[sender];
-    std::bitset<MAX_COLLIDER_PROPERTIES> recieveProps = args.colliderComponent.properties[reciever];
+    std::bitset<MAX_COLLIDER_PROPERTIES> recieverProps = args.colliderComponent.properties[reciever];
     std::bitset<MAX_RECIEVE_METEOR_BEHAVIORS> recieverBehaviors = args.colliderComponent.recieveMeteorBehaviors[reciever];
     int& recieverCooldown = args.colliderComponent.recieveMeteorCooldown[reciever]; 
 
-    if (senderProps.test(SendMeteor) && recieveProps.test(RecieveMeteor) && recieverCooldown == 0) {
+    if (senderProps.test(SendMeteor) && recieverProps.test(RecieveMeteor) && recieverCooldown == 0) {
         args.entities[sender].stunTimer_ = 2;
         args.entities[reciever].stunTimer_ = 2;
         recieverCooldown = 30;
@@ -125,7 +128,7 @@ void HandleCollision(
     if (
         args.entities[sender].MatchesKey(projectileKey) &&
         args.projectileComponent.active[sender] &&
-        recieveProps.test(RecieveProjectile)
+        recieverProps.test(RecieveProjectile)
     ) {
         ProjectileSystem::HandleContact(
             args.meterComponent,
@@ -136,6 +139,10 @@ void HandleCollision(
             reciever
         );
         args.meterComponent.meter[reciever] -= args.projectileComponent.damage[sender];  
+    }
+
+    if (senderProps.test(SendPush) && recieverProps.test(RecievePush)) {
+        args.transformComponent.transform[reciever].position += resolutionVec; 
     }
 }
 
@@ -182,7 +189,7 @@ void CollisionSystem::Execute(
     int numCollisions = GetCollisions(args, collisions);
 
     for (int i = 0; i < numCollisions; i++) {
-        HandleCollision(args, collisions[i].entity1, collisions[i].entity2);
-        HandleCollision(args, collisions[i].entity2, collisions[i].entity1);
+        HandleCollision(args, collisions[i].entity1, collisions[i].entity2, collisions[i].resolutionVec);
+        HandleCollision(args, collisions[i].entity2, collisions[i].entity1, -collisions[i].resolutionVec);
     }
 }

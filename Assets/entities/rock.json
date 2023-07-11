@@ -17,13 +17,14 @@
             "num_destroy_seeds": 125 
         },
         "collider": {
-            "radius0": 1.25,
+            "radius0": 1.0,
             "recieve_meteor": true,
             "launch_on_meteor": true,
             "damage_on_meteor": true,
             "meteor_damage": 20,
             "release_seed_on_meteor": true,
-            "num_seeds": 20
+            "num_seeds": 20,
+            "send_push": true
         },
         "projectile": {
             "type": "target",

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Entity/EntityID.h"
+#include <glm/vec3.hpp>
 class Entity;
 class SeedManager;
 class SpreadManager;
@@ -25,6 +26,7 @@ struct CollisionArgs {
 struct Collision {
     EntityID entity1;
     EntityID entity2;
+    glm::vec3 resolutionVec;
 };
 
 namespace CollisionSystem {

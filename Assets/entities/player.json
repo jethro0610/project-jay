@@ -29,8 +29,9 @@
         "collider": {
             "radius0": 2.0,
             "radius1": 15.0,
-            "send_meteor": true,
-            "capture_seed": true
+            "send_meteor": false,
+            "capture_seed": true,
+            "recieve_push": true
         },
         "velocity": {
             "use_gravity": true

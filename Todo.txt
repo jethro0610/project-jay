@@ -5,10 +5,12 @@
 - Rename to World to Terrain
 
 - Breakable round stone (gives meter)
-    - Rotation (angular velocity)
-    - Generic friction
+    - Collision and meteor limit
 
-- Breakable bush
+- Breakable bush (meter pad basically, regrows)
+    - Version that doesn't regrow
+    - Yo, maybe enemeis can break the regrowing ones?
+
 - Holes (terrain modification)
 - Enemy
 - Flower model

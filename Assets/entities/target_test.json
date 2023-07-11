@@ -10,7 +10,8 @@
         },
         "collider": {
             "radius0": 1.0,
-            "recieve_projectile": true
+            "recieve_projectile": true,
+            "send_push": true
         },
         "meter": {
             "initial_meter": 40.0,

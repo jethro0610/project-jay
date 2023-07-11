@@ -29,7 +29,7 @@
         "collider": {
             "radius0": 2.0,
             "radius1": 15.0,
-            "send_meteor": false,
+            "send_meteor": true,
             "capture_seed": true,
             "recieve_push": true
         },

@@ -12,7 +12,7 @@ class TransformComponent;
 
 const float SEED_GRAVITY_SCALE = 24.0f;
 const float SEED_EASE_SPEED = 16.0f;
-const float SEED_FALL_SPEED = 1.5f;
+const float SEED_FALL_SPEED = 0.25f;
 const float MIN_CAPTURE_TIME = 0.75f;
 const float MIN_REMOVE_TIME = 0.15f;
 

@@ -25,11 +25,16 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
 void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius, EntityID capturer) {
     for (int i = 0; i < amount; i++) {
         vec3 offset = vec3(
-            (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
-            (rand() % (radius * 100)) * 0.01f - radius / 2.0f,
-            (rand() % (radius * 100)) * 0.01f - radius / 2.0f
+            (rand() % 100) - 50,
+            (rand() % 100) - 50,
+            (rand() % 100) - 50
         );
-        CreateSeed(position, capturer, offset);
+        offset = normalize(offset);
+        float dist = (rand() % 100) * 0.01f;
+        dist = sqrt(dist);
+        dist *= radius;
+
+        CreateSeed(position, capturer, offset * dist);
     }
 }
 
@@ -47,7 +52,7 @@ void SeedManager::CalculatePositions(
 
         float logisitic = 1 + expf(-SEED_EASE_SPEED * timeSinceStart);
         physicsOffset.x = seed.offset.x * 2 / logisitic - seed.offset.x;
-        physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y;// - timeSinceStart * SEED_FALL_SPEED;
+        physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y - timeSinceStart * SEED_FALL_SPEED;
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 

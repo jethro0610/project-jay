@@ -1,5 +1,6 @@
 #include "ProjectileSystem.h"
 #include <glm/gtx/compatibility.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
 #include "../../Constants/GameConstants.h"
@@ -15,7 +16,8 @@ using namespace glm;
 typedef void (LaunchFunction)(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectileVelocity,
+    vec3& velocity,
+    quat& angularVelocity,
     vec3& senderVelocity,
     vec3 projectilePosition,
     vec3 senderPosition
@@ -23,7 +25,8 @@ typedef void (LaunchFunction)(
 void LaunchRandom (
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectileVelocity,
+    vec3& velocity,
+    quat& angularVelocity,
     vec3& senderVelocity,
     vec3 projectilePosition,
     vec3 senderPosition
@@ -33,7 +36,8 @@ void LaunchRandom (
 void LaunchRiseAndFall(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectileVelocity,
+    vec3& velocity,
+    quat& angularVelocity,
     vec3& senderVelocity,
     vec3 projectilePosition,
     vec3 senderPosition
@@ -43,7 +47,8 @@ void LaunchRiseAndFall(
 void LaunchTarget(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectileVelocity,
+    vec3& velocity,
+    quat& angularVelocity,
     vec3& senderVelocity,
     vec3 projectilePosition,
     vec3 senderPosition
@@ -54,10 +59,14 @@ void LaunchTarget(
 
     vec3 direction = normalize(projectilePosition - senderPosition);
     direction.y = 0.0f;
+
+    vec3 rotationDirection = normalize(direction);
     direction = normalize(senderDirection + direction * 0.8f);
 
-    projectileVelocity = direction * senderMagnitude * 0.95f;
-    projectileVelocity.y += param2.height + senderVelocity.y * 0.5f;
+    angularVelocity = quat(cross(Transform::worldUp, rotationDirection * senderMagnitude * 0.001f));
+
+    velocity = direction * senderMagnitude * 0.95f;
+    velocity.y += param2.height + senderVelocity.y * 0.5f;
 }
 LaunchFunction* launchFunctions[NumOfProjectileTypes] = {
     &LaunchRandom,
@@ -74,7 +83,8 @@ void ProjectileSystem::Launch(
 ) {
     const ProjParam1& param1 = projectileComponent.param1[projectile];
     const ProjParam2& param2 = projectileComponent.param2[projectile];
-    vec3& projectileVelocity = velocityComponent.velocity[projectile];
+    vec3& velocity = velocityComponent.velocity[projectile];
+    quat& angularVelocity = velocityComponent.angularVelocity[projectile];
     vec3& senderVelocity = velocityComponent.velocity[sender];
     vec3 projectilePosition = transformComponent.transform[projectile].position;
     vec3 senderPosition = transformComponent.transform[sender].position;
@@ -83,7 +93,8 @@ void ProjectileSystem::Launch(
     launchFunctions[projectileComponent.type[projectile]](
         param1, 
         param2, 
-        projectileVelocity, 
+        velocity, 
+        angularVelocity,
         senderVelocity,
         projectilePosition,
         senderPosition
@@ -164,16 +175,18 @@ void ProjectileSystem::HandleContact(
 typedef void (UpdateFunction)(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectilePosition,
-    vec3& projectileVelocity,
+    Transform& transform,
+    vec3& velocity,
+    quat& angularVelocity,
     bool hasTarget,
     vec3 targetPosition
 );  
 void UpdateDefault(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectilePosition,
-    vec3& projectileVelocity,
+    Transform& transform,
+    vec3& velocity,
+    quat& angularVelocity,
     bool hasTarget,
     vec3 targetPosition
 ) {
@@ -182,16 +195,18 @@ void UpdateDefault(
 void UpdateTarget(
     ProjParam1 param1,
     ProjParam2 param2,
-    vec3& projectilePosition,
-    vec3& projectileVelocity,
+    Transform& transform,
+    vec3& velocity,
+    quat& angularVelocity,
     bool hasTarget,
     vec3 targetPosition
 ) {
     if (!hasTarget)
         return;
 
-    vec3 direction = normalize(targetPosition - projectilePosition);
-    projectileVelocity = lerp(projectileVelocity, direction * 150.0f, param1.trackingStrength);
+    vec3 direction = normalize(targetPosition - transform.position);
+    velocity = lerp(velocity, direction * 150.0f, param1.trackingStrength);
+    angularVelocity = slerp(angularVelocity, quat(1.0f, 0.0f, 0.0f, 0.0f), 0.05f);
 }
 
 UpdateFunction* updateFunctions[NumOfProjectileTypes] = {
@@ -199,7 +214,6 @@ UpdateFunction* updateFunctions[NumOfProjectileTypes] = {
     &UpdateDefault,
     &UpdateTarget
 };
-
 
 constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
 constexpr EntityKey targetKey = GetEntityKey<TransformComponent>();
@@ -256,8 +270,9 @@ void ProjectileSystem::Execute(
         updateFunctions[type](
             param1, 
             param2,
-            position, 
+            transformComponent.transform[i], 
             velocity, 
+            velocityComponent.angularVelocity[i],
             (targetId != NULL_ENTITY), 
             targetPosition
         );

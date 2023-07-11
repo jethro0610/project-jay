@@ -27,7 +27,7 @@ void DestroyMeterSystem::Execute(
             seedManager.CreateMultipleSeed(
                 transformComponent.transform[i].position,
                 meterComponent.numDestroySeeds[i],
-                20
+                15
             );
         }
     }

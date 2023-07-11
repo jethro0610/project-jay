@@ -42,6 +42,9 @@ void VelocitySystem::Apply(
             continue;
 
         vec3& velocity = velocityComponent.velocity[i];
+        quat& angularVelocity = velocityComponent.angularVelocity[i];
+
         transformComponent.transform[i].position += velocity * TIMESTEP;
+        transformComponent.transform[i].rotation = angularVelocity * transformComponent.transform[i].rotation;
     }
 }

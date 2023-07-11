@@ -1,5 +1,6 @@
 #include "GroundStickSystem.h"
 #include <glm/vec3.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/compatibility.hpp>
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
@@ -43,13 +44,12 @@ void GroundStickSystem::Stick(
             float stickVelocity = distanceToGround / TIMESTEP;
             if (velocity.y <= stickVelocity + 5.0f) {
                 velocity.y = stickVelocity;
-                if (i == PLAYER_ENTITY)
-                    continue;
 
-                vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
-                planarVelocity *= 0.75f;
-                velocity.x = planarVelocity.x;
-                velocity.z = planarVelocity.z;
+                if (groundTraceComponent.zeroVelocity[i]) {
+                    velocity.x = 0.0f;
+                    velocity.z = 0.0f;
+                    velocityComponent.angularVelocity[i] = quat(1.0f, 0.0f, 0.0f, 0.0f);
+                }
             }
         }
     }

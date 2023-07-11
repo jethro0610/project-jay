@@ -105,20 +105,21 @@ void HandleCollision(
     EntityID reciever,
     vec3 resolutionVec
 ) {
-    bool sent = false;
     std::bitset<MAX_COLLIDER_PROPERTIES> senderProps = args.colliderComponent.properties[sender];
     std::bitset<MAX_COLLIDER_PROPERTIES> recieverProps = args.colliderComponent.properties[reciever];
     std::bitset<MAX_RECIEVE_METEOR_BEHAVIORS> recieverBehaviors = args.colliderComponent.recieveMeteorBehaviors[reciever];
+
     int& recieverCooldown = args.colliderComponent.recieveMeteorCooldown[reciever]; 
+    int& senderCooldown = args.colliderComponent.recieveMeteorCooldown[sender]; 
 
     if (
         length(args.velocityComponent.velocity[sender]) > METEOR_SPEED &&
         senderProps.test(SendMeteor) && 
-        recieverProps.test(RecieveMeteor) && 
+        recieverProps.test(RecieveMeteor) &&
         recieverCooldown == 0
     ) {
-        args.entities[sender].stunTimer_ = 2;
-        args.entities[reciever].stunTimer_ = 2;
+        args.entities[sender].stunTimer_ = 1;
+        args.entities[reciever].stunTimer_ = 1;
         recieverCooldown = 30;
         MeteorSlowdown(
             args.velocityComponent.velocity[sender],
@@ -129,7 +130,6 @@ void HandleCollision(
             if (recieverBehaviors.test(j))
                 meteorBehaviorFuncs[j](args, sender, reciever);
         }
-        sent = true;
     } 
 
     if (
@@ -137,6 +137,8 @@ void HandleCollision(
         args.projectileComponent.active[sender] &&
         recieverProps.test(RecieveProjectile)
     ) {
+        args.entities[sender].stunTimer_ = 3;
+        args.entities[reciever].stunTimer_ = 3;
         ProjectileSystem::HandleContact(
             args.meterComponent,
             args.projectileComponent,
@@ -146,11 +148,14 @@ void HandleCollision(
             reciever
         );
         args.meterComponent.meter[reciever] -= args.projectileComponent.damage[sender];  
-        sent = true;
     }
 
-    if (!sent && senderProps.test(SendPush) && recieverProps.test(RecievePush)) {
-        args.transformComponent.transform[reciever].position += resolutionVec; 
+    if (
+        senderCooldown == 0 &&
+        senderProps.test(SendPush) && 
+        recieverProps.test(RecievePush)
+    ) {
+        args.transformComponent.transform[reciever].position += vec3(resolutionVec.x, 0.0f, resolutionVec.z); 
     }
 }
 

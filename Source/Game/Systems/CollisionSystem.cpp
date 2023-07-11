@@ -127,15 +127,15 @@ void HandleCollision(
         args.projectileComponent.active[sender] &&
         recieveProps.test(RecieveProjectile)
     ) {
-        args.projectileComponent.active[sender] = false;
-        args.projectileComponent.target[sender] = NULL_ENTITY;
-        vec3& velocity = args.velocityComponent.velocity[sender];
-        vec3 direction = normalize(vec3(velocity.x, 0.0f, velocity.z));
-        velocity.x = -direction.x * 20.0f;
-        velocity.y = 30.0f;
-        velocity.z = -direction.z * 20.0f;
-
-        args.meterComponent.meter[reciever] -= 1;  
+        ProjectileSystem::HandleContact(
+            args.meterComponent,
+            args.projectileComponent,
+            args.transformComponent,
+            args.velocityComponent,
+            sender,
+            reciever
+        );
+        args.meterComponent.meter[reciever] -= args.projectileComponent.damage[sender];  
     }
 }
 

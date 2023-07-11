@@ -2,6 +2,7 @@
 #include "../Entity/EntityID.h"
 class Entity;
 class World;
+class MeterComponent;
 class ProjectileComponent;
 class TransformComponent;
 class VelocityComponent;
@@ -15,6 +16,15 @@ namespace ProjectileSystem {
         VelocityComponent& velocityComponent, 
         EntityID projectile,
         EntityID target
+    );
+
+    void HandleContact(
+        MeterComponent& meterComponent,
+        ProjectileComponent& projectileComponent, 
+        TransformComponent& transformComponent, 
+        VelocityComponent& velocityComponent, 
+        EntityID projectile,
+        EntityID reciever
     );
 
     void Execute(

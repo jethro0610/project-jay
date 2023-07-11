@@ -28,7 +28,8 @@
         "projectile": {
             "type": "target",
             "tracking_strength": 0.05,
-            "height": 35.0
+            "height": 35.0,
+            "damage": 20.0
         },
         "ground_trace": {
             "distance": 1.0,

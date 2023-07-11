@@ -4,6 +4,7 @@
 #include "../Entity/EntityKey.h"
 #include "../../Constants/GameConstants.h"
 #include "../World/World.h"
+#include "../Components/MeterComponent.h"
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
@@ -90,6 +91,76 @@ void ProjectileSystem::Launch(
     projectileComponent.active[projectile] = true;
 }
 
+typedef void (ContactFunction)(
+    ProjParam1 param1,
+    ProjParam2 param2,
+    int damage,
+    vec3& projectilePosition,
+    vec3& projectileVelocity,
+    bool& active,
+    int& meter
+);  
+void ContactSelfDamage(
+    ProjParam1 param1,
+    ProjParam2 param2,
+    int damage,
+    vec3& projectilePosition,
+    vec3& projectileVelocity,
+    bool& active,
+    int& meter
+) {
+    meter -= damage;
+}
+void ContactBounceBack(
+    ProjParam1 param1,
+    ProjParam2 param2,
+    int damage,
+    vec3& projectilePosition,
+    vec3& projectileVelocity,
+    bool& active,
+    int& meter
+) {
+    vec3 direction = vec3(projectileVelocity.x, 0.0f, projectileVelocity.z);
+    projectileVelocity = normalize(direction) * 20.0f;
+    projectileVelocity.y = 20.0f;
+}
+void ContactDeactivate(
+    ProjParam1 param1,
+    ProjParam2 param2,
+    int damage,
+    vec3& projectilePosition,
+    vec3& projectileVelocity,
+    bool& active,
+    int& meter
+) {
+    active = false;
+}
+ContactFunction* contactFunctions[NumContactBehaviors] = {
+    &ContactSelfDamage,
+    &ContactBounceBack,
+    &ContactDeactivate
+};
+
+void ProjectileSystem::HandleContact(
+    MeterComponent& meterComponent,
+    ProjectileComponent& projectileComponent, 
+    TransformComponent& transformComponent, 
+    VelocityComponent& velocityComponent, 
+    EntityID projectile,
+    EntityID reciever
+) {
+    vec3& position = transformComponent.transform[projectile].position; 
+    vec3& velocity = velocityComponent.velocity[projectile]; 
+    int damage = projectileComponent.damage[projectile];
+    ProjParam1 param1 = projectileComponent.param1[projectile];
+    ProjParam2 param2 = projectileComponent.param2[projectile];
+    bool& active = projectileComponent.active[projectile];
+    int& meter = meterComponent.meter[projectile]; 
+
+    for (int i = 0; i < NumContactBehaviors; i++)
+        contactFunctions[i](param1, param2, damage, position, velocity, active, meter);
+}
+
 typedef void (UpdateFunction)(
     ProjParam1 param1,
     ProjParam2 param2,
@@ -128,6 +199,7 @@ UpdateFunction* updateFunctions[NumOfProjectileTypes] = {
     &UpdateDefault,
     &UpdateTarget
 };
+
 
 constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
 constexpr EntityKey targetKey = GetEntityKey<TransformComponent>();

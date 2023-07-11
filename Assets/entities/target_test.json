@@ -13,8 +13,8 @@
             "recieve_projectile": true
         },
         "meter": {
-            "initial_meter": 5,
-            "max_meter": 5,
+            "initial_meter": 40.0,
+            "max_meter": 40.0,
             "destroy_on_none": true,
             "num_destroy_seeds": 500
         }

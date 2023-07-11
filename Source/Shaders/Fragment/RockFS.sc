@@ -35,12 +35,11 @@ void main() {
     if (specular >= 0.3f)
         brightness = 1.5f;
 
-    float hp = u_meter.x / u_meter.y;
 
     vec4 crackColor = texture2DLod(s_sampler3, v_texcoord0, 0);
     vec2 crackStrength = getCrackStrength();
     float crackDepth = crackColor.r * crackStrength.x + crackColor.g * crackStrength.y;
-    brightness = lerp(brightness, 0.15f, crackDepth);
+    color = lerp(color, 0.15f, crackDepth);
 
     gl_FragColor = vec4(color * (brightness), 1.0f);
 }

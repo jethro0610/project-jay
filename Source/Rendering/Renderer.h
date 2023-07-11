@@ -133,6 +133,7 @@ private:
     void RenderWorld_P(World& world);
     void RenderEntities_P(
         Entity* entities, 
+        MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );

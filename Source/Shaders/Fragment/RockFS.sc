@@ -2,6 +2,7 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <Dither.sh>
+#include <Crack.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -34,10 +35,11 @@ void main() {
     if (specular >= 0.3f)
         brightness = 1.5f;
 
+    float hp = u_meter.x / u_meter.y;
+
     vec4 crackColor = texture2DLod(s_sampler3, v_texcoord0, 0);
-    float crackDepth = min(1.0f, crackColor.r + crackColor.g);
-    crackDepth = pow(crackDepth, 2.0f);
-    crackDepth = 0.0f;
+    vec2 crackStrength = getCrackStrength();
+    float crackDepth = crackColor.r * crackStrength.x + crackColor.g * crackStrength.y;
     brightness = lerp(brightness, 0.15f, crackDepth);
 
     gl_FragColor = vec4(color * (brightness), 1.0f);

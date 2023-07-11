@@ -340,6 +340,7 @@ void Renderer::RenderWorld_P(World& world) {
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 void Renderer::RenderEntities_P(
     Entity* entities, 
+    MeterComponent& meterComponent,
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
@@ -349,6 +350,9 @@ void Renderer::RenderEntities_P(
             continue;
         if (!entity.MatchesKey(key))
             continue;
+
+        vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
+        bgfx::setUniform(u_meter_, &meter);
 
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
         bgfx::setTransform(&worldMatrix);
@@ -423,7 +427,7 @@ void Renderer::RenderBlit_P() {
 }
 
 void Renderer::RenderUI_P(MeterComponent& meterComponent) {
-    vec4 meter = vec4((float)meterComponent.meter[PLAYER_ENTITY] / meterComponent.maxMeter[PLAYER_ENTITY]); 
+    vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);

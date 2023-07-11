@@ -19,7 +19,7 @@ void Renderer::Render(
     StartFrame_P();
 
     RenderWorld_P(world);
-    RenderEntities_P(entities, staticModelComponent, transformComponent);
+    RenderEntities_P(entities, meterComponent, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
     RenderPostProcess_P();

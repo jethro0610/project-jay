@@ -118,8 +118,8 @@ void HandleCollision(
         recieverProps.test(RecieveMeteor) &&
         recieverCooldown == 0
     ) {
-        args.entities[sender].stunTimer_ = 1;
-        args.entities[reciever].stunTimer_ = 1;
+        args.entities[sender].stunTimer_ = 2;
+        args.entities[reciever].stunTimer_ = 2;
         recieverCooldown = 30;
         MeteorSlowdown(
             args.velocityComponent.velocity[sender],
@@ -151,10 +151,11 @@ void HandleCollision(
     }
 
     if (
-        senderCooldown == 0 &&
+        senderCooldown == 0 && // Check for cooldown to prevent pushing from a meteored object
         senderProps.test(SendPush) && 
         recieverProps.test(RecievePush)
     ) {
+        // To prevent rising from collision, only push with the x and z components
         args.transformComponent.transform[reciever].position += vec3(resolutionVec.x, 0.0f, resolutionVec.z); 
     }
 }

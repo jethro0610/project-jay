@@ -223,6 +223,9 @@ void ProjectileSystem::Execute(
         ProjParam1 param1 = projectileComponent.param1[i];
         ProjParam2 param2 = projectileComponent.param2[i];
 
+        if (entities[projectileComponent.target[i]].alive_ == false)
+            projectileComponent.target[i] = NULL_ENTITY;
+
         if (projectileComponent.target[i] == NULL_ENTITY) {
             for (int j = 0; j < MAX_ENTITIES; j++) {
                 const Entity& target = entities[j];

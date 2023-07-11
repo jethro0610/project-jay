@@ -5,9 +5,8 @@
 - Rename to World to Terrain
 
 - Breakable round stone (gives meter)
-    - Damage on projectile
-        - Last/previous hit detection
-        - Projectile bounce off
+    - Rotation (angular velocity)
+    - Generic friction
 
 - Breakable bush
 - Holes (terrain modification)

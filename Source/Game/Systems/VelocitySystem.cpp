@@ -6,6 +6,7 @@
 #include "../Components/VelocityComponent.h"
 #include "../../Constants/TimeConstants.h"
 #include "../../Logging/ScreenText.h"
+#include "../../Logging/Logger.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent, VelocityComponent>();

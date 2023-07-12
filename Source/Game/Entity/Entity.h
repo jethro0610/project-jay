@@ -12,6 +12,7 @@ public:
     Entity() {
         alive_ = false;
         key_ = 0;
+        stunTimer_ = 0;
     }
 
     bool ShouldUpdate() const {

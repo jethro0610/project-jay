@@ -19,6 +19,9 @@ static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
 void main() {
     vec3 lightDirection = u_lightDirection.xyz; 
 
+    // OPTIMIZATION: This check is run on every world chunk, but we
+    // can just do it on a single chunk, likely by writing a different
+    // shader without the fade function
     float fade = max(-v_edgeDistance, 0.0f);
     fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
     fade *= 0.05f;

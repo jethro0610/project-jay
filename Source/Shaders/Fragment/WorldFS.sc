@@ -19,6 +19,12 @@ static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
 void main() {
     vec3 lightDirection = u_lightDirection.xyz; 
 
+    float fade = max(-v_edgeDistance, 0.0f);
+    fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
+    fade *= 0.05f;
+    if (dither(gl_FragCoord, fade) <= 0.0f)
+        discard;
+
     vec3 color = texture2D(s_sampler1, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     float macroStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;
     float microStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.01f).r;
@@ -49,12 +55,6 @@ void main() {
 
     float4 fresnelColor = float4(0.85f, 0.9f, 1.0f, 0.0f); 
     color = lerp(color, fresnelColor, fresnel);
-    
-    float fade = max(-v_edgeDistance, 0.0f);
-    fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
-    fade *= 0.05f;
-    if (dither(gl_FragCoord, fade))
-        discard;
 
     // Should also fade if height is lower than a certain threshhold
     // for holes

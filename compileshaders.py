@@ -15,6 +15,7 @@ shader_profile = ''
 executable_extension = ''
 use_shell = False
 recompile = False
+optimization = ''
 if '-r' in sys.argv:
     recompile = True
 
@@ -22,6 +23,7 @@ if platform.system() == 'Windows':
     shader_platform = 'windows'
     shader_profile = 's_5_0'
     executable_extension = '.exe'
+    optimization = '-O 3'
 elif platform.system() == 'Linux':
     shader_platform = 'linux'
     shader_profile = 'spirv'
@@ -155,10 +157,12 @@ for desc in shader_descriptions.values():
         '-o %s '
         '--type %s '
         '--platform %s '
-        '--profile %s'
+        '--profile %s ' +
+        optimization
     )
     output_name = os.path.splitext(desc.name)[0] + '.bin';
     command = command % (desc.path, output_path + output_name, desc.shader_type, shader_platform, shader_profile)
+    print(command)
     result = subprocess.run(command, shell = use_shell)
 
     if result.returncode == 0:

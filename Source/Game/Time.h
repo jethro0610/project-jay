@@ -6,6 +6,7 @@ public:
     static void UpdateTime();
     static float GetDeltaTime();
     static float GetTime();
+    static float GetFrameTime();
 
 private:
     static GlobalTime* time_;

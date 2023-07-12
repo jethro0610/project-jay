@@ -17,12 +17,23 @@ static const int bayerMatrix[16][16] = {
     {255, 127, 223,  95, 247, 119, 215,  87, 253, 125, 221,  93, 245, 117, 213,  85},
 }; 
 
-bool dither(vec2 coords, float a) {
+float dither(vec2 coords, float a) {
     int x = (coords.x) % 16;
     int y = (coords.y) % 16;
 
-    if (a * 256.0f > bayerMatrix[x][y])
-        return true;
-    else
-        return false;
+    return step(a * 256.0f, bayerMatrix[x][y]);
 }
+
+// static const float bayerMatrix[4][4] = {
+//     {    0.0f,     0.5f,  0.125f,   0.625f},
+//     {   0.75f,    0.25f,  0.875f,   0.375f},
+//     { 0.1875f,  0.6875f, 0.0625f,  0.5625f},
+//     {  0.9375,  0.4375f, 0.8125f,  0.3125f}
+// };
+//
+// float dither(vec2 coords, float a) {
+//     int x = (coords.x) % 4;
+//     int y = (coords.y) % 4;
+//
+//     return step(a * 256.0f, bayerMatrix[x][y]);
+// }

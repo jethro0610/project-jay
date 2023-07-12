@@ -99,13 +99,13 @@ void PlayerController::Execute(
         spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;
     } 
 
-    SCREENLINE(0, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
-    SCREENLINE(1, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));
-    SCREENLINE(2, "Action: " + std::to_string(actionMeter_));
-    SCREENLINE(3, "X-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].x));
-    SCREENLINE(4, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
-    SCREENLINE(5, "Z-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].z));
-    SCREENLINE(6, "X: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.x));
-    SCREENLINE(7, "Y: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.y));
-    SCREENLINE(8, "Z: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.z));
+    SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
+    SCREENLINE(2, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));
+    SCREENLINE(3, "Action: " + std::to_string(actionMeter_));
+    SCREENLINE(4, "X-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].x));
+    SCREENLINE(5, "Y-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].y));
+    SCREENLINE(6, "Z-Vel: " + std::to_string(velocityComponent.velocity[PLAYER_ENTITY].z));
+    SCREENLINE(7, "X: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.x));
+    SCREENLINE(8, "Y: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.y));
+    SCREENLINE(9, "Z: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.z));
 }

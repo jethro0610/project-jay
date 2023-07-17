@@ -10,6 +10,7 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
+constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
     
 void IntervalSpawnSystem::Execute(
     Entity* entities,
@@ -26,15 +27,28 @@ void IntervalSpawnSystem::Execute(
         if (!entity.MatchesKey(key))
             continue;
 
-        int& spawnTimer = intervalSpawnComponent.spawnTimer[i];
-        spawnTimer += 1;
-        if (spawnTimer >= intervalSpawnComponent.spawnInterval[i]) {
+        int& timer = intervalSpawnComponent.timer[i];
+        timer++;
+        if (timer >= intervalSpawnComponent.interval[i]) {
             Transform spawnTransform;
-            spawnTransform.position = transformComponent.transform[i].position;
-            EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
 
-            // Create the spawn entity
-            spawnTimer = 0;
+            vec3 position = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.numOffsets[i]];
+            
+            // NOTE: Need to use the transform to get the child transform, instead of just adding position
+            spawnTransform.position = transformComponent.transform[i].position + position;
+
+            EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
+            if (intervalSpawnComponent.launch[i])
+                ProjectileSystem::Launch(
+                    projectileComponent, 
+                    transformComponent, 
+                    velocityComponent, 
+                    entityId, 
+                    NULL_ENTITY
+                );
+
+
+            timer = 0;
         }
     }
 }

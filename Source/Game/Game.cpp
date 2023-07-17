@@ -26,30 +26,36 @@ void Game::Init() {
     entityManager_.LoadEntity("rock");
     Transform rockTransform;
 
-    for (int j = 0; j < 8; j++) {
-        float x0 = (rand() % 200) - 100;
-        float z0 = (rand() % 200) - 100;
-        for (int i = 0; i < 5; i++) {
-            float x = (rand() % 20) - 10;
-            float z = (rand() % 20) - 10;
-            rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
+    // for (int j = 0; j < 8; j++) {
+    //     float x0 = (rand() % 200) - 100;
+    //     float z0 = (rand() % 200) - 100;
+    //     for (int i = 0; i < 5; i++) {
+    //         float x = (rand() % 20) - 10;
+    //         float z = (rand() % 20) - 10;
+    //         rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
+    //
+    //         float rx = (rand() % 360);
+    //         float ry = (rand() % 360);
+    //         float rz = (rand() % 360);
+    //         rockTransform.rotation = quat(vec3(rx, ry, rz));
+    //
+    //         float scale = 1.0f + (rand() % 150) * 0.01f;
+    //         rockTransform.scale = vec3(scale);
+    //         entityManager_.CreateEntity("rock", rockTransform);
+    //     }
+    // }
 
-            float rx = (rand() % 360);
-            float ry = (rand() % 360);
-            float rz = (rand() % 360);
-            rockTransform.rotation = quat(vec3(rx, ry, rz));
+    // entityManager_.LoadEntity("target_test");
+    // Transform targetTransform;
+    // targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    // targetTransform.scale = vec3(3.0f);
+    // entityManager_.CreateEntity("target_test", targetTransform);
 
-            float scale = 1.0f + (rand() % 150) * 0.01f;
-            rockTransform.scale = vec3(scale);
-            entityManager_.CreateEntity("rock", rockTransform);
-        }
-    }
-
-    entityManager_.LoadEntity("target_test");
-    Transform targetTransform;
-    targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
-    targetTransform.scale = vec3(3.0f);
-    entityManager_.CreateEntity("target_test", targetTransform);
+    entityManager_.LoadEntity("tree");
+    Transform treeTransform;
+    treeTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    treeTransform.scale = vec3(2.0f);
+    entityManager_.CreateEntity("tree", treeTransform);
 
     camera_.target_ = PLAYER_ENTITY;
 }

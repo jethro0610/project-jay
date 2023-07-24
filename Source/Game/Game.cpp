@@ -53,7 +53,8 @@ void Game::Init() {
 
     entityManager_.LoadEntity("tree");
     Transform treeTransform;
-    treeTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    treeTransform.scale = vec3(2.0f);
+    treeTransform.position = vec3(50.0f, 10.0f, 50.0f);
     entityManager_.CreateEntity("tree", treeTransform);
 
     camera_.target_ = PLAYER_ENTITY;

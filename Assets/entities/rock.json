@@ -5,7 +5,10 @@
         },
         "static_model": {
             "model": "st_rock",
-            "material0": "rock"
+            "materials": 
+            [
+                "rock"
+            ]
         },
         "velocity": {
             "use_gravity": true 

@@ -6,7 +6,10 @@
         },
         "static_model": {
             "model": "st_tree",
-            "material0": "player"
+            "materials": [
+                "player",
+                "rock"
+            ]
         }
     }
 }

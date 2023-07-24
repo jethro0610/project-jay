@@ -5,7 +5,9 @@
         },
         "static_model": {
             "model": "st_sphere",
-            "material0": "player"
+            "materials": [
+                "player"
+            ]
         },
         "ground_trace": {
             "distance": 1.0,

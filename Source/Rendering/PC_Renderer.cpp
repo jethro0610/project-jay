@@ -106,43 +106,43 @@ void Renderer::TEMP_LoadTestData() {
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Texture playerTextures[] = { bricksC, bricksN };
-    Material playerMaterial = MakeMaterial_P("player", staticVS, defaultFS, playerTextures, 2);
+    Material playerMaterial = MakeMaterial_P("m_player", staticVS, defaultFS, playerTextures, 2);
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
     Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
-    Material rockMaterial = MakeMaterial_P("rock", rockVS, rockFS, rockTextures, 4);
+    Material rockMaterial = MakeMaterial_P("m_rock", rockVS, rockFS, rockTextures, 4);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
     Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
-    worldMaterial_ = MakeMaterial_P("world", worldVS, worldFS, worldTextures, 4);
+    worldMaterial_ = MakeMaterial_P("m_world", worldVS, worldFS, worldTextures, 4);
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
     Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
-    postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
+    postProcessMaterial_ = MakeMaterial_P("m_postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
-    spreadMaterial_ = MakeMaterial_P("spread", instanceVS, defaultFS, playerTextures, 2); 
+    spreadMaterial_ = MakeMaterial_P("m_spread", instanceVS, defaultFS, playerTextures, 2); 
     spreadModel_ = sphere;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
-    seedMaterial_ = MakeMaterial_P("seed", instBillboardVS, seedFS, nullptr, 0);
+    seedMaterial_ = MakeMaterial_P("m_seed", instBillboardVS, seedFS, nullptr, 0);
 
     Shader glyphVS = LoadVertexShader_P("GlyphVS");
     Shader textFS = LoadFragmentShader_P("TextFS");
     Texture fontTextures[] = { LoadTexture_P("font") };
-    textMaterial_ = MakeMaterial_P("text", glyphVS, textFS, fontTextures, 1);
+    textMaterial_ = MakeMaterial_P("m_text", glyphVS, textFS, fontTextures, 1);
 
     Shader barVS = LoadVertexShader_P("BarVS");
     Shader barFS = LoadFragmentShader_P("BarFS");
-    barMaterial_ = MakeMaterial_P("bar", barVS, barFS, nullptr, 0);
+    barMaterial_ = MakeMaterial_P("m_bar", barVS, barFS, nullptr, 0);
 
     Texture blitTextures[] = { postProcessTexture_ };
-    blitMaterial_ = MakeMaterial_P("blit", screenQuadVS, blitFS, blitTextures, 1);
+    blitMaterial_ = MakeMaterial_P("m_blit", screenQuadVS, blitFS, blitTextures, 1);
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -353,14 +353,14 @@ void Renderer::RenderEntities_P(
             continue;
 
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
-        bgfx::setUniform(u_meter_, &meter);
-
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
-        bgfx::setTransform(&worldMatrix);
-        bgfx::setUniform(u_normal_, &normalMatrix);
 
         Model model = staticModelComponent.model[i];
         for (int m = 0; m < model.numMeshes; m++) {
+            bgfx::setUniform(u_meter_, &meter);
+            bgfx::setTransform(&worldMatrix);
+            bgfx::setUniform(u_normal_, &normalMatrix);
+
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
 

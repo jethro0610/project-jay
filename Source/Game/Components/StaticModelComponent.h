@@ -30,6 +30,7 @@ public:
         model[entity] = renderer->GetModel(data["model"].get<std::string>());
 
         auto materialData = data["materials"];
+        ASSERT((materialData.size() <= MAX_MESHES_PER_MODEL), "Too many materials on entity description");
         for (int i = 0; i < materialData.size(); i++)
             materials[entity][i] = renderer->GetMaterial(materialData[i]);
     }

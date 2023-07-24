@@ -7,8 +7,8 @@
         "static_model": {
             "model": "st_tree",
             "materials": [
-                "player",
-                "rock"
+                "m_player",
+                "m_rock"
             ]
         }
     }

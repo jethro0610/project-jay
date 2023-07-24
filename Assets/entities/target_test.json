@@ -7,7 +7,7 @@
         "static_model": {
             "model": "st_sphere",
             "materials": [
-                "player"
+                "m_player"
             ]
         },
         "collider": {

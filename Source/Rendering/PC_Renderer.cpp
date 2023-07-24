@@ -102,6 +102,9 @@ void Renderer::TEMP_LoadTestData() {
     Texture rockC = LoadTexture_P("t_rock_c");
     Texture rockN = LoadTexture_P("t_rock_n");
     Texture crackM = LoadTexture_P("t_crack_m");
+    Texture treeC = LoadTexture_P("t_tree_c");
+    Texture treeN = LoadTexture_P("t_tree_n");
+    Texture leavesM = LoadTexture_P("t_leaves_m");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
@@ -112,6 +115,12 @@ void Renderer::TEMP_LoadTestData() {
     Shader rockFS = LoadFragmentShader_P("RockFS");
     Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
     Material rockMaterial = MakeMaterial_P("m_rock", rockVS, rockFS, rockTextures, 4);
+
+    Texture treeTextures[] = { treeC, treeN };
+    Material treeMaterial = MakeMaterial_P("m_tree", staticVS, defaultFS, treeTextures, 2);
+    Shader leavesFS = LoadFragmentShader_P("LeavesFS");
+    Texture leavesTextures[] { leavesM };
+    Material leavesMaterial = MakeMaterial_P("m_leaves", staticVS, leavesFS, leavesTextures, 1);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");

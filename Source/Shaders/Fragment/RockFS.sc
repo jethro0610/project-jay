@@ -1,7 +1,6 @@
 $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
-#include <Dither.sh>
 #include <Crack.sh>
 
 uniform vec4 u_cameraPosition;

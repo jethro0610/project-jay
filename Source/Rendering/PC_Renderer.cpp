@@ -94,14 +94,14 @@ void Renderer::TEMP_LoadTestData() {
     Model rock = LoadModel_P("st_rock");
     Model tree = LoadModel_P("st_tree");
 
-    Texture bricksC = LoadTexture_P("bricks_c");
-    Texture bricksN = LoadTexture_P("bricks_n");
-    Texture grassC = LoadTexture_P("grass_c");
-    Texture grassN = LoadTexture_P("grass_n");
-    Texture marbleC = LoadTexture_P("marble_c");
-    Texture rockC = LoadTexture_P("rock_c");
-    Texture rockN = LoadTexture_P("rock_n");
-    Texture crackM = LoadTexture_P("crack_m");
+    Texture bricksC = LoadTexture_P("t_bricks_c");
+    Texture bricksN = LoadTexture_P("t_bricks_n");
+    Texture grassC = LoadTexture_P("t_grass_c");
+    Texture grassN = LoadTexture_P("t_grass_n");
+    Texture marbleC = LoadTexture_P("t_marble_c");
+    Texture rockC = LoadTexture_P("t_rock_c");
+    Texture rockN = LoadTexture_P("t_rock_n");
+    Texture crackM = LoadTexture_P("t_crack_m");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
@@ -134,7 +134,7 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader glyphVS = LoadVertexShader_P("GlyphVS");
     Shader textFS = LoadFragmentShader_P("TextFS");
-    Texture fontTextures[] = { LoadTexture_P("font") };
+    Texture fontTextures[] = { LoadTexture_P("t_font") };
     textMaterial_ = MakeMaterial_P("m_text", glyphVS, textFS, fontTextures, 1);
 
     Shader barVS = LoadVertexShader_P("BarVS");

@@ -92,6 +92,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 void Renderer::TEMP_LoadTestData() {
     Model sphere = LoadModel_P("st_sphere");
     Model rock = LoadModel_P("st_rock");
+    Model tree = LoadModel_P("st_tree");
 
     Texture bricksC = LoadTexture_P("bricks_c");
     Texture bricksN = LoadTexture_P("bricks_n");

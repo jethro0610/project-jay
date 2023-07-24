@@ -1,0 +1,12 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": true,
+            "targetable": true
+        },
+        "static_model": {
+            "model": "st_tree",
+            "material0": "player"
+        }
+    }
+}

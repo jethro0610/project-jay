@@ -3,10 +3,11 @@ $output v_wposition, v_vposition, v_normal, v_tangent, v_bitangent, v_tbn, v_tex
 #include <bgfx_shader.sh>
 
 uniform mat3 u_normal;
+uniform vec4 u_normalMult;
 
 void main() {
     v_normal = mul(u_normal, a_normal); 
-    v_normal = normalize(v_normal);
+    v_normal = normalize(v_normal) * u_normalMult.x;
 
     v_bitangent = mul(u_normal, a_bitangent);
     v_bitangent = normalize(v_bitangent);

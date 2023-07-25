@@ -55,6 +55,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     }
 
     u_normal_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
+    u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
@@ -120,7 +121,7 @@ void Renderer::TEMP_LoadTestData() {
     Material treeMaterial = MakeMaterial_P("m_tree", staticVS, defaultFS, treeTextures, 2);
     Shader leavesFS = LoadFragmentShader_P("LeavesFS");
     Texture leavesTextures[] { leavesM };
-    Material leavesMaterial = MakeMaterial_P("m_leaves", staticVS, leavesFS, leavesTextures, 1);
+    Material leavesMaterial = MakeMaterial_P("m_leaves", staticVS, leavesFS, leavesTextures, 1, true);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
@@ -365,20 +366,31 @@ void Renderer::RenderEntities_P(
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
 
         Model model = staticModelComponent.model[i];
+        vec4 normalMult;
         for (int m = 0; m < model.numMeshes; m++) {
-            bgfx::setUniform(u_meter_, &meter);
-            bgfx::setTransform(&worldMatrix);
-            bgfx::setUniform(u_normal_, &normalMatrix);
-
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
+            int renderNum = material.twoSided ? 2 : 1;
+            for (int n = 0; n < renderNum; n++) {
+                if (n == 1) {
+                    bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+                    normalMult.x = -1.0f;
+                }
+                else
+                    normalMult.x = 1.0f;
 
-            for (int t = 0; t < material.numTextures; t++)
-                bgfx::setTexture(t, samplers_[t], material.textures[t]);
+                bgfx::setUniform(u_meter_, &meter);
+                bgfx::setTransform(&worldMatrix);
+                bgfx::setUniform(u_normal_, &normalMatrix);
+                bgfx::setUniform(u_normalMult_, &normalMult);
 
-            bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-            bgfx::setIndexBuffer(mesh.indexBuffer);
-            bgfx::submit(0, material.shader);
+                for (int t = 0; t < material.numTextures; t++)
+                    bgfx::setTexture(t, samplers_[t], material.textures[t]);
+
+                bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+                bgfx::setIndexBuffer(mesh.indexBuffer);
+                bgfx::submit(0, material.shader);
+            }
         }
     }
 }
@@ -558,7 +570,8 @@ Material Renderer::MakeMaterial_P(
     Shader vertex, 
     Shader fragment, 
     Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures
+    int numTextures,
+    bool twoSided
 ) {
     ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     Material material;
@@ -566,6 +579,7 @@ Material Renderer::MakeMaterial_P(
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures[i];
+    material.twoSided = twoSided;
     materials_[name] = material;
 
     DEBUGLOG("Created material " << name);
@@ -577,13 +591,14 @@ Material Renderer::MakeMaterial_P(
     std::string vertex, 
     std::string fragment, 
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures
+    int numTextures,
+    bool twoSided
 ) {
     Texture textureList[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < numTextures; i++)
         textureList[i] = GetTexture(textures[i]);
 
-    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures);
+    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures, twoSided);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

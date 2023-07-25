@@ -24,6 +24,9 @@ float dither(vec2 coords, float a) {
     return step(a * 256.0f, bayerMatrix[x][y]);
 }
 
+#define DITHERDISCARD(alpha) if(dither(gl_FragCoord, (alpha)) <= 0.0f) discard
+
+// LIGHTERWEIGHT VERSION
 // static const float bayerMatrix[4][4] = {
 //     {    0.0f,     0.5f,  0.125f,   0.625f},
 //     {   0.75f,    0.25f,  0.875f,   0.375f},

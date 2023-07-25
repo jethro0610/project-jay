@@ -6,7 +6,9 @@
         },
         "static_model": {
             "model": "st_sphere",
-            "material0": "player"
+            "materials": [
+                "m_player"
+            ]
         },
         "collider": {
             "radius0": 1.0,

@@ -1,7 +1,8 @@
 {
     "components": {
         "transform": {
-            "interpolate": true
+            "interpolate": true,
+            "targetable": true
         },
         "static_model": {
             "model": "st_tree",

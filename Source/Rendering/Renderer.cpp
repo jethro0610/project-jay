@@ -18,8 +18,8 @@ void Renderer::Render(
 ) {
     StartFrame_P();
 
-    RenderEntities_P(entities, meterComponent, staticModelComponent, transformComponent);
     RenderWorld_P(world);
+    RenderEntities_P(entities, meterComponent, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
     RenderPostProcess_P();

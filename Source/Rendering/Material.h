@@ -7,5 +7,4 @@ struct Material {
     MaterialShader shader;
     Texture textures[MAX_TEXTURES_PER_MATERIAL];
     int numTextures;
-    bool twoSided;
 };

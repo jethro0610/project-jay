@@ -1,0 +1,41 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": true
+        },
+        "static_model": {
+            "model": "st_sphere",
+            "material0": "player"
+        },
+        "ground_trace": {
+            "distance": 1.0,
+            "stick": true,
+            "stick_offset": 1.0
+        },
+        "movement": {
+            "min_speed": 12.0,
+            "max_speed": 120.0,
+            "min_friction": 0.015,
+            "max_friction": 0.1,
+            "momentum_decay": 0.1
+        },
+        "spread_activator": {
+            "ground_only": false
+        },
+        "meter": {
+            "initial_meter": 512,
+            "max_meter": 2048 
+        },
+        "collider": {
+            "radius0": 2.0,
+            "radius1": 15.0,
+            "send_meteor": true,
+            "capture_seed": true,
+            "recieve_push": true
+        },
+        "velocity": {
+            "use_gravity": true
+        },
+        "spread_detect": {}
+    }
+}

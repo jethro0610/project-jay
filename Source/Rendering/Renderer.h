@@ -51,16 +51,14 @@ public:
         Shader vertex, 
         Shader fragment, 
         Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        bool twoSided = false
+        int numTextures
     );
     Material MakeMaterial_P(
         std::string name, 
         std::string vertex, 
         std::string fragment, 
         std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        bool twoSided = false
+        int numTextures
     );
 
     void TEMP_LoadTestData();
@@ -109,7 +107,6 @@ private:
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
     Uniform u_normal_;
-    Uniform u_normalMult_;
     Uniform u_lightDirection_;
     Uniform u_timeResolution_;
     Uniform u_cameraPosition_;

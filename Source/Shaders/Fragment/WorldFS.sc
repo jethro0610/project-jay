@@ -25,7 +25,8 @@ void main() {
     float fade = max(-v_edgeDistance, 0.0f);
     fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
     fade *= 0.05f;
-    DITHERDISCARD(fade);
+    if (dither(gl_FragCoord, fade) <= 0.0f)
+        discard;
 
     vec3 color = texture2D(s_sampler1, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     float macroStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;

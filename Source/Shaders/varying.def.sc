@@ -5,6 +5,7 @@ vec3 a_bitangent : BITANGENT;
 vec2 a_texcoord0 : TEXCOORD0;
 
 vec3 v_wposition : WORLDPOSITION;
+vec3 v_vposition : VERTEXPOSITION;
 vec3 v_normal : NORMAL;
 vec3 v_tangent : TANGENT;
 vec3 v_bitangent : BITANGENT;

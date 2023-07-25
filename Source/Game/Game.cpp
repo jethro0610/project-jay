@@ -53,7 +53,7 @@ void Game::Init() {
 
     entityManager_.LoadEntity("e_tree");
     Transform treeTransform;
-    treeTransform.scale = vec3(2.0f);
+    treeTransform.scale = vec3(3.0f);
     treeTransform.position = vec3(50.0f, 10.0f, 50.0f);
     entityManager_.CreateEntity("e_tree", treeTransform);
 

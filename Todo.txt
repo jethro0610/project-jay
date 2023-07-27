@@ -6,13 +6,13 @@
 
 - Tree:
     - Fruit spawning
-    - Double sided rendering for leaves
 
 - Stump:
     - Not sure how it will interact
 
 - Breakable bush (meter pad basically, regrows)
     - Version that doesn't regrow
+    - Tree probably better since height is necessary
     - Yo, maybe enemeis can break the regrowing ones?
 
 - Holes (terrain modification)

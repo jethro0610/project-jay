@@ -25,5 +25,7 @@ void main() {
     
     brightness += v_texcoord0.x * 0.15f;
 
-    gl_FragColor = vec4(vec3(0.425f, 0.5f, 0.25f) * brightness, 1.0f);
+    vec3 color = vec3(1.0f, 0.95f, 0.36f) * 0.45f;
+    // vec3 color = vec3(0.425f, 0.5f, 0.25f);
+    gl_FragColor = vec4(color * brightness, 1.0f);
 }

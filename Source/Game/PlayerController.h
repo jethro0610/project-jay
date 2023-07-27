@@ -12,8 +12,8 @@ class TransformComponent;
 class VelocityComponent;
 
 const int TIME_TO_CUT = 16;
-const int CUT_COOLDOWN_TIME = 32;
-const int MAX_ACTION_METER = 250;
+const int CUT_COOLDOWN_TIME = 16;
+const int MAX_ACTION_METER = 300;
 
 class PlayerController {
 public:

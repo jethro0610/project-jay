@@ -5,7 +5,9 @@
 - Rename to World to Terrain
 
 - Tree:
-    - Fruit spawning
+    - Genericize radius spawning
+    - Add fruit spawning with random positions
+    - Fruits can act as buffs ie. magnet
 
 - Stump:
     - Not sure how it will interact

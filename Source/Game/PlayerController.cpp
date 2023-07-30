@@ -84,7 +84,7 @@ void PlayerController::Execute(
     }
 
     if (!isDoingAction && actionMeter_ > 0)
-        actionMeter_ = max(actionMeter_ - 3, 0);
+        actionMeter_ = max(actionMeter_ - 6, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
         if (length(desiredMovement) > 0.0001f) {
@@ -95,8 +95,8 @@ void PlayerController::Execute(
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
 
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 6;
-        spreadActivatorComponent.amount[PLAYER_ENTITY] = 32;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 12;
+        spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
     } 
 
     SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
@@ -108,4 +108,5 @@ void PlayerController::Execute(
     SCREENLINE(7, "X: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.x));
     SCREENLINE(8, "Y: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.y));
     SCREENLINE(9, "Z: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.z));
+    SCREENLINE(10, "Cut Cooldown: " + std::to_string(cutCooldown_));
 }

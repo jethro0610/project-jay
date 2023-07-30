@@ -18,18 +18,18 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
 
     // Create the player entity
-    entityManager_.LoadEntity("player");
+    entityManager_.LoadEntity("e_player");
     Transform playerTransform;
     playerTransform.position = vec3(0.0f, 50.0f, 0.0f);
-    entityManager_.CreateEntity("player", playerTransform);
+    entityManager_.CreateEntity("e_player", playerTransform);
 
-    entityManager_.LoadEntity("rock");
+    entityManager_.LoadEntity("e_rock");
     Transform rockTransform;
 
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < 6; j++) {
         float x0 = (rand() % 200) - 100;
         float z0 = (rand() % 200) - 100;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             float x = (rand() % 20) - 10;
             float z = (rand() % 20) - 10;
             rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
@@ -41,15 +41,25 @@ void Game::Init() {
 
             float scale = 1.0f + (rand() % 150) * 0.01f;
             rockTransform.scale = vec3(scale);
-            entityManager_.CreateEntity("rock", rockTransform);
+            // entityManager_.CreateEntity("e_rock", rockTransform);
         }
     }
 
-    entityManager_.LoadEntity("target_test");
-    Transform targetTransform;
-    targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
-    targetTransform.scale = vec3(3.0f);
-    entityManager_.CreateEntity("target_test", targetTransform);
+    // entityManager_.LoadEntity("target_test");
+    // Transform targetTransform;
+    // targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    // targetTransform.scale = vec3(3.0f);
+    // entityManager_.CreateEntity("target_test", targetTransform);
+
+    entityManager_.LoadEntity("e_tree");
+    Transform treeTransform;
+    treeTransform.scale = vec3(3.0f);
+    treeTransform.position = vec3(50.0f, 10.0f, 50.0f);
+    entityManager_.CreateEntity("e_tree", treeTransform);
+
+    treeTransform.position = vec3(-27.0f, 0.0f, -43.0f);
+    treeTransform.rotation = quat(vec3(0.0f, 33.0f, 0.0f));
+    entityManager_.CreateEntity("e_tree", treeTransform);
 
     entityManager_.LoadEntity("tree");
     Transform treeTransform;
@@ -68,6 +78,7 @@ void Game::Update() {
         IntervalSpawnSystem::Execute(
             entityManager_.entities_,
             entityManager_,
+            seedManager_,
             GETCOMP(IntervalSpawnComponent),
             GETCOMP(ProjectileComponent),
             GETCOMP(TransformComponent),

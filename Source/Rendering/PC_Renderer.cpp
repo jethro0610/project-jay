@@ -55,6 +55,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     }
 
     u_normal_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
+    u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
@@ -92,56 +93,66 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 void Renderer::TEMP_LoadTestData() {
     Model sphere = LoadModel_P("st_sphere");
     Model rock = LoadModel_P("st_rock");
+    Model tree = LoadModel_P("st_tree");
 
-    Texture bricksC = LoadTexture_P("bricks_c");
-    Texture bricksN = LoadTexture_P("bricks_n");
-    Texture grassC = LoadTexture_P("grass_c");
-    Texture grassN = LoadTexture_P("grass_n");
-    Texture marbleC = LoadTexture_P("marble_c");
-    Texture rockC = LoadTexture_P("rock_c");
-    Texture rockN = LoadTexture_P("rock_n");
-    Texture crackM = LoadTexture_P("crack_m");
+    Texture bricksC = LoadTexture_P("t_bricks_c");
+    Texture bricksN = LoadTexture_P("t_bricks_n");
+    Texture grassC = LoadTexture_P("t_grass_c");
+    Texture grassN = LoadTexture_P("t_grass_n");
+    Texture marbleC = LoadTexture_P("t_marble_c");
+    Texture rockC = LoadTexture_P("t_rock_c");
+    Texture rockN = LoadTexture_P("t_rock_n");
+    Texture crackM = LoadTexture_P("t_crack_m");
+    Texture treeC = LoadTexture_P("t_tree_c");
+    Texture treeN = LoadTexture_P("t_tree_n");
+    Texture leavesM = LoadTexture_P("t_leaves_m");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Texture playerTextures[] = { bricksC, bricksN };
-    Material playerMaterial = MakeMaterial_P("player", staticVS, defaultFS, playerTextures, 2);
+    Material playerMaterial = MakeMaterial_P("m_player", staticVS, defaultFS, playerTextures, 2);
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
     Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
-    Material rockMaterial = MakeMaterial_P("rock", rockVS, rockFS, rockTextures, 4);
+    Material rockMaterial = MakeMaterial_P("m_rock", rockVS, rockFS, rockTextures, 4);
+
+    Texture treeTextures[] = { treeC, treeN };
+    Material treeMaterial = MakeMaterial_P("m_tree", staticVS, defaultFS, treeTextures, 2);
+    Shader leavesFS = LoadFragmentShader_P("LeavesFS");
+    Texture leavesTextures[] { leavesM };
+    Material leavesMaterial = MakeMaterial_P("m_leaves", staticVS, leavesFS, leavesTextures, 1, true);
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
     Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
-    worldMaterial_ = MakeMaterial_P("world", worldVS, worldFS, worldTextures, 4);
+    worldMaterial_ = MakeMaterial_P("m_world", worldVS, worldFS, worldTextures, 4);
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
     Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
-    postProcessMaterial_ = MakeMaterial_P("postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
+    postProcessMaterial_ = MakeMaterial_P("m_postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
-    spreadMaterial_ = MakeMaterial_P("spread", instanceVS, defaultFS, playerTextures, 2); 
+    spreadMaterial_ = MakeMaterial_P("m_spread", instanceVS, defaultFS, playerTextures, 2); 
     spreadModel_ = sphere;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
-    seedMaterial_ = MakeMaterial_P("seed", instBillboardVS, seedFS, nullptr, 0);
+    seedMaterial_ = MakeMaterial_P("m_seed", instBillboardVS, seedFS, nullptr, 0);
 
     Shader glyphVS = LoadVertexShader_P("GlyphVS");
     Shader textFS = LoadFragmentShader_P("TextFS");
-    Texture fontTextures[] = { LoadTexture_P("font") };
-    textMaterial_ = MakeMaterial_P("text", glyphVS, textFS, fontTextures, 1);
+    Texture fontTextures[] = { LoadTexture_P("t_font") };
+    textMaterial_ = MakeMaterial_P("m_text", glyphVS, textFS, fontTextures, 1);
 
     Shader barVS = LoadVertexShader_P("BarVS");
     Shader barFS = LoadFragmentShader_P("BarFS");
-    barMaterial_ = MakeMaterial_P("bar", barVS, barFS, nullptr, 0);
+    barMaterial_ = MakeMaterial_P("m_bar", barVS, barFS, nullptr, 0);
 
     Texture blitTextures[] = { postProcessTexture_ };
-    blitMaterial_ = MakeMaterial_P("blit", screenQuadVS, blitFS, blitTextures, 1);
+    blitMaterial_ = MakeMaterial_P("m_blit", screenQuadVS, blitFS, blitTextures, 1);
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -352,23 +363,34 @@ void Renderer::RenderEntities_P(
             continue;
 
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
-        bgfx::setUniform(u_meter_, &meter);
-
         auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
-        bgfx::setTransform(&worldMatrix);
-        bgfx::setUniform(u_normal_, &normalMatrix);
 
         Model model = staticModelComponent.model[i];
+        vec4 normalMult;
         for (int m = 0; m < model.numMeshes; m++) {
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
+            int renderNum = material.twoSided ? 2 : 1;
+            for (int n = 0; n < renderNum; n++) {
+                if (n == 1) {
+                    bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+                    normalMult.x = -1.0f;
+                }
+                else
+                    normalMult.x = 1.0f;
 
-            for (int t = 0; t < material.numTextures; t++)
-                bgfx::setTexture(t, samplers_[t], material.textures[t]);
+                bgfx::setUniform(u_meter_, &meter);
+                bgfx::setTransform(&worldMatrix);
+                bgfx::setUniform(u_normal_, &normalMatrix);
+                bgfx::setUniform(u_normalMult_, &normalMult);
 
-            bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-            bgfx::setIndexBuffer(mesh.indexBuffer);
-            bgfx::submit(0, material.shader);
+                for (int t = 0; t < material.numTextures; t++)
+                    bgfx::setTexture(t, samplers_[t], material.textures[t]);
+
+                bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+                bgfx::setIndexBuffer(mesh.indexBuffer);
+                bgfx::submit(0, material.shader);
+            }
         }
     }
 }
@@ -548,7 +570,8 @@ Material Renderer::MakeMaterial_P(
     Shader vertex, 
     Shader fragment, 
     Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures
+    int numTextures,
+    bool twoSided
 ) {
     ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     Material material;
@@ -556,6 +579,7 @@ Material Renderer::MakeMaterial_P(
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures[i];
+    material.twoSided = twoSided;
     materials_[name] = material;
 
     DEBUGLOG("Created material " << name);
@@ -567,13 +591,14 @@ Material Renderer::MakeMaterial_P(
     std::string vertex, 
     std::string fragment, 
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures
+    int numTextures,
+    bool twoSided
 ) {
     Texture textureList[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < numTextures; i++)
         textureList[i] = GetTexture(textures[i]);
 
-    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures);
+    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures, twoSided);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

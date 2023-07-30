@@ -1,0 +1,18 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": true
+        },
+        "static_model": {
+            "model": "st_tree",
+            "materials": [
+                "m_tree",
+                "m_leaves"
+            ]
+        },
+        "interval_spawner": {
+            "interval": 0.05,
+            "entity": "e_seed"
+        }
+    }
+}

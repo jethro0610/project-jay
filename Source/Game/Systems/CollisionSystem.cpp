@@ -87,6 +87,9 @@ RecieveMeteorFunc* meteorBehaviorFuncs[MAX_RECIEVE_METEOR_BEHAVIORS] = {
 
 void MeteorSlowdown(vec3& senderVeloicty, int& senderCooldown, int& consecutiveSends) {
     senderCooldown = 10;
+
+    // NOTE: Renable this to slowdown on consecutive meteors
+    return;
     consecutiveSends++;
     if (consecutiveSends < 3)
         return;

@@ -30,7 +30,7 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         entityToSpawn[entity] = GetString(data, "entity", "");
-        interval[entity] = GetFloat(data, "interval", 0) * 60;
+        interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
         launch[entity] = GetBoolean(data, "launch", false);
 
         if (!data.contains("offsets")) {

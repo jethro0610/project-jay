@@ -1,4 +1,4 @@
-$input v_wposition, v_vposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
+$input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <Dither.sh>
@@ -15,8 +15,9 @@ void main() {
     DITHERDISCARD(1.0f - alpha);
 
     vec3 normal = v_normal;
-    vec3 worldDirection = normalize(v_vposition - vec3(0.0f, 2.0f, 0.0f));
-    normal = normalize(v_normal * 0.4f + worldDirection * 0.6f);
+    vec4 worldOrigin = mul(u_model[0], vec4(0.0f, 1.0f, 0.0f, 1.0f));
+    vec3 worldDirection = normalize(v_wposition.xyz - worldOrigin);
+    normal = normalize(v_normal * 0.3f + worldDirection * 0.7f);
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);

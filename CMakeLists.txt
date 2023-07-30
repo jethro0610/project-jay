@@ -26,6 +26,7 @@ file(GLOB SOURCES
     Source/Game/Systems/IntervalSpawnSystem.cpp
 
     Source/Helpers/LoadHelpers.cpp
+    Source/Helpers/Random.cpp
 
     Source/Game/Camera.cpp
     Source/Game/Game.cpp

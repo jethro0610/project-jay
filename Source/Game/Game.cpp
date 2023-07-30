@@ -41,7 +41,7 @@ void Game::Init() {
 
             float scale = 1.0f + (rand() % 150) * 0.01f;
             rockTransform.scale = vec3(scale);
-            // entityManager_.CreateEntity("e_rock", rockTransform);
+            entityManager_.CreateEntity("e_rock", rockTransform);
         }
     }
 
@@ -60,12 +60,6 @@ void Game::Init() {
     treeTransform.position = vec3(-27.0f, 0.0f, -43.0f);
     treeTransform.rotation = quat(vec3(0.0f, 33.0f, 0.0f));
     entityManager_.CreateEntity("e_tree", treeTransform);
-
-    entityManager_.LoadEntity("tree");
-    Transform treeTransform;
-    treeTransform.position = vec3(50.0f, 15.0f, 50.0f);
-    treeTransform.scale = vec3(2.0f);
-    // entityManager_.CreateEntity("tree", treeTransform);
 
     camera_.target_ = PLAYER_ENTITY;
 }

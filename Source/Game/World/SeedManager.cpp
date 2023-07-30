@@ -7,6 +7,7 @@
 #include "../Components/TransformComponent.h"
 #include "../Time.h"
 #include "../../Constants/TimeConstants.h"
+#include "../../Helpers/Random.h"
 using namespace glm;
 
 // TODO: Track any entity that bubbles onto it
@@ -24,17 +25,7 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
 
 void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius, EntityID capturer) {
     for (int i = 0; i < amount; i++) {
-        vec3 offset = vec3(
-            (rand() % 100) - 50,
-            (rand() % 100) - 50,
-            (rand() % 100) - 50
-        );
-        offset = normalize(offset);
-        float dist = (rand() % 100) * 0.01f;
-        dist = sqrt(dist);
-        dist *= radius;
-
-        CreateSeed(position, capturer, offset * dist);
+        CreateSeed(position, capturer, RandomVector(radius));
     }
 }
 

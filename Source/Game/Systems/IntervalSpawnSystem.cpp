@@ -8,6 +8,7 @@
 #include "../Components/ProjectileComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
+#include "../../Helpers/Random.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
@@ -33,39 +34,26 @@ void IntervalSpawnSystem::Execute(
         timer++;
         if (timer >= intervalSpawnComponent.interval[i]) {
             Transform spawnTransform;
-
-            // Interval
-            vec3 position = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.numOffsets[i]];
-            
+            vec3 offset = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.numOffsets[i]];
+            vec3 radialOffset = RandomVector(intervalSpawnComponent.radius[i]);
             // NOTE: Need to use the transform to get the child transform, instead of just adding position
-            spawnTransform.position = transformComponent.transform[i].position + position;
-
-            EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
-            if (intervalSpawnComponent.launch[i])
-                ProjectileSystem::Launch(
-                    projectileComponent, 
-                    transformComponent, 
-                    velocityComponent, 
-                    entityId, 
-                    NULL_ENTITY
-                );
-
-            // Seeded
-            spawnTransform.position = transformComponent.transform[i].position;
+            spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
 
             if (intervalSpawnComponent.entityToSpawn[i] == "e_seed") {
-                float x = ((rand() % 100) * 0.01f) - 0.5f;
-                float z = ((rand() % 100) * 0.01f) - 0.5f;
-                vec2 direction = normalize(vec2(x, z));
-                float dist = (rand() % 100) * 0.01f;
-                dist = sqrt(dist);
-                direction *= dist * 30.0f;
-                float y = ((rand() % 4000) * 0.01f) - 20.0f;
-
-                seedManager.CreateSeed(spawnTransform.position + vec3(direction.x, y + 30.0f, direction.y));
+                seedManager.CreateSeed(spawnTransform.position);
             }
-            else
+            else {
                 EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
+                if (intervalSpawnComponent.launch[i])
+                    ProjectileSystem::Launch(
+                        projectileComponent, 
+                        transformComponent, 
+                        velocityComponent, 
+                        entityId, 
+                        NULL_ENTITY
+                    );
+            }
+
             timer = 0;
         }
     }

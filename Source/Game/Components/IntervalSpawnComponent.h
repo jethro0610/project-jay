@@ -9,6 +9,7 @@ class IntervalSpawnComponent : public Component {
 public:
     std::string entityToSpawn[MAX_ENTITIES];
     int interval[MAX_ENTITIES];
+    float radius[MAX_ENTITIES];
     bool launch[MAX_ENTITIES];
 
     glm::vec3 offsets[MAX_ENTITIES][MAX_INTERVAL_SPAWN_OFFSET];
@@ -31,6 +32,7 @@ public:
     void Load(nlohmann::json& data, EntityID entity) {
         entityToSpawn[entity] = GetString(data, "entity", "");
         interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
+        radius[entity] = GetFloat(data, "radius", 0.0f);
         launch[entity] = GetBoolean(data, "launch", false);
 
         if (!data.contains("offsets")) {

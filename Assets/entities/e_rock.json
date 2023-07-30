@@ -17,7 +17,7 @@
             "max_meter": 60,
             "initial_meter": 60,
             "destroy_on_none": true,
-            "num_destroy_seeds": 175 
+            "num_destroy_seeds": 100 
         },
         "collider": {
             "radius0": 1.0,

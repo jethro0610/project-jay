@@ -11,7 +11,7 @@
             ]
         },
         "interval_spawner": {
-            "interval": 0.05,
+            "interval": 0.1,
             "radius": 25.0,
             "entity": "e_seed",
             "offsets": [

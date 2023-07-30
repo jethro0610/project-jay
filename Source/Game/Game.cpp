@@ -5,6 +5,7 @@
 #include "../Constants/TimeConstants.h"
 #include "Time.h"
 #include "../Logging/Logger.h"
+#include "../Helpers/Random.h"
 using namespace glm;
 
 using namespace std::chrono;
@@ -30,16 +31,15 @@ void Game::Init() {
         float x0 = (rand() % 200) - 100;
         float z0 = (rand() % 200) - 100;
         for (int i = 0; i < 4; i++) {
-            float x = (rand() % 20) - 10;
-            float z = (rand() % 20) - 10;
-            rockTransform.position =  vec3(x0 + x, 20.0f, z0 + z);
+            vec2 planarPos = RandomVector2D(15.0f); 
+            rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
 
             float rx = (rand() % 360);
             float ry = (rand() % 360);
             float rz = (rand() % 360);
             rockTransform.rotation = quat(vec3(rx, ry, rz));
 
-            float scale = 1.0f + (rand() % 150) * 0.01f;
+            float scale = RandomFloatRange(1.5f, 3.0);
             rockTransform.scale = vec3(scale);
             entityManager_.CreateEntity("e_rock", rockTransform);
         }

@@ -32,12 +32,13 @@ void IntervalSpawnSystem::Execute(
 
         int& timer = intervalSpawnComponent.timer[i];
         timer++;
+
         if (timer >= intervalSpawnComponent.interval[i]) {
             Transform spawnTransform;
             vec3 offset = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.numOffsets[i]];
             vec3 radialOffset = RandomVector(intervalSpawnComponent.radius[i]);
-            // NOTE: Need to use the transform to get the child transform, instead of just adding position
             spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
+            // NOTE: Need to use the transform to get the child transform, instead of just adding position
 
             if (intervalSpawnComponent.entityToSpawn[i] == "e_seed") {
                 seedManager.CreateSeed(spawnTransform.position);

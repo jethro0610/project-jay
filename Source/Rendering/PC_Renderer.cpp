@@ -419,7 +419,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
         for (int n = 0; n < normalPasses; n++) {
             if (n == 1) {
                 bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-                normalMult.x = -1.0f;
+                normalMult.x = 1.0f;
             }
             else
                 normalMult.x = 1.0f;

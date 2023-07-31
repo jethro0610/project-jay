@@ -94,6 +94,7 @@ void Renderer::TEMP_LoadTestData() {
     Model sphere = LoadModel_P("st_sphere");
     Model rock = LoadModel_P("st_rock");
     Model tree = LoadModel_P("st_tree");
+    Model flower = LoadModel_P("st_flower");
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
     Texture bricksN = LoadTexture_P("t_bricks_n");
@@ -136,7 +137,7 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
     spreadMaterial_ = MakeMaterial_P("m_spread", instanceVS, defaultFS, playerTextures, 2); 
-    spreadModel_ = sphere;
+    spreadModel_ = flower;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
@@ -403,7 +404,6 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, spreadManager.GetPositions(), sizeof(vec4) * count);
-    bgfx::setInstanceDataBuffer(&instanceBuffer);
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {
         Mesh mesh = spreadModel_.meshes[m];
@@ -411,6 +411,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
         for (int t = 0; t < spreadMaterial_.numTextures; t++)
             bgfx::setTexture(t, samplers_[t], spreadMaterial_.textures[t]);
 
+        bgfx::setInstanceDataBuffer(&instanceBuffer);
         bgfx::setVertexBuffer(0, mesh.vertexBuffer);
         bgfx::setIndexBuffer(mesh.indexBuffer);
         bgfx::submit(0, spreadMaterial_.shader);

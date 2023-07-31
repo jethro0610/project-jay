@@ -61,7 +61,7 @@ bool SpreadManager::AddSpread(ivec2 key) {
     transform.position.z += randOffset.y;
     vec2 pos2d = vec2(transform.position.x, transform.position.z);
     transform.position.y = world_.GetHeight(pos2d + RandomFloatRange(-0.5f, 0.5f));
-    transform.scale = vec3(RandomFloatRange(0.5f, 1.5f));
+    transform.scale = vec3(RandomFloatRange(0.5f, 1.65f));
     transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
     transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
 
@@ -115,14 +115,16 @@ bool SpreadManager::RemoveSpread(
         return false;
 
     int deleteIndex = foundKey->second;
+    vec3 position = vec3(transforms_[deleteIndex][3]);
 
-    // vec3 seedPosition = vec3(positions_[deleteIndex]) + vec3(0.0f, 0.25f, 0.0f);
-    // seedManager_.CreateSeed(seedPosition, remover, seedOffset);
+    vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
+    seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
-    // mat4 swappedTransform = transforms_.Remove(deleteIndex);
-    // SpreadKey keyToSwap = GetKey(vec2(swa.x , swappedPosition.z));
+    mat4 swappedTransform = transforms_.Remove(deleteIndex);
+    vec3 swappedPosition = vec3(swappedTransform[3]);
+    SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 
-    // keyIndices_[keyToSwap] = deleteIndex;
+    keyIndices_[keyToSwap] = deleteIndex;
     keyIndices_.erase(key);
     count_--;
 

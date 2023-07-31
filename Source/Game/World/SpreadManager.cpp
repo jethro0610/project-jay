@@ -11,6 +11,7 @@
 #include "../../Types/Transform.h"
 #include "../Components/TransformComponent.h"
 #include "World.h"
+#include "../../Helpers/Random.h"
 #include "../../Logging/Logger.h"
 using namespace glm;
 
@@ -47,14 +48,22 @@ bool SpreadManager::SpreadIsActive(vec3 position) const {
 bool SpreadManager::AddSpread(ivec2 key) {
     if (keyIndices_.contains(key))
         return false;
-    ASSERT((positions_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
+    ASSERT((transforms_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
 
     const float offset = SPREAD_DIST / 2.0f;
-    vec2 position2d = vec2(key.x * SPREAD_DIST + offset, key.y * SPREAD_DIST + offset);
-    float worldHeight = world_.GetHeight(position2d);
 
-    vec4 position = vec4(position2d.x, worldHeight, position2d.y, 0.0f);
-    keyIndices_[key] = positions_.Append(position);
+    Transform transform;
+
+    transform.position = vec3(key.x * SPREAD_DIST + offset, 0.0f, key.y * SPREAD_DIST + offset);
+    vec2 randOffset = RandomVector2D(1.0f);
+    transform.position.x += randOffset.x;
+    transform.position.z += randOffset.y;
+    vec2 pos2d = vec2(transform.position.x, transform.position.z);
+    transform.position.y = world_.GetHeight(pos2d + RandomFloatRange(-0.5f, 0.5f));
+    transform.scale = vec3(RandomFloatRange(0.75f, 1.5f));
+    transform.rotation = quatLookAtRH(world_.GetNormal(pos2d), Transform::worldUp);
+
+    keyIndices_[key] = transforms_.Append(transform.GetWorldMatrix());
     count_++;
 
     return true;
@@ -105,13 +114,13 @@ bool SpreadManager::RemoveSpread(
 
     int deleteIndex = foundKey->second;
 
-    vec3 seedPosition = vec3(positions_[deleteIndex]) + vec3(0.0f, 0.25f, 0.0f);
-    seedManager_.CreateSeed(seedPosition, remover, seedOffset);
+    // vec3 seedPosition = vec3(positions_[deleteIndex]) + vec3(0.0f, 0.25f, 0.0f);
+    // seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
-    vec4 swappedPosition = positions_.Remove(deleteIndex);
-    SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x , swappedPosition.z));
+    // mat4 swappedTransform = transforms_.Remove(deleteIndex);
+    // SpreadKey keyToSwap = GetKey(vec2(swa.x , swappedPosition.z));
 
-    keyIndices_[keyToSwap] = deleteIndex;
+    // keyIndices_[keyToSwap] = deleteIndex;
     keyIndices_.erase(key);
     count_--;
 

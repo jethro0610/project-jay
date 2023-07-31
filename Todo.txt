@@ -5,7 +5,9 @@
 - Rename to World to Terrain
 
 - Flower model
-    - Randomize flower placements
+    - Normal align flowers
+    - Fix spread swapping
+    - Bending
 
 - Enemy
 - Shadow mapping

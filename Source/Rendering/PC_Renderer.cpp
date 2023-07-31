@@ -408,8 +408,8 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
         return;
 
     bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
-    memcpy(instanceBuffer.data, spreadManager.GetPositions(), sizeof(vec4) * count);
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(mat4));
+    memcpy(instanceBuffer.data, spreadManager.GetTransforms(), sizeof(mat4) * count);
     vec4 normalMult;
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {

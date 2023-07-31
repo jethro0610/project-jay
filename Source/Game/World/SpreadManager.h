@@ -48,7 +48,7 @@ public:
     void UpdateRenderData_P();
 
     int GetCount() const { return count_; }
-    glm::vec4* GetPositions() const { return positions_.GetData(); }
+    glm::mat4* GetTransforms() const { return transforms_.GetData(); }
     SpreadKey GetKey(glm::vec2 position) const;
     SpreadKey GetKey(glm::vec3 position) const;
 
@@ -64,7 +64,7 @@ private:
     SeedManager& seedManager_;
     FixedVector<SpreadKey, 8192> viableAddKeys_;
 
-    FixedVector<glm::vec4, MAX_SPREAD> positions_;
+    FixedVector<glm::mat4, MAX_SPREAD> transforms_;
     std::unordered_map<SpreadKey, int> keyIndices_;
     int count_;
 };

@@ -22,7 +22,7 @@ void main() {
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
     float brightness = diffuse + ambient;
-    brightness = max(0.5f, brightness);
+    brightness = max(0.6f, brightness);
     
     brightness += v_texcoord0.x * 0.15f;
 

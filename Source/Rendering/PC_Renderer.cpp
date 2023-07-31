@@ -107,6 +107,7 @@ void Renderer::TEMP_LoadTestData() {
     Texture treeC = LoadTexture_P("t_tree_c");
     Texture treeN = LoadTexture_P("t_tree_n");
     Texture leavesM = LoadTexture_P("t_leaves_m");
+    Texture flowerM = LoadTexture_P("t_flower_m");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
@@ -136,7 +137,12 @@ void Renderer::TEMP_LoadTestData() {
     postProcessMaterial_ = MakeMaterial_P("m_postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
-    spreadMaterial_ = MakeMaterial_P("m_spread", instanceVS, defaultFS, playerTextures, 2); 
+    Shader flowerFS = LoadFragmentShader_P("FlowerFS");
+    Shader stemFS = LoadFragmentShader_P("StemFS");
+    Texture flowerTextures[] = { flowerM };
+    spreadMaterials_[0] = MakeMaterial_P("m_flower", instanceVS, flowerFS, flowerTextures, 1, true); 
+    spreadMaterials_[1] = MakeMaterial_P("m_stem", instanceVS, stemFS, nullptr, 0); 
+
     spreadModel_ = flower;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
@@ -404,17 +410,29 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, spreadManager.GetPositions(), sizeof(vec4) * count);
+    vec4 normalMult;
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {
         Mesh mesh = spreadModel_.meshes[m];
+        Material material = spreadMaterials_[m];
+        int normalPasses = material.twoSided ? 2 : 1;
+        for (int n = 0; n < normalPasses; n++) {
+            if (n == 1) {
+                bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+                normalMult.x = -1.0f;
+            }
+            else
+                normalMult.x = 1.0f;
 
-        for (int t = 0; t < spreadMaterial_.numTextures; t++)
-            bgfx::setTexture(t, samplers_[t], spreadMaterial_.textures[t]);
+            for (int t = 0; t < spreadMaterials_[m].numTextures; t++)
+                bgfx::setTexture(t, samplers_[t], spreadMaterials_[m].textures[t]);
 
-        bgfx::setInstanceDataBuffer(&instanceBuffer);
-        bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-        bgfx::setIndexBuffer(mesh.indexBuffer);
-        bgfx::submit(0, spreadMaterial_.shader);
+            bgfx::setUniform(u_normalMult_, &normalMult);
+            bgfx::setInstanceDataBuffer(&instanceBuffer);
+            bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+            bgfx::setIndexBuffer(mesh.indexBuffer);
+            bgfx::submit(0, spreadMaterials_[m].shader);
+        }
     }
 }
 

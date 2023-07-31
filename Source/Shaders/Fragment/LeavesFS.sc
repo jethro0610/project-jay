@@ -10,9 +10,9 @@ SAMPLER2D(s_sampler0, 0);
 
 void main() {
     float alpha = texture2D(s_sampler0, v_texcoord0).r;
-    vec3 lightDirection = u_lightDirection.xyz;
-
     DITHERDISCARD(1.0f - alpha);
+
+    vec3 lightDirection = u_lightDirection.xyz;
 
     vec3 normal = v_normal;
     vec4 worldOrigin = mul(u_model[0], vec4(0.0f, 1.0f, 0.0f, 1.0f));

@@ -85,7 +85,7 @@ private:
 
     Material postProcessMaterial_;
     Material worldMaterial_;
-    Material spreadMaterial_;
+    Material spreadMaterials_[MAX_MESHES_PER_MODEL];
     Material seedMaterial_;
     Material textMaterial_;
     Material barMaterial_;

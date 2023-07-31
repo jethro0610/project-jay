@@ -3,6 +3,7 @@
 #include <numbers>
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 #include "SpreadManager.h"
 #include "../../Helpers/Assert.h"
 #include "../../Constants/GameConstants.h"
@@ -60,8 +61,9 @@ bool SpreadManager::AddSpread(ivec2 key) {
     transform.position.z += randOffset.y;
     vec2 pos2d = vec2(transform.position.x, transform.position.z);
     transform.position.y = world_.GetHeight(pos2d + RandomFloatRange(-0.5f, 0.5f));
-    transform.scale = vec3(RandomFloatRange(0.75f, 1.5f));
-    transform.rotation = quatLookAtRH(world_.GetNormal(pos2d), Transform::worldUp);
+    transform.scale = vec3(RandomFloatRange(0.5f, 1.5f));
+    transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
+    transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
 
     keyIndices_[key] = transforms_.Append(transform.GetWorldMatrix());
     count_++;

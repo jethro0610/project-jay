@@ -60,17 +60,19 @@ bool SpreadManager::AddSpread(ivec2 key) {
     transform.position.x += randOffset.x;
     transform.position.z += randOffset.y;
     vec2 pos2d = vec2(transform.position.x, transform.position.z);
-    transform.position.y = world_.GetHeight(pos2d + RandomFloatRange(-0.5f, 0.5f));
-    transform.scale = vec3(RandomFloatRange(0.5f, 1.65f));
+    transform.position.y = world_.GetHeight(pos2d) + RandomFloatRange(0.15f, 1.25f);
+    transform.scale = vec3(RandomFloatRange(0.35f, 1.65f));
     transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
     transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
+    vec3 randomEuler = RandomVector(radians(15.0f));
+    transform.rotation = quat(randomEuler) * transform.rotation;
 
     SpreadRenderData renderData;
     renderData.worldMatrix = transform.GetWorldMatrix();
 
-    renderData.color.x = RandomFloatRange(0.25f, 0.95f);
-    renderData.color.y = RandomFloatRange(0.25f, 0.95f);
-    renderData.color.z = RandomFloatRange(0.25f, 0.95f);
+    renderData.color.r = RandomFloatRange(0.85f, 1.0f);
+    renderData.color.g = RandomFloatRange(0.75f, 0.95f);
+    renderData.color.b = RandomFloatRange(0.25f, 0.65f);
 
     keyIndices_[key] = renderData_.Append(renderData);
     count_++;

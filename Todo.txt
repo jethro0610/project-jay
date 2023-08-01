@@ -5,13 +5,13 @@
 - Rename to World to Terrain
 - Remove normal matrix
 
+- Shadow mapping
+
 - Flower model
-    - Normal align flowers
-    - Fix spread swapping
     - Bending
+    - Needs to look splotchier/textured. Like the tree
 
 - Enemy
-- Shadow mapping
 - Player model
     - Animation
 - Holes (terrain modification)

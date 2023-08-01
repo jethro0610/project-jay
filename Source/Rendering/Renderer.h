@@ -101,6 +101,11 @@ private:
     void InitPostProcessBuffer_P();
     void InitUIBuffer_P();
 
+    View shadowView_;
+    View renderView_;
+    View postProcessView_;
+    View uiView_;
+
     FrameBuffer backBuffer_;
     FrameBuffer shadowBuffer_;
     FrameBuffer renderBuffer_;
@@ -135,20 +140,21 @@ private:
 
     void StartFrame_P();
     void Clear_P();
-    void RenderWorld_P(World& world);
+    void RenderWorld_P(View view, World& world);
     void RenderEntities_P(
+        View view,
         Entity* entities, 
         MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );
-    void RenderSpread_P(SpreadManager& spreadManager);
-    void RenderSeed_P(SeedManager& seedManager);
-    void RenderPostProcess_P();
-    void RenderBlit_P();
-    void RenderUI_P(MeterComponent& meterComponent);
+    void RenderSpread_P(View view, SpreadManager& spreadManager);
+    void RenderSeed_P(View view, SeedManager& seedManager);
+    void RenderPostProcess_P(View view);
+    void RenderBlit_P(View view);
+    void RenderUI_P(View view, MeterComponent& meterComponent);
     #ifdef _DEBUG
-    void RenderScreenText_P();
+    void RenderScreenText_P(View view);
     #endif
     void PresentFrame_P();
 

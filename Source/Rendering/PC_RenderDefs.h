@@ -22,3 +22,5 @@ typedef bgfx::TextureHandle Texture;
 typedef bgfx::UniformHandle TextureSampler;
 
 typedef bgfx::FrameBufferHandle FrameBuffer;
+
+typedef int View;

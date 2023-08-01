@@ -33,11 +33,6 @@ bgfx::VertexLayout TextureQuadVertex::layout;
 const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
-const int SHADOW_VIEW = 0;
-const int RENDER_VIEW = 1;
-const int POST_VIEW = 2;
-const int UI_VIEW = 3;
-
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
     bgfx::Init init; 
@@ -83,8 +78,12 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     noiseProps.y = 1.0f / (1024 * 2.0f);
     bgfx::setUniform(u_noiseProps_, &noiseProps);
 
-
+    shadowView_ = 0;
+    renderView_ = 1;
+    postProcessView_ = 2;
+    uiView_ = 3;
     backBuffer_ = BGFX_INVALID_HANDLE;
+
     InitWorldMesh_P();
     InitQuad_P();
     InitRenderBuffer_P();
@@ -185,6 +184,7 @@ void Renderer::InitQuad_P() {
     quad_.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
 }
 
+// TODO: InitBuffer functions into one generic function
 void Renderer::InitShadowBuffer_P() {
     shadowBufferTexture_ = bgfx::createTexture2D(
         1024,
@@ -196,9 +196,9 @@ void Renderer::InitShadowBuffer_P() {
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 
-    bgfx::setViewFrameBuffer(SHADOW_VIEW, shadowBuffer_);
-    // bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    // bgfx::setViewRect(0, 0, 0, 1024, 1024);
+    bgfx::setViewFrameBuffer(shadowView_, shadowBuffer_);
+    bgfx::setViewClear(shadowView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(shadowView_, 0, 0, 1024, 1024);
 }
 
 void Renderer::InitRenderBuffer_P() {
@@ -220,9 +220,9 @@ void Renderer::InitRenderBuffer_P() {
     );
     renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
 
-    bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
-    bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(RENDER_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewFrameBuffer(renderView_, renderBuffer_);
+    bgfx::setViewClear(renderView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(renderView_, 0, 0, 1280, 720);
 }
 
 void Renderer::InitPostProcessBuffer_P() {
@@ -236,15 +236,15 @@ void Renderer::InitPostProcessBuffer_P() {
     );
 
     postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture_);
-    bgfx::setViewFrameBuffer(POST_VIEW, postProcessBuffer_);
-    bgfx::setViewClear(POST_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(POST_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewFrameBuffer(postProcessView_, postProcessBuffer_);
+    bgfx::setViewClear(postProcessView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(postProcessView_, 0, 0, 1280, 720);
 }
 
 void Renderer::InitUIBuffer_P() {
-    bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
-    bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(UI_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewFrameBuffer(uiView_, backBuffer_);
+    bgfx::setViewClear(uiView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(uiView_, 0, 0, 1280, 720);
 }
 
 void Renderer::InitWorldMesh_P() {
@@ -322,7 +322,7 @@ Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float
 
 void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
-    bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_,&projectionMatrix_);
+    bgfx::setViewTransform(renderView_, &viewMatrix_,&projectionMatrix_);
 
     vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
@@ -347,7 +347,7 @@ void Renderer::PresentFrame_P() {
     bgfx::frame(); 
 }
 
-void Renderer::RenderWorld_P(World& world) {
+void Renderer::RenderWorld_P(View view, World& world) {
     vec4 worldProps[2];
     worldProps[0].x = 0.0f;
     worldProps[0].y = world.properties_.minRadius;
@@ -370,12 +370,13 @@ void Renderer::RenderWorld_P(World& world) {
 
         bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
         bgfx::setIndexBuffer(worldMesh_.indexBuffer);
-        bgfx::submit(RENDER_VIEW, worldMaterial_.shader);
+        bgfx::submit(view, worldMaterial_.shader);
     };
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 void Renderer::RenderEntities_P(
+    View view,
     Entity* entities, 
     MeterComponent& meterComponent,
     StaticModelComponent& staticModelComponent,
@@ -414,13 +415,13 @@ void Renderer::RenderEntities_P(
 
                 bgfx::setVertexBuffer(0, mesh.vertexBuffer);
                 bgfx::setIndexBuffer(mesh.indexBuffer);
-                bgfx::submit(RENDER_VIEW, material.shader);
+                bgfx::submit(view, material.shader);
             }
         }
     }
 }
 
-void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
+void Renderer::RenderSpread_P(View view, SpreadManager& spreadManager) {
     uint32_t count = spreadManager.GetCount();
     if (count == 0)
         return;
@@ -449,12 +450,12 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
             bgfx::setInstanceDataBuffer(&instanceBuffer);
             bgfx::setVertexBuffer(0, mesh.vertexBuffer);
             bgfx::setIndexBuffer(mesh.indexBuffer);
-            bgfx::submit(RENDER_VIEW, spreadMaterials_[m].shader);
+            bgfx::submit(view, spreadMaterials_[m].shader);
         }
     }
 }
 
-void Renderer::RenderSeed_P(SeedManager& seedManager) {
+void Renderer::RenderSeed_P(View view, SeedManager& seedManager) {
     uint32_t count = seedManager.seeds_.GetCount();
     if (count == 0)
         return;
@@ -466,35 +467,35 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(RENDER_VIEW, seedMaterial_.shader);
+    bgfx::submit(view, seedMaterial_.shader);
 }
 
-void Renderer::RenderPostProcess_P() {
+void Renderer::RenderPostProcess_P(View view) {
     for (int i = 0; i < postProcessMaterial_.numTextures; i++)
         bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(POST_VIEW, postProcessMaterial_.shader);
+    bgfx::submit(view, postProcessMaterial_.shader);
 }
 
-void Renderer::RenderBlit_P() {
+void Renderer::RenderBlit_P(View view) {
     bgfx::setTexture(0, samplers_[0], blitMaterial_.textures[0]);
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_.shader);
+    bgfx::submit(view, blitMaterial_.shader);
 }
 
-void Renderer::RenderUI_P(MeterComponent& meterComponent) {
+void Renderer::RenderUI_P(View view, MeterComponent& meterComponent) {
     vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_.shader);
+    bgfx::submit(view, barMaterial_.shader);
 }
 
-void Renderer::RenderScreenText_P() {
+void Renderer::RenderScreenText_P(View view) {
     if (!ScreenText::IsEnabled())
         return;
 
@@ -510,7 +511,7 @@ void Renderer::RenderScreenText_P() {
 
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_.shader);
+    bgfx::submit(view, textMaterial_.shader);
     bgfx::setState(BGFX_STATE_DEFAULT);
 }
 

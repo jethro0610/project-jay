@@ -75,8 +75,11 @@ private:
     int width_;
     int height_;
 
+    glm::vec3 lightDirection_;
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
+    glm::mat4 shadowViewMatrix_;
+    glm::mat4 shadowProjectionMatrix_;
 
     Model spreadModel_;
 

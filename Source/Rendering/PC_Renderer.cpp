@@ -32,6 +32,7 @@ bgfx::VertexLayout TextureQuadVertex::layout;
 
 const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
+const float SHADOW_DISTANCE = 150.0f;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
@@ -48,6 +49,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     width_ = 1280;
     height_ = 720;
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
+    shadowProjectionMatrix_ = orthoRH_ZO(-50.0f, 50.0f, -50.0f, 50.0f, 0.5f, SHADOW_DISTANCE);
 
     for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
@@ -86,6 +88,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 
     InitWorldMesh_P();
     InitQuad_P();
+    InitShadowBuffer_P();
     InitRenderBuffer_P();
     InitPostProcessBuffer_P();
     InitUIBuffer_P();
@@ -160,7 +163,7 @@ void Renderer::TEMP_LoadTestData() {
     Shader barFS = LoadFragmentShader_P("BarFS");
     barMaterial_ = MakeMaterial_P("m_bar", barVS, barFS, nullptr, 0);
 
-    Texture blitTextures[] = { postProcessTexture_ };
+    Texture blitTextures[] = { shadowBufferTexture_ };
     blitMaterial_ = MakeMaterial_P("m_blit", screenQuadVS, blitFS, blitTextures, 1);
 
     DEBUGLOG("Succesfully loaded all test assets");
@@ -192,7 +195,7 @@ void Renderer::InitShadowBuffer_P() {
         false,
         1,
         bgfx::TextureFormat::D16,
-        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_EQUAL 
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 
@@ -322,7 +325,10 @@ Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float
 
 void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
-    bgfx::setViewTransform(renderView_, &viewMatrix_,&projectionMatrix_);
+    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + camera_->transform_.position;
+    shadowViewMatrix_ = lookAt(lightPosition, camera_->transform_.position, Transform::worldUp);
+    bgfx::setViewTransform(renderView_, &viewMatrix_, &projectionMatrix_);
+    bgfx::setViewTransform(shadowView_, &shadowViewMatrix_, &shadowProjectionMatrix_);
 
     vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
@@ -640,6 +646,7 @@ Material Renderer::MakeMaterial_P(
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {
-    vec4 lightDirection = normalize(vec4(direction, 0.0f));
-    bgfx::setUniform(u_lightDirection_, &lightDirection);
+    lightDirection_ = normalize(direction);
+    vec4 uniformDirection = normalize(vec4(lightDirection_, 0.0f));
+    bgfx::setUniform(u_lightDirection_, &uniformDirection);
 }

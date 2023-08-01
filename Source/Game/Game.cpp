@@ -27,23 +27,23 @@ void Game::Init() {
     entityManager_.LoadEntity("e_rock");
     Transform rockTransform;
 
-    // for (int j = 0; j < 6; j++) {
-    //     float x0 = (rand() % 200) - 100;
-    //     float z0 = (rand() % 200) - 100;
-    //     for (int i = 0; i < 4; i++) {
-    //         vec2 planarPos = RandomVector2D(15.0f); 
-    //         rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
-    //
-    //         float rx = (rand() % 360);
-    //         float ry = (rand() % 360);
-    //         float rz = (rand() % 360);
-    //         rockTransform.rotation = quat(vec3(rx, ry, rz));
-    //
-    //         float scale = RandomFloatRange(1.5f, 3.0);
-    //         rockTransform.scale = vec3(scale);
-    //         entityManager_.CreateEntity("e_rock", rockTransform);
-    //     }
-    // }
+    for (int j = 0; j < 6; j++) {
+        float x0 = (rand() % 200) - 100;
+        float z0 = (rand() % 200) - 100;
+        for (int i = 0; i < 4; i++) {
+            vec2 planarPos = RandomVector2D(15.0f); 
+            rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
+
+            float rx = (rand() % 360);
+            float ry = (rand() % 360);
+            float rz = (rand() % 360);
+            rockTransform.rotation = quat(vec3(rx, ry, rz));
+
+            float scale = RandomFloatRange(1.5f, 3.0);
+            rockTransform.scale = vec3(scale);
+            entityManager_.CreateEntity("e_rock", rockTransform);
+        }
+    }
 
     // entityManager_.LoadEntity("target_test");
     // Transform targetTransform;

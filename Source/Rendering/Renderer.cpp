@@ -20,7 +20,7 @@ void Renderer::Render(
 
     // Shadow Pass
     RenderEntities_P(shadowView_, entities, meterComponent, staticModelComponent, transformComponent);
-    // RenderWorld_P(shadowView_, world);
+    RenderWorld_P(shadowView_, world);
     RenderSpread_P(shadowView_, spreadManager);
     RenderSeed_P(shadowView_, seedManager);
 

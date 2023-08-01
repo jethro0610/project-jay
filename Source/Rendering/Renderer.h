@@ -108,7 +108,6 @@ private:
 
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
 
-    Uniform u_normal_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;
     Uniform u_timeResolution_;

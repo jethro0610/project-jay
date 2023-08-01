@@ -3,7 +3,6 @@
 - Fix Xbox Series controller on Linux
 - Clean up dependencies
 - Rename to World to Terrain
-- Remove normal matrix
 
 - Shadow mapping
 

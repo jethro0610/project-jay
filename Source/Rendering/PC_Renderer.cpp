@@ -54,7 +54,6 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
 
-    u_normal_ = bgfx::createUniform("u_normal", bgfx::UniformType::Mat3);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
@@ -369,7 +368,7 @@ void Renderer::RenderEntities_P(
             continue;
 
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
-        auto [worldMatrix, normalMatrix] = transformComponent.renderTransform[i].GetWorldAndNormalMatrix();
+        mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
 
         Model model = staticModelComponent.model[i];
         vec4 normalMult;
@@ -387,7 +386,6 @@ void Renderer::RenderEntities_P(
 
                 bgfx::setUniform(u_meter_, &meter);
                 bgfx::setTransform(&worldMatrix);
-                bgfx::setUniform(u_normal_, &normalMatrix);
                 bgfx::setUniform(u_normalMult_, &normalMult);
 
                 for (int t = 0; t < material.numTextures; t++)

@@ -114,7 +114,7 @@ private:
     FrameBuffer shadowBuffer_;
     FrameBuffer renderBuffer_;
     FrameBuffer postProcessBuffer_;
-    Texture shadowBufferTexture_;
+    Texture shadowBufferTextures_[2];
     Texture renderBufferTextures_[2];
     Texture postProcessTexture_;
 

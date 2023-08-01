@@ -191,7 +191,15 @@ void Renderer::InitQuad_P() {
 
 // TODO: InitBuffer functions into one generic function
 void Renderer::InitShadowBuffer_P() {
-    shadowBufferTexture_ = bgfx::createTexture2D(
+    shadowBufferTextures_[0] = bgfx::createTexture2D(
+        1024,
+        1024,
+        false,
+        1,
+        bgfx::TextureFormat::BGRA8,
+        BGFX_TEXTURE_RT
+    );
+    shadowBufferTextures_[1] = bgfx::createTexture2D(
         1024,
         1024,
         false,
@@ -199,7 +207,7 @@ void Renderer::InitShadowBuffer_P() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT
     );
-    shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
+    shadowBuffer_ = bgfx::createFrameBuffer(2, shadowBufferTextures_);
 
     bgfx::setViewFrameBuffer(shadowView_, shadowBuffer_);
     bgfx::setViewClear(shadowView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
@@ -651,7 +659,7 @@ void Renderer::SetTexturesFromMaterial_P(View view, Material& material) {
         bgfx::setTexture(i, samplers_[i], material.textures[i]);
 
     if (view != shadowView_)
-        bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTexture_);
+        bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTextures_[1]);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

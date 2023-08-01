@@ -96,13 +96,16 @@ private:
     void InitQuad_P();
     void InitWorldMesh_P();
 
+    void InitShadowBuffer_P();
     void InitRenderBuffer_P();
     void InitPostProcessBuffer_P();
     void InitUIBuffer_P();
 
     FrameBuffer backBuffer_;
+    FrameBuffer shadowBuffer_;
     FrameBuffer renderBuffer_;
     FrameBuffer postProcessBuffer_;
+    Texture shadowBufferTexture_;
     Texture renderBufferTextures_[2];
     Texture postProcessTexture_;
 

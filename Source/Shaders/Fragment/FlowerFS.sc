@@ -3,6 +3,7 @@ $input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord
 #include <Lighting.sh>
 #include <Dither.sh>
 
+uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
 
 SAMPLER2D(s_sampler0, 0);
@@ -19,6 +20,7 @@ void main() {
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float edge = 1.0f - alpha; 
     float brightness = diffuse + ambient;
 
     if (brightness <= 0.25f)
@@ -28,5 +30,5 @@ void main() {
     else
         brightness = 1.00f;
 
-    gl_FragColor = vec4(color * brightness, 1.0f);
+    gl_FragColor = vec4(color * (brightness + edge), 1.0f);
 }

@@ -1,9 +1,11 @@
 $input a_position, a_normal
-$output v_wposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
+$output v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 
 #define SHARED_SHADER
 #include <Shared_WorldFuncs.h>
+
+uniform mat4 u_shadowMatrix;
 
 void main() {
     WorldProperties props = {
@@ -28,5 +30,6 @@ void main() {
     v_bitangent = normalize(cross(v_tangent, v_normal));
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
+    v_sposition = mul(u_shadowMatrix, vec4(v_wposition, 1.0f));
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

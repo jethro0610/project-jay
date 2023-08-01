@@ -1,7 +1,8 @@
-$input v_wposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
+$input v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <Dither.sh>
+#include <Shadow.sh>
 
 #define SHARED_SHADER
 #include <Shared_WorldFuncs.h>
@@ -39,7 +40,8 @@ void main() {
     normal = normalize(mul(normal, v_tbn));
 
     float ambient = 0.2f;
-    float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float shadow = getShadow(v_sposition);
+    float diffuse = (1.0f - shadow) * max(-dot(normal, lightDirection), 0.0f);
     float brightness = ambient + diffuse;
 
     float fresnel = getFresnel(u_cameraPosition, v_wposition, normal, 1.0f, 16.0f);

@@ -80,6 +80,7 @@ private:
     glm::mat4 projectionMatrix_;
     glm::mat4 shadowViewMatrix_;
     glm::mat4 shadowProjectionMatrix_;
+    glm::mat4 shadowMatrix_;
 
     Model spreadModel_;
 
@@ -118,7 +119,9 @@ private:
     Texture postProcessTexture_;
 
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
+    TextureSampler shadowSampler_;
 
+    Uniform u_shadowMatrix_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;
     Uniform u_timeResolution_;
@@ -140,6 +143,8 @@ private:
     std::unordered_map<std::string, Material> materials_;
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
+
+    void SetTexturesFromMaterial_P(View view, Material& material);
 
     void StartFrame_P();
     void Clear_P();

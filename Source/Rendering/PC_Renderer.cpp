@@ -55,7 +55,9 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
+    shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
 
+    u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
@@ -163,7 +165,7 @@ void Renderer::TEMP_LoadTestData() {
     Shader barFS = LoadFragmentShader_P("BarFS");
     barMaterial_ = MakeMaterial_P("m_bar", barVS, barFS, nullptr, 0);
 
-    Texture blitTextures[] = { shadowBufferTexture_ };
+    Texture blitTextures[] = { postProcessTexture_ };
     blitMaterial_ = MakeMaterial_P("m_blit", screenQuadVS, blitFS, blitTextures, 1);
 
     DEBUGLOG("Succesfully loaded all test assets");
@@ -195,7 +197,7 @@ void Renderer::InitShadowBuffer_P() {
         false,
         1,
         bgfx::TextureFormat::D16,
-        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL
+        BGFX_TEXTURE_RT
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 
@@ -325,10 +327,11 @@ Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float
 
 void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
-    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + camera_->transform_.position;
-    shadowViewMatrix_ = lookAt(lightPosition, camera_->transform_.position, Transform::worldUp);
+    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f;
+    shadowViewMatrix_ = lookAt(lightPosition, vec3(0.0f), Transform::worldUp);
     bgfx::setViewTransform(renderView_, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(shadowView_, &shadowViewMatrix_, &shadowProjectionMatrix_);
+    shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
 
     vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
@@ -341,6 +344,7 @@ void Renderer::StartFrame_P() {
     bgfx::setUniform(u_cameraUp_, &cameraUp);
     bgfx::setUniform(u_cameraRight_, &cameraRight);
     bgfx::setUniform(u_randomVec_, &randomVec);
+    bgfx::setUniform(u_shadowMatrix_, &shadowMatrix_);
 
     bgfx::touch(0);
 }
@@ -371,8 +375,7 @@ void Renderer::RenderWorld_P(View view, World& world) {
         vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
-        for (int i = 0; i < worldMaterial_.numTextures; i++)
-            bgfx::setTexture(i, samplers_[i], worldMaterial_.textures[i]);
+        SetTexturesFromMaterial_P(view, worldMaterial_);
 
         bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
         bgfx::setIndexBuffer(worldMesh_.indexBuffer);
@@ -416,8 +419,7 @@ void Renderer::RenderEntities_P(
                 bgfx::setTransform(&worldMatrix);
                 bgfx::setUniform(u_normalMult_, &normalMult);
 
-                for (int t = 0; t < material.numTextures; t++)
-                    bgfx::setTexture(t, samplers_[t], material.textures[t]);
+                SetTexturesFromMaterial_P(view, material);
 
                 bgfx::setVertexBuffer(0, mesh.vertexBuffer);
                 bgfx::setIndexBuffer(mesh.indexBuffer);
@@ -449,8 +451,7 @@ void Renderer::RenderSpread_P(View view, SpreadManager& spreadManager) {
             else
                 normalMult.x = 1.0f;
 
-            for (int t = 0; t < spreadMaterials_[m].numTextures; t++)
-                bgfx::setTexture(t, samplers_[t], spreadMaterials_[m].textures[t]);
+            SetTexturesFromMaterial_P(view, material);
 
             bgfx::setUniform(u_normalMult_, &normalMult);
             bgfx::setInstanceDataBuffer(&instanceBuffer);
@@ -643,6 +644,14 @@ Material Renderer::MakeMaterial_P(
         textureList[i] = GetTexture(textures[i]);
 
     return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures, twoSided);
+}
+
+void Renderer::SetTexturesFromMaterial_P(View view, Material& material) {
+    for (int i = 0; i < material.numTextures; i++)
+        bgfx::setTexture(i, samplers_[i], material.textures[i]);
+
+    if (view != shadowView_)
+        bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTexture_);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

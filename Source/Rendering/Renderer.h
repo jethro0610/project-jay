@@ -81,6 +81,7 @@ private:
     glm::mat4 shadowViewMatrix_;
     glm::mat4 shadowProjectionMatrix_;
     glm::mat4 shadowMatrix_;
+    // Shader shadowFS_;
 
     Model spreadModel_;
 

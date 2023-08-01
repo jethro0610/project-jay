@@ -49,7 +49,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     width_ = 1280;
     height_ = 720;
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
-    shadowProjectionMatrix_ = orthoRH_ZO(-50.0f, 50.0f, -50.0f, 50.0f, 0.5f, SHADOW_DISTANCE);
+    shadowProjectionMatrix_ = orthoRH_ZO(-1000.0f, 1000.0f, -1000.0f, 1000.0f, 0.5f, SHADOW_DISTANCE);
 
     for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
@@ -197,7 +197,7 @@ void Renderer::InitShadowBuffer_P() {
         false,
         1,
         bgfx::TextureFormat::D16,
-        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 
@@ -327,11 +327,12 @@ Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float
 
 void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
-    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f;
-    shadowViewMatrix_ = lookAt(lightPosition, vec3(0.0f), Transform::worldUp);
     bgfx::setViewTransform(renderView_, &viewMatrix_, &projectionMatrix_);
-    bgfx::setViewTransform(shadowView_, &shadowViewMatrix_, &shadowProjectionMatrix_);
+
+    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + camera_->transform_.position;
+    shadowViewMatrix_ = lookAt(lightPosition, camera_->transform_.position, Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
+    bgfx::setViewTransform(shadowView_, &shadowViewMatrix_, &shadowProjectionMatrix_);
 
     vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);

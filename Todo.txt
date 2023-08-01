@@ -1,3 +1,4 @@
+- Remove normal from WorldVS
 - Remove _P
 - Privatize some variables
 - Fix Xbox Series controller on Linux

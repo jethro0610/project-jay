@@ -41,7 +41,7 @@ void main() {
 
     float ambient = 0.2f;
     float shadow = getShadow(v_sposition);
-    float diffuse = (1.0f - shadow) * max(-dot(normal, lightDirection), 0.0f);
+    float diffuse = shadow * max(-dot(normal, lightDirection), 0.0f);
     float brightness = ambient + diffuse;
 
     float fresnel = getFresnel(u_cameraPosition, v_wposition, normal, 1.0f, 16.0f);

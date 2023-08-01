@@ -31,7 +31,7 @@ mat4 Camera::GetViewMatrix() const {
     return lookAtRH(
         transform_.position,
         transform_.position + forward,
-        up
+        Transform::worldUp 
     );
 }
 

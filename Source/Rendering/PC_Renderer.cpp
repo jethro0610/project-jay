@@ -32,7 +32,7 @@ bgfx::VertexLayout TextureQuadVertex::layout;
 
 const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
-const float SHADOW_DISTANCE = 150.0f;
+const float SHADOW_DISTANCE = 1000.0f;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     DEBUGLOG("Starting BGFX again...");
@@ -49,7 +49,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     width_ = 1280;
     height_ = 720;
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
-    shadowProjectionMatrix_ = orthoRH_ZO(-1000.0f, 1000.0f, -1000.0f, 1000.0f, 0.5f, SHADOW_DISTANCE);
+    shadowProjectionMatrix_ = orthoRH_ZO(-250.0f, 250.0f, -250.0f, 250.0f, 0.5f, SHADOW_DISTANCE);
 
     for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
@@ -192,18 +192,18 @@ void Renderer::InitQuad_P() {
 // TODO: InitBuffer functions into one generic function
 void Renderer::InitShadowBuffer_P() {
     shadowBufferTexture_ = bgfx::createTexture2D(
-        1024,
-        1024,
+        4096,
+        4096,
         false,
         1,
         bgfx::TextureFormat::D16,
-        BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_U_BORDER | BGFX_SAMPLER_V_BORDER
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 
     bgfx::setViewFrameBuffer(shadowView_, shadowBuffer_);
     bgfx::setViewClear(shadowView_, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(shadowView_, 0, 0, 1024, 1024);
+    bgfx::setViewRect(shadowView_, 0, 0, 4096, 4096);
 }
 
 void Renderer::InitRenderBuffer_P() {
@@ -330,7 +330,7 @@ void Renderer::StartFrame_P() {
     bgfx::setViewTransform(renderView_, &viewMatrix_, &projectionMatrix_);
 
     vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + camera_->transform_.position;
-    shadowViewMatrix_ = lookAt(lightPosition, camera_->transform_.position, Transform::worldUp);
+    shadowViewMatrix_ = lookAtRH(lightPosition, camera_->transform_.position, Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
     bgfx::setViewTransform(shadowView_, &shadowViewMatrix_, &shadowProjectionMatrix_);
 

@@ -8,10 +8,11 @@ uniform vec4 u_lightDirection;
 SAMPLER2D(s_sampler0, 0);
 
 void main() {
-    float alpha = texture2D(s_sampler0, v_texcoord0).a;
+    vec4 texColor = texture2D(s_sampler0, v_texcoord0); 
+    float alpha = texColor.a;
     DITHERDISCARD(1.0f - alpha);
 
-    vec3 color = v_color;
+    vec3 color = v_color * texColor.r;
     vec3 lightDirection = u_lightDirection.xyz;
 
     vec3 normal = v_normal;

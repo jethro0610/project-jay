@@ -14,9 +14,7 @@ void main() {
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
     float brightness = diffuse + ambient;
 
-    if (brightness <= 0.25f)
-        brightness = 0.25f;
-    else if (brightness <= 0.75f)
+    if (brightness <= 0.75f)
         brightness = 0.75f;
     else
         brightness = 1.00f;

@@ -49,7 +49,7 @@ bool SpreadManager::SpreadIsActive(vec3 position) const {
 bool SpreadManager::AddSpread(ivec2 key) {
     if (keyIndices_.contains(key))
         return false;
-    ASSERT((transforms_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
+    ASSERT((renderData_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
 
     const float offset = SPREAD_DIST / 2.0f;
 
@@ -65,7 +65,14 @@ bool SpreadManager::AddSpread(ivec2 key) {
     transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
     transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
 
-    keyIndices_[key] = transforms_.Append(transform.GetWorldMatrix());
+    SpreadRenderData renderData;
+    renderData.worldMatrix = transform.GetWorldMatrix();
+
+    renderData.color.x = RandomFloatRange(0.25f, 0.95f);
+    renderData.color.y = RandomFloatRange(0.25f, 0.95f);
+    renderData.color.z = RandomFloatRange(0.25f, 0.95f);
+
+    keyIndices_[key] = renderData_.Append(renderData);
     count_++;
 
     return true;
@@ -115,12 +122,12 @@ bool SpreadManager::RemoveSpread(
         return false;
 
     int deleteIndex = foundKey->second;
-    vec3 position = vec3(transforms_[deleteIndex][3]);
+    vec3 position = vec3(renderData_[deleteIndex].worldMatrix[3]);
 
     vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
     seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
-    mat4 swappedTransform = transforms_.Remove(deleteIndex);
+    mat4 swappedTransform = renderData_.Remove(deleteIndex).worldMatrix;
     vec3 swappedPosition = vec3(swappedTransform[3]);
     SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 

@@ -20,6 +20,11 @@ struct AddSpreadInfo {
     SpreadKey key;
 };
 
+struct SpreadRenderData {
+    glm::mat4 worldMatrix;
+    glm::vec4 color;
+};
+
 class SpreadManager {
 public:
     SpreadManager(
@@ -48,7 +53,7 @@ public:
     void UpdateRenderData_P();
 
     int GetCount() const { return count_; }
-    glm::mat4* GetTransforms() const { return transforms_.GetData(); }
+    SpreadRenderData* GetRenderData() const { return renderData_.GetData(); }
     SpreadKey GetKey(glm::vec2 position) const;
     SpreadKey GetKey(glm::vec3 position) const;
 
@@ -64,7 +69,7 @@ private:
     SeedManager& seedManager_;
     FixedVector<SpreadKey, 8192> viableAddKeys_;
 
-    FixedVector<glm::mat4, MAX_SPREAD> transforms_;
+    FixedVector<SpreadRenderData, MAX_SPREAD> renderData_;
     std::unordered_map<SpreadKey, int> keyIndices_;
     int count_;
 };

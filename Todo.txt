@@ -3,9 +3,12 @@
 - Fix Xbox Series controller on Linux
 - Clean up dependencies
 - Rename to World to Terrain
+- Remove normal matrix
 
 - Flower model
     - Normal align flowers
+    brightness += 0.5f;
+    brightness /= 1.5f;
     - Fix spread swapping
     - Bending
 

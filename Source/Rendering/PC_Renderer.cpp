@@ -142,7 +142,6 @@ void Renderer::TEMP_LoadTestData() {
     Texture flowerTextures[] = { flowerM };
     spreadMaterials_[0] = MakeMaterial_P("m_flower", instanceVS, flowerFS, flowerTextures, 1, true); 
     spreadMaterials_[1] = MakeMaterial_P("m_stem", instanceVS, stemFS, nullptr, 0); 
-
     spreadModel_ = flower;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
@@ -408,8 +407,8 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
         return;
 
     bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(mat4));
-    memcpy(instanceBuffer.data, spreadManager.GetTransforms(), sizeof(mat4) * count);
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
+    memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
     vec4 normalMult;
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {

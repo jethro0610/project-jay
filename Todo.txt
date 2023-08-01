@@ -6,6 +6,8 @@
 - Rename to World to Terrain
 
 - Shadow mapping
+    - Create shaders specifically for shadows
+    - Organize views, maybe remove views arg from render functions
 
 - Flower model
     - Bending

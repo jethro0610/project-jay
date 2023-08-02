@@ -23,3 +23,18 @@ float getShadow(vec4 sposition) {
     }
     return shadow / 9.0f;
 }
+
+float getFastShadow(vec4 sposition) {
+    sposition.y = -sposition.y;
+    vec3 projected = sposition.xyz / sposition.w;
+    projected.xy = projected.xy * 0.5f + 0.5f;
+    
+    float closest = texture2D(s_samplerShadow, projected.xy).r;
+    float current = projected.z - 0.0005f;
+    float shadowVal = current > closest ? 1.0f : 0.0f;
+
+    // Can't figure out how to get BGFX to use white borders, using
+    // this conversion for now
+    float border = step(1.0, 1.0f - closest);
+    return max(border, 1.0f - shadowVal);
+}

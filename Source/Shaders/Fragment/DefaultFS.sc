@@ -19,8 +19,9 @@ void main() {
 
     float ambient = 0.2f;
     float shadow = getShadow(v_sposition);
-    float diffuse = shadow * max(-dot(normal, lightDirection), 0.0f);
-    float specular = shadow * getSpecular(u_cameraPosition.xyz, v_wposition, lightDirection, normal, 32.0f);
+    float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float specular = getSpecular(u_cameraPosition.xyz, v_wposition, lightDirection, normal, 32.0f);
+    specular = 0.0f;
     float fresnel = getFresnel(u_cameraPosition.xyz, v_wposition, normal, 1.0, 4.0f);
     float brightness = diffuse + ambient;
 
@@ -30,9 +31,9 @@ void main() {
         brightness = 0.75f;
     else
         brightness = 1.00f;
-
     if (specular >= 0.3f)
       brightness = 1.5f;
+    brightness = lerp(brightness, 0.25f, 1.0f - shadow);
 
     gl_FragColor = vec4(color * (brightness + fresnel), 1.0f);
 }

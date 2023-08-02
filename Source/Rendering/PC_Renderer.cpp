@@ -65,8 +65,11 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     }
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
 
-    u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
+    u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
+    u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
+    u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
+
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
@@ -225,11 +228,15 @@ void Renderer::TEMP_LoadTestData() {
     spreadModel_ = flower;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
+    Shader instBillboardShadowVS = LoadVertexShader_P("InstBillboardShadowVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
+    Shader seedShadowFS = LoadFragmentShader_P("SeedShadowFS");
     seedMaterial_ = MakeMaterial_P(
         "m_seed", 
         instBillboardVS, 
         seedFS, 
+        instBillboardShadowVS,
+        seedShadowFS,
         nullptr, 
         0
     );
@@ -508,7 +515,7 @@ void Renderer::RenderEntities_P(
 
             // 2 Renders minimum for shadow pass. 2x more if the
             // material is double sided
-            int renderNum = 2;
+            int renderNum = material.twoSided ? 4 : 2;
             for (int n = 0; n < renderNum; n++) {
                 bgfx::setTransform(&worldMatrix);
                 if (n < 2) {
@@ -591,11 +598,24 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_, sizeof(vec4) * count);
-    bgfx::setInstanceDataBuffer(&instanceBuffer);
 
-    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-    bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(RENDER_VIEW, seedMaterial_.shader);
+    for (int i = 0; i < 2; i++) {
+        View view;
+        MaterialShader shader;
+        if (i == 0) {
+            view = RENDER_VIEW;
+            shader = seedMaterial_.shader;
+        }
+        else {
+            view = SHADOW_VIEW;
+            shader = seedMaterial_.shadowShader;
+        }
+
+        bgfx::setInstanceDataBuffer(&instanceBuffer);
+        bgfx::setVertexBuffer(0, quad_.vertexBuffer);
+        bgfx::setIndexBuffer(quad_.indexBuffer);
+        bgfx::submit(view, shader);
+    }
 }
 
 void Renderer::RenderPostProcess_P() {
@@ -826,7 +846,13 @@ void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {
-    lightDirection_ = normalize(direction);
+    quat directionQuat = quatLookAtRH(normalize(lightDirection_), Transform::worldUp);
+    lightDirection_ = rotate(directionQuat, Transform::worldForward);
+    vec4 shadowRight = vec4(rotate(directionQuat, Transform::worldRight), 0.0f);
+    vec4 shadowUp = vec4(rotate(directionQuat, Transform::worldUp), 0.0f);
+
     vec4 uniformDirection = normalize(vec4(lightDirection_, 0.0f));
     bgfx::setUniform(u_lightDirection_, &uniformDirection);
+    bgfx::setUniform(u_shadowRight_, &shadowRight);
+    bgfx::setUniform(u_shadowUp_, &shadowUp);
 }

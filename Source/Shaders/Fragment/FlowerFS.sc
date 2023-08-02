@@ -21,8 +21,8 @@ void main() {
 
     float ambient = 0.2f;
     float shadow = getShadow(v_sposition);
-    float diffuse = shadow * max(-dot(normal, lightDirection), 0.0f);
-    float edge = max(0.25f, shadow) * (1.0f - alpha); 
+    float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float edge = 1.0f - alpha; 
     float brightness = diffuse + ambient;
 
     if (brightness <= 0.25f)
@@ -31,6 +31,7 @@ void main() {
         brightness = 0.75f;
     else
         brightness = 1.00f;
+    brightness = lerp(brightness, 0.25f, 1.0f - shadow);
 
     gl_FragColor = vec4(color * (brightness + edge), 1.0f);
 }

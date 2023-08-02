@@ -35,7 +35,7 @@ const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
 const float SHADOW_RANGE = 250.0f;
-const int SHADOW_RESOLUTION = 4096;
+const int SHADOW_RESOLUTION = 6144;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -65,6 +65,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     }
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
 
+    u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
@@ -299,6 +300,9 @@ void Renderer::InitShadowBuffer_P() {
     bgfx::setViewFrameBuffer(SHADOW_VIEW, shadowBuffer_);
     bgfx::setViewClear(SHADOW_VIEW, BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(SHADOW_VIEW, 0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+
+    vec4 shadowResolution = vec4(SHADOW_RESOLUTION, SHADOW_RESOLUTION, 0.0f, 0.0f);
+    bgfx::setUniform(u_shadowResolution_, &shadowResolution);
 }
 
 void Renderer::InitRenderBuffer_P() {

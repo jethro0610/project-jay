@@ -135,6 +135,7 @@ private:
     TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
     TextureSampler shadowSampler_;
 
+    Uniform u_shadowResolution_;
     Uniform u_shadowMatrix_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;

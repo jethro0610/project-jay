@@ -56,8 +56,28 @@ public:
     );
     Material MakeMaterial_P(
         std::string name, 
+        Shader vertex, 
+        Shader fragment, 
+        Shader vertexShadow,
+        Shader fragmentShadow,
+        Texture textures[MAX_TEXTURES_PER_MATERIAL], 
+        int numTextures,
+        bool twoSided = false
+    );
+    Material MakeMaterial_P(
+        std::string name, 
         std::string vertex, 
         std::string fragment, 
+        std::string textures[MAX_TEXTURES_PER_MATERIAL], 
+        int numTextures,
+        bool twoSided = false
+    );
+    Material MakeMaterial_P(
+        std::string name, 
+        std::string vertex, 
+        std::string fragment, 
+        std::string vertexShadow,
+        std::string fragmentShadow,
         std::string textures[MAX_TEXTURES_PER_MATERIAL], 
         int numTextures,
         bool twoSided = false

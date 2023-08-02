@@ -120,54 +120,138 @@ void Renderer::TEMP_LoadTestData() {
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
+    Shader staticShadowVS = LoadVertexShader_P("StaticShadowVS");
+    Shader defaultShadowFS = LoadFragmentShader_P("DefaultShadowFS");
     Texture playerTextures[] = { bricksC, bricksN };
-    Material playerMaterial = MakeMaterial_P("m_player", staticVS, defaultFS, playerTextures, 2);
+    Material playerMaterial = MakeMaterial_P(
+        "m_player", 
+        staticVS, 
+        defaultFS, 
+        staticShadowVS, 
+        defaultShadowFS, 
+        playerTextures, 
+        2
+    );
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
     Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
-    Material rockMaterial = MakeMaterial_P("m_rock", rockVS, rockFS, rockTextures, 4);
+    Material rockMaterial = MakeMaterial_P(
+        "m_rock", 
+        rockVS, 
+        rockFS, 
+        staticShadowVS, 
+        defaultShadowFS, 
+        rockTextures, 
+        4
+    );
 
     Texture treeTextures[] = { treeC, treeN };
-    Material treeMaterial = MakeMaterial_P("m_tree", staticVS, defaultFS, treeTextures, 2);
+    Material treeMaterial = MakeMaterial_P(
+        "m_tree", 
+        staticVS, 
+        defaultFS, 
+        staticShadowVS, 
+        defaultShadowFS, 
+        treeTextures, 
+        2
+    );
     Shader leavesFS = LoadFragmentShader_P("LeavesFS");
     Texture leavesTextures[] { leavesM };
-    Material leavesMaterial = MakeMaterial_P("m_leaves", staticVS, leavesFS, leavesTextures, 1, true);
+    Material leavesMaterial = MakeMaterial_P(
+        "m_leaves", 
+        staticVS, 
+        leavesFS, 
+        staticShadowVS, 
+        defaultShadowFS, 
+        leavesTextures, 
+        1, 
+        true
+    );
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
     Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
-    worldMaterial_ = MakeMaterial_P("m_world", worldVS, worldFS, worldTextures, 4);
+    worldMaterial_ = MakeMaterial_P(
+        "m_world", 
+        worldVS, 
+        worldFS, 
+        worldTextures, 
+        4
+    );
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
     Shader blitFS = LoadFragmentShader_P("BlitFS");
     Texture postProcessTextures[] = { renderBufferTextures_[0] };
-    postProcessMaterial_ = MakeMaterial_P("m_postProcess", screenQuadVS, postProcessFS, postProcessTextures, 1);
+    postProcessMaterial_ = MakeMaterial_P(
+        "m_postProcess", 
+        screenQuadVS, 
+        postProcessFS, 
+        postProcessTextures, 
+        1
+    );
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
     Shader flowerFS = LoadFragmentShader_P("FlowerFS");
     Shader stemFS = LoadFragmentShader_P("StemFS");
     Texture flowerTextures[] = { flowerM };
-    spreadMaterials_[0] = MakeMaterial_P("m_flower", instanceVS, flowerFS, flowerTextures, 1, true); 
-    spreadMaterials_[1] = MakeMaterial_P("m_stem", instanceVS, stemFS, nullptr, 0); 
+    spreadMaterials_[0] = MakeMaterial_P(
+        "m_flower", 
+        instanceVS, 
+        flowerFS, 
+        flowerTextures, 
+        1, 
+        true
+    ); 
+    spreadMaterials_[1] = MakeMaterial_P(
+        "m_stem", 
+        instanceVS, 
+        stemFS, 
+        nullptr, 
+        0
+    ); 
     spreadModel_ = flower;
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
-    seedMaterial_ = MakeMaterial_P("m_seed", instBillboardVS, seedFS, nullptr, 0);
+    seedMaterial_ = MakeMaterial_P(
+        "m_seed", 
+        instBillboardVS, 
+        seedFS, 
+        nullptr, 
+        0
+    );
 
     Shader glyphVS = LoadVertexShader_P("GlyphVS");
     Shader textFS = LoadFragmentShader_P("TextFS");
     Texture fontTextures[] = { LoadTexture_P("t_font") };
-    textMaterial_ = MakeMaterial_P("m_text", glyphVS, textFS, fontTextures, 1);
+    textMaterial_ = MakeMaterial_P(
+        "m_text", 
+        glyphVS, 
+        textFS, 
+        fontTextures, 
+        1
+    );
 
     Shader barVS = LoadVertexShader_P("BarVS");
     Shader barFS = LoadFragmentShader_P("BarFS");
-    barMaterial_ = MakeMaterial_P("m_bar", barVS, barFS, nullptr, 0);
+    barMaterial_ = MakeMaterial_P(
+        "m_bar", 
+        barVS, 
+        barFS, 
+        nullptr, 
+        0
+    );
 
     Texture blitTextures[] = { postProcessTexture_ };
-    blitMaterial_ = MakeMaterial_P("m_blit", screenQuadVS, blitFS, blitTextures, 1);
+    blitMaterial_ = MakeMaterial_P(
+        "m_blit", 
+        screenQuadVS, 
+        blitFS, 
+        blitTextures, 
+        1
+    );
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -407,24 +491,37 @@ void Renderer::RenderEntities_P(
         for (int m = 0; m < model.numMeshes; m++) {
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
-            int renderNum = material.twoSided ? 2 : 1;
+
+            // 2 Renders minimum for shadow pass. 2x more if the
+            // material is double sided
+            int renderNum = 2;
             for (int n = 0; n < renderNum; n++) {
-                if (n == 1) {
+                bgfx::setTransform(&worldMatrix);
+                if (n < 2) {
+                    normalMult.x = 1.0f;
+                }
+                else {
                     bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
                     normalMult.x = -1.0f;
                 }
-                else
-                    normalMult.x = 1.0f;
 
-                bgfx::setUniform(u_meter_, &meter);
-                bgfx::setTransform(&worldMatrix);
-                bgfx::setUniform(u_normalMult_, &normalMult);
-
-                SetTexturesFromMaterial_P(material);
+                int view;
+                MaterialShader shader;
+                if (n % 2 == 0) {
+                    view = RENDER_VIEW;
+                    bgfx::setUniform(u_meter_, &meter);
+                    bgfx::setUniform(u_normalMult_, &normalMult);
+                    SetTexturesFromMaterial_P(material);
+                    shader = material.shader;
+                }
+                else {
+                    view = SHADOW_VIEW;
+                    shader = material.shadowShader;
+                }
 
                 bgfx::setVertexBuffer(0, mesh.vertexBuffer);
                 bgfx::setIndexBuffer(mesh.indexBuffer);
-                bgfx::submit(RENDER_VIEW, material.shader);
+                bgfx::submit(view, shader);
             }
         }
     }
@@ -634,6 +731,23 @@ Material Renderer::MakeMaterial_P(
 
 Material Renderer::MakeMaterial_P(
     std::string name, 
+    Shader vertex, 
+    Shader fragment, 
+    Shader vertexShadow,
+    Shader fragmentShadow,
+    Texture textures[MAX_TEXTURES_PER_MATERIAL], 
+    int numTextures,
+    bool twoSided
+) {
+    Material material = MakeMaterial_P(name, vertex, fragment, textures, numTextures, twoSided);
+    material.shadowShader = bgfx::createProgram(vertexShadow, fragmentShadow);
+    materials_[name] = material;
+    return material;
+}
+
+
+Material Renderer::MakeMaterial_P(
+    std::string name, 
     std::string vertex, 
     std::string fragment, 
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
@@ -644,7 +758,40 @@ Material Renderer::MakeMaterial_P(
     for (int i = 0; i < numTextures; i++)
         textureList[i] = GetTexture(textures[i]);
 
-    return MakeMaterial_P(name, GetVertexShader(vertex), GetFragmentShader(fragment), textureList, numTextures, twoSided);
+    return MakeMaterial_P(
+        name, 
+        GetVertexShader(vertex), 
+        GetFragmentShader(fragment), 
+        textureList, 
+        numTextures, 
+        twoSided
+    );
+}
+
+Material Renderer::MakeMaterial_P(
+    std::string name, 
+    std::string vertex, 
+    std::string fragment, 
+    std::string vertexShadow,
+    std::string fragmentShadow,
+    std::string textures[MAX_TEXTURES_PER_MATERIAL], 
+    int numTextures,
+    bool twoSided
+) {
+    Texture textureList[MAX_TEXTURES_PER_MATERIAL];
+    for (int i = 0; i < numTextures; i++)
+        textureList[i] = GetTexture(textures[i]);
+
+    return MakeMaterial_P(
+        name, 
+        GetVertexShader(vertex), 
+        GetFragmentShader(fragment), 
+        GetVertexShader(vertexShadow),
+        GetFragmentShader(fragmentShadow),
+        textureList, 
+        numTextures, 
+        twoSided
+    );
 }
 
 void Renderer::SetTexturesFromMaterial_P(Material& material) {

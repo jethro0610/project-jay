@@ -18,25 +18,16 @@ void Renderer::Render(
 ) {
     StartFrame_P();
 
-    // Shadow Pass
-    RenderEntities_P(shadowView_, entities, meterComponent, staticModelComponent, transformComponent);
-    RenderWorld_P(shadowView_, world);
-    RenderSpread_P(shadowView_, spreadManager);
-    RenderSeed_P(shadowView_, seedManager);
+    RenderEntities_P(entities, meterComponent, staticModelComponent, transformComponent);
+    RenderWorld_P(world);
+    RenderSpread_P(spreadManager);
+    RenderSeed_P(seedManager);
 
-    // Render Pass
-    RenderEntities_P(renderView_, entities, meterComponent, staticModelComponent, transformComponent);
-    RenderWorld_P(renderView_, world);
-    RenderSpread_P(renderView_, spreadManager);
-    RenderSeed_P(renderView_, seedManager);
+    RenderPostProcess_P();
 
-    // Post Process Pass
-    RenderPostProcess_P(postProcessView_);
-
-    // UI Pass
-    RenderBlit_P(uiView_);
-    RenderUI_P(uiView_, meterComponent);
-    RenderScreenText_P(uiView_);
+    RenderBlit_P();
+    RenderUI_P(meterComponent);
+    RenderScreenText_P();
 
     PresentFrame_P();
 }

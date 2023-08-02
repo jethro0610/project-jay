@@ -1,3 +1,6 @@
+- When you hit certain objects off level, they'll come right back, aimed someplace where the player can
+  easily hit them. This will reward high speeds and ring outs on items that need to broken (ie. rocks)
+
 - EVERYTHING needs to be big due to the filter and terrain
 - Rocks will NOT roll/slide, just dig back into the ground when they throw
 - The level design will use large "pillars" that the player weaves around

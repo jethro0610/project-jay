@@ -194,14 +194,18 @@ void Renderer::TEMP_LoadTestData() {
     );
 
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
+    Shader instanceShadowVS = LoadVertexShader_P("InstanceShadowVS");
     Shader flowerFS = LoadFragmentShader_P("FlowerFS");
+    Shader flowerShadowFS = LoadFragmentShader_P("FlowerShadowFS");
     Shader stemFS = LoadFragmentShader_P("StemFS");
     Texture flowerTextures[] = { flowerM };
     spreadMaterials_[0] = MakeMaterial_P(
         "m_flower", 
         instanceVS, 
         flowerFS, 
-        flowerTextures, 
+        instanceShadowVS,
+        flowerShadowFS,
+        flowerTextures,
         1, 
         true
     ); 
@@ -209,6 +213,8 @@ void Renderer::TEMP_LoadTestData() {
         "m_stem", 
         instanceVS, 
         stemFS, 
+        instanceShadowVS,
+        defaultShadowFS,
         nullptr, 
         0
     ); 
@@ -538,26 +544,34 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
     vec4 normalMult;
+    normalMult.x = 1.0f;
+    bgfx::setUniform(u_normalMult_, &normalMult);
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {
         Mesh mesh = spreadModel_.meshes[m];
         Material material = spreadMaterials_[m];
-        int normalPasses = material.twoSided ? 2 : 1;
-        for (int n = 0; n < normalPasses; n++) {
-            if (n == 1) {
+        int renderPasses = material.twoSided ? 4 : 2;
+        for (int n = 0; n < renderPasses; n++) {
+            if (n > 2)
                 bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-                normalMult.x = 1.0f;
+
+            int view;
+            MaterialShader shader;
+            if (n % 2 == 0) {
+                view = RENDER_VIEW;
+                shader = material.shader;
+                SetTexturesFromMaterial_P(material, true);
             }
-            else
-                normalMult.x = 1.0f;
+            else {
+                view = SHADOW_VIEW;
+                shader = material.shadowShader;
+                SetTexturesFromMaterial_P(material, false);
+            }
 
-            SetTexturesFromMaterial_P(material);
-
-            bgfx::setUniform(u_normalMult_, &normalMult);
             bgfx::setInstanceDataBuffer(&instanceBuffer);
             bgfx::setVertexBuffer(0, mesh.vertexBuffer);
             bgfx::setIndexBuffer(mesh.indexBuffer);
-            bgfx::submit(RENDER_VIEW, spreadMaterials_[m].shader);
+            bgfx::submit(view, shader);
         }
     }
 }

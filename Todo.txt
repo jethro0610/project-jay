@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Add negative backside bool to material
+
 - Shadow mapping
     - Create shaders specifically for shadows
     - Organize views, maybe remove views arg from render functions

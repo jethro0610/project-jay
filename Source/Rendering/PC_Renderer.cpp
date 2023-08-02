@@ -157,13 +157,14 @@ void Renderer::TEMP_LoadTestData() {
         2
     );
     Shader leavesFS = LoadFragmentShader_P("LeavesFS");
+    Shader leavesShadowFS = LoadFragmentShader_P("LeavesShadowFS");
     Texture leavesTextures[] { leavesM };
     Material leavesMaterial = MakeMaterial_P(
         "m_leaves", 
         staticVS, 
         leavesFS, 
         staticShadowVS, 
-        defaultShadowFS, 
+        leavesShadowFS,
         leavesTextures, 
         1, 
         true
@@ -511,12 +512,13 @@ void Renderer::RenderEntities_P(
                     view = RENDER_VIEW;
                     bgfx::setUniform(u_meter_, &meter);
                     bgfx::setUniform(u_normalMult_, &normalMult);
-                    SetTexturesFromMaterial_P(material);
                     shader = material.shader;
+                    SetTexturesFromMaterial_P(material, true);
                 }
                 else {
                     view = SHADOW_VIEW;
                     shader = material.shadowShader;
+                    SetTexturesFromMaterial_P(material, false);
                 }
 
                 bgfx::setVertexBuffer(0, mesh.vertexBuffer);
@@ -794,11 +796,12 @@ Material Renderer::MakeMaterial_P(
     );
 }
 
-void Renderer::SetTexturesFromMaterial_P(Material& material) {
+void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
     for (int i = 0; i < material.numTextures; i++)
         bgfx::setTexture(i, samplers_[i], material.textures[i]);
 
-    bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTexture_);
+    if (shadowMap)
+        bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTexture_);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

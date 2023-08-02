@@ -158,7 +158,7 @@ private:
 
     glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
 
-    void SetTexturesFromMaterial_P(Material& material);
+    void SetTexturesFromMaterial_P(Material& material, bool shadowMap = true);
 
     void StartFrame_P();
     void Clear_P();

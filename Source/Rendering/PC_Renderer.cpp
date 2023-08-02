@@ -34,7 +34,7 @@ const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_RANGE = 25.0f;
+const float SHADOW_RANGE = 250.0f;
 const int SHADOW_RESOLUTION = 4096;
 
 const int SHADOW_VIEW = 0;
@@ -254,7 +254,7 @@ void Renderer::TEMP_LoadTestData() {
         0
     );
 
-    Texture blitTextures[] = { shadowBufferTexture_ };
+    Texture blitTextures[] = { postProcessTexture_ };
     blitMaterial_ = MakeMaterial_P(
         "m_blit", 
         screenQuadVS, 
@@ -292,7 +292,7 @@ void Renderer::InitShadowBuffer_P() {
         false,
         1,
         bgfx::TextureFormat::D16,
-        BGFX_SAMPLER_BORDER_COLOR(0xFFFFFFFF) | BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
+        BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
     );
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture_);
 

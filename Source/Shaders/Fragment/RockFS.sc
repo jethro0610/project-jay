@@ -1,7 +1,8 @@
-$input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
+$input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <Crack.sh>
+#include <Shadow.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -19,10 +20,11 @@ void main() {
     normal = normalize(mul(normal, v_tbn));
 
     float ambient = 0.2f;
-    float diffuse = max(-dot(normal, lightDirection), 0.0f);
-    float specular = getSpecular(u_cameraPosition.xyz, v_wposition, lightDirection, normal, 32.0f);
+    float shadow = getShadow(v_sposition);
+    float diffuse = shadow * max(-dot(normal, lightDirection), 0.0f);
+    float specular = shadow * getSpecular(u_cameraPosition.xyz, v_wposition, lightDirection, normal, 32.0f);
     float fresnel = getFresnel(u_cameraPosition.xyz, v_wposition, normal, 1.0, 4.0f);
-    float brightness = diffuse + ambient + specular;
+    float brightness = diffuse + ambient;
 
     if (brightness <= 0.25f)
         brightness = 0.25f;

@@ -1,6 +1,7 @@
-$input v_wposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
+$input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
+#include <Shadow.sh>
 
 uniform vec4 u_lightDirection;
 
@@ -12,7 +13,7 @@ void main() {
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
-    float brightness = diffuse + ambient;
+    float brightness = getShadow(v_sposition) * diffuse + ambient;
 
     if (brightness <= 0.75f)
         brightness = 0.75f;

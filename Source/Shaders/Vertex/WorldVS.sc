@@ -30,6 +30,6 @@ void main() {
     v_bitangent = normalize(cross(v_tangent, v_normal));
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
-    v_sposition = mul(u_shadowMatrix, vec4(v_wposition.x, v_wposition.y, v_wposition.z, 1.0f));
+    v_sposition = mul(u_shadowMatrix, vec4(v_wposition, 1.0f));
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

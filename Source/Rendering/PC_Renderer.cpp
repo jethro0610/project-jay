@@ -857,7 +857,7 @@ void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {
-    quat directionQuat = quatLookAtRH(normalize(lightDirection_), Transform::worldUp);
+    quat directionQuat = quatLookAtRH(normalize(direction), Transform::worldUp);
     lightDirection_ = rotate(directionQuat, Transform::worldForward);
     vec4 shadowRight = vec4(rotate(directionQuat, Transform::worldRight), 0.0f);
     vec4 shadowUp = vec4(rotate(directionQuat, Transform::worldUp), 0.0f);

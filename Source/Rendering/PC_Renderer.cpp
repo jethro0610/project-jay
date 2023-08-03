@@ -44,8 +44,10 @@ const int POST_PROCESS_VIEW = 2;
 const int UI_VIEW = 3;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
-    width_ = 1920;
-    height_ = 1080;
+    renderWidth_ = 1920;
+    renderHeight_ = 1080;
+    width_ = 1280;
+    height_ = 720;
 
     DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
@@ -316,16 +318,16 @@ void Renderer::InitShadowBuffer_P() {
 
 void Renderer::InitRenderBuffer_P() {
     renderBufferTextures_[0] = bgfx::createTexture2D(
-        width_,
-        height_,
+        renderWidth_,
+        renderHeight_,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
     );
     renderBufferTextures_[1] = bgfx::createTexture2D(
-        width_,
-        height_,
+        renderWidth_,
+        renderHeight_,
         false,
         1,
         bgfx::TextureFormat::D16,
@@ -335,13 +337,13 @@ void Renderer::InitRenderBuffer_P() {
 
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(RENDER_VIEW, 0, 0, width_, height_);
+    bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
 void Renderer::InitPostProcessBuffer_P() {
     postProcessTexture_ = bgfx::createTexture2D(
-        width_,
-        height_,
+        renderWidth_,
+        renderHeight_,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
@@ -351,7 +353,7 @@ void Renderer::InitPostProcessBuffer_P() {
     postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture_);
     bgfx::setViewFrameBuffer(POST_PROCESS_VIEW, postProcessBuffer_);
     bgfx::setViewClear(POST_PROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, width_, height_);
+    bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
 void Renderer::InitUIBuffer_P() {

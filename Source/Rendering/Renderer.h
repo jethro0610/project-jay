@@ -94,6 +94,8 @@ public:
 private:
     int width_;
     int height_;
+    int renderWidth_;
+    int renderHeight_;
 
     glm::vec3 lightDirection_;
     glm::mat4 viewMatrix_;

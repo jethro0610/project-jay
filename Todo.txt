@@ -8,8 +8,7 @@
 - Add negative backside bool to material
 
 - Shadow mapping
-    - Create shaders specifically for shadows
-    - Organize views, maybe remove views arg from render functions
+    - Rotate shadow camera to get more distance using diagonal
 
 - Flower model
     - Bending

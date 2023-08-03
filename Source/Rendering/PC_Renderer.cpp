@@ -34,8 +34,8 @@ const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_RANGE = 250.0f;
-const int SHADOW_RESOLUTION = 4096;
+const float SHADOW_RANGE = 130.0f;
+const int SHADOW_RESOLUTION = 2048;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -43,19 +43,20 @@ const int POST_PROCESS_VIEW = 2;
 const int UI_VIEW = 3;
 
 Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
-    DEBUGLOG("Starting BGFX again...");
+    width_ = 1920;
+    height_ = 1080;
+
+    DEBUGLOG("Starting BGFX...");
     bgfx::Init init; 
     init.type = bgfx::RendererType::Count;
-    init.resolution.width = 1280;
-    init.resolution.height = 720;
+    init.resolution.width = width_;
+    init.resolution.height = height_;
     init.resolution.reset = BGFX_RESET_VSYNC;
     init.platformData.nwh = GETHANDLE(window);
     init.platformData.ndt = GETDISPLAY();
     bgfx::init(init);
     DEBUGLOG("Succesfully started BGFX");
 
-    width_ = 1280;
-    height_ = 720;
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
 
@@ -333,7 +334,7 @@ void Renderer::InitRenderBuffer_P() {
 
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(RENDER_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewRect(RENDER_VIEW, 0, 0, width_, height_);
 }
 
 void Renderer::InitPostProcessBuffer_P() {
@@ -349,13 +350,13 @@ void Renderer::InitPostProcessBuffer_P() {
     postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture_);
     bgfx::setViewFrameBuffer(POST_PROCESS_VIEW, postProcessBuffer_);
     bgfx::setViewClear(POST_PROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, width_, height_);
 }
 
 void Renderer::InitUIBuffer_P() {
     bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
     bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(UI_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewRect(UI_VIEW, 0, 0, width_, height_);
 }
 
 void Renderer::InitWorldMesh_P() {
@@ -435,12 +436,20 @@ void Renderer::StartFrame_P() {
     viewMatrix_ = camera_->GetViewMatrix();
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
 
-    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + camera_->transform_.position;
-    shadowViewMatrix_ = lookAtRH(lightPosition, camera_->transform_.position, Transform::worldUp);
+    vec3 forward = camera_->transform_.GetForwardVector();
+    forward.y = 0.0f;
+    forward = normalize(forward);
+
+    vec3 cameraPos = camera_->transform_.position;
+    cameraPos.y = 0.0f;
+
+    vec3 lookPosition = cameraPos + forward * 100.0f;
+    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + lookPosition;
+    shadowViewMatrix_ = lookAtRH(lightPosition, lookPosition, Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
     bgfx::setViewTransform(SHADOW_VIEW, &shadowViewMatrix_, &shadowProjectionMatrix_);
 
-    vec4 timeResolution = vec4(GlobalTime::GetTime(), 1280, 720, 0.0f);
+    vec4 timeResolution = vec4(GlobalTime::GetTime(), width_, height_, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);

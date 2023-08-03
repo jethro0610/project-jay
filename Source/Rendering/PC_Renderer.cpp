@@ -34,8 +34,9 @@ const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_RANGE = 130.0f;
-const int SHADOW_RESOLUTION = 1024;
+const float SHADOW_FORWARD = 60.0f;
+const float SHADOW_RANGE = 120.0f;
+const int SHADOW_RESOLUTION = 2048;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -443,7 +444,7 @@ void Renderer::StartFrame_P() {
     vec3 cameraPos = camera_->transform_.position;
     cameraPos.y = 0.0f;
 
-    vec3 lookPosition = cameraPos + forward * 100.0f;
+    vec3 lookPosition = cameraPos + forward * SHADOW_FORWARD;
     vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + lookPosition;
     shadowViewMatrix_ = lookAtRH(lightPosition, lookPosition, Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;

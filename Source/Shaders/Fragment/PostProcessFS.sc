@@ -1,5 +1,12 @@
 $input v_texcoord0
 #include <bgfx_shader.sh>
+static const ivec2 radius = ivec2(4, 4);
+static const ivec4 kernelRanges[4] = {
+    {-radius.x,     0, -radius.y,     0},
+    {     0, radius.x, -radius.y,     0},
+    {-radius.x,     0,      0, radius.y},
+    {     0, radius.x,      0, radius.y}
+};
 
 SAMPLER2D(s_sampler0, 0);
 
@@ -31,12 +38,8 @@ vec2 getGradient(vec2 coord) {
 void main() {
     vec2 gradient = getGradient(v_texcoord0);
     float angle = 0.0f;
-    if (abs(gradient.x) > 0.001f)
-        angle = atan(gradient.y / gradient.x);
+    angle = atan(gradient.y / gradient.x);
     float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
-
-    vec2 radius = vec2(4.0f, 4.0f);
-    float sampleRate = 1.0f;
 
     vec3 kernelMean[4] = {
         {0.0f, 0.0f, 0.0f},
@@ -52,17 +55,10 @@ void main() {
         {0.0f, 0.0f, 0.0f}
     };
     
-    vec4 kernelRanges[4] = {
-        {-radius.x,     0.0f, -radius.y,     0.0f},
-        {     0.0f, radius.x, -radius.y,     0.0f},
-        {-radius.x,     0.0f,      0.0f, radius.y},
-        {     0.0f, radius.x,      0.0f, radius.y}
-    };
-
     for(int i = 0; i < 4; i++) {
         int totalSamples = 0;
-        for (float j = kernelRanges[i].x; j <= kernelRanges[i].y; j += sampleRate) {
-            for (float k = kernelRanges[i].z; k <= kernelRanges[i].w; k += sampleRate) {
+        for (int j = kernelRanges[i].x; j <= kernelRanges[i].y; j += 1) {
+            for (int k = kernelRanges[i].z; k <= kernelRanges[i].w; k += 1) {
                 vec2 offset = vec2(j * u_viewTexel.x, k * u_viewTexel.y);
                 offset = mul(offset, rotMat);
                 vec3 sampleColor = texture2D(s_sampler0, v_texcoord0 + offset).rgb; 

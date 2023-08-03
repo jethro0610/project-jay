@@ -34,9 +34,9 @@ const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_FORWARD = 60.0f;
-const float SHADOW_RANGE = 120.0f;
-const int SHADOW_RESOLUTION = 2048;
+const float SHADOW_FORWARD = 40.0f;
+const float SHADOW_RANGE = 80.0f;
+const int SHADOW_RESOLUTION = 1024;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -54,7 +54,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     init.type = bgfx::RendererType::Count;
     init.resolution.width = width_;
     init.resolution.height = height_;
-    init.resolution.reset = BGFX_RESET_VSYNC;
+    init.resolution.reset = BGFX_RESET_NONE;
     init.platformData.nwh = GETHANDLE(window);
     init.platformData.ndt = GETDISPLAY();
     bgfx::init(init);

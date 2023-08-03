@@ -19,7 +19,7 @@ float getShadow(vec4 sposition) {
     for (int y = -PCF_SIZE; y <= PCF_SIZE; y++){
         vec2 pos = projected.xy + vec2(x, y) * texel;
         float closest = texture2D(s_samplerShadow, pos).r;
-        shadow += current > closest ? 1.0f : 0.0f;
+        shadow += step(closest, current);
 
         // Can't figure out how to get BGFX to use white borders, using
         // this conversion for now

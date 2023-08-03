@@ -23,6 +23,7 @@ Game::Game():
 {
     Init();
 
+    float lastDeltaTime = 0.0f;
     while (running_) {
         GlobalTime::UpdateTime();
         SCREENLINE(0, "Frame Time(ms): " + std::to_string(GlobalTime::GetDeltaTime() * 1000.0f));

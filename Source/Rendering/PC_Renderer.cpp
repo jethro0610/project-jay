@@ -141,21 +141,15 @@ void Renderer::TEMP_LoadTestData() {
     Shader leavesFS = LoadFragmentShader_P("LeavesFS");
     Shader leavesShadowFS = LoadFragmentShader_P("LeavesShadowFS");
 
+    Shader worldVS = LoadVertexShader_P("WorldVS");
+    Shader worldFS = LoadFragmentShader_P("WorldFS");
+
     Material playerMaterial = LoadMaterial_P("m_player");
     Material rockMaterial = LoadMaterial_P("m_rock");
     Material treeMaterial = LoadMaterial_P("m_tree");
     Material leavesMaterial = LoadMaterial_P("m_leaves");
 
-    Shader worldVS = LoadVertexShader_P("WorldVS");
-    Shader worldFS = LoadFragmentShader_P("WorldFS");
-    Texture worldTextures[] = { grassC, grassN, marbleC };
-    worldMaterial_ = MakeMaterial_P(
-        "m_world", 
-        worldVS, 
-        worldFS, 
-        worldTextures, 
-        3
-    );
+    worldMaterial_ = LoadMaterial_P("m_world");
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
     Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
@@ -827,16 +821,28 @@ Material Renderer::LoadMaterial_P(std::string name) {
     for (int i = 0; i < textureNames.size(); i++)
         textures[i] = textureNames[i];
     
-    return MakeMaterial_P(
-        name,
-        GetString(data, "vertex"),
-        GetString(data, "fragment"),
-        GetString(data, "vertex_shadow"),
-        GetString(data, "fragment_shadow"),
-        textures,
-        textureNames.size(),
-        GetBoolean(data, "two_sided", false)
-    );
+    if (data.contains("vertex_shadow")) { 
+        return MakeMaterial_P(
+            name,
+            GetString(data, "vertex"),
+            GetString(data, "fragment"),
+            GetString(data, "vertex_shadow"),
+            GetString(data, "fragment_shadow"),
+            textures,
+            textureNames.size(),
+            GetBoolean(data, "two_sided", false)
+        );
+    }
+    else {
+        return MakeMaterial_P(
+            name,
+            GetString(data, "vertex"),
+            GetString(data, "fragment"),
+            textures,
+            textureNames.size(),
+            GetBoolean(data, "two_sided", false)
+        );
+    }
 }
 
 void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {

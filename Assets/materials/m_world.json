@@ -1,0 +1,9 @@
+{
+    "vertex": "WorldVS",
+    "fragment": "WorldFS",
+    "textures": [
+        "t_grass_c",
+        "t_grass_n",
+        "t_marble_c"
+    ]
+}

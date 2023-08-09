@@ -65,12 +65,10 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
 
-    for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
+    for (int i = 0; i < NUM_SAMPLERS; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
-    shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
-
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
@@ -95,7 +93,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     TextureQuadVertex::Init();
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
-    textures_["t_noise"] = noiseTexture_;
+    textures_["t_g_noise"] = noiseTexture_;
     vec4 noiseProps;
     noiseProps.x = 1024;
     noiseProps.y = 1.0f / (1024 * 2.0f);
@@ -138,40 +136,20 @@ void Renderer::TEMP_LoadTestData() {
     Shader staticShadowVS = LoadVertexShader_P("StaticShadowVS");
     Shader defaultShadowFS = LoadFragmentShader_P("DefaultShadowFS");
 
-    Material playerMaterial = LoadMaterial_P("m_player");
-
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
 
-    Material rockMaterial = LoadMaterial_P("m_rock");
-
-    Texture treeTextures[] = { treeC, treeN };
-    Material treeMaterial = MakeMaterial_P(
-        "m_tree", 
-        staticVS, 
-        defaultFS, 
-        staticShadowVS, 
-        defaultShadowFS, 
-        treeTextures, 
-        2
-    );
     Shader leavesFS = LoadFragmentShader_P("LeavesFS");
     Shader leavesShadowFS = LoadFragmentShader_P("LeavesShadowFS");
-    Texture leavesTextures[] { leavesM };
-    Material leavesMaterial = MakeMaterial_P(
-        "m_leaves", 
-        staticVS, 
-        leavesFS, 
-        staticShadowVS, 
-        leavesShadowFS,
-        leavesTextures, 
-        1, 
-        true
-    );
+
+    Material playerMaterial = LoadMaterial_P("m_player");
+    Material rockMaterial = LoadMaterial_P("m_rock");
+    Material treeMaterial = LoadMaterial_P("m_tree");
+    Material leavesMaterial = LoadMaterial_P("m_leaves");
 
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
-    Texture worldTextures[] = { noiseTexture_, grassC, grassN, marbleC };
+    Texture worldTextures[] = { grassC, grassN, marbleC };
     worldMaterial_ = MakeMaterial_P(
         "m_world", 
         worldVS, 
@@ -483,6 +461,7 @@ void Renderer::RenderWorld_P(World& world) {
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
         SetTexturesFromMaterial_P(worldMaterial_);
+        bgfx::setTexture(WORLD_NOISE_TEXINDEX, samplers_[WORLD_NOISE_TEXINDEX], noiseTexture_);
 
         bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
         bgfx::setIndexBuffer(worldMesh_.indexBuffer);
@@ -866,7 +845,7 @@ void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
         bgfx::setTexture(i, samplers_[i], material.textures[i]);
 
     if (shadowMap)
-        bgfx::setTexture(MAX_TEXTURES_PER_MATERIAL, shadowSampler_, shadowBufferTexture_);
+        bgfx::setTexture(SHADOW_TEXINDEX, samplers_[SHADOW_TEXINDEX], shadowBufferTexture_);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

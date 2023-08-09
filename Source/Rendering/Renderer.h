@@ -135,8 +135,7 @@ private:
     Texture renderBufferTextures_[2];
     Texture postProcessTexture_;
 
-    TextureSampler samplers_[MAX_TEXTURES_PER_MATERIAL];
-    TextureSampler shadowSampler_;
+    TextureSampler samplers_[NUM_SAMPLERS];
 
     Uniform u_shadowUp_;
     Uniform u_shadowRight_;

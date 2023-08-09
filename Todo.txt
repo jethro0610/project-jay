@@ -5,6 +5,13 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Material rewrite
+    - Default to static and default
+    - Default shadow shaders
+    - Handle non-shadowing materials
+    - Material properties
+    - Generic mapped color material
+
 - Flower model
     - Bending
     - Reduce overdraw with mesh shape

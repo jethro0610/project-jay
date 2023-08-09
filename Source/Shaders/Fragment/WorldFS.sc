@@ -10,9 +10,9 @@ $input v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangen
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
 
-SAMPLER2D(s_sampler1, 1);
-SAMPLER2D(s_sampler2, 2);
-SAMPLER2D(s_sampler3, 3);
+SAMPLER2D(s_color, 0);
+SAMPLER2D(s_normal, 1);
+SAMPLER2D(s_variation, 2);
 
 static float MAX_NOISE_POS = 256.0f;
 static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
@@ -28,14 +28,14 @@ void main() {
     fade *= 0.05f;
     DITHERDISCARD(fade);
 
-    vec3 color = texture2D(s_sampler1, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
-    float macroStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;
-    float microStrength = texture2D(s_sampler3, vec2(v_wposition.x, v_wposition.z) * 0.01f).r;
+    vec3 color = texture2D(s_color, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
+    float macroStrength = texture2D(s_variation, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;
+    float microStrength = texture2D(s_variation, vec2(v_wposition.x, v_wposition.z) * 0.01f).r;
     float variationStrength = lerp(0.05f, 1.0f, (microStrength * macroStrength) + 0.35f);    
     color *= 1.5f;
     color *= variationStrength;
 
-    vec3 normal = texture2D(s_sampler2, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
+    vec3 normal = texture2D(s_normal, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     normal = normal * 2.0f - 1.0f;
     normal = normalize(mul(normal, v_tbn));
 

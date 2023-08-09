@@ -7,7 +7,7 @@
 
 - Flower model
     - Bending
-    - Needs to look splotchier/textured. Like the tree
+    - Reduce overdraw with mesh shape
 
 - Enemy
 - Player model

@@ -7,15 +7,15 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texc
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
 
-SAMPLER2D(s_sampler1, 1);
-SAMPLER2D(s_sampler2, 2);
-SAMPLER2D(s_sampler3, 3);
+SAMPLER2D(s_color, 0);
+SAMPLER2D(s_normal, 1);
+SAMPLER2D(s_crack, 2);
 
 void main() {
-    vec3 color = texture2D(s_sampler1, v_texcoord0);
+    vec3 color = texture2D(s_color, v_texcoord0);
     vec3 lightDirection = u_lightDirection.xyz;
 
-    vec3 normal = texture2D(s_sampler2, v_texcoord0).rgb;
+    vec3 normal = texture2D(s_normal, v_texcoord0).rgb;
     normal = normal * 2.0f - 1.0f;
     normal = normalize(mul(normal, v_tbn));
 
@@ -37,8 +37,7 @@ void main() {
         brightness = 1.5f;
     brightness = lerp(brightness, 0.25f, 1.0f - shadow);
 
-
-    vec4 crackColor = texture2DLod(s_sampler3, v_texcoord0, 0);
+    vec4 crackColor = texture2DLod(s_crack, v_texcoord0, 0);
     vec2 crackStrength = getCrackStrength();
     float crackDepth = crackColor.r * crackStrength.x + crackColor.g * crackStrength.y;
     color = lerp(color, 0.15f, crackDepth);

@@ -3,7 +3,7 @@ $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_tex
 #include <bgfx_shader.sh>
 #include <Crack.sh>
 
-SAMPLER2D(s_sampler3, 3);
+SAMPLER2D(s_crack, 2);
 uniform mat4 u_shadowMatrix;
 
 void main() {
@@ -18,7 +18,7 @@ void main() {
 
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
-    vec4 crackColor = texture2DLod(s_sampler3, a_texcoord0, 0);
+    vec4 crackColor = texture2DLod(s_crack, a_texcoord0, 0);
     vec2 crackStrength = getCrackStrength();
     float crackDepth = crackColor.r * crackStrength.x + crackColor.g * crackStrength.y;
     a_position += a_normal * pow(crackDepth, 0.25f) * -0.1f;

@@ -82,6 +82,7 @@ public:
         int numTextures,
         bool twoSided = false
     );
+    Material LoadMaterial_P(std::string name);
 
     void TEMP_LoadTestData();
 

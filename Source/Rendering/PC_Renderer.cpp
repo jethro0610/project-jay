@@ -7,9 +7,11 @@
 #include <iostream>
 #include <FastNoiseLite.h>
 #include <random>
+#include <json.hpp>
 #include "../Game/Camera.h"
 #include "../Game/Entity/EntityKey.h"
 #include "../Helpers/MapCheck.h"
+#include "../Helpers/LoadHelpers.h"
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
 
@@ -134,16 +136,7 @@ void Renderer::TEMP_LoadTestData() {
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Shader staticShadowVS = LoadVertexShader_P("StaticShadowVS");
     Shader defaultShadowFS = LoadFragmentShader_P("DefaultShadowFS");
-    Texture playerTextures[] = { bricksC, bricksN };
-    Material playerMaterial = MakeMaterial_P(
-        "m_player", 
-        staticVS, 
-        defaultFS, 
-        staticShadowVS, 
-        defaultShadowFS, 
-        playerTextures, 
-        2
-    );
+    Material playerMaterial = LoadMaterial_P("m_player");
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
@@ -849,6 +842,28 @@ Material Renderer::MakeMaterial_P(
         textureList, 
         numTextures, 
         twoSided
+    );
+}
+
+Material Renderer::LoadMaterial_P(std::string name) {
+    std::ifstream inFile("materials/" + name + ".json");
+    ASSERT(inFile.is_open(), "Failed to load material " + name);
+    nlohmann::json data = nlohmann::json::parse(inFile);
+
+    auto textureNames = data["textures"];
+    std::string textures[MAX_TEXTURES_PER_MATERIAL];
+    for (int i = 0; i < textureNames.size(); i++)
+        textures[i] = textureNames[i];
+    
+    return MakeMaterial_P(
+        name,
+        GetString(data, "vertex"),
+        GetString(data, "fragment"),
+        GetString(data, "vertex_shadow"),
+        GetString(data, "fragment_shadow"),
+        textures,
+        textureNames.size(),
+        GetBoolean(data, "two_sided", false)
     );
 }
 

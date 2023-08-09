@@ -1,0 +1,10 @@
+{
+    "vertex": "StaticVS",
+    "fragment": "DefaultFS",
+    "vertex_shadow": "StaticShadowVS",
+    "fragment_shadow": "DefaultShadowFS",
+    "textures": [ 
+        "t_bricks_c", 
+        "t_bricks_n" 
+    ]
+}

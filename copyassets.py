@@ -31,3 +31,4 @@ def copyfromfolder(folder):
 copyfromfolder("entities")
 copyfromfolder("models")
 copyfromfolder("textures")
+copyfromfolder("materials")

@@ -1,0 +1,10 @@
+{
+    "two_sided": true,
+    "vertex": "StaticVS",
+    "fragment": "LeavesFS",
+    "vertex_shadow": "StaticShadowVS",
+    "fragment_shadow": "LeavesShadowFS",
+    "textures": [
+        "t_leaves_m"
+    ]
+}

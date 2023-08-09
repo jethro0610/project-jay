@@ -115,6 +115,7 @@ void Renderer::TEMP_LoadTestData() {
     Model rock = LoadModel_P("st_rock");
     Model tree = LoadModel_P("st_tree");
     Model flower = LoadModel_P("st_flower");
+    Model character = LoadModel_P("st_char");
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
     Texture bricksN = LoadTexture_P("t_bricks_n");

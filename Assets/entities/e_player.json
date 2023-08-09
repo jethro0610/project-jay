@@ -4,15 +4,21 @@
             "interpolate": true
         },
         "static_model": {
-            "model": "st_sphere",
+            "model": "st_char",
             "materials": [
+                "m_player",
+                "m_player",
+                "m_player",
+                "m_player",
+                "m_player",
+                "m_player",
+                "m_player",
                 "m_player"
             ]
         },
         "ground_trace": {
             "distance": 1.0,
-            "stick": true,
-            "stick_offset": 1.0
+            "stick": true
         },
         "movement": {
             "min_speed": 12.0,

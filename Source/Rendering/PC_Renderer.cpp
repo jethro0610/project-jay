@@ -93,7 +93,6 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     TextureQuadVertex::Init();
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
-    textures_["t_g_noise"] = noiseTexture_;
     vec4 noiseProps;
     noiseProps.x = 1024;
     noiseProps.y = 1.0f / (1024 * 2.0f);
@@ -155,7 +154,7 @@ void Renderer::TEMP_LoadTestData() {
         worldVS, 
         worldFS, 
         worldTextures, 
-        4
+        3
     );
 
     Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");

@@ -1,0 +1,7 @@
+{
+    "vertex": "ScreenQuadVS",
+    "fragment": "PostProcessFS",
+    "textures": [
+        "t_g_render_c"
+    ]
+}

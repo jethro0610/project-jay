@@ -1,0 +1,7 @@
+{
+    "vertex": "GlyphVS",
+    "fragment": "TextFS",
+    "textures": [
+        "t_font"
+    ]
+}

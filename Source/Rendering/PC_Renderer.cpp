@@ -116,6 +116,7 @@ void Renderer::TEMP_LoadTestData() {
     Model tree = LoadModel_P("st_tree");
     Model flower = LoadModel_P("st_flower");
     Model character = LoadModel_P("st_char");
+    spreadModel_ = flower;
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
     Texture bricksN = LoadTexture_P("t_bricks_n");
@@ -129,6 +130,7 @@ void Renderer::TEMP_LoadTestData() {
     Texture treeN = LoadTexture_P("t_tree_n");
     Texture leavesM = LoadTexture_P("t_leaves_m");
     Texture flowerM = LoadTexture_P("t_flower_m");
+    Texture font = LoadTexture_P("t_font");
 
     Shader staticVS = LoadVertexShader_P("StaticVS");
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
@@ -144,95 +146,39 @@ void Renderer::TEMP_LoadTestData() {
     Shader worldVS = LoadVertexShader_P("WorldVS");
     Shader worldFS = LoadFragmentShader_P("WorldFS");
 
-    Material playerMaterial = LoadMaterial_P("m_player");
-    Material rockMaterial = LoadMaterial_P("m_rock");
-    Material treeMaterial = LoadMaterial_P("m_tree");
-    Material leavesMaterial = LoadMaterial_P("m_leaves");
-
-    worldMaterial_ = LoadMaterial_P("m_world");
-
-    Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
-    Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
-    Shader blitFS = LoadFragmentShader_P("BlitFS");
-    Texture postProcessTextures[] = { renderBufferTextures_[0] };
-    postProcessMaterial_ = MakeMaterial_P(
-        "m_postProcess", 
-        screenQuadVS, 
-        postProcessFS, 
-        postProcessTextures, 
-        1
-    );
-
     Shader instanceVS = LoadVertexShader_P("InstanceVS");
     Shader instanceShadowVS = LoadVertexShader_P("InstanceShadowVS");
     Shader flowerFS = LoadFragmentShader_P("FlowerFS");
     Shader flowerShadowFS = LoadFragmentShader_P("FlowerShadowFS");
     Shader stemFS = LoadFragmentShader_P("StemFS");
-    Texture flowerTextures[] = { flowerM };
-    spreadMaterials_[0] = MakeMaterial_P(
-        "m_flower", 
-        instanceVS, 
-        flowerFS, 
-        instanceShadowVS,
-        flowerShadowFS,
-        flowerTextures,
-        1, 
-        true
-    ); 
-    spreadMaterials_[1] = MakeMaterial_P(
-        "m_stem", 
-        instanceVS, 
-        stemFS, 
-        instanceShadowVS,
-        defaultShadowFS,
-        nullptr, 
-        0
-    ); 
-    spreadModel_ = flower;
+
+    Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
+    Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
+    Shader blitFS = LoadFragmentShader_P("BlitFS");
 
     Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
     Shader instBillboardShadowVS = LoadVertexShader_P("InstBillboardShadowVS");
     Shader seedFS = LoadFragmentShader_P("SeedFS");
     Shader seedShadowFS = LoadFragmentShader_P("SeedShadowFS");
-    seedMaterial_ = MakeMaterial_P(
-        "m_seed", 
-        instBillboardVS, 
-        seedFS, 
-        instBillboardShadowVS,
-        seedShadowFS,
-        nullptr, 
-        0
-    );
 
     Shader glyphVS = LoadVertexShader_P("GlyphVS");
     Shader textFS = LoadFragmentShader_P("TextFS");
-    Texture fontTextures[] = { LoadTexture_P("t_font") };
-    textMaterial_ = MakeMaterial_P(
-        "m_text", 
-        glyphVS, 
-        textFS, 
-        fontTextures, 
-        1
-    );
 
     Shader barVS = LoadVertexShader_P("BarVS");
     Shader barFS = LoadFragmentShader_P("BarFS");
-    barMaterial_ = MakeMaterial_P(
-        "m_bar", 
-        barVS, 
-        barFS, 
-        nullptr, 
-        0
-    );
 
-    Texture blitTextures[] = { postProcessTexture_ };
-    blitMaterial_ = MakeMaterial_P(
-        "m_blit", 
-        screenQuadVS, 
-        blitFS, 
-        blitTextures, 
-        1
-    );
+    Material playerMaterial = LoadMaterial_P("m_player");
+    Material rockMaterial = LoadMaterial_P("m_rock");
+    Material treeMaterial = LoadMaterial_P("m_tree");
+    Material leavesMaterial = LoadMaterial_P("m_leaves");
+    worldMaterial_ = LoadMaterial_P("m_world");
+    postProcessMaterial_ = LoadMaterial_P("m_postprocess");
+    spreadMaterials_[0] = LoadMaterial_P("m_flower");
+    spreadMaterials_[1] = LoadMaterial_P("m_stem");
+    seedMaterial_ = LoadMaterial_P("m_seed");
+    textMaterial_ = LoadMaterial_P("m_text");
+    barMaterial_ = LoadMaterial_P("m_bar");
+    blitMaterial_ = LoadMaterial_P("m_screenblit");
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -273,6 +219,7 @@ void Renderer::InitShadowBuffer_P() {
 
     vec4 shadowResolution = vec4(SHADOW_RESOLUTION, SHADOW_RESOLUTION, 0.0f, 0.0f);
     bgfx::setUniform(u_shadowResolution_, &shadowResolution);
+    textures_["t_g_shadowMap"] = shadowBufferTexture_;
 }
 
 void Renderer::InitRenderBuffer_P() {
@@ -297,6 +244,8 @@ void Renderer::InitRenderBuffer_P() {
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
+    textures_["t_g_render_c"] = renderBufferTextures_[0];
+    textures_["t_g_render_d"] = renderBufferTextures_[1];
 }
 
 void Renderer::InitPostProcessBuffer_P() {
@@ -313,6 +262,7 @@ void Renderer::InitPostProcessBuffer_P() {
     bgfx::setViewFrameBuffer(POST_PROCESS_VIEW, postProcessBuffer_);
     bgfx::setViewClear(POST_PROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
+    textures_["t_g_post_c"] = postProcessTexture_;
 }
 
 void Renderer::InitUIBuffer_P() {

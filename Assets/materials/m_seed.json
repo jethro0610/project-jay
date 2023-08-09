@@ -1,0 +1,7 @@
+{
+    "vertex": "InstBillboardVS",
+    "fragment": "SeedFS",
+    "vertex_shadow": "InstBillboardShadowVS",
+    "fragment_shadow": "SeedShadowFS",
+    "textures": []
+}

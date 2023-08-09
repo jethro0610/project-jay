@@ -95,6 +95,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     TextureQuadVertex::Init();
 
     noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
+    textures_["t_noise"] = noiseTexture_;
     vec4 noiseProps;
     noiseProps.x = 1024;
     noiseProps.y = 1.0f / (1024 * 2.0f);
@@ -136,20 +137,13 @@ void Renderer::TEMP_LoadTestData() {
     Shader defaultFS = LoadFragmentShader_P("DefaultFS");
     Shader staticShadowVS = LoadVertexShader_P("StaticShadowVS");
     Shader defaultShadowFS = LoadFragmentShader_P("DefaultShadowFS");
+
     Material playerMaterial = LoadMaterial_P("m_player");
 
     Shader rockVS = LoadVertexShader_P("RockVS");
     Shader rockFS = LoadFragmentShader_P("RockFS");
-    Texture rockTextures[] = { noiseTexture_, rockC, rockN, crackM };
-    Material rockMaterial = MakeMaterial_P(
-        "m_rock", 
-        rockVS, 
-        rockFS, 
-        staticShadowVS, 
-        defaultShadowFS, 
-        rockTextures, 
-        4
-    );
+
+    Material rockMaterial = LoadMaterial_P("m_rock");
 
     Texture treeTextures[] = { treeC, treeN };
     Material treeMaterial = MakeMaterial_P(

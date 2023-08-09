@@ -1,0 +1,12 @@
+{
+    "vertex": "RockVS",
+    "fragment": "RockFS",
+    "vertex_shadow": "StaticShadowVS",
+    "fragment_shadow": "DefaultShadowFS",
+    "textures": [ 
+        "t_noise", 
+        "t_rock_c", 
+        "t_rock_n", 
+        "t_crack_m" 
+    ]
+}

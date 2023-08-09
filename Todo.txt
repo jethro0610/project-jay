@@ -11,6 +11,13 @@
     - Handle non-shadowing materials
     - Material properties
     - Generic mapped color material
+    - Boolean for casting and recieving shadows (defaults to false)
+    - Negative back-side normals
+    - Genericize:
+        - Color
+        - Masked alpha
+        - Defaults material
+        - This should use uniforms to add variation between materials
 
 - Flower model
     - Bending

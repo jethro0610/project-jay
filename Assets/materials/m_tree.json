@@ -1,8 +1,8 @@
 {
     "vertex": "StaticVS",
     "fragment": "DefaultFS",
-    "vertex_shadow": "StaticShadowVS",
-    "fragment_shadow": "DefaultShadowFS",
+    "vertex_shadow": "StaticVS_S",
+    "fragment_shadow": "DefaultFS_S",
     "textures": [
         "t_tree_c",
         "t_tree_n"

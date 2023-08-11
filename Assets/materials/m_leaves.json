@@ -2,8 +2,8 @@
     "two_sided": true,
     "vertex": "StaticVS",
     "fragment": "LeavesFS",
-    "vertex_shadow": "StaticShadowVS",
-    "fragment_shadow": "LeavesShadowFS",
+    "vertex_shadow": "StaticVS_S",
+    "fragment_shadow": "LeavesFS_S",
     "textures": [
         "t_leaves_m"
     ]

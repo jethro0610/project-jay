@@ -1,8 +1,8 @@
 {
     "vertex": "InstanceVS",
     "fragment": "FlowerFS",
-    "vertex_shadow": "InstanceShadowVS",
-    "fragment_shadow": "FlowerShadowFS",
+    "vertex_shadow": "InstanceVS_S",
+    "fragment_shadow": "FlowerFS_S",
     "textures": [
         "t_flower_m"
     ]

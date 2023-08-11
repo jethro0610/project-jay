@@ -132,40 +132,40 @@ void Renderer::TEMP_LoadTestData() {
     Texture flowerM = LoadTexture_P("t_flower_m");
     Texture font = LoadTexture_P("t_font");
 
-    Shader staticVS = LoadVertexShader_P("StaticVS");
-    Shader defaultFS = LoadFragmentShader_P("DefaultFS");
-    Shader staticShadowVS = LoadVertexShader_P("StaticShadowVS");
-    Shader defaultShadowFS = LoadFragmentShader_P("DefaultShadowFS");
+    LoadVertexShader_P("StaticVS");
+    LoadFragmentShader_P("DefaultFS");
+    LoadVertexShader_P("StaticVS_S");
+    LoadFragmentShader_P("DefaultFS_S");
 
-    Shader rockVS = LoadVertexShader_P("RockVS");
-    Shader rockFS = LoadFragmentShader_P("RockFS");
+    LoadVertexShader_P("RockVS");
+    LoadFragmentShader_P("RockFS");
 
-    Shader leavesFS = LoadFragmentShader_P("LeavesFS");
-    Shader leavesShadowFS = LoadFragmentShader_P("LeavesShadowFS");
+    LoadFragmentShader_P("LeavesFS");
+    LoadFragmentShader_P("LeavesFS_S");
 
-    Shader worldVS = LoadVertexShader_P("WorldVS");
-    Shader worldFS = LoadFragmentShader_P("WorldFS");
+    LoadVertexShader_P("WorldVS");
+    LoadFragmentShader_P("WorldFS");
 
-    Shader instanceVS = LoadVertexShader_P("InstanceVS");
-    Shader instanceShadowVS = LoadVertexShader_P("InstanceShadowVS");
-    Shader flowerFS = LoadFragmentShader_P("FlowerFS");
-    Shader flowerShadowFS = LoadFragmentShader_P("FlowerShadowFS");
-    Shader stemFS = LoadFragmentShader_P("StemFS");
+    LoadVertexShader_P("InstanceVS");
+    LoadVertexShader_P("InstanceVS_S");
+    LoadFragmentShader_P("FlowerFS");
+    LoadFragmentShader_P("FlowerFS_S");
+    LoadFragmentShader_P("StemFS");
 
-    Shader screenQuadVS = LoadVertexShader_P("ScreenQuadVS");
-    Shader postProcessFS = LoadFragmentShader_P("PostProcessFS");
-    Shader blitFS = LoadFragmentShader_P("BlitFS");
+    LoadVertexShader_P("ScreenQuadVS");
+    LoadFragmentShader_P("PostProcessFS");
+    LoadFragmentShader_P("BlitFS");
 
-    Shader instBillboardVS = LoadVertexShader_P("InstBillboardVS");
-    Shader instBillboardShadowVS = LoadVertexShader_P("InstBillboardShadowVS");
-    Shader seedFS = LoadFragmentShader_P("SeedFS");
-    Shader seedShadowFS = LoadFragmentShader_P("SeedShadowFS");
+    LoadVertexShader_P("InstBillboardVS");
+    LoadVertexShader_P("InstBillboardVS_S");
+    LoadFragmentShader_P("SeedFS");
+    LoadFragmentShader_P("SeedFS_S");
 
-    Shader glyphVS = LoadVertexShader_P("GlyphVS");
-    Shader textFS = LoadFragmentShader_P("TextFS");
+    LoadVertexShader_P("GlyphVS");
+    LoadFragmentShader_P("TextFS");
 
-    Shader barVS = LoadVertexShader_P("BarVS");
-    Shader barFS = LoadFragmentShader_P("BarFS");
+    LoadVertexShader_P("BarVS");
+    LoadFragmentShader_P("BarFS");
 
     Material playerMaterial = LoadMaterial_P("m_player");
     Material rockMaterial = LoadMaterial_P("m_rock");

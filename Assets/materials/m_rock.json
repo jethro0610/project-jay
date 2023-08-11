@@ -1,8 +1,8 @@
 {
     "vertex": "RockVS",
     "fragment": "RockFS",
-    "vertex_shadow": "StaticShadowVS",
-    "fragment_shadow": "DefaultShadowFS",
+    "vertex_shadow": "StaticVS_S",
+    "fragment_shadow": "DefaultFS_S",
     "textures": [ 
         "t_rock_c", 
         "t_rock_n", 

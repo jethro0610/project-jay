@@ -46,42 +46,6 @@ public:
     Shader LoadFragmentShader_P(std::string name);
     Model LoadModel_P(std::string name);
     Texture LoadTexture_P(std::string name);
-    Material MakeMaterial_P(
-        std::string name, 
-        Shader vertex, 
-        Shader fragment, 
-        Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        TriangleType triangleType = ONE_SIDED 
-    );
-    Material MakeMaterial_P(
-        std::string name, 
-        Shader vertex, 
-        Shader fragment, 
-        Shader vertexShadow,
-        Shader fragmentShadow,
-        Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        TriangleType triangleType = ONE_SIDED 
-    );
-    Material MakeMaterial_P(
-        std::string name, 
-        std::string vertex, 
-        std::string fragment, 
-        std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        TriangleType triangleType = ONE_SIDED 
-    );
-    Material MakeMaterial_P(
-        std::string name, 
-        std::string vertex, 
-        std::string fragment, 
-        std::string vertexShadow,
-        std::string fragmentShadow,
-        std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-        int numTextures,
-        TriangleType triangleType = ONE_SIDED 
-    );
     Material LoadMaterial_P(std::string name);
 
     void TEMP_LoadTestData();

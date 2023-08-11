@@ -671,130 +671,38 @@ Texture Renderer::LoadTexture_P(std::string name) {
     return texture;
 }
 
-Material Renderer::MakeMaterial_P(
-    std::string name, 
-    Shader vertex, 
-    Shader fragment, 
-    Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures,
-    TriangleType triangleType
-) {
-    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
-    Material material;
-    material.shader = bgfx::createProgram(vertex, fragment);
-    material.numTextures = numTextures;
-    for (int i = 0; i < numTextures; i++)
-        material.textures[i] = textures[i];
-    material.triangleType = triangleType;
-    materials_[name] = material;
-
-    DEBUGLOG("Created material " << name);
-    return material;
-}
-
-Material Renderer::MakeMaterial_P(
-    std::string name, 
-    Shader vertex, 
-    Shader fragment, 
-    Shader vertexShadow,
-    Shader fragmentShadow,
-    Texture textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures,
-    TriangleType triangleType
-) {
-    Material material = MakeMaterial_P(name, vertex, fragment, textures, numTextures, triangleType);
-    material.shadowShader = bgfx::createProgram(vertexShadow, fragmentShadow);
-    materials_[name] = material;
-    return material;
-}
-
-
-Material Renderer::MakeMaterial_P(
-    std::string name, 
-    std::string vertex, 
-    std::string fragment, 
-    std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures,
-    TriangleType triangleType
-) {
-    Texture textureList[MAX_TEXTURES_PER_MATERIAL];
-    for (int i = 0; i < numTextures; i++)
-        textureList[i] = GetTexture(textures[i]);
-
-    return MakeMaterial_P(
-        name, 
-        GetVertexShader(vertex), 
-        GetFragmentShader(fragment), 
-        textureList, 
-        numTextures, 
-        triangleType
-    );
-}
-
-Material Renderer::MakeMaterial_P(
-    std::string name, 
-    std::string vertex, 
-    std::string fragment, 
-    std::string vertexShadow,
-    std::string fragmentShadow,
-    std::string textures[MAX_TEXTURES_PER_MATERIAL], 
-    int numTextures,
-    TriangleType triangleType
-) {
-    Texture textureList[MAX_TEXTURES_PER_MATERIAL];
-    for (int i = 0; i < numTextures; i++)
-        textureList[i] = GetTexture(textures[i]);
-
-    return MakeMaterial_P(
-        name, 
-        GetVertexShader(vertex), 
-        GetFragmentShader(fragment), 
-        GetVertexShader(vertexShadow),
-        GetFragmentShader(fragmentShadow),
-        textureList, 
-        numTextures, 
-        triangleType
-    );
-}
-
 Material Renderer::LoadMaterial_P(std::string name) {
     std::ifstream inFile("materials/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load material " + name);
     nlohmann::json data = nlohmann::json::parse(inFile);
+    Material material;
 
-    auto textureNames = data["textures"];
-    std::string textures[MAX_TEXTURES_PER_MATERIAL];
-    for (int i = 0; i < textureNames.size(); i++)
-        textures[i] = textureNames[i];
-
-    TriangleType triangleType = ONE_SIDED;
+    material.triangleType = ONE_SIDED;
     if (GetBoolean(data, "two_sided"))
-        triangleType = TWO_SIDED;
-    if (GetBoolean(data, "negative_back") && triangleType == TWO_SIDED)
-        triangleType = TWO_SIDED_NEGATIVE_BACK;
+        material.triangleType = TWO_SIDED;
+    if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
+        material.triangleType = TWO_SIDED_NEGATIVE_BACK;
+
+    Shader vertexShader = GetVertexShader(GetString(data, "vertex"));
+    Shader fragmentShader = GetFragmentShader(GetString(data, "fragment"));
+    material.shader = bgfx::createProgram(vertexShader, fragmentShader);
+
+    if (data.contains("vertex_shadow")) {
+        Shader vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
+        Shader fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
+        material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
+    }
+
+    if (data.contains("textures")) {
+        auto textureNames = data["textures"];
+        for (int i = 0; i < textureNames.size(); i++)
+            material.textures[i] = GetTexture(textureNames[i]);
+        material.numTextures = textureNames.size();
+    }
     
-    if (data.contains("vertex_shadow")) { 
-        return MakeMaterial_P(
-            name,
-            GetString(data, "vertex"),
-            GetString(data, "fragment"),
-            GetString(data, "vertex_shadow"),
-            GetString(data, "fragment_shadow"),
-            textures,
-            textureNames.size(),
-            triangleType
-        );
-    }
-    else {
-        return MakeMaterial_P(
-            name,
-            GetString(data, "vertex"),
-            GetString(data, "fragment"),
-            textures,
-            textureNames.size(),
-            triangleType
-        );
-    }
+    materials_[name] = material;
+    DEBUGLOG("Loaded material " << name);
+    return material;
 }
 
 void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {

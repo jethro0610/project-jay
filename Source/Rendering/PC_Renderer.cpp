@@ -385,30 +385,6 @@ void Renderer::PresentFrame_P() {
     bgfx::frame(); 
 }
 
-void Renderer::RenderWorld_P(World& world) {
-    vec4 worldProps[2];
-    worldProps[0].x = 0.0f;
-    worldProps[0].y = world.properties_.minRadius;
-    worldProps[0].z = world.properties_.maxRadius;
-    worldProps[0].w = world.properties_.edgeJaggedness;
-    worldProps[1].x = world.properties_.edgeFalloff;
-    worldProps[1].y = world.properties_.edgePower;
-
-    // Can use instancing here if necessary
-    int radius = world.properties_.maxRadius / WORLD_MESH_SIZE;
-    radius += 1;
-    for (int x = -radius; x < radius; x++)
-    for (int y = -radius; y < radius; y++) { 
-        bgfx::setUniform(u_worldProps_, worldProps, 2);
-        vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
-        bgfx::setUniform(u_worldMeshOffset_, &offset);
-
-        bgfx::setTexture(WORLD_NOISE_TEXINDEX, samplers_[WORLD_NOISE_TEXINDEX], noiseTexture_);
-
-        RenderMesh_P(&worldMesh_, &worldMaterial_);
-    };
-}
-
 void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer, glm::mat4* worldMatrix) {
     vec4 normalMult;
 
@@ -429,9 +405,8 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
             normalMult = vec4(material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
         }
-        else {
+        else
             normalMult = vec4(1.0f);
-        }
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;
@@ -467,6 +442,29 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
         else
             curPass++;
     }
+}
+
+void Renderer::RenderWorld_P(World& world) {
+    vec4 worldProps[2];
+    worldProps[0].x = 0.0f;
+    worldProps[0].y = world.properties_.minRadius;
+    worldProps[0].z = world.properties_.maxRadius;
+    worldProps[0].w = world.properties_.edgeJaggedness;
+    worldProps[1].x = world.properties_.edgeFalloff;
+    worldProps[1].y = world.properties_.edgePower;
+
+    // Can use instancing here if necessary
+    int radius = world.properties_.maxRadius / WORLD_MESH_SIZE;
+    radius += 1;
+    for (int x = -radius; x < radius; x++)
+    for (int y = -radius; y < radius; y++) { 
+        bgfx::setUniform(u_worldProps_, worldProps, 2);
+        vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
+        bgfx::setUniform(u_worldMeshOffset_, &offset);
+
+        bgfx::setTexture(WORLD_NOISE_TEXINDEX, samplers_[WORLD_NOISE_TEXINDEX], noiseTexture_);
+        RenderMesh_P(&worldMesh_, &worldMaterial_);
+    };
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();

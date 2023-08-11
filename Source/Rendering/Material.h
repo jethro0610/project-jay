@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderDefs.h"
+#include <glm/mat4x4.hpp>
 
 const int MAX_TEXTURES_PER_MATERIAL = 8;
 const int SHADOW_TEXINDEX = 8;
@@ -20,4 +21,5 @@ struct Material {
     bool castShadows;
     bool recieveShadows;
     TriangleType triangleType;
+    glm::mat4 properties;
 };

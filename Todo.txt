@@ -6,13 +6,9 @@
 - Rename to World to Terrain
 
 - Material rewrite
-    - Default to static and default
-    - Default shadow shaders
     - Handle non-shadowing materials
     - Material properties
     - Generic mapped color material
-    - Boolean for casting and recieving shadows (defaults to false)
-    - Negative back-side normals
     - Genericize:
         - Color
         - Masked alpha

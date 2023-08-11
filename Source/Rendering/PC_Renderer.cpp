@@ -677,7 +677,7 @@ Material Renderer::MakeMaterial_P(
     Shader fragment, 
     Texture textures[MAX_TEXTURES_PER_MATERIAL], 
     int numTextures,
-    bool twoSided
+    TriangleType triangleType
 ) {
     ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     Material material;
@@ -685,7 +685,7 @@ Material Renderer::MakeMaterial_P(
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures[i];
-    material.triangleType = ONE_SIDED;
+    material.triangleType = triangleType;
     materials_[name] = material;
 
     DEBUGLOG("Created material " << name);
@@ -700,9 +700,9 @@ Material Renderer::MakeMaterial_P(
     Shader fragmentShadow,
     Texture textures[MAX_TEXTURES_PER_MATERIAL], 
     int numTextures,
-    bool twoSided
+    TriangleType triangleType
 ) {
-    Material material = MakeMaterial_P(name, vertex, fragment, textures, numTextures, twoSided);
+    Material material = MakeMaterial_P(name, vertex, fragment, textures, numTextures, triangleType);
     material.shadowShader = bgfx::createProgram(vertexShadow, fragmentShadow);
     materials_[name] = material;
     return material;
@@ -715,7 +715,7 @@ Material Renderer::MakeMaterial_P(
     std::string fragment, 
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
     int numTextures,
-    bool twoSided
+    TriangleType triangleType
 ) {
     Texture textureList[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < numTextures; i++)
@@ -727,7 +727,7 @@ Material Renderer::MakeMaterial_P(
         GetFragmentShader(fragment), 
         textureList, 
         numTextures, 
-        twoSided
+        triangleType
     );
 }
 
@@ -739,7 +739,7 @@ Material Renderer::MakeMaterial_P(
     std::string fragmentShadow,
     std::string textures[MAX_TEXTURES_PER_MATERIAL], 
     int numTextures,
-    bool twoSided
+    TriangleType triangleType
 ) {
     Texture textureList[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < numTextures; i++)
@@ -753,7 +753,7 @@ Material Renderer::MakeMaterial_P(
         GetFragmentShader(fragmentShadow),
         textureList, 
         numTextures, 
-        twoSided
+        triangleType
     );
 }
 

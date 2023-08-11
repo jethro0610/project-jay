@@ -52,7 +52,7 @@ public:
         Shader fragment, 
         Texture textures[MAX_TEXTURES_PER_MATERIAL], 
         int numTextures,
-        bool twoSided = false
+        TriangleType triangleType = ONE_SIDED 
     );
     Material MakeMaterial_P(
         std::string name, 
@@ -62,7 +62,7 @@ public:
         Shader fragmentShadow,
         Texture textures[MAX_TEXTURES_PER_MATERIAL], 
         int numTextures,
-        bool twoSided = false
+        TriangleType triangleType = ONE_SIDED 
     );
     Material MakeMaterial_P(
         std::string name, 
@@ -70,7 +70,7 @@ public:
         std::string fragment, 
         std::string textures[MAX_TEXTURES_PER_MATERIAL], 
         int numTextures,
-        bool twoSided = false
+        TriangleType triangleType = ONE_SIDED 
     );
     Material MakeMaterial_P(
         std::string name, 
@@ -80,7 +80,7 @@ public:
         std::string fragmentShadow,
         std::string textures[MAX_TEXTURES_PER_MATERIAL], 
         int numTextures,
-        bool twoSided = false
+        TriangleType triangleType = ONE_SIDED 
     );
     Material LoadMaterial_P(std::string name);
 

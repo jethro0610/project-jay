@@ -1,6 +1,7 @@
 {
     "vertex": "InstanceVS",
     "fragment": "FlowerFS",
+    "casts_shadow": true,
     "vertex_shadow": "InstanceVS_S",
     "fragment_shadow": "FlowerFS_S",
     "textures": [

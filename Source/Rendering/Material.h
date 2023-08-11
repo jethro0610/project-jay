@@ -17,5 +17,7 @@ struct Material {
     MaterialShader shadowShader;
     Texture textures[MAX_TEXTURES_PER_MATERIAL];
     int numTextures;
+    bool castShadows;
+    bool recieveShadows;
     TriangleType triangleType;
 };

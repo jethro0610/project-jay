@@ -435,19 +435,30 @@ void Renderer::RenderEntities_P(
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
 
-            // 2 Renders minimum for shadow pass. 2x more if the
-            // material is double sided
-            int renderNum = material.triangleType > ONE_SIDED ? 4 : 2;
-            for (int n = 0; n < renderNum; n++) {
+            int numOfRenders = 1;
+            if (material.castShadows)
+                numOfRenders *= 2;
+            if (material.triangleType > ONE_SIDED)
+                numOfRenders *= 2;
+
+            int curPass = 0;
+            int curFace = 0;
+
+            for (int n = 0; n < numOfRenders; n++) {
                 bgfx::setTransform(&worldMatrix);
-                if (n >= 2)
+
+                if (curFace == 1) {
                     bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-                normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+                    normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+                }
+                else {
+                    normalMult = vec4(1.0f);
+                }
                 bgfx::setUniform(u_normalMult_, &normalMult);
 
                 int view;
                 MaterialShader shader;
-                if (n % 2 == 0) {
+                if (curPass == 0) {
                     view = RENDER_VIEW;
                     bgfx::setUniform(u_meter_, &meter);
                     shader = material.shader;
@@ -462,6 +473,19 @@ void Renderer::RenderEntities_P(
                 bgfx::setVertexBuffer(0, mesh.vertexBuffer);
                 bgfx::setIndexBuffer(mesh.indexBuffer);
                 bgfx::submit(view, shader);
+
+                if (material.triangleType > ONE_SIDED) {
+                    curFace++;
+
+                    // When two faces have been rendered,
+                    // render to the next pass
+                    if (curFace > 1) {
+                        curFace = 0;
+                        curPass = 1; 
+                    }
+                }
+                else
+                    curPass++;
             }
         }
     }
@@ -687,7 +711,10 @@ Material Renderer::LoadMaterial_P(std::string name) {
     Shader fragmentShader = GetFragmentShader(GetString(data, "fragment"));
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
 
-    if (data.contains("vertex_shadow")) {
+    material.castShadows = GetBoolean(data, "cast_shadows");
+    material.recieveShadows = GetBoolean(data, "recieve_shadows");
+    if (material.castShadows) {
+        DEBUGLOG(name << " is a shadow caster");
         Shader vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
         Shader fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
         material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);

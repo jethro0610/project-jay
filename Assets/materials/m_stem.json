@@ -1,6 +1,7 @@
 {
     "vertex": "InstanceVS",
     "fragment": "StemFS",
+    "casts_shadow": true,
     "vertex_shadow": "InstanceVS_S",
     "fragment_shadow": "DefaultFS_S",
     "textures": []

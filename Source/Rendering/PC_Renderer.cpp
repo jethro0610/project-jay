@@ -437,23 +437,19 @@ void Renderer::RenderEntities_P(
 
             // 2 Renders minimum for shadow pass. 2x more if the
             // material is double sided
-            int renderNum = material.twoSided ? 4 : 2;
+            int renderNum = material.triangleType > ONE_SIDED ? 4 : 2;
             for (int n = 0; n < renderNum; n++) {
                 bgfx::setTransform(&worldMatrix);
-                if (n < 2) {
-                    normalMult.x = 1.0f;
-                }
-                else {
+                if (n >= 2)
                     bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-                    normalMult.x = -1.0f;
-                }
+                normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+                bgfx::setUniform(u_normalMult_, &normalMult);
 
                 int view;
                 MaterialShader shader;
                 if (n % 2 == 0) {
                     view = RENDER_VIEW;
                     bgfx::setUniform(u_meter_, &meter);
-                    bgfx::setUniform(u_normalMult_, &normalMult);
                     shader = material.shader;
                     SetTexturesFromMaterial_P(material, true);
                 }
@@ -480,16 +476,16 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
     vec4 normalMult;
-    normalMult.x = 1.0f;
-    bgfx::setUniform(u_normalMult_, &normalMult);
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {
         Mesh mesh = spreadModel_.meshes[m];
         Material material = spreadMaterials_[m];
-        int renderPasses = material.twoSided ? 4 : 2;
+        int renderPasses = material.triangleType > ONE_SIDED ? 4 : 2;
         for (int n = 0; n < renderPasses; n++) {
-            if (n > 2)
+            if (n >= 2)
                 bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+            normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+            bgfx::setUniform(u_normalMult_, &normalMult);
 
             int view;
             MaterialShader shader;
@@ -689,7 +685,7 @@ Material Renderer::MakeMaterial_P(
     material.numTextures = numTextures;
     for (int i = 0; i < numTextures; i++)
         material.textures[i] = textures[i];
-    material.twoSided = twoSided;
+    material.triangleType = ONE_SIDED;
     materials_[name] = material;
 
     DEBUGLOG("Created material " << name);
@@ -770,6 +766,12 @@ Material Renderer::LoadMaterial_P(std::string name) {
     std::string textures[MAX_TEXTURES_PER_MATERIAL];
     for (int i = 0; i < textureNames.size(); i++)
         textures[i] = textureNames[i];
+
+    TriangleType triangleType = ONE_SIDED;
+    if (GetBoolean(data, "two_sided"))
+        triangleType = TWO_SIDED;
+    if (GetBoolean(data, "negative_back") && triangleType == TWO_SIDED)
+        triangleType = TWO_SIDED_NEGATIVE_BACK;
     
     if (data.contains("vertex_shadow")) { 
         return MakeMaterial_P(
@@ -780,7 +782,7 @@ Material Renderer::LoadMaterial_P(std::string name) {
             GetString(data, "fragment_shadow"),
             textures,
             textureNames.size(),
-            GetBoolean(data, "two_sided", false)
+            triangleType
         );
     }
     else {
@@ -790,7 +792,7 @@ Material Renderer::LoadMaterial_P(std::string name) {
             GetString(data, "fragment"),
             textures,
             textureNames.size(),
-            GetBoolean(data, "two_sided", false)
+            triangleType
         );
     }
 }

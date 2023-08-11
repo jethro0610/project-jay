@@ -403,13 +403,70 @@ void Renderer::RenderWorld_P(World& world) {
         vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
-        SetTexturesFromMaterial_P(worldMaterial_);
         bgfx::setTexture(WORLD_NOISE_TEXINDEX, samplers_[WORLD_NOISE_TEXINDEX], noiseTexture_);
 
-        bgfx::setVertexBuffer(0, worldMesh_.vertexBuffer);
-        bgfx::setIndexBuffer(worldMesh_.indexBuffer);
-        bgfx::submit(RENDER_VIEW, worldMaterial_.shader);
+        RenderMesh_P(&worldMesh_, &worldMaterial_);
     };
+}
+
+void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer, glm::mat4* worldMatrix) {
+    vec4 normalMult;
+
+    int numOfRenders = 1;
+    if (material->castShadows)
+        numOfRenders *= 2;
+    if (material->triangleType > ONE_SIDED)
+        numOfRenders *= 2;
+
+    int curPass = 0;
+    int curFace = 0;
+
+    for (int n = 0; n < numOfRenders; n++) {
+        if (worldMatrix != nullptr)
+            bgfx::setTransform(worldMatrix);
+
+        if (curFace == 1) {
+            bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+            normalMult = vec4(material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+        }
+        else {
+            normalMult = vec4(1.0f);
+        }
+        bgfx::setUniform(u_normalMult_, &normalMult);
+
+        int view;
+        MaterialShader shader;
+        if (curPass == 0) {
+            view = RENDER_VIEW;
+            shader = material->shader;
+            SetTexturesFromMaterial_P(*material, true);
+        }
+        else {
+            view = SHADOW_VIEW;
+            shader = material->shadowShader;
+            SetTexturesFromMaterial_P(*material, false);
+        }
+
+        if (instanceBuffer != nullptr)
+            bgfx::setInstanceDataBuffer(instanceBuffer);
+
+        bgfx::setVertexBuffer(0, mesh->vertexBuffer);
+        bgfx::setIndexBuffer(mesh->indexBuffer);
+        bgfx::submit(view, shader);
+
+        if (material->triangleType > ONE_SIDED) {
+            curFace++;
+
+            // When two faces have been rendered,
+            // render to the next pass
+            if (curFace > 1) {
+                curFace = 0;
+                curPass = 1; 
+            }
+        }
+        else
+            curPass++;
+    }
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
@@ -427,66 +484,14 @@ void Renderer::RenderEntities_P(
             continue;
 
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
+        bgfx::setUniform(u_meter_, &meter);
         mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
 
         Model model = staticModelComponent.model[i];
-        vec4 normalMult;
         for (int m = 0; m < model.numMeshes; m++) {
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
-
-            int numOfRenders = 1;
-            if (material.castShadows)
-                numOfRenders *= 2;
-            if (material.triangleType > ONE_SIDED)
-                numOfRenders *= 2;
-
-            int curPass = 0;
-            int curFace = 0;
-
-            for (int n = 0; n < numOfRenders; n++) {
-                bgfx::setTransform(&worldMatrix);
-
-                if (curFace == 1) {
-                    bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-                    normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
-                }
-                else {
-                    normalMult = vec4(1.0f);
-                }
-                bgfx::setUniform(u_normalMult_, &normalMult);
-
-                int view;
-                MaterialShader shader;
-                if (curPass == 0) {
-                    view = RENDER_VIEW;
-                    bgfx::setUniform(u_meter_, &meter);
-                    shader = material.shader;
-                    SetTexturesFromMaterial_P(material, true);
-                }
-                else {
-                    view = SHADOW_VIEW;
-                    shader = material.shadowShader;
-                    SetTexturesFromMaterial_P(material, false);
-                }
-
-                bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-                bgfx::setIndexBuffer(mesh.indexBuffer);
-                bgfx::submit(view, shader);
-
-                if (material.triangleType > ONE_SIDED) {
-                    curFace++;
-
-                    // When two faces have been rendered,
-                    // render to the next pass
-                    if (curFace > 1) {
-                        curFace = 0;
-                        curPass = 1; 
-                    }
-                }
-                else
-                    curPass++;
-            }
+            RenderMesh_P(&mesh, &material, nullptr, &worldMatrix);
         }
     }
 }
@@ -499,36 +504,11 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
-    vec4 normalMult;
 
     for (int m = 0; m < spreadModel_.numMeshes; m++) {
         Mesh mesh = spreadModel_.meshes[m];
         Material material = spreadMaterials_[m];
-        int renderPasses = material.triangleType > ONE_SIDED ? 4 : 2;
-        for (int n = 0; n < renderPasses; n++) {
-            if (n >= 2)
-                bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-            normalMult = vec4(material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
-            bgfx::setUniform(u_normalMult_, &normalMult);
-
-            int view;
-            MaterialShader shader;
-            if (n % 2 == 0) {
-                view = RENDER_VIEW;
-                shader = material.shader;
-                SetTexturesFromMaterial_P(material, true);
-            }
-            else {
-                view = SHADOW_VIEW;
-                shader = material.shadowShader;
-                SetTexturesFromMaterial_P(material, false);
-            }
-
-            bgfx::setInstanceDataBuffer(&instanceBuffer);
-            bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-            bgfx::setIndexBuffer(mesh.indexBuffer);
-            bgfx::submit(view, shader);
-        }
+        RenderMesh_P(&mesh, &material, &instanceBuffer);
     }
 }
 
@@ -541,25 +521,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_, sizeof(vec4) * count);
 
-    for (int i = 0; i < 2; i++) {
-        View view;
-        MaterialShader shader;
-        if (i == 0) {
-            view = RENDER_VIEW;
-            shader = seedMaterial_.shader;
-            SetTexturesFromMaterial_P(seedMaterial_, true);
-        }
-        else {
-            view = SHADOW_VIEW;
-            shader = seedMaterial_.shadowShader;
-            SetTexturesFromMaterial_P(seedMaterial_, false);
-        }
-
-        bgfx::setInstanceDataBuffer(&instanceBuffer);
-        bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-        bgfx::setIndexBuffer(quad_.indexBuffer);
-        bgfx::submit(view, shader);
-    }
+    RenderMesh_P(&quad_, &seedMaterial_, &instanceBuffer);
 }
 
 void Renderer::RenderPostProcess_P() {

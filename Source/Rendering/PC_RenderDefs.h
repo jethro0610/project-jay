@@ -16,6 +16,7 @@ typedef bgfx::UniformHandle Uniform;
 typedef bgfx::ShaderHandle Shader;
 typedef bgfx::VertexBufferHandle VertexBuffer;
 typedef bgfx::IndexBufferHandle IndexBuffer;
+typedef bgfx::InstanceDataBuffer InstanceBuffer;
 typedef bgfx::ProgramHandle MaterialShader;
 
 typedef bgfx::TextureHandle Texture;

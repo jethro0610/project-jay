@@ -133,6 +133,7 @@ private:
     void StartFrame_P();
     void Clear_P();
     void RenderWorld_P(World& world);
+    void RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer = nullptr, glm::mat4* worldMatrix = nullptr);
     void RenderEntities_P(
         Entity* entities, 
         MeterComponent& meterComponent,

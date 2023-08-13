@@ -1,0 +1,5 @@
+{
+    "vertex": "vs_uibar",
+    "fragment": "fs_uibar",
+    "textures": []
+}

@@ -1,0 +1,7 @@
+{
+    "vertex": "vs_screenquad",
+    "fragment": "fs_blit",
+    "textures": [
+       "t_g_post_c"
+    ]
+}

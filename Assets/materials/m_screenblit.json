@@ -1,7 +1,0 @@
-{
-   "vertex": "ScreenQuadVS",
-   "fragment": "BlitFS",
-   "textures": [
-       "t_g_post_c"
-   ]
-}

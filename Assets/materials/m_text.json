@@ -1,6 +1,6 @@
 {
-    "vertex": "GlyphVS",
-    "fragment": "TextFS",
+    "vertex": "vs_glyph",
+    "fragment": "fs_text",
     "textures": [
         "t_font"
     ]

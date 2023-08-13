@@ -1,9 +1,9 @@
 {
-    "vertex": "StaticVS",
-    "fragment": "DefaultFS",
+    "vertex": "vs_static",
+    "fragment": "fs_dfsa",
     "cast_shadows": true,
-    "vertex_shadow": "StaticVS_S",
-    "fragment_shadow": "DefaultFS_S",
+    "vertex_shadow": "vs_static_s",
+    "fragment_shadow": "fs_depth_s",
     "textures": [
         "t_tree_c",
         "t_tree_n"

@@ -1,9 +1,9 @@
 {
-    "vertex": "RockVS",
-    "fragment": "RockFS",
+    "vertex": "vs_static_crack",
+    "fragment": "fs_dfsa_crack",
     "cast_shadows": true,
-    "vertex_shadow": "StaticVS_S",
-    "fragment_shadow": "DefaultFS_S",
+    "vertex_shadow": "vs_static_s",
+    "fragment_shadow": "fs_depth_s",
     "textures": [ 
         "t_rock_c", 
         "t_rock_n", 

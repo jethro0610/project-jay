@@ -1,9 +1,9 @@
 {
-    "vertex": "InstanceVS",
-    "fragment": "FlowerFS",
+    "vertex": "vs_inst",
+    "fragment": "fs_dfsa_color_masked_edgeglow",
     "cast_shadows": true,
-    "vertex_shadow": "InstanceVS_S",
-    "fragment_shadow": "FlowerFS_S",
+    "vertex_shadow": "vs_inst_s",
+    "fragment_shadow": "fs_depth_masked_s",
     "textures": [
         "t_flower_m"
     ]

@@ -1,6 +1,6 @@
 {
     "vertex": "vs_inst",
-    "fragment": "fs_dfsa_color_masked_edgeglow",
+    "fragment": "fs_flower",
     "cast_shadows": true,
     "vertex_shadow": "vs_inst_s",
     "fragment_shadow": "fs_depth_masked_s",

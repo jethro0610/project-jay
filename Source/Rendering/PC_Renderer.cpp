@@ -132,40 +132,35 @@ void Renderer::TEMP_LoadTestData() {
     Texture flowerM = LoadTexture_P("t_flower_m");
     Texture font = LoadTexture_P("t_font");
 
-    LoadVertexShader_P("StaticVS");
-    LoadFragmentShader_P("DefaultFS");
-    LoadVertexShader_P("StaticVS_S");
-    LoadFragmentShader_P("DefaultFS_S");
+    LoadVertexShader_P("vs_static");
+    LoadVertexShader_P("vs_static_s");
+    LoadVertexShader_P("vs_static_crack");
+    LoadVertexShader_P("vs_inst");
+    LoadVertexShader_P("vs_inst_s");
+    LoadVertexShader_P("vs_inst_billboard");
+    LoadVertexShader_P("vs_inst_billboard_s");
+    LoadVertexShader_P("vs_world");
+    LoadVertexShader_P("vs_world_s");
+    LoadVertexShader_P("vs_screenquad");
+    LoadVertexShader_P("vs_glyph");
+    LoadVertexShader_P("vs_uibar");
 
-    LoadVertexShader_P("RockVS");
-    LoadFragmentShader_P("RockFS");
+    LoadFragmentShader_P("fs_depth_s");
+    LoadFragmentShader_P("fs_depth_masked_s");
 
-    LoadFragmentShader_P("LeavesFS");
-    LoadFragmentShader_P("LeavesFS_S");
+    LoadFragmentShader_P("fs_dfsa");
+    LoadFragmentShader_P("fs_dfsa_color");
+    LoadFragmentShader_P("fs_dfsa_crack");
 
-    LoadVertexShader_P("WorldVS");
-    LoadFragmentShader_P("WorldFS");
+    LoadFragmentShader_P("fs_flower");
+    LoadFragmentShader_P("fs_seed");
+    LoadFragmentShader_P("fs_leaves");
+    LoadFragmentShader_P("fs_world");
 
-    LoadVertexShader_P("InstanceVS");
-    LoadVertexShader_P("InstanceVS_S");
-    LoadFragmentShader_P("FlowerFS");
-    LoadFragmentShader_P("FlowerFS_S");
-    LoadFragmentShader_P("StemFS");
-
-    LoadVertexShader_P("ScreenQuadVS");
-    LoadFragmentShader_P("PostProcessFS");
-    LoadFragmentShader_P("BlitFS");
-
-    LoadVertexShader_P("InstBillboardVS");
-    LoadVertexShader_P("InstBillboardVS_S");
-    LoadFragmentShader_P("SeedFS");
-    LoadFragmentShader_P("SeedFS_S");
-
-    LoadVertexShader_P("GlyphVS");
-    LoadFragmentShader_P("TextFS");
-
-    LoadVertexShader_P("BarVS");
-    LoadFragmentShader_P("BarFS");
+    LoadFragmentShader_P("fs_blit");
+    LoadFragmentShader_P("fs_text");
+    LoadFragmentShader_P("fs_uibar");
+    LoadFragmentShader_P("fs_postprocess");
 
     Material playerMaterial = LoadMaterial_P("m_player");
     Material rockMaterial = LoadMaterial_P("m_rock");
@@ -177,8 +172,8 @@ void Renderer::TEMP_LoadTestData() {
     spreadMaterials_[1] = LoadMaterial_P("m_stem");
     seedMaterial_ = LoadMaterial_P("m_seed");
     textMaterial_ = LoadMaterial_P("m_text");
-    barMaterial_ = LoadMaterial_P("m_bar");
-    blitMaterial_ = LoadMaterial_P("m_screenblit");
+    barMaterial_ = LoadMaterial_P("m_uibar");
+    blitMaterial_ = LoadMaterial_P("m_preuiblit");
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -674,7 +669,6 @@ Material Renderer::LoadMaterial_P(std::string name) {
     material.castShadows = GetBoolean(data, "cast_shadows");
     material.recieveShadows = GetBoolean(data, "recieve_shadows");
     if (material.castShadows) {
-        DEBUGLOG(name << " is a shadow caster");
         Shader vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
         Shader fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
         material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);

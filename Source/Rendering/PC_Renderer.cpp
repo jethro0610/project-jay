@@ -404,9 +404,12 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
         if (curFace == 1) {
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
             normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
+            normalMult.y = -1.0f;
         }
-        else
+        else {
             normalMult.x = 1.0f;
+            normalMult.y = 1.0f;
+        }
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;

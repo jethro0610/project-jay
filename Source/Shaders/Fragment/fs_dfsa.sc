@@ -12,7 +12,7 @@ void main() {
     normal = normal * 2.0f - 1.0f;
     normal = normalize(mul(normal, v_tbn));
 
-    float brightness = getBrightness(normal, u_lightDirection.xyz, u_cameraPosition.xyz, v_wposition, v_sposition);
+    float brightness = getBrightness(normal, v_wposition, v_sposition);
 
     gl_FragColor = vec4(color * brightness, 1.0f);
 }

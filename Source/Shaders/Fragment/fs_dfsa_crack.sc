@@ -1,11 +1,8 @@
-$input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_texcoord0
+$input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 #define NOFRESNEL
 #include <Lighting.sh>
 #include <Crack.sh>
-
-uniform vec4 u_cameraPosition;
-uniform vec4 u_lightDirection;
 
 SAMPLER2D(s_color, 0);
 SAMPLER2D(s_normal, 1);

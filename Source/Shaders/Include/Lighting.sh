@@ -2,6 +2,9 @@
 #include <Shadow.sh>
 #endif
 
+uniform vec4 u_cameraPosition;
+uniform vec4 u_lightDirection;
+
 float getSpecular(vec3 cameraPosition, vec3 wposition, vec3 lightDir, vec3 normal, float power) {
     vec3 viewDir = normalize(cameraPosition - wposition);
     vec3 reflectDir = reflect(-lightDir, normal);

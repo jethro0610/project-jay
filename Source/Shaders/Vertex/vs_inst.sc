@@ -21,6 +21,8 @@ void main() {
     v_texcoord0 = a_texcoord0;
     v_wposition = mul(modelMatrix, vec4(a_position, 1.0f)).xyz;
     v_sposition = mul(u_shadowMatrix, vec4(v_wposition, 1.0f));
+
     v_color = i_data4;
+
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

@@ -4,5 +4,6 @@
     "casts_shadow": true,
     "vertex_shadow": "vs_inst_s",
     "fragment_shadow": "fs_depth_s",
-    "textures": []
+    "textures": [],
+    "color": {"x": 0.85, "y": 1.0, "z": 0.5 }
 }

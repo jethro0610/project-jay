@@ -26,3 +26,16 @@ std::string GetString(nlohmann::json& data, std::string property, std::string de
 
     return data[property].get<std::string>();
 }
+
+glm::vec4 GetVec4(nlohmann::json& data, std::string property, glm::vec4 defaultReturn) {
+    if (!data.contains(property))
+        return defaultReturn;
+
+    auto vector = data[property];
+    float x = GetFloat(vector, "x", 0.0f);
+    float y = GetFloat(vector, "y", 0.0f);
+    float z = GetFloat(vector, "z", 0.0f);
+    float w = GetFloat(vector, "w", 1.0f);
+
+    return glm::vec4(x, y, z, w);
+}

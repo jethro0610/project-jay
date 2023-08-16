@@ -6,9 +6,6 @@ $input v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangen
 #define SHARED_SHADER
 #include <Shared_WorldFuncs.h>
 
-uniform vec4 u_cameraPosition;
-uniform vec4 u_lightDirection;
-
 SAMPLER2D(s_color, 0);
 SAMPLER2D(s_normal, 1);
 SAMPLER2D(s_variation, 2);

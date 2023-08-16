@@ -106,6 +106,7 @@ private:
     Uniform u_shadowMatrix_;
     Uniform u_shadowResolution_;
 
+    Uniform u_materialProps_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;
     Uniform u_timeResolution_;

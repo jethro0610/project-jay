@@ -74,6 +74,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
 
+    u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
@@ -162,10 +163,11 @@ void Renderer::TEMP_LoadTestData() {
     LoadFragmentShader_P("fs_uibar");
     LoadFragmentShader_P("fs_postprocess");
 
-    Material playerMaterial = LoadMaterial_P("m_player");
-    Material rockMaterial = LoadMaterial_P("m_rock");
-    Material treeMaterial = LoadMaterial_P("m_tree");
-    Material leavesMaterial = LoadMaterial_P("m_leaves");
+    LoadMaterial_P("m_player");
+    LoadMaterial_P("m_skin");
+    LoadMaterial_P("m_rock");
+    LoadMaterial_P("m_tree");
+    LoadMaterial_P("m_leaves");
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");
     spreadMaterials_[0] = LoadMaterial_P("m_flower");
@@ -392,6 +394,8 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
     int curPass = 0;
     int curFace = 0;
 
+    mat4 transposeProps = transpose(material->properties);
+    bgfx::setUniform(u_materialProps_, &transposeProps);
     for (int n = 0; n < numOfRenders; n++) {
         if (worldMatrix != nullptr)
             bgfx::setTransform(worldMatrix);
@@ -680,6 +684,8 @@ Material Renderer::LoadMaterial_P(std::string name) {
             material.textures[i] = GetTexture(textureNames[i]);
         material.numTextures = textureNames.size();
     }
+
+    material.properties[1] = GetVec4(data, "color");
     
     materials_[name] = material;
     DEBUGLOG("Loaded material " << name);

@@ -2,7 +2,6 @@ $input v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangen
 #include <bgfx_shader.sh>
 #include <Lighting.sh>
 #include <Dither.sh>
-#include <Shadow.sh>
 
 #define SHARED_SHADER
 #include <Shared_WorldFuncs.h>

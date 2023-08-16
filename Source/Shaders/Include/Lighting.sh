@@ -1,3 +1,7 @@
+#ifndef NOSHADOW
+#include <Shadow.sh>
+#endif
+
 float getSpecular(vec3 cameraPosition, vec3 wposition, vec3 lightDir, vec3 normal, float power) {
     vec3 viewDir = normalize(cameraPosition - wposition);
     vec3 reflectDir = reflect(-lightDir, normal);
@@ -9,32 +13,34 @@ float getFresnel(vec3 cameraPosition, vec3 wposition, vec3 normal, float scale, 
     return saturate(scale * pow(1.0f + dot(-viewDir, normal), power));
 }
 
-// float getDFSABrightnessNoShadow(vec3 normal, vec3 lightDirection) {
-//     float ambient = 0.2f;
-//     float diffuse = max(-dot(normal, lightDirection), 0.0f);
-//     float brightness = diffuse + ambient;
-//     float specular = getSpecular(u_cameraPosition.xyz, v_wposition, lightDirection, normal, 32.0f);
-//     float fresnel = getFresnel(u_cameraPosition.xyz, v_wposition, normal, 1.0, 4.0f);
-//
-//     brightness = max(brightness, step(1.0f, brightness) * 1.0f);
-//     brightness = max(brightness, step(0.75f, brightness) * 0.75f);
-//     brightness = max(brightness, step(0.25f, brightness) * 0.25f);
-//
-//     // if (brightness <= 0.25f)
-//     //     brightness = 0.25f;
-//     // else if (brightness <= 0.75f)
-//     //     brightness = 0.75f;
-//     // else
-//     //     brightness = 1.00f;
-//
-//     return brightness;
-// }
-//
-// float getDFSABrightness(vec3 normal, vec3 lightDirection) {
-//     float shadow = getShadow(v_sposition);
-//     float brightness = getDFSABrightnessNoShadow(normal, lightDirection);
-//
-//     brightness = lerp(0.25f, brightness, shadow);
-//
-//     return brightness;
-// }
+float getDSABrightness(vec3 normal, vec3 lightDirection, vec3 cameraPosition, vec3 wPosition) {
+    float ambient = 0.2f;
+    float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float brightness = diffuse + ambient;
+    #ifndef NOSPECULAR
+    float specular = getSpecular(cameraPosition, wPosition, lightDirection, normal, 32.0f);
+    #endif
+
+    brightness = max(brightness, step(0.3f, specular) * 1.5f);
+    brightness = max(brightness, step(0.75f, brightness) * 1.0f);
+    brightness = max(brightness, step(0.25f, brightness) * 0.75f);
+    brightness = max(brightness, step(0.00f, brightness) * 0.25f);
+
+    return brightness;
+}
+
+float getBrightness(vec3 normal, vec3 lightDirection, vec3 cameraPosition, vec3 wPosition, vec4 sPosition) {
+    float brightness = getDSABrightness(normal, lightDirection, cameraPosition, wPosition);
+
+    #ifndef NOSHADOW
+    float shadow = getShadow(sPosition);
+    brightness = lerp(0.25f, brightness, shadow);
+    #endif
+
+    #ifndef NOFRESNEL
+    float fresnel = getFresnel(cameraPosition, wPosition, normal, 1.0, 4.0f);
+    brightness += fresnel;
+    #endif
+
+    return brightness;
+}

@@ -7,7 +7,7 @@
             "model": "st_tree",
             "materials": [
                 "m_tree",
-                "m_leaves"
+                "m_willowleaves"
             ]
         },
         "interval_spawner": {

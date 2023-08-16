@@ -17,7 +17,7 @@ void main() {
     float brightness = diffuse + ambient;
     brightness = max(0.6f, brightness);
     
-    brightness += v_texcoord0.x * 0.15f;
+    brightness += v_texcoord0.x * 0.2f;
 
     gl_FragColor = vec4(PROP_COLOR.xyz * brightness, 1.0f);
 }

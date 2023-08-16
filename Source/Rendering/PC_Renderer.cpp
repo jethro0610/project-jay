@@ -132,6 +132,7 @@ void Renderer::TEMP_LoadTestData() {
     Texture leavesM = LoadTexture_P("t_leaves_m");
     Texture flowerM = LoadTexture_P("t_flower_m");
     Texture font = LoadTexture_P("t_font");
+    Texture hairM = LoadTexture_P("t_hair_m");
 
     LoadVertexShader_P("vs_static");
     LoadVertexShader_P("vs_static_s");
@@ -151,11 +152,12 @@ void Renderer::TEMP_LoadTestData() {
 
     LoadFragmentShader_P("fs_dfsa");
     LoadFragmentShader_P("fs_dfsa_color");
+    LoadFragmentShader_P("fs_dfsa_color_masked");
     LoadFragmentShader_P("fs_dfsa_crack");
 
     LoadFragmentShader_P("fs_flower");
     LoadFragmentShader_P("fs_seed");
-    LoadFragmentShader_P("fs_leaves");
+    LoadFragmentShader_P("fs_leaves_strand");
     LoadFragmentShader_P("fs_world");
 
     LoadFragmentShader_P("fs_blit");
@@ -166,9 +168,10 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_player");
     LoadMaterial_P("m_playerskin");
     LoadMaterial_P("m_playershirt");
+    LoadMaterial_P("m_hair");
     LoadMaterial_P("m_rock");
     LoadMaterial_P("m_tree");
-    LoadMaterial_P("m_leaves");
+    LoadMaterial_P("m_willowleaves");
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");
     spreadMaterials_[0] = LoadMaterial_P("m_flower");

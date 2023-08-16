@@ -1,7 +1,7 @@
 {
     "two_sided": true,
     "vertex": "vs_static",
-    "fragment": "fs_leaves",
+    "fragment": "fs_leaves_strand",
     "cast_shadows": true,
     "vertex_shadow": "vs_static_s",
     "fragment_shadow": "fs_depth_masked_s",

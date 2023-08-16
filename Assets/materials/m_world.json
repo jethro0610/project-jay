@@ -5,5 +5,6 @@
         "t_grass_c",
         "t_grass_n",
         "t_marble_c"
-    ]
+    ],
+    "fresnel_power": 16.0
 }

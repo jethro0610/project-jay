@@ -13,7 +13,7 @@ float getSpecular(vec3 wposition, vec3 normal, float power) {
     return pow(max(dot(-viewDir, reflectDir), 0.0f), power);
 }
 
-float getFresnel(vec3 wposition, vec3 normal, float scale, float power) {
+float getFresnel(vec3 wposition, vec3 normal, float power, float scale) {
     vec3 viewDir = normalize(u_cameraPosition.xyz - wposition);
     return saturate(scale * pow(1.0f + dot(-viewDir, normal), power));
 }
@@ -24,7 +24,7 @@ float getDSABrightness(vec3 normal, vec3 wPosition) {
     float brightness = diffuse + ambient;
 
     #ifndef NOSPECULAR
-    float specular = getSpecular(wPosition, normal * u_normalMult.y, 32.0f);
+    float specular = getSpecular(wPosition, normal * u_normalMult.y, PROP_SPEC_POWER);
     brightness = max(brightness, step(PROP_SPEC_THRESH, specular) * PROP_SPEC_BRIGHTNESS);
     #endif
 
@@ -44,8 +44,8 @@ float getBrightness(vec3 normal, vec3 wPosition, vec4 sPosition) {
     #endif
 
     #ifndef NOFRESNEL
-    float fresnel = getFresnel(wPosition, normal * u_normalMult.y, 1.0, 4.0f);
-    brightness += fresnel;
+    float fresnel = getFresnel(wPosition, normal * u_normalMult.y, PROP_FRES_POWER, PROP_FRES_SCALE);
+    brightness += fresnel * PROP_FRES_BRIGHTNESS;
     #endif
 
     return brightness;

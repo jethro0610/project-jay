@@ -8,5 +8,6 @@
         "t_rock_c", 
         "t_rock_n", 
         "t_crack_m" 
-    ]
+    ],
+    "fresnel_brightness": 0.25
 }

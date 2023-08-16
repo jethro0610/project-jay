@@ -689,9 +689,15 @@ Material Renderer::LoadMaterial_P(std::string name) {
         material.numTextures = textureNames.size();
     }
 
-    material.properties[0][0] = GetFloat(data, "specular_threshhold", 0.3f);
-    material.properties[0][1] = GetFloat(data, "specular_brightness", 1.5f);
-    material.properties[1] = GetVec4(data, "color");
+    material.properties[0][0] = GetFloat(data, "specular_power", 32.0f);
+    material.properties[0][1] = GetFloat(data, "specular_threshhold", 0.3f);
+    material.properties[0][2] = GetFloat(data, "specular_brightness", 1.5f);
+
+    material.properties[1][0] = GetFloat(data, "fresnel_power", 4.0f);
+    material.properties[1][1] = GetFloat(data, "fresnel_scale", 1.0f);
+    material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
+
+    material.properties[3] = GetVec4(data, "color");
     
     materials_[name] = material;
     DEBUGLOG("Loaded material " << name);

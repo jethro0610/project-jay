@@ -12,12 +12,13 @@ void main() {
     vec3 lightDirection = u_lightDirection.xyz;
 
     vec3 normal = v_normal;
-    vec4 worldOrigin = mul(u_model[0], vec4(0.0f, 1.0f, 0.0f, 1.0f));
-    vec3 worldDirection = normalize(v_wposition.xyz - worldOrigin);
-    normal = normalize(v_normal * 0.3f + worldDirection * 0.7f);
 
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
+
+    // Areas that skim the light are brightened
+    diffuse = max(diffuse, pow(1.0f - abs(diffuse - 0.35f), 3.0f));
+
     float brightness = diffuse + ambient;
     brightness = max(0.6f, brightness);
     

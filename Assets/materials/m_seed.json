@@ -3,6 +3,6 @@
     "fragment": "fs_seed",
     "cast_shadows": true,
     "vertex_shadow": "vs_inst_billboard_s",
-    "fragment_shadow": "fs_depth_masked_s",
+    "fragment_shadow": "fs_depth_s",
     "textures": []
 }

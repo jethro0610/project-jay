@@ -1,5 +1,7 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
+#define NOSPECULAR
+#define NOFRESNEL
 #include <Lighting.sh>
 #include <Dither.sh>
 
@@ -11,8 +13,6 @@ void main() {
     DITHERDISCARD(1.0f - alpha);
 
     vec3 color = v_color * texColor.r;
-    vec3 lightDirection = u_lightDirection.xyz;
-
     vec3 normal = v_normal;
 
     float brightness = getBrightness(normal, u_lightDirection.xyz, u_cameraPosition.xyz, v_wposition, v_sposition);

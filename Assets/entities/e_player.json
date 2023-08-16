@@ -7,11 +7,13 @@
             "model": "st_char",
             "materials": [
                 "m_player",
-                "m_skin",
+                "m_playerskin",
                 "m_player",
                 "m_player",
                 "m_player",
                 "m_player",
+                "m_player",
+                "m_playershirt",
                 "m_player",
                 "m_player"
             ]

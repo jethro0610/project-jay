@@ -1,4 +1,5 @@
 {
+    "two_sided": true,
     "vertex": "vs_inst",
     "fragment": "fs_flower",
     "cast_shadows": true,

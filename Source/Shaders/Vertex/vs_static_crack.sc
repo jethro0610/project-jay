@@ -4,17 +4,18 @@ $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_col
 #include <Crack.sh>
 
 SAMPLER2D(s_crack, 2);
+uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
 
 void main() {
     v_normal = mul(u_model[0], vec4(a_normal, 0.0f)).xyz; 
-    v_normal = normalize(v_normal);
+    v_normal = normalize(v_normal) * u_normalMult.x;
 
     v_bitangent = mul(u_model[0], vec4(a_bitangent, 0.0f)).xyz; 
-    v_bitangent = normalize(v_bitangent);
+    v_bitangent = normalize(v_bitangent) * u_normalMult.x;
 
     v_tangent = mul(u_model[0], vec4(a_tangent, 0.0f)).xyz; 
-    v_tangent = normalize(v_tangent);
+    v_tangent = normalize(v_tangent) * u_normalMult.x;
 
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 

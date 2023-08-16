@@ -20,11 +20,12 @@ float getDSABrightness(vec3 normal, vec3 lightDirection, vec3 cameraPosition, ve
     float ambient = 0.2f;
     float diffuse = max(-dot(normal, lightDirection), 0.0f);
     float brightness = diffuse + ambient;
+
     #ifndef NOSPECULAR
     float specular = getSpecular(cameraPosition, wPosition, lightDirection, normal, 32.0f);
+    brightness = max(brightness, step(0.3f, specular) * 1.5f);
     #endif
 
-    brightness = max(brightness, step(0.3f, specular) * 1.5f);
     brightness = max(brightness, step(0.75f, brightness) * 1.0f);
     brightness = max(brightness, step(0.25f, brightness) * 0.75f);
     brightness = max(brightness, step(0.00f, brightness) * 0.25f);

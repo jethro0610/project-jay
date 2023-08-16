@@ -12,10 +12,11 @@ void main() {
     v_normal = normalize(v_normal) * u_normalMult.x;
 
     v_bitangent = mul(modelMatrix, vec4(a_bitangent, 0.0f)).xyz; 
-    v_bitangent = normalize(v_bitangent);
+    v_bitangent = normalize(v_bitangent) * u_normalMult.x;
 
     v_tangent = mul(modelMatrix, vec4(a_tangent, 0.0f)).xyz; 
-    v_tangent = normalize(v_tangent);
+    v_tangent = normalize(v_tangent) * u_normalMult.x;
+
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
     v_texcoord0 = a_texcoord0;

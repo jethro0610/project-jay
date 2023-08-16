@@ -164,7 +164,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadFragmentShader_P("fs_postprocess");
 
     LoadMaterial_P("m_player");
-    LoadMaterial_P("m_skin");
+    LoadMaterial_P("m_playerskin");
+    LoadMaterial_P("m_playershirt");
     LoadMaterial_P("m_rock");
     LoadMaterial_P("m_tree");
     LoadMaterial_P("m_leaves");
@@ -402,10 +403,10 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
 
         if (curFace == 1) {
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-            normalMult = vec4(material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f);
+            normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
         }
         else
-            normalMult = vec4(1.0f);
+            normalMult.x = 1.0f;
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;

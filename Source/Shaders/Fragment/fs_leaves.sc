@@ -14,10 +14,8 @@ void main() {
     vec3 normal = v_normal;
 
     float ambient = 0.2f;
-    float diffuse = max(-dot(normal, lightDirection), 0.0f);
+    float diffuse = pow(max(-dot(normal, lightDirection), 0.0f), 0.3f);
 
-    // Areas that skim the light are brightened
-    diffuse = max(diffuse, pow(1.0f - abs(diffuse - 0.35f), 3.0f));
 
     float brightness = diffuse + ambient;
     brightness = max(0.6f, brightness);

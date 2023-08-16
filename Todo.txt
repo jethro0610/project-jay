@@ -8,15 +8,12 @@
 - Material rewrite
     - Include guards
     - Handle non-shadowing materials
-    - Material properties
-    - Generic mapped color material
-    - 0 fresnel on rocks
     - Genericize:
-        - Color
         - Instances need to have an ID
         - Masked alpha
         - Defaults material
         - This should use uniforms to add variation between materials
+        - Leaf and hair material
 
 - Flower model
     - Bending

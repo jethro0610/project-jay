@@ -6,6 +6,7 @@
 - Rename to World to Terrain
 
 - Material rewrite
+    - Include guards
     - Handle non-shadowing materials
     - Material properties
     - Generic mapped color material

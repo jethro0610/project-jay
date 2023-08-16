@@ -1,6 +1,5 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
-#define NOFRESNEL
 #include <Lighting.sh>
 #include <Crack.sh>
 

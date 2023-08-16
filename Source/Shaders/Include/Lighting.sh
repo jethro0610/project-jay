@@ -1,6 +1,7 @@
 #ifndef NOSHADOW
 #include <Shadow.sh>
 #endif
+#include <Properties.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -23,8 +24,8 @@ float getDSABrightness(vec3 normal, vec3 wPosition) {
     float brightness = diffuse + ambient;
 
     #ifndef NOSPECULAR
-    float specular = getSpecular(wPosition, normal, 32.0f);
-    brightness = max(brightness, step(0.3f, specular) * 1.5f);
+    float specular = getSpecular(wPosition, normal * u_normalMult.y, 32.0f);
+    brightness = max(brightness, step(PROP_SPEC_THRESH, specular) * PROP_SPEC_BRIGHTNESS);
     #endif
 
     brightness = max(brightness, step(0.75f, brightness) * 1.0f);

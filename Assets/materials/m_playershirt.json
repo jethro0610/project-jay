@@ -1,0 +1,11 @@
+{
+    "two_sided": true,
+    "vertex": "vs_static",
+    "fragment": "fs_dfsa_color",
+    "cast_shadows": true,
+    "vertex_shadow": "vs_static_s",
+    "fragment_shadow": "fs_depth_s",
+    "textures": [],
+    "color": {"x": 0.9, "y": 0.85, "z": 0.75 },
+    "specular_brightness": 0.0
+}

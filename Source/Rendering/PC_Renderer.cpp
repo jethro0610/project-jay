@@ -689,6 +689,8 @@ Material Renderer::LoadMaterial_P(std::string name) {
         material.numTextures = textureNames.size();
     }
 
+    material.properties[0][0] = GetFloat(data, "specular_threshhold", 0.3f);
+    material.properties[0][1] = GetFloat(data, "specular_brightness", 1.5f);
     material.properties[1] = GetVec4(data, "color");
     
     materials_[name] = material;

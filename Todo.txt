@@ -5,15 +5,6 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
-- Material rewrite
-    - Include guards
-    - Handle non-shadowing materials
-    - Genericize:
-        - Instances need to have an ID
-        - Masked alpha
-        - Defaults material
-        - This should use uniforms to add variation between materials
-        - Leaf and hair material
 
 - Flower model
     - Bending
@@ -23,8 +14,6 @@
 - Player model
     - Animation
 - Holes (terrain modification)
-
-- Add negative backside bool to material
 
 - Frustum culling
 
@@ -39,6 +28,8 @@
       levels and keeping their index
 
 - Camera needs to collide with world
+
+- Instances need to have an ID
 
 - Tree:
     - Enemy that breaks the tree

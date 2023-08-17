@@ -1,3 +1,6 @@
+#ifndef RANDOM_H
+#define RANDOM_H
+
 uniform vec4 u_randomVec;
 #define u_random u_randomVec.x
 
@@ -7,3 +10,5 @@ int getRandom(vec2 vec) {
     random = random * (random + 3) % 516169;
     return random;
 }
+
+#endif

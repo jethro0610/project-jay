@@ -1,7 +1,10 @@
+#ifndef LIGHTING
+#define LIGHTING_H
+
 #ifndef NOSHADOW
-#include <Shadow.sh>
+#include <shadow.sh>
 #endif
-#include <Properties.sh>
+#include <properties.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -50,3 +53,5 @@ float getBrightness(vec3 normal, vec3 wPosition, vec4 sPosition) {
 
     return brightness;
 }
+
+#endif

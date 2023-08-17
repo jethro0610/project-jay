@@ -1,6 +1,6 @@
 $input v_sposition, v_texcoord0
 #include <bgfx_shader.sh>
-#include <Shadow.sh>
+#include <shadow.sh>
 
 void main() {
     vec2 origin = (0.5f, 0.5f);

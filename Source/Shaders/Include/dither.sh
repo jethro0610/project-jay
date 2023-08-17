@@ -1,3 +1,6 @@
+#ifndef DITHER_H
+#define DITHER_H
+
 static const int bayerMatrix[16][16] = {
     {  0, 128,  32, 160,   8, 136,  40, 168,   2, 130,  34, 162,  10, 138,  42, 170},
     {192,  64, 224,  96, 200,  72, 232, 104, 194,  66, 226,  98, 202,  74, 234, 106},
@@ -40,3 +43,5 @@ float dither(vec2 coords, float a) {
 //
 //     return step(a * 256.0f, bayerMatrix[x][y]);
 // }
+
+#endif

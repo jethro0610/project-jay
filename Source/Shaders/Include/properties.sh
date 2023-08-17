@@ -1,5 +1,6 @@
 #ifndef PROPERTIES_H
 #define PROPERTIES_H
+
 uniform mat4 u_materialProps;
 
 #define PROP_COLOR u_materialProps[3]
@@ -11,4 +12,5 @@ uniform mat4 u_materialProps;
 #define PROP_FRES_POWER u_materialProps[1][0]
 #define PROP_FRES_SCALE u_materialProps[1][1]
 #define PROP_FRES_BRIGHTNESS u_materialProps[1][2]
+
 #endif

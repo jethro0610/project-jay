@@ -1,3 +1,6 @@
+#ifndef SHADOW_H
+#define SHADOW_H
+
 SAMPLER2D(s_samplerShadow, 8);
 static const float BIAS = 0.001f;
 static const float FADE_POW = 3.0f;
@@ -50,3 +53,5 @@ float getFastShadow(vec4 sposition) {
     float border = step(1.0, 1.0f - closest);
     return max(border, 1.0f - shadowVal);
 }
+
+#endif

@@ -1,6 +1,6 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
-#include <Lighting.sh>
+#include <lighting.sh>
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);

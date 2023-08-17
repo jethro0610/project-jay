@@ -1,7 +1,7 @@
 $input a_position, a_normal, a_tangent, a_bitangent, a_texcoord0
 $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
-#include <Crack.sh>
+#include <crack.sh>
 
 SAMPLER2D(s_crack, 2);
 uniform vec4 u_normalMult;

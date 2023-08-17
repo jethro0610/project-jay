@@ -1,3 +1,6 @@
+#ifndef CRACK_H
+#define CRACK_H
+
 uniform vec4 u_meter;
 vec2 getCrackStrength() {
     vec2 strength = vec2(0.0f, 0.0f);
@@ -11,3 +14,5 @@ vec2 getCrackStrength() {
 
     return strength;
 }
+
+#endif

@@ -492,7 +492,7 @@ void Renderer::RenderEntities_P(
         mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
 
         Model model = staticModelComponent.model[i];
-        for (int m = 0; m < model.numMeshes; m++) {
+        for (int m = 0; m < model.meshes.size(); m++) {
             Material material = staticModelComponent.materials[i][m];
             Mesh mesh = model.meshes[m];
             RenderMesh_P(&mesh, &material, nullptr, &worldMatrix);
@@ -509,7 +509,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
 
-    for (int m = 0; m < spreadModel_.numMeshes; m++) {
+    for (int m = 0; m < spreadModel_.meshes.size(); m++) {
         Mesh mesh = spreadModel_.meshes[m];
         Material material = spreadMaterials_[m];
         RenderMesh_P(&mesh, &material, &instanceBuffer);

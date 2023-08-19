@@ -65,10 +65,13 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
 
-    for (int i = 0; i < NUM_SAMPLERS; i++) {
+    for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
+    shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
+    worldNoiseSampler_ = bgfx::createUniform("s_samplerWorldNoise", bgfx::UniformType::Sampler);
+
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
@@ -468,7 +471,7 @@ void Renderer::RenderWorld_P(World& world) {
         vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
-        bgfx::setTexture(WORLD_NOISE_TEXINDEX, samplers_[WORLD_NOISE_TEXINDEX], noiseTexture_);
+        bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_);
         RenderMesh_P(&worldMesh_, &worldMaterial_);
     };
 }
@@ -627,7 +630,7 @@ Model Renderer::LoadModel_P(std::string name) {
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
     model.meshes.resize(modelHeader.numMeshes);
 
-    for (int i = 0; i < model.meshes.size(); i++) {
+    for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
         
@@ -637,8 +640,8 @@ Model Renderer::LoadModel_P(std::string name) {
         const bgfx::Memory* indexMem = bgfx::alloc(sizeof(uint16_t) * meshHeader.numIndices);
         file.read((char*)indexMem->data, sizeof(uint16_t) * meshHeader.numIndices);
 
-        model.meshes[i].vertexBuffer = bgfx::createVertexBuffer(vertexMem, StaticVertex::layout);
-        model.meshes[i].indexBuffer = bgfx::createIndexBuffer(indexMem);
+        mesh.vertexBuffer = bgfx::createVertexBuffer(vertexMem, StaticVertex::layout);
+        mesh.indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 
     // Skeleton_INTERNAL skeleton;
@@ -690,6 +693,7 @@ Material Renderer::LoadMaterial_P(std::string name) {
 
     if (data.contains("textures")) {
         auto textureNames = data["textures"];
+        ASSERT((textureNames.size() <= MAX_TEXTURES_PER_MATERIAL), "Too many textures on material " + name);
         for (std::string textureName : textureNames)
             material.textures.push_back(GetTexture(textureName));
     }
@@ -714,7 +718,7 @@ void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
         bgfx::setTexture(i, samplers_[i], material.textures[i]);
 
     if (shadowMap)
-        bgfx::setTexture(SHADOW_TEXINDEX, samplers_[SHADOW_TEXINDEX], shadowBufferTexture_);
+        bgfx::setTexture(SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_);
 }
 
 void Renderer::SetLightDirection_P(vec3 direction) {

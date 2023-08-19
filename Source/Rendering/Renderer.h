@@ -102,7 +102,9 @@ private:
     std::array<Texture, 2> renderBufferTextures_;
     Texture postProcessTexture_;
 
-    std::array<TextureSampler, NUM_SAMPLERS> samplers_;
+    std::array<TextureSampler, MAX_TEXTURES_PER_MATERIAL> samplers_;
+    TextureSampler shadowSampler_;
+    TextureSampler worldNoiseSampler_;
 
     Uniform u_shadowUp_;
     Uniform u_shadowRight_;

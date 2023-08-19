@@ -389,19 +389,19 @@ void Renderer::PresentFrame_P() {
     bgfx::frame(); 
 }
 
-void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer, glm::mat4* worldMatrix) {
+void Renderer::RenderMesh_P(Mesh& mesh, Material& material, InstanceBuffer* instanceBuffer, glm::mat4* worldMatrix) {
     vec4 normalMult;
 
     int numOfRenders = 1;
-    if (material->castShadows)
+    if (material.castShadows)
         numOfRenders *= 2;
-    if (material->triangleType > ONE_SIDED)
+    if (material.triangleType > ONE_SIDED)
         numOfRenders *= 2;
 
     int curPass = 0;
     int curFace = 0;
 
-    mat4 transposeProps = transpose(material->properties);
+    mat4 transposeProps = transpose(material.properties);
     bgfx::setUniform(u_materialProps_, &transposeProps);
     for (int n = 0; n < numOfRenders; n++) {
         if (worldMatrix != nullptr)
@@ -409,7 +409,7 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
 
         if (curFace == 1) {
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-            normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
+            normalMult.x = material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
             normalMult.y = -1.0f;
         }
         else {
@@ -422,23 +422,23 @@ void Renderer::RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* inst
         MaterialShader shader;
         if (curPass == 0) {
             view = RENDER_VIEW;
-            shader = material->shader;
-            SetTexturesFromMaterial_P(*material, true);
+            shader = material.shader;
+            SetTexturesFromMaterial_P(material, true);
         }
         else {
             view = SHADOW_VIEW;
-            shader = material->shadowShader;
-            SetTexturesFromMaterial_P(*material, false);
+            shader = material.shadowShader;
+            SetTexturesFromMaterial_P(material, false);
         }
 
         if (instanceBuffer != nullptr)
             bgfx::setInstanceDataBuffer(instanceBuffer);
 
-        bgfx::setVertexBuffer(0, mesh->vertexBuffer);
-        bgfx::setIndexBuffer(mesh->indexBuffer);
+        bgfx::setVertexBuffer(0, mesh.vertexBuffer);
+        bgfx::setIndexBuffer(mesh.indexBuffer);
         bgfx::submit(view, shader);
 
-        if (material->triangleType > ONE_SIDED) {
+        if (material.triangleType > ONE_SIDED) {
             curFace++;
 
             // When two faces have been rendered,
@@ -472,7 +472,7 @@ void Renderer::RenderWorld_P(World& world) {
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
         bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_);
-        RenderMesh_P(&worldMesh_, &worldMaterial_);
+        RenderMesh_P(worldMesh_, worldMaterial_);
     };
 }
 
@@ -494,11 +494,11 @@ void Renderer::RenderEntities_P(
         bgfx::setUniform(u_meter_, &meter);
         mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
 
-        Model model = staticModelComponent.model[i];
+        Model& model = *staticModelComponent.model[i];
         for (int m = 0; m < model.meshes.size(); m++) {
-            Material material = staticModelComponent.materials[i][m];
-            Mesh mesh = model.meshes[m];
-            RenderMesh_P(&mesh, &material, nullptr, &worldMatrix);
+            Material& material = *staticModelComponent.materials[i][m];
+            Mesh& mesh = model.meshes[m];
+            RenderMesh_P(mesh, material, nullptr, &worldMatrix);
         }
     }
 }
@@ -513,9 +513,9 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
 
     for (int m = 0; m < spreadModel_.meshes.size(); m++) {
-        Mesh mesh = spreadModel_.meshes[m];
-        Material material = spreadMaterials_[m];
-        RenderMesh_P(&mesh, &material, &instanceBuffer);
+        Mesh& mesh = spreadModel_.meshes[m];
+        Material& material = spreadMaterials_[m];
+        RenderMesh_P(mesh, material, &instanceBuffer);
     }
 }
 
@@ -528,7 +528,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
-    RenderMesh_P(&quad_, &seedMaterial_, &instanceBuffer);
+    RenderMesh_P(quad_, seedMaterial_, &instanceBuffer);
 }
 
 void Renderer::RenderPostProcess_P() {
@@ -590,7 +590,7 @@ void Renderer::RenderScreenText_P() {
     file.close()
 
 
-Shader Renderer::LoadVertexShader_P(std::string name) {
+Shader& Renderer::LoadVertexShader_P(std::string name) {
     ForceMapUnique(vertexShaders_, name, "Vertex shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
@@ -600,10 +600,10 @@ Shader Renderer::LoadVertexShader_P(std::string name) {
     Shader shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded vertex shader " << name);
     vertexShaders_[name] = shader;
-    return shader;
+    return vertexShaders_[name];
 }
 
-Shader Renderer::LoadFragmentShader_P(std::string name) {
+Shader& Renderer::LoadFragmentShader_P(std::string name) {
     ForceMapUnique(fragmentShaders_, name, "Fragment shader " + name + " is already loaded");
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
@@ -613,10 +613,10 @@ Shader Renderer::LoadFragmentShader_P(std::string name) {
     Shader shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded fragment shader " << name);
     fragmentShaders_[name] = shader;
-    return shader;
+    return fragmentShaders_[name];
 }
 
-Model Renderer::LoadModel_P(std::string name) {
+Model& Renderer::LoadModel_P(std::string name) {
     ForceMapUnique(models_, name, "Model " + name + " is already loaded");
     Model model;
     std::ifstream file;
@@ -652,10 +652,10 @@ Model Renderer::LoadModel_P(std::string name) {
     DEBUGLOG("Loaded model " << name << " with " << (int)model.meshes.size() << " meshes");
     models_[name] = model;
 
-    return model;
+    return models_[name];
 }
 
-Texture Renderer::LoadTexture_P(std::string name) {
+Texture& Renderer::LoadTexture_P(std::string name) {
     ForceMapUnique(textures_, name, "Texture " + name + " is already loaded");
     std::string path = "./textures/" + name + ".dds";
     MEMORYFROMFILE(path);
@@ -665,10 +665,10 @@ Texture Renderer::LoadTexture_P(std::string name) {
     Texture texture = bgfx::createTexture(memory);
     DEBUGLOG("Loaded texture " << name);
     textures_[name] = texture;
-    return texture;
+    return textures_[name];
 }
 
-Material Renderer::LoadMaterial_P(std::string name) {
+Material& Renderer::LoadMaterial_P(std::string name) {
     std::ifstream inFile("materials/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load material " + name);
     nlohmann::json data = nlohmann::json::parse(inFile);
@@ -680,14 +680,14 @@ Material Renderer::LoadMaterial_P(std::string name) {
     if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
         material.triangleType = TWO_SIDED_NEGATIVE_BACK;
 
-    Shader vertexShader = GetVertexShader(GetString(data, "vertex"));
-    Shader fragmentShader = GetFragmentShader(GetString(data, "fragment"));
+    Shader& vertexShader = GetVertexShader(GetString(data, "vertex"));
+    Shader& fragmentShader = GetFragmentShader(GetString(data, "fragment"));
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
 
     material.castShadows = GetBoolean(data, "cast_shadows");
     if (material.castShadows) {
-        Shader vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
-        Shader fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
+        Shader& vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
+        Shader& fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
         material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
     }
 
@@ -710,7 +710,7 @@ Material Renderer::LoadMaterial_P(std::string name) {
     
     materials_[name] = material;
     DEBUGLOG("Loaded material " << name);
-    return material;
+    return materials_[name];
 }
 
 void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {

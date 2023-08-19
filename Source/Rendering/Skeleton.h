@@ -12,12 +12,6 @@ struct Joint {
     std::array<int, MAX_JOINT_CHILDREN> children;
 };
 
-// Internal is defined here so we can store the actual
-// values in the renderer. Everything else will use a
-// pointer to that skeleton. This follows the same semantics
-// as bgfx's handles
-struct Skeleton_INTERNAL {
+struct Skeleton {
     std::vector<Joint> joints;   
 };
-
-typedef Skeleton_INTERNAL* Skeleton;

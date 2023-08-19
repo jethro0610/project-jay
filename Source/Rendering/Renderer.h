@@ -44,20 +44,20 @@ public:
         TransformComponent& transformComponent
     );
 
-    Shader LoadVertexShader_P(std::string name);
-    Shader LoadFragmentShader_P(std::string name);
-    Model LoadModel_P(std::string name);
-    Texture LoadTexture_P(std::string name);
-    Material LoadMaterial_P(std::string name);
+    Shader& LoadVertexShader_P(std::string name);
+    Shader& LoadFragmentShader_P(std::string name);
+    Model& LoadModel_P(std::string name);
+    Texture& LoadTexture_P(std::string name);
+    Material& LoadMaterial_P(std::string name);
 
     void TEMP_LoadTestData();
 
-    Shader GetVertexShader(std::string name);
-    Shader GetFragmentShader(std::string name);
-    Model GetModel(std::string name);
-    Skeleton GetSkeleton(std::string name);
-    Texture GetTexture(std::string name);
-    Material GetMaterial(std::string name);
+    Shader& GetVertexShader(std::string name);
+    Shader& GetFragmentShader(std::string name);
+    Model& GetModel(std::string name);
+    Skeleton& GetSkeleton(std::string name);
+    Texture& GetTexture(std::string name);
+    Material& GetMaterial(std::string name);
 
 private:
     int width_;
@@ -129,7 +129,7 @@ private:
     std::unordered_map<std::string, Shader> vertexShaders_;
     std::unordered_map<std::string, Shader> fragmentShaders_;
     std::unordered_map<std::string, Model> models_;
-    std::unordered_map<std::string, Skeleton_INTERNAL> skeletons_;
+    std::unordered_map<std::string, Skeleton> skeletons_;
     std::unordered_map<std::string, Texture> textures_;
     std::unordered_map<std::string, Material> materials_;
 
@@ -139,7 +139,7 @@ private:
 
     void StartFrame_P();
     void Clear_P();
-    void RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer = nullptr, glm::mat4* worldMatrix = nullptr);
+    void RenderMesh_P(Mesh& mesh, Material& material, InstanceBuffer* instanceBuffer = nullptr, glm::mat4* worldMatrix = nullptr);
     void RenderWorld_P(World& world);
     void RenderEntities_P(
         std::array<Entity, MAX_ENTITIES>& entities, 

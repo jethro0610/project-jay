@@ -23,8 +23,10 @@
     - (i) Joint
         - Transform Data
         - Inverse Bind Matrix
-        - Children (8 max)
+        - Num Children 
+        - Children In Contiguous Sequence
 
+- Add compile models script that will take all glb files and convert and move to output
 
 - Flower model
     - Bending

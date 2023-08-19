@@ -12,12 +12,13 @@ public:
     // loading any models
     Renderer* renderer;
 
-    std::array<Model, MAX_ENTITIES> model;
-    std::array<std::vector<Material>, MAX_ENTITIES> materials;
-    std::array<Skeleton, MAX_ENTITIES> skeleton;
+    std::array<Model*, MAX_ENTITIES> model;
+    std::array<std::vector<Material*>, MAX_ENTITIES> materials;
+    std::array<Skeleton*, MAX_ENTITIES> skeleton;
 
     StaticModelComponent() {
-
+        model.fill(nullptr);
+        skeleton.fill(nullptr);
     };
 
     StaticModelComponent(const StaticModelComponent&) = delete;
@@ -32,13 +33,13 @@ public:
 
         ASSERT((renderer != nullptr), "Static Model Component has no access to renderer");
         std::string name = GetString(data, "model", "null_model");
-        model[entity] = renderer->GetModel(name);
+        model[entity] = &renderer->GetModel(name);
 
         auto materialData = data["materials"];
         for (auto& materialName : materialData)
-            materials[entity].push_back(renderer->GetMaterial(materialName));
+            materials[entity].push_back(&renderer->GetMaterial(materialName));
 
         if (GetBoolean(data, "skeletal") == true)
-            skeleton[entity] = renderer->GetSkeleton(name);
+            skeleton[entity] = &renderer->GetSkeleton(name);
     }
 };

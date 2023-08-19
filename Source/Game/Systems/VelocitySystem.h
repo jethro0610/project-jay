@@ -1,16 +1,18 @@
 #pragma once
+#include <array>
+#include "../Entity/EntityLimits.h"
 class Entity;
 class TransformComponent;
 class VelocityComponent;
 
 namespace VelocitySystem {
     void CalculateGravity(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         VelocityComponent& velocityComponent
     );
 
     void Apply(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent
     );

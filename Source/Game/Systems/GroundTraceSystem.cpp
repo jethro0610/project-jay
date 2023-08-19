@@ -10,7 +10,7 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
 
 void GroundTraceSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     World& world,
     GroundTraceComponent& groundTraceComponent,
     TransformComponent& transformComponent

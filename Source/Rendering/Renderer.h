@@ -10,6 +10,7 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
+#include "../Game/Entity/EntityLimits.h"
 
 class Camera;
 class Entity;
@@ -34,7 +35,7 @@ public:
     Camera* camera_;
 
     void Render(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         World& world,
@@ -77,7 +78,7 @@ private:
 
     Material postProcessMaterial_;
     Material worldMaterial_;
-    Material spreadMaterials_[2];
+    std::array<Material, 2> spreadMaterials_;
     Material seedMaterial_;
     Material textMaterial_;
     Material barMaterial_;
@@ -98,10 +99,10 @@ private:
     FrameBuffer renderBuffer_;
     FrameBuffer postProcessBuffer_;
     Texture shadowBufferTexture_;
-    Texture renderBufferTextures_[2];
+    std::array<Texture, 2> renderBufferTextures_;
     Texture postProcessTexture_;
 
-    TextureSampler samplers_[NUM_SAMPLERS];
+    std::array<TextureSampler, NUM_SAMPLERS> samplers_;
 
     Uniform u_shadowUp_;
     Uniform u_shadowRight_;
@@ -139,7 +140,7 @@ private:
     void RenderMesh_P(Mesh* mesh, Material* material, InstanceBuffer* instanceBuffer = nullptr, glm::mat4* worldMatrix = nullptr);
     void RenderWorld_P(World& world);
     void RenderEntities_P(
-        Entity* entities, 
+        std::array<Entity, MAX_ENTITIES>& entities, 
         MeterComponent& meterComponent,
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent

@@ -9,7 +9,7 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<SpreadDetectComponent, TransformComponent>();
 
 void SpreadDetectSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     SpreadManager& spreadManager,
     SpreadDetectComponent& spreadDetectComponent,
     TransformComponent& transformComponent

@@ -8,7 +8,7 @@ mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
 }
 
 void Renderer::Render(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     World& world,

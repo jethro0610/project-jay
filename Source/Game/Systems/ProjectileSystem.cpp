@@ -218,7 +218,7 @@ UpdateFunction* updateFunctions[NumOfProjectileTypes] = {
 constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
 constexpr EntityKey targetKey = GetEntityKey<TransformComponent>();
 void ProjectileSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     ProjectileComponent& projectileComponent, 
     TransformComponent& transformComponent, 
     VelocityComponent& velocityComponent

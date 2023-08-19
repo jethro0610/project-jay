@@ -7,7 +7,7 @@
 constexpr EntityKey key = GetEntityKey<TransformComponent>();
 
 void TransformSystem::UpdateLastTransforms(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     TransformComponent& transformComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
@@ -22,7 +22,7 @@ void TransformSystem::UpdateLastTransforms(
 }
 
 void TransformSystem::UpdateRenderTransforms(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     TransformComponent& transformComponent,
     float interpTime
 ) {

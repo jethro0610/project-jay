@@ -1,3 +1,5 @@
+#include <array>
+#include "../Entity/EntityLimits.h"
 class Entity;
 class EntityManager;
 class SeedManager;
@@ -6,7 +8,7 @@ class TransformComponent;
 
 namespace DestroyMeterSystem {
     void Execute(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         EntityManager& entityManager,
         SeedManager& seedManager,
         MeterComponent& meterComponent,

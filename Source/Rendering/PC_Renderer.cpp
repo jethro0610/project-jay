@@ -240,7 +240,7 @@ void Renderer::InitRenderBuffer_P() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     );
-    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_);
+    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_.data());
 
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
@@ -475,7 +475,7 @@ void Renderer::RenderWorld_P(World& world) {
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 void Renderer::RenderEntities_P(
-    Entity* entities, 
+    std::array<Entity, MAX_ENTITIES>& entities, 
     MeterComponent& meterComponent,
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
@@ -523,15 +523,13 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
-    memcpy(instanceBuffer.data, seedManager.positions_, sizeof(vec4) * count);
+    memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
     RenderMesh_P(&quad_, &seedMaterial_, &instanceBuffer);
 }
 
 void Renderer::RenderPostProcess_P() {
-    for (int i = 0; i < postProcessMaterial_.numTextures; i++)
-        bgfx::setTexture(i, samplers_[i], postProcessMaterial_.textures[i]);
-
+    SetTexturesFromMaterial_P(postProcessMaterial_, false);
     bgfx::setVertexBuffer(0, quad_.vertexBuffer);
     bgfx::setIndexBuffer(quad_.indexBuffer);
     bgfx::submit(POST_PROCESS_VIEW, postProcessMaterial_.shader);
@@ -692,9 +690,8 @@ Material Renderer::LoadMaterial_P(std::string name) {
 
     if (data.contains("textures")) {
         auto textureNames = data["textures"];
-        for (int i = 0; i < textureNames.size(); i++)
-            material.textures[i] = GetTexture(textureNames[i]);
-        material.numTextures = textureNames.size();
+        for (std::string textureName : textureNames)
+            material.textures.push_back(GetTexture(textureName));
     }
 
     material.properties[0][0] = GetFloat(data, "specular_power", 32.0f);
@@ -713,7 +710,7 @@ Material Renderer::LoadMaterial_P(std::string name) {
 }
 
 void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
-    for (int i = 0; i < material.numTextures; i++)
+    for (int i = 0; i < material.textures.size(); i++)
         bgfx::setTexture(i, samplers_[i], material.textures[i]);
 
     if (shadowMap)

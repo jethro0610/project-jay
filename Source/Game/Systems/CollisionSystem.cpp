@@ -15,11 +15,10 @@ using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
 
-int CollisionSystem::GetCollisions(
+void CollisionSystem::GetCollisions(
     CollisionArgs args,
-    Collision* collisions
+    std::vector<Collision>& collisions
 ) {
-    int numCollisions = 0;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity1 = args.entities[i];
         if (!entity1.ShouldUpdate())
@@ -49,12 +48,11 @@ int CollisionSystem::GetCollisions(
             float maxDist = entity1Radius + entity2Radius;
             if (dist < maxDist) {
                 Collision collision = { i, j, direction * (maxDist - dist)};
-                collisions[numCollisions++] = collision;
+                collisions.push_back(collision);
             }
         }
     }
-    ASSERT((numCollisions < MAX_COLLISIONS), "Exceeded max collisions");
-    return numCollisions;
+    ASSERT((collisions.size() < MAX_COLLISIONS), "Exceeded max collisions");
 }
 
 typedef void (RecieveMeteorFunc)(CollisionArgs args, EntityID sender, EntityID reciever);
@@ -164,7 +162,7 @@ void HandleCollision(
 }
 
 void CollisionSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     ColliderComponent& colliderComponent,
@@ -202,11 +200,12 @@ void CollisionSystem::Execute(
         transformComponent, 
         velocityComponent
     };
-    Collision collisions[MAX_COLLISIONS];
-    int numCollisions = GetCollisions(args, collisions);
+    std::vector<Collision> collisions;
+    collisions.reserve(MAX_COLLISIONS);
+    GetCollisions(args, collisions);
 
-    for (int i = 0; i < numCollisions; i++) {
-        HandleCollision(args, collisions[i].entity1, collisions[i].entity2, collisions[i].resolutionVec);
-        HandleCollision(args, collisions[i].entity2, collisions[i].entity1, -collisions[i].resolutionVec);
+    for (Collision& collision : collisions) {
+        HandleCollision(args, collision.entity1, collision.entity2, collision.resolutionVec);
+        HandleCollision(args, collision.entity2, collision.entity1, -collision.resolutionVec);
     }
 }

@@ -18,7 +18,7 @@ constexpr EntityKey groundKey = GetEntityKey<GroundTraceComponent>();
 constexpr EntityKey meterKey = GetEntityKey<MeterComponent>();
 
 void SpreadActivatorSystem::Execute(
-    Entity* entities, 
+    std::array<Entity, MAX_ENTITIES>& entities, 
     SpreadManager& spreadManager,
     World& world,
     GroundTraceComponent& groundTraceComponent,

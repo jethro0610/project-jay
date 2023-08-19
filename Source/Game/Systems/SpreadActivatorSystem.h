@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+#include "../Entity/EntityLimits.h"
 class Entity;
 class SpreadManager;
 class World;
@@ -10,7 +12,7 @@ class TransformComponent;
 
 namespace SpreadActivatorSystem {
     void Execute(
-        Entity* entities, 
+        std::array<Entity, MAX_ENTITIES>& entities, 
         SpreadManager& spreadManager,
         World& world,
         GroundTraceComponent& groundTraceComponent,

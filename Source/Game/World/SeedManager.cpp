@@ -71,7 +71,7 @@ void SeedManager::CalculatePositions(
 constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
 
 void SeedManager::GetCaptures(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     ColliderComponent& colliderComponent, 
     TransformComponent& transformComponent
 ) {

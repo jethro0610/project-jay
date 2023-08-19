@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+#include "../Entity/EntityLimits.h"
 #include "../Entity/EntityID.h"
 class Entity;
 class World;
@@ -28,7 +30,7 @@ namespace ProjectileSystem {
     );
 
     void Execute(
-        Entity* entities, 
+        std::array<Entity, MAX_ENTITIES>& entities, 
         ProjectileComponent& projectileComponent,
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent

@@ -1,6 +1,8 @@
 #pragma once
+#include <array>
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include "../Entity/EntityLimits.h"
 class Entity;
 class GroundTraceComponent;
 class MovementComponent;
@@ -10,7 +12,7 @@ class VelocityComponent;
 
 namespace MovementSystem {
     void Execute(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         GroundTraceComponent& groundTraceComponent,
         MovementComponent& movementComponent,
         SpreadDetectComponent& spreadDetectComponent,

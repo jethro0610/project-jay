@@ -9,7 +9,7 @@
 constexpr EntityKey key = GetEntityKey<MeterComponent, TransformComponent>();
 
 void DestroyMeterSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     EntityManager& entityManager,
     SeedManager& seedManager,
     MeterComponent& meterComponent,

@@ -11,7 +11,7 @@
 
 class EntityManager {
 public:
-    Entity entities_[MAX_ENTITIES];
+    std::array<Entity, MAX_ENTITIES> entities_;
     std::deque<EntityID> usableEntities_;
     std::unordered_map<std::string, nlohmann::json> entityData_;
 

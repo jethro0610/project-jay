@@ -4,15 +4,15 @@
 
 class TransformComponent : public Component {
 public:
-    Transform transform[MAX_ENTITIES];
-    Transform transformLastUpdate[MAX_ENTITIES];
-    Transform renderTransform[MAX_ENTITIES];
-    bool interpolate[MAX_ENTITIES];
-    bool targetable[MAX_ENTITIES];
+    std::array<Transform, MAX_ENTITIES> transform;
+    std::array<Transform, MAX_ENTITIES> transformLastUpdate;
+    std::array<Transform, MAX_ENTITIES> renderTransform;
+    std::array<bool, MAX_ENTITIES> interpolate;
+    std::array<bool, MAX_ENTITIES> targetable;
 
     TransformComponent() {
-        std::fill_n(interpolate, MAX_ENTITIES, false);
-        std::fill_n(targetable, MAX_ENTITIES, false);
+        interpolate.fill(false);
+        targetable.fill(false);
     };
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;

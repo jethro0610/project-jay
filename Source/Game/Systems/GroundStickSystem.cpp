@@ -16,7 +16,7 @@ constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>
 constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 
 void GroundStickSystem::Stick(
-    Entity* entities, 
+    std::array<Entity, MAX_ENTITIES>& entities, 
     World& world, 
     GroundTraceComponent& groundTraceComponent,
     TransformComponent& transformComponent,

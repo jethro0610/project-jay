@@ -9,14 +9,14 @@ const float MAX_GRAVITY = 120.0f;
 
 class VelocityComponent : public Component {
 public:
-    glm::vec3 velocity[MAX_ENTITIES];
-    glm::quat angularVelocity[MAX_ENTITIES];
-    bool useGravity[MAX_ENTITIES];
+    std::array<glm::vec3, MAX_ENTITIES> velocity;
+    std::array<glm::quat, MAX_ENTITIES> angularVelocity;
+    std::array<bool, MAX_ENTITIES> useGravity;
 
     VelocityComponent() {
-        std::fill_n(velocity, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f));
-        std::fill_n(angularVelocity, MAX_ENTITIES, glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
-        std::fill_n(useGravity, MAX_ENTITIES, false);
+        velocity.fill(glm::vec3(0.0f, 0.0f, 0.0f));
+        angularVelocity.fill(glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+        useGravity.fill(false);
     };
     VelocityComponent(const VelocityComponent&) = delete;
     VelocityComponent& operator=(const VelocityComponent&) = delete;

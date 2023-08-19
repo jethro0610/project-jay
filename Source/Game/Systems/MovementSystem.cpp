@@ -20,7 +20,7 @@ constexpr EntityKey key = GetEntityKey<
 constexpr EntityKey spreadKey = GetEntityKey<SpreadDetectComponent>();
 
 void MovementSystem::Execute (
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     GroundTraceComponent& groundTraceComponent,
     MovementComponent& movementComponent,
     SpreadDetectComponent& spreadDetectComponent,

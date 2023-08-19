@@ -1,6 +1,9 @@
 #pragma once
-#include "../Entity/EntityID.h"
+#include <array>
 #include <glm/vec3.hpp>
+#include <vector>
+#include "../Entity/EntityID.h"
+#include "../Entity/EntityLimits.h"
 class Entity;
 class SeedManager;
 class SpreadManager;
@@ -13,7 +16,7 @@ class VelocityComponent;
 const int MAX_COLLISIONS = 128;
 
 struct CollisionArgs {
-    Entity* entities;
+    std::array<Entity, MAX_ENTITIES>& entities;
     SeedManager& seedManager;
     SpreadManager& spreadManager;
     ColliderComponent& colliderComponent;
@@ -30,9 +33,9 @@ struct Collision {
 };
 
 namespace CollisionSystem {
-    int GetCollisions(
+    void GetCollisions(
         CollisionArgs args,
-        Collision* collisions
+        std::vector<Collision>& collisions
     ); 
 
     void HandleCollisions(
@@ -42,7 +45,7 @@ namespace CollisionSystem {
     );
 
     void Execute(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         ColliderComponent& colliderComponent,

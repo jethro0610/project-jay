@@ -15,7 +15,7 @@ constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
 constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
     
 void IntervalSpawnSystem::Execute(
-    Entity* entities,
+    std::array<Entity, MAX_ENTITIES>& entities,
     EntityManager& entityManager,
     SeedManager& seedManager,
     IntervalSpawnComponent& intervalSpawnComponent,

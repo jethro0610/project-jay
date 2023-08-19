@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+#include "../Entity/EntityLimits.h"
 class Entity;
 class EntityManager;
 class SeedManager;
@@ -9,7 +11,7 @@ class VelocityComponent;
 
 namespace IntervalSpawnSystem {
     void Execute(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         EntityManager& entityManager, // TODO: Create a list for spawning instead
         SeedManager& seedManager,
         IntervalSpawnComponent& intervalSpawnComponent,

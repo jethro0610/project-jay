@@ -2,7 +2,7 @@
 #include "../Entity/EntityLimits.h"
 #include "../Entity/Entity.h"
 
-void FreezeSytem::Execute(Entity* entities) {
+void FreezeSytem::Execute(std::array<Entity, MAX_ENTITIES>& entities) {
     for(int i = 0; i < MAX_ENTITIES; i++) {
         Entity& entity = entities[i];
         if (!entity.alive_)

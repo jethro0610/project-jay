@@ -4,6 +4,7 @@
 #include "../../Constants/GameConstants.h"
 #include "../../Types/FixedVector.h"
 #include "../Entity/EntityID.h"
+#include "../Entity/EntityLimits.h"
 #include "../../Types/Transform.h"
 class Entity;
 class ColliderComponent;
@@ -28,7 +29,7 @@ struct Seed {
 class SeedManager {
 public:
     FixedVector<Seed, MAX_SEED> seeds_;
-    glm::vec4 positions_[MAX_SEED];
+    std::array<glm::vec4, MAX_SEED> positions_;
 
     void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
     void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2, EntityID capturer = NULL_ENTITY);
@@ -41,7 +42,7 @@ public:
     );
 
     void GetCaptures(
-        Entity* entities,
+        std::array<Entity, MAX_ENTITIES>& entities,
         ColliderComponent& colliderComponent, 
         TransformComponent& transformComponent
     );

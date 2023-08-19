@@ -27,6 +27,9 @@ public:
     static constexpr int GetID() { return 9; }
 
     void Load(nlohmann::json& data, EntityID entity) {
+        materials[entity].clear();
+        materials[entity].shrink_to_fit();
+
         ASSERT((renderer != nullptr), "Static Model Component has no access to renderer");
         std::string name = GetString(data, "model", "null_model");
         model[entity] = renderer->GetModel(name);

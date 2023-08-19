@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include "RenderDefs.h"
+#include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
 
@@ -53,6 +54,7 @@ public:
     Shader GetVertexShader(std::string name);
     Shader GetFragmentShader(std::string name);
     Model GetModel(std::string name);
+    Skeleton GetSkeleton(std::string name);
     Texture GetTexture(std::string name);
     Material GetMaterial(std::string name);
 
@@ -124,6 +126,7 @@ private:
     std::unordered_map<std::string, Shader> vertexShaders_;
     std::unordered_map<std::string, Shader> fragmentShaders_;
     std::unordered_map<std::string, Model> models_;
+    std::unordered_map<std::string, Skeleton_INTERNAL> skeletons_;
     std::unordered_map<std::string, Texture> textures_;
     std::unordered_map<std::string, Material> materials_;
 

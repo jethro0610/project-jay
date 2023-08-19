@@ -3,7 +3,7 @@
 
 #ifdef _DEBUG
 template <class T, class M>
-T GetFromMap(M map, std::string key, std::string error) {
+T& GetFromMap(M map, std::string key, std::string error) {
     auto element = map.find(key);
     if (element == map.end()) {
         ERRORLOG(error);

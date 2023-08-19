@@ -44,6 +44,10 @@ Model Renderer::GetModel(std::string name) {
     return GetFromMap<Model>(models_, name, "Tried using unloaded model " + name);
 }
 
+Skeleton Renderer::GetSkeleton(std::string name) {
+    return &GetFromMap<Skeleton_INTERNAL>(skeletons_, name, "Tried using unloaded skeleton " + name);
+}
+
 Texture Renderer::GetTexture(std::string name) {
     return GetFromMap<Texture>(textures_, name, "Tried using unloaded texture " + name);
 }

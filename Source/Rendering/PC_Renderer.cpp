@@ -38,7 +38,7 @@ const float WORLD_MESH_DENSITY = 0.5f;
 const float SHADOW_DISTANCE = 1000.0f;
 const float SHADOW_FORWARD = 40.0f;
 const float SHADOW_RANGE = 80.0f;
-const int SHADOW_RESOLUTION = 1024;
+const int SHADOW_RESOLUTION = 2048;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -643,8 +643,14 @@ Model Renderer::LoadModel_P(std::string name) {
         model.meshes[i].indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 
+    // Skeleton_INTERNAL skeleton;
+    // skeleton.joints.resize(modelHeader.numJoints);
+    // file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
+    // skeletons_[name] = skeleton;
+
     DEBUGLOG("Loaded model " << name << " with " << (int)model.numMeshes << " meshes");
     models_[name] = model;
+
     return model;
 }
 
@@ -678,7 +684,6 @@ Material Renderer::LoadMaterial_P(std::string name) {
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
 
     material.castShadows = GetBoolean(data, "cast_shadows");
-    material.recieveShadows = GetBoolean(data, "recieve_shadows");
     if (material.castShadows) {
         Shader vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
         Shader fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));

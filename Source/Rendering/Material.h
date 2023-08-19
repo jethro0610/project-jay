@@ -19,7 +19,6 @@ struct Material {
     Texture textures[MAX_TEXTURES_PER_MATERIAL];
     int numTextures;
     bool castShadows;
-    bool recieveShadows;
     TriangleType triangleType;
     glm::mat4 properties;
 };

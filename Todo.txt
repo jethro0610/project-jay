@@ -5,6 +5,26 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Model Spec
+    - Model Header:
+        Num Meshes
+        Num Joints
+
+    - (n) Mesh Header:
+        Num Vertices
+        Num Indieces
+
+    - (n) Mesh
+        - Transform Data
+        - Only if its skeletal: 
+            - Joints its affected by (4 max)
+            - Joint weights
+
+    - (i) Joint
+        - Transform Data
+        - Inverse Bind Matrix
+        - Children (8 max)
+
 
 - Flower model
     - Bending

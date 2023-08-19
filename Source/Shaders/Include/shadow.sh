@@ -1,7 +1,7 @@
 #ifndef SHADOW_H
 #define SHADOW_H
 
-SAMPLER2D(s_samplerShadow, 8);
+SAMPLER2D(s_samplerShadow, 14);
 static const float BIAS = 0.001f;
 static const float FADE_POW = 3.0f;
 static const int PCF_SIZE = 1;

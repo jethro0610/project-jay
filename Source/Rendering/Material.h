@@ -4,8 +4,8 @@
 #include "RenderDefs.h"
 
 const int MAX_TEXTURES_PER_MATERIAL = 8;
-const int SHADOW_TEXINDEX = 8;
-const int WORLD_NOISE_TEXINDEX = 9;
+const int SHADOW_TEXINDEX = 14;
+const int WORLD_NOISE_TEXINDEX = 15;
 
 enum TriangleType {
     ONE_SIDED,

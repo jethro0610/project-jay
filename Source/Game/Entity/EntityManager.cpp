@@ -39,7 +39,7 @@ EntityID EntityManager::CreateEntity(Transform transform) {
 
 EntityID EntityManager::CreateEntity(std::string name, Transform transform) {
     EntityID createdEntity = CreateEntity(transform);
-    auto entityData = GetFromMap<nlohmann::json>(entityData_, name, "Tried creating unloaded entity " + name);
+    nlohmann::json& entityData = GetFromMap<nlohmann::json>(entityData_, name, "Tried creating unloaded entity " + name);
 
     for (auto& componentData : entityData["components"].items()) {
         std::string componentName = componentData.key();

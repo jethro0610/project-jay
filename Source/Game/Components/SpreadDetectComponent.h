@@ -10,13 +10,13 @@ const glm::ivec2 NO_ADD = glm::ivec2(-1024, -1024);
 
 class SpreadDetectComponent : public Component {
 public:
-    bool deteced[MAX_ENTITIES];
-    SpreadKey lastAdd[MAX_ENTITIES];
-    SpreadKey lastKey[MAX_ENTITIES];
+    std::array<bool, MAX_ENTITIES> deteced;
+    std::array<SpreadKey, MAX_ENTITIES> lastAdd;
+    std::array<SpreadKey, MAX_ENTITIES> lastKey;
 
     SpreadDetectComponent() {
-        std::fill_n(deteced, MAX_ENTITIES, false);
-        std::fill_n(lastAdd, MAX_ENTITIES, NO_ADD);
+        deteced.fill(false);
+        lastAdd.fill(NO_ADD);
     };
     SpreadDetectComponent (const SpreadDetectComponent &) = delete;
     SpreadDetectComponent & operator=(const SpreadDetectComponent &) = delete;

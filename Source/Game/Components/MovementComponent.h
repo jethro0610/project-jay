@@ -30,26 +30,26 @@ enum MoveMode {
 
 class MovementComponent : public Component {
 public:
-    glm::vec3 desiredMovement[MAX_ENTITIES];
-    MoveMode moveMode[MAX_ENTITIES];
-    float speed[MAX_ENTITIES];
-    float minSpeed[MAX_ENTITIES];
-    float maxSpeed[MAX_ENTITIES];
-    float friction[MAX_ENTITIES];
-    float minFriction[MAX_ENTITIES];
-    float maxFriction[MAX_ENTITIES];
-    float momentumDecay[MAX_ENTITIES];
+    std::array<glm::vec3, MAX_ENTITIES> desiredMovement;
+    std::array<MoveMode, MAX_ENTITIES> moveMode;
+    std::array<float, MAX_ENTITIES> speed;
+    std::array<float, MAX_ENTITIES> minSpeed;
+    std::array<float, MAX_ENTITIES> maxSpeed;
+    std::array<float, MAX_ENTITIES> friction;
+    std::array<float, MAX_ENTITIES> minFriction;
+    std::array<float, MAX_ENTITIES> maxFriction;
+    std::array<float, MAX_ENTITIES> momentumDecay;
 
     MovementComponent() {
-        std::fill_n(desiredMovement, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f));
-        std::fill_n(moveMode, MAX_ENTITIES, MoveMode::Default);
-        std::fill_n(speed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
-        std::fill_n(minSpeed, MAX_ENTITIES, DEFAULT_MIN_SPEED);
-        std::fill_n(maxSpeed, MAX_ENTITIES, DEFAULT_MAX_SPEED);
-        std::fill_n(friction, MAX_ENTITIES, DEFAULT_MAX_FRICTION);
-        std::fill_n(minFriction, MAX_ENTITIES, DEFAULT_MIN_FRICTION);
-        std::fill_n(maxFriction, MAX_ENTITIES, DEFAULT_MAX_FRICTION);
-        std::fill_n(momentumDecay, MAX_ENTITIES, DEFAULT_MOMENTUM_DECAY);
+        desiredMovement.fill(glm::vec3(0.0f, 0.0f, 0.0f));
+        moveMode.fill(MoveMode::Default);
+        speed.fill(DEFAULT_MIN_SPEED);
+        minSpeed.fill(DEFAULT_MIN_SPEED);
+        maxSpeed.fill(DEFAULT_MAX_SPEED);
+        friction.fill(DEFAULT_MAX_FRICTION);
+        minFriction.fill(DEFAULT_MIN_FRICTION);
+        maxFriction.fill(DEFAULT_MAX_FRICTION);
+        momentumDecay.fill(DEFAULT_MOMENTUM_DECAY);
     };
     MovementComponent(const MovementComponent&) = delete;
     MovementComponent& operator=(const MovementComponent&) = delete;

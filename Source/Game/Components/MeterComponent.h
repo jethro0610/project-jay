@@ -3,14 +3,14 @@
 
 class MeterComponent : public Component {
 public:
-    int meter[MAX_ENTITIES];
-    int maxMeter[MAX_ENTITIES];
-    bool destroyOnNone[MAX_ENTITIES];
-    int numDestroySeeds[MAX_ENTITIES];
+    std::array<int, MAX_ENTITIES> meter;
+    std::array<int, MAX_ENTITIES> maxMeter;
+    std::array<bool, MAX_ENTITIES> destroyOnNone;
+    std::array<int, MAX_ENTITIES> numDestroySeeds;
 
     MeterComponent() {
-        std::fill_n(meter, MAX_ENTITIES, 0);
-        std::fill_n(maxMeter, MAX_ENTITIES, INT_MAX);
+        meter.fill(0);
+        maxMeter.fill(INT_MAX);
     };
     MeterComponent(const MeterComponent&) = delete;
     MeterComponent& operator=(const MeterComponent&) = delete;

@@ -12,9 +12,9 @@ public:
     // loading any models
     Renderer* renderer;
 
-    Model model[MAX_ENTITIES];
-    Material materials[MAX_ENTITIES][MAX_MESHES_PER_MODEL];
-    Skeleton skeleton[MAX_ENTITIES];
+    std::array<Model, MAX_ENTITIES> model;
+    std::array<std::vector<Material>, MAX_ENTITIES> materials;
+    std::array<Skeleton, MAX_ENTITIES> skeleton;
 
     StaticModelComponent() {
 
@@ -32,9 +32,8 @@ public:
         model[entity] = renderer->GetModel(name);
 
         auto materialData = data["materials"];
-        ASSERT((materialData.size() <= MAX_MESHES_PER_MODEL), "Too many materials on entity description");
-        for (int i = 0; i < materialData.size(); i++)
-            materials[entity][i] = renderer->GetMaterial(materialData[i]);
+        for (auto& materialName : materialData)
+            materials[entity].push_back(renderer->GetMaterial(materialName));
 
         if (GetBoolean(data, "skeletal") == true)
             skeleton[entity] = renderer->GetSkeleton(name);

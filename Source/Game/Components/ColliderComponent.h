@@ -21,31 +21,31 @@ enum RecieveMeteorBehavior {
 
 class ColliderComponent : public Component {
 public:
-    std::bitset<MAX_COLLIDER_PROPERTIES> properties[MAX_ENTITIES];
+    std::array<std::bitset<MAX_COLLIDER_PROPERTIES>, MAX_ENTITIES> properties;
 
-    float radius0[MAX_ENTITIES];
-    float radius1[MAX_ENTITIES];
+    std::array<float, MAX_ENTITIES> radius0;
+    std::array<float, MAX_ENTITIES> radius1;
 
-    int sendMeteorCooldown[MAX_ENTITIES];
-    int consecutiveMeteorSends[MAX_ENTITIES];
+    std::array<int, MAX_ENTITIES> sendMeteorCooldown;
+    std::array<int, MAX_ENTITIES> consecutiveMeteorSends;
 
-    std::bitset<MAX_RECIEVE_METEOR_BEHAVIORS> recieveMeteorBehaviors[MAX_ENTITIES];
-    int recieveMeteorCooldown[MAX_ENTITIES];
-    int recieveMeteorDamage[MAX_ENTITIES];
-    int recieveMeteorSeedAmount[MAX_ENTITIES];
+    std::array<std::bitset<MAX_RECIEVE_METEOR_BEHAVIORS>, MAX_ENTITIES> recieveMeteorBehaviors;
+    std::array<int, MAX_ENTITIES> recieveMeteorCooldown;
+    std::array<int, MAX_ENTITIES> recieveMeteorDamage;
+    std::array<int, MAX_ENTITIES> recieveMeteorSeedAmount;
 
     ColliderComponent() {
-        std::fill_n(properties, MAX_ENTITIES, 0);
-        std::fill_n(radius0, MAX_ENTITIES, 0.0f);
-        std::fill_n(radius1, MAX_ENTITIES, 0.0f);
+        properties.fill(0);
+        radius0.fill(0.0f);
+        radius1.fill(0.0f);
 
-        std::fill_n(sendMeteorCooldown, MAX_ENTITIES, 0);
-        std::fill_n(consecutiveMeteorSends, MAX_ENTITIES, 0);
+        sendMeteorCooldown.fill(0);
+        consecutiveMeteorSends.fill(0);
 
-        std::fill_n(recieveMeteorBehaviors, MAX_ENTITIES, 0);
-        std::fill_n(recieveMeteorCooldown, MAX_ENTITIES, 0);
-        std::fill_n(recieveMeteorDamage, MAX_ENTITIES, 0);
-        std::fill_n(recieveMeteorSeedAmount, MAX_ENTITIES, 0);
+        recieveMeteorBehaviors.fill(0);
+        recieveMeteorCooldown.fill(0);
+        recieveMeteorDamage.fill(0);
+        recieveMeteorSeedAmount.fill(0);
     };
     ColliderComponent(const ColliderComponent&) = delete;
     ColliderComponent& operator=(const ColliderComponent&) = delete;

@@ -24,18 +24,18 @@ enum ContactBehavior {
 
 class ProjectileComponent : public Component {
 public:
-    ProjectileType type[MAX_ENTITIES];
-    int damage[MAX_ENTITIES];
-    ProjParam1 param1[MAX_ENTITIES];
-    ProjParam2 param2[MAX_ENTITIES];
-    std::bitset<NumContactBehaviors> contactBehavior[MAX_ENTITIES]; 
+    std::array<ProjectileType, MAX_ENTITIES> type;
+    std::array<int, MAX_ENTITIES> damage;
+    std::array<ProjParam1, MAX_ENTITIES> param1;
+    std::array<ProjParam2, MAX_ENTITIES> param2;
+    std::array<std::bitset<NumContactBehaviors>, MAX_ENTITIES> contactBehavior; 
 
-    EntityID target[MAX_ENTITIES];
-    bool active[MAX_ENTITIES];
+    std::array<EntityID, MAX_ENTITIES> target;
+    std::array<bool, MAX_ENTITIES> active;
 
     ProjectileComponent() {
-        std::fill_n(target, MAX_ENTITIES, NULL_ENTITY);
-        std::fill_n(active, MAX_ENTITIES, false);
+        target.fill(NULL_ENTITY);
+        active.fill(false);
     }
 
     static constexpr std::string GetName() { return "projectile"; }

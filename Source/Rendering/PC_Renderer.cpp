@@ -627,9 +627,9 @@ Model Renderer::LoadModel_P(std::string name) {
 
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
-    model.numMeshes = modelHeader.numMeshes;
+    model.meshes.resize(modelHeader.numMeshes);
 
-    for (int i = 0; i < model.numMeshes; i++) {
+    for (int i = 0; i < model.meshes.size(); i++) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
         
@@ -648,7 +648,7 @@ Model Renderer::LoadModel_P(std::string name) {
     // file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
     // skeletons_[name] = skeleton;
 
-    DEBUGLOG("Loaded model " << name << " with " << (int)model.numMeshes << " meshes");
+    DEBUGLOG("Loaded model " << name << " with " << (int)model.meshes.size() << " meshes");
     models_[name] = model;
 
     return model;

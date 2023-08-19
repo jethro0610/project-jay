@@ -35,7 +35,7 @@ void IntervalSpawnSystem::Execute(
 
         if (timer >= intervalSpawnComponent.interval[i]) {
             Transform spawnTransform;
-            vec3 offset = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.numOffsets[i]];
+            vec3 offset = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.offsets[i].size()];
             vec3 radialOffset = RandomVector(intervalSpawnComponent.radius[i]);
             spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
             // NOTE: Need to use the transform to get the child transform, instead of just adding position

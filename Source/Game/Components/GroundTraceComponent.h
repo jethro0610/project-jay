@@ -7,30 +7,25 @@ const float STEP_UP_HEIGHT = 0.25f;
 
 class GroundTraceComponent : public Component {
 public:
-    float distance[MAX_ENTITIES];
-    bool stick[MAX_ENTITIES];
-    float stickOffset[MAX_ENTITIES];
-    bool zeroVelocity[MAX_ENTITIES];
+    std::array<float, MAX_ENTITIES> distance;
+    std::array<bool, MAX_ENTITIES> stick;
+    std::array<float, MAX_ENTITIES> stickOffset;
+    std::array<bool, MAX_ENTITIES> zeroVelocity;
 
-    bool onGround[MAX_ENTITIES];
-    bool onGroundLastFrame[MAX_ENTITIES];
-    bool enteredGround[MAX_ENTITIES];
-    bool exitedGround[MAX_ENTITIES];
-    float groundPosition[MAX_ENTITIES];
-    glm::vec3 groundNormal[MAX_ENTITIES];
+    std::array<bool, MAX_ENTITIES> onGround;
+    std::array<bool, MAX_ENTITIES> onGroundLastFrame;
+    std::array<bool, MAX_ENTITIES> enteredGround;
+    std::array<bool, MAX_ENTITIES> exitedGround;
+    std::array<float, MAX_ENTITIES> groundPosition;
+    std::array<glm::vec3, MAX_ENTITIES> groundNormal;
 
     GroundTraceComponent() {
-        std::fill_n(distance, MAX_ENTITIES, 0.0f);
-        std::fill_n(stick, MAX_ENTITIES, false);
-        std::fill_n(stickOffset, MAX_ENTITIES, 0.0f);
-        std::fill_n(zeroVelocity, MAX_ENTITIES, false);
-
-        std::fill_n(onGround, MAX_ENTITIES, false);
-        std::fill_n(enteredGround, MAX_ENTITIES, false);
-        std::fill_n(exitedGround, MAX_ENTITIES, false);
-        std::fill_n(onGroundLastFrame, MAX_ENTITIES, false);
-        std::fill_n(groundPosition, MAX_ENTITIES, 0.0f);
-        std::fill_n(groundNormal, MAX_ENTITIES, glm::vec3(0.0f, 0.0f, 0.0f));
+        onGround.fill(false);
+        enteredGround.fill(false);
+        exitedGround.fill(false);
+        onGroundLastFrame.fill(false);
+        groundPosition.fill(0.0f);
+        groundNormal.fill(glm::vec3(0.0f, 0.0f, 0.0f));
     };
     GroundTraceComponent(const GroundTraceComponent&) = delete;
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
@@ -39,7 +34,7 @@ public:
     static constexpr int GetID() { return 1; }
 
     void Load(nlohmann::json& data, EntityID entity) {
-        distance[entity] = data["distance"].get<float>();
+        distance[entity] = GetFloat(data, "distance", 1.0f);
         stick[entity] = GetBoolean(data, "stick", false);
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
         zeroVelocity[entity] = GetBoolean(data, "zero_velocity", false);

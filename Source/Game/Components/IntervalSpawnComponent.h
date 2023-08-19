@@ -3,25 +3,22 @@
 #include "Component.h"
 #include "../../Logging/Logger.h"
 
-const int MAX_INTERVAL_SPAWN_OFFSET = 16;
-
 class IntervalSpawnComponent : public Component {
 public:
-    std::string entityToSpawn[MAX_ENTITIES];
-    int interval[MAX_ENTITIES];
-    float radius[MAX_ENTITIES];
-    bool launch[MAX_ENTITIES];
+    std::array<std::string, MAX_ENTITIES> entityToSpawn;
+    std::array<int, MAX_ENTITIES> interval;
+    std::array<float, MAX_ENTITIES> radius;
+    std::array<bool, MAX_ENTITIES> launch;
 
-    glm::vec3 offsets[MAX_ENTITIES][MAX_INTERVAL_SPAWN_OFFSET];
-    int numOffsets[MAX_ENTITIES];
+    std::array<std::vector<glm::vec3>, MAX_ENTITIES> offsets;
 
-    int entitiesPerOffset[MAX_ENTITIES];
-    EntityID offsetEntity[MAX_ENTITIES][MAX_INTERVAL_SPAWN_OFFSET];
+    std::array<int, MAX_ENTITIES> entitiesPerOffset;
+    std::array<std::vector<EntityID>, MAX_ENTITIES> offsetEntity;
 
-    int timer[MAX_ENTITIES]; 
+    std::array<int, MAX_ENTITIES> timer; 
 
     IntervalSpawnComponent() {
-        std::fill_n(timer, MAX_ENTITIES, 0);
+        timer.fill(0);
     };
     IntervalSpawnComponent(const IntervalSpawnComponent&) = delete;
     IntervalSpawnComponent& operator=(const IntervalSpawnComponent&) = delete;
@@ -30,20 +27,21 @@ public:
     static constexpr int GetID() { return 3; }
 
     void Load(nlohmann::json& data, EntityID entity) {
+        offsets[entity].clear();
+        offsets[entity].shrink_to_fit();
+        
         entityToSpawn[entity] = GetString(data, "entity", "");
         interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
         radius[entity] = GetFloat(data, "radius", 0.0f);
         launch[entity] = GetBoolean(data, "launch", false);
 
         if (!data.contains("offsets")) {
-            numOffsets[entity] = 1;
-            offsets[entity][0] = glm::vec3(0.0f, 0.0f, 0.0f);
+            offsets[entity].push_back(glm::vec3(0.0f, 0.0f, 0.0f));
         }
         else {
             auto jOffsets = data["offsets"];
-            numOffsets[entity] = jOffsets.size();
-            for (int i = 0; i < numOffsets[entity]; i++)
-                offsets[entity][i] = glm::vec3(jOffsets[i]["x"], jOffsets[i]["y"], jOffsets[i]["z"]);
+            for (auto& jOffset : jOffsets)
+                offsets[entity].push_back(glm::vec3(jOffset["x"], jOffset["y"], jOffset["z"]));
         }
 
         // -1 entities per offset means infinite number

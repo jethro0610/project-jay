@@ -654,16 +654,19 @@ Model& Renderer::LoadModel_P(std::string name) {
         mesh.indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 
-    if (modelHeader.numJoints > 0) {
-        Skeleton skeleton;
-        skeleton.joints.resize(modelHeader.numJoints);
-        file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
-        skeletons_[name] = skeleton;
+    if (modelHeader.numJoints == 0) {
+        models_[name] = model;
+        DEBUGLOG("Loaded static model " << name << " with " << (int)model.meshes.size() << " meshes");
+        return models_[name];
     }
 
-    DEBUGLOG("Loaded " << (skeletal ? "skeletal model " : "static model ") << name << " with " << (int)model.meshes.size() << " meshes");
-    models_[name] = model;
+    Skeleton skeleton;
+    skeleton.joints.resize(modelHeader.numJoints);
+    file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
+    skeletons_[name] = skeleton;
 
+    models_[name] = model;
+    DEBUGLOG("Loaded skeletal model " << name << " with " << (int)model.meshes.size() << " meshes");
     return models_[name];
 }
 

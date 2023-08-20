@@ -4,7 +4,8 @@
 
 struct ModelFileHeader {    
     int numMeshes;
-    int numJoints;
+    int numAnimations;
+    bool skeletal;
 };  
 
 struct Model {

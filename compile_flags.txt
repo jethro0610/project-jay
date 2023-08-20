@@ -6,6 +6,7 @@
 -I./Libraries/json
 -I./Libraries/glfw/include
 -I./Libraries/bgfx.cmake/bgfx/include
+-I./Libraries/vector_const
 -D_WINDOWS
 -D_DEBUG
 -DNOMINMAX

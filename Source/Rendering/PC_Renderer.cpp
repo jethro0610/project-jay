@@ -624,7 +624,7 @@ Shader& Renderer::LoadFragmentShader_P(std::string name) {
 
 Model& Renderer::LoadModel_P(std::string name) {
     ForceMapUnique(models_, name, "Model " + name + " is already loaded");
-    Model model;
+    Model& model = models_[name];
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -634,11 +634,10 @@ Model& Renderer::LoadModel_P(std::string name) {
 
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
-    bool skeletal = modelHeader.numJoints > 0;
     model.meshes.resize(modelHeader.numMeshes);
 
-    int vertexSize = skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
-    bgfx::VertexLayout layout = skeletal ? SkeletalVertex::layout : StaticVertex::layout;
+    int vertexSize = modelHeader.skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
+    bgfx::VertexLayout layout = modelHeader.skeletal ? SkeletalVertex::layout : StaticVertex::layout;
     DEBUGLOG(vertexSize);
     for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
@@ -654,16 +653,19 @@ Model& Renderer::LoadModel_P(std::string name) {
         mesh.indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 
-    if (modelHeader.numJoints == 0) {
-        models_[name] = model;
+    if (!modelHeader.skeletal) {
         DEBUGLOG("Loaded static model " << name << " with " << (int)model.meshes.size() << " meshes");
-        return models_[name];
+        return model;
     }
 
-    Skeleton skeleton;
-    skeleton.joints.resize(modelHeader.numJoints);
+    Skeleton& skeleton = skeletons_[name];
     file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
-    skeletons_[name] = skeleton;
+
+    AnimationHeader animationHeader;
+    file.read((char*)&animationHeader, sizeof(AnimationHeader));
+    Animation animation;
+    animation.keyframes.resize(animationHeader.numKeyframes);
+    file.read((char*)animation.keyframes.data(), sizeof(Keyframe) * animationHeader.numKeyframes);
 
     models_[name] = model;
     DEBUGLOG("Loaded skeletal model " << name << " with " << (int)model.meshes.size() << " meshes");

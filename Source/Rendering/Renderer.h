@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include "RenderDefs.h"
+#include "Animation.h"
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"

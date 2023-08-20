@@ -1,5 +1,7 @@
 #pragma once
+#include <array>
 #include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include "World.h"
 #include "../../Constants/GameConstants.h"
 #include "../../Types/FixedVector.h"

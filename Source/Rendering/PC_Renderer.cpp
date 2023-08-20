@@ -29,6 +29,7 @@
 using namespace glm;
 
 bgfx::VertexLayout StaticVertex::layout;
+bgfx::VertexLayout SkeletalVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
@@ -93,6 +94,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
 
     StaticVertex::Init();
+    SkeletalVertex::Init();
     WorldVertex::Init();
     TextureQuadVertex::Init();
 
@@ -140,6 +142,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("vs_static");
     LoadVertexShader_P("vs_static_s");
     LoadVertexShader_P("vs_static_crack");
+    LoadVertexShader_P("vs_skeletal");
+    LoadVertexShader_P("vs_skeletal_s");
     LoadVertexShader_P("vs_inst");
     LoadVertexShader_P("vs_inst_s");
     LoadVertexShader_P("vs_inst_billboard");
@@ -175,6 +179,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_rock");
     LoadMaterial_P("m_tree");
     LoadMaterial_P("m_willowleaves");
+    LoadMaterial_P("m_test_skel");
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");
     spreadMaterials_[0] = LoadMaterial_P("m_flower");
@@ -578,8 +583,10 @@ void Renderer::RenderScreenText_P() {
     const bgfx::Memory* memory = nullptr;                       \
     std::ifstream file;                                         \
     file.open(path, std::ios::binary);                          \
-    if (!file.is_open())                                        \
+    if (!file.is_open()) {                                      \
         ERRORLOG("BGFX failed to open file: " << path);         \
+        abort();                                                \
+    }                                                           \
                                                                 \
     file.seekg(0, file.end);                                    \
     size_t fileSize = file.tellg();                             \
@@ -588,7 +595,6 @@ void Renderer::RenderScreenText_P() {
     memory = bgfx::alloc(fileSize);                             \
     file.read((char*)memory->data, fileSize);                   \
     file.close()
-
 
 Shader& Renderer::LoadVertexShader_P(std::string name) {
     ForceMapUnique(vertexShaders_, name, "Vertex shader " + name + " is already loaded");
@@ -632,6 +638,8 @@ Model& Renderer::LoadModel_P(std::string name) {
     model.meshes.resize(modelHeader.numMeshes);
 
     int vertexSize = skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
+    bgfx::VertexLayout layout = skeletal ? SkeletalVertex::layout : StaticVertex::layout;
+    DEBUGLOG(vertexSize);
     for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
@@ -642,7 +650,7 @@ Model& Renderer::LoadModel_P(std::string name) {
         const bgfx::Memory* indexMem = bgfx::alloc(sizeof(uint16_t) * meshHeader.numIndices);
         file.read((char*)indexMem->data, sizeof(uint16_t) * meshHeader.numIndices);
 
-        mesh.vertexBuffer = bgfx::createVertexBuffer(vertexMem, StaticVertex::layout);
+        mesh.vertexBuffer = bgfx::createVertexBuffer(vertexMem, layout);
         mesh.indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 

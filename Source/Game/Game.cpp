@@ -64,6 +64,12 @@ void Game::Init() {
     treeTransform.rotation = quat(vec3(0.0f, 15.0f, 0.0f));
     entityManager_.CreateEntity("e_tree", treeTransform);
 
+    entityManager_.LoadEntity("e_test_skel");
+    Transform skelTransform;
+    skelTransform.position = vec3(0.0f, 0.0f, 0.0f);
+    skelTransform.scale = vec3(2.0f);
+    entityManager_.CreateEntity("e_test_skel", skelTransform);
+
     camera_.target_ = PLAYER_ENTITY;
 }
 

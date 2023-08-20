@@ -29,6 +29,5 @@ def copyfromfolder(folder):
         shutil.copy2(asset_file, out_folder_dir)
 
 copyfromfolder("entities")
-copyfromfolder("models")
 copyfromfolder("textures")
 copyfromfolder("materials")

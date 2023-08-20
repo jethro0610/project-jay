@@ -4,7 +4,7 @@
 
 struct ModelFileHeader {    
     int numMeshes;
-    // int numJoints;
+    int numJoints;
 };  
 
 struct Model {

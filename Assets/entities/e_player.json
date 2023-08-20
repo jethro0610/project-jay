@@ -8,13 +8,11 @@
             "materials": [
                 "m_player",
                 "m_playerskin",
-                "m_player",
+                "m_hair",
                 "m_player",
                 "m_player",
                 "m_player",
                 "m_playershirt",
-                "m_hair",
-                "m_player",
                 "m_player"
             ]
         },

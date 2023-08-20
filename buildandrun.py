@@ -1,6 +1,7 @@
 import subprocess
 import platform
 import os
+import sys
 
 executable_extension = ''
 use_shell = False

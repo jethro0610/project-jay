@@ -6,8 +6,8 @@
         "static_model": {
             "model": "st_tree",
             "materials": [
-                "m_tree",
-                "m_willowleaves"
+                "m_willowleaves",
+                "m_tree"
             ]
         },
         "interval_spawner": {

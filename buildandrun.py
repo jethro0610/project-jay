@@ -14,8 +14,8 @@ if platform.system() == 'Windows':
 elif platform.system() == 'Linux':
     use_shell = True
 
-subprocess.run('python copyassets.py ', shell = True)
-subprocess.run('python compilemodels.py' + recompile, shell = True)
+subprocess.run('python copyassets.py', shell = True)
+subprocess.run('python compilemodels.py ' + recompile, shell = True)
 
 shader_success = subprocess.run('python compileshaders.py ' + recompile, shell = True)
 if shader_success.returncode != 0:

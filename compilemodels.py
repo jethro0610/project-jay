@@ -25,9 +25,10 @@ def compilemodel(model_path, output_path):
         output_path + ' ' +
         'noprompt'
     )
-    print(colored("\nCompiling model %s..." % os.path.splitext(model_path)[0], "yellow"))
+    print(colored("Compiling model %s..." % os.path.splitext(model_path)[0], "yellow"))
     print(command)
     result = subprocess.run(command, shell = use_shell)
+    print()
 
 files = os.listdir(model_dir)
 for fname in files:

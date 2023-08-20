@@ -628,14 +628,16 @@ Model& Renderer::LoadModel_P(std::string name) {
 
     ModelFileHeader modelHeader;
     file.read((char*)&modelHeader, sizeof(ModelFileHeader));
+    bool skeletal = modelHeader.numJoints > 0;
     model.meshes.resize(modelHeader.numMeshes);
 
+    int vertexSize = skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
     for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
         
-        const bgfx::Memory* vertexMem = bgfx::alloc(sizeof(StaticVertex) * meshHeader.numVertices);
-        file.read((char*)vertexMem->data, sizeof(StaticVertex) * meshHeader.numVertices);
+        const bgfx::Memory* vertexMem = bgfx::alloc(vertexSize * meshHeader.numVertices);
+        file.read((char*)vertexMem->data, vertexSize * meshHeader.numVertices);
 
         const bgfx::Memory* indexMem = bgfx::alloc(sizeof(uint16_t) * meshHeader.numIndices);
         file.read((char*)indexMem->data, sizeof(uint16_t) * meshHeader.numIndices);
@@ -644,12 +646,14 @@ Model& Renderer::LoadModel_P(std::string name) {
         mesh.indexBuffer = bgfx::createIndexBuffer(indexMem);
     }
 
-    // Skeleton_INTERNAL skeleton;
-    // skeleton.joints.resize(modelHeader.numJoints);
-    // file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
-    // skeletons_[name] = skeleton;
+    if (modelHeader.numJoints > 0) {
+        Skeleton skeleton;
+        skeleton.joints.resize(modelHeader.numJoints);
+        file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
+        skeletons_[name] = skeleton;
+    }
 
-    DEBUGLOG("Loaded model " << name << " with " << (int)model.meshes.size() << " meshes");
+    DEBUGLOG("Loaded " << (skeletal ? "skeletal model " : "static model ") << name << " with " << (int)model.meshes.size() << " meshes");
     models_[name] = model;
 
     return models_[name];

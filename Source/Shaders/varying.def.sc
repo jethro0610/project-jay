@@ -3,6 +3,8 @@ vec3 a_normal : NORMAL;
 vec3 a_tangent : TANGENT;
 vec3 a_bitangent : BITANGENT;
 vec2 a_texcoord0 : TEXCOORD0;
+uvec4 a_joints : COLOR0;
+vec4 a_weights : COLOR1;
 
 vec3 v_wposition : WORLDPOSITION;
 vec4 v_sposition : SHADOWPOSITION;

@@ -115,12 +115,12 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
-    Model sphere = LoadModel_P("st_sphere");
-    Model rock = LoadModel_P("st_rock");
-    Model tree = LoadModel_P("st_tree");
-    Model flower = LoadModel_P("st_flower");
-    Model character = LoadModel_P("st_char");
-    spreadModel_ = flower;
+    LoadModel_P("st_sphere");
+    LoadModel_P("st_rock");
+    LoadModel_P("st_tree");
+    spreadModel_ = LoadModel_P("st_flower");
+    LoadModel_P("st_char");
+    LoadModel_P("sk_test_skel"); 
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
     Texture bricksN = LoadTexture_P("t_bricks_n");

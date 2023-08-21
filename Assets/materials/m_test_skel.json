@@ -1,7 +1,7 @@
 {
     "vertex": "vs_skeletal",
     "fragment": "fs_dfsa_color",
-    "casts_shadow": true,
+    "cast_shadows": true,
     "vertex_shadow": "vs_skeletal_s",
     "fragment_shadow": "fs_depth_s",
     "textures": [],

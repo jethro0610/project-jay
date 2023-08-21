@@ -638,7 +638,6 @@ Model& Renderer::LoadModel_P(std::string name) {
 
     int vertexSize = modelHeader.skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
     bgfx::VertexLayout layout = modelHeader.skeletal ? SkeletalVertex::layout : StaticVertex::layout;
-    DEBUGLOG(vertexSize);
     for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));
@@ -654,21 +653,33 @@ Model& Renderer::LoadModel_P(std::string name) {
     }
 
     if (!modelHeader.skeletal) {
+        file.close();
         DEBUGLOG("Loaded static model " << name << " with " << (int)model.meshes.size() << " meshes");
         return model;
     }
 
     Skeleton& skeleton = skeletons_[name];
-    file.read((char*)skeleton.joints.data(), sizeof(Joint) * skeleton.joints.size());
+    file.read((char*)&skeleton, sizeof(Skeleton));
+    DEBUGLOG("Loaded skeleton " << name);
 
-    AnimationHeader animationHeader;
-    file.read((char*)&animationHeader, sizeof(AnimationHeader));
-    Animation animation;
-    animation.keyframes.resize(animationHeader.numKeyframes);
-    file.read((char*)animation.keyframes.data(), sizeof(Keyframe) * animationHeader.numKeyframes);
+    for (int i = 0; i < modelHeader.numAnimations; i++) {
+        AnimationHeader animationHeader;
+        file.read((char*)&animationHeader, sizeof(AnimationHeader));
+        std::string animationName = name + "." + animationHeader.name;
 
+        Animation animation;
+        animation.keyframes.resize(animationHeader.numKeyframes);
+        file.read((char*)animation.keyframes.data(), sizeof(Keyframe) * animationHeader.numKeyframes);
+        DEBUGLOG("Loaded animation " << animationName << " with " << animation.keyframes.size() << " keyframes");
+    }
+
+    file.close();
     models_[name] = model;
-    DEBUGLOG("Loaded skeletal model " << name << " with " << (int)model.meshes.size() << " meshes");
+    DEBUGLOG(
+        "Loaded skeletal model " << name << " with " << 
+        (int)model.meshes.size() << " meshes" << " and " <<
+        modelHeader.numAnimations << " animations"
+    );
     return models_[name];
 }
 

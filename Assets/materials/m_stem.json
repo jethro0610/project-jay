@@ -1,7 +1,6 @@
 {
     "vertex": "vs_inst",
     "fragment": "fs_dfsa_color",
-    "casts_shadow": true,
     "vertex_shadow": "vs_inst_s",
     "fragment_shadow": "fs_depth_s",
     "textures": [],

@@ -26,7 +26,12 @@
         - Num Children 
         - Children In Contiguous Sequence
 
-- Add compile models script that will take all glb files and convert and move to output
+- Animation:
+    - Remove base pose functions and make base pose animation 0 instead
+    - Remove time from keyframe
+    - Remove local transform joint
+    - Rename joint to bone
+    - Use animation on shadow vertex shader
 
 - Flower model
     - Bending

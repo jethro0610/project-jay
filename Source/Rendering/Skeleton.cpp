@@ -56,11 +56,8 @@ void Skeleton::GetAnimationPose(
     jointTransforms.resize(joints_.size());
     jointTransforms[0] = GetAnimatedLocalJointTransform(animation, time, 0).GetWorldMatrix();
     GetAnimationPose_Recursive(animation, time, jointTransforms, 0);
-    for (int i = 0; i < joints_.size(); i++) {
+    for (int i = 0; i < joints_.size(); i++)
         jointTransforms[i] = jointTransforms[i] * joints_[i].inverseBindMatrix;
-        // DEBUGLOG(to_string(jointTransforms[i]));
-    }
-    // abort();
 }
 
 void Skeleton::GetAnimationPose(

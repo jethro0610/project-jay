@@ -28,10 +28,8 @@ Transform Skeleton::GetAnimatedLocalJointTransform(
     float time, 
     int jointIndex
 ) const {
-    int index = floorf(time * 60.0f);
-    index = index % 80;
-    ASSERT((index < animation.keyframes.size()), "Input time exceeds animation time");
-
+    int index = floorf(time * KEYFRAMES_PER_SECOND);
+    index = index % animation.keyframes.size();
     return animation.keyframes[index].transform[jointIndex];
 }
 

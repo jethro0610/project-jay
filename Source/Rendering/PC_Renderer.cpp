@@ -516,7 +516,7 @@ void Renderer::RenderEntities_P(
         bool skeletal = false;
         if (staticModelComponent.skeleton[i] != nullptr) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->GetBasePose(joints);
+            staticModelComponent.skeleton[i]->GetAnimationPose(0, GlobalTime::GetTime(), joints);
         }
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];

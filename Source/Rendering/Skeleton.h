@@ -15,13 +15,18 @@ struct Joint {
 };
 
 typedef vector_const<Joint, MAX_JOINTS> SkeletonJoints;
+typedef vector_const<glm::mat4, MAX_JOINTS> JointTransforms;
 class Skeleton {
 public:
     SkeletonJoints joints_;
     std::vector<Animation> animations_;
 
-    void GetBasePose(std::array<glm::mat4, MAX_JOINTS>& jointTransforms) const;
-    void GetAnimationPose(const Animation& animation, float time, std::array<glm::mat4, MAX_JOINTS>& jointTransforms) const;
-    void GetAnimationPose(int animationIndex, float time, std::array<glm::mat4, MAX_JOINTS>& jointTransforms) const;
-    Transform GetLocalJointTransformAtTime(const Animation& animation, float time, int jointIndex) const;
+    void GetBasePose_Recursive(JointTransforms& jointTransforms, int jointIndex) const;
+    void GetBasePose(JointTransforms& jointTransforms) const;
+
+    void GetAnimationPose_Recursive(const Animation& animation, float time, JointTransforms& jointTransforms, int jointIndex) const;
+    void GetAnimationPose(const Animation& animation, float time, JointTransforms& jointTransforms) const;
+    void GetAnimationPose(int animationIndex, float time, JointTransforms& jointTransforms) const;
+
+    Transform GetAnimatedLocalJointTransform(const Animation& animation, float time, int jointIndex) const;
 };

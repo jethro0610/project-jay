@@ -113,6 +113,8 @@ private:
     Uniform u_shadowMatrix_;
     Uniform u_shadowResolution_;
 
+    Uniform u_joints_;
+
     Uniform u_materialProps_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;
@@ -141,7 +143,13 @@ private:
 
     void StartFrame_P();
     void Clear_P();
-    void RenderMesh_P(Mesh& mesh, Material& material, InstanceBuffer* instanceBuffer = nullptr, glm::mat4* worldMatrix = nullptr);
+    void RenderMesh_P(
+        Mesh& mesh, 
+        Material& material, 
+        InstanceBuffer* instanceBuffer = nullptr, 
+        glm::mat4* worldMatrix = nullptr,
+        JointTransforms* joints = nullptr 
+    );
     void RenderWorld_P(World& world);
     void RenderEntities_P(
         std::array<Entity, MAX_ENTITIES>& entities, 

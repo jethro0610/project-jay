@@ -41,6 +41,7 @@ file(GLOB SOURCES
     Source/Logging/ScreenText.cpp
 
     Source/Rendering/Renderer.cpp
+    Source/Rendering/Skeleton.cpp
 
     Source/Types/Gamepad.cpp
     Source/Types/Transform.cpp

@@ -78,6 +78,8 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
 
+    u_joints_ = bgfx::createUniform("u_joints", bgfx::UniformType::Mat4, MAX_JOINTS);
+
     u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
@@ -394,7 +396,13 @@ void Renderer::PresentFrame_P() {
     bgfx::frame(); 
 }
 
-void Renderer::RenderMesh_P(Mesh& mesh, Material& material, InstanceBuffer* instanceBuffer, glm::mat4* worldMatrix) {
+void Renderer::RenderMesh_P(
+    Mesh& mesh, 
+    Material& material, 
+    InstanceBuffer* instanceBuffer, 
+    glm::mat4* worldMatrix,
+    JointTransforms* joints
+) {
     vec4 normalMult;
 
     int numOfRenders = 1;
@@ -408,6 +416,10 @@ void Renderer::RenderMesh_P(Mesh& mesh, Material& material, InstanceBuffer* inst
 
     mat4 transposeProps = transpose(material.properties);
     bgfx::setUniform(u_materialProps_, &transposeProps);
+
+    if (joints != nullptr)
+        bgfx::setUniform(u_joints_, joints->data(), MAX_JOINTS);
+
     for (int n = 0; n < numOfRenders; n++) {
         if (worldMatrix != nullptr)
             bgfx::setTransform(worldMatrix);
@@ -488,6 +500,7 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
+    JointTransforms joints;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -500,10 +513,15 @@ void Renderer::RenderEntities_P(
         mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
 
         Model& model = *staticModelComponent.model[i];
+        bool skeletal = false;
+        if (staticModelComponent.skeleton[i] != nullptr) {
+            skeletal = true; 
+            staticModelComponent.skeleton[i]->GetBasePose(joints);
+        }
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];
             Mesh& mesh = model.meshes[m];
-            RenderMesh_P(mesh, material, nullptr, &worldMatrix);
+            RenderMesh_P(mesh, material, nullptr, &worldMatrix, skeletal ? &joints : nullptr);
         }
     }
 }

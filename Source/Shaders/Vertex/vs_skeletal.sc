@@ -1,12 +1,19 @@
-$input a_position, a_normal, a_tangent, a_bitangent, a_texcoord0, a_joints, a_weights
+$input a_position, a_normal, a_tangent, a_bitangent, a_texcoord0, a_color0, a_color1 
 $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 #include <properties.sh>
 
 uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
+uniform mat4 u_joints[32];
 
 void main() {
+    mat4 skinMatrix = 
+        a_color1.x * u_joints[a_color0.x] +
+        a_color1.y * u_joints[a_color0.y] +
+        a_color1.z * u_joints[a_color0.z] +
+        a_color1.w * u_joints[a_color0.w];
+
     v_normal = mul(u_model[0], vec4(a_normal, 0.0f)).xyz; 
     v_normal = normalize(v_normal) * u_normalMult.x;
 
@@ -22,5 +29,5 @@ void main() {
     v_wposition = mul(u_model[0], vec4(a_position, 1.0f)).xyz;
     v_sposition = mul(u_shadowMatrix, vec4(v_wposition, 1.0f));
 
-    gl_Position = mul(u_modelViewProj, vec4(a_position, 1.0f));
+    gl_Position = mul(u_modelViewProj, mul(skinMatrix, vec4(a_position, 1.0f)));
 }

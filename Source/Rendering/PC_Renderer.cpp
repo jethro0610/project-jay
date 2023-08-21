@@ -659,18 +659,18 @@ Model& Renderer::LoadModel_P(std::string name) {
     }
 
     Skeleton& skeleton = skeletons_[name];
-    file.read((char*)&skeleton, sizeof(Skeleton));
+    file.read((char*)&skeleton.joints_, sizeof(SkeletonJoints));
     DEBUGLOG("Loaded skeleton " << name);
 
+    skeleton.animations_.resize(modelHeader.numAnimations);
     for (int i = 0; i < modelHeader.numAnimations; i++) {
         AnimationHeader animationHeader;
         file.read((char*)&animationHeader, sizeof(AnimationHeader));
-        std::string animationName = name + "." + animationHeader.name;
 
-        Animation animation;
+        Animation& animation = skeleton.animations_[i];
         animation.keyframes.resize(animationHeader.numKeyframes);
         file.read((char*)animation.keyframes.data(), sizeof(Keyframe) * animationHeader.numKeyframes);
-        DEBUGLOG("Loaded animation " << animationName << " with " << animation.keyframes.size() << " keyframes");
+        DEBUGLOG("Loaded animation " << animationHeader.name << " with " << animation.keyframes.size() << " keyframes");
     }
 
     file.close();

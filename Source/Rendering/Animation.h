@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
-#include "Skeleton.h"
+#include <vector_const.h>
+#include "RenderConstants.h"
 #include "../Types/Transform.h"
 
-const int MAX_ANIMATION_NAME = 32;
 
 struct AnimationHeader {
     char name[MAX_ANIMATION_NAME];

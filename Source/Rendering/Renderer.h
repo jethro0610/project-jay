@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 #endif
 
+#include <array>
 #include <glm/mat4x4.hpp>
 #include <string>
 #include <unordered_map>

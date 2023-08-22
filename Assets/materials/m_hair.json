@@ -8,5 +8,6 @@
     "textures": [
         "t_hair_m"
     ],
-    "color": { "x": 0.45, "y": 0.45, "z": 0.45 }
+    "color": { "x": 0.75, "y": 0.75, "z": 0.75 },
+    "fresnel_brightness": 0.2
 }

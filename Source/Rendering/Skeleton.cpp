@@ -5,47 +5,47 @@
 
 using namespace glm;
 
-Transform Skeleton::GetAnimatedLocalJointTransform(
+Transform Skeleton::GetAnimatedLocalBoneTransform(
     const Animation& animation, 
     float time, 
-    int jointIndex
+    int boneIndex
 ) const {
     int index = floorf(time * KEYFRAMES_PER_SECOND);
     index = index % animation.keyframes.size();
-    return animation.keyframes[index].jointTransforms[jointIndex];
+    return animation.keyframes[index].boneTransforms[boneIndex];
 }
 
 void Skeleton::GetAnimationPose_Recursive(
     const Animation& animation, 
     float time,
-    JointTransforms& jointTransforms, 
-    int jointIndex
+    Pose& pose, 
+    int boneIndex
 ) const {
-    const mat4& parentTransform = jointTransforms[jointIndex];
+    const mat4& parentTransform = pose[boneIndex];
 
-    for (int child : joints_[jointIndex].children) {
-        mat4 childLocalTransform = GetAnimatedLocalJointTransform(animation, time, child).GetWorldMatrix();
-        jointTransforms[child] = parentTransform * childLocalTransform;
-        GetAnimationPose_Recursive(animation, time, jointTransforms, child);
+    for (int child : bones_[boneIndex].children) {
+        mat4 childLocalTransform = GetAnimatedLocalBoneTransform(animation, time, child).GetWorldMatrix();
+        pose[child] = parentTransform * childLocalTransform;
+        GetAnimationPose_Recursive(animation, time, pose, child);
     }
 }
 
 void Skeleton::GetAnimationPose(
     const Animation& animation, 
     float time, 
-    JointTransforms& jointTransforms
+    Pose& pose
 ) const {
-    jointTransforms.resize(joints_.size());
-    jointTransforms[0] = GetAnimatedLocalJointTransform(animation, time, 0).GetWorldMatrix();
-    GetAnimationPose_Recursive(animation, time, jointTransforms, 0);
-    for (int i = 0; i < joints_.size(); i++)
-        jointTransforms[i] = jointTransforms[i] * joints_[i].inverseBindMatrix;
+    pose.resize(bones_.size());
+    pose[0] = GetAnimatedLocalBoneTransform(animation, time, 0).GetWorldMatrix();
+    GetAnimationPose_Recursive(animation, time, pose, 0);
+    for (int i = 0; i < bones_.size(); i++)
+        pose[i] = pose[i] * bones_[i].inverseBindMatrix;
 }
 
 void Skeleton::GetAnimationPose(
     int animationIndex, 
     float time, 
-    JointTransforms& jointTransforms
+    Pose& pose
 ) const {
-    GetAnimationPose(animations_[animationIndex], time, jointTransforms); 
+    GetAnimationPose(animations_[animationIndex], time, pose); 
 }

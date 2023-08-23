@@ -10,7 +10,7 @@ struct AnimationHeader {
 };
 
 struct Keyframe {
-    vector_const<Transform, MAX_JOINTS> jointTransforms;
+    vector_const<Transform, MAX_BONES> boneTransforms;
 };
 
 struct Animation {

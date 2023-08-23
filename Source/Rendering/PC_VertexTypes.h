@@ -29,7 +29,7 @@ struct SkeletalVertex {
     glm::vec3 tangent;
     glm::vec3 bitangent;
     glm::vec2 uv;
-    glm::u8vec4 joints;
+    glm::u8vec4 bones;
     glm::vec4 weights;
 
     static bgfx::VertexLayout layout;

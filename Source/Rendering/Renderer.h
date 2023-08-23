@@ -113,7 +113,7 @@ private:
     Uniform u_shadowMatrix_;
     Uniform u_shadowResolution_;
 
-    Uniform u_joints_;
+    Uniform u_pose_;
 
     Uniform u_materialProps_;
     Uniform u_normalMult_;
@@ -148,7 +148,7 @@ private:
         Material& material, 
         InstanceBuffer* instanceBuffer = nullptr, 
         glm::mat4* worldMatrix = nullptr,
-        JointTransforms* joints = nullptr 
+        Pose* pose = nullptr 
     );
     void RenderWorld_P(World& world);
     void RenderEntities_P(

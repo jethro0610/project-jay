@@ -78,7 +78,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
 
-    u_joints_ = bgfx::createUniform("u_joints", bgfx::UniformType::Mat4, MAX_JOINTS);
+    u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, MAX_BONES);
 
     u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
@@ -401,7 +401,7 @@ void Renderer::RenderMesh_P(
     Material& material, 
     InstanceBuffer* instanceBuffer, 
     glm::mat4* worldMatrix,
-    JointTransforms* joints
+    Pose* pose 
 ) {
     vec4 normalMult;
 
@@ -417,8 +417,8 @@ void Renderer::RenderMesh_P(
     mat4 transposeProps = transpose(material.properties);
     bgfx::setUniform(u_materialProps_, &transposeProps);
 
-    if (joints != nullptr)
-        bgfx::setUniform(u_joints_, joints->data(), MAX_JOINTS);
+    if (pose != nullptr)
+        bgfx::setUniform(u_pose_, pose->data(), MAX_BONES);
 
     for (int n = 0; n < numOfRenders; n++) {
         if (worldMatrix != nullptr)
@@ -500,7 +500,7 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    JointTransforms joints;
+    Pose pose;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -516,12 +516,12 @@ void Renderer::RenderEntities_P(
         bool skeletal = false;
         if (staticModelComponent.skeleton[i] != nullptr) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->GetAnimationPose(0, GlobalTime::GetTime(), joints);
+            staticModelComponent.skeleton[i]->GetAnimationPose(0, GlobalTime::GetTime(), pose);
         }
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];
             Mesh& mesh = model.meshes[m];
-            RenderMesh_P(mesh, material, nullptr, &worldMatrix, skeletal ? &joints : nullptr);
+            RenderMesh_P(mesh, material, nullptr, &worldMatrix, skeletal ? &pose: nullptr);
         }
     }
 }
@@ -677,7 +677,7 @@ Model& Renderer::LoadModel_P(std::string name) {
     }
 
     Skeleton& skeleton = skeletons_[name];
-    file.read((char*)&skeleton.joints_, sizeof(SkeletonJoints));
+    file.read((char*)&skeleton.bones_, sizeof(Bones));
     DEBUGLOG("Loaded skeleton " << name);
 
     skeleton.animations_.resize(modelHeader.numAnimations);

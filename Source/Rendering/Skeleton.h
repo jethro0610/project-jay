@@ -6,25 +6,23 @@
 #include "Animation.h"
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
-class Renderer;
 
-struct Joint {
+struct Bone {
     glm::mat4 inverseBindMatrix;
-    vector_const<int, MAX_JOINT_CHILDREN> children;
+    vector_const<int, MAX_BONE_CHILDREN> children;
 };
 
-typedef vector_const<Joint, MAX_JOINTS> SkeletonJoints;
-typedef vector_const<glm::mat4, MAX_JOINTS> JointTransforms;
+typedef vector_const<Bone, MAX_BONES> Bones;
+typedef vector_const<glm::mat4, MAX_BONES> Pose;
 class Skeleton {
-    friend Renderer;
-    SkeletonJoints joints_;
+public:
+    Bones bones_;
     std::vector<Animation> animations_; // Animations are stored directly on skeleton.
                                         // This makes the relationship clearer and they
                                         // will deallocate with the skeleton
 
-    void GetAnimationPose_Recursive(const Animation& animation, float time, JointTransforms& jointTransforms, int jointIndex) const;
-public:
-    void GetAnimationPose(const Animation& animation, float time, JointTransforms& jointTransforms) const;
-    void GetAnimationPose(int animationIndex, float time, JointTransforms& jointTransforms) const;
-    Transform GetAnimatedLocalJointTransform(const Animation& animation, float time, int jointIndex) const;
+    void GetAnimationPose_Recursive(const Animation& animation, float time, Pose& pose, int boneIndex) const;
+    void GetAnimationPose(const Animation& animation, float time, Pose& pose) const;
+    void GetAnimationPose(int animationIndex, float time, Pose& pose) const;
+    Transform GetAnimatedLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 };

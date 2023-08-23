@@ -28,8 +28,6 @@
 
 - Animation:
     - Make base pose animation 0 instead
-    - Rename joint to bone
-    - Use animation on shadow vertex shader
 
 - Flower model
     - Bending

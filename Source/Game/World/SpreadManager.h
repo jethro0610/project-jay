@@ -21,7 +21,7 @@ struct AddSpreadInfo {
 };
 
 struct SpreadRenderData {
-    glm::mat4 worldMatrix;
+    glm::mat4 modelMatrix;
     glm::vec4 color;
 };
 

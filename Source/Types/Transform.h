@@ -14,8 +14,7 @@ struct Transform {
     glm::quat rotation;
     glm::vec3 scale;
 
-    WorldNormalReturn GetWorldAndNormalMatrix() const;
-    glm::mat4 GetWorldMatrix() const;
+    glm::mat4 ToMatrix() const;
     std::string ToString() const;
     static Transform Lerp(const Transform& a, const Transform& b, float t);
     

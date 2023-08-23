@@ -137,7 +137,7 @@ private:
     std::unordered_map<std::string, Texture> textures_;
     std::unordered_map<std::string, Material> materials_;
 
-    glm::mat4 GetWorldViewProjection(glm::mat4 worldMatrix);
+    glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
 
     void SetTexturesFromMaterial_P(Material& material, bool shadowMap = true);
 
@@ -147,7 +147,7 @@ private:
         Mesh& mesh, 
         Material& material, 
         InstanceBuffer* instanceBuffer = nullptr, 
-        glm::mat4* worldMatrix = nullptr,
+        glm::mat4* modelMatrix = nullptr,
         Pose* pose = nullptr 
     );
     void RenderWorld_P(World& world);

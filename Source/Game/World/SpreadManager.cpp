@@ -68,7 +68,7 @@ bool SpreadManager::AddSpread(ivec2 key) {
     transform.rotation = quat(randomEuler) * transform.rotation;
 
     SpreadRenderData renderData;
-    renderData.worldMatrix = transform.GetWorldMatrix();
+    renderData.modelMatrix = transform.ToMatrix();
 
     renderData.color.r = RandomFloatRange(0.85f, 1.0f);
     renderData.color.g = RandomFloatRange(0.75f, 0.95f);
@@ -124,12 +124,12 @@ bool SpreadManager::RemoveSpread(
         return false;
 
     int deleteIndex = foundKey->second;
-    vec3 position = vec3(renderData_[deleteIndex].worldMatrix[3]);
+    vec3 position = vec3(renderData_[deleteIndex].modelMatrix[3]);
 
     vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
     seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
-    mat4 swappedTransform = renderData_.Remove(deleteIndex).worldMatrix;
+    mat4 swappedTransform = renderData_.Remove(deleteIndex).modelMatrix;
     vec3 swappedPosition = vec3(swappedTransform[3]);
     SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 

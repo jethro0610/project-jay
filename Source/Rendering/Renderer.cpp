@@ -3,8 +3,8 @@
 #include "../Helpers/MapCheck.h"
 using namespace glm;
 
-mat4 Renderer::GetWorldViewProjection(mat4 worldMatrix) {
-    return projectionMatrix_ * camera_->GetViewMatrix() * worldMatrix;
+mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
+    return projectionMatrix_ * camera_->GetViewMatrix() * modelMatrix;
 }
 
 void Renderer::Render(

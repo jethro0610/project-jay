@@ -400,7 +400,7 @@ void Renderer::RenderMesh_P(
     Mesh& mesh, 
     Material& material, 
     InstanceBuffer* instanceBuffer, 
-    glm::mat4* worldMatrix,
+    glm::mat4* modelMatrix,
     Pose* pose 
 ) {
     vec4 normalMult;
@@ -421,8 +421,8 @@ void Renderer::RenderMesh_P(
         bgfx::setUniform(u_pose_, pose->data(), MAX_BONES);
 
     for (int n = 0; n < numOfRenders; n++) {
-        if (worldMatrix != nullptr)
-            bgfx::setTransform(worldMatrix);
+        if (modelMatrix != nullptr)
+            bgfx::setTransform(modelMatrix);
 
         if (curFace == 1) {
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
@@ -510,7 +510,7 @@ void Renderer::RenderEntities_P(
 
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
         bgfx::setUniform(u_meter_, &meter);
-        mat4 worldMatrix = transformComponent.renderTransform[i].GetWorldMatrix();
+        mat4 modelMatrix = transformComponent.renderTransform[i].ToMatrix();
 
         Model& model = *staticModelComponent.model[i];
         bool skeletal = false;
@@ -521,7 +521,7 @@ void Renderer::RenderEntities_P(
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];
             Mesh& mesh = model.meshes[m];
-            RenderMesh_P(mesh, material, nullptr, &worldMatrix, skeletal ? &pose: nullptr);
+            RenderMesh_P(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
         }
     }
 }

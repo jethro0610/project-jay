@@ -21,8 +21,8 @@ public:
                                         // This makes the relationship clearer and they
                                         // will deallocate with the skeleton
 
-    void GetAnimationPose_Recursive(const Animation& animation, float time, Pose& pose, int boneIndex) const;
-    void GetAnimationPose(const Animation& animation, float time, Pose& pose) const;
-    void GetAnimationPose(int animationIndex, float time, Pose& pose) const;
+    void GetAnimationPose_Recursive(Pose& pose, const Animation& animation, float time, int boneIndex) const;
+    void GetAnimationPose(Pose& pose, const Animation& animation, float time) const;
+    void GetAnimationPose(Pose& pose, int animationIndex, float time) const;
     Transform GetAnimatedLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 };

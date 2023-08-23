@@ -28,9 +28,9 @@ Transform Skeleton::GetAnimatedLocalBoneTransform(
 }
 
 void Skeleton::GetAnimationPose_Recursive(
+    Pose& pose, 
     const Animation& animation, 
     float time,
-    Pose& pose, 
     int boneIndex
 ) const {
     const mat4& parentTransform = pose[boneIndex];
@@ -38,26 +38,26 @@ void Skeleton::GetAnimationPose_Recursive(
     for (int child : bones_[boneIndex].children) {
         mat4 childLocalTransform = GetAnimatedLocalBoneTransform(animation, time, child).ToMatrix();
         pose[child] = parentTransform * childLocalTransform;
-        GetAnimationPose_Recursive(animation, time, pose, child);
+        GetAnimationPose_Recursive(pose, animation, time, child);
     }
 }
 
 void Skeleton::GetAnimationPose(
+    Pose& pose,
     const Animation& animation, 
-    float time, 
-    Pose& pose
+    float time
 ) const {
     pose.resize(bones_.size());
     pose[0] = GetAnimatedLocalBoneTransform(animation, time, 0).ToMatrix();
-    GetAnimationPose_Recursive(animation, time, pose, 0);
+    GetAnimationPose_Recursive(pose, animation, time, 0);
     for (int i = 0; i < bones_.size(); i++)
         pose[i] = pose[i] * bones_[i].inverseBindMatrix;
 }
 
 void Skeleton::GetAnimationPose(
+    Pose& pose, 
     int animationIndex, 
-    float time, 
-    Pose& pose
+    float time
 ) const {
-    GetAnimationPose(animations_[animationIndex], time, pose); 
+    GetAnimationPose(pose, animations_[animationIndex], time); 
 }

@@ -4,15 +4,13 @@
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
 
-
 struct AnimationHeader {
     char name[MAX_ANIMATION_NAME];
     int numKeyframes;
 };
 
 struct Keyframe {
-    float time;
-    vector_const<Transform, MAX_JOINTS> transform;
+    vector_const<Transform, MAX_JOINTS> jointTransforms;
 };
 
 struct Animation {

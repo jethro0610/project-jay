@@ -5,24 +5,6 @@
 
 using namespace glm;
 
-void Skeleton::GetBasePose_Recursive(JointTransforms& jointTransforms, int jointIndex) const {
-    const mat4& parentTransform = jointTransforms[jointIndex];
-
-    for (int child : joints_[jointIndex].children) {
-        mat4 childLocalTransform = joints_[child].localTransform.GetWorldMatrix();
-        jointTransforms[child] = parentTransform * childLocalTransform;
-        GetBasePose_Recursive(jointTransforms, child);
-    }
-}
-
-void Skeleton::GetBasePose(JointTransforms& jointTransforms) const {
-    jointTransforms.resize(joints_.size());
-    jointTransforms[0] = joints_[0].localTransform.GetWorldMatrix();
-    GetBasePose_Recursive(jointTransforms, 0);
-    for (int i = 0; i < joints_.size(); i++)
-        jointTransforms[i] = jointTransforms[i] * joints_[i].inverseBindMatrix;
-}
-
 Transform Skeleton::GetAnimatedLocalJointTransform(
     const Animation& animation, 
     float time, 
@@ -30,7 +12,7 @@ Transform Skeleton::GetAnimatedLocalJointTransform(
 ) const {
     int index = floorf(time * KEYFRAMES_PER_SECOND);
     index = index % animation.keyframes.size();
-    return animation.keyframes[index].transform[jointIndex];
+    return animation.keyframes[index].jointTransforms[jointIndex];
 }
 
 void Skeleton::GetAnimationPose_Recursive(

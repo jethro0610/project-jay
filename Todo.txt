@@ -27,9 +27,7 @@
         - Children In Contiguous Sequence
 
 - Animation:
-    - Remove base pose functions and make base pose animation 0 instead
-    - Remove time from keyframe
-    - Remove local transform joint
+    - Make base pose animation 0 instead
     - Rename joint to bone
     - Use animation on shadow vertex shader
 

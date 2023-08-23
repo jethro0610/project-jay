@@ -1,6 +1,8 @@
 #include "../Helpers/Assert.h"
 #include "Skeleton.h"
 #include "../Logging/Logger.h"
+#include "../Logging/ScreenText.h"
+#include "../Game/Time.h"
 #include <glm/gtx/string_cast.hpp>
 
 using namespace glm;
@@ -10,9 +12,19 @@ Transform Skeleton::GetAnimatedLocalBoneTransform(
     float time, 
     int boneIndex
 ) const {
-    int index = floorf(time * KEYFRAMES_PER_SECOND);
-    index = index % animation.keyframes.size();
-    return animation.keyframes[index].boneTransforms[boneIndex];
+    int floorTime = floorf(time * KEYFRAMES_PER_SECOND);
+    float lerpTime = (time * KEYFRAMES_PER_SECOND) - floorTime;
+
+    int beforeIndex = floorTime;
+    int afterIndex = beforeIndex + 1;
+
+    beforeIndex = beforeIndex % animation.keyframes.size();
+    afterIndex = afterIndex % animation.keyframes.size();
+
+    Transform beforeTransform = animation.keyframes[beforeIndex].boneTransforms[boneIndex];
+    Transform afterTransform =  animation.keyframes[afterIndex].boneTransforms[boneIndex];
+
+    return Transform::Lerp(beforeTransform, afterTransform, lerpTime);
 }
 
 void Skeleton::GetAnimationPose_Recursive(

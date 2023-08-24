@@ -10,6 +10,7 @@ typedef std::tuple<glm::mat4, glm::mat3> WorldNormalReturn;
 
 struct Transform {
     Transform();
+    Transform(const glm::mat4& matrix);
     glm::vec3 position;
     glm::quat rotation;
     glm::vec3 scale;

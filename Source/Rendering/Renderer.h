@@ -148,7 +148,7 @@ private:
         Material& material, 
         InstanceBuffer* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
-        Pose* pose = nullptr 
+        GPUPose* pose = nullptr 
     );
     void RenderWorld_P(World& world);
     void RenderEntities_P(

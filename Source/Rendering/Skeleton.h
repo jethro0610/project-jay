@@ -4,16 +4,10 @@
 #include <unordered_map>
 #include <vector_const.h>
 #include "Animation.h"
+#include "Bone.h"
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
 
-struct Bone {
-    glm::mat4 inverseBindMatrix;
-    vector_const<int, MAX_BONE_CHILDREN> children;
-};
-
-typedef vector_const<Bone, MAX_BONES> Bones;
-typedef vector_const<glm::mat4, MAX_BONES> Pose;
 class Skeleton {
 public:
     Bones bones_;
@@ -21,8 +15,10 @@ public:
                                         // This makes the relationship clearer and they
                                         // will deallocate with the skeleton
 
-    void GetAnimationPose_Recursive(Pose& pose, const Animation& animation, float time, int boneIndex) const;
-    void GetAnimationPose(Pose& pose, const Animation& animation, float time) const;
-    void GetAnimationPose(Pose& pose, int animationIndex, float time) const;
-    Transform GetAnimatedLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
+    void GetPose_Recursive(Pose& pose, const Animation& animation, float time, int boneIndex) const;
+    void GetPose(Pose& pose, const Animation& animation, float time) const;
+    void GetPose(Pose& pose, int animationIndex, float time) const;
+    void GetGPUPose(GPUPose& pose, const Animation& animation, float time) const;
+    void GetGPUPose(GPUPose& pose, int animationIndex, float time) const;
+    Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 };

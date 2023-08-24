@@ -401,7 +401,7 @@ void Renderer::RenderMesh_P(
     Material& material, 
     InstanceBuffer* instanceBuffer, 
     glm::mat4* modelMatrix,
-    Pose* pose 
+    GPUPose* pose 
 ) {
     vec4 normalMult;
 
@@ -500,7 +500,7 @@ void Renderer::RenderEntities_P(
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
-    Pose pose;
+    GPUPose pose;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -516,7 +516,7 @@ void Renderer::RenderEntities_P(
         bool skeletal = false;
         if (staticModelComponent.skeleton[i] != nullptr) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->GetAnimationPose(pose, 0, GlobalTime::GetTime());
+            staticModelComponent.skeleton[i]->GetGPUPose(pose, 0, GlobalTime::GetTime());
         }
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];

@@ -1,4 +1,5 @@
 #include <glm/gtx/compatibility.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 #include <sstream>
 #include "Transform.h"
 using namespace glm;
@@ -11,6 +12,12 @@ Transform::Transform() {
     position = vec3(0.0f, 0.0f, 0.0f);
     rotation = quat(vec3(0.0f, 0.0f, 0.0f));
     scale = vec3(1.0f, 1.0f, 1.0f);
+}
+
+Transform::Transform(const mat4& matrix) {
+    vec3 skew;
+    vec4 persp;
+    decompose(matrix, scale, rotation, position, skew, persp);
 }
 
 mat4 Transform::ToMatrix() const {

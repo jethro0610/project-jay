@@ -4,7 +4,7 @@
             "interpolate": true
         },
         "static_model": {
-            "model": "st_char",
+            "model": "sk_char",
             "materials": [
                 "m_player",
                 "m_playerskin",
@@ -14,7 +14,9 @@
                 "m_player",
                 "m_playershirt",
                 "m_player"
-            ]
+            ],
+            "skeletal": true,
+            "snake_roots": [8, 17]
         },
         "ground_trace": {
             "distance": 1.0,

@@ -1,9 +1,9 @@
 {
     "two_sided": true,
-    "vertex": "vs_static",
+    "vertex": "vs_skeletal",
     "fragment": "fs_dfsa_color_masked",
     "cast_shadows": true,
-    "vertex_shadow": "vs_static_s",
+    "vertex_shadow": "vs_skeletal_s",
     "fragment_shadow": "fs_depth_s",
     "textures": [
         "t_hair_m"

@@ -62,23 +62,27 @@ void Skeleton::GetPose(
     GetPose(pose, animations_[animationIndex], time); 
 }
 
-void Skeleton::GetGPUPose(
-    GPUPose& pose,
-    const Animation& animation, 
+void Skeleton::GetWorldPose(
+    Pose& pose,
+    const Transform& transform,
+    int animationIndex,
     float time
 ) const {
-    Pose wPose;
-    GetPose(wPose, animation, time);
-
-    pose.resize(bones_.size());
-    for (int i = 0; i < bones_.size(); i++)
-        pose[i] = wPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
+    GetPose(pose, animationIndex, time); 
+    for (Transform& poseTransform : pose)
+        poseTransform = transform.ToMatrix() * poseTransform.ToMatrix();
 }
 
 void Skeleton::GetGPUPose(
     GPUPose& pose, 
+    const Transform& transform,
     int animationIndex, 
     float time
 ) const {
-    GetGPUPose(pose, animations_[animationIndex], time);
+    Pose worldPose;
+    GetWorldPose(worldPose, transform, animationIndex, time);
+
+    pose.resize(bones_.size());
+    for (int i = 0; i < bones_.size(); i++)
+        pose[i] = worldPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
 }

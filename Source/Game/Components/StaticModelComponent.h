@@ -6,6 +6,8 @@
 #include "../../Rendering/Model.h"
 #include "../../Rendering/Renderer.h"
 
+const int MAX_SNAKE_ROOTS = 4;
+
 class StaticModelComponent : public Component {
 public:
     // Kind of a hack, but we need to assign this renderer before
@@ -15,6 +17,8 @@ public:
     std::array<Model*, MAX_ENTITIES> model;
     std::array<std::vector<Material*>, MAX_ENTITIES> materials;
     std::array<Skeleton*, MAX_ENTITIES> skeleton;
+    std::array<vector_const<int, MAX_SNAKE_ROOTS>, MAX_ENTITIES> snakeRoots;
+    std::array<Pose, MAX_ENTITIES> prevWorldPose;
 
     StaticModelComponent() {
         model.fill(nullptr);

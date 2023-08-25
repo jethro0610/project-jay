@@ -5,6 +5,14 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Submodules for Libraries
+- const refs for strings
+
+- Optimize seed position calculation
+    - World Height taking the most time, optimize that
+        - Maybe pregenerate the noise and just use bilinear filtering
+    - Worst case takes around 1.3ms
+
 - Model Spec
     - Model Header:
         Num Meshes

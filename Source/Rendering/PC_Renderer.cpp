@@ -123,7 +123,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadModel_P("st_rock");
     LoadModel_P("st_tree");
     spreadModel_ = LoadModel_P("st_flower");
-    LoadModel_P("st_char");
+    LoadModel_P("sk_char");
     LoadModel_P("sk_test_skel"); 
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
@@ -516,7 +516,7 @@ void Renderer::RenderEntities_P(
         bool skeletal = false;
         if (staticModelComponent.skeleton[i] != nullptr) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->GetGPUPose(pose, 0, GlobalTime::GetTime());
+            staticModelComponent.skeleton[i]->GetGPUPose(pose, transformComponent.renderTransform[i], 0, GlobalTime::GetTime());
         }
         for (int m = 0; m < model.meshes.size(); m++) {
             Material& material = *staticModelComponent.materials[i][m];

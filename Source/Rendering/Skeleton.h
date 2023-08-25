@@ -18,7 +18,9 @@ public:
     void GetPose_Recursive(Pose& pose, const Animation& animation, float time, int boneIndex) const;
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;
-    void GetGPUPose(GPUPose& pose, const Animation& animation, float time) const;
-    void GetGPUPose(GPUPose& pose, int animationIndex, float time) const;
+
+    void GetWorldPose(Pose& pose, const Transform& transform, int animationIndex, float time) const;
+    void GetGPUPose(GPUPose& pose, const Transform& transform, int animationIndex, float time) const;
+
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 };

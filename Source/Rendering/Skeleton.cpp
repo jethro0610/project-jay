@@ -67,12 +67,12 @@ void Skeleton::GetGPUPose(
     const Animation& animation, 
     float time
 ) const {
-    Pose worldPose;
-    GetPose(worldPose, animation, time);
+    Pose wPose;
+    GetPose(wPose, animation, time);
 
     pose.resize(bones_.size());
     for (int i = 0; i < bones_.size(); i++)
-        pose[i] = worldPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
+        pose[i] = wPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
 }
 
 void Skeleton::GetGPUPose(

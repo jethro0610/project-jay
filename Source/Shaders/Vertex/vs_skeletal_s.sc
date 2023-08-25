@@ -4,13 +4,6 @@ $output v_texcoord0
 
 uniform mat4 u_pose[32];
 
-static const mat4 identity = {
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {0.0f, 1.0f, 0.0f, 0.0f},
-    {0.0f, 0.0f, 1.0f, 0.0f},
-    {0.0f, 0.0f, 0.0f, 1.0f}
-};
-
 void main() {
     mat4 skinMatrix = 
         a_color1.x * u_pose[a_color0.x] +

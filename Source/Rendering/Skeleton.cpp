@@ -103,19 +103,6 @@ void Skeleton::GetWorldPose(
     }
 }
 
-void Skeleton::GetGPUPose(
-    GPUPose& pose, 
-    int animationIndex, 
-    float time
-) const {
-    Pose localPose;
-    GetPose(localPose, animationIndex, time);
-
-    pose.resize(bones_.size());
-    for (int i = 0; i < bones_.size(); i++)
-        pose[i] = localPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
-}
-
 void Skeleton::WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const {
     gpuPose.resize(bones_.size());
     for (int i = 0; i < bones_.size(); i++)

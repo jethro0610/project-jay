@@ -18,6 +18,13 @@
     on the CPU to all the bones to save on matrix multiplications in the GPU.
     Profile later
 
+- For snake tails:
+    - We now have the world space poses, we need to take the world space
+      pose from the previous frames and solve where the current bones need 
+      to be
+    - We likely need to store some momentum data
+    - Lets test this in Python?
+
 - Model Spec
     - Model Header:
         Num Meshes

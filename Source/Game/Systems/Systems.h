@@ -12,3 +12,4 @@
 #include "ProjectileSystem.h"
 #include "CollisionSystem.h"
 #include "IntervalSpawnSystem.h"
+#include "SkeletonSystem.h"

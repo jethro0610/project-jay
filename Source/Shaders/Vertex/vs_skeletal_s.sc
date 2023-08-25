@@ -4,6 +4,13 @@ $output v_texcoord0
 
 uniform mat4 u_pose[32];
 
+static const mat4 identity = {
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 0.0f, 1.0f}
+};
+
 void main() {
     mat4 skinMatrix = 
         a_color1.x * u_pose[a_color0.x] +
@@ -12,5 +19,5 @@ void main() {
         a_color1.w * u_pose[a_color0.w];
 
     v_texcoord0 = a_texcoord0;
-    gl_Position = mul(u_modelViewProj, mul(skinMatrix, vec4(a_position, 1.0f)));
+    gl_Position = mul(u_viewProj, mul(skinMatrix, vec4(a_position, 1.0f)));
 }

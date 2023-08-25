@@ -75,6 +75,34 @@ void Skeleton::GetWorldPose(
     // To undo the world space pose, inverse(transform) * everything else
 }
 
+void Skeleton::GetWorldPose(
+    Pose& pose, 
+    const Transform& transform, 
+    const SnakeChainList& snakeChainList, 
+    float deltaTime,
+    int animationIndex, 
+    float time
+) const {
+    Pose prevPose = pose;
+    GetWorldPose(pose, transform, animationIndex, time);
+
+    int firstBone = snakeChainList[0].first;
+    int lastBone = snakeChainList[0].second;
+    int numChainBones = (firstBone - lastBone) + 1;
+
+    for (int i = 1; i < numChainBones; i++) {
+        vec3 velocity = pose[i + firstBone].position - prevPose[i + firstBone].position;
+
+        float scalar = i - (numChainBones - 1);
+        scalar *= 0.5;
+        scalar = 1.0f - scalar;
+        scalar = powf(scalar, 4.0);
+
+        velocity *= 15.0f * scalar * deltaTime;
+        pose[i].position = prevPose[i].position + velocity;
+    }
+}
+
 void Skeleton::GetGPUPose(
     GPUPose& pose, 
     int animationIndex, 
@@ -86,4 +114,10 @@ void Skeleton::GetGPUPose(
     pose.resize(bones_.size());
     for (int i = 0; i < bones_.size(); i++)
         pose[i] = localPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
+}
+
+void Skeleton::WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const {
+    gpuPose.resize(bones_.size());
+    for (int i = 0; i < bones_.size(); i++)
+        gpuPose[i] = worldPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
 }

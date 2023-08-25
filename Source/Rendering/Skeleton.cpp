@@ -71,18 +71,19 @@ void Skeleton::GetWorldPose(
     GetPose(pose, animationIndex, time); 
     for (Transform& poseTransform : pose)
         poseTransform = transform.ToMatrix() * poseTransform.ToMatrix();
+
+    // To undo the world space pose, inverse(transform) * everything else
 }
 
 void Skeleton::GetGPUPose(
     GPUPose& pose, 
-    const Transform& transform,
     int animationIndex, 
     float time
 ) const {
-    Pose worldPose;
-    GetWorldPose(worldPose, transform, animationIndex, time);
+    Pose localPose;
+    GetPose(localPose, animationIndex, time);
 
     pose.resize(bones_.size());
     for (int i = 0; i < bones_.size(); i++)
-        pose[i] = worldPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
+        pose[i] = localPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
 }

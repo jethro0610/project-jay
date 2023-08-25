@@ -13,6 +13,11 @@
         - Maybe pregenerate the noise and just use bilinear filtering
     - Worst case takes around 1.3ms
 
+- Possible skeleton GPU optimization:
+    Currently skeletons calculate with model matrix, but we can apply this
+    on the CPU to all the bones to save on matrix multiplications in the GPU.
+    Profile later
+
 - Model Spec
     - Model Header:
         Num Meshes

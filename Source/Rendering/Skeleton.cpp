@@ -113,10 +113,10 @@ void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const Rib
 
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
-        scalar = std::powf(scalar, 2.0f);
-        scalar = mix(0.05f, 0.95f, scalar);
+        scalar = std::powf(scalar, ribbon.tailPower);
+        scalar = mix(ribbon.tailRatio, 1.0f, scalar);
 
-        velocity *= 100.0f * scalar * deltaTime;
+        velocity *= ribbon.returnSpeed * scalar * deltaTime;
         if (length(velocity) > maxVelocity)
             velocity = normalize(velocity) * maxVelocity;
 

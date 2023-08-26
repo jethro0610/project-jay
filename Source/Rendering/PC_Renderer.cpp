@@ -415,12 +415,11 @@ void Renderer::RenderMesh_P(
     int curFace = 0;
 
     mat4 transposeProps = transpose(material.properties);
-    bgfx::setUniform(u_materialProps_, &transposeProps);
-
-    if (pose != nullptr)
-        bgfx::setUniform(u_pose_, pose->data(), MAX_BONES);
 
     for (int n = 0; n < numOfRenders; n++) {
+        bgfx::setUniform(u_materialProps_, &transposeProps);
+        if (pose != nullptr)
+            bgfx::setUniform(u_pose_, pose->data(), MAX_BONES);
         if (modelMatrix != nullptr)
             bgfx::setTransform(modelMatrix);
 

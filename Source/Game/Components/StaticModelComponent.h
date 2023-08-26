@@ -21,6 +21,8 @@ public:
     StaticModelComponent() {
         model.fill(nullptr);
         skeleton.fill(nullptr);
+        for (SnakeChainList& l : snakeChainList)
+            l.resize(0);
     };
 
     StaticModelComponent(const StaticModelComponent&) = delete;
@@ -41,7 +43,17 @@ public:
         for (auto& materialName : materialData)
             materials[entity].push_back(&renderer->GetMaterial(materialName));
 
-        if (GetBoolean(data, "skeletal") == true)
+        if (GetBoolean(data, "skeletal") == true) {
             skeleton[entity] = &renderer->GetSkeleton(name);
+            worldPose[entity].resize(skeleton[entity]->bones_.size());
+        }
+
+        if (data.contains("snake_chains")) {
+            auto snakeChains = data["snake_chains"];
+            ASSERT((snakeChains.size() % 2 == 0), "Missing snake chain pair");
+            for (int i = 0; i < snakeChains.size() / 2; i++) {
+                snakeChainList[entity].push_back(std::pair<int, int>(snakeChains[i * 2], snakeChains[i * 2 + 1])); 
+            }
+        }
     }
 };

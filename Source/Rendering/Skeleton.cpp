@@ -84,22 +84,46 @@ void Skeleton::GetWorldPose(
     float time
 ) const {
     Pose prevPose = pose;
-    GetWorldPose(pose, transform, animationIndex, time);
+    Pose desiredPose;
+    GetWorldPose(desiredPose, transform, animationIndex, time);
+    pose = desiredPose;
 
     int firstBone = snakeChainList[0].first;
     int lastBone = snakeChainList[0].second;
-    int numChainBones = (firstBone - lastBone) + 1;
+    int numChainBones = (lastBone - firstBone) + 1;
+
+    std::array<float, MAX_BONES> distances;
 
     for (int i = 1; i < numChainBones; i++) {
-        vec3 velocity = pose[i + firstBone].position - prevPose[i + firstBone].position;
+        const int boneIndex = i + firstBone;
+        distances[boneIndex] = distance(desiredPose[boneIndex].position, desiredPose[boneIndex - 1].position);
+    }
 
-        float scalar = i - (numChainBones - 1);
-        scalar *= 0.5;
-        scalar = 1.0f - scalar;
-        scalar = powf(scalar, 4.0);
+    for (int i = 1; i < numChainBones; i++) {
+        const int boneIndex = i + firstBone;
 
-        velocity *= 15.0f * scalar * deltaTime;
-        pose[i].position = prevPose[i].position + velocity;
+        vec3 direction = normalize(prevPose[boneIndex].position - pose[boneIndex - 1].position);
+        vec3 lockPosition = pose[boneIndex - 1].position + (direction * distances[boneIndex]);
+
+        vec3 velocity = desiredPose[boneIndex].position - lockPosition;
+
+        float scalar = (numChainBones - 1) - i;
+        scalar /= numChainBones - 2;
+        scalar = std::powf(scalar, 4.0f);
+        scalar = mix(0.05f, 0.95f, scalar);
+
+        velocity *= 50.0f * scalar * deltaTime;
+        pose[boneIndex].position = lockPosition + velocity;
+    }
+
+    for (int i = 1; i < numChainBones; i++) {
+        const int boneIndex = i + firstBone;
+        vec3 a = normalize(desiredPose[boneIndex + 1].position - desiredPose[boneIndex].position);
+        vec3 b = normalize(pose[boneIndex + 1].position - pose[boneIndex].position);
+        vec3 half = normalize(a + b);
+        // quat deltaDir = (dot(a, half), cross(a, half));
+        quat deltaDir = rotation(a, b);
+        pose[boneIndex].rotation = deltaDir * desiredPose[boneIndex].rotation;
     }
 }
 

@@ -18,25 +18,24 @@ void SkeletonSystem::CalculatePoses(
         if (modelComponent.skeleton[i] == nullptr)
             continue;
 
-        modelComponent.skeleton[i]->GetWorldPose(
-            modelComponent.worldPose[i],
-            transformComponent.renderTransform[i],
-            0,
-            GlobalTime::GetTime()
-        );
-
-        // if (modelComponent.snakeChainList.size() > 0) {
-        //     modelComponent.skeleton[i]->GetWorldPose(
-        //         modelComponent.worldPose[i],
-        //         transformComponent.renderTransform[i],
-        //         modelComponent.snakeChainList[i],
-        //         deltaTime,
-        //         0,
-        //         GlobalTime::GetTime()
-        //     );
-        // }
-        // else {
-        // }
+        if (modelComponent.snakeChainList[i].size() > 0) {
+            modelComponent.skeleton[i]->GetWorldPose(
+                modelComponent.worldPose[i],
+                transformComponent.renderTransform[i],
+                modelComponent.snakeChainList[i],
+                deltaTime,
+                0,
+                GlobalTime::GetTime()
+            );
+        }
+        else {
+            modelComponent.skeleton[i]->GetWorldPose(
+                modelComponent.worldPose[i],
+                transformComponent.renderTransform[i],
+                0,
+                GlobalTime::GetTime()
+            );
+        }
 
     }
 }

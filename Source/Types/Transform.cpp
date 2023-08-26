@@ -21,8 +21,7 @@ Transform::Transform(const mat4& matrix) {
 }
 
 mat4 Transform::ToMatrix() const {
-    mat4 outWorld;
-    outWorld = mat4(1.0f);
+    mat4 outWorld(1.0f);
     outWorld = translate(outWorld, position);
     outWorld *= toMat4(rotation);
     outWorld = glm::scale(outWorld, scale);

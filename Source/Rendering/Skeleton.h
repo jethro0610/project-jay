@@ -9,8 +9,8 @@
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
 
-const int MAX_SNAKE_CHAINS = 4;
-typedef vector_const<std::pair<int, int>, MAX_SNAKE_CHAINS> SnakeChainList; 
+const int MAX_RIBBON_CHAINS = 4;
+typedef vector_const<std::pair<int, int>, MAX_RIBBON_CHAINS> RibbonChainList; 
 
 class Skeleton {
 public:
@@ -27,7 +27,7 @@ public:
     void GetWorldPose(
         Pose& pose, 
         const Transform& transform, 
-        const SnakeChainList& snakeChainList, 
+        const RibbonChainList& ribbonChainList, 
         float deltaTime,
         int animationIndex, 
         float time
@@ -35,4 +35,7 @@ public:
     void WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const;
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
+
+private:
+    void ComputeRibbonChain(Pose& pose, const Pose& desiredPose, int startBone, int endBone, float deltaTime) const;
 };

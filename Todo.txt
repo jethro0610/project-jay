@@ -13,17 +13,12 @@
         - Maybe pregenerate the noise and just use bilinear filtering
     - Worst case takes around 1.3ms
 
-- Possible skeleton GPU optimization:
-    Currently skeletons calculate with model matrix, but we can apply this
-    on the CPU to all the bones to save on matrix multiplications in the GPU.
-    Profile later
-
-- For snake tails:
-    - We now have the world space poses, we need to take the world space
-      pose from the previous frames and solve where the current bones need 
-      to be
-    - We likely need to store some momentum data
-    - Lets test this in Python?
+- Optimize Skeleton pose calculation
+    - Going from Matrix -> Transform -> Matrix is inefficient. How to avoid this?    
+    - Figure out some way to lerp Mat4?
+    - Converting Transform to Mat4 takes the most time, specifically the multiplication
+    - Or can just calculate a few skeletons every few ticks, then interpolate poses
+    - Precompute bones in model space instead of local space?
 
 - Model Spec
     - Model Header:

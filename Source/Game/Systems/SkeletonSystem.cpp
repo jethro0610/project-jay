@@ -18,11 +18,11 @@ void SkeletonSystem::CalculatePoses(
         if (modelComponent.skeleton[i] == nullptr)
             continue;
 
-        if (modelComponent.snakeChainList[i].size() > 0) {
+        if (modelComponent.ribbonChainList[i].size() > 0) {
             modelComponent.skeleton[i]->GetWorldPose(
                 modelComponent.worldPose[i],
                 transformComponent.renderTransform[i],
-                modelComponent.snakeChainList[i],
+                modelComponent.ribbonChainList[i],
                 deltaTime,
                 0,
                 GlobalTime::GetTime()

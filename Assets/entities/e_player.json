@@ -16,7 +16,7 @@
                 "m_player"
             ],
             "skeletal": true,
-            "snake_chains": [7, 16]
+            "ribbon_chains": [7, 16, 18, 26]
         },
         "ground_trace": {
             "distance": 1.0,

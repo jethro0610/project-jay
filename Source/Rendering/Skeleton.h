@@ -6,6 +6,7 @@
 #include <vector_const.h>
 #include "Animation.h"
 #include "Bone.h"
+#include "Ribbon.h"
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
 
@@ -15,6 +16,7 @@ typedef vector_const<std::pair<int, int>, MAX_RIBBON_CHAINS> RibbonChainList;
 class Skeleton {
 public:
     Bones bones_;
+    Ribbons ribbons_;
     std::vector<Animation> animations_; // Animations are stored directly on skeleton.
                                         // This makes the relationship clearer and they
                                         // will deallocate with the skeleton
@@ -23,19 +25,11 @@ public:
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;
 
-    void GetWorldPose(Pose& pose, const Transform& transform, int animationIndex, float time) const;
-    void GetWorldPose(
-        Pose& pose, 
-        const Transform& transform, 
-        const RibbonChainList& ribbonChainList, 
-        float deltaTime,
-        int animationIndex, 
-        float time
-    ) const;
+    void GetWorldPose(Pose& pose, const Transform& transform, int animationIndex, float time, float deltaTime) const;
     void WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const;
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 
 private:
-    void ComputeRibbonChain(Pose& pose, const Pose& desiredPose, int startBone, int endBone, float deltaTime) const;
+    void ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const RibbonDesc& ribbon, float deltaTime) const;
 };

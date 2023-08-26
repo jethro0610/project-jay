@@ -680,6 +680,7 @@ Model& Renderer::LoadModel_P(std::string name) {
 
     Skeleton& skeleton = skeletons_[name];
     file.read((char*)&skeleton.bones_, sizeof(Bones));
+    file.read((char*)&skeleton.ribbons_, sizeof(Ribbons));
     DEBUGLOG("Loaded skeleton " << name);
 
     skeleton.animations_.resize(modelHeader.numAnimations);

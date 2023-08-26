@@ -66,27 +66,43 @@ void Skeleton::GetWorldPose(
     Pose& pose,
     const Transform& transform,
     int animationIndex,
-    float time
+    float time,
+    float deltaTime
 ) const {
-    pose.resize(bones_.size());
-    pose[0] = transform.ToMatrix() * GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
-    GetPose_Recursive(pose, animations_[animationIndex], time, 0); 
+    Pose desiredPose;
+    desiredPose.resize(bones_.size());
+    desiredPose[0] = transform.ToMatrix() * GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
+    GetPose_Recursive(desiredPose, animations_[animationIndex], time, 0); 
+
+    std::array<bool, MAX_BONES> isRibbon;
+    isRibbon.fill(false);
+
+    for (const RibbonDesc& ribbon : ribbons_) {
+        ComputeRibbonChain(pose, desiredPose, ribbon, deltaTime);
+        for (int i = ribbon.start; i <= ribbon.end; i++)
+            isRibbon[i] = true;
+    }
+
+    for (int i = 0; i < pose.size(); i++) {
+        if (!isRibbon[i])
+            pose[i] = desiredPose[i];
+    }
 }
 
-void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, int startBone, int endBone, float deltaTime) const {
+void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const RibbonDesc& ribbon, float deltaTime) const {
     std::array<float, MAX_BONES> desiredDistances;
-    int numChainBones = (endBone - startBone) + 1;
-    pose[startBone] = desiredPose[startBone];
+    int numChainBones = (ribbon.end - ribbon.start) + 1;
+    pose[ribbon.start] = desiredPose[ribbon.start];
 
     // OPTIMIZATION: Precompute the bone distances
     for (int i = 1; i < numChainBones; i++) {
-        const int boneIndex = i + startBone;
+        const int boneIndex = i + ribbon.start;
         desiredDistances[boneIndex] = distance(desiredPose[boneIndex].position, desiredPose[boneIndex - 1].position);
     }
 
     // Calculate bone positions
     for (int i = 1; i < numChainBones; i++) {
-        const int boneIndex = i + startBone;
+        const int boneIndex = i + ribbon.start;
             
         vec3 fromParent = pose[boneIndex].position - pose[boneIndex - 1].position;
         if (length(fromParent) > desiredDistances[boneIndex])
@@ -110,39 +126,13 @@ void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, int start
     // Calculate bone rotations, the tail is skipped since it's only used
     // as reference for the last deforming bone
     for (int i = 1; i < numChainBones - 1; i++) {
-        const int boneIndex = i + startBone;
+        const int boneIndex = i + ribbon.start;
 
         vec3 a = normalize(desiredPose[boneIndex + 1].position - desiredPose[boneIndex].position);
         vec3 b = normalize(pose[boneIndex + 1].position - pose[boneIndex].position);
         quat deltaDir = rotation(a, b);
 
         pose[boneIndex].rotation = deltaDir * desiredPose[boneIndex].rotation;
-    }
-}
-
-void Skeleton::GetWorldPose(
-    Pose& pose, 
-    const Transform& transform, 
-    const RibbonChainList& ribbonChainList, 
-    float deltaTime,
-    int animationIndex, 
-    float time
-) const {
-    Pose desiredPose;
-    GetWorldPose(desiredPose, transform, animationIndex, time);
-
-    std::array<bool, MAX_BONES> isRibbon;
-    isRibbon.fill(false);
-
-    for (const std::pair<int, int>& ribbonChain : ribbonChainList) {
-        ComputeRibbonChain(pose, desiredPose, ribbonChain.first, ribbonChain.second, deltaTime);
-        for (int i = ribbonChain.first; i <= ribbonChain.second; i++)
-            isRibbon[i] = true;
-    }
-
-    for (int i = 0; i < pose.size(); i++) {
-        if (!isRibbon[i])
-            pose[i] = desiredPose[i];
     }
 }
 

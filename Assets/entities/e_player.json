@@ -15,8 +15,7 @@
                 "m_playershirt",
                 "m_player"
             ],
-            "skeletal": true,
-            "ribbon_chains": [7, 16, 18, 26]
+            "skeletal": true
         },
         "ground_trace": {
             "distance": 1.0,

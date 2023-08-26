@@ -20,37 +20,11 @@
     - Or can just calculate a few skeletons every few ticks, then interpolate poses
     - Precompute bones in model space instead of local space?
 
-- Model Spec
-    - Model Header:
-        Num Meshes
-        Num Joints
-
-    - (n) Mesh Header:
-        Num Vertices
-        Num Indieces
-
-    - (n) Mesh
-        - Transform Data
-        - Only if its skeletal: 
-            - Joints its affected by (4 max)
-            - Joint weights
-
-    - (i) Joint
-        - Transform Data
-        - Inverse Bind Matrix
-        - Num Children 
-        - Children In Contiguous Sequence
-
-- Animation:
-    - Make base pose animation 0 instead
-
 - Flower model
     - Bending
     - Reduce overdraw with mesh shape
 
 - Enemy
-- Player model
-    - Animation
 - Holes (terrain modification)
 
 - Frustum culling

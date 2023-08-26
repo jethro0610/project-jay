@@ -15,14 +15,11 @@ public:
     std::array<Model*, MAX_ENTITIES> model;
     std::array<std::vector<Material*>, MAX_ENTITIES> materials;
     std::array<Skeleton*, MAX_ENTITIES> skeleton;
-    std::array<RibbonChainList, MAX_ENTITIES> ribbonChainList;
     std::array<Pose, MAX_ENTITIES> worldPose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
 
     StaticModelComponent() {
         model.fill(nullptr);
         skeleton.fill(nullptr);
-        for (RibbonChainList& ribbonChain : ribbonChainList)
-            ribbonChain.resize(0);
     };
 
     StaticModelComponent(const StaticModelComponent&) = delete;
@@ -46,13 +43,6 @@ public:
         if (GetBoolean(data, "skeletal") == true) {
             skeleton[entity] = &renderer->GetSkeleton(name);
             worldPose[entity].resize(skeleton[entity]->bones_.size());
-        }
-
-        if (data.contains("ribbon_chains")) {
-            auto ribbonChains = data["ribbon_chains"];
-            ASSERT((ribbonChains.size() % 2 == 0), "Missing ribbon chain pair");
-            for (int i = 0; i < ribbonChains.size() / 2; i++)
-                ribbonChainList[entity].push_back(std::pair<int, int>(ribbonChains[i * 2], ribbonChains[i * 2 + 1])); 
         }
     }
 };

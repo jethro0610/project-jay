@@ -1,5 +1,7 @@
 - Sea Dock Bells 
 
+- Big Yellow Cross thing, not sure what it'll do (see test_skel)
+
 - Effect that launches light beams that keep target in air, multi-hit
     - Can use this to combo
 

@@ -6,6 +6,8 @@ from termcolor import colored
 
 model_dir = "Assets/models"
 output_dir = "Output/models"
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 executable_path = './Tools/JayModelCompiler'
 use_shell = False
 recompile = False
@@ -37,13 +39,13 @@ for fname in files:
     model_path = os.path.join(model_dir, fname)
     output_path = os.path.join(output_dir, os.path.splitext(fname)[0] + '.jmd')
 
-    should_compile = False
+    should_compile = True
     if os.path.exists(output_path):
         asset_write_time = os.path.getmtime(model_path)
         output_write_time = os.path.getmtime(output_path)
 
-        if asset_write_time > output_write_time or executable_last_compile > output_write_time:
-            should_compile = True 
+        if asset_write_time <= output_write_time and executable_last_compile <= output_write_time:
+            should_compile = False
 
     if should_compile or recompile:
         compilemodel(model_path, output_path)

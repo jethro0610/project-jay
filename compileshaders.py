@@ -10,6 +10,8 @@ from termcolor import colored
 input_path = './Source/Shaders/'
 include_path = input_path + 'Include/'
 output_path = './Output/shaders/'
+if not os.path.exists(output_path):
+    os.makedirs(output_path)
 shader_platform = ''
 shader_profile = ''
 executable_extension = ''

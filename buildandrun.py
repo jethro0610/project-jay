@@ -24,7 +24,6 @@ if shader_success.returncode != 0:
 
 if not os.path.exists('./Build'):
     os.makedirs('./Build')
-
 os.chdir('./Build')
 if not os.path.exists('CMakeCache.txt'):
     subprocess.run('cmake ../')

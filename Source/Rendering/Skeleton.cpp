@@ -113,7 +113,7 @@ void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const Rib
 
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
-        scalar = std::powf(scalar, ribbon.tailPower);
+        scalar = std::pow(scalar, ribbon.tailPower);
         scalar = mix(ribbon.tailRatio, 1.0f, scalar);
 
         velocity *= ribbon.returnSpeed * scalar * deltaTime;

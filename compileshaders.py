@@ -149,7 +149,7 @@ for desc in shader_descriptions.values():
 
     command = (
         './Tools/shaderc' + executable_extension + ' '
-        '-i ./Tools/include/ '
+        '-i ./Libraries/bgfx.cmake/bgfx/src '
         '-i ./Source/Shaders/Include/ ' +
         include_string +
         '--varyingdef ./Source/Shaders/varying.def.sc '

@@ -16,3 +16,6 @@
 [submodule "Libraries/vector_const"]
 	path = Libraries/vector_const
 	url = https://github.com/jethro0610/vector_const
+[submodule "Libraries/modelcompiler"]
+	path = Libraries/modelcompiler
+	url = https://github.com/jethro0610/jay-model-compiler

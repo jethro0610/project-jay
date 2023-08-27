@@ -14,6 +14,7 @@ if platform.system() == 'Windows':
 elif platform.system() == 'Linux':
     use_shell = True
 
+subprocess.run('python generatetools.py', shell = True)
 subprocess.run('python copyassets.py', shell = True)
 subprocess.run('python compilemodels.py ' + recompile, shell = True)
 
@@ -21,7 +22,13 @@ shader_success = subprocess.run('python compileshaders.py ' + recompile, shell =
 if shader_success.returncode != 0:
     exit()
 
+if not os.path.exists('./Build'):
+    os.makedirs('./Build')
+
 os.chdir('./Build')
+if not os.path.exists('CMakeCache.txt'):
+    subprocess.run('cmake ../')
+
 build_success = subprocess.run('cmake --build .', shell = True)
 if build_success.returncode != 0:
     exit()

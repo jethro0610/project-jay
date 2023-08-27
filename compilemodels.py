@@ -6,7 +6,7 @@ from termcolor import colored
 
 model_dir = "Assets/models"
 output_dir = "Output/models"
-executable_path = './Tools/model'
+executable_path = './Tools/JayModelCompiler'
 use_shell = False
 recompile = False
 

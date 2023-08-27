@@ -1,6 +1,5 @@
 *.swp
 Build/
-Libraries/
 lastcompiletimes.json
 Tools/
 Output/

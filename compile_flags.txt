@@ -1,9 +1,8 @@
 -xc++
 -std=c++20
 -I./Libraries/glm
--I./Libraries/FastNoise
--I./Libraries/DirectXTK/Inc
--I./Libraries/json
+-I./Libraries/FastNoise/Cpp
+-I./Libraries/json/include
 -I./Libraries/glfw/include
 -I./Libraries/bgfx.cmake/bgfx/include
 -I./Libraries/vector_const

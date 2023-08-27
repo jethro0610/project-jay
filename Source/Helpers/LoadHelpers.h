@@ -1,5 +1,5 @@
 #pragma once
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <glm/vec4.hpp>
 bool GetBoolean(nlohmann::json& data, std::string property, bool defaultReturn = false);

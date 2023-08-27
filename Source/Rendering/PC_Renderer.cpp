@@ -7,7 +7,7 @@
 #include <iostream>
 #include <FastNoiseLite.h>
 #include <random>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include "../Game/Camera.h"
 #include "../Game/Entity/EntityKey.h"
 #include "../Helpers/MapCheck.h"

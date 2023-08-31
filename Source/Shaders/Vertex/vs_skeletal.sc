@@ -5,7 +5,7 @@ $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_col
 
 uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
-uniform mat4 u_pose[32];
+uniform mat4 u_pose[64];
 
 static const mat4 identity = {
     {1.0f, 0.0f, 0.0f, 0.0f},

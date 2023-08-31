@@ -2,7 +2,7 @@ $input a_position, a_texcoord0, a_color0, a_color1
 $output v_texcoord0
 #include <bgfx_shader.sh>
 
-uniform mat4 u_pose[32];
+uniform mat4 u_pose[64];
 
 void main() {
     mat4 skinMatrix = 

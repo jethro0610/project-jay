@@ -19,6 +19,7 @@
         },
         "ground_trace": {
             "distance": 1.0,
+            "stick_offset": -0.05,
             "stick": true
         },
         "movement": {
@@ -26,7 +27,7 @@
             "max_speed": 120.0,
             "min_friction": 0.015,
             "max_friction": 0.1,
-            "momentum_decay": 0.1
+            "momentum_decay": 1.0
         },
         "spread_activator": {
             "ground_only": false

@@ -5,6 +5,14 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Release ski to hit
+- Fog
+- Crystal
+- Usables
+- Raining seed
+- Bloom
+- Ground moving cutter enemy (leafy disk)
+
 - Submodules for Libraries
 - const refs for strings
 

@@ -8,6 +8,7 @@
 struct AnimationHeader {
     char name[MAX_ANIMATION_NAME];
     int numKeyframes;
+    int framerate;
 };
 
 struct Keyframe {
@@ -16,4 +17,5 @@ struct Keyframe {
 
 struct Animation {
     std::vector<Keyframe> keyframes;
+    int framerate;
 };

@@ -30,6 +30,8 @@ public:
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 
+    int GetFramerate(int animationIndex) const { return animations_[animationIndex].framerate; }
+
 private:
     void ComputeRibbonChain(
         Pose& pose, 

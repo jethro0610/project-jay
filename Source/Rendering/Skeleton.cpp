@@ -12,19 +12,8 @@ Transform Skeleton::GetLocalBoneTransform(
     float time, 
     int boneIndex
 ) const {
-    int floorTime = floorf(time * KEYFRAMES_PER_SECOND);
-    float lerpTime = (time * KEYFRAMES_PER_SECOND) - floorTime;
-
-    int beforeIndex = floorTime;
-    int afterIndex = beforeIndex + 1;
-
-    beforeIndex = beforeIndex % animation.keyframes.size();
-    afterIndex = afterIndex % animation.keyframes.size();
-
-    Transform beforeTransform = animation.keyframes[beforeIndex].pose[boneIndex];
-    Transform afterTransform =  animation.keyframes[afterIndex].pose[boneIndex];
-
-    return Transform::Lerp(beforeTransform, afterTransform, lerpTime);
+    int keyframe = (int)floorf(time * KEYFRAMES_PER_SECOND) % animation.keyframes.size();
+    return animation.keyframes[keyframe].pose[boneIndex];
 }
 
 void Skeleton::GetPose_Recursive(
@@ -124,7 +113,6 @@ void Skeleton::ComputeRibbonChain(
     // Calculate bone positions
     for (int i = 1; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
-        // worldPose[boneIndex].rotation = desiredWorldPose[boneIndex].rotation;
             
         vec3 fromParent = worldPose[boneIndex].position - worldPose[boneIndex - 1].position;
         if (length(fromParent) > desiredDistances[boneIndex])
@@ -136,12 +124,9 @@ void Skeleton::ComputeRibbonChain(
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
         scalar = std::pow(scalar, ribbon.tailPower);
-        scalar = mix(ribbon.tailRatio, 1.0f, scalar);
+        scalar = mix(0.1f, 1.0f, scalar);
 
-        velocity *= ribbon.returnSpeed * scalar * GlobalTime::GetDeltaTime();
-        // if (length(velocity) > maxVelocity)
-        //     velocity = normalize(velocity) * maxVelocity;
-        //
+        velocity *= scalar * 0.75f;
         worldPose[boneIndex].position += velocity;
     }
 

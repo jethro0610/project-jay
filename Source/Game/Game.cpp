@@ -172,6 +172,11 @@ void Game::Update() {
             GETCOMP(MeterComponent),
             GETCOMP(TransformComponent)
         );
+        SkeletonSystem::CalculatePoses(
+            entityManager_.entities_,
+            GETCOMP(StaticModelComponent),
+            GETCOMP(TransformComponent)
+        );
         timeAccumlulator_ -= TIMESTEP;
     }
     TransformSystem::UpdateRenderTransforms(
@@ -191,12 +196,6 @@ void Game::Update() {
         GETCOMP(TransformComponent)
     );
     camera_.Update(inputs_);
-    SkeletonSystem::CalculatePoses(
-        entityManager_.entities_,
-        GETCOMP(StaticModelComponent),
-        GETCOMP(TransformComponent),
-        GlobalTime::GetDeltaTime()
-    );
     renderer_.Render(
         entityManager_.entities_, 
         seedManager_,

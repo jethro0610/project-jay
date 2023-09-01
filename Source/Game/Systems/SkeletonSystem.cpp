@@ -1,13 +1,13 @@
 #include "SkeletonSystem.h"
 #include "../Time.h"
+#include "../../Constants/TimeConstants.h"
 
 constexpr EntityKey key = GetEntityKey<StaticModelComponent, TransformComponent>();
 
 void SkeletonSystem::CalculatePoses(
     std::array<Entity, MAX_ENTITIES>& entities,
     StaticModelComponent& modelComponent,
-    TransformComponent& transformComponent,
-    float deltaTime
+    TransformComponent& transformComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -18,19 +18,18 @@ void SkeletonSystem::CalculatePoses(
         if (modelComponent.skeleton[i] == nullptr)
             continue;
 
-        modelComponent.time[i] += GlobalTime::GetDeltaTime();
+        modelComponent.time[i] += TIMESTEP;
         modelComponent.skeleton[i]->GetPose(
             modelComponent.pose[i],
             0,
             modelComponent.time[i],
-            transformComponent.renderTransform[i],
-            transformComponent.transformLastPose[i]
+            transformComponent.transform[i],
+            transformComponent.transformLastUpdate[i]
         );
-        transformComponent.transformLastPose = transformComponent.renderTransform;
 
         if (modelComponent.time[i] >= modelComponent.nextPoseUpdate[i]) {
             modelComponent.renderPose[i] = modelComponent.pose[i];
-            modelComponent.nextPoseUpdate[i] += 1/6.0f;
+            modelComponent.nextPoseUpdate[i] += 1.0f / modelComponent.skeleton[i]->GetFramerate(0);
         }
     }
 }

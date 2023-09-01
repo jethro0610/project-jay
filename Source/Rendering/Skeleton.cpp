@@ -85,11 +85,11 @@ void Skeleton::GetPose(
 }
 
 void Skeleton::ComputeRibbonChain(
-        Pose& pose, 
-        const Pose& desiredPose, 
-        const RibbonDesc& ribbon, 
-        const Transform& transform, 
-        const Transform& lastTransform
+    Pose& pose, 
+    const Pose& desiredPose, 
+    const RibbonDesc& ribbon, 
+    const Transform& transform, 
+    const Transform& lastTransform
 ) const {
     std::array<float, MAX_BONES> desiredDistances;
     int numChainBones = (ribbon.end - ribbon.start) + 1;
@@ -126,7 +126,7 @@ void Skeleton::ComputeRibbonChain(
         scalar = std::pow(scalar, ribbon.tailPower);
         scalar = mix(0.1f, 1.0f, scalar);
 
-        velocity *= scalar * 0.75f;
+        velocity *= 0.95f * scalar;
         worldPose[boneIndex].position += velocity;
     }
 

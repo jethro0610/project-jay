@@ -10,4 +10,11 @@ namespace SkeletonSystem {
         StaticModelComponent& modelComponent,
         TransformComponent& transformComponent
     );
+
+    void InterpPoses(
+        std::array<Entity, MAX_ENTITIES>& entities,
+        StaticModelComponent& modelComponent,
+        TransformComponent& transformComponent,
+        float interpTime
+    );
 }

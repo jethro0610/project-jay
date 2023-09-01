@@ -17,8 +17,11 @@ public:
     std::array<Skeleton*, MAX_ENTITIES> skeleton;
 
     std::array<Pose, MAX_ENTITIES> pose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
+    std::array<Pose, MAX_ENTITIES> prevPose;
     std::array<Pose, MAX_ENTITIES> renderPose; 
+
     std::array<float, MAX_ENTITIES> time; 
+
     std::array<float, MAX_ENTITIES> nextPoseUpdate; 
 
     StaticModelComponent() {
@@ -50,6 +53,7 @@ public:
             skeleton[entity] = &renderer->GetSkeleton(name);
             pose[entity].resize(skeleton[entity]->bones_.size());
             renderPose[entity].resize(skeleton[entity]->bones_.size());
+            prevPose[entity].resize(skeleton[entity]->bones_.size());
         }
     }
 };

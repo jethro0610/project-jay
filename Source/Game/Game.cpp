@@ -68,7 +68,7 @@ void Game::Init() {
     Transform skelTransform;
     skelTransform.position = vec3(0.0f, 0.0f, 0.0f);
     skelTransform.scale = vec3(2.0f);
-    // entityManager_.CreateEntity("e_test_skel", skelTransform);
+    entityManager_.CreateEntity("e_test_skel", skelTransform);
 
     camera_.target_ = PLAYER_ENTITY;
 }
@@ -179,6 +179,12 @@ void Game::Update() {
         );
         timeAccumlulator_ -= TIMESTEP;
     }
+    SkeletonSystem::InterpPoses(
+        entityManager_.entities_,
+        GETCOMP(StaticModelComponent),
+        GETCOMP(TransformComponent),
+        timeAccumlulator_
+    );
     TransformSystem::UpdateRenderTransforms(
         entityManager_.entities_,
         GETCOMP(TransformComponent),

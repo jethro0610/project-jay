@@ -25,7 +25,13 @@ public:
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;
 
-    void GetPose(Pose& pose, int animationIndex, float time, const Transform& transform, const Transform& lastTransform) const;
+    void GetPose(
+        Pose& pose, 
+        int animationIndex, 
+        float time, 
+        const Transform& transform, 
+        const Transform& lastTransform
+    ) const;
     void PoseToGPUPose(GPUPose& gpuPose, const Pose& pose) const;
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;

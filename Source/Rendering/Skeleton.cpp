@@ -124,9 +124,9 @@ void Skeleton::ComputeRibbonChain(
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
         scalar = std::pow(scalar, ribbon.tailPower);
-        scalar = mix(0.1f, 1.0f, scalar);
+        scalar = mix(ribbon.tailRatio, 1.0f, scalar);
 
-        velocity *= 0.95f * scalar;
+        velocity *= ribbon.returnSpeed * scalar;
         worldPose[boneIndex].position += velocity;
     }
 

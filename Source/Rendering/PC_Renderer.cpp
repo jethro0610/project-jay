@@ -515,9 +515,9 @@ void Renderer::RenderEntities_P(
         bool skeletal = false;
         if (staticModelComponent.skeleton[i] != nullptr) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->WorldPoseToGPUPose(
+            staticModelComponent.skeleton[i]->PoseToGPUPose(
                 pose,
-                staticModelComponent.worldPose[i]
+                staticModelComponent.renderPose[i]
             );
         }
         for (int m = 0; m < model.meshes.size(); m++) {

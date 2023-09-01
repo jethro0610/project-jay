@@ -12,5 +12,5 @@ void main() {
         a_color1.w * u_pose[a_color0.w];
 
     v_texcoord0 = a_texcoord0;
-    gl_Position = mul(u_viewProj, mul(skinMatrix, vec4(a_position, 1.0f)));
+    gl_Position = mul(u_modelViewProj, mul(skinMatrix, vec4(a_position, 1.0f)));
 }

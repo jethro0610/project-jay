@@ -18,12 +18,19 @@ void SkeletonSystem::CalculatePoses(
         if (modelComponent.skeleton[i] == nullptr)
             continue;
 
-        modelComponent.skeleton[i]->GetWorldPose(
-            modelComponent.worldPose[i],
-            transformComponent.renderTransform[i],
+        modelComponent.time[i] += GlobalTime::GetDeltaTime();
+        modelComponent.skeleton[i]->GetPose(
+            modelComponent.pose[i],
             0,
-            GlobalTime::GetTime(),
-            deltaTime
+            modelComponent.time[i],
+            transformComponent.renderTransform[i],
+            transformComponent.transformLastPose[i]
         );
+        transformComponent.transformLastPose = transformComponent.renderTransform;
+
+        if (modelComponent.time[i] >= modelComponent.nextPoseUpdate[i]) {
+            modelComponent.renderPose[i] = modelComponent.pose[i];
+            modelComponent.nextPoseUpdate[i] += 1/6.0f;
+        }
     }
 }

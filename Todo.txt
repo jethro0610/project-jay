@@ -5,6 +5,10 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Each animation stores framerate 
+- Animations evaulate every 60 frames
+- Presented based on animation framerate
+
 - Release ski to hit
 - Fog
 - Crystal

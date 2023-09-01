@@ -25,11 +25,17 @@ public:
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;
 
-    void GetWorldPose(Pose& pose, const Transform& transform, int animationIndex, float time, float deltaTime) const;
-    void WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const;
+    void GetPose(Pose& pose, int animationIndex, float time, const Transform& transform, const Transform& lastTransform) const;
+    void PoseToGPUPose(GPUPose& gpuPose, const Pose& pose) const;
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;
 
 private:
-    void ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const RibbonDesc& ribbon, float deltaTime) const;
+    void ComputeRibbonChain(
+        Pose& pose, 
+        const Pose& desiredPose, 
+        const RibbonDesc& ribbon, 
+        const Transform& transform, 
+        const Transform& lastTransform
+    ) const;
 };

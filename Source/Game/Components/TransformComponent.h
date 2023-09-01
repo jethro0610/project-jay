@@ -6,6 +6,7 @@ class TransformComponent : public Component {
 public:
     std::array<Transform, MAX_ENTITIES> transform;
     std::array<Transform, MAX_ENTITIES> transformLastUpdate;
+    std::array<Transform, MAX_ENTITIES> transformLastPose;
     std::array<Transform, MAX_ENTITIES> renderTransform;
     std::array<bool, MAX_ENTITIES> interpolate;
     std::array<bool, MAX_ENTITIES> targetable;

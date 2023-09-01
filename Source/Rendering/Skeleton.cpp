@@ -62,23 +62,29 @@ void Skeleton::GetPose(
     GetPose(pose, animations_[animationIndex], time); 
 }
 
-void Skeleton::GetWorldPose(
+void Skeleton::GetPose(
     Pose& pose,
-    const Transform& transform,
     int animationIndex,
     float time,
-    float deltaTime
+    const Transform& transform,
+    const Transform& lastTransform
 ) const {
     Pose desiredPose;
     desiredPose.resize(bones_.size());
-    desiredPose[0] = transform.ToMatrix() * GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
+    desiredPose[0] = GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
     GetPose_Recursive(desiredPose, animations_[animationIndex], time, 0); 
 
     std::array<bool, MAX_BONES> isRibbon;
     isRibbon.fill(false);
 
     for (const RibbonDesc& ribbon : ribbons_) {
-        ComputeRibbonChain(pose, desiredPose, ribbon, deltaTime);
+        ComputeRibbonChain(
+            pose, 
+            desiredPose, 
+            ribbon, 
+            transform,
+            lastTransform
+        );
         for (int i = ribbon.start; i <= ribbon.end; i++)
             isRibbon[i] = true;
     }
@@ -89,55 +95,72 @@ void Skeleton::GetWorldPose(
     }
 }
 
-void Skeleton::ComputeRibbonChain(Pose& pose, const Pose& desiredPose, const RibbonDesc& ribbon, float deltaTime) const {
+void Skeleton::ComputeRibbonChain(
+        Pose& pose, 
+        const Pose& desiredPose, 
+        const RibbonDesc& ribbon, 
+        const Transform& transform, 
+        const Transform& lastTransform
+) const {
     std::array<float, MAX_BONES> desiredDistances;
     int numChainBones = (ribbon.end - ribbon.start) + 1;
     pose[ribbon.start] = desiredPose[ribbon.start];
 
+    mat4 modelMatrix = transform.ToMatrix();
+    mat4 inverseModelMatrix = inverse(modelMatrix);
+    mat4 lastModelMatrix = lastTransform.ToMatrix();
+
+    Pose worldPose = pose;
+    Pose desiredWorldPose = desiredPose;
+
     // OPTIMIZATION: Precompute the bone distances
-    for (int i = 1; i < numChainBones; i++) {
+    for (int i = 0; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
+        worldPose[boneIndex] = lastModelMatrix * worldPose[boneIndex].ToMatrix();
+        desiredWorldPose[boneIndex] = modelMatrix * desiredWorldPose[boneIndex].ToMatrix();
         desiredDistances[boneIndex] = distance(desiredPose[boneIndex].position, desiredPose[boneIndex - 1].position);
     }
 
     // Calculate bone positions
     for (int i = 1; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
+        // worldPose[boneIndex].rotation = desiredWorldPose[boneIndex].rotation;
             
-        vec3 fromParent = pose[boneIndex].position - pose[boneIndex - 1].position;
+        vec3 fromParent = worldPose[boneIndex].position - worldPose[boneIndex - 1].position;
         if (length(fromParent) > desiredDistances[boneIndex])
-            pose[boneIndex].position = pose[boneIndex - 1].position + (normalize(fromParent) * desiredDistances[boneIndex]);
+            worldPose[boneIndex].position = worldPose[boneIndex - 1].position + (normalize(fromParent) * desiredDistances[boneIndex]);
 
-        vec3 velocity = desiredPose[boneIndex].position - pose[boneIndex].position;
+        vec3 velocity = desiredWorldPose[boneIndex].position - worldPose[boneIndex].position;
         float maxVelocity = length(velocity);
-
+        
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
         scalar = std::pow(scalar, ribbon.tailPower);
         scalar = mix(ribbon.tailRatio, 1.0f, scalar);
 
-        velocity *= ribbon.returnSpeed * scalar * deltaTime;
-        if (length(velocity) > maxVelocity)
-            velocity = normalize(velocity) * maxVelocity;
-
-        pose[boneIndex].position += velocity;
+        velocity *= ribbon.returnSpeed * scalar * GlobalTime::GetDeltaTime();
+        // if (length(velocity) > maxVelocity)
+        //     velocity = normalize(velocity) * maxVelocity;
+        //
+        worldPose[boneIndex].position += velocity;
     }
 
     // Calculate bone rotations, the tail is skipped since it's only used
     // as reference for the last deforming bone
-    for (int i = 1; i < numChainBones - 1; i++) {
+    for (int i = 1; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
 
-        vec3 a = normalize(desiredPose[boneIndex + 1].position - desiredPose[boneIndex].position);
-        vec3 b = normalize(pose[boneIndex + 1].position - pose[boneIndex].position);
+        vec3 a = normalize(desiredWorldPose[boneIndex + 1].position - desiredWorldPose[boneIndex].position);
+        vec3 b = normalize(worldPose[boneIndex + 1].position - worldPose[boneIndex].position);
         quat deltaDir = rotation(a, b);
 
-        pose[boneIndex].rotation = deltaDir * desiredPose[boneIndex].rotation;
+        worldPose[boneIndex].rotation = deltaDir * desiredWorldPose[boneIndex].rotation;
+        pose[boneIndex] = inverseModelMatrix * worldPose[boneIndex].ToMatrix();
     }
 }
 
-void Skeleton::WorldPoseToGPUPose(GPUPose& gpuPose, const Pose& worldPose) const {
+void Skeleton::PoseToGPUPose(GPUPose& gpuPose, const Pose& pose) const {
     gpuPose.resize(bones_.size());
     for (int i = 0; i < bones_.size(); i++)
-        gpuPose[i] = worldPose[i].ToMatrix() * bones_[i].inverseBindMatrix;
+        gpuPose[i] = pose[i].ToMatrix() * bones_[i].inverseBindMatrix;
 }

@@ -15,11 +15,17 @@ public:
     std::array<Model*, MAX_ENTITIES> model;
     std::array<std::vector<Material*>, MAX_ENTITIES> materials;
     std::array<Skeleton*, MAX_ENTITIES> skeleton;
-    std::array<Pose, MAX_ENTITIES> worldPose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
+
+    std::array<Pose, MAX_ENTITIES> pose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
+    std::array<Pose, MAX_ENTITIES> renderPose; 
+    std::array<float, MAX_ENTITIES> time; 
+    std::array<float, MAX_ENTITIES> nextPoseUpdate; 
 
     StaticModelComponent() {
         model.fill(nullptr);
         skeleton.fill(nullptr);
+        time.fill(0.0f);
+        nextPoseUpdate.fill(0.0f);
     };
 
     StaticModelComponent(const StaticModelComponent&) = delete;
@@ -42,7 +48,8 @@ public:
 
         if (GetBoolean(data, "skeletal") == true) {
             skeleton[entity] = &renderer->GetSkeleton(name);
-            worldPose[entity].resize(skeleton[entity]->bones_.size());
+            pose[entity].resize(skeleton[entity]->bones_.size());
+            renderPose[entity].resize(skeleton[entity]->bones_.size());
         }
     }
 };

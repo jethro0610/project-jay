@@ -44,6 +44,7 @@ private:
         const Pose& desiredPose, 
         const RibbonDesc& ribbon, 
         const Transform& transform, 
-        const Transform& lastTransform
+        const Transform& lastTransform,
+        float speedInfluence
     ) const;
 };

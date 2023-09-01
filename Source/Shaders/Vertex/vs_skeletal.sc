@@ -7,15 +7,7 @@ uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
 uniform mat4 u_pose[64];
 
-// static const mat4 u_model[0] = {
-//     {1.0f, 0.0f, 0.0f, 0.0f},
-//     {0.0f, 1.0f, 0.0f, 0.0f},
-//     {0.0f, 0.0f, 1.0f, 0.0f},
-//     {0.0f, 0.0f, 0.0f, 1.0f}
-// };
-
 void main() {
-
     mat4 skinMatrix = 
         a_color1.x * u_pose[a_color0.x] +
         a_color1.y * u_pose[a_color0.y] +

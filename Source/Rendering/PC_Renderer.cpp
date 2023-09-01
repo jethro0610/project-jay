@@ -691,6 +691,7 @@ Model& Renderer::LoadModel_P(std::string name) {
         Animation& animation = skeleton.animations_[i];
         animation.keyframes.resize(animationHeader.numKeyframes);
         animation.framerate = animationHeader.framerate;
+        animation.speedInfluence = animationHeader.speedInfluence;
         file.read((char*)animation.keyframes.data(), sizeof(Keyframe) * animationHeader.numKeyframes);
         DEBUGLOG("Loaded animation " << animationHeader.name << " with " << animation.keyframes.size() << " keyframes");
     }

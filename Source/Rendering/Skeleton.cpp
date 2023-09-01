@@ -72,7 +72,8 @@ void Skeleton::GetPose(
             desiredPose, 
             ribbon, 
             transform,
-            lastTransform
+            lastTransform,
+            animations_[animationIndex].speedInfluence
         );
         for (int i = ribbon.start; i <= ribbon.end; i++)
             isRibbon[i] = true;
@@ -89,7 +90,8 @@ void Skeleton::ComputeRibbonChain(
     const Pose& desiredPose, 
     const RibbonDesc& ribbon, 
     const Transform& transform, 
-    const Transform& lastTransform
+    const Transform& lastTransform,
+    float speedInfluence
 ) const {
     std::array<float, MAX_BONES> desiredDistances;
     int numChainBones = (ribbon.end - ribbon.start) + 1;
@@ -101,11 +103,13 @@ void Skeleton::ComputeRibbonChain(
 
     Pose worldPose = pose;
     Pose desiredWorldPose = desiredPose;
+    vec3 additive = (transform.position - lastTransform.position) * (1.0f - speedInfluence);
 
     // OPTIMIZATION: Precompute the bone distances
     for (int i = 0; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
         worldPose[boneIndex] = lastModelMatrix * worldPose[boneIndex].ToMatrix();
+        worldPose[boneIndex].position += additive;
         desiredWorldPose[boneIndex] = modelMatrix * desiredWorldPose[boneIndex].ToMatrix();
         desiredDistances[boneIndex] = distance(desiredPose[boneIndex].position, desiredPose[boneIndex - 1].position);
     }

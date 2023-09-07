@@ -95,8 +95,8 @@ void PlayerController::Execute(
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
 
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 12;
-        spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
+        // spreadActivatorComponent.radius[PLAYER_ENTITY] = 12;
+        // spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
     } 
 
     SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

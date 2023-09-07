@@ -5,9 +5,34 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- To exit level, player must have grown certain number of flowers
+    - If some get cut the exit disappears
+    - This means a player can stun enemies instead of elim
+    - Elim gives lots of meter however
+    - ie. player makes exit, but enemy takes out flower to prevent leaving
+
+- How force boss fights with flower exit system?
+
+- Attack button?
+    - High attack (follow up, no homing)
+    - Low attack (too fast to follow up, homing)
+    - Burst jump large AOE high attack and homing?
+    - Attack uses meter?
+    - Only low attack can finish
+    - High attack in air does more damage than a low attack
+
 - Each animation stores framerate 
 - Animations evaulate every 60 frames
 - Presented based on animation framerate
+
+- "Goomba"
+    - 2/3 hits to destroy
+    - Walk around
+    - Destroys seed in a radius
+    - Jumps occasionally (really high)?
+
+- Gust cut enemy
+    - Blows large beam that cuts lots of spread down
 
 - Release ski to hit
 - Fog

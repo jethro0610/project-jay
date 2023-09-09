@@ -89,7 +89,7 @@ void MovementSystem::Execute (
             planarLength >= 0.0f &&
             onGround
         ) {
-           // planarVelocity *= 0.985f; 
+            // planarVelocity *= 0.995f; 
             // SUGGESTION: Maybe this can be per level? Maybe some mechanic to turn off decay? Loop back limit (1, 2, 3)?
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;

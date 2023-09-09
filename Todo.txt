@@ -5,6 +5,23 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Hittable that clears way more spread on landing, but gives
+  lots of seed. Also does more damage
+
+- Enemy where you hit it, it poofs away. Then you have to chase it
+  down to get a full combo/finish
+
+- Pillars that shoot out fire when an object is over it
+    - Combo: Launch -> Burned over pillar -> Hit after burn
+
+- Going fast = ghost dimension
+- Going slow = human dimension
+- Changes interactions
+
+- "Goomba"
+    - Grow flowers around them? They take a second then burst
+    - Hit them after the burst
+
 - Each animation stores framerate 
 - Animations evaulate every 60 frames
 - Presented based on animation framerate

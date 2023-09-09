@@ -37,8 +37,8 @@ const float WORLD_MESH_SIZE = 64.0f;
 const float WORLD_MESH_DENSITY = 0.5f;
 
 const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_FORWARD = 40.0f;
-const float SHADOW_RANGE = 80.0f;
+const float SHADOW_FORWARD = 60.0f;
+const float SHADOW_RANGE = 120.0f;
 const int SHADOW_RESOLUTION = 2048;
 
 const int SHADOW_VIEW = 0;

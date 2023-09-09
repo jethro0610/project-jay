@@ -23,7 +23,7 @@ void SkeletonSystem::CalculatePoses(
         modelComponent.prevPose[i] = modelComponent.pose[i];
         modelComponent.skeleton[i]->GetPose(
             modelComponent.pose[i],
-            0,
+            1,
             modelComponent.time[i],
             transformComponent.transform[i],
             transformComponent.transformLastUpdate[i]

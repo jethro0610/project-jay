@@ -13,13 +13,14 @@ void Renderer::Render(
     SpreadManager& spreadManager,
     World& world,
     MeterComponent& meterComponent,
+    SkeletonComponent& skeletonComponent,
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
     StartFrame_P();
 
     RenderWorld_P(world);
-    RenderEntities_P(entities, meterComponent, staticModelComponent, transformComponent);
+    RenderEntities_P(entities, meterComponent, skeletonComponent, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
 

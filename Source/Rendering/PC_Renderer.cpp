@@ -16,6 +16,7 @@
 #include "../Game/Time.h"
 
 #include "../Game/Entity/Entity.h"
+#include "../Game/Components/SkeletonComponent.h"
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 
@@ -493,9 +494,11 @@ void Renderer::RenderWorld_P(World& world) {
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
+EntityKey constexpr skeletonKey = GetEntityKey<SkeletonComponent>();
 void Renderer::RenderEntities_P(
     std::array<Entity, MAX_ENTITIES>& entities, 
     MeterComponent& meterComponent,
+    SkeletonComponent& skeletonComponent,
     StaticModelComponent& staticModelComponent,
     TransformComponent& transformComponent
 ) {
@@ -513,11 +516,11 @@ void Renderer::RenderEntities_P(
 
         Model& model = *staticModelComponent.model[i];
         bool skeletal = false;
-        if (staticModelComponent.skeleton[i] != nullptr) {
+        if (entity.MatchesKey(skeletonKey)) {
             skeletal = true; 
-            staticModelComponent.skeleton[i]->PoseToGPUPose(
+            skeletonComponent.skeleton[i]->PoseToGPUPose(
                 pose,
-                staticModelComponent.renderPose[i]
+                skeletonComponent.renderPose[i]
             );
         }
         for (int m = 0; m < model.meshes.size(); m++) {

@@ -13,6 +13,7 @@ using namespace std::chrono;
 
 void Game::Init() {
     srand(time(0));
+    GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
     // Create the camera and assign it to the renderer
@@ -174,14 +175,14 @@ void Game::Update() {
         );
         SkeletonSystem::CalculatePoses(
             entityManager_.entities_,
-            GETCOMP(StaticModelComponent),
+            GETCOMP(SkeletonComponent),
             GETCOMP(TransformComponent)
         );
         timeAccumlulator_ -= TIMESTEP;
     }
     SkeletonSystem::InterpPoses(
         entityManager_.entities_,
-        GETCOMP(StaticModelComponent),
+        GETCOMP(SkeletonComponent),
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
@@ -208,6 +209,7 @@ void Game::Update() {
         spreadManager_, 
         world_, 
         GETCOMP(MeterComponent),
+        GETCOMP(SkeletonComponent),
         GETCOMP(StaticModelComponent),
         GETCOMP(TransformComponent)
     );

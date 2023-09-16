@@ -14,8 +14,10 @@
                 "m_player",
                 "m_playershirt",
                 "m_player"
-            ],
-            "skeletal": true
+            ]
+        },
+        "skeleton": {
+            "skeleton": "sk_char" 
         },
         "ground_trace": {
             "distance": 1.0,

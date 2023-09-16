@@ -1,4 +1,5 @@
 #pragma once
+#include <bitset>
 #include <string>
 #include "Component.h"
 #include "../../Helpers/Assert.h"
@@ -14,21 +15,9 @@ public:
 
     std::array<Model*, MAX_ENTITIES> model;
     std::array<std::vector<Material*>, MAX_ENTITIES> materials;
-    std::array<Skeleton*, MAX_ENTITIES> skeleton;
-
-    std::array<Pose, MAX_ENTITIES> pose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
-    std::array<Pose, MAX_ENTITIES> prevPose;
-    std::array<Pose, MAX_ENTITIES> renderPose; 
-
-    std::array<float, MAX_ENTITIES> time; 
-
-    std::array<float, MAX_ENTITIES> nextPoseUpdate; 
 
     StaticModelComponent() {
         model.fill(nullptr);
-        skeleton.fill(nullptr);
-        time.fill(0.0f);
-        nextPoseUpdate.fill(0.0f);
     };
 
     StaticModelComponent(const StaticModelComponent&) = delete;
@@ -48,12 +37,5 @@ public:
         auto materialData = data["materials"];
         for (auto& materialName : materialData)
             materials[entity].push_back(&renderer->GetMaterial(materialName));
-
-        if (GetBoolean(data, "skeletal") == true) {
-            skeleton[entity] = &renderer->GetSkeleton(name);
-            pose[entity].resize(skeleton[entity]->bones_.size());
-            renderPose[entity].resize(skeleton[entity]->bones_.size());
-            prevPose[entity].resize(skeleton[entity]->bones_.size());
-        }
     }
 };

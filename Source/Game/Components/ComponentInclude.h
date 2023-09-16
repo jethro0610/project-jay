@@ -14,6 +14,7 @@
 #include "IntervalSpawnComponent.h"
 #include "MeterComponent.h"
 
+#include "SkeletonComponent.h"
 #include "StaticModelComponent.h"
 
 #define CREATECOMPONENTVARS \
@@ -26,5 +27,6 @@
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
     COMPONENTVAR(ColliderComponent, colliderComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
+    COMPONENTVAR(SkeletonComponent, skeletonComponent_) \
     COMPONENTVAR(StaticModelComponent, staticModelComponent_) \
     COMPONENTVAR(MeterComponent, meterComponent_)

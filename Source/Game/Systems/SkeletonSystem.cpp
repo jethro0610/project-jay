@@ -2,11 +2,11 @@
 #include "../Time.h"
 #include "../../Constants/TimeConstants.h"
 
-constexpr EntityKey key = GetEntityKey<StaticModelComponent, TransformComponent>();
+constexpr EntityKey key = GetEntityKey<SkeletonComponent, TransformComponent>();
 
 void SkeletonSystem::CalculatePoses(
     std::array<Entity, MAX_ENTITIES>& entities,
-    StaticModelComponent& modelComponent,
+    SkeletonComponent& skeletonComponent,
     TransformComponent& transformComponent
 ) {
     for (int i = 0; i < MAX_ENTITIES; i++) {
@@ -15,16 +15,14 @@ void SkeletonSystem::CalculatePoses(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (modelComponent.skeleton[i] == nullptr)
-            continue;
-        modelComponent.time[i] += TIMESTEP;
+        skeletonComponent.time[i] += TIMESTEP;
 
-        const int framerate = modelComponent.skeleton[i]->GetFramerate(0);
-        modelComponent.prevPose[i] = modelComponent.pose[i];
-        modelComponent.skeleton[i]->GetPose(
-            modelComponent.pose[i],
-            1,
-            modelComponent.time[i],
+        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(6);
+        skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
+        skeletonComponent.skeleton[i]->GetPose(
+            skeletonComponent.pose[i],
+            6,
+            skeletonComponent.time[i],
             transformComponent.transform[i],
             transformComponent.transformLastUpdate[i]
         );
@@ -32,16 +30,16 @@ void SkeletonSystem::CalculatePoses(
         if (framerate == 0)
             continue;
 
-        if (modelComponent.time[i] >= modelComponent.nextPoseUpdate[i]) {
-            modelComponent.renderPose[i] = modelComponent.pose[i];
-            modelComponent.nextPoseUpdate[i] += 1.0f / modelComponent.skeleton[i]->GetFramerate(0);
+        if (skeletonComponent.time[i] >= skeletonComponent.nextPoseUpdate[i]) {
+            skeletonComponent.renderPose[i] = skeletonComponent.pose[i];
+            skeletonComponent.nextPoseUpdate[i] += 1.0f / skeletonComponent.skeleton[i]->GetFramerate(0);
         }
     }
 }
 
 void SkeletonSystem::InterpPoses(
     std::array<Entity, MAX_ENTITIES>& entities,
-    StaticModelComponent& modelComponent,
+    SkeletonComponent& skeletonComponent,
     TransformComponent& transformComponent,
     float interpTime
 ) {
@@ -52,15 +50,15 @@ void SkeletonSystem::InterpPoses(
             continue;
         if (!entity.MatchesKey(key))
             continue;
-        if (modelComponent.skeleton[i] == nullptr)
+        if (skeletonComponent.skeleton[i] == nullptr)
             continue;
 
-        const int framerate = modelComponent.skeleton[i]->GetFramerate(0);
+        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(0);
         if (framerate != 0)
             continue;
 
-        for (int p = 0; p < modelComponent.renderPose[i].size(); p++) 
-            modelComponent.renderPose[i][p] = Transform::Lerp(modelComponent.prevPose[i][p], modelComponent.pose[i][p], interpAmount);
+        for (int p = 0; p < skeletonComponent.renderPose[i].size(); p++) 
+            skeletonComponent.renderPose[i][p] = Transform::Lerp(skeletonComponent.prevPose[i][p], skeletonComponent.pose[i][p], interpAmount);
     }
 }
 

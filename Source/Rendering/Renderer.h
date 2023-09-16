@@ -22,6 +22,7 @@ class SeedManager;
 class SpreadManager;
 class World;
 class MeterComponent;
+class SkeletonComponent;
 class StaticModelComponent;
 class TransformComponent;
 
@@ -42,6 +43,7 @@ public:
         SpreadManager& spreadManager,
         World& world,
         MeterComponent& meterComponent,
+        SkeletonComponent& skeletonComponent,
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );
@@ -154,6 +156,7 @@ private:
     void RenderEntities_P(
         std::array<Entity, MAX_ENTITIES>& entities, 
         MeterComponent& meterComponent,
+        SkeletonComponent& skeletonComponent,
         StaticModelComponent& staticModelComponent,
         TransformComponent& transformComponent
     );

@@ -5,6 +5,12 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Blending animations
+- Animation state machine
+    - Per CPP file?
+    - Only a function?
+    - Generic state machine component?
+
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage
 

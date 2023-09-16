@@ -1,4 +1,5 @@
 - Sea Dock Bells 
+    - Enemy that stuns when hit with sound waves
 
 - Big Yellow Cross thing, not sure what it'll do (see test_skel)
 

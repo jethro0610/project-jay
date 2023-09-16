@@ -125,6 +125,7 @@ void Game::Update() {
             GETCOMP(GroundTraceComponent),
             GETCOMP(MeterComponent),
             GETCOMP(MovementComponent),
+            GETCOMP(SkeletonComponent),
             GETCOMP(SpreadActivatorComponent),
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent),

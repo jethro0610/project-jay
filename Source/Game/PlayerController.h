@@ -7,6 +7,7 @@ class World;
 class GroundTraceComponent;
 class MeterComponent;
 class MovementComponent;
+class SkeletonComponent;
 class SpreadActivatorComponent;
 class TransformComponent;
 class VelocityComponent;
@@ -25,6 +26,7 @@ public:
         GroundTraceComponent& groundTraceComponent,
         MeterComponent& meterComponent,
         MovementComponent& movementComponent,
+        SkeletonComponent& skeletonComponent,
         SpreadActivatorComponent& spreadActivatorComponent,
         TransformComponent& transformComponent,
         VelocityComponent& velocityComponent,

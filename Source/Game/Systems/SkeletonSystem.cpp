@@ -17,11 +17,13 @@ void SkeletonSystem::CalculatePoses(
             continue;
         skeletonComponent.time[i] += TIMESTEP;
 
-        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(6);
+        int animationIndex = skeletonComponent.stateBindings[i][skeletonComponent.animState[i]];
+
+        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
         skeletonComponent.skeleton[i]->GetPose(
             skeletonComponent.pose[i],
-            6,
+            animationIndex,
             skeletonComponent.time[i],
             transformComponent.transform[i],
             transformComponent.transformLastUpdate[i]
@@ -49,8 +51,6 @@ void SkeletonSystem::InterpPoses(
         if (!entity.ShouldUpdate())
             continue;
         if (!entity.MatchesKey(key))
-            continue;
-        if (skeletonComponent.skeleton[i] == nullptr)
             continue;
 
         const int framerate = skeletonComponent.skeleton[i]->GetFramerate(0);

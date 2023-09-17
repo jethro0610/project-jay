@@ -16,26 +16,62 @@ void SkeletonSystem::CalculatePoses(
         if (!entity.MatchesKey(key))
             continue;
         skeletonComponent.time[i] += TIMESTEP;
+        skeletonComponent.prevTime[i] += TIMESTEP;
 
-        int animationIndex = skeletonComponent.stateBindings[i][skeletonComponent.animState[i]];
+        int& prevAnimationIndex = skeletonComponent.prevAnimationIndex[i];
+        int& nextAnimationIndex = skeletonComponent.nextAnimationIndex[i];
+        int& animationIndex = skeletonComponent.animationIndex[i];
+        float& prevTime = skeletonComponent.prevTime[i];
+        float& time = skeletonComponent.time[i];
+        float& transitionLength = skeletonComponent.transitionLength[i];
+        float& transitionTime = skeletonComponent.transitionTime[i];
+        float & nextPoseUpdate = skeletonComponent.nextPoseUpdate[i];
+        int framerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
 
-        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
+        if (animationIndex != nextAnimationIndex) {
+            prevAnimationIndex = animationIndex;
+            animationIndex = nextAnimationIndex; 
+            prevTime = time;
+
+            transitionLength = 0.35f;
+            transitionTime = 0.0f;
+        }
+
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
-        skeletonComponent.skeleton[i]->GetPose(
-            skeletonComponent.pose[i],
-            animationIndex,
-            skeletonComponent.time[i],
-            transformComponent.transform[i],
-            transformComponent.transformLastUpdate[i]
-        );
+
+        if (skeletonComponent.transitionTime > skeletonComponent.transitionLength) {
+            skeletonComponent.skeleton[i]->GetPose(
+                skeletonComponent.pose[i],
+                animationIndex,
+                time,
+                transformComponent.transform[i],
+                transformComponent.transformLastUpdate[i]
+            );
+            // prevAnimationIndex = animationIndex;
+        }
+        else {
+            skeletonComponent.skeleton[i]->GetBlendedPose(
+                skeletonComponent.pose[i],
+                prevAnimationIndex,
+                animationIndex,
+                prevTime,
+                time,
+                transitionTime / transitionLength,
+                transformComponent.transform[i],
+                transformComponent.transformLastUpdate[i]
+            );
+            transitionTime += TIMESTEP;
+        }
 
         if (framerate == 0)
             continue;
 
         if (skeletonComponent.time[i] >= skeletonComponent.nextPoseUpdate[i]) {
             skeletonComponent.renderPose[i] = skeletonComponent.pose[i];
-            skeletonComponent.nextPoseUpdate[i] += 1.0f / skeletonComponent.skeleton[i]->GetFramerate(0);
+            skeletonComponent.nextPoseUpdate[i] += 1.0f / framerate;
         }
+
+        skeletonComponent.transitionThisTick[i] = false;
     }
 }
 

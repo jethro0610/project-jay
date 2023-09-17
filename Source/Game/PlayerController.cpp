@@ -40,14 +40,14 @@ void PlayerController::Execute(
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
 
-    skeletonComponent.animState[PLAYER_ENTITY] = AnimState::IDLE;
+    skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 0;
 
     vec3 desiredMovement = cameraPlanarForward * inputs.forwardInput + cameraPlanarRight * inputs.sideInput;
     float moveLength = length(desiredMovement);
     if (moveLength < 0.1f)
         desiredMovement = vec3(0.0f);
     else
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::WALK;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;
 
     if (moveLength >= 0.6f)
         desiredMovement = normalize(desiredMovement);
@@ -58,7 +58,7 @@ void PlayerController::Execute(
     spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::SKI;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
 
     if (inputs.flow && inputs.ski) {
         // Have to check this to prevent overflow
@@ -77,26 +77,26 @@ void PlayerController::Execute(
     }
     else if (cutCooldown_ > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::FLOW;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
         cutCooldown_--;
     }
     else if (cutTimer_ >= TIME_TO_CUT){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::FLOW;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = -3;
         isDoingAction = true;
         actionMeter_ += 1;
     } 
     else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::FLOW;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
         isDoingAction = true;
         actionMeter_ += 2;
     }
     else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        skeletonComponent.animState[PLAYER_ENTITY] = AnimState::SKI;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }
 

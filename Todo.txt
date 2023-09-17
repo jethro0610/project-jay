@@ -9,6 +9,9 @@
 - Animation state machine
     - Maybe just have each animation type be a state, no need for bindings
     - Need an animation for player sloping
+        - Probably just gonna do a hop with trails
+
+- Trails and particles system
 
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage

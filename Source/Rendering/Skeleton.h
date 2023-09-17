@@ -32,6 +32,17 @@ public:
         const Transform& transform, 
         const Transform& lastTransform
     ) const;
+
+    void GetBlendedPose(
+        Pose& pose, 
+        int prevAnimationIndex, 
+        int animationIndex,
+        float prevTime, 
+        float time,
+        float blend,
+        const Transform& transform, 
+        const Transform& lastTransform
+    ) const;
     void PoseToGPUPose(GPUPose& gpuPose, const Pose& pose) const;
 
     Transform GetLocalBoneTransform(const Animation& animation, float time, int boneIndex) const;

@@ -85,6 +85,51 @@ void Skeleton::GetPose(
     }
 }
 
+void Skeleton::GetBlendedPose(
+    Pose& pose,
+    int prevAnimationIndex,
+    int animationIndex,
+    float prevTime,
+    float time,
+    float blend,
+    const Transform& transform,
+    const Transform& lastTransform
+) const {
+    Pose prevDesiredPose;
+    prevDesiredPose.resize(bones_.size());
+    prevDesiredPose[0] = GetLocalBoneTransform(animations_[prevAnimationIndex], prevTime, 0).ToMatrix();
+    GetPose_Recursive(prevDesiredPose, animations_[prevAnimationIndex], prevTime, 0); 
+
+    Pose desiredPose;
+    desiredPose.resize(bones_.size());
+    desiredPose[0] = GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
+    GetPose_Recursive(desiredPose, animations_[animationIndex], time, 0); 
+
+    for (int i = 0; i < bones_.size(); i++)
+        desiredPose[i] = Transform::Lerp(prevDesiredPose[i], desiredPose[i], blend);
+
+    std::array<bool, MAX_BONES> isRibbon;
+    isRibbon.fill(false);
+
+    for (const RibbonDesc& ribbon : ribbons_) {
+        ComputeRibbonChain(
+            pose, 
+            desiredPose, 
+            ribbon, 
+            transform,
+            lastTransform,
+            animations_[animationIndex].speedInfluence
+        );
+        for (int i = ribbon.start; i <= ribbon.end; i++)
+            isRibbon[i] = true;
+    }
+
+    for (int i = 0; i < pose.size(); i++) {
+        if (!isRibbon[i])
+            pose[i] = desiredPose[i];
+    }
+}
+
 void Skeleton::ComputeRibbonChain(
     Pose& pose, 
     const Pose& desiredPose, 

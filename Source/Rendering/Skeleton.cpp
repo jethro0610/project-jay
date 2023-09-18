@@ -162,13 +162,13 @@ void Skeleton::ComputeRibbonChain(
     // Calculate bone positions
     for (int i = 1; i < numChainBones; i++) {
         const int boneIndex = i + ribbon.start;
+        worldPose[boneIndex].scale = desiredWorldPose[boneIndex].scale;
             
         vec3 fromParent = worldPose[boneIndex].position - worldPose[boneIndex - 1].position;
         if (length(fromParent) > desiredDistances[boneIndex])
             worldPose[boneIndex].position = worldPose[boneIndex - 1].position + (normalize(fromParent) * desiredDistances[boneIndex]);
 
         vec3 velocity = desiredWorldPose[boneIndex].position - worldPose[boneIndex].position;
-        float maxVelocity = length(velocity);
         
         float scalar = (numChainBones - 1) - i;
         scalar /= numChainBones - 2;
@@ -176,7 +176,10 @@ void Skeleton::ComputeRibbonChain(
         scalar = mix(ribbon.tailRatio, 1.0f, scalar);
 
         velocity *= ribbon.returnSpeed * scalar;
-        worldPose[boneIndex].position += velocity;
+        if (all(isnan(velocity)))
+            worldPose[boneIndex].position = desiredWorldPose[boneIndex].position;
+        else
+            worldPose[boneIndex].position += velocity;
     }
 
     // Calculate bone rotations, the tail is skipped since it's only used

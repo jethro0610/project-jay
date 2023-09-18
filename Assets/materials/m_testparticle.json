@@ -1,5 +1,5 @@
 {
-    "vertex": "vs_inst_billboard",
+    "vertex": "vs_particle",
     "fragment": "fs_seed",
     "cast_shadows": false,
     "textures": []

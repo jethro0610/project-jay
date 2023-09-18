@@ -9,9 +9,9 @@ void ParticleEmitter::Update(Transform& origin, float deltaTime) {
         particle.position = origin.position;
         particle.scale = 1.0f;
         vec2 randomVec = RandomVector2D(2.0f);
-        particle.velocity.x = randomVec.x;
-        particle.velocity.z = randomVec.y;
-        particle.velocity.y = RandomFloatRange(1.0f, 3.0f);
+        particle.velocity.x = 0.0f;
+        particle.velocity.z = 0.0f;
+        particle.velocity.y = 10.0f;
         particle.rotation = 0.0f;
         particle.time = 0.0f;
 
@@ -21,7 +21,7 @@ void ParticleEmitter::Update(Transform& origin, float deltaTime) {
 
     for (Particle& particle : particles) {
         particle.time += deltaTime;
-        particle.velocity.y += 1.0f * deltaTime;
+        particle.velocity.y -= 1.0f * deltaTime;
         particle.position += particle.velocity * deltaTime;
     }
 }

@@ -157,6 +157,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("vs_screenquad");
     LoadVertexShader_P("vs_glyph");
     LoadVertexShader_P("vs_uibar");
+    LoadVertexShader_P("vs_particle");
 
     LoadFragmentShader_P("fs_depth_s");
     LoadFragmentShader_P("fs_depth_masked_s");
@@ -564,7 +565,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderParticles_P(ParticleEmitter& emitter) {
     bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, MAX_PARTICLES, sizeof(vec4));
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, MAX_PARTICLES, sizeof(Particle));
     memcpy(instanceBuffer.data, emitter.particles.data(), sizeof(Particle) * emitter.particles.size());
 
     RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);

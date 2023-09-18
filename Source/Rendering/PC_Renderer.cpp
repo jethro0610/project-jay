@@ -192,6 +192,8 @@ void Renderer::TEMP_LoadTestData() {
     barMaterial_ = LoadMaterial_P("m_uibar");
     blitMaterial_ = LoadMaterial_P("m_preuiblit");
 
+    testParticleMaterial_ = LoadMaterial_P("m_testparticle");
+
     DEBUGLOG("Succesfully loaded all test assets");
 }
 
@@ -557,6 +559,14 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
     RenderMesh_P(quad_, seedMaterial_, &instanceBuffer);
+}
+
+void Renderer::RenderParticles_P(ParticleEmitter& emitter) {
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, MAX_PARTICLES, sizeof(vec4));
+    memcpy(instanceBuffer.data, emitter.particles.data(), sizeof(Particle) * emitter.particles.size());
+
+    RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);
 }
 
 void Renderer::RenderPostProcess_P() {

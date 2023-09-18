@@ -13,6 +13,7 @@
 #include "Model.h"
 #include "Material.h"
 #include "../Game/Entity/EntityLimits.h"
+#include "../Game/ParticleEmitter.h"
 
 class Camera;
 class Entity;
@@ -87,6 +88,7 @@ private:
     Material textMaterial_;
     Material barMaterial_;
     Material blitMaterial_;
+    Material testParticleMaterial_;
 
     Texture noiseTexture_;
 
@@ -162,6 +164,7 @@ private:
     );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderSeed_P(SeedManager& seedManager);
+    void RenderParticles_P(ParticleEmitter& emitter);
     void RenderPostProcess_P();
     void RenderBlit_P();
     void RenderUI_P(MeterComponent& meterComponent);

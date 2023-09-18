@@ -12,6 +12,8 @@
 #include "World/World.h"
 #include <FastNoiseLite.h>
 
+#include "ParticleEmitter.h"
+
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
 #endif
@@ -34,6 +36,8 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
+
+    ParticleEmitter testEmitter_;
 
     Inputs inputs_;
 

@@ -204,6 +204,9 @@ void Game::Update() {
         GETCOMP(TransformComponent)
     );
     camera_.Update(inputs_);
+    Transform emitterOrigin;
+    emitterOrigin.position = vec3(10.0f, 10.0f, 10.0f);
+    testEmitter_.Update(emitterOrigin, GlobalTime::GetDeltaTime());
     renderer_.Render(
         entityManager_.entities_, 
         seedManager_,

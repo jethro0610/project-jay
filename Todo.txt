@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Use color uniform for seed
+
 - Blending animations
 - Animation state machine
     - Maybe just have each animation type be a state, no need for bindings
@@ -12,6 +14,8 @@
         - Probably just gonna do a hop with trails
 
 - Trails and particles system
+    - Stretched billboard rendering
+        - Keep the velocity on instances then use dot product?
 
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage

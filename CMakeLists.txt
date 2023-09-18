@@ -33,6 +33,7 @@ file(GLOB SOURCES
     Source/Game/Game.cpp
     Source/Game/PlayerController.cpp
     Source/Game/Time.cpp
+    Source/Game/ParticleEmitter.cpp
 
     Source/Game/World/World.cpp
     Source/Game/World/SeedManager.cpp

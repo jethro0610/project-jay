@@ -215,6 +215,7 @@ void Game::Update() {
         GETCOMP(MeterComponent),
         GETCOMP(SkeletonComponent),
         GETCOMP(StaticModelComponent),
-        GETCOMP(TransformComponent)
+        GETCOMP(TransformComponent),
+        testEmitter_
     );
 }

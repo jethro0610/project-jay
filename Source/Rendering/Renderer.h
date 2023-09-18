@@ -46,7 +46,8 @@ public:
         MeterComponent& meterComponent,
         SkeletonComponent& skeletonComponent,
         StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent
+        TransformComponent& transformComponent,
+        ParticleEmitter& emitter
     );
 
     Shader& LoadVertexShader_P(std::string name);

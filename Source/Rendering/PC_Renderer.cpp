@@ -15,6 +15,7 @@
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
 
+#include "../Game/ParticleEmitter.h"
 #include "../Game/Entity/Entity.h"
 #include "../Game/Components/SkeletonComponent.h"
 #include "../Game/Components/StaticModelComponent.h"

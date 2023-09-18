@@ -15,7 +15,8 @@ void Renderer::Render(
     MeterComponent& meterComponent,
     SkeletonComponent& skeletonComponent,
     StaticModelComponent& staticModelComponent,
-    TransformComponent& transformComponent
+    TransformComponent& transformComponent,
+    ParticleEmitter& emitter 
 ) {
     StartFrame_P();
 
@@ -23,6 +24,7 @@ void Renderer::Render(
     RenderEntities_P(entities, meterComponent, skeletonComponent, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
+    RenderParticles_P(emitter);
 
     RenderPostProcess_P();
 

@@ -1,0 +1,6 @@
+{
+    "vertex": "vs_inst_billboard",
+    "fragment": "fs_seed",
+    "cast_shadows": false,
+    "textures": []
+}

@@ -13,7 +13,6 @@
 #include "Model.h"
 #include "Material.h"
 #include "../Game/Entity/EntityLimits.h"
-#include "../Game/ParticleEmitter.h"
 
 class Camera;
 class Entity;
@@ -26,6 +25,7 @@ class MeterComponent;
 class SkeletonComponent;
 class StaticModelComponent;
 class TransformComponent;
+class ParticleEmitter;
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"

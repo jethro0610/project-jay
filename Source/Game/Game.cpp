@@ -20,6 +20,7 @@ void Game::Init() {
     emitterProps.lifetime = 2.5f;
     emitterProps.minScale = 0.1f;
     emitterProps.maxScale = 0.5f;
+    emitterProps.endScale = 0.0f;
     emitterProps.acceleration = vec3(0.0f, -2.0f, 0.0f);
 
     emitterProps.spawnRadius = 3.0f;

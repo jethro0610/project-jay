@@ -39,8 +39,13 @@ class ParticleEmitter {
     Transform transform_;
     EmitterProperties properties_;
     float timer_;
-    
+
 public:
+    ParticleEmitter() {
+        transform_ = Transform();
+        timer_ = 0.0f;
+    }
+
     void Update(float deltaTime);
     void SetTransform(const Transform& transform) { transform_ = transform; }
     void SetPosition(const glm::vec3& position) { transform_.position = position; }

@@ -1,6 +1,5 @@
 #include "ParticleEmitter.h"
 #include "../Helpers/Random.h"
-#include "../Logging/Logger.h"
 using namespace glm;
 
 void ParticleEmitter::Update(float deltaTime) {

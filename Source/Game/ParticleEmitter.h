@@ -18,13 +18,9 @@ struct Particle {
     glm::vec2 padding;
 };
 
-struct ParticleEmitter {
-    vector_contig<Particle, MAX_PARTICLES> particles;
-    Transform transform;
-
+struct EmitterProperties {
     float spawnRate;
     float lifetime;
-    float timer;
 
     float minScale;
     float maxScale;
@@ -32,10 +28,23 @@ struct ParticleEmitter {
 
     float spawnRadius;
 
-    glm::vec3 velocityMin;
-    glm::vec3 velocityMax;
+    glm::vec3 minVelocity;
+    glm::vec3 maxVelocity;
 
     glm::vec3 acceleration;
+};
+
+class ParticleEmitter {
+    vector_contig<Particle, MAX_PARTICLES> particles_;
+    Transform transform_;
+    EmitterProperties properties_;
+    float timer_;
     
+public:
     void Update(float deltaTime);
+    void SetTransform(const Transform& transform) { transform_ = transform; }
+    void SetPosition(const glm::vec3& position) { transform_.position = position; }
+    void SetProperties(const EmitterProperties& properties) { properties_ = properties; }
+    void* GetRenderData() { return particles_.data(); }
+    int GetParticleCount() const { return particles_.size(); }
 };

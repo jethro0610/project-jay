@@ -6,7 +6,7 @@
 #include <vector_contig.h>
 #include "../Types/Transform.h"
 
-const int MAX_PARTICLES = 512;
+const int MAX_PARTICLES = 256;
 
 struct Particle {
     glm::vec3 position;

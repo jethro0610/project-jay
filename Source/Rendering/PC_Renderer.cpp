@@ -565,7 +565,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderParticles_P(ParticleEmitter& emitter) {
     bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, MAX_PARTICLES, sizeof(Particle));
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.GetParticleCount(), sizeof(Particle));
     memcpy(instanceBuffer.data, emitter.GetRenderData(), sizeof(Particle) * emitter.GetParticleCount());
 
     RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);

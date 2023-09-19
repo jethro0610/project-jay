@@ -3,6 +3,9 @@
 using namespace glm;
 
 float RandomFloatRange(float min, float max) {
+    if (min == max)
+        return min;
+
     float range = max - min; 
     int modVal = range * 1000;
 
@@ -19,6 +22,14 @@ vec3 RandomVector(float maxDist) {
     dist = sqrt(dist) * maxDist;
 
     return direction * dist;
+}
+
+vec3 RandomVector(glm::vec3& min, glm::vec3& max) {
+    float x = RandomFloatRange(min.x, max.x);
+    float y = RandomFloatRange(min.y, max.y);
+    float z = RandomFloatRange(min.z, max.z);
+
+    return vec3(x, y, z);
 }
 
 vec2 RandomVector2D(float maxDist) {

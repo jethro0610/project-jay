@@ -15,6 +15,16 @@ void Game::Init() {
     srand(time(0));
     GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
+    testEmitter_.transform.position = vec3(10.0f, 10.0f, 10.0f);
+    testEmitter_.spawnRate = 0.01f;
+    testEmitter_.lifetime = 2.5f;
+    testEmitter_.minScale = 0.1f;
+    testEmitter_.maxScale = 0.5f;
+    testEmitter_.acceleration = vec3(0.0f, -2.0f, 0.0f);
+
+    testEmitter_.spawnRadius = 3.0f;
+    testEmitter_.velocityMin = vec3(0.0f, 4.0f, 0.0f);
+    testEmitter_.velocityMax = vec3(0.0f, 5.0f, 0.0f);
 
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
@@ -204,9 +214,7 @@ void Game::Update() {
         GETCOMP(TransformComponent)
     );
     camera_.Update(inputs_);
-    Transform emitterOrigin;
-    emitterOrigin.position = vec3(10.0f, 10.0f, 10.0f);
-    testEmitter_.Update(emitterOrigin, GlobalTime::GetDeltaTime());
+    testEmitter_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(
         entityManager_.entities_, 
         seedManager_,

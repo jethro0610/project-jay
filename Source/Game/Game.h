@@ -4,6 +4,7 @@
 #include "../Types/Gamepad.h"
 #include "../Types/Inputs.h"
 #include "PlayerController.h"
+#include "ParticleManager.h"
 #include "World/SeedManager.h"
 #include "World/SpreadManager.h"
 #include "Systems/Systems.h"
@@ -11,8 +12,6 @@
 #include "../Rendering/Renderer.h"
 #include "World/World.h"
 #include <FastNoiseLite.h>
-
-#include "ParticleEmitter.h"
 
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
@@ -33,11 +32,10 @@ private:
     Renderer renderer_;
     Camera camera_;
     World world_;
+    ParticleManager particleManager_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
-
-    ParticleEmitter testEmitter_;
 
     Inputs inputs_;
 

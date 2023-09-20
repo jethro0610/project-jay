@@ -9,14 +9,14 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 
 void Renderer::Render(
     std::array<Entity, MAX_ENTITIES>& entities,
+    ParticleManager& particleManager, 
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     World& world,
     MeterComponent& meterComponent,
     SkeletonComponent& skeletonComponent,
     StaticModelComponent& staticModelComponent,
-    TransformComponent& transformComponent,
-    ParticleEmitter& emitter 
+    TransformComponent& transformComponent
 ) {
     StartFrame_P();
 
@@ -24,7 +24,7 @@ void Renderer::Render(
     RenderEntities_P(entities, meterComponent, skeletonComponent, staticModelComponent, transformComponent);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);
-    RenderParticles_P(emitter);
+    RenderParticles_P(particleManager);
 
     RenderPostProcess_P();
 

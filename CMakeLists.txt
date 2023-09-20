@@ -36,6 +36,7 @@ file(GLOB SOURCES
     Source/Game/ParticleEmitter.cpp
 
     Source/Game/World/World.cpp
+    Source/Game/ParticleManager.cpp
     Source/Game/World/SeedManager.cpp
     Source/Game/World/SpreadManager.cpp
 

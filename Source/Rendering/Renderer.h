@@ -25,7 +25,7 @@ class MeterComponent;
 class SkeletonComponent;
 class StaticModelComponent;
 class TransformComponent;
-class ParticleEmitter;
+class ParticleManager;
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -40,14 +40,14 @@ public:
 
     void Render(
         std::array<Entity, MAX_ENTITIES>& entities,
+        ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         World& world,
         MeterComponent& meterComponent,
         SkeletonComponent& skeletonComponent,
         StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent,
-        ParticleEmitter& emitter
+        TransformComponent& transformComponent
     );
 
     Shader& LoadVertexShader_P(std::string name);
@@ -165,7 +165,7 @@ private:
     );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderSeed_P(SeedManager& seedManager);
-    void RenderParticles_P(ParticleEmitter& emitter);
+    void RenderParticles_P(ParticleManager& particleManager);
     void RenderPostProcess_P();
     void RenderBlit_P();
     void RenderUI_P(MeterComponent& meterComponent);

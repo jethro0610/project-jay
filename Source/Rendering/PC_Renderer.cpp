@@ -15,7 +15,7 @@
 #include "../Logging/Logger.h"
 #include "../Game/Time.h"
 
-#include "../Game/ParticleEmitter.h"
+#include "../Game/ParticleManager.h"
 #include "../Game/Entity/Entity.h"
 #include "../Game/Components/SkeletonComponent.h"
 #include "../Game/Components/StaticModelComponent.h"
@@ -563,12 +563,20 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     RenderMesh_P(quad_, seedMaterial_, &instanceBuffer);
 }
 
-void Renderer::RenderParticles_P(ParticleEmitter& emitter) {
-    bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.GetParticleCount(), sizeof(Particle));
-    memcpy(instanceBuffer.data, emitter.GetRenderData(), sizeof(Particle) * emitter.GetParticleCount());
+void Renderer::RenderParticles_P(ParticleManager& particleManager) {
+    for (int i = 0; i < MAX_EMITTERS; i++) {
+        if (!particleManager.alive_[i])
+            continue;
 
-    RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);
+        ParticleEmitter& emitter = particleManager.emitters_[i];
+        if (emitter.particles_.size() == 0)
+            continue;
+
+        bgfx::InstanceDataBuffer instanceBuffer;
+        bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
+        memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
+        RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);
+    }
 }
 
 void Renderer::RenderPostProcess_P() {

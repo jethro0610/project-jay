@@ -6,7 +6,7 @@
 #include <vector_contig.h>
 #include "../Types/Transform.h"
 
-const int MAX_PARTICLES = 256;
+const int MAX_PARTICLES = 512;
 
 struct Particle {
     glm::vec3 position;
@@ -19,7 +19,8 @@ struct Particle {
 };
 
 struct EmitterProperties {
-    float spawnRate;
+    float spawnInterval;
+    int spawnCount;
     float lifetime;
 
     float minScale;
@@ -34,22 +35,18 @@ struct EmitterProperties {
     glm::vec3 acceleration;
 };
 
-class ParticleEmitter {
+struct ParticleEmitter {
+    bool active_;
     vector_contig<Particle, MAX_PARTICLES> particles_;
     Transform transform_;
-    EmitterProperties properties_;
+    EmitterProperties* properties_;
     float timer_;
 
-public:
     ParticleEmitter() {
         transform_ = Transform();
         timer_ = 0.0f;
     }
 
     void Update(float deltaTime);
-    void SetTransform(const Transform& transform) { transform_ = transform; }
-    void SetPosition(const glm::vec3& position) { transform_.position = position; }
-    void SetProperties(const EmitterProperties& properties) { properties_ = properties; }
-    void* GetRenderData() { return particles_.data(); }
-    int GetParticleCount() const { return particles_.size(); }
+    void Emmit();
 };

@@ -27,15 +27,35 @@ std::string GetString(nlohmann::json& data, std::string property, std::string de
     return data[property].get<std::string>();
 }
 
+glm::vec4 GetVec4(nlohmann::json& data, glm::vec4 defaultReturn) {
+    float x = GetFloat(data, "x", defaultReturn.x);
+    float y = GetFloat(data, "y", defaultReturn.y);
+    float z = GetFloat(data, "z", defaultReturn.z);
+    float w = GetFloat(data, "w", defaultReturn.w);
+
+    return glm::vec4(x, y, z, w);
+}
+
 glm::vec4 GetVec4(nlohmann::json& data, std::string property, glm::vec4 defaultReturn) {
     if (!data.contains(property))
         return defaultReturn;
 
-    auto vector = data[property];
-    float x = GetFloat(vector, "x", 0.0f);
-    float y = GetFloat(vector, "y", 0.0f);
-    float z = GetFloat(vector, "z", 0.0f);
-    float w = GetFloat(vector, "w", 1.0f);
+    auto& vector = data[property];
+    return GetVec4(vector, defaultReturn);
+}
 
-    return glm::vec4(x, y, z, w);
+glm::vec3 GetVec3(nlohmann::json& data, glm::vec3 defaultReturn) {
+    float x = GetFloat(data, "x", defaultReturn.x);
+    float y = GetFloat(data, "y", defaultReturn.y);
+    float z = GetFloat(data, "z", defaultReturn.z);
+
+    return glm::vec3(x, y, z);
+}
+
+glm::vec3 GetVec3(nlohmann::json& data, std::string property, glm::vec3 defaultReturn) {
+    if (!data.contains(property))
+        return defaultReturn;
+
+    auto& vector = data[property];
+    return GetVec3(vector, defaultReturn);
 }

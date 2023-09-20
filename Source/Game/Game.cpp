@@ -15,20 +15,20 @@ void Game::Init() {
     srand(time(0));
     GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
-    EmitterProperties emitterProps;
-    emitterProps.spawnRate = 0.01f;
-    emitterProps.lifetime = 2.5f;
-    emitterProps.minScale = 0.1f;
-    emitterProps.maxScale = 0.5f;
-    emitterProps.endScale = 0.0f;
-    emitterProps.acceleration = vec3(0.0f, -2.0f, 0.0f);
 
-    emitterProps.spawnRadius = 3.0f;
-    emitterProps.minVelocity = vec3(0.0f, 4.0f, 0.0f);
-    emitterProps.maxVelocity = vec3(0.0f, 5.0f, 0.0f);
+    particleManager_.LoadEmitterProperty("p_test");
 
-    testEmitter_.SetPosition(vec3(10.0f, 10.0f, 10.0f));
-    testEmitter_.SetProperties(emitterProps);
+    EmitterID emitter = particleManager_.RequestEmitter("p_test");
+    Transform emitterTransform;
+    emitterTransform.position = vec3(10.0f, 10.0f, 10.0f);
+    particleManager_.SetTransform(emitter, emitterTransform);
+    particleManager_.SetActive(emitter, true);
+
+    EmitterID emitter2 = particleManager_.RequestEmitter("p_test");
+    Transform emitter2Transform;
+    emitter2Transform.position = vec3(20.0f, 20.0f, 20.0f);
+    particleManager_.SetTransform(emitter2, emitter2Transform);
+    particleManager_.SetActive(emitter2, true);
 
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
@@ -218,16 +218,16 @@ void Game::Update() {
         GETCOMP(TransformComponent)
     );
     camera_.Update(inputs_);
-    testEmitter_.Update(GlobalTime::GetDeltaTime());
+    particleManager_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(
         entityManager_.entities_, 
+        particleManager_,
         seedManager_,
         spreadManager_, 
         world_, 
         GETCOMP(MeterComponent),
         GETCOMP(SkeletonComponent),
         GETCOMP(StaticModelComponent),
-        GETCOMP(TransformComponent),
-        testEmitter_
+        GETCOMP(TransformComponent)
     );
 }

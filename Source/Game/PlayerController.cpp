@@ -16,10 +16,13 @@
 #include "../Logging/ScreenText.h"
 using namespace glm;
 
-PlayerController::PlayerController(ParticleManager& particleManager) {
+PlayerController::PlayerController() {
     actionMeter_ = 0; 
     cutTimer_ = 0;
     cutCooldown_ = 0;
+}
+
+void PlayerController::Init(ParticleManager& particleManager) {
     sparkEmitter_ = particleManager.RequestEmitter("p_test");
 }
 

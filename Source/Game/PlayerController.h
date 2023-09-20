@@ -19,7 +19,9 @@ const int MAX_ACTION_METER = 250;
 
 class PlayerController {
 public:
-    PlayerController(ParticleManager& particleManager);
+    PlayerController();
+    void Init(ParticleManager& particleManager);
+
     void Execute(
         World& world, 
         SpreadManager& spreadManager, 

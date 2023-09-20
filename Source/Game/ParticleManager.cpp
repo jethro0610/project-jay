@@ -5,7 +5,6 @@
 #include "../Helpers/LoadHelpers.h"
 
 ParticleManager::ParticleManager() {
-    LoadEmitterProperty("p_test");
     usableEmitters_.push_front(0);
 }
 

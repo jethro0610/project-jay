@@ -16,6 +16,7 @@ void Game::Init() {
     GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
+    particleManager_.LoadEmitterProperty("p_test");
     ParticleEmitter* emitter = particleManager_.RequestEmitter("p_test");
     emitter->transform_.position = vec3(10.0f, 10.0f, 10.0f);
     emitter->active_ = true;
@@ -76,6 +77,7 @@ void Game::Init() {
     // entityManager_.CreateEntity("e_test_skel", skelTransform);
 
     camera_.target_ = PLAYER_ENTITY;
+    playerController_.Init(particleManager_);
 }
 
 void Game::Update() {

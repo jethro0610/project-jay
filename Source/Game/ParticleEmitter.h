@@ -49,4 +49,5 @@ struct ParticleEmitter {
 
     void Update(float deltaTime);
     void Emmit();
+    bool release_;
 };

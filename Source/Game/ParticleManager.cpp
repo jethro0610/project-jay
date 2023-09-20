@@ -9,44 +9,29 @@ ParticleManager::ParticleManager() {
     usableEmitters_.push_front(0);
 }
 
-EmitterID ParticleManager::RequestEmitter(std::string name) {
-    EmitterID emitter = usableEmitters_.front();
+ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
+    int emitterIndex = usableEmitters_.front();
     usableEmitters_.pop_front();
     if (usableEmitters_.size() <= 0)
-        usableEmitters_.push_front(emitter + 1);
+        usableEmitters_.push_front(emitterIndex + 1);
 
-    alive_[emitter] = true;
-    SetProperties(emitter, name);
+    alive_[emitterIndex] = true;
+    emitters_[emitterIndex].properties_ = &GetFromMap<EmitterProperties>(emitterProps_, name, "Tried using unloaded particle emitter " + name);
     // TODO: Set particles array to 0 on emitter
-    return emitter; 
+    return &emitters_[emitterIndex]; 
 }
 
-void ParticleManager::ReleaseEmitter(EmitterID emitter) {
-    alive_[emitter] = false;
-    usableEmitters_.push_front(emitter);
-}
 
 void ParticleManager::Update(float deltaTime) {
     for (int i = 0; i < MAX_EMITTERS; i++) {
         if (alive_[i])
             emitters_[i].Update(deltaTime);
+
+        if (emitters_[i].release_) {
+            alive_[i] = false;
+            usableEmitters_.push_front(i);
+        }
     }
-}
-
-void ParticleManager::Emmit(EmitterID emitter) {
-    emitters_[emitter].Emmit();
-}
-
-void ParticleManager::SetActive(EmitterID emitter, bool active) {
-    emitters_[emitter].active_ = active;
-}
-
-void ParticleManager::SetTransform(EmitterID emitter, const Transform& transform) {
-    emitters_[emitter].transform_ = transform;
-}
-
-void ParticleManager::SetProperties(EmitterID emitter, std::string name) {
-    emitters_[emitter].properties_ = &GetFromMap<EmitterProperties>(emitterProps_, name, "Tried using unloaded particle emitter " + name);
 }
 
 void ParticleManager::LoadEmitterProperty(std::string name) {

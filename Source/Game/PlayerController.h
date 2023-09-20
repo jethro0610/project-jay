@@ -38,6 +38,5 @@ private:
     int actionMeter_;
     int cutTimer_;
     int cutCooldown_;
-    EmitterID sparkEmitter_;
-    ParticleManager& particleManager_;
+    ParticleEmitter* sparkEmitter_;
 };

@@ -565,10 +565,10 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderParticles_P(ParticleManager& particleManager) {
     for (int i = 0; i < MAX_EMITTERS; i++) {
-        if (!particleManager.alive_[i])
+        ParticleEmitter& emitter = particleManager.emitters_[i];
+        if (!emitter.alive_)
             continue;
 
-        ParticleEmitter& emitter = particleManager.emitters_[i];
         if (emitter.particles_.size() == 0)
             continue;
 

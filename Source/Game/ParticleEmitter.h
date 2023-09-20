@@ -36,18 +36,23 @@ struct EmitterProperties {
 };
 
 struct ParticleEmitter {
+    bool alive_;
     bool active_;
+    bool release_;
     vector_contig<Particle, MAX_PARTICLES> particles_;
     Transform transform_;
     EmitterProperties* properties_;
     float timer_;
 
     ParticleEmitter() {
+        alive_ = false;
+        active_ = false;
+        release_ = false;
         transform_ = Transform();
+        properties_ = nullptr;
         timer_ = 0.0f;
     }
 
     void Update(float deltaTime);
     void Emmit();
-    bool release_;
 };

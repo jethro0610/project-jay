@@ -1,8 +1,10 @@
 #include "ParticleEmitter.h"
 #include "../Helpers/Random.h"
+#include "../Helpers/Assert.h"
 using namespace glm;
 
 void ParticleEmitter::Update(float deltaTime) {
+    ASSERT(alive_ == true, "Using dead particle emitter");
     for (int i = 0; i < particles_.size(); i++) {
         Particle& particle = particles_[i];
         if (particle.time > properties_->lifetime)
@@ -26,6 +28,7 @@ void ParticleEmitter::Update(float deltaTime) {
 }
 
 void ParticleEmitter::Emmit() {
+    ASSERT(alive_ == true, "Using dead particle emitter");
     Particle particle;
     particle.position = transform_.position + RandomVector(properties_->spawnRadius);
     particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);

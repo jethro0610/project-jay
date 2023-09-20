@@ -15,7 +15,8 @@ ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
     if (usableEmitters_.size() <= 0)
         usableEmitters_.push_front(emitterIndex + 1);
 
-    alive_[emitterIndex] = true;
+    ParticleEmitter& emitter = emitters_[emitterIndex];
+    emitter.alive_ = true;
     emitters_[emitterIndex].properties_ = &GetFromMap<EmitterProperties>(emitterProps_, name, "Tried using unloaded particle emitter " + name);
     // TODO: Set particles array to 0 on emitter
     return &emitters_[emitterIndex]; 
@@ -24,11 +25,13 @@ ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
 
 void ParticleManager::Update(float deltaTime) {
     for (int i = 0; i < MAX_EMITTERS; i++) {
-        if (alive_[i])
-            emitters_[i].Update(deltaTime);
+        if (!emitters_[i].alive_)
+            continue;
 
+        emitters_[i].Update(deltaTime);
         if (emitters_[i].release_) {
-            alive_[i] = false;
+            emitters_[i].alive_ = false;
+            emitters_[i].release_ = false;
             usableEmitters_.push_front(i);
         }
     }

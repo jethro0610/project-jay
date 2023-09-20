@@ -14,7 +14,8 @@
         - Probably just gonna do a hop with trails
 
 - Trails and particles system
-    - Fix debug menu causing enlarged particles
+    - Use Transform for directions
+    - Maybe just store pointer and have emitters flagged for deletion
     - Stretched billboard rendering
         - Keep the velocity on instances then use dot product?
         - Store initial position? Then have differentiate between a,b -> c,d in vertex shader

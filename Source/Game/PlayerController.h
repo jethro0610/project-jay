@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "../Types/Inputs.h"
+#include "ParticleManager.h"
 class Camera;
 class SpreadManager;
 class World;
@@ -18,7 +19,7 @@ const int MAX_ACTION_METER = 250;
 
 class PlayerController {
 public:
-    PlayerController();
+    PlayerController(ParticleManager& particleManager);
     void Execute(
         World& world, 
         SpreadManager& spreadManager, 
@@ -37,4 +38,6 @@ private:
     int actionMeter_;
     int cutTimer_;
     int cutCooldown_;
+    EmitterID sparkEmitter_;
+    ParticleManager& particleManager_;
 };

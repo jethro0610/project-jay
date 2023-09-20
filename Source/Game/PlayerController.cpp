@@ -16,10 +16,13 @@
 #include "../Logging/ScreenText.h"
 using namespace glm;
 
-PlayerController::PlayerController() {
+PlayerController::PlayerController(ParticleManager& particleManager):
+    particleManager_(particleManager)
+{
     actionMeter_ = 0; 
     cutTimer_ = 0;
     cutCooldown_ = 0;
+    sparkEmitter_ = particleManager_.RequestEmitter("p_test");
 }
 
 void PlayerController::Execute(
@@ -35,6 +38,9 @@ void PlayerController::Execute(
     VelocityComponent& velocityComponent,
     Inputs inputs
 ) {
+    particleManager_.SetActive(sparkEmitter_, false); 
+    particleManager_.SetTransform(sparkEmitter_, transformComponent.renderTransform[PLAYER_ENTITY]);
+
     vec3& position = transformComponent.transform[PLAYER_ENTITY].position;
     quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
@@ -96,6 +102,7 @@ void PlayerController::Execute(
     }
     else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
+        particleManager_.SetActive(sparkEmitter_, true); 
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }

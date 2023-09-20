@@ -1,3 +1,4 @@
+#pragma once
 #include "ParticleEmitter.h"
 #include <deque>
 #include <tuple>

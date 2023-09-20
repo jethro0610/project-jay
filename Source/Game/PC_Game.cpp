@@ -19,7 +19,7 @@ Game::Game():
     particleManager_(),
     seedManager_(),
     spreadManager_(seedManager_, world_),
-    playerController_(),
+    playerController_(particleManager_),
     running_(true)
 {
     Init();

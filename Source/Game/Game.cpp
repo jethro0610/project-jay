@@ -16,8 +16,6 @@ void Game::Init() {
     GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
-    particleManager_.LoadEmitterProperty("p_test");
-
     EmitterID emitter = particleManager_.RequestEmitter("p_test");
     Transform emitterTransform;
     emitterTransform.position = vec3(10.0f, 10.0f, 10.0f);

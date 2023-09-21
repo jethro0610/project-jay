@@ -9,14 +9,13 @@
 const int MAX_PARTICLES = 512;
 
 struct Particle {
-    glm::vec3 position;
-    glm::vec3 velocity;
+    glm::vec4 initialPosition;
+    glm::vec4 position;
+    glm::vec4 velocity;
     float rotation;
     float initialScale;
     float scale;
     float time;
-    glm::vec3 color;
-    glm::vec3 padding;
 };
 
 struct EmitterProperties {
@@ -30,10 +29,10 @@ struct EmitterProperties {
 
     float spawnRadius;
 
-    glm::vec3 minVelocity;
-    glm::vec3 maxVelocity;
+    glm::vec4 minVelocity;
+    glm::vec4 maxVelocity;
 
-    glm::vec3 acceleration;
+    glm::vec4 acceleration;
 
     glm::vec4 startColor;
     glm::vec4 endColor;

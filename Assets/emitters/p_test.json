@@ -1,14 +1,13 @@
 {
     "spawn_interval": 0.01,
-    "spawn_count": 1,
-    "lifetime": 2.5,
+    "spawn_count": 10,
+    "lifetime": 0.1,
     "scale_range": [0.1, 0.5],
     "end_scale": 0.0,
-    "acceleration": { "y": -2.0 },
-    "spawn_radius": 3.0,
+    "spawn_radius": 0.0,
     "velocity_range": [
-        { "x": 0.0, "y": 4.0, "z": 0.0 },
-        { "x": 0.0, "y": 5.0, "z": 0.0}
+        { "x": -50.0, "y": -50.0, "z": -50.0 },
+        { "x": 50.0, "y": 50.0, "z": 50.0}
     ],
     "start_color": { "x": 1.0, "y": 0.0, "z": 0.0, "w": 1.0 },
     "end_color": { "x": 0.0, "y": 0.0, "z": 1.0, "w": 1.0 }

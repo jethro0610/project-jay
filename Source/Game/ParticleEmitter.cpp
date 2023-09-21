@@ -30,10 +30,11 @@ void ParticleEmitter::Update(float deltaTime) {
 void ParticleEmitter::Emmit() {
     ASSERT(alive_ == true, "Using dead particle emitter");
     Particle particle;
-    particle.position = transform_.position + RandomVector(properties_->spawnRadius);
+    particle.initialPosition = vec4(transform_.position + RandomVector(properties_->spawnRadius), 0.0f);
+    particle.position = particle.initialPosition;
     particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);
     particle.scale = particle.initialScale;
-    particle.velocity = RandomVector(properties_->minVelocity, properties_->maxVelocity);
+    particle.velocity = RandomVec4(properties_->minVelocity, properties_->maxVelocity);
     particle.rotation = 0.0f;
     particle.time = 0.0f;
     particles_.push_back(particle); 

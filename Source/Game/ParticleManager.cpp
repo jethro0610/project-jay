@@ -55,9 +55,9 @@ void ParticleManager::LoadEmitterProperty(std::string name) {
 
     properties.spawnRadius = GetFloat(data, "spawn_radius", 0.0f);
     auto velocityRange = data["velocity_range"];
-    properties.minVelocity = GetVec3(velocityRange[0]);
-    properties.maxVelocity = GetVec3(velocityRange[1]);
-    properties.acceleration = GetVec3(data, "acceleration");
+    properties.minVelocity = GetVec4(velocityRange[0]);
+    properties.maxVelocity = GetVec4(velocityRange[1]);
+    properties.acceleration = GetVec4(data, "acceleration");
 
     properties.startColor = GetVec4(data, "start_color");
     properties.endColor = GetVec4(data, "end_color");

@@ -32,6 +32,15 @@ vec3 RandomVector(glm::vec3& min, glm::vec3& max) {
     return vec3(x, y, z);
 }
 
+vec4 RandomVec4(glm::vec4& min, glm::vec4& max) {
+    float x = RandomFloatRange(min.x, max.x);
+    float y = RandomFloatRange(min.y, max.y);
+    float z = RandomFloatRange(min.z, max.z);
+    float w = RandomFloatRange(min.w, max.w);
+
+    return vec4(x, y, z, w);
+}
+
 vec2 RandomVector2D(float maxDist) {
     float x = RandomFloatRange(-1.0f, 1.0f);
     float z = RandomFloatRange(-1.0f, 1.0f);

@@ -2,5 +2,6 @@
     "vertex": "vs_particle",
     "fragment": "fs_particle",
     "cast_shadows": false,
+    "two_sided": true,
     "textures": []
 }

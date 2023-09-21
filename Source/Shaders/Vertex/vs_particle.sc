@@ -1,6 +1,11 @@
-$input a_position, a_texcoord0, i_data0, i_data1, i_data2
+$input a_position, a_texcoord0, i_data0, i_data1, i_data2, i_data3
 $output v_sposition, v_texcoord0
 #include <bgfx_shader.sh>
+#include <particle.sh>
+
+uniform mat4 u_shadowMatrix;
+uniform vec4 u_cameraUp;
+uniform vec4 u_cameraRight;
 
 #define i_position i_data0.xyz
 #define i_velocity vec3(i_data0.w, i_data1.xy)
@@ -8,10 +13,7 @@ $output v_sposition, v_texcoord0
 #define i_initialScale i_data1.w
 #define i_scale i_data2.x
 #define i_time i_data2.y
-
-uniform mat4 u_shadowMatrix;
-uniform vec4 u_cameraUp;
-uniform vec4 u_cameraRight;
+#define i_color vec3(i_data2.z, i_data2.w, i_data3.x)
 
 void main() {
     v_texcoord0 = a_texcoord0;

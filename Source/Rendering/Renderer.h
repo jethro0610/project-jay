@@ -121,6 +121,7 @@ private:
     Uniform u_pose_;
 
     Uniform u_materialProps_;
+    Uniform u_particleProps_;
     Uniform u_normalMult_;
     Uniform u_lightDirection_;
     Uniform u_timeResolution_;

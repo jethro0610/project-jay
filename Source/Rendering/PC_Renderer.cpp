@@ -83,6 +83,7 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, MAX_BONES);
 
     u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
+    u_particleProps_ = bgfx::createUniform("u_particleProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
     u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
@@ -564,6 +565,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 }
 
 void Renderer::RenderParticles_P(ParticleManager& particleManager) {
+    mat4 particleProps;
     for (int i = 0; i < MAX_EMITTERS; i++) {
         ParticleEmitter& emitter = particleManager.emitters_[i];
         if (!emitter.alive_)
@@ -571,6 +573,10 @@ void Renderer::RenderParticles_P(ParticleManager& particleManager) {
 
         if (emitter.particles_.size() == 0)
             continue;
+
+        particleProps[0] = emitter.properties_->startColor;
+        particleProps[1] = emitter.properties_->endColor;
+        bgfx::setUniform(u_particleProps_, &particleProps);
 
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));

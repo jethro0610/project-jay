@@ -15,7 +15,8 @@ struct Particle {
     float initialScale;
     float scale;
     float time;
-    glm::vec2 padding;
+    glm::vec3 color;
+    glm::vec3 padding;
 };
 
 struct EmitterProperties {
@@ -33,6 +34,9 @@ struct EmitterProperties {
     glm::vec3 maxVelocity;
 
     glm::vec3 acceleration;
+
+    glm::vec4 startColor;
+    glm::vec4 endColor;
 };
 
 struct ParticleEmitter {

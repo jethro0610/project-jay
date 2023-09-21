@@ -60,6 +60,7 @@ void ParticleManager::LoadEmitterProperty(std::string name) {
     properties.acceleration = GetVec3(data, "acceleration");
 
     properties.startColor = GetVec4(data, "start_color");
+    properties.endColor = GetVec4(data, "end_color");
 
     emitterProps_[name] = properties; 
     DEBUGLOG("Loaded entity " << name);

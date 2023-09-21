@@ -7,13 +7,13 @@ void ParticleEmitter::Update(float deltaTime) {
     ASSERT(alive_ == true, "Using dead particle emitter");
     for (int i = 0; i < particles_.size(); i++) {
         Particle& particle = particles_[i];
-        if (particle.time > properties_->lifetime)
+        if (particle.time > 1.0f)
             particles_.remove(i--);
 
-        particle.time += deltaTime;
+        particle.time += deltaTime / properties_->lifetime;
         particle.velocity += properties_->acceleration * deltaTime;
         particle.position += particle.velocity * deltaTime;
-        particle.scale = std::lerp(particle.initialScale, properties_->endScale, particle.time / properties_->lifetime);
+        particle.scale = std::lerp(particle.initialScale, properties_->endScale, particle.time);
     }
 
     if (!active_)

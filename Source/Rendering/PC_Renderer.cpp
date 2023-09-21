@@ -170,6 +170,7 @@ void Renderer::TEMP_LoadTestData() {
 
     LoadFragmentShader_P("fs_flower");
     LoadFragmentShader_P("fs_seed");
+    LoadFragmentShader_P("fs_particle");
     LoadFragmentShader_P("fs_leaves_strand");
     LoadFragmentShader_P("fs_world");
 
@@ -576,6 +577,7 @@ void Renderer::RenderParticles_P(ParticleManager& particleManager) {
 
         particleProps[0] = emitter.properties_->startColor;
         particleProps[1] = emitter.properties_->endColor;
+        particleProps = transpose(particleProps);
         bgfx::setUniform(u_particleProps_, &particleProps);
 
         bgfx::InstanceDataBuffer instanceBuffer;

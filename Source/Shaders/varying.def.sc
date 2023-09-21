@@ -15,6 +15,7 @@ mat3 v_tbn : TBN;
 vec2 v_texcoord0 : TEXCOORD0;
 vec4 v_color : VCOLOR;
 float v_edgeDistance : EDGEDIST;
+float v_time : TIME;
 
 vec4 i_data0: TEXCOORD7;
 vec4 i_data1: TEXCOORD6;

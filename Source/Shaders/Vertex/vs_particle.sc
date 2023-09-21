@@ -1,5 +1,5 @@
 $input a_position, a_texcoord0, i_data0, i_data1, i_data2, i_data3
-$output v_sposition, v_texcoord0
+$output v_sposition, v_texcoord0, v_time
 #include <bgfx_shader.sh>
 #include <particle.sh>
 
@@ -18,6 +18,7 @@ uniform vec4 u_cameraRight;
 void main() {
     v_texcoord0 = a_texcoord0;
     a_position *= i_scale;
+    v_time = i_time;
     vec3 position = u_cameraRight.xyz * a_position.x + u_cameraUp.xyz * a_position.y + i_position;
     v_sposition = mul(u_shadowMatrix, vec4(position, 1.0f));
     gl_Position = mul(u_viewProj, vec4(position, 1.0f));

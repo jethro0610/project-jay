@@ -7,9 +7,9 @@ float RandomFloatRange(float min, float max) {
         return min;
 
     float range = max - min; 
-    int modVal = range * 1000;
+    int modVal = range * 100;
 
-    return ((rand() % modVal) * 0.001f) + min;
+    return ((rand() % modVal) * 0.01f) + min;
 }
 
 vec3 RandomVector(float maxDist) {

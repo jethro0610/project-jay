@@ -38,7 +38,8 @@ vec2 getGradient(vec2 coord) {
 void main() {
     vec2 gradient = getGradient(v_texcoord0);
     float angle = 0.0f;
-    angle = atan(gradient.y / gradient.x);
+    if (gradient.x != 0.0f)
+        angle = atan(gradient.y / gradient.x);
     float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 
     vec3 kernelMean[4] = {

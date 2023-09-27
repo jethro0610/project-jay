@@ -1,5 +1,5 @@
 {
-    "vertex": "vs_particle",
+    "vertex": "vs_particle_stretch",
     "fragment": "fs_particle",
     "cast_shadows": false,
     "two_sided": true,

@@ -3,6 +3,7 @@
 #include "../Helpers/MapCheck.h"
 #include "../Helpers/Assert.h"
 #include "../Helpers/LoadHelpers.h"
+#include "../Rendering/Renderer.h"
 
 ParticleManager::ParticleManager() {
     usableEmitters_.push_front(0);
@@ -16,7 +17,12 @@ ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
 
     ParticleEmitter& emitter = emitters_[emitterIndex];
     emitter.alive_ = true;
-    emitters_[emitterIndex].properties_ = &GetFromMap<EmitterProperties>(emitterProps_, name, "Tried using unloaded particle emitter " + name);
+    emitters_[emitterIndex].properties_ = &GetFromMap<EmitterProperties>(
+        emitterProps_, 
+        name, 
+        "Tried using unloaded particle emitter " + name
+    );
+
     // TODO: Set particles array to 0 on emitter
     return &emitters_[emitterIndex]; 
 }
@@ -36,7 +42,7 @@ void ParticleManager::Update(float deltaTime) {
     }
 }
 
-void ParticleManager::LoadEmitterProperty(std::string name) {
+void ParticleManager::LoadEmitterProperty(std::string name, Renderer& renderer) {
     ForceMapUnique(emitterProps_, name, "Emitter " + name + " is already loaded");
 
     std::ifstream inFile("emitters/" + name + ".json");
@@ -44,6 +50,9 @@ void ParticleManager::LoadEmitterProperty(std::string name) {
 
     nlohmann::json data = nlohmann::json::parse(inFile);
     EmitterProperties properties;
+
+    properties.material = &renderer.GetMaterial(GetString(data, "material", "null_material"));
+
     properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);
     properties.spawnCount = GetInt(data, "spawn_count", 1);
     properties.lifetime = GetFloat(data, "lifetime", 1.0f);

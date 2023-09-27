@@ -159,6 +159,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("vs_glyph");
     LoadVertexShader_P("vs_uibar");
     LoadVertexShader_P("vs_particle");
+    LoadVertexShader_P("vs_particle_stretch");
 
     LoadFragmentShader_P("fs_depth_s");
     LoadFragmentShader_P("fs_depth_masked_s");
@@ -187,6 +188,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_tree");
     LoadMaterial_P("m_willowleaves");
     LoadMaterial_P("m_test_skel");
+    LoadMaterial_P("m_testparticle");
+
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");
     spreadMaterials_[0] = LoadMaterial_P("m_flower");
@@ -195,8 +198,6 @@ void Renderer::TEMP_LoadTestData() {
     textMaterial_ = LoadMaterial_P("m_text");
     barMaterial_ = LoadMaterial_P("m_uibar");
     blitMaterial_ = LoadMaterial_P("m_preuiblit");
-
-    testParticleMaterial_ = LoadMaterial_P("m_testparticle");
 
     DEBUGLOG("Succesfully loaded all test assets");
 }
@@ -583,7 +584,7 @@ void Renderer::RenderParticles_P(ParticleManager& particleManager) {
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
         memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
-        RenderMesh_P(quad_, testParticleMaterial_, &instanceBuffer);
+        RenderMesh_P(quad_, *emitter.properties_->material, &instanceBuffer);
     }
 }
 

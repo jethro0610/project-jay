@@ -89,7 +89,6 @@ private:
     Material textMaterial_;
     Material barMaterial_;
     Material blitMaterial_;
-    Material testParticleMaterial_;
 
     Texture noiseTexture_;
 

@@ -4,6 +4,8 @@
 #include <tuple>
 #include <unordered_map>
 
+class Renderer;
+
 const int MAX_EMITTERS = 64;
 
 class ParticleManager {
@@ -17,5 +19,5 @@ public:
     ParticleEmitter* RequestEmitter(std::string name);
 
     void Update(float deltaTime);
-    void LoadEmitterProperty(std::string name);
+    void LoadEmitterProperty(std::string name, Renderer& renderer);
 };

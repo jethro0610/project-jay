@@ -5,6 +5,7 @@
 #include <glm/vec2.hpp>
 #include <vector_contig.h>
 #include "../Types/Transform.h"
+#include "../Rendering/Material.h"
 
 const int MAX_PARTICLES = 512;
 
@@ -19,6 +20,7 @@ struct Particle {
 };
 
 struct EmitterProperties {
+    Material* material;
     float spawnInterval;
     int spawnCount;
     float lifetime;

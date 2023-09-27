@@ -21,21 +21,26 @@ void ParticleEmitter::Update(float deltaTime) {
 
     timer_ += deltaTime;
     if (timer_ >= properties_->spawnInterval) {
-        for (int i = 0; i < properties_->spawnCount; i++)
-            Emmit();
+        Emmit();
         timer_ = 0.0f;
     }
 }
 
 void ParticleEmitter::Emmit() {
     ASSERT(alive_ == true, "Using dead particle emitter");
-    Particle particle;
-    particle.initialPosition = vec4(transform_.position + RandomVector(properties_->spawnRadius), 0.0f);
-    particle.position = particle.initialPosition;
-    particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);
-    particle.scale = particle.initialScale;
-    particle.velocity = RandomVec4(properties_->minVelocity, properties_->maxVelocity);
-    particle.rotation = 0.0f;
-    particle.time = 0.0f;
-    particles_.push_back(particle); 
+    mat4 worldMatrix = transpose(transform_.ToMatrix());
+    for (int i = 0; i < properties_->spawnCount; i++) {
+        Particle particle;
+
+        vec4 offset = vec4(RandomVector(properties_->spawnRadius), 1.0f);
+        particle.initialPosition = offset * worldMatrix;
+        particle.position = particle.initialPosition;
+
+        particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);
+        particle.scale = particle.initialScale;
+        particle.velocity = RandomVec4(properties_->minVelocity, properties_->maxVelocity);
+        particle.rotation = 0.0f;
+        particle.time = 0.0f;
+        particles_.push_back(particle); 
+    }
 }

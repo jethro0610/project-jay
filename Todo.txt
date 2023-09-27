@@ -7,27 +7,10 @@
 
 - Use color uniform for seed
 
-- Blending animations
-- Animation state machine
-    - Maybe just have each animation type be a state, no need for bindings
-    - Need an animation for player sloping
-        - Probably just gonna do a hop with trails
+- Seperate assets from Renderer
 
 - Trails and particles system
-    - Color uniform
-    - Use Transform for directions
-    - Stretched billboard rendering
-        - Keep the velocity on instances then use dot product?
-        - Store initial position? Then have differentiate between a,b -> c,d in vertex shader
-    - Some way to have it work as an effect where it's single activation
-        - Maybe a burst function?
-        - Looping flag. Looping is a emission, non-looping an effect
     - Opacity fading
-    - Connect particles to ECS
-        - Particle component?
-        - Need some way to attach to bones as well
-        - Transform as pointer instead?
-        - Or just have an emitter pointer on the component 
 
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage

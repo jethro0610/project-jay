@@ -18,10 +18,6 @@ vec2 getGradient(vec2 coord) {
     int index = 0;
     for (int x = -1; x <= 1; x++) {
         for (int y = -1; y <= 1; y++) {
-            if (index == 4) {
-                index++;
-                continue;
-            }
             vec2 offset = float2(x * u_viewTexel.x, y * u_viewTexel.y);
             vec3 color = texture2D(s_sampler0, coord + offset); 
             vec3 lum = dot(color, float3(0.2126, 0.7152, 0.0722));
@@ -36,11 +32,9 @@ vec2 getGradient(vec2 coord) {
 }
 
 void main() {
-    vec2 gradient = getGradient(v_texcoord0);
-    float angle = 0.0f;
-    if (gradient.x != 0.0f)
-        angle = atan(gradient.y / gradient.x);
-    float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+    // vec2 gradient = getGradient(v_texcoord0);
+    // float angle = gradient.x == 0.0f ? 0.0f : atan(gradient.y / gradient.x);
+    // float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 
     vec3 kernelMean[4] = {
         {0.0f, 0.0f, 0.0f},
@@ -61,7 +55,7 @@ void main() {
         for (int j = kernelRanges[i].x; j <= kernelRanges[i].y; j += 1) {
             for (int k = kernelRanges[i].z; k <= kernelRanges[i].w; k += 1) {
                 vec2 offset = vec2(j * u_viewTexel.x, k * u_viewTexel.y);
-                offset = mul(offset, rotMat);
+                // offset = mul(offset, rotMat);
                 vec3 sampleColor = texture2D(s_sampler0, v_texcoord0 + offset).rgb; 
                 kernelMean[i] += sampleColor;
                 kernelVariance[i] += sampleColor * sampleColor;

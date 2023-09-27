@@ -19,10 +19,21 @@ void main() {
     v_time = i_time;
     v_texcoord0 = a_texcoord0;
 
-    float2x2 rotMat = mat2(cos(i_rotation), -sin(i_rotation), sin(i_rotation), cos(i_rotation));
+    vec2 initialBillSpace = vec2(dot(u_cameraRight.xyz, i_initialPosition.xyz), dot(u_cameraUp.xyz, i_initialPosition.xyz));
+    vec2 currentBillSpace = vec2(dot(u_cameraRight.xyz, i_position.xyz), dot(u_cameraUp.xyz, i_position.xyz));
+    vec2 direction = normalize(currentBillSpace - initialBillSpace);
+
+    float angle = atan(direction.x / direction.y);
+    float2x2 rotMat = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
     vec2 vertPos = mul(a_position.xy * i_scale, rotMat);
 
-    vec3 position = u_cameraRight.xyz * vertPos.x + u_cameraUp.xyz * vertPos.y + i_position.xyz;
+    vec3 vertOrigin;
+    if (a_texcoord0.y < 1.0f)
+        vertOrigin = i_position;
+    else
+        vertOrigin = i_position - i_velocity * 0.05f;
+            
+    vec3 position = u_cameraRight.xyz * vertPos.x + u_cameraUp.xyz * vertPos.y + vertOrigin;
     v_sposition = mul(u_shadowMatrix, vec4(position, 1.0f));
     gl_Position = mul(u_viewProj, vec4(position, 1.0f));
 }

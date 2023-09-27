@@ -160,6 +160,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("vs_uibar");
     LoadVertexShader_P("vs_particle");
     LoadVertexShader_P("vs_particle_stretch");
+    LoadVertexShader_P("vs_particle_trail");
 
     LoadFragmentShader_P("fs_depth_s");
     LoadFragmentShader_P("fs_depth_masked_s");

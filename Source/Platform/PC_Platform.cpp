@@ -150,7 +150,7 @@ void Platform::PollGamepad() {
 }
 
 void LoadMappingFile() {
-    std::ifstream mappingFile("./gamecontrollerdb.txt");
+    std::ifstream mappingFile("./mappings/gamecontrollerdb.txt");
     ASSERT(mappingFile.is_open(), "Failed to find input mapping file");
 
     std::string line, text;

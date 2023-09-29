@@ -65,7 +65,7 @@ void PlayerController::Execute(
     spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
-        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;
 
     if (inputs.flow && inputs.ski) {
         // Have to check this to prevent overflow

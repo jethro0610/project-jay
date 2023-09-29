@@ -19,7 +19,7 @@ void Game::Init() {
     particleManager_.LoadEmitterProperty("p_test", renderer_);
     ParticleEmitter* emitter = particleManager_.RequestEmitter("p_test");
     emitter->transform_.position = vec3(10.0f, 10.0f, 10.0f);
-    emitter->active_ = true;
+    // emitter->active_ = true;
 
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;

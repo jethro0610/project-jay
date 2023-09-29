@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Convert discards to alpha
+
 - Use color uniform for seed
 
 - Seperate assets from Renderer

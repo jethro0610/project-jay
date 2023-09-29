@@ -1,14 +1,17 @@
 #include "PC_Platform.h"
 #include <assert.h>
 #include <iostream>
+#include <fstream>
 #include <GLFW/glfw3.h>
 #include "../Logging/Logger.h"
+#include "../Helpers/Assert.h"
 
 Platform* Platform::platform_ = nullptr;
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods);
 void CursorCallback(GLFWwindow* window, double x, double y);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+void LoadMappingFile();
 
 Platform::Platform() {
     assert(platform_ == nullptr);
@@ -26,6 +29,8 @@ Platform::Platform() {
     glfwGetCursorPos(window_, &mouseX_, &mouseY_);
     glfwSetCursorPosCallback(window_, CursorCallback);
     glfwSetMouseButtonCallback(window_, MouseButtonCallback);
+
+    LoadMappingFile();
 
     DEBUGLOG("Succesfully started platform");
     platform_ = this;
@@ -115,6 +120,7 @@ void Platform::PollGamepad() {
 
     if (!glfwJoystickPresent(GLFW_JOYSTICK_1))
         return;
+    assert(glfwJoystickIsGamepad(GLFW_JOYSTICK_1));
 
     GLFWgamepadstate state;
     if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) == GLFW_FALSE)
@@ -141,4 +147,16 @@ void Platform::PollGamepad() {
 
     for (int i = 0; i < GAMEPAD_BUTTONS - 2; i++)
         gamepad_.SetButtonHeld(i, state.buttons[i]);
+}
+
+void LoadMappingFile() {
+    std::ifstream mappingFile("./gamecontrollerdb.txt");
+    ASSERT(mappingFile.is_open(), "Failed to find input mapping file");
+
+    std::string line, text;
+    while (std::getline(mappingFile, line))
+        text += line + '\n';
+
+    const char* mappingData = text.c_str();
+    ASSERT((glfwUpdateGamepadMappings(mappingData) == GLFW_TRUE), "Input mapping file invalid");
 }

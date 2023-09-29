@@ -18,17 +18,20 @@ float getShadow(vec4 sposition) {
     float shadow = 0.0f;
     float current = projected.z - BIAS;
     
-    for (int x = -PCF_SIZE; x <= PCF_SIZE; x++)
-    for (int y = -PCF_SIZE; y <= PCF_SIZE; y++){
-        vec2 pos = projected.xy + vec2(x, y) * texel;
-        float closest = texture2D(s_samplerShadow, pos).r;
-        shadow += step(closest, current);
+    [unroll]
+    for (int x = -PCF_SIZE; x <= PCF_SIZE; x++) {
+        [unroll]
+        for (int y = -PCF_SIZE; y <= PCF_SIZE; y++){
+            vec2 pos = projected.xy + vec2(x, y) * texel;
+            float closest = texture2D(s_samplerShadow, pos).r;
+            shadow += step(closest, current);
 
-        // Can't figure out how to get BGFX to use white borders, using
-        // this conversion for now
-        // When closest = 1.0f(at the border) then border returns
-        // 1.0f, which will force the shadow to be 1.0f (lit)
-        // float border = step(1.0, 1.0f - closest);
+            // Can't figure out how to get BGFX to use white borders, using
+            // this conversion for now
+            // When closest = 1.0f(at the border) then border returns
+            // 1.0f, which will force the shadow to be 1.0f (lit)
+            // float border = step(1.0, 1.0f - closest);
+        }
     }
     shadow /= KERNEL_SIZE;
 

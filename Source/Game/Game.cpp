@@ -16,10 +16,7 @@ void Game::Init() {
     GETCOMP(SkeletonComponent).renderer = &renderer_;
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
-    particleManager_.LoadEmitterProperty("p_test", renderer_);
-    ParticleEmitter* emitter = particleManager_.RequestEmitter("p_test");
-    emitter->transform_.position = vec3(10.0f, 10.0f, 10.0f);
-    // emitter->active_ = true;
+    particleManager_.LoadEmitterProperty("p_dust", renderer_);
 
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;

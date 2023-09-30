@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <GLFW/glfw3.h>
 #include "../Logging/Logger.h"
 #include "../Helpers/Assert.h"

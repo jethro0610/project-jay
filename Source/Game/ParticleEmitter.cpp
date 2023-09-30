@@ -16,29 +16,36 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.scale = std::lerp(particle.initialScale, properties_->endScale, particle.time);
     }
 
-    if (!active_)
-        return;
-
-    timer_ += deltaTime;
-    if (timer_ >= properties_->spawnInterval) {
-        Emmit();
-        timer_ = 0.0f;
+    if (active_) {
+        timer_ += deltaTime;
+        if (timer_ >= properties_->spawnInterval) {
+            Emmit();
+            timer_ = 0.0f;
+        }
     }
+    else
+        timer_ = 0.0f;
+
+    lastTransform_ = transform_;
 }
 
 void ParticleEmitter::Emmit() {
     ASSERT(alive_ == true, "Using dead particle emitter");
-    mat4 worldMatrix = transpose(transform_.ToMatrix());
+    // mat4 worldMatrix = transpose(transform_.ToMatrix());
+
     for (int i = 0; i < properties_->spawnCount; i++) {
         Particle particle;
 
+        float lerpAmount = (std::rand() % 1000) * 0.001f;
+        vec4 initialPos = vec4(mix(lastTransform_.position, transform_.position, lerpAmount), 0.0f);
+
         vec4 offset = vec4(RandomVector(properties_->spawnRadius), 1.0f);
-        particle.initialPosition = offset * worldMatrix;
+        particle.initialPosition = initialPos + offset;
         particle.position = particle.initialPosition;
 
         particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);
         particle.scale = particle.initialScale;
-        particle.velocity = RandomVec4(properties_->minVelocity, properties_->maxVelocity);
+        particle.velocity = rotate(transform_.rotation, RandomVec4(properties_->minVelocity, properties_->maxVelocity));
         particle.rotation = 0.0f;
         particle.time = 0.0f;
         particles_.push_back(particle); 

@@ -23,7 +23,7 @@ PlayerController::PlayerController() {
 }
 
 void PlayerController::Init(ParticleManager& particleManager) {
-    sparkEmitter_ = particleManager.RequestEmitter("p_test");
+    sparkEmitter_ = particleManager.RequestEmitter("p_dust");
 }
 
 void PlayerController::Execute(

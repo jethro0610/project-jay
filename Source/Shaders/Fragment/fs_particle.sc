@@ -9,6 +9,7 @@ void main() {
     if (distance(origin, v_texcoord0) > 0.5)
         discard;
 
-    DITHERDISCARD(v_time);
-    gl_FragColor = lerp(PART_STARTCOL, PART_ENDCOL, v_time);
+    vec4 color = lerp(PART_STARTCOL, PART_ENDCOL, v_time);
+    DITHERDISCARD(1.0f - color.w);
+    gl_FragColor = color;
 }

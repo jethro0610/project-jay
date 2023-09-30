@@ -46,6 +46,7 @@ struct ParticleEmitter {
     bool release_;
     vector_contig<Particle, MAX_PARTICLES> particles_;
     Transform transform_;
+    Transform lastTransform_;
     EmitterProperties* properties_;
     float timer_;
 

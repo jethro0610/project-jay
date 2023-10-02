@@ -52,6 +52,7 @@ void ParticleManager::LoadEmitterProperty(std::string name, Renderer& renderer) 
     EmitterProperties properties;
 
     properties.material = &renderer.GetMaterial(GetString(data, "material", "null_material"));
+    properties.moveWith = GetBoolean(data, "move_with");
 
     properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);
     properties.spawnCount = GetInt(data, "spawn_count", 1);

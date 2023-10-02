@@ -47,7 +47,7 @@ void SeedManager::CalculatePositions(
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
-        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z))  + 1.0f;
+        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z))  + 0.25f;
         if (positions_[i].y < height)
             positions_[i].y = height;
 

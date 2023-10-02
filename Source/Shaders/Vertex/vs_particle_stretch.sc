@@ -31,7 +31,7 @@ void main() {
     if (a_texcoord0.y < 1.0f)
         vertOrigin = i_position;
     else
-        vertOrigin = i_position - i_velocity * 0.025f;
+        vertOrigin = i_position - i_velocity * (0.05f * (clamp(i_time, 0.0f, 0.1f) / 0.1f));
             
     vec3 position = u_cameraRight.xyz * vertPos.x + u_cameraUp.xyz * vertPos.y + vertOrigin;
     v_sposition = mul(u_shadowMatrix, vec4(position, 1.0f));

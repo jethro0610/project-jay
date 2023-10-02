@@ -40,5 +40,7 @@ private:
     int actionMeter_;
     int cutTimer_;
     int cutCooldown_;
+    ParticleEmitter* dustEmitter_;
+    ParticleEmitter* sparkleEmitter_;
     ParticleEmitter* sparkEmitter_;
 };

@@ -2,5 +2,5 @@
 #include <cmath>
 #include <glm/vec2.hpp>
 
-const float SPREAD_DIST = 2.75f;
+const float SPREAD_DIST = 2.0f;
 const int MAX_SPREAD = 16384;

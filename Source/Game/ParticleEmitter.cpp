@@ -14,6 +14,9 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.velocity += properties_->acceleration * deltaTime;
         particle.position += particle.velocity * deltaTime;
         particle.scale = std::lerp(particle.initialScale, properties_->endScale, particle.time);
+
+        if (properties_->moveWith)
+            particle.position += vec4(transform_.position - lastTransform_.position, 0.0f);
     }
 
     if (active_) {
@@ -46,6 +49,7 @@ void ParticleEmitter::Emmit() {
         particle.initialScale = RandomFloatRange(properties_->minScale, properties_->maxScale);
         particle.scale = particle.initialScale;
         particle.velocity = rotate(transform_.rotation, RandomVec4(properties_->minVelocity, properties_->maxVelocity));
+        particle.velocity += vec4(velocityOffset_, 0.0f);
         particle.rotation = 0.0f;
         particle.time = 0.0f;
         particles_.push_back(particle); 

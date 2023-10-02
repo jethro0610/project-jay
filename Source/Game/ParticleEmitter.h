@@ -21,6 +21,7 @@ struct Particle {
 
 struct EmitterProperties {
     Material* material;
+    bool moveWith;
     float spawnInterval;
     int spawnCount;
     float lifetime;
@@ -49,6 +50,7 @@ struct ParticleEmitter {
     Transform lastTransform_;
     EmitterProperties* properties_;
     float timer_;
+    glm::vec3 velocityOffset_;
 
     ParticleEmitter() {
         alive_ = false;
@@ -57,6 +59,7 @@ struct ParticleEmitter {
         transform_ = Transform();
         properties_ = nullptr;
         timer_ = 0.0f;
+        velocityOffset_ = glm::vec3(0.0f);
     }
 
     void Update(float deltaTime);

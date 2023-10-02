@@ -23,7 +23,9 @@ PlayerController::PlayerController() {
 }
 
 void PlayerController::Init(ParticleManager& particleManager) {
-    sparkEmitter_ = particleManager.RequestEmitter("p_dust");
+    dustEmitter_ = particleManager.RequestEmitter("p_dust");
+    sparkleEmitter_ = particleManager.RequestEmitter("p_sparkle");
+    sparkEmitter_ = particleManager.RequestEmitter("p_spark");
 }
 
 void PlayerController::Execute(
@@ -39,6 +41,13 @@ void PlayerController::Execute(
     VelocityComponent& velocityComponent,
     Inputs inputs
 ) {
+    dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
+    dustEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
+
+    sparkleEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
+    sparkleEmitter_->active_ = false;
+    sparkleEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
+
     sparkEmitter_->active_ = false;
     sparkEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
 
@@ -95,6 +104,7 @@ void PlayerController::Execute(
         actionMeter_ += 1;
     } 
     else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
+        sparkEmitter_->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
@@ -102,8 +112,8 @@ void PlayerController::Execute(
         actionMeter_ += 2;
     }
     else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
+        sparkleEmitter_->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
-        sparkEmitter_->active_ = true;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
     }

@@ -70,9 +70,9 @@ bool SpreadManager::AddSpread(ivec2 key) {
     SpreadRenderData renderData;
     renderData.modelMatrix = transform.ToMatrix();
 
-    renderData.color.r = RandomFloatRange(0.85f, 1.0f);
-    renderData.color.g = RandomFloatRange(0.75f, 0.95f);
-    renderData.color.b = RandomFloatRange(0.35f, 0.75f);
+    renderData.color.r = RandomFloatRange(0.95f, 1.0f);
+    renderData.color.g = RandomFloatRange(0.85f, 0.95f);
+    renderData.color.b = RandomFloatRange(0.65f, 0.75f);
 
     keyIndices_[key] = renderData_.Append(renderData);
     count_++;

@@ -12,7 +12,7 @@
 - Seperate assets from Renderer
 
 - Trails and particles system
-    - Opacity fading
+    - Particle groups
 
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage

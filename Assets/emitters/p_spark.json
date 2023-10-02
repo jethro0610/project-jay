@@ -1,0 +1,17 @@
+{
+    "material": "m_spark",
+    "move_with": true,
+    "spawn_interval": 0.1,
+    "spawn_count": 6,
+    "lifetime": 0.5,
+    "scale_range": [0.15, 0.25],
+    "end_scale": 0.0,
+    "spawn_radius": 0.0,
+    "velocity_range": [
+        { "x": -20.0, "y": 5.0, "z": -20.0 },
+        { "x": 20.0, "y": 10.0, "z": 20.0}
+    ],
+    "acceleration": { "y": -25.0 },
+    "start_color": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.75 },
+    "end_color": { "x": 1.0, "y": 1.0, "z": 1.0, "w": 0.0 }
+}

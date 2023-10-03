@@ -22,7 +22,8 @@ struct AddSpreadInfo {
 
 struct SpreadRenderData {
     glm::mat4 modelMatrix;
-    glm::vec4 color;
+    glm::vec3 color;
+    float time;
 };
 
 class SpreadManager {

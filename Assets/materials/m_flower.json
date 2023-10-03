@@ -1,6 +1,6 @@
 {
     "two_sided": true,
-    "vertex": "vs_inst",
+    "vertex": "vs_spread",
     "fragment": "fs_flower",
     "cast_shadows": true,
     "vertex_shadow": "vs_inst_s",

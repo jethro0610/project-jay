@@ -150,6 +150,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadVertexShader_P("vs_skeletal");
     LoadVertexShader_P("vs_skeletal_s");
     LoadVertexShader_P("vs_inst");
+    LoadVertexShader_P("vs_spread");
     LoadVertexShader_P("vs_inst_s");
     LoadVertexShader_P("vs_inst_billboard");
     LoadVertexShader_P("vs_inst_billboard_s");

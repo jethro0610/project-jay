@@ -5,6 +5,7 @@ using namespace glm;
 
 void ParticleEmitter::Update(float deltaTime) {
     ASSERT(alive_ == true, "Using dead particle emitter");
+    vec4 deltaPosition = vec4(transform_.position - lastTransform_.position, 0.0f);
     for (int i = 0; i < particles_.size(); i++) {
         Particle& particle = particles_[i];
         if (particle.time > 1.0f)
@@ -13,10 +14,10 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.time += deltaTime / properties_->lifetime;
         particle.velocity += properties_->acceleration * deltaTime;
         particle.position += particle.velocity * deltaTime;
-        particle.scale = std::lerp(particle.initialScale, properties_->endScale, particle.time);
+        particle.scale = mix(particle.initialScale, properties_->endScale, particle.time);
 
         if (properties_->moveWith)
-            particle.position += vec4(transform_.position - lastTransform_.position, 0.0f);
+            particle.position += deltaPosition;
     }
 
     if (active_) {

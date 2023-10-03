@@ -5,6 +5,13 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Skating uphill creates a brake state
+    - Spawn particles
+    - Special animation (can reuse it in turn around brake)
+    - Special jump / attack features
+
+- Action keyframes to spawn particles
+
 - Convert discards to alpha
 
 - Use color uniform for seed

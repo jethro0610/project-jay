@@ -190,7 +190,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_willowleaves");
     LoadMaterial_P("m_test_skel");
     LoadMaterial_P("m_dust");
-    LoadMaterial_P("m_sparkle");
+    LoadMaterial_P("m_cloud");
     LoadMaterial_P("m_spark");
 
     worldMaterial_ = LoadMaterial_P("m_world");

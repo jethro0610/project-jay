@@ -41,6 +41,6 @@ private:
     int cutTimer_;
     int cutCooldown_;
     ParticleEmitter* dustEmitter_;
-    ParticleEmitter* sparkleEmitter_;
+    ParticleEmitter* cloudEmitter_;
     ParticleEmitter* sparkEmitter_;
 };

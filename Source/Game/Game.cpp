@@ -17,7 +17,7 @@ void Game::Init() {
     GETCOMP(StaticModelComponent).renderer = &renderer_;
 
     particleManager_.LoadEmitterProperty("p_dust", renderer_);
-    particleManager_.LoadEmitterProperty("p_sparkle", renderer_);
+    particleManager_.LoadEmitterProperty("p_cloud", renderer_);
     particleManager_.LoadEmitterProperty("p_spark", renderer_);
 
     // Create the camera and assign it to the renderer

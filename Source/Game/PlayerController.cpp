@@ -24,7 +24,7 @@ PlayerController::PlayerController() {
 
 void PlayerController::Init(ParticleManager& particleManager) {
     dustEmitter_ = particleManager.RequestEmitter("p_dust");
-    sparkleEmitter_ = particleManager.RequestEmitter("p_sparkle");
+    cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
     sparkEmitter_ = particleManager.RequestEmitter("p_spark");
 }
 
@@ -44,9 +44,9 @@ void PlayerController::Execute(
     dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
     dustEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
 
-    sparkleEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
-    sparkleEmitter_->active_ = false;
-    sparkleEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
+    cloudEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
+    cloudEmitter_->active_ = false;
+    cloudEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
 
     sparkEmitter_->active_ = false;
     sparkEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
@@ -112,7 +112,7 @@ void PlayerController::Execute(
         actionMeter_ += 2;
     }
     else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
-        sparkleEmitter_->active_ = true;
+        cloudEmitter_->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;

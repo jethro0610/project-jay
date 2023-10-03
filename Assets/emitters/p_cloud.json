@@ -1,9 +1,9 @@
 {
-    "material": "m_sparkle",
-    "spawn_interval": 0.05,
-    "spawn_count": 10,
-    "lifetime": 0.25,
-    "scale_range": [0.15, 0.25],
+    "material": "m_cloud",
+    "spawn_interval": 0.1,
+    "spawn_count": 25,
+    "lifetime": 0.5,
+    "scale_range": [0.25, 1.0],
     "end_scale": 0.0,
     "spawn_radius": 1.0,
     "velocity_range": [

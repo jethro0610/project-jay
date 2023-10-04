@@ -6,6 +6,7 @@
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
+#include <vector_contig.h>
 #include "../../Constants/SpreadConstants.h"
 #include "../../Types/FixedVector.h"
 #include "../Entity/EntityID.h"
@@ -54,7 +55,7 @@ public:
     void UpdateRenderData_P();
 
     int GetCount() const { return count_; }
-    SpreadRenderData* GetRenderData() const { return renderData_.GetData(); }
+    SpreadRenderData* GetRenderData() { return renderData_.data(); }
     SpreadKey GetKey(glm::vec2 position) const;
     SpreadKey GetKey(glm::vec3 position) const;
 
@@ -68,9 +69,9 @@ private:
 
     World& world_;
     SeedManager& seedManager_;
-    FixedVector<SpreadKey, 8192> viableAddKeys_;
+    vector_contig<SpreadKey, 8192> viableAddKeys_;
 
-    FixedVector<SpreadRenderData, MAX_SPREAD> renderData_;
+    vector_contig<SpreadRenderData, MAX_SPREAD> renderData_;
     std::unordered_map<SpreadKey, int> keyIndices_;
     int count_;
 };

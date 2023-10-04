@@ -49,7 +49,6 @@ bool SpreadManager::SpreadIsActive(vec3 position) const {
 bool SpreadManager::AddSpread(ivec2 key) {
     if (keyIndices_.contains(key))
         return false;
-    ASSERT((renderData_.GetCount() <= MAX_SPREAD), "Spread count exceeds max");
 
     const float offset = SPREAD_DIST / 2.0f;
 
@@ -75,7 +74,7 @@ bool SpreadManager::AddSpread(ivec2 key) {
     renderData.color.b = RandomFloatRange(0.65f, 0.75f);
     renderData.time = GlobalTime::GetTime();
 
-    keyIndices_[key] = renderData_.Append(renderData);
+    keyIndices_[key] = renderData_.push_back(renderData);
     count_++;
 
     return true;
@@ -91,7 +90,7 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, int amoun
     int count = 0;
 
     // Get the spreads we can add in this radius
-    viableAddKeys_.Clear();
+    viableAddKeys_.clear();
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         float distance = sqrtf(x*x + z*z);
@@ -100,15 +99,15 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, int amoun
         
         ivec2 key = origin + ivec2(x, z);
         if (!keyIndices_.contains(key))
-            viableAddKeys_.Append(key);
+            viableAddKeys_.push_back(key);
     } }
 
     // Randomly select a spread from the viable ones and
     // add it
-    while (viableAddKeys_.GetCount() > 0 && count < amount) {
-        int index = std::rand() % viableAddKeys_.GetCount();
+    while (viableAddKeys_.size() > 0 && count < amount) {
+        int index = std::rand() % viableAddKeys_.size();
         AddSpread(viableAddKeys_[index]);
-        viableAddKeys_.Remove(index);
+        viableAddKeys_.remove(index);
         count++;
     }
 
@@ -130,7 +129,7 @@ bool SpreadManager::RemoveSpread(
     vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
     seedManager_.CreateSeed(seedPosition, remover, seedOffset);
 
-    mat4 swappedTransform = renderData_.Remove(deleteIndex).modelMatrix;
+    mat4 swappedTransform = renderData_.remove(deleteIndex).modelMatrix;
     vec3 swappedPosition = vec3(swappedTransform[3]);
     SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 

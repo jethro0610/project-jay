@@ -107,16 +107,6 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
         );
-        SpreadActivatorSystem::Execute(
-            entityManager_.entities_,
-            spreadManager_,
-            world_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(MeterComponent),
-            GETCOMP(SpreadActivatorComponent),
-            GETCOMP(SpreadDetectComponent),
-            GETCOMP(TransformComponent)
-        );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
             spreadManager_,
@@ -171,6 +161,16 @@ void Game::Update() {
             entityManager_.entities_,
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
+        );
+        SpreadActivatorSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            world_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(MeterComponent),
+            GETCOMP(SpreadActivatorComponent),
+            GETCOMP(SpreadDetectComponent),
+            GETCOMP(TransformComponent)
         );
         DestroyMeterSystem::Execute(
             entityManager_.entities_,

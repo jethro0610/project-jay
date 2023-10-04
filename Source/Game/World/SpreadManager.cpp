@@ -47,7 +47,7 @@ bool SpreadManager::SpreadIsActive(vec3 position) const {
 }
 
 bool SpreadManager::AddSpread(ivec2 key) {
-    if (keyIndices_.contains(key))
+    if (keyIndices_.contains(key) || tramples_.contains(key))
         return false;
 
     const float offset = SPREAD_DIST / 2.0f;
@@ -165,4 +165,31 @@ int SpreadManager::RemoveSpread(
             count++;
     } }
     return count;
+}
+
+void SpreadManager::Trample(SpreadKey key) {
+    RemoveSpread(key);
+    tramples_.insert(key); 
+}
+
+void SpreadManager::Trample(glm::vec3 position) {
+    Trample(GetKey(position));
+}
+
+void SpreadManager::Trample(glm::vec3 position, int radius) {
+    if (radius == 0)
+        return;
+
+    ivec2 origin = GetKey(position);
+    radius--;
+    
+    for (int x = -radius; x <= radius; x++) {
+    for (int z = -radius; z <= radius; z++) {
+        float distance = sqrtf(x*x + z*z);
+        if (distance > radius)
+            continue;
+        
+        ivec2 key = origin + ivec2(x, z);
+        Trample(key);
+    } }
 }

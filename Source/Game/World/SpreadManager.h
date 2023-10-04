@@ -15,7 +15,6 @@ class World;
 class SeedManager;
 class TransformComponent;
 
-
 struct AddSpreadInfo {
     int count;
     SpreadKey key;
@@ -59,6 +58,11 @@ public:
     SpreadKey GetKey(glm::vec2 position) const;
     SpreadKey GetKey(glm::vec3 position) const;
 
+    void ClearTramples() { tramples_.clear(); }
+    void Trample(SpreadKey key);
+    void Trample(glm::vec3 position);
+    void Trample(glm::vec3 position, int radius);
+
 private:
     bool AddSpread(SpreadKey key); 
     bool RemoveSpread(
@@ -73,5 +77,6 @@ private:
 
     vector_contig<SpreadRenderData, MAX_SPREAD> renderData_;
     std::unordered_map<SpreadKey, int> keyIndices_;
+    std::unordered_set<SpreadKey> tramples_;
     int count_;
 };

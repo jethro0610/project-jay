@@ -20,6 +20,7 @@ file(GLOB SOURCES
     Source/Game/Systems/TransformSystem.cpp
     Source/Game/Systems/SpreadActivatorSystem.cpp
     Source/Game/Systems/SpreadDetectSystem.cpp
+    Source/Game/Systems/TrampleSystem.cpp
     Source/Game/Systems/GroundStickSystem.cpp
     Source/Game/Systems/VelocitySystem.cpp
     Source/Game/Systems/ProjectileSystem.cpp

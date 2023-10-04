@@ -8,6 +8,7 @@
 
 #include "SpreadActivatorComponent.h"
 #include "SpreadDetectComponent.h"
+#include "TrampleComponent.h"
 
 #include "ColliderComponent.h"
 
@@ -25,6 +26,7 @@
     COMPONENTVAR(ProjectileComponent, projectileComponent_) \
     COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent_) \
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
+    COMPONENTVAR(TrampleComponent, trampleComponent_) \
     COMPONENTVAR(ColliderComponent, colliderComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
     COMPONENTVAR(SkeletonComponent, skeletonComponent_) \

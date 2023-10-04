@@ -162,6 +162,13 @@ void Game::Update() {
             GETCOMP(TransformComponent),
             GETCOMP(VelocityComponent)
         );
+        TrampleSystem::Execute(
+            entityManager_.entities_,
+            spreadManager_,
+            GETCOMP(GroundTraceComponent),
+            GETCOMP(TrampleComponent),
+            GETCOMP(TransformComponent)
+        );
         SpreadActivatorSystem::Execute(
             entityManager_.entities_,
             spreadManager_,

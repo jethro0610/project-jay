@@ -40,6 +40,10 @@
             "stick": true,
             "stick_offset": 0.0,
             "zero_velocity": true
+        },
+        "trample": {
+            "radius": 5,
+            "ground_entry_radius": 6
         }
     }
 }

@@ -559,7 +559,7 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
 }
 
 void Renderer::RenderSeed_P(SeedManager& seedManager) {
-    uint32_t count = seedManager.seeds_.GetCount();
+    uint32_t count = seedManager.seeds_.size();
     if (count == 0)
         return;
     

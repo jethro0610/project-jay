@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <vector_contig.h>
 #include "../../Constants/SpreadConstants.h"
-#include "../../Types/FixedVector.h"
 #include "../Entity/EntityID.h"
 #include "SpreadKey.h"
 class World;

@@ -4,7 +4,6 @@
 #include <glm/gtx/hash.hpp>
 #include <vector>
 #include <unordered_set>
-#include "../../Types/FixedVector.h"
 #include "TerrainModifier.h"
 #include "Shared_WorldProperties.h"
 

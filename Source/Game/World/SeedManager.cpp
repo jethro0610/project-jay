@@ -20,7 +20,7 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
         GlobalTime::GetTime(),
         GlobalTime::GetTime() + MIN_REMOVE_TIME
     };
-    seeds_.Append(seed);
+    seeds_.push_back(seed);
 }
 
 void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius, EntityID capturer) {
@@ -35,7 +35,7 @@ void SeedManager::CalculatePositions(
     TransformComponent& transformComponent,
     float interpTime
 ) {
-    for (int i = 0; i < seeds_.GetCount(); i++) {
+    for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];
 
         float timeSinceStart = GlobalTime::GetTime() - seed.startTime;
@@ -58,7 +58,7 @@ void SeedManager::CalculatePositions(
         timeSinceCapture *= 3.0f;
         if (timeSinceCapture >= 1.0f) {
             meterComponent.meter[seed.targetEntity] += 1;
-            seeds_.Remove(i--);
+            seeds_.remove(i--);
             continue;
         }
         vec3 initialPosition = seed.position;
@@ -85,7 +85,7 @@ void SeedManager::GetCaptures(
         if (!colliderComponent.properties[i].test(ColliderProperties::CaptureSeed))
             continue;
 
-        for (int j = 0; j < seeds_.GetCount(); j++) {
+        for (int j = 0; j < seeds_.size(); j++) {
             if (seeds_[j].targetEntity != NULL_ENTITY)
                 continue;
             if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)

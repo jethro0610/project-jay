@@ -2,9 +2,9 @@
 #include <array>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include <vector_contig.h>
 #include "World.h"
 #include "../../Constants/GameConstants.h"
-#include "../../Types/FixedVector.h"
 #include "../Entity/EntityID.h"
 #include "../Entity/EntityLimits.h"
 #include "../../Types/Transform.h"
@@ -30,7 +30,7 @@ struct Seed {
 
 class SeedManager {
 public:
-    FixedVector<Seed, MAX_SEED> seeds_;
+    vector_contig<Seed, MAX_SEED> seeds_;
     std::array<glm::vec4, MAX_SEED> positions_;
 
     void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));

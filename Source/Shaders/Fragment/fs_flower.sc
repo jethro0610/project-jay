@@ -2,6 +2,7 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 #include <bgfx_shader.sh>
 #define NOSPECULAR
 #define NOFRESNEL
+#define BIAS_OVERRIDE 0.0025f;
 #include <lighting.sh>
 #include <dither.sh>
 

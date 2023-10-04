@@ -2,7 +2,13 @@
 #define SHADOW_H
 
 SAMPLER2D(s_samplerShadow, 14);
+
+#ifndef BIAS_OVERRIDE
 static const float BIAS = 0.0005f;
+#else
+static const float BIAS = BIAS_OVERRIDE;
+#endif
+
 static const float FADE_POW = 3.0f;
 static const int PCF_SIZE = 1;
 static const float KERNEL_SIZE = (PCF_SIZE * 2 + 1) * (PCF_SIZE * 2 + 1);

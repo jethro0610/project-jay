@@ -54,10 +54,6 @@
     - Only low attack can finish
     - High attack in air does more damage than a low attack
 
-- Each animation stores framerate 
-- Animations evaulate every 60 frames
-- Presented based on animation framerate
-
 - "Goomba"
     - 2/3 hits to destroy
     - Walk around

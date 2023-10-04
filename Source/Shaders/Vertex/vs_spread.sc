@@ -11,8 +11,11 @@ uniform vec4 u_timeResolution;
 #define u_time u_timeResolution.x
 
 static const float TIME_FOR_MAX_SIZE = 0.25f;
-static const float c1 = 1.70158;
+static const float c1 = 4.0f;
 static const float c3 = c1 + 1.0f;
+
+#define SQR(factor) ((factor) * (factor))
+#define CUBE(factor) ((factor) * (factor) * (factor))
 
 void main() {
     mat4 modelMatrix = mtxFromCols(i_data0, i_data1, i_data2, i_data3);
@@ -29,7 +32,7 @@ void main() {
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
     float time = min(1.0f, (u_time - i_time) / TIME_FOR_MAX_SIZE);
-    time = 1.0f + c3 * pow(time - 1.0f, 3.0f) + c1 * pow(time - 1.0f, 2.0f);
+    time = 1.0f + c3 * CUBE(time - 1.0f) + c1 * SQR(time - 1.0f);
 
     v_texcoord0 = a_texcoord0;
     v_wposition = mul(modelMatrix, vec4(a_position * time, 1.0f)).xyz;

@@ -572,6 +572,7 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
 
 void Renderer::RenderParticles_P(ParticleManager& particleManager) {
     mat4 particleProps;
+    mat4 modelMatrix;
     for (int i = 0; i < MAX_EMITTERS; i++) {
         ParticleEmitter& emitter = particleManager.emitters_[i];
         if (!emitter.alive_)
@@ -584,6 +585,11 @@ void Renderer::RenderParticles_P(ParticleManager& particleManager) {
         particleProps[1] = emitter.properties_->endColor;
         particleProps = transpose(particleProps);
         bgfx::setUniform(u_particleProps_, &particleProps);
+
+        modelMatrix = mat4(1.0f);
+        if (emitter.properties_->localSpace)
+            modelMatrix = translate(modelMatrix, emitter.transform_.position);
+        bgfx::setTransform(&modelMatrix);
 
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));

@@ -24,5 +24,5 @@ void main() {
 
     vec3 position = u_cameraRight.xyz * vertPos.x + u_cameraUp.xyz * vertPos.y + i_position.xyz;
     v_sposition = mul(u_shadowMatrix, vec4(position, 1.0f));
-    gl_Position = mul(u_viewProj, vec4(position, 1.0f));
+    gl_Position = mul(u_modelViewProj, vec4(position, 1.0f));
 }

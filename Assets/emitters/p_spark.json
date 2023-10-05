@@ -1,6 +1,6 @@
 {
     "material": "m_spark",
-    "move_with": true,
+    "local_space": true,
     "spawn_interval": 0.1,
     "spawn_count": 6,
     "lifetime": 0.5,

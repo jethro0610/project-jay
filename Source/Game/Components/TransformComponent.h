@@ -6,15 +6,23 @@ class TransformComponent : public Component {
 public:
     std::array<Transform, MAX_ENTITIES> transform;
     std::array<Transform, MAX_ENTITIES> transformLastUpdate;
-    std::array<glm::vec3, MAX_ENTITIES> renderRotUp;
+
     std::array<Transform, MAX_ENTITIES> renderTransform;
     std::array<bool, MAX_ENTITIES> interpolate;
     std::array<bool, MAX_ENTITIES> targetable;
 
+    std::array<glm::vec3, MAX_ENTITIES> lastUp;
+    std::array<glm::vec3, MAX_ENTITIES> up;
+    std::array<float, MAX_ENTITIES> lastTilt;
+    std::array<float, MAX_ENTITIES> tilt;
+
     TransformComponent() {
         interpolate.fill(false);
         targetable.fill(false);
-        renderRotUp.fill(Transform::worldUp);
+        lastUp.fill(Transform::worldUp);
+        up.fill(Transform::worldUp);
+        lastTilt.fill(0.0f);
+        tilt.fill(0.0f);
     };
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;

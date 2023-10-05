@@ -21,7 +21,7 @@ struct Particle {
 
 struct EmitterProperties {
     Material* material;
-    bool moveWith;
+    bool localSpace;
     float spawnInterval;
     int spawnCount;
     float lifetime;

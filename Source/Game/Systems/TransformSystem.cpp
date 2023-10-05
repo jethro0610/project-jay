@@ -36,8 +36,10 @@ void TransformSystem::UpdateRenderTransforms(
         if (!entity.MatchesKey(key))
             continue;
 
-
-        quat deltaRot = rotation(Transform::worldUp, transformComponent.renderRotUp[i]);
+        vec3 right = transformComponent.transform[i].GetRightVector(); 
+        vec3 finalUp = mix(transformComponent.up[i], right, transformComponent.tilt[i]);
+        finalUp = normalize(finalUp);
+        quat deltaRot = rotation(Transform::worldUp, finalUp);
 
         if (transformComponent.interpolate[i]) {
             transformComponent.renderTransform[i] = Transform::Lerp(

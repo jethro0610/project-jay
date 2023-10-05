@@ -34,10 +34,12 @@ void GroundTraceSystem::Execute(
         if (distanceToSurface < traceDistance) {
             groundTraceComponent.onGround[i] = true;
             if (groundTraceComponent.align[i])
-                transformComponent.renderRotUp[i] = mix(Transform::worldUp, groundTraceComponent.groundNormal[i], 0.5f);
+                transformComponent.up[i] = mix(Transform::worldUp, groundTraceComponent.groundNormal[i], 0.5f);
         }
-        else
+        else {
             groundTraceComponent.onGround[i] = false;
+            transformComponent.up[i] = Transform::worldUp;
+        }
 
         // Check if the entity entered/exited the ground on this frame
         if (!groundTraceComponent.onGroundLastFrame[i] && groundTraceComponent.onGround[i])

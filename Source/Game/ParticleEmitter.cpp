@@ -8,7 +8,6 @@ void ParticleEmitter::Update(float deltaTime) {
     if (parent_ != nullptr)
         transform_ = *parent_;
 
-    vec4 deltaPosition = vec4(transform_.position - lastTransform_.position, 0.0f);
     for (int i = 0; i < particles_.size(); i++) {
         Particle& particle = particles_[i];
         if (particle.time > 1.0f)
@@ -18,9 +17,6 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.velocity += properties_->acceleration * deltaTime;
         particle.position += particle.velocity * deltaTime;
         particle.scale = mix(particle.initialScale, properties_->endScale, particle.time);
-
-        if (properties_->moveWith)
-            particle.position += deltaPosition;
     }
 
     if (active_) {
@@ -44,7 +40,9 @@ void ParticleEmitter::Emmit() {
         Particle particle;
 
         float lerpAmount = (std::rand() % 1000) * 0.001f;
-        vec4 initialPos = vec4(mix(lastTransform_.position, transform_.position, lerpAmount), 0.0f);
+        vec4 initialPos = properties_->localSpace ? 
+            vec4(0.0f) : 
+            vec4(mix(lastTransform_.position, transform_.position, lerpAmount), 0.0f);
 
         vec4 offset = vec4(RandomVector(properties_->spawnRadius), 1.0f);
         particle.initialPosition = initialPos + offset;

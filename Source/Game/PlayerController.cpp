@@ -22,10 +22,17 @@ PlayerController::PlayerController() {
     cutCooldown_ = 0;
 }
 
-void PlayerController::Init(ParticleManager& particleManager) {
+void PlayerController::Init(
+    ParticleManager& particleManager, 
+    TransformComponent& transformComponent
+) {
+    Transform& transform = transformComponent.renderTransform[PLAYER_ENTITY];
     dustEmitter_ = particleManager.RequestEmitter("p_dust");
+    dustEmitter_->parent_ = &transform;
     cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
+    cloudEmitter_->parent_ = &transform;
     sparkEmitter_ = particleManager.RequestEmitter("p_spark");
+    sparkEmitter_->parent_ = &transform;
 }
 
 void PlayerController::Execute(
@@ -42,14 +49,9 @@ void PlayerController::Execute(
     Inputs inputs
 ) {
     dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
-    dustEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
-
     cloudEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
     cloudEmitter_->active_ = false;
-    cloudEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
-
     sparkEmitter_->active_ = false;
-    sparkEmitter_->transform_ = transformComponent.renderTransform[PLAYER_ENTITY];
 
     vec3& position = transformComponent.transform[PLAYER_ENTITY].position;
     quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));

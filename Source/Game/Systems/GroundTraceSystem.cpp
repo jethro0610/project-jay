@@ -31,8 +31,11 @@ void GroundTraceSystem::Execute(
         groundTraceComponent.groundNormal[i] = world.GetNormal(position);
         float distanceToSurface = position.y - groundHeight;
 
-        if (distanceToSurface < traceDistance)
+        if (distanceToSurface < traceDistance) {
             groundTraceComponent.onGround[i] = true;
+            if (groundTraceComponent.align[i])
+                transformComponent.renderRotUp[i] = mix(Transform::worldUp, groundTraceComponent.groundNormal[i], 0.5f);
+        }
         else
             groundTraceComponent.onGround[i] = false;
 

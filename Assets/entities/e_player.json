@@ -29,7 +29,8 @@
         "ground_trace": {
             "distance": 1.0,
             "stick_offset": -0.05,
-            "stick": true
+            "stick": true,
+            "align": true
         },
         "movement": {
             "min_speed": 12.0,

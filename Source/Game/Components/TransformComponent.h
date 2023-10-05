@@ -6,6 +6,7 @@ class TransformComponent : public Component {
 public:
     std::array<Transform, MAX_ENTITIES> transform;
     std::array<Transform, MAX_ENTITIES> transformLastUpdate;
+    std::array<glm::vec3, MAX_ENTITIES> renderRotUp;
     std::array<Transform, MAX_ENTITIES> renderTransform;
     std::array<bool, MAX_ENTITIES> interpolate;
     std::array<bool, MAX_ENTITIES> targetable;
@@ -13,6 +14,7 @@ public:
     TransformComponent() {
         interpolate.fill(false);
         targetable.fill(false);
+        renderRotUp.fill(Transform::worldUp);
     };
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;

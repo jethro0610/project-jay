@@ -11,6 +11,7 @@ public:
     std::array<bool, MAX_ENTITIES> stick;
     std::array<float, MAX_ENTITIES> stickOffset;
     std::array<bool, MAX_ENTITIES> zeroVelocity;
+    std::array<bool, MAX_ENTITIES> align;
 
     std::array<bool, MAX_ENTITIES> onGround;
     std::array<bool, MAX_ENTITIES> onGroundLastFrame;
@@ -38,5 +39,6 @@ public:
         stick[entity] = GetBoolean(data, "stick", false);
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
         zeroVelocity[entity] = GetBoolean(data, "zero_velocity", false);
+        align[entity] = GetBoolean(data, "align", false);
     }
 };

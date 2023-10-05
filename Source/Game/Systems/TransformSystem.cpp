@@ -3,6 +3,7 @@
 #include "../Entity/EntityKey.h"
 #include "../Components/TransformComponent.h"
 #include "../../Constants/TimeConstants.h"
+using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent>();
 
@@ -35,6 +36,9 @@ void TransformSystem::UpdateRenderTransforms(
         if (!entity.MatchesKey(key))
             continue;
 
+
+        quat deltaRot = rotation(Transform::worldUp, transformComponent.renderRotUp[i]);
+
         if (transformComponent.interpolate[i]) {
             transformComponent.renderTransform[i] = Transform::Lerp(
                 transformComponent.transformLastUpdate[i],
@@ -44,5 +48,7 @@ void TransformSystem::UpdateRenderTransforms(
         }
         else 
             transformComponent.renderTransform[i] = transformComponent.transform[i];
+
+        transformComponent.renderTransform[i].rotation = deltaRot * transformComponent.renderTransform[i].rotation;
     }
 }

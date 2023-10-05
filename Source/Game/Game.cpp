@@ -76,7 +76,7 @@ void Game::Init() {
     // entityManager_.CreateEntity("e_test_skel", skelTransform);
 
     camera_.target_ = PLAYER_ENTITY;
-    playerController_.Init(particleManager_);
+    playerController_.Init(particleManager_, GETCOMP(TransformComponent));
 }
 
 void Game::Update() {

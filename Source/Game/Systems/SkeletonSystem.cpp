@@ -39,7 +39,7 @@ void SkeletonSystem::CalculatePoses(
 
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
 
-        if (skeletonComponent.transitionTime > skeletonComponent.transitionLength) {
+        if (transitionTime > transitionLength) {
             skeletonComponent.skeleton[i]->GetPose(
                 skeletonComponent.pose[i],
                 animationIndex,
@@ -89,7 +89,7 @@ void SkeletonSystem::InterpPoses(
         if (!entity.MatchesKey(key))
             continue;
 
-        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(0);
+        const int framerate = skeletonComponent.skeleton[i]->GetFramerate(skeletonComponent.animationIndex[i]);
         if (framerate != 0)
             continue;
 

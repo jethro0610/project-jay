@@ -5,6 +5,9 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Object that spurts out and player has to destroy it.
+    - After some time, the object creates a permiter that slows player and removes spread
+
 - Skating uphill creates a brake state
     - Spawn particles
     - Special animation (can reuse it in turn around brake)

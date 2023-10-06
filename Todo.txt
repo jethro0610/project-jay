@@ -5,6 +5,9 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Nosise texture sample on CPU
+- Spread array instead of map
+
 - Object that spurts out and player has to destroy it.
     - After some time, the object creates a permiter that slows player and removes spread
 

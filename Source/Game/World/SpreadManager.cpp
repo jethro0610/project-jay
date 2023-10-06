@@ -27,26 +27,24 @@ SpreadManager::SpreadManager(
 
 }
 
-SpreadKey SpreadManager::GetKey(vec2 position) const {
-    position /= SPREAD_DIST;
-    position = floor(position);
-    return ivec2(position);
+SpreadKey SpreadManager::GetKey(const vec2& position) const {
+    return ivec2(floor(position / SPREAD_DIST));
 }
 
-SpreadKey SpreadManager::GetKey(vec3 position) const {
+SpreadKey SpreadManager::GetKey(const vec3& position) const {
     return GetKey(vec2(position.x, position.z));
 }
 
-bool SpreadManager::SpreadIsActive(vec2 position) const {
+bool SpreadManager::SpreadIsActive(const vec2& position) const {
     SpreadKey key = GetKey(position);
     return keyIndices_.contains(key);
 }
 
-bool SpreadManager::SpreadIsActive(vec3 position) const {
+bool SpreadManager::SpreadIsActive(const vec3& position) const {
     return SpreadIsActive(vec2(position.x, position.z));
 }
 
-bool SpreadManager::AddSpread(ivec2 key) {
+bool SpreadManager::AddSpread(const ivec2& key) {
     if (keyIndices_.contains(key) || tramples_.contains(key))
         return false;
 
@@ -80,11 +78,11 @@ bool SpreadManager::AddSpread(ivec2 key) {
     return true;
 }
 
-bool SpreadManager::AddSpread(glm::vec3 position) {
+bool SpreadManager::AddSpread(const glm::vec3& position) {
     return AddSpread(GetKey(position));
 }
 
-AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, int amount) {
+AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, int amount) {
     radius--;
     ivec2 origin = GetKey(position);
     int count = 0;
@@ -115,9 +113,9 @@ AddSpreadInfo SpreadManager::AddSpread(glm::vec3 position, int radius, int amoun
 }
 
 bool SpreadManager::RemoveSpread(
-    SpreadKey key, 
+    const SpreadKey& key, 
     EntityID remover,
-    vec3 seedOffset
+    const vec3& seedOffset
 ) {
     auto foundKey = keyIndices_.find(key);
     if (foundKey == keyIndices_.end())
@@ -141,19 +139,19 @@ bool SpreadManager::RemoveSpread(
 }
 
 bool SpreadManager::RemoveSpread(
-    vec3 position, 
+    const vec3& position, 
     EntityID remover,
-    vec3 seedOffset
+    const vec3& seedOffset
 ) {
     SpreadKey key = GetKey(position);
     return RemoveSpread(key, remover, seedOffset);
 }
 
 int SpreadManager::RemoveSpread(
-    vec3 position, 
+    const vec3& position, 
     int radius, 
     EntityID remover,
-    vec3 seedOffset
+    const vec3& seedOffset
 ) {
     int count = 0;
     ivec2 origin = GetKey(position);
@@ -167,16 +165,16 @@ int SpreadManager::RemoveSpread(
     return count;
 }
 
-void SpreadManager::Trample(SpreadKey key) {
+void SpreadManager::Trample(const SpreadKey& key) {
     RemoveSpread(key);
     tramples_.insert(key); 
 }
 
-void SpreadManager::Trample(glm::vec3 position) {
+void SpreadManager::Trample(const glm::vec3& position) {
     Trample(GetKey(position));
 }
 
-void SpreadManager::Trample(glm::vec3 position, int radius) {
+void SpreadManager::Trample(const glm::vec3& position, int radius) {
     if (radius == 0)
         return;
 

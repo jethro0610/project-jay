@@ -39,7 +39,7 @@
             "min_friction": 0.015,
             "max_friction": 0.1,
             "momentum_decay": 1.0,
-            "tilt_strength": 0.25
+            "tilt_strength": 0.35
         },
         "spread_activator": {
         },

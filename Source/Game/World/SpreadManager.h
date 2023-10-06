@@ -33,41 +33,41 @@ public:
     );
     SpreadManager(const SpreadManager&) = delete;
 
-    bool SpreadIsActive(glm::vec2 position) const;
-    bool SpreadIsActive(glm::vec3 position) const;
+    bool SpreadIsActive(const glm::vec2& position) const;
+    bool SpreadIsActive(const glm::vec3& position) const;
 
-    bool AddSpread(glm::vec3 position); 
-    AddSpreadInfo AddSpread(glm::vec3 position, int radius, int amount = INT_MAX);
+    bool AddSpread(const glm::vec3& position); 
+    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, int amount = INT_MAX);
 
     bool RemoveSpread(
-        glm::vec3 position, 
+        const glm::vec3& position, 
         EntityID remover = NULL_ENTITY, 
-        glm::vec3 seedOffset = glm::vec3(0.0f)
+        const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
     int RemoveSpread(
-        glm::vec3 position, 
+        const glm::vec3& position, 
         int radius, 
         EntityID remover = NULL_ENTITY, 
-        glm::vec3 seedOffset = glm::vec3(0.0f)
+        const glm::vec3& seedOffset = glm::vec3(0.0f)
     ); 
     void UpdateRenderData_P();
 
     int GetCount() const { return count_; }
     SpreadRenderData* GetRenderData() { return renderData_.data(); }
-    SpreadKey GetKey(glm::vec2 position) const;
-    SpreadKey GetKey(glm::vec3 position) const;
+    SpreadKey GetKey(const glm::vec2& position) const;
+    SpreadKey GetKey(const glm::vec3& position) const;
 
     void ClearTramples() { tramples_.clear(); }
-    void Trample(SpreadKey key);
-    void Trample(glm::vec3 position);
-    void Trample(glm::vec3 position, int radius);
+    void Trample(const SpreadKey& key);
+    void Trample(const glm::vec3& position);
+    void Trample(const glm::vec3& position, int radius);
 
 private:
-    bool AddSpread(SpreadKey key); 
+    bool AddSpread(const SpreadKey& key); 
     bool RemoveSpread(
-        SpreadKey key,
+        const SpreadKey& key,
         EntityID remover = NULL_ENTITY,
-        glm::vec3 seedOffset = glm::vec3(0.0f)
+        const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
 
     World& world_;

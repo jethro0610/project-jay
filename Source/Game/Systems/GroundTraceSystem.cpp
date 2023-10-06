@@ -33,8 +33,12 @@ void GroundTraceSystem::Execute(
 
         if (distanceToSurface < traceDistance) {
             groundTraceComponent.onGround[i] = true;
-            if (groundTraceComponent.align[i])
-                transformComponent.up[i] = mix(Transform::worldUp, groundTraceComponent.groundNormal[i], 0.5f);
+            if (groundTraceComponent.alignStrength[i] != 0.0f)
+                transformComponent.up[i] = mix(
+                    Transform::worldUp, 
+                    groundTraceComponent.groundNormal[i], 
+                    groundTraceComponent.alignStrength[i]
+                );
         }
         else {
             groundTraceComponent.onGround[i] = false;

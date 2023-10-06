@@ -19,6 +19,11 @@ void TransformSystem::UpdateLastTransforms(
             continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
+        if (!transformComponent.useTilt[i])
+            continue;
+
+        transformComponent.lastTilt[i] = transformComponent.tilt[i];
+        transformComponent.lastUp[i] = transformComponent.up[i];
     }
 }
 
@@ -36,11 +41,6 @@ void TransformSystem::UpdateRenderTransforms(
         if (!entity.MatchesKey(key))
             continue;
 
-        vec3 right = transformComponent.transform[i].GetRightVector(); 
-        vec3 finalUp = mix(transformComponent.up[i], right, transformComponent.tilt[i]);
-        finalUp = normalize(finalUp);
-        quat deltaRot = rotation(Transform::worldUp, finalUp);
-
         if (transformComponent.interpolate[i]) {
             transformComponent.renderTransform[i] = Transform::Lerp(
                 transformComponent.transformLastUpdate[i],
@@ -51,6 +51,15 @@ void TransformSystem::UpdateRenderTransforms(
         else 
             transformComponent.renderTransform[i] = transformComponent.transform[i];
 
+        if (!transformComponent.useTilt[i])
+            continue;
+
+        vec3 renderUp = mix(transformComponent.lastUp[i], transformComponent.up[i], interpAmount);
+        float renderTilt = std::lerp(transformComponent.lastTilt[i], transformComponent.tilt[i], interpAmount);
+        vec3 right = transformComponent.transform[i].GetRightVector(); 
+        vec3 finalUp = mix(transformComponent.up[i], right, transformComponent.tilt[i]);
+        finalUp = normalize(finalUp);
+        quat deltaRot = rotation(Transform::worldUp, finalUp);
         transformComponent.renderTransform[i].rotation = deltaRot * transformComponent.renderTransform[i].rotation;
     }
 }

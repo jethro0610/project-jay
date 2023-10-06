@@ -39,6 +39,8 @@ public:
     std::array<float, MAX_ENTITIES> minFriction;
     std::array<float, MAX_ENTITIES> maxFriction;
     std::array<float, MAX_ENTITIES> momentumDecay;
+    std::array<float, MAX_ENTITIES> tiltStrength;
+    std::array<float, MAX_ENTITIES> tiltSpeed;
 
     MovementComponent() {
         desiredMovement.fill(glm::vec3(0.0f, 0.0f, 0.0f));
@@ -63,5 +65,7 @@ public:
         minFriction[entity] = data["min_friction"].get<float>();
         maxFriction[entity] = data["max_friction"].get<float>();
         momentumDecay[entity] = data["momentum_decay"].get<float>();
+        tiltStrength[entity] = GetFloat(data, "tilt_strength", 0.0f);
+        tiltSpeed[entity] = GetFloat(data, "tilt_speed", 0.05f);
     }
 };

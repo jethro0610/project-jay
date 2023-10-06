@@ -136,12 +136,6 @@ void PlayerController::Execute(
         // spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
     } 
 
-    float desiredTilt = dot(
-        desiredMovement,
-        transformComponent.transform[PLAYER_ENTITY].GetRightVector()
-    );
-    desiredTilt *= 0.25f;
-    transformComponent.tilt[PLAYER_ENTITY] = std::lerp(transformComponent.tilt[PLAYER_ENTITY], desiredTilt, 0.01f);
 
     SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
     SCREENLINE(2, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));

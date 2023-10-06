@@ -1,7 +1,8 @@
 {
     "components": {
         "transform": {
-            "interpolate": true
+            "interpolate": true,
+            "use_tilt": true
         },
         "static_model": {
             "model": "sk_char",
@@ -30,14 +31,15 @@
             "distance": 1.0,
             "stick_offset": -0.05,
             "stick": true,
-            "align": true
+            "align_strength": 0.5
         },
         "movement": {
             "min_speed": 12.0,
             "max_speed": 120.0,
             "min_friction": 0.015,
             "max_friction": 0.1,
-            "momentum_decay": 1.0
+            "momentum_decay": 1.0,
+            "tilt_strength": 0.25
         },
         "spread_activator": {
             "ground_only": false

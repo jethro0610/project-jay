@@ -94,6 +94,19 @@ void MovementSystem::Execute (
             velocity.x = planarVelocity.x;
             velocity.z = planarVelocity.z;
         }
+
+        if (movementComponent.tiltStrength[i] != 0.0f) {
+            float desiredTilt = dot(
+                desiredMovement,
+                transformComponent.transform[i].GetRightVector()
+            );
+            desiredTilt *= movementComponent.tiltStrength[i];
+            transformComponent.tilt[i] = std::lerp(
+                transformComponent.tilt[i], 
+                desiredTilt, 
+                movementComponent.tiltSpeed[i]
+            );
+        }
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.

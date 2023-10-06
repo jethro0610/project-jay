@@ -11,6 +11,7 @@ public:
     std::array<bool, MAX_ENTITIES> interpolate;
     std::array<bool, MAX_ENTITIES> targetable;
 
+    std::array<bool, MAX_ENTITIES> useTilt;
     std::array<glm::vec3, MAX_ENTITIES> lastUp;
     std::array<glm::vec3, MAX_ENTITIES> up;
     std::array<float, MAX_ENTITIES> lastTilt;
@@ -19,6 +20,7 @@ public:
     TransformComponent() {
         interpolate.fill(false);
         targetable.fill(false);
+        useTilt.fill(false);
         lastUp.fill(Transform::worldUp);
         up.fill(Transform::worldUp);
         lastTilt.fill(0.0f);
@@ -33,5 +35,6 @@ public:
     void Load(nlohmann::json& data, EntityID entity) {
         interpolate[entity] = data["interpolate"].get<bool>();
         targetable[entity] = GetBoolean(data, "targetable", false);
+        useTilt[entity] = GetBoolean(data, "use_tilt", false);
     }
 };

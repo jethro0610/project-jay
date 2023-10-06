@@ -5,12 +5,6 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
-- Ground alignment and tilting
-    - Get a vector up from the terrain
-    - Add some left/right vector to it to tilt it based on transform right
-    - Get delta by calling rotation(upVector, tiltVector)
-    - Do this in transform componennt
-
 - Skating uphill creates a brake state
     - Spawn particles
     - Special animation (can reuse it in turn around brake)

@@ -42,7 +42,6 @@
             "tilt_strength": 0.25
         },
         "spread_activator": {
-            "ground_only": false
         },
         "meter": {
             "initial_meter": 512,

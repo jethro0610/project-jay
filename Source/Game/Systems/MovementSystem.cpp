@@ -1,4 +1,5 @@
 #include <glm/gtx/compatibility.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "MovementSystem.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
@@ -13,7 +14,6 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<
     GroundTraceComponent,
     MovementComponent,
-    SpreadDetectComponent,
     TransformComponent,
     VelocityComponent
 >();

@@ -1,0 +1,35 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": true,
+            "use_tilt": true
+        },
+        "movement": {
+            "min_speed": 32.0,
+            "max_speed": 64.0,
+            "min_friction": 0.1,
+            "max_friction": 0.5
+        },
+        "static_model": {
+            "model": "st_sphere",
+            "materials": 
+            [
+                "m_brick"
+            ]
+        },
+        "ground_trace": {
+            "distance": 1.0,
+            "stick": true,
+            "align_strength": 0.5
+        },
+        "velocity": {
+            "use_gravity": true 
+        },
+        "collider": {
+            "radius0": 1.0
+        },
+        "trample": {
+            "radius": 8
+        }
+    }
+}

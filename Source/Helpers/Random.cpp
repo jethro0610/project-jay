@@ -52,6 +52,17 @@ vec2 RandomVector2D(float maxDist) {
     return direction * dist;
 }
 
+vec2 RandomVector2D(float minDist, float maxDist) {
+    float x = RandomFloatRange(-1.0f, 1.0f);
+    float z = RandomFloatRange(-1.0f, 1.0f);
+
+    vec2 direction = normalize(vec2(x, z));
+    float dist = RandomFloatRange(0.0f, 1.0f);
+    dist = minDist + sqrt(dist) * (maxDist - minDist);
+
+    return direction * dist;
+}
+
 vec3 RandomVectorHeight(float maxDist, float minHeight, float maxHeight) {
     float x = RandomFloatRange(-1.0f, 1.0f);
     float y = RandomFloatRange(minHeight, maxHeight);

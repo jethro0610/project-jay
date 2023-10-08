@@ -10,6 +10,7 @@
 #include "Systems/Systems.h"
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
+#include "./AI/WalkerController.h"
 #include "World/World.h"
 #include <FastNoiseLite.h>
 
@@ -40,6 +41,8 @@ private:
     Inputs inputs_;
 
     float timeAccumlulator_;
+
+    WalkerController testWalker;
 
     void UpdateInputs_P();
     void PollGamepadInputs_P();

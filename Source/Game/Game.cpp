@@ -69,11 +69,12 @@ void Game::Init() {
     treeTransform.rotation = quat(vec3(0.0f, 15.0f, 0.0f));
     entityManager_.CreateEntity("e_tree", treeTransform);
 
-    // entityManager_.LoadEntity("e_test_skel");
-    // Transform skelTransform;
-    // skelTransform.position = vec3(0.0f, 0.0f, 0.0f);
-    // skelTransform.scale = vec3(2.0f);
-    // entityManager_.CreateEntity("e_test_skel", skelTransform);
+    entityManager_.LoadEntity("e_enemy");
+    Transform enemyTransform;
+    enemyTransform.position = vec3(0.0f, 100.0f, 0.0f);
+    enemyTransform.scale = vec3(3.0f);
+    EntityID walkerEnt = entityManager_.CreateEntity("e_enemy", enemyTransform);
+    testWalker.Init(walkerEnt, particleManager_, world_, GETCOMP(TransformComponent));
 
     camera_.target_ = PLAYER_ENTITY;
     playerController_.Init(particleManager_, GETCOMP(TransformComponent));
@@ -112,6 +113,12 @@ void Game::Update() {
             spreadManager_,
             GETCOMP(SpreadDetectComponent),
             GETCOMP(TransformComponent)
+        );
+        testWalker.Update(
+            world_,
+            GETCOMP(MovementComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
         );
         playerController_.Execute(
             world_,

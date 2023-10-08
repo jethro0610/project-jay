@@ -45,13 +45,6 @@ public:
     MovementComponent() {
         desiredMovement.fill(glm::vec3(0.0f, 0.0f, 0.0f));
         moveMode.fill(MoveMode::Default);
-        speed.fill(DEFAULT_MIN_SPEED);
-        minSpeed.fill(DEFAULT_MIN_SPEED);
-        maxSpeed.fill(DEFAULT_MAX_SPEED);
-        friction.fill(DEFAULT_MAX_FRICTION);
-        minFriction.fill(DEFAULT_MIN_FRICTION);
-        maxFriction.fill(DEFAULT_MAX_FRICTION);
-        momentumDecay.fill(DEFAULT_MOMENTUM_DECAY);
     };
     MovementComponent(const MovementComponent&) = delete;
     MovementComponent& operator=(const MovementComponent&) = delete;
@@ -60,11 +53,15 @@ public:
     static constexpr int GetID() { return 4; }
 
     void Load(nlohmann::json& data, EntityID entity) {
-        minSpeed[entity] = data["min_speed"].get<float>();
-        maxSpeed[entity] = data["max_speed"].get<float>();
-        minFriction[entity] = data["min_friction"].get<float>();
-        maxFriction[entity] = data["max_friction"].get<float>();
-        momentumDecay[entity] = data["momentum_decay"].get<float>();
+        minSpeed[entity] = GetFloat(data, "min_speed", DEFAULT_MIN_SPEED);
+        maxSpeed[entity] = GetFloat(data, "max_speed", DEFAULT_MAX_SPEED);
+        speed[entity] = minSpeed[entity];
+
+        minFriction[entity] = GetFloat(data, "min_friction", DEFAULT_MIN_FRICTION);
+        maxFriction[entity] = GetFloat(data, "max_friction", DEFAULT_MAX_FRICTION);
+        friction[entity] = maxFriction[entity];
+
+        momentumDecay[entity] = GetFloat(data, "momentum_decay", DEFAULT_MOMENTUM_DECAY);
         tiltStrength[entity] = GetFloat(data, "tilt_strength", 0.0f);
         tiltSpeed[entity] = GetFloat(data, "tilt_speed", 0.05f);
     }

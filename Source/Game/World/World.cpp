@@ -32,7 +32,7 @@ float World::GetHeight(vec2 position) const {
         properties_ 
     );
 
-    if (worldDistance.x < -32.0f)
+    if (worldDistance.x > 32.0f)
         return -INFINITY;
 
     return worldDistance.y;

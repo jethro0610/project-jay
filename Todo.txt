@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Some enemies stay in center, others at border
+
 - Nosise texture sample on CPU
 - Spread array instead of map
 

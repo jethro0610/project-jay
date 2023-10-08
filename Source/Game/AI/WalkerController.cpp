@@ -64,6 +64,6 @@ void WalkerController::FindNewTarget(World& world) {
     }
     while (
         any(isnan(targetPosition_)) ||
-        world.GetDistance(targetPosition_).x < 0.0f
+        world.GetDistance(targetPosition_).x > -128.0f
     );
 }

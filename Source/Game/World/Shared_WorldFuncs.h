@@ -52,8 +52,8 @@ INLINE vec2 getWorldDistance(vec2 position, WorldProperties props) {
 
     float blobRadius = props.minRadius + blobVal * (props.maxRadius - props.minRadius);
     float curRadius = length(position);
-    float edgeDistance = blobRadius - curRadius;
-    float edgeCloseness = max(1.0f - (edgeDistance) * props.edgeFalloff, 0.0f);
+    float edgeDistance = curRadius - blobRadius;
+    float edgeCloseness = max(1.0f + edgeDistance * props.edgeFalloff, 0.0f);
     float edgeHeight = -pow(edgeCloseness, props.edgePower);
 
     float terrainVal = sampleNoise(position, 0.75f, props.noise);

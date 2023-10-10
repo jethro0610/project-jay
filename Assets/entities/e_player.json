@@ -47,12 +47,10 @@
             "initial_meter": 512,
             "max_meter": 8192
         },
-        "collider": {
-            "radius0": 2.0,
-            "radius1": 15.0,
-            "send_meteor": true,
-            "capture_seed": true,
-            "recieve_push": true
+        "pushbox": {
+            "radius": 2.0,
+            "send": true,
+            "recieve": true
         },
         "velocity": {
             "use_gravity": true

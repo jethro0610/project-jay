@@ -98,15 +98,10 @@ void Game::Update() {
             entityManager_.entities_,
             GETCOMP(TransformComponent)
         );
-        CollisionSystem::Execute(
+        PushSystem::Execute(
             entityManager_.entities_,
-            seedManager_,
-            spreadManager_,
-            GETCOMP(ColliderComponent),
-            GETCOMP(MeterComponent),
-            GETCOMP(ProjectileComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            GETCOMP(PushboxComponent),
+            GETCOMP(TransformComponent) 
         );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
@@ -211,17 +206,17 @@ void Game::Update() {
         GETCOMP(TransformComponent),
         timeAccumlulator_
     );
-    seedManager_.CalculatePositions(
-        world_,
-        GETCOMP(MeterComponent),
-        GETCOMP(TransformComponent),
-        timeAccumlulator_
-    );
-    seedManager_.GetCaptures(
-        entityManager_.entities_,
-        GETCOMP(ColliderComponent),
-        GETCOMP(TransformComponent)
-    );
+    // seedManager_.CalculatePositions(
+    //     world_,
+    //     GETCOMP(MeterComponent),
+    //     GETCOMP(TransformComponent),
+    //     timeAccumlulator_
+    // );
+    // seedManager_.GetCaptures(
+    //     entityManager_.entities_,
+    //     // GETCOMP(ColliderComponent),
+    //     GETCOMP(TransformComponent)
+    // );
     camera_.Update(inputs_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(

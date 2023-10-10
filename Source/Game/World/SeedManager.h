@@ -9,7 +9,7 @@
 #include "../Entity/EntityLimits.h"
 #include "../../Types/Transform.h"
 class Entity;
-class ColliderComponent;
+// class ColliderComponent;
 class MeterComponent;
 class TransformComponent;
 
@@ -45,7 +45,7 @@ public:
 
     void GetCaptures(
         std::array<Entity, MAX_ENTITIES>& entities,
-        ColliderComponent& colliderComponent, 
+        // ColliderComponent& colliderComponent, 
         TransformComponent& transformComponent
     );
 };

@@ -2,7 +2,6 @@
 #include "SeedManager.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../Components/ColliderComponent.h"
 #include "../Components/MeterComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Time.h"
@@ -68,33 +67,33 @@ void SeedManager::CalculatePositions(
     }
 }
 
-constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
+// constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
 
 void SeedManager::GetCaptures(
     std::array<Entity, MAX_ENTITIES>& entities,
-    ColliderComponent& colliderComponent, 
+    // ColliderComponent& colliderComponent, 
     TransformComponent& transformComponent
 ) {
-    float time = GlobalTime::GetTime();
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.alive_)
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
-        if (!colliderComponent.properties[i].test(ColliderProperties::CaptureSeed))
-            continue;
-
-        for (int j = 0; j < seeds_.size(); j++) {
-            if (seeds_[j].targetEntity != NULL_ENTITY)
-                continue;
-            if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
-                continue;
-
-            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < colliderComponent.radius1[i]) {
-                seeds_[j].targetEntity = i;
-                seeds_[j].captureTime = time;
-            }
-        }
-    }
+    // float time = GlobalTime::GetTime();
+    // for (int i = 0; i < MAX_ENTITIES; i++) {
+    //     const Entity& entity = entities[i];
+    //     if (!entity.alive_)
+    //         continue;
+    //     if (!entity.MatchesKey(key))
+    //         continue;
+    //     // // if (!colliderComponent.properties[i].test(ColliderProperties::CaptureSeed))
+    //     // //     continue;
+    //     //
+    //     // for (int j = 0; j < seeds_.size(); j++) {
+    //     //     if (seeds_[j].targetEntity != NULL_ENTITY)
+    //     //         continue;
+    //     //     if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
+    //     //         continue;
+    //     //
+    //     //     if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < colliderComponent.radius1[i]) {
+    //     //         seeds_[j].targetEntity = i;
+    //     //         seeds_[j].captureTime = time;
+    //     //     }
+    //     // }
+    // }
 }

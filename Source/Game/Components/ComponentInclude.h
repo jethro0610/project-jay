@@ -10,7 +10,9 @@
 #include "SpreadDetectComponent.h"
 #include "TrampleComponent.h"
 
-#include "ColliderComponent.h"
+#include "HitboxComponent.h"
+#include "HurtboxComponent.h"
+#include "PushboxComponent.h"
 
 #include "IntervalSpawnComponent.h"
 #include "MeterComponent.h"
@@ -27,7 +29,9 @@
     COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent_) \
     COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent_) \
     COMPONENTVAR(TrampleComponent, trampleComponent_) \
-    COMPONENTVAR(ColliderComponent, colliderComponent_) \
+    COMPONENTVAR(HitboxComponent, hitboxComponent_) \
+    COMPONENTVAR(HurtboxComponent, hurtboxComponent_) \
+    COMPONENTVAR(PushboxComponent, pushboxComponent_) \
     COMPONENTVAR(IntervalSpawnComponent, intervalSpawnComponent_) \
     COMPONENTVAR(SkeletonComponent, skeletonComponent_) \
     COMPONENTVAR(StaticModelComponent, staticModelComponent_) \

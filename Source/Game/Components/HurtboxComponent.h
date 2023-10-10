@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Collider.h"
+#include "../Collision/Collider.h"
 
 struct Hurtbox : public Collider {
     float cooldown;
@@ -21,6 +21,7 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         hurtbox[entity].radius = GetFloat(data, "radius");
-        hurtbox[entity].height = GetFloat(data, "height");
+        hurtbox[entity].top = GetFloat(data, "top");
+        hurtbox[entity].bottom = GetFloat(data, "bottom");
     }
 };

@@ -25,11 +25,6 @@
         "velocity": {
             "use_gravity": true 
         },
-        "pushbox": {
-            "radius": 1.0,
-            "send": true,
-            "recieve": true
-        },
         "trample": {
             "radius": 8
         }

@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Collider.h"
+#include "../Collision/Collider.h"
 
 struct Pushbox : public Collider {
     bool send;
@@ -25,7 +25,8 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         pushbox[entity].radius = GetFloat(data, "radius");
-        pushbox[entity].height = GetFloat(data, "height");
+        pushbox[entity].top = GetFloat(data, "top", 0.0f);
+        pushbox[entity].bottom = GetFloat(data, "bottom", 0.0f);
         pushbox[entity].send = GetBoolean(data, "send", true);
         pushbox[entity].recieve = GetBoolean(data, "recieve", true);
     }

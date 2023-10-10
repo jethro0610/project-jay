@@ -4,14 +4,15 @@
 #include <vector_const.h>
 #include "../Entity/EntityID.h"
 #include "../Entity/EntityLimits.h"
+#include "../Collision/Collision.h"
 class Entity;
 class PushboxComponent;
 class TransformComponent;
 
 struct Push {
-    EntityID entity1;
-    EntityID entity2;
-    glm::vec3 resolutionVec;
+    EntityID entityA;
+    EntityID entityB;
+    Collision collision;
 };
 
 const int MAX_COLLISIONS = 128;

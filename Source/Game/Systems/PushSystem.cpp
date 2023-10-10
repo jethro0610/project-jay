@@ -14,39 +14,39 @@ void GetPushes(
     TransformComponent& transformComponent,
     PushList& pushes 
 ) {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity1 = entities[i];
-        if (!entity1.ShouldUpdate())
+    for (int a = 0; a < MAX_ENTITIES; a++) {
+        const Entity& entityA = entities[a];
+        if (!entityA.ShouldUpdate())
             continue;
-        if (!entity1.MatchesKey(key))
+        if (!entityA.MatchesKey(key))
             continue;
         
-        vec3& pos1 = transformComponent.transform[i].position;
-        Pushbox& pushbox1 = pushboxComponent.pushbox[i];
-        float scale1 = (transformComponent.transform[i].scale.x + transformComponent.transform[i].scale.z) * 0.5f;
+        const bool& sendA = pushboxComponent.pushbox[a].send;
+        const bool& recieveA = pushboxComponent.pushbox[a].recieve;
+        Transform& transformA = transformComponent.transform[a];
+        Pushbox& pushboxA = pushboxComponent.pushbox[a];
 
         // TODO: Only check components within the same chunk
-        for (int j = i + 1; j < MAX_ENTITIES; j++) {
-            if (j == i)
+        for (int b = a + 1; b < MAX_ENTITIES; b++) {
+            if (b == a)
                 continue;
-            const Entity& entity2 = entities[j];
-            if (!entity2.ShouldUpdate())
+            const Entity& entityB = entities[b];
+            if (!entityB.ShouldUpdate())
                 continue;
-            if (!entity2.MatchesKey(key))
+            if (!entityB.MatchesKey(key))
                 continue;
 
-            vec3& pos2 = transformComponent.transform[j].position;
-            Pushbox& pushbox2 = pushboxComponent.pushbox[j];
-            float scale2 = (transformComponent.transform[j].scale.x + transformComponent.transform[j].scale.z) * 0.5f;
+            const bool& sendB = pushboxComponent.pushbox[b].send;
+            const bool& recieveB = pushboxComponent.pushbox[b].recieve;
+            Transform& transformB = transformComponent.transform[b];
+            Pushbox& pushboxB = pushboxComponent.pushbox[b];
+
+            if ((!sendA && !sendB) || (!recieveA && recieveB))
+                continue;
             
-            float dist = distance(pos1, pos2);
-            vec3 direction = normalize(pos2 - pos1);
-            float maxDist = pushbox1.radius * scale1 + pushbox2.radius * scale2;
-            if (dist < maxDist) {
-                vec3 resolutionVec = direction * (maxDist - dist);
-                resolutionVec.y = 0.0f;
-                pushes.push_back({i, j, resolutionVec}); 
-            }
+            Push push = {a, b, Collision::GetCollision(transformA, pushboxA, transformB, pushboxB)};
+            if (push.collision.isColliding)
+                pushes.push_back(push);
         }
     }
 }
@@ -71,28 +71,28 @@ void PushSystem::Execute(
     GetPushes(entities, pushboxComponent, transformComponent, pushes);
 
     for (Push& push : pushes) {
-        const bool& entity1Send = pushboxComponent.pushbox[push.entity1].send;
-        const bool& entity2Send = pushboxComponent.pushbox[push.entity2].send;
-        const bool& entity1Recieve = pushboxComponent.pushbox[push.entity1].recieve;
-        const bool& entity2Recieve = pushboxComponent.pushbox[push.entity2].recieve;
+        const bool& sendA = pushboxComponent.pushbox[push.entityA].send;
+        const bool& sendB = pushboxComponent.pushbox[push.entityB].send;
+        const bool& recieveA = pushboxComponent.pushbox[push.entityA].recieve;
+        const bool& recieveB = pushboxComponent.pushbox[push.entityB].recieve;
 
-        if (entity1Send && entity1Recieve && entity2Send && entity2Recieve) {
-            transformComponent.transform[push.entity1].position -= push.resolutionVec * 0.5f;
-            transformComponent.transform[push.entity2].position += push.resolutionVec * 0.5f;
-            pushboxComponent.sentPush[push.entity1] = true;
-            pushboxComponent.sentPush[push.entity2] = true;
-            pushboxComponent.recievedPush[push.entity1] = true;
-            pushboxComponent.recievedPush[push.entity2] = true;
+        if (sendA && recieveA && sendB && recieveB) {
+            transformComponent.transform[push.entityA].position -= push.collision.resolution * 0.5f;
+            transformComponent.transform[push.entityB].position += push.collision.resolution * 0.5f;
+            pushboxComponent.sentPush[push.entityA] = true;
+            pushboxComponent.sentPush[push.entityB] = true;
+            pushboxComponent.recievedPush[push.entityA] = true;
+            pushboxComponent.recievedPush[push.entityB] = true;
         }
-        else if (entity1Send && entity2Recieve) {
-            transformComponent.transform[push.entity2].position += push.resolutionVec;
-            pushboxComponent.sentPush[push.entity1] = true;
-            pushboxComponent.recievedPush[push.entity2] = true;
+        else if (sendA && recieveB) {
+            transformComponent.transform[push.entityB].position += push.collision.resolution;
+            pushboxComponent.sentPush[push.entityA] = true;
+            pushboxComponent.recievedPush[push.entityB] = true;
         }
-        else if (entity2Send && entity1Recieve) {
-            transformComponent.transform[push.entity1].position -= push.resolutionVec;
-            pushboxComponent.sentPush[push.entity2] = true;
-            pushboxComponent.recievedPush[push.entity1] = true;
+        else if (sendB && recieveA) {
+            transformComponent.transform[push.entityA].position -= push.collision.resolution;
+            pushboxComponent.sentPush[push.entityB] = true;
+            pushboxComponent.recievedPush[push.entityA] = true;
         }
     }
 }

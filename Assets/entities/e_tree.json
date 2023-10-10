@@ -20,6 +20,12 @@
         },
         "trample": {
             "radius": 12
+        },
+        "pushbox": {
+            "radius": 4.0,
+            "top": 32.0,
+            "send": true,
+            "recieve": false
         }
     }
 }

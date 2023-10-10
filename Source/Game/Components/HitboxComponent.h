@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Collider.h"
+#include "../Collision/Collider.h"
 
 struct Hitbox : public Collider {
     float horizontalKb;
@@ -24,7 +24,8 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         hitbox[entity].radius = GetFloat(data, "radius");
-        hitbox[entity].height = GetFloat(data, "height");
+        hitbox[entity].top = GetFloat(data, "top");
+        hitbox[entity].bottom = GetFloat(data, "bottom");
         hitbox[entity].horizontalKb = GetFloat(data, "horizontal_kb");
         hitbox[entity].verticalKb = GetFloat(data, "vertical_kb");
         hitbox[entity].damage = GetInt(data, "damage");

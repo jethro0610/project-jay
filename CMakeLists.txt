@@ -30,6 +30,8 @@ file(GLOB SOURCES
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp
 
+    Source/Game/Collision/Collision.cpp
+
     Source/Game/AI/WalkerController.cpp
 
     Source/Game/Camera.cpp

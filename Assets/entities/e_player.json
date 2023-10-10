@@ -49,6 +49,7 @@
         },
         "pushbox": {
             "radius": 2.0,
+            "top": 4.0,
             "send": true,
             "recieve": true
         },

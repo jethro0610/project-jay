@@ -32,10 +32,10 @@ void Game::Init() {
     entityManager_.LoadEntity("e_rock");
     Transform rockTransform;
 
-    for (int j = 0; j < 6; j++) {
+    for (int j = 0; j < 1; j++) {
         float x0 = (rand() % 200) - 100;
         float z0 = (rand() % 200) - 100;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             vec2 planarPos = RandomVector2D(15.0f); 
             rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
 

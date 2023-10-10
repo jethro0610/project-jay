@@ -14,14 +14,8 @@ struct Push {
     glm::vec3 resolutionVec;
 };
 
-struct Hit {
-    EntityID sender;
-    EntityID reciever;
-};
-
 const int MAX_COLLISIONS = 128;
 typedef vector_const<Push, MAX_COLLISIONS> PushList;
-typedef vector_const<Hit, MAX_COLLISIONS> HitList;
 
 namespace PushSystem {
     void Execute(

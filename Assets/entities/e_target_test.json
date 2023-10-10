@@ -10,10 +10,8 @@
                 "m_player"
             ]
         },
-        "collider": {
-            "radius0": 1.0,
-            "recieve_projectile": true,
-            "send_push": true
+        "pushbox": {
+            "radius": 1.0
         },
         "meter": {
             "initial_meter": 40.0,

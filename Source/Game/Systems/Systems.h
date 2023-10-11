@@ -1,5 +1,6 @@
 #pragma once
 #include "PushSystem.h"
+#include "HitSystem.h"
 #include "DestroyMeterSystem.h"
 #include "MovementSystem.h"
 #include "FreezeSystem.h"

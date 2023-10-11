@@ -13,6 +13,7 @@ file(GLOB SOURCES
     Source/Game/Entity/EntityManager.cpp
 
     Source/Game/Systems/PushSystem.cpp
+    Source/Game/Systems/HitSystem.cpp
     Source/Game/Systems/DestroyMeterSystem.cpp
     Source/Game/Systems/FreezeSystem.cpp
     Source/Game/Systems/GroundTraceSystem.cpp

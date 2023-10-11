@@ -29,5 +29,6 @@ public:
         hitbox[entity].horizontalKb = GetFloat(data, "horizontal_kb");
         hitbox[entity].verticalKb = GetFloat(data, "vertical_kb");
         hitbox[entity].damage = GetInt(data, "damage");
+        hitbox[entity].active = GetBoolean(data, "active", false);
     }
 };

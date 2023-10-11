@@ -26,6 +26,11 @@
             "send": true,
             "recieve": false
         },
+        "hurtbox": {
+            "radius": 2.0,
+            "top": 1.0,
+            "bottom": 1.0
+        },
         "projectile": {
             "type": "target",
             "tracking_strength": 0.05,

@@ -103,6 +103,13 @@ void Game::Update() {
             GETCOMP(PushboxComponent),
             GETCOMP(TransformComponent) 
         );
+        HitSystem::Execute(
+            entityManager_.entities_,
+            GETCOMP(HitboxComponent),
+            GETCOMP(HurtboxComponent),
+            GETCOMP(TransformComponent),
+            GETCOMP(VelocityComponent)
+        );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
             spreadManager_,

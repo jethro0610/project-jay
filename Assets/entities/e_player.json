@@ -53,6 +53,13 @@
             "send": true,
             "recieve": true
         },
+        "hitbox": {
+            "radius": 4.0,
+            "top": 4.0,
+            "horizontal_kb": 50.0,
+            "vertical_kb": 50.0,
+            "active": true
+        },
         "velocity": {
             "use_gravity": true
         },

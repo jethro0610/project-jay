@@ -41,7 +41,7 @@ void GetPushes(
             Transform& transformB = transformComponent.transform[b];
             Pushbox& pushboxB = pushboxComponent.pushbox[b];
 
-            if ((!sendA && !sendB) || (!recieveA && recieveB))
+            if ((!sendA && !sendB) || (!recieveA && !recieveB))
                 continue;
             
             Push push = {a, b, Collision::GetCollision(transformA, pushboxA, transformB, pushboxB)};
@@ -85,12 +85,12 @@ void PushSystem::Execute(
             pushboxComponent.recievedPush[push.entityB] = true;
         }
         else if (sendA && recieveB) {
-            transformComponent.transform[push.entityB].position += push.collision.resolution;
+            transformComponent.transform[push.entityB].position += push.collision.resolution * 0.5f;
             pushboxComponent.sentPush[push.entityA] = true;
             pushboxComponent.recievedPush[push.entityB] = true;
         }
         else if (sendB && recieveA) {
-            transformComponent.transform[push.entityA].position -= push.collision.resolution;
+            transformComponent.transform[push.entityA].position -= push.collision.resolution * 0.5f;
             pushboxComponent.sentPush[push.entityB] = true;
             pushboxComponent.recievedPush[push.entityA] = true;
         }

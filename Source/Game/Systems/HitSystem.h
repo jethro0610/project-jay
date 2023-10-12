@@ -16,7 +16,6 @@ struct Hit {
     EntityID hitter;
     EntityID target;
     Collision collision;
-    const Hitbox* hitbox;
 };
 
 const int MAX_HITS = 128;

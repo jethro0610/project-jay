@@ -54,16 +54,17 @@ void HitSystem::Execute(
             );
 
             if (collision.isColliding) {
-                hitList.push_back({h, t, collision, &hitbox});
+                hitList.push_back({h, t, collision});
                 DEBUGLOG("hit");
             }
         }
     }
 
     for (const Hit& hit : hitList) {
+        // Add curving hits, spread release, damage, angular momentum, hitlag, etc...
         vec3 direction = normalize(hit.collision.resolution);
         velocityComponent.velocity[hit.target] = 
-            direction * hit.hitbox->horizontalKb + 
-            Transform::worldUp * hit.hitbox->verticalKb;
+            direction * hitboxComponent.hitbox[hit.hitter].horizontalKb + 
+            Transform::worldUp * hitboxComponent.hitbox[hit.target].verticalKb;
     }
 }

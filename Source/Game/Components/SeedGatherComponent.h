@@ -4,8 +4,11 @@
 class SeedGatherComponent: public Component {
 public:
     std::array<float, MAX_ENTITIES> radius;
+    std::array<bool, MAX_ENTITIES> active;
 
-    SeedGatherComponent() {};
+    SeedGatherComponent() {
+        active.fill(true);
+    };
     SeedGatherComponent(const SeedGatherComponent&) = delete;
     SeedGatherComponent& operator=(const SeedGatherComponent&) = delete;
 

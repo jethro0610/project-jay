@@ -81,6 +81,7 @@ void SeedManager::GetCaptures(
     float time = GlobalTime::GetTime();
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
+        if (!seedGatherComponent.active[i]) continue;
 
         for (int j = 0; j < seeds_.size(); j++) {
             if (seeds_[j].targetEntity != NULL_ENTITY)

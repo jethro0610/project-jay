@@ -83,13 +83,9 @@ void Game::Update() {
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= TIMESTEP) {
         FlushInputs_P();
+        entityManager_.SpawnEntities();
+        entityManager_.DestoryEntities();
         FreezeSytem::Execute(entityManager_.entities_);
-        IntervalSpawnSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_,
-            seedManager_
-        );
         TransformSystem::UpdateLastTransforms(
             entityManager_.entities_,
             entityManager_.components_
@@ -155,18 +151,25 @@ void Game::Update() {
             spreadManager_,
             world_
         );
-        DestroyMeterSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_,
-            seedManager_
-        );
         SkeletonSystem::CalculatePoses(
             entityManager_.entities_,
             entityManager_.components_
         );
+        DestroyMeterSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.components_,
+            entityManager_.destroyList_,
+            seedManager_
+        );
+        IntervalSpawnSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.components_,
+            entityManager_.spawnList_,
+            seedManager_
+        );
         timeAccumlulator_ -= TIMESTEP;
     }
+
     SkeletonSystem::InterpPoses(
         entityManager_.entities_,
         entityManager_.components_,

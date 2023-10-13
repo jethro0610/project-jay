@@ -12,6 +12,7 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
+
 #include "../Game/Entity/EntityList.h"
 #include "../Game/Components/ComponentList.h"
 
@@ -20,7 +21,6 @@
 #endif
 
 class Camera;
-class Entity;
 class FastNoiseLite;
 class SeedManager;
 class SpreadManager;

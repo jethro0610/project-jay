@@ -8,23 +8,26 @@
 #include <FastNoiseLite.h>
 #include <random>
 #include <nlohmann/json.hpp>
-#include "../Game/Camera.h"
-#include "../Game/Entity/EntityKey.h"
-#include "../Helpers/MapCheck.h"
-#include "../Helpers/LoadHelpers.h"
-#include "../Logging/Logger.h"
-#include "../Game/Time.h"
 
-#include "../Game/ParticleManager.h"
-#include "../Game/Entity/Entity.h"
+#include "../Game/Camera.h"
+
+#include "../Game/Time.h"
+#include "../Game/Entity/EntityKey.h"
+#include "../Game/Components/MeterComponent.h"
 #include "../Game/Components/SkeletonComponent.h"
 #include "../Game/Components/StaticModelComponent.h"
 #include "../Game/Components/TransformComponent.h"
 
+#include "../Game/ParticleManager.h"
+#include "../Game/Entity/Entity.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Game/World/SeedManager.h"
 
-#include "../Game/Components/MeterComponent.h"
+
+#include "../Helpers/MapCheck.h"
+#include "../Helpers/LoadHelpers.h"
+#include "../Logging/Logger.h"
+
 
 #include "PC_VertexTypes.h"
 

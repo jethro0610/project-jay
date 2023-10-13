@@ -22,7 +22,7 @@ EntityManager::EntityManager() : components_(
     #undef TAILEXPANSION 
 }
 
-void EntityManager::LoadEntity(std::string name) {
+void EntityManager::LoadEntity(const std::string& name) {
     ForceMapUnique(entityData_, name, "Entity " + name + " is already loaded");
 
     std::ifstream inFile("entities/" + name + ".json");
@@ -33,7 +33,7 @@ void EntityManager::LoadEntity(std::string name) {
     DEBUGLOG("Loaded entity " << name);
 }
 
-EntityID EntityManager::CreateEntity(Transform transform) {
+EntityID EntityManager::CreateEntity(const Transform& transform) {
     EntityID createdEntity = usableEntities_.front();
     usableEntities_.pop_front();
     if (usableEntities_.size() <= 0)
@@ -46,7 +46,7 @@ EntityID EntityManager::CreateEntity(Transform transform) {
     return createdEntity;
 }
 
-EntityID EntityManager::CreateEntity(std::string name, Transform transform) {
+EntityID EntityManager::CreateEntity(const std::string& name, const Transform& transform) {
     EntityID createdEntity = CreateEntity(transform);
     nlohmann::json& entityData = GetFromMap<nlohmann::json>(entityData_, name, "Tried creating unloaded entity " + name);
 
@@ -68,4 +68,18 @@ void EntityManager::DestroyEntity(EntityID entityToDestroy) {
     entities_[entityToDestroy].alive_ = false;
     entities_[entityToDestroy].key_ = 0;
     usableEntities_.push_front(entityToDestroy);
+}
+
+void EntityManager::SpawnEntities() {
+    for (const Spawn& spawn : spawnList_)
+        CreateEntity(spawn.name, spawn.transform);
+
+    spawnList_.clear();
+}
+
+void EntityManager::DestoryEntities() {
+    for (const EntityID& entity : destroyList_)
+        DestroyEntity(entity);
+
+    destroyList_.clear();
 }

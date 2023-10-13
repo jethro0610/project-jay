@@ -2,7 +2,6 @@
 #include "ProjectileSystem.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../Entity/EntityManager.h"
 #include "../World/SeedManager.h"
 #include "../Components/IntervalSpawnComponent.h"
 #include "../Components/ProjectileComponent.h"
@@ -17,7 +16,7 @@ constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
 void IntervalSpawnSystem::Execute(
     EntityList& entities,
     ComponentList& components,
-    EntityManager& entityManager,
+    SpawnList& spawnList,
     SeedManager& seedManager
 ) {
     auto& intervalSpawnComponent = components.Get<IntervalSpawnComponent>();
@@ -38,18 +37,10 @@ void IntervalSpawnSystem::Execute(
             spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
             // NOTE: Need to use the transform to get the child transform, instead of just adding position
 
-            if (intervalSpawnComponent.entityToSpawn[i] == "e_seed") {
+            if (intervalSpawnComponent.entityToSpawn[i] == "e_seed")
                 seedManager.CreateSeed(spawnTransform.position);
-            }
-            else {
-                EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
-                if (intervalSpawnComponent.launch[i])
-                    ProjectileSystem::Launch(
-                        components,
-                        entityId,
-                        NULL_ENTITY
-                    );
-            }
+            else
+                spawnList.push_back({intervalSpawnComponent.entityToSpawn[i], spawnTransform});
 
             timer = 0;
         }

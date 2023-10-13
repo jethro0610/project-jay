@@ -9,6 +9,7 @@
     COMPONENTEXPANSION(ProjectileComponent, projectileComponent) \
     COMPONENTEXPANSION(PushboxComponent, pushboxComponent) \
     COMPONENTEXPANSION(SkeletonComponent, skeletonComponent) \
+    COMPONENTEXPANSION(SeedGatherComponent, seedGatherComponent) \
     COMPONENTEXPANSION(SpreadActivatorComponent, spreadActivatorComponent) \
     COMPONENTEXPANSION(SpreadDetectComponent, spreadDetectComponent) \
     COMPONENTEXPANSION(StaticModelComponent, staticModelComponent) \

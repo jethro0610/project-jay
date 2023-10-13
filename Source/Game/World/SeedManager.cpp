@@ -3,6 +3,7 @@
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
 #include "../Components/MeterComponent.h"
+#include "../Components/SeedGatherComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Time.h"
 #include "../../Constants/TimeConstants.h"
@@ -69,32 +70,28 @@ void SeedManager::CalculatePositions(
     }
 }
 
-// constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
-
+constexpr EntityKey key = GetEntityKey<SeedGatherComponent, TransformComponent>();
 void SeedManager::GetCaptures(
     EntityList& entities,
     ComponentList& components
 ) {
-    // float time = GlobalTime::GetTime();
-    // for (int i = 0; i < MAX_ENTITIES; i++) {
-    //     const Entity& entity = entities[i];
-    //     if (!entity.alive_)
-    //         continue;
-    //     if (!entity.MatchesKey(key))
-    //         continue;
-    //     // // if (!colliderComponent.properties[i].test(ColliderProperties::CaptureSeed))
-    //     // //     continue;
-    //     //
-    //     // for (int j = 0; j < seeds_.size(); j++) {
-    //     //     if (seeds_[j].targetEntity != NULL_ENTITY)
-    //     //         continue;
-    //     //     if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
-    //     //         continue;
-    //     //
-    //     //     if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < colliderComponent.radius1[i]) {
-    //     //         seeds_[j].targetEntity = i;
-    //     //         seeds_[j].captureTime = time;
-    //     //     }
-    //     // }
-    // }
+    auto& seedGatherComponent = components.Get<SeedGatherComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
+    float time = GlobalTime::GetTime();
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities[i].ShouldUpdate(key)) continue;
+
+        for (int j = 0; j < seeds_.size(); j++) {
+            if (seeds_[j].targetEntity != NULL_ENTITY)
+                continue;
+            if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
+                continue;
+
+            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < seedGatherComponent.radius[i]) {
+                seeds_[j].targetEntity = i;
+                seeds_[j].captureTime = time;
+            }
+        }
+    }
 }

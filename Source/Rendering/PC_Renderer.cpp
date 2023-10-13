@@ -23,11 +23,9 @@
 #include "../Game/World/SpreadManager.h"
 #include "../Game/World/SeedManager.h"
 
-
 #include "../Helpers/MapCheck.h"
 #include "../Helpers/LoadHelpers.h"
 #include "../Logging/Logger.h"
-
 
 #include "PC_VertexTypes.h"
 

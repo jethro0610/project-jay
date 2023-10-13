@@ -7,6 +7,7 @@
 #include "MovementComponent.h"
 #include "ProjectileComponent.h"
 #include "PushboxComponent.h"
+#include "SeedGatherComponent.h"
 #include "SkeletonComponent.h"
 #include "SpreadActivatorComponent.h"
 #include "SpreadDetectComponent.h"

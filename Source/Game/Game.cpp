@@ -180,15 +180,15 @@ void Game::Update() {
         entityManager_.components_,
         timeAccumlulator_
     );
-    // seedManager_.CalculatePositions(
-    //     entityManager_.components_,
-    //     world_,
-    //     timeAccumlulator_
-    // );
-    // seedManager_.GetCaptures(
-    //     entityManager_.entities_,
-    //     entityManager_.components_
-    // );
+    seedManager_.CalculatePositions(
+        entityManager_.components_,
+        world_,
+        timeAccumlulator_
+    );
+    seedManager_.GetCaptures(
+        entityManager_.entities_,
+        entityManager_.components_
+    );
     camera_.Update(inputs_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(

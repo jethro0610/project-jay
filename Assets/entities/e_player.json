@@ -63,6 +63,9 @@
         "velocity": {
             "use_gravity": true
         },
+        "seed_gather": {
+            "radius": 12.0
+        },
         "spread_detect": {}
     }
 }

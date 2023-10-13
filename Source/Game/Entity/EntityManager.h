@@ -29,18 +29,14 @@ public:
         entities_[targetEntity].AddComponent<T>();
     }
 
-    template <class T>
-    T& GetComponent() {
-        return std::get<T&>(components_);
-    }
-
     ComponentList components_;
 
 private:
-    // Create all components based on the Components.h file
-    #define COMPONENTVAR(TYPE, VAR) TYPE VAR;
-        CREATECOMPONENTVARS  
-    #undef COMPONENTVAR
+    #define COMPONENTEXPANSION(TYPE, VAR) TYPE VAR;
+    #define TAILEXPANSION(TYPE, VAR) TYPE VAR;
+    EXPANDCOMPONENTS
+    #undef COMPONENTEXPANSION 
+    #undef TAILEXPANSION 
 
     std::unordered_map<std::string, Component*> componentMap_;
     std::unordered_map<std::string, int> componentIds_;

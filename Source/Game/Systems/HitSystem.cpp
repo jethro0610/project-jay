@@ -16,10 +16,10 @@ void HitSystem::Execute(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& hitboxComponent = std::get<HitboxComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& hurtboxComponent = std::get<HurtboxComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& hitboxComponent = components.Get<HitboxComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& hurtboxComponent = components.Get<HurtboxComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
     HitList hitList;
 
     for (int h = 0; h < MAX_ENTITIES; h++) {

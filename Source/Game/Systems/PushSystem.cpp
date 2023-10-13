@@ -13,8 +13,9 @@ void GetPushes(
     ComponentList& components,
     PushList& pushes 
 ) {
-    auto& pushboxComponent = std::get<PushboxComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& pushboxComponent = components.Get<PushboxComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int a = 0; a < MAX_ENTITIES; a++) {
         const Entity& entityA = entities[a];
         if (!entityA.ShouldUpdate())
@@ -56,8 +57,9 @@ void PushSystem::Execute(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& pushboxComponent = std::get<PushboxComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& pushboxComponent = components.Get<PushboxComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate())

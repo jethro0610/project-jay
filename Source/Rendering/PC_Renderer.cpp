@@ -508,12 +508,14 @@ void Renderer::RenderWorld_P(World& world) {
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 EntityKey constexpr skeletonKey = GetEntityKey<SkeletonComponent>();
 void Renderer::RenderEntities_P(
-    std::array<Entity, MAX_ENTITIES>& entities, 
-    MeterComponent& meterComponent,
-    SkeletonComponent& skeletonComponent,
-    StaticModelComponent& staticModelComponent,
-    TransformComponent& transformComponent
+    EntityList& entities, 
+    ComponentList& components
 ) {
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& skeletonComponent = components.Get<SkeletonComponent>();
+    auto& staticModelComponent = components.Get<StaticModelComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     GPUPose pose;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
@@ -613,7 +615,9 @@ void Renderer::RenderBlit_P() {
     bgfx::submit(UI_VIEW, blitMaterial_.shader);
 }
 
-void Renderer::RenderUI_P(MeterComponent& meterComponent) {
+void Renderer::RenderUI_P(ComponentList& components) {
+    auto& meterComponent = components.Get<MeterComponent>();
+
     vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 

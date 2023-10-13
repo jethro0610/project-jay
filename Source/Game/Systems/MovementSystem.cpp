@@ -23,11 +23,11 @@ void MovementSystem::Execute (
     EntityList& entities,
     ComponentList& components 
 ) {
-    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
-    auto& movementComponent = std::get<MovementComponent&>(components);
-    auto& spreadDetectComponent = std::get<SpreadDetectComponent&>(components);
-    auto& transformComponent= std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& movementComponent = components.Get<MovementComponent>();
+    auto& spreadDetectComponent = components.Get<SpreadDetectComponent>();
+    auto& transformComponent= components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

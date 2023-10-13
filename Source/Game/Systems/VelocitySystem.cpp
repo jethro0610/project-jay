@@ -15,7 +15,8 @@ void VelocitySystem::CalculateGravity(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& velocityComponent = components.Get<VelocityComponent>();
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate())
@@ -35,8 +36,8 @@ void VelocitySystem::Apply(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

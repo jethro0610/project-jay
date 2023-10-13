@@ -15,9 +15,9 @@ void TrampleSystem::Execute(
     ComponentList& components,
     SpreadManager& spreadManager
 ) {
-    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
-    auto& trampleComponent = std::get<TrampleComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& trampleComponent = components.Get<TrampleComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
 
     spreadManager.ClearTramples();
     for (int i = 0; i < MAX_ENTITIES; i++) {

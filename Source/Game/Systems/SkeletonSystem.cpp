@@ -11,8 +11,9 @@ void SkeletonSystem::CalculatePoses(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& skeletonComponent = components.Get<SkeletonComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
 
@@ -81,9 +82,10 @@ void SkeletonSystem::InterpPoses(
     ComponentList& components,
     float interpTime
 ) {
-    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& skeletonComponent = components.Get<SkeletonComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
     const float interpAmount = interpTime / TIMESTEP;
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
 

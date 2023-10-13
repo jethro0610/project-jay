@@ -29,11 +29,13 @@ void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius
 }
 
 void SeedManager::CalculatePositions(
+    ComponentList& components,
     World& world,
-    MeterComponent& meterComponent,
-    TransformComponent& transformComponent,
     float interpTime
 ) {
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];
 
@@ -70,9 +72,8 @@ void SeedManager::CalculatePositions(
 // constexpr EntityKey key = GetEntityKey<ColliderComponent, TransformComponent>();
 
 void SeedManager::GetCaptures(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    // ColliderComponent& colliderComponent, 
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
     // float time = GlobalTime::GetTime();
     // for (int i = 0; i < MAX_ENTITIES; i++) {

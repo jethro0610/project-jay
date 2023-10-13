@@ -11,7 +11,8 @@ void TransformSystem::UpdateLastTransforms(
     EntityList& entities,
     ComponentList& components 
 ) {
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
 
@@ -29,7 +30,7 @@ void TransformSystem::UpdateRenderTransforms(
     ComponentList& components,
     float interpTime
 ) {
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& transformComponent = components.Get<TransformComponent>();
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {

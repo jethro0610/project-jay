@@ -2,22 +2,24 @@
 #include "../../Helpers/MapCheck.h"
 #include "../../Logging/Logger.h"
 
-EntityManager::EntityManager() :
-    components_(
-        #define COMPONENTVAR(TYPE, VAR) VAR,
-            CREATECOMPONENTVARS  
-        #undef COMPONENTVAR
-        0
-    ) 
-{
+EntityManager::EntityManager() : components_(
+    #define COMPONENTEXPANSION(TYPE, VAR) VAR,
+    #define TAILEXPANSION(TYPE, VAR) VAR
+    EXPANDCOMPONENTS
+    #undef COMPONENTEXPANSION 
+    #undef TAILEXPANSION 
+) {
     usableEntities_.push_front(0);
-    int idCounter = 0;
-    
-    #define COMPONENTVAR(TYPE, VAR) \
-        componentMap_[TYPE::GetName()] = &VAR; \
-        componentIds_[TYPE::GetName()] = TYPE::GetID();
-        CREATECOMPONENTVARS  
-    #undef COMPONENTVAR
+
+    #define COMPONENTEXPANSION(TYPE, VAR) \
+    componentMap_[TYPE::GetName()] = &VAR; \
+    componentIds_[TYPE::GetName()] = TYPE::GetID();
+    #define TAILEXPANSION(TYPE, VAR) \
+    componentMap_[TYPE::GetName()] = &VAR; \
+    componentIds_[TYPE::GetName()] = TYPE::GetID();
+    EXPANDCOMPONENTS
+    #undef COMPONENTEXPANSION 
+    #undef TAILEXPANSION 
 }
 
 void EntityManager::LoadEntity(std::string name) {
@@ -38,9 +40,9 @@ EntityID EntityManager::CreateEntity(Transform transform) {
         usableEntities_.push_front(createdEntity + 1);
 
     entities_[createdEntity].alive_ = true;
-    GetComponent<TransformComponent>().transform[createdEntity] = transform;
-    GetComponent<TransformComponent>().transformLastUpdate[createdEntity] = transform;
-    GetComponent<TransformComponent>().renderTransform[createdEntity] = transform;
+    components_.Get<TransformComponent>().transform[createdEntity] = transform;
+    components_.Get<TransformComponent>().transformLastUpdate[createdEntity] = transform;
+    components_.Get<TransformComponent>().renderTransform[createdEntity] = transform;
     return createdEntity;
 }
 

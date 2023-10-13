@@ -1,31 +1,58 @@
 #pragma once
 #include <tuple>
-#include <inttypes.h>
-#define CREATECOMPONENTVARS \
-    COMPONENTVAR(TransformComponent, transformComponent) \
-    COMPONENTVAR(MovementComponent, movementComponent) \
-    COMPONENTVAR(GroundTraceComponent, groundTraceComponent) \
-    COMPONENTVAR(VelocityComponent, velocityComponent) \
-    COMPONENTVAR(ProjectileComponent, projectileComponent) \
-    COMPONENTVAR(SpreadActivatorComponent, spreadActivatorComponent) \
-    COMPONENTVAR(SpreadDetectComponent, spreadDetectComponent) \
-    COMPONENTVAR(TrampleComponent, trampleComponent) \
-    COMPONENTVAR(HitboxComponent, hitboxComponent) \
-    COMPONENTVAR(HurtboxComponent, hurtboxComponent) \
-    COMPONENTVAR(PushboxComponent, pushboxComponent) \
-    COMPONENTVAR(IntervalSpawnComponent, intervalSpawnerComponent) \
-    COMPONENTVAR(SkeletonComponent, skeletonComponent) \
-    COMPONENTVAR(StaticModelComponent, staticModelComponent) \
-    COMPONENTVAR(MeterComponent, meterComponent)
+#define EXPANDCOMPONENTS \
+    COMPONENTEXPANSION(GroundTraceComponent, groundTraceComponent) \
+    COMPONENTEXPANSION(HitboxComponent, hitboxComponent) \
+    COMPONENTEXPANSION(HurtboxComponent, hurtboxComponent) \
+    COMPONENTEXPANSION(IntervalSpawnComponent, intervalSpawnerComponent) \
+    COMPONENTEXPANSION(MeterComponent, meterComponent) \
+    COMPONENTEXPANSION(MovementComponent, movementComponent) \
+    COMPONENTEXPANSION(ProjectileComponent, projectileComponent) \
+    COMPONENTEXPANSION(PushboxComponent, pushboxComponent) \
+    COMPONENTEXPANSION(SkeletonComponent, skeletonComponent) \
+    COMPONENTEXPANSION(SpreadActivatorComponent, spreadActivatorComponent) \
+    COMPONENTEXPANSION(SpreadDetectComponent, spreadDetectComponent) \
+    COMPONENTEXPANSION(StaticModelComponent, staticModelComponent) \
+    COMPONENTEXPANSION(TrampleComponent, trampleComponent) \
+    COMPONENTEXPANSION(TransformComponent, transformComponent) \
+    TAILEXPANSION(VelocityComponent, velocityComponent)
 
-#define COMPONENTVAR(TYPE, VAR) class TYPE;
-    CREATECOMPONENTVARS  
-#undef COMPONENTVAR
+// Create forward declarations of the types
+#define COMPONENTEXPANSION(TYPE, VAR) class TYPE;
+#define TAILEXPANSION(TYPE, VAR) class TYPE;
+EXPANDCOMPONENTS
+#undef COMPONENTEXPANSION 
+#undef TAILEXPANSION
 
-typedef
-std::tuple<
-    #define COMPONENTVAR(TYPE, VAR) TYPE&,
-        CREATECOMPONENTVARS  
-    #undef COMPONENTVAR
-    uint8_t
-> ComponentList;
+
+class ComponentList {
+    std::tuple<
+        #define COMPONENTEXPANSION(TYPE, VAR) TYPE&,
+        #define TAILEXPANSION(TYPE, VAR) TYPE&
+        EXPANDCOMPONENTS
+        #undef COMPONENTEXPANSION 
+        #undef TAILEXPANSION
+    > tuple_;
+
+public:
+    ComponentList(
+        #define COMPONENTEXPANSION(TYPE, VAR) TYPE& VAR,
+        #define TAILEXPANSION(TYPE, VAR) TYPE& VAR
+        EXPANDCOMPONENTS
+        #undef COMPONENTEXPANSION 
+        #undef TAILEXPANSION
+    ) 
+    :tuple_(
+        #define COMPONENTEXPANSION(TYPE, VAR) VAR,
+        #define TAILEXPANSION(TYPE, VAR) VAR
+        EXPANDCOMPONENTS
+        #undef COMPONENTEXPANSION 
+        #undef TAILEXPANSION
+    ) {
+
+    }
+    template <class T>
+    T& Get() {
+        return std::get<T&>(tuple_);
+    }
+};

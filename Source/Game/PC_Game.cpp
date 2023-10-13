@@ -14,7 +14,7 @@ Game::Game():
     timeAccumlulator_(0.0f),
     entityManager_(),
     renderer_(noise_, platform_.window_),
-    camera_(entityManager_.GetComponent<TransformComponent>(), 14.0f),
+    camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
     world_(noise_),
     particleManager_(),
     seedManager_(),

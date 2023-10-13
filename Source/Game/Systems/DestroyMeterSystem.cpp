@@ -14,8 +14,8 @@ void DestroyMeterSystem::Execute(
     EntityManager& entityManager,
     SeedManager& seedManager
 ) {
-    auto& meterComponent = std::get<MeterComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

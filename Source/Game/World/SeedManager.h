@@ -6,12 +6,9 @@
 #include "World.h"
 #include "../../Constants/GameConstants.h"
 #include "../Entity/EntityID.h"
-#include "../Entity/EntityLimits.h"
+#include "../Entity/EntityList.h"
+#include "../Components/ComponentList.h"
 #include "../../Types/Transform.h"
-class Entity;
-// class ColliderComponent;
-class MeterComponent;
-class TransformComponent;
 
 const float SEED_GRAVITY_SCALE = 24.0f;
 const float SEED_EASE_SPEED = 16.0f;
@@ -37,15 +34,13 @@ public:
     void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2, EntityID capturer = NULL_ENTITY);
 
     void CalculatePositions(
+        ComponentList& components,
         World& world,
-        MeterComponent& meterComponent,
-        TransformComponent& transformComponent,
         float interpTime
     );
 
     void GetCaptures(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        // ColliderComponent& colliderComponent, 
-        TransformComponent& transformComponent
+        EntityList& entities,
+        ComponentList& components
     );
 };

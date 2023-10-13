@@ -17,7 +17,7 @@ void WalkerController::Init(
     ParticleManager& particleManager,
     World& world
 ) {
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& transformComponent = components.Get<TransformComponent>();
 
     stopTime_ = 0.0f;
     entity_ = entity;
@@ -35,9 +35,9 @@ void WalkerController::Update(
     ComponentList& components,
     World& world
 ) {
-    auto& movementComponent = std::get<MovementComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& movementComponent = components.Get<MovementComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     vec3& position = transformComponent.transform[entity_].position; 
     vec3& desiredMovement = movementComponent.desiredMovement[entity_];

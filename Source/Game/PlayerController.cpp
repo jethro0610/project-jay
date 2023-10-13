@@ -26,7 +26,7 @@ void PlayerController::Init(
     ComponentList& components,
     ParticleManager& particleManager
 ) {
-    Transform& transform = std::get<TransformComponent&>(components).renderTransform[PLAYER_ENTITY];
+    auto& transform = components.Get<TransformComponent>().renderTransform[PLAYER_ENTITY];
     dustEmitter_ = particleManager.RequestEmitter("p_dust");
     dustEmitter_->parent_ = &transform;
     cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
@@ -42,13 +42,13 @@ void PlayerController::Execute(
     Camera& camera,
     Inputs inputs
 ) {
-    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
-    auto& meterComponent = std::get<MeterComponent&>(components);
-    auto& movementComponent = std::get<MovementComponent&>(components);
-    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
-    auto& spreadActivatorComponent = std::get<SpreadActivatorComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& movementComponent = components.Get<MovementComponent>();
+    auto& skeletonComponent = components.Get<SkeletonComponent>();
+    auto& spreadActivatorComponent = components.Get<SpreadActivatorComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
     cloudEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
@@ -137,7 +137,6 @@ void PlayerController::Execute(
         // spreadActivatorComponent.radius[PLAYER_ENTITY] = 12;
         // spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
     } 
-
 
     SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));
     SCREENLINE(2, "Meter: " + std::to_string(meterComponent.meter[PLAYER_ENTITY]));

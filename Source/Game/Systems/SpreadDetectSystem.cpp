@@ -13,8 +13,8 @@ void SpreadDetectSystem::Execute(
     ComponentList& components,
     SpreadManager& spreadManager
 ) {
-    auto& spreadDetectComponent = std::get<SpreadDetectComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& spreadDetectComponent = components.Get<SpreadDetectComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

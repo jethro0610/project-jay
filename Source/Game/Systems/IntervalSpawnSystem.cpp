@@ -20,10 +20,10 @@ void IntervalSpawnSystem::Execute(
     EntityManager& entityManager,
     SeedManager& seedManager
 ) {
-    auto& intervalSpawnComponent = std::get<IntervalSpawnComponent&>(components);
-    auto& projectileComponent = std::get<ProjectileComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& intervalSpawnComponent = components.Get<IntervalSpawnComponent>();
+    auto& projectileComponent = components.Get<ProjectileComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

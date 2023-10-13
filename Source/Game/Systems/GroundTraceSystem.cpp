@@ -13,8 +13,9 @@ void GroundTraceSystem::Execute(
     ComponentList& components,
     World& world
 ) {
-    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
 

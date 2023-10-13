@@ -9,12 +9,11 @@
 using namespace glm;
 
 using namespace std::chrono;
-#define GETCOMP(COMP) entityManager_.GetComponent<COMP>()
 
 void Game::Init() {
     srand(time(0));
-    std::get<SkeletonComponent&>(entityManager_.components_).renderer = &renderer_;
-    std::get<StaticModelComponent&>(entityManager_.components_).renderer = &renderer_;
+    entityManager_.components_.Get<SkeletonComponent>().renderer = &renderer_;
+    entityManager_.components_.Get<StaticModelComponent>().renderer = &renderer_;
 
     particleManager_.LoadEmitterProperty("p_dust", renderer_);
     particleManager_.LoadEmitterProperty("p_cloud", renderer_);
@@ -179,27 +178,22 @@ void Game::Update() {
         timeAccumlulator_
     );
     // seedManager_.CalculatePositions(
+    //     entityManager_.components_,
     //     world_,
-    //     GETCOMP(MeterComponent),
-    //     GETCOMP(TransformComponent),
     //     timeAccumlulator_
     // );
     // seedManager_.GetCaptures(
     //     entityManager_.entities_,
-    //     // GETCOMP(ColliderComponent),
-    //     GETCOMP(TransformComponent)
+    //     entityManager_.components_
     // );
     camera_.Update(inputs_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(
         entityManager_.entities_, 
+        entityManager_.components_,
         particleManager_,
         seedManager_,
         spreadManager_, 
-        world_, 
-        GETCOMP(MeterComponent),
-        GETCOMP(SkeletonComponent),
-        GETCOMP(StaticModelComponent),
-        GETCOMP(TransformComponent)
+        world_
     );
 }

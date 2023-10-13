@@ -79,9 +79,9 @@ void ProjectileSystem::Launch(
     EntityID projectile,
     EntityID sender 
 ) {
-    auto& projectileComponent = std::get<ProjectileComponent&>(components);
-    auto& transformComponent = std::get<TransformComponent&>(components);
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& projectileComponent = components.Get<ProjectileComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     const ProjParam1& param1 = projectileComponent.param1[projectile];
     const ProjParam2& param2 = projectileComponent.param2[projectile];
@@ -159,10 +159,10 @@ void ProjectileSystem::HandleContact(
     EntityID projectile,
     EntityID reciever
 ) {
-    auto& meterComponent = std::get<MeterComponent&>(components);
-    auto& projectileComponent = std::get<ProjectileComponent&>(components); 
-    auto& transformComponent = std::get<TransformComponent&>(components); 
-    auto& velocityComponent = std::get<VelocityComponent&>(components); 
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& projectileComponent = components.Get<ProjectileComponent>(); 
+    auto& transformComponent = components.Get<TransformComponent>(); 
+    auto& velocityComponent = components.Get<VelocityComponent>(); 
 
     vec3& position = transformComponent.transform[projectile].position; 
     vec3& velocity = velocityComponent.velocity[projectile]; 
@@ -225,9 +225,9 @@ void ProjectileSystem::Execute(
     EntityList& entities,
     ComponentList& components
 ) {
-    auto& projectileComponent = std::get<ProjectileComponent&>(components); 
-    auto& transformComponent = std::get<TransformComponent&>(components); 
-    auto& velocityComponent = std::get<VelocityComponent&>(components);
+    auto& projectileComponent = components.Get<ProjectileComponent>(); 
+    auto& transformComponent = components.Get<TransformComponent>(); 
+    auto& velocityComponent = components.Get<VelocityComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];

@@ -12,25 +12,20 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-#include "
-#include "../Game/Entity/EntityLimits.h"
-
-class Camera;
-class Entity;
-class FastNoiseLite;
-class PlayerController;
-class SeedManager;
-class SpreadManager;
-class World;
-class MeterComponent;
-class SkeletonComponent;
-class StaticModelComponent;
-class TransformComponent;
-class ParticleManager;
+#include "../Game/Entity/EntityList.h"
+#include "../Game/Components/ComponentList.h"
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
 #endif
+
+class Camera;
+class Entity;
+class FastNoiseLite;
+class SeedManager;
+class SpreadManager;
+class World;
+class ParticleManager;
 
 class Renderer {
 public:
@@ -40,7 +35,8 @@ public:
     Camera* camera_;
 
     void Render(
-        std::array<Entity, MAX_ENTITIES>& entities,
+        EntityList& entities,
+        ComponentList& components,
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
@@ -154,18 +150,15 @@ private:
     );
     void RenderWorld_P(World& world);
     void RenderEntities_P(
-        std::array<Entity, MAX_ENTITIES>& entities, 
-        MeterComponent& meterComponent,
-        SkeletonComponent& skeletonComponent,
-        StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent
+        EntityList& entities, 
+        ComponentList& components
     );
     void RenderSpread_P(SpreadManager& spreadManager);
     void RenderSeed_P(SeedManager& seedManager);
     void RenderParticles_P(ParticleManager& particleManager);
     void RenderPostProcess_P();
     void RenderBlit_P();
-    void RenderUI_P(MeterComponent& meterComponent);
+    void RenderUI_P(ComponentList& components);
     #ifdef _DEBUG
     void RenderScreenText_P();
     #endif

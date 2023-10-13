@@ -23,11 +23,11 @@ void SpreadActivatorSystem::Execute(
     SpreadManager& spreadManager,
     World& world
 ) {
-    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
-    auto& meterComponent = std::get<MeterComponent&>(components);
-    auto& spreadActivatorComponent = std::get<SpreadActivatorComponent&>(components);
-    auto& spreadDetectComponent = std::get<SpreadDetectComponent&>(components);
-    auto &transformComponent = std::get<TransformComponent&>(components);
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& meterComponent = components.Get<MeterComponent>();
+    auto& spreadActivatorComponent = components.Get<SpreadActivatorComponent>();
+    auto& spreadDetectComponent = components.Get<SpreadDetectComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if(!entities[i].ShouldUpdate(key)) continue;

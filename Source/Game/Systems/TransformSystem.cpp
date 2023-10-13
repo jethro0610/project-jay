@@ -8,15 +8,12 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<TransformComponent>();
 
 void TransformSystem::UpdateLastTransforms(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components 
 ) {
+    auto& transformComponent = std::get<TransformComponent&>(components);
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
         if (!transformComponent.useTilt[i])
@@ -28,10 +25,11 @@ void TransformSystem::UpdateLastTransforms(
 }
 
 void TransformSystem::UpdateRenderTransforms(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    TransformComponent& transformComponent,
+    EntityList& entities,
+    ComponentList& components,
     float interpTime
 ) {
+    auto& transformComponent = std::get<TransformComponent&>(components);
     float interpAmount = interpTime / TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {

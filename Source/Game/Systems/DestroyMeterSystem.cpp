@@ -9,19 +9,16 @@
 constexpr EntityKey key = GetEntityKey<MeterComponent, TransformComponent>();
 
 void DestroyMeterSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
+    EntityList& entities,
+    ComponentList& components,
     EntityManager& entityManager,
-    SeedManager& seedManager,
-    MeterComponent& meterComponent,
-    TransformComponent& transformComponent
+    SeedManager& seedManager
 ) {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+    auto& meterComponent = std::get<MeterComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
 
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities[i].ShouldUpdate(key)) continue;
         if (meterComponent.destroyOnNone[i] && meterComponent.meter[i] <= 0) {
             entityManager.DestroyEntity(i);
             seedManager.CreateMultipleSeed(

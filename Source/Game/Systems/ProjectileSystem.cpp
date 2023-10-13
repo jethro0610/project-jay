@@ -75,12 +75,14 @@ LaunchFunction* launchFunctions[NumOfProjectileTypes] = {
 };
 
 void ProjectileSystem::Launch(
-    ProjectileComponent& projectileComponent, 
-    TransformComponent& transformComponent, 
-    VelocityComponent& velocityComponent, 
+    ComponentList& components,
     EntityID projectile,
     EntityID sender 
 ) {
+    auto& projectileComponent = std::get<ProjectileComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     const ProjParam1& param1 = projectileComponent.param1[projectile];
     const ProjParam2& param2 = projectileComponent.param2[projectile];
     vec3& velocity = velocityComponent.velocity[projectile];
@@ -153,13 +155,15 @@ ContactFunction* contactFunctions[NumContactBehaviors] = {
 };
 
 void ProjectileSystem::HandleContact(
-    MeterComponent& meterComponent,
-    ProjectileComponent& projectileComponent, 
-    TransformComponent& transformComponent, 
-    VelocityComponent& velocityComponent, 
+    ComponentList& components,
     EntityID projectile,
     EntityID reciever
 ) {
+    auto& meterComponent = std::get<MeterComponent&>(components);
+    auto& projectileComponent = std::get<ProjectileComponent&>(components); 
+    auto& transformComponent = std::get<TransformComponent&>(components); 
+    auto& velocityComponent = std::get<VelocityComponent&>(components); 
+
     vec3& position = transformComponent.transform[projectile].position; 
     vec3& velocity = velocityComponent.velocity[projectile]; 
     int damage = projectileComponent.damage[projectile];
@@ -218,11 +222,13 @@ UpdateFunction* updateFunctions[NumOfProjectileTypes] = {
 constexpr EntityKey key = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();
 constexpr EntityKey targetKey = GetEntityKey<TransformComponent>();
 void ProjectileSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    ProjectileComponent& projectileComponent, 
-    TransformComponent& transformComponent, 
-    VelocityComponent& velocityComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
+    auto& projectileComponent = std::get<ProjectileComponent&>(components); 
+    auto& transformComponent = std::get<TransformComponent&>(components); 
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate())

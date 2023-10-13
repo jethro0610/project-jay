@@ -9,11 +9,12 @@ using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<PushboxComponent, TransformComponent>();
 void GetPushes(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    PushboxComponent& pushboxComponent,
-    TransformComponent& transformComponent,
+    EntityList& entities,
+    ComponentList& components,
     PushList& pushes 
 ) {
+    auto& pushboxComponent = std::get<PushboxComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
     for (int a = 0; a < MAX_ENTITIES; a++) {
         const Entity& entityA = entities[a];
         if (!entityA.ShouldUpdate())
@@ -52,10 +53,11 @@ void GetPushes(
 }
 
 void PushSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    PushboxComponent& pushboxComponent,
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
+    auto& pushboxComponent = std::get<PushboxComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate())
@@ -68,7 +70,7 @@ void PushSystem::Execute(
     }
 
     PushList pushes;
-    GetPushes(entities, pushboxComponent, transformComponent, pushes);
+    GetPushes(entities, components, pushes);
 
     for (Push& push : pushes) {
         const bool& sendA = pushboxComponent.pushbox[push.entityA].send;

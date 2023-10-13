@@ -12,9 +12,10 @@ using namespace glm;
 constexpr EntityKey key = GetEntityKey<TransformComponent, VelocityComponent>();
 
 void VelocitySystem::CalculateGravity(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    VelocityComponent& velocityComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate())
@@ -31,16 +32,14 @@ void VelocitySystem::CalculateGravity(
 }
 
 void VelocitySystem::Apply(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         quat& angularVelocity = velocityComponent.angularVelocity[i];

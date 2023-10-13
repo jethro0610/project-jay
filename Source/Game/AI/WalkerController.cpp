@@ -13,10 +13,12 @@ using namespace glm;
 
 void WalkerController::Init(
     EntityID entity, 
+    ComponentList& components,
     ParticleManager& particleManager,
-    World& world, 
-    TransformComponent& transformComponent
+    World& world
 ) {
+    auto& transformComponent = std::get<TransformComponent&>(components);
+
     stopTime_ = 0.0f;
     entity_ = entity;
     targetPosition_ = vec2(
@@ -30,11 +32,13 @@ void WalkerController::Init(
 }
 
 void WalkerController::Update(
-    World& world,
-    MovementComponent& movementComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    ComponentList& components,
+    World& world
 ) {
+    auto& movementComponent = std::get<MovementComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     vec3& position = transformComponent.transform[entity_].position; 
     vec3& desiredMovement = movementComponent.desiredMovement[entity_];
     cloudEmitter_->velocityOffset_ = velocityComponent.velocity[entity_] * 0.75f;

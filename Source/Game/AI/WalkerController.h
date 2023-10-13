@@ -1,14 +1,11 @@
 #pragma once
 #include <glm/vec2.hpp>
 #include "../Entity/EntityID.h"
+#include "../Components/ComponentList.h"
 
 class World;
 class ParticleEmitter;
 class ParticleManager;
-class MovementComponent;
-class SkeletonComponent;
-class TransformComponent;
-class VelocityComponent;
 
 // Enemy will walk around for a little bit
 // When spread is dectected in radius, it will bust and remove a lot
@@ -27,16 +24,14 @@ public:
 
     void Init(
         EntityID entity, 
+        ComponentList& components,
         ParticleManager& particleManager,
-        World& world, 
-        TransformComponent& transformComponent
+        World& world
     );
 
     void Update(
-        World& world,
-        MovementComponent& movementComponent,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
+        ComponentList& componentList,
+        World& world
     );
 
     void FindNewTarget(World& world);

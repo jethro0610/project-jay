@@ -1,20 +1,21 @@
 #include "SkeletonSystem.h"
+#include "../Entity/Entity.h"
+#include "../Components/SkeletonComponent.h"
+#include "../Components/TransformComponent.h"
 #include "../Time.h"
 #include "../../Constants/TimeConstants.h"
 
 constexpr EntityKey key = GetEntityKey<SkeletonComponent, TransformComponent>();
 
 void SkeletonSystem::CalculatePoses(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    SkeletonComponent& skeletonComponent,
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components
 ) {
+    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
+
         skeletonComponent.time[i] += TIMESTEP;
         skeletonComponent.prevTime[i] += TIMESTEP;
 
@@ -76,25 +77,26 @@ void SkeletonSystem::CalculatePoses(
 }
 
 void SkeletonSystem::InterpPoses(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    SkeletonComponent& skeletonComponent,
-    TransformComponent& transformComponent,
+    EntityList& entities,
+    ComponentList& components,
     float interpTime
 ) {
+    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
     const float interpAmount = interpTime / TIMESTEP;
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         const int framerate = skeletonComponent.skeleton[i]->GetFramerate(skeletonComponent.animationIndex[i]);
         if (framerate != 0)
             continue;
 
         for (int p = 0; p < skeletonComponent.renderPose[i].size(); p++) 
-            skeletonComponent.renderPose[i][p] = Transform::Lerp(skeletonComponent.prevPose[i][p], skeletonComponent.pose[i][p], interpAmount);
+            skeletonComponent.renderPose[i][p] = Transform::Lerp(
+                skeletonComponent.prevPose[i][p], 
+                skeletonComponent.pose[i][p], 
+                interpAmount
+            );
     }
 }
 

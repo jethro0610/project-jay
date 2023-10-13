@@ -15,20 +15,18 @@ constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
 constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
     
 void IntervalSpawnSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
+    EntityList& entities,
+    ComponentList& components,
     EntityManager& entityManager,
-    SeedManager& seedManager,
-    IntervalSpawnComponent& intervalSpawnComponent,
-    ProjectileComponent& projectileComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    SeedManager& seedManager
 ) {
+    auto& intervalSpawnComponent = std::get<IntervalSpawnComponent&>(components);
+    auto& projectileComponent = std::get<ProjectileComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         int& timer = intervalSpawnComponent.timer[i];
         timer++;
@@ -47,10 +45,8 @@ void IntervalSpawnSystem::Execute(
                 EntityID entityId = entityManager.CreateEntity(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
                 if (intervalSpawnComponent.launch[i])
                     ProjectileSystem::Launch(
-                        projectileComponent, 
-                        transformComponent, 
-                        velocityComponent, 
-                        entityId, 
+                        components,
+                        entityId,
                         NULL_ENTITY
                     );
             }

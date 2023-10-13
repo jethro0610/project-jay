@@ -2,12 +2,19 @@
 #include "../../Helpers/MapCheck.h"
 #include "../../Logging/Logger.h"
 
-EntityManager::EntityManager() {
+EntityManager::EntityManager() :
+    components_(
+        #define COMPONENTVAR(TYPE, VAR) VAR,
+            CREATECOMPONENTVARS  
+        #undef COMPONENTVAR
+        0
+    ) 
+{
     usableEntities_.push_front(0);
     int idCounter = 0;
     
     #define COMPONENTVAR(TYPE, VAR) \
-        componentMap_[TYPE::GetName()] = &std::get<TYPE>(components_); \
+        componentMap_[TYPE::GetName()] = &VAR; \
         componentIds_[TYPE::GetName()] = TYPE::GetID();
         CREATECOMPONENTVARS  
     #undef COMPONENTVAR

@@ -19,8 +19,12 @@ public:
         return (alive_ && stunTimer_ == 0);
     }
 
-    bool MatchesKey(EntityKey otherKey) const {
-        return (key_ & otherKey) == otherKey;
+    bool ShouldUpdate(EntityKey key) const {
+        return (alive_ && stunTimer_ == 0 && MatchesKey(key));
+    }
+
+    bool MatchesKey(EntityKey key) const {
+        return (key_ & key) == key;
     }
 
     void AddComponentById(int componentId) {

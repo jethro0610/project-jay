@@ -1,20 +1,15 @@
 #pragma once
-#include "../Entity/EntityLimits.h"
-#include "../Entity/Entity.h"
-#include "../Components/SkeletonComponent.h"
-#include "../Components/TransformComponent.h"
+#include "SystemInc.h"
 
 namespace SkeletonSystem {
     void CalculatePoses(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        SkeletonComponent& skeletonComponent,
-        TransformComponent& transformComponent
+        EntityList& entities,
+        ComponentList& components
     );
 
     void InterpPoses(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        SkeletonComponent& skeletonComponent,
-        TransformComponent& transformComponent,
+        EntityList& entities,
+        ComponentList& components,
         float interpTime
     );
 }

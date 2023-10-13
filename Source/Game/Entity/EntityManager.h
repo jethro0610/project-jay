@@ -5,9 +5,11 @@
 #include <tuple>
 #include "Entity.h"
 #include "EntityID.h"
+#include "EntityKey.h"
 #include "../../Helpers/Assert.h"
 #include "../../Logging/Logger.h"
 #include "../Components/ComponentInclude.h"
+#include "../Components/ComponentList.h"
 
 class EntityManager {
 public:
@@ -29,21 +31,16 @@ public:
 
     template <class T>
     T& GetComponent() {
-        return std::get<T>(components_);
+        return std::get<T&>(components_);
     }
 
-    template <class...T>
-    std::tuple<T&...> GetComponents() {
-        return std::make_tuple(std::get<T>(components_)...);
-    }
+    ComponentList components_;
 
 private:
-    std::tuple<
-        #define COMPONENTVAR(TYPE, VAR) TYPE,
-            CREATECOMPONENTVARS  
-        #undef COMPONENTVAR
-        int 
-    > components_;
+    // Create all components based on the Components.h file
+    #define COMPONENTVAR(TYPE, VAR) TYPE VAR;
+        CREATECOMPONENTVARS  
+    #undef COMPONENTVAR
 
     std::unordered_map<std::string, Component*> componentMap_;
     std::unordered_map<std::string, int> componentIds_;

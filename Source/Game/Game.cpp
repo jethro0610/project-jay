@@ -13,8 +13,8 @@ using namespace std::chrono;
 
 void Game::Init() {
     srand(time(0));
-    GETCOMP(SkeletonComponent).renderer = &renderer_;
-    GETCOMP(StaticModelComponent).renderer = &renderer_;
+    std::get<SkeletonComponent&>(entityManager_.components_).renderer = &renderer_;
+    std::get<StaticModelComponent&>(entityManager_.components_).renderer = &renderer_;
 
     particleManager_.LoadEmitterProperty("p_dust", renderer_);
     particleManager_.LoadEmitterProperty("p_cloud", renderer_);
@@ -74,10 +74,10 @@ void Game::Init() {
     enemyTransform.position = vec3(0.0f, 100.0f, 0.0f);
     enemyTransform.scale = vec3(3.0f);
     EntityID walkerEnt = entityManager_.CreateEntity("e_enemy", enemyTransform);
-    testWalker.Init(walkerEnt, particleManager_, world_, GETCOMP(TransformComponent));
+    testWalker.Init(walkerEnt, entityManager_.components_, particleManager_, world_);
 
     camera_.target_ = PLAYER_ENTITY;
-    playerController_.Init(particleManager_, GETCOMP(TransformComponent));
+    playerController_.Init(entityManager_.components_, particleManager_);
 }
 
 void Game::Update() {
@@ -87,130 +87,95 @@ void Game::Update() {
         FreezeSytem::Execute(entityManager_.entities_);
         IntervalSpawnSystem::Execute(
             entityManager_.entities_,
+            entityManager_.components_,
             entityManager_,
-            seedManager_,
-            GETCOMP(IntervalSpawnComponent),
-            GETCOMP(ProjectileComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            seedManager_
         );
         TransformSystem::UpdateLastTransforms(
             entityManager_.entities_,
-            GETCOMP(TransformComponent)
+            entityManager_.components_
         );
         PushSystem::Execute(
             entityManager_.entities_,
-            GETCOMP(PushboxComponent),
-            GETCOMP(TransformComponent) 
+            entityManager_.components_
         );
         HitSystem::Execute(
             entityManager_.entities_,
-            GETCOMP(HitboxComponent),
-            GETCOMP(HurtboxComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            entityManager_.components_
         );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,
-            spreadManager_,
-            GETCOMP(SpreadDetectComponent),
-            GETCOMP(TransformComponent)
+            entityManager_.components_,
+            spreadManager_
         );
         testWalker.Update(
-            world_,
-            GETCOMP(MovementComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            entityManager_.components_,
+            world_
         );
         playerController_.Execute(
+            entityManager_.components_,
             world_,
             spreadManager_,
             camera_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(MeterComponent),
-            GETCOMP(MovementComponent),
-            GETCOMP(SkeletonComponent),
-            GETCOMP(SpreadActivatorComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent),
             inputs_
         );
         VelocitySystem::CalculateGravity(
             entityManager_.entities_,
-            GETCOMP(VelocityComponent)
+            entityManager_.components_
         );
         MovementSystem::Execute(
             entityManager_.entities_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(MovementComponent),
-            GETCOMP(SpreadDetectComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            entityManager_.components_
         );
         ProjectileSystem::Execute(
             entityManager_.entities_,
-            GETCOMP(ProjectileComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent) 
+            entityManager_.components_
         );
         GroundTraceSystem::Execute(
             entityManager_.entities_,
-            world_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(TransformComponent)
+            entityManager_.components_,
+            world_
         );
         GroundStickSystem::Stick(
             entityManager_.entities_,
-            world_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            entityManager_.components_,
+            world_
         );
         VelocitySystem::Apply(
             entityManager_.entities_,
-            GETCOMP(TransformComponent),
-            GETCOMP(VelocityComponent)
+            entityManager_.components_
         );
         TrampleSystem::Execute(
             entityManager_.entities_,
-            spreadManager_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(TrampleComponent),
-            GETCOMP(TransformComponent)
+            entityManager_.components_,
+            spreadManager_
         );
         SpreadActivatorSystem::Execute(
             entityManager_.entities_,
+            entityManager_.components_,
             spreadManager_,
-            world_,
-            GETCOMP(GroundTraceComponent),
-            GETCOMP(MeterComponent),
-            GETCOMP(SpreadActivatorComponent),
-            GETCOMP(SpreadDetectComponent),
-            GETCOMP(TransformComponent)
+            world_
         );
         DestroyMeterSystem::Execute(
             entityManager_.entities_,
+            entityManager_.components_,
             entityManager_,
-            seedManager_,
-            GETCOMP(MeterComponent),
-            GETCOMP(TransformComponent)
+            seedManager_
         );
         SkeletonSystem::CalculatePoses(
             entityManager_.entities_,
-            GETCOMP(SkeletonComponent),
-            GETCOMP(TransformComponent)
+            entityManager_.components_
         );
         timeAccumlulator_ -= TIMESTEP;
     }
     SkeletonSystem::InterpPoses(
         entityManager_.entities_,
-        GETCOMP(SkeletonComponent),
-        GETCOMP(TransformComponent),
+        entityManager_.components_,
         timeAccumlulator_
     );
     TransformSystem::UpdateRenderTransforms(
         entityManager_.entities_,
-        GETCOMP(TransformComponent),
+        entityManager_.components_,
         timeAccumlulator_
     );
     // seedManager_.CalculatePositions(

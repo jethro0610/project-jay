@@ -4,23 +4,19 @@
 #include "../World/World.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
-#include "../../Logging/Logger.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
 
 void GroundTraceSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    World& world,
-    GroundTraceComponent& groundTraceComponent,
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components,
+    World& world
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         float traceDistance = groundTraceComponent.distance[i] + groundTraceComponent.stickOffset[i];
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];

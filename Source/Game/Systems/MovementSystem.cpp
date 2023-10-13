@@ -20,19 +20,17 @@ constexpr EntityKey key = GetEntityKey<
 constexpr EntityKey spreadKey = GetEntityKey<SpreadDetectComponent>();
 
 void MovementSystem::Execute (
-    std::array<Entity, MAX_ENTITIES>& entities,
-    GroundTraceComponent& groundTraceComponent,
-    MovementComponent& movementComponent,
-    SpreadDetectComponent& spreadDetectComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    EntityList& entities,
+    ComponentList& components 
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& movementComponent = std::get<MovementComponent&>(components);
+    auto& spreadDetectComponent = std::get<SpreadDetectComponent&>(components);
+    auto& transformComponent= std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];
@@ -84,7 +82,7 @@ void MovementSystem::Execute (
         vec3 planarVelocity = vec3(velocity.x, 0.0f, velocity.z);
         float planarLength = length(planarVelocity);
         if (
-            entity.MatchesKey(spreadKey) && 
+            entities[i].MatchesKey(spreadKey) && 
             spreadDetectComponent.deteced[i] &&
             planarLength >= 0.0f &&
             onGround

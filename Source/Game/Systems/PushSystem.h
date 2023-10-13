@@ -1,10 +1,9 @@
 #pragma once
-#include <array>
 #include <glm/vec3.hpp>
 #include <vector_const.h>
-#include "../Entity/EntityID.h"
-#include "../Entity/EntityLimits.h"
+#include "SystemInc.h"
 #include "../Collision/Collision.h"
+#include "../Entity/EntityID.h"
 
 class Entity;
 class PushboxComponent;
@@ -21,8 +20,7 @@ typedef vector_const<Push, MAX_COLLISIONS> PushList;
 
 namespace PushSystem {
     void Execute(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        PushboxComponent& pushboxComponent,
-        TransformComponent& transformComponent
+        EntityList& entities,
+        ComponentList& components
     );
 };

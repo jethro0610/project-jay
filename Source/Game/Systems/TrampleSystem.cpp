@@ -11,23 +11,21 @@ constexpr EntityKey key = GetEntityKey<TrampleComponent, TransformComponent>();
 constexpr EntityKey groundKey = GetEntityKey<GroundTraceComponent>();
 
 void TrampleSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities,
-    SpreadManager& spreadManager,
-    GroundTraceComponent& groundTraceComponent,
-    TrampleComponent& trampleComponent,
-    TransformComponent& transformComponent
+    EntityList& entities,
+    ComponentList& components,
+    SpreadManager& spreadManager
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& trampleComponent = std::get<TrampleComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+
     spreadManager.ClearTramples();
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if (!entities[i].ShouldUpdate(key)) continue;
 
         const vec3& position = transformComponent.transform[i].position;
 
-        if (entity.MatchesKey(groundKey)) {
+        if (entities[i].MatchesKey(groundKey)) {
             if (groundTraceComponent.enteredGround[i])
                 spreadManager.Trample(position, trampleComponent.groundEntryRadius[i]);
             else if (groundTraceComponent.onGround[i])

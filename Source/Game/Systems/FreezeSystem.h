@@ -1,7 +1,6 @@
-#include <array>
-#include "../Entity/EntityLimits.h"
-class Entity;
+#pragma once
+#include "SystemInc.h"
 
 namespace FreezeSytem {
-    void Execute(std::array<Entity, MAX_ENTITIES>& entities);
+    void Execute(EntityList& entities);
 }

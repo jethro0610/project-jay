@@ -1,23 +1,12 @@
 #pragma once
-#include <array>
+#include "SystemInc.h"
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include "../Entity/EntityLimits.h"
-class Entity;
-class GroundTraceComponent;
-class MovementComponent;
-class SpreadDetectComponent;
-class TransformComponent;
-class VelocityComponent;
 
 namespace MovementSystem {
     void Execute(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        GroundTraceComponent& groundTraceComponent,
-        MovementComponent& movementComponent,
-        SpreadDetectComponent& spreadDetectComponent,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
+        EntityList& entities,
+        ComponentList& components
     );
 
     void CalculateDefaultMovement(

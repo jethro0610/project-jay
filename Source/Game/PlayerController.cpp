@@ -23,10 +23,10 @@ PlayerController::PlayerController() {
 }
 
 void PlayerController::Init(
-    ParticleManager& particleManager, 
-    TransformComponent& transformComponent
+    ComponentList& components,
+    ParticleManager& particleManager
 ) {
-    Transform& transform = transformComponent.renderTransform[PLAYER_ENTITY];
+    Transform& transform = std::get<TransformComponent&>(components).renderTransform[PLAYER_ENTITY];
     dustEmitter_ = particleManager.RequestEmitter("p_dust");
     dustEmitter_->parent_ = &transform;
     cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
@@ -36,18 +36,20 @@ void PlayerController::Init(
 }
 
 void PlayerController::Execute(
+    ComponentList& components,
     World& world, 
     SpreadManager& spreadManager, 
     Camera& camera,
-    GroundTraceComponent& groundTraceComponent,
-    MeterComponent& meterComponent,
-    MovementComponent& movementComponent,
-    SkeletonComponent& skeletonComponent,
-    SpreadActivatorComponent& spreadActivatorComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent,
     Inputs inputs
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& meterComponent = std::get<MeterComponent&>(components);
+    auto& movementComponent = std::get<MovementComponent&>(components);
+    auto& skeletonComponent = std::get<SkeletonComponent&>(components);
+    auto& spreadActivatorComponent = std::get<SpreadActivatorComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
     cloudEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
     cloudEmitter_->active_ = false;

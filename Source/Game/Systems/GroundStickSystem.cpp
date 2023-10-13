@@ -16,23 +16,19 @@ constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>
 constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 
 void GroundStickSystem::Stick(
-    std::array<Entity, MAX_ENTITIES>& entities, 
-    World& world, 
-    GroundTraceComponent& groundTraceComponent,
-    TransformComponent& transformComponent,
-    VelocityComponent& velocityComponent
+    EntityList& entities, 
+    ComponentList& components,
+    World& world
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& transformComponent = std::get<TransformComponent&>(components);
+    auto& velocityComponent = std::get<VelocityComponent&>(components);
+
     for (int i = 0 ; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
-        if (!groundTraceComponent.stick[i])
-            continue;
-        if (!groundTraceComponent.onGround[i])
-            continue;
-        bool hasVelocity = entity.MatchesKey(velocityKey);
+        if (!entities[i].ShouldUpdate(key)) continue;
+        if (!groundTraceComponent.stick[i]) continue;
+        if (!groundTraceComponent.onGround[i]) continue;
+        bool hasVelocity = entities[i].MatchesKey(velocityKey);
 
         if (!hasVelocity) {
             transformComponent.transform[i].position.y = groundTraceComponent.groundPosition[i];

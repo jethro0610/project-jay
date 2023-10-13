@@ -1,38 +1,25 @@
 #pragma once
-#include <array>
-#include "../Entity/EntityLimits.h"
+#include "SystemInc.h"
 #include "../Entity/EntityID.h"
-class Entity;
 class World;
-class MeterComponent;
-class ProjectileComponent;
-class TransformComponent;
-class VelocityComponent;
 
 namespace ProjectileSystem {
     // TODO: Maybe set a flag instead of having these two functions,
     // that way we're not calling a system in another system
     void Launch(
-        ProjectileComponent& projectileComponent, 
-        TransformComponent& transformComponent, 
-        VelocityComponent& velocityComponent, 
+        ComponentList& components,
         EntityID projectile,
         EntityID target
     );
 
     void HandleContact(
-        MeterComponent& meterComponent,
-        ProjectileComponent& projectileComponent, 
-        TransformComponent& transformComponent, 
-        VelocityComponent& velocityComponent, 
+        ComponentList& components,
         EntityID projectile,
         EntityID reciever
     );
 
     void Execute(
-        std::array<Entity, MAX_ENTITIES>& entities, 
-        ProjectileComponent& projectileComponent,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent
+        EntityList& entities, 
+        ComponentList& components
     );
 }

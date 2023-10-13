@@ -1,17 +1,14 @@
 #pragma once
-#include <array>
-#include "../Entity/EntityLimits.h"
-class Entity;
-class TransformComponent;
+#include "SystemInc.h"
 
 namespace TransformSystem {
     void UpdateLastTransforms(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        TransformComponent& transformComponent
+        EntityList& entities,
+        ComponentList& components
     );
     void UpdateRenderTransforms(
-        std::array<Entity, MAX_ENTITIES>& entities,
-        TransformComponent& transformComponent,
+        EntityList& entities,
+        ComponentList& components,
         float interpTime
     );
 }

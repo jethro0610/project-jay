@@ -12,6 +12,7 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
+#include "
 #include "../Game/Entity/EntityLimits.h"
 
 class Camera;
@@ -43,11 +44,7 @@ public:
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        World& world,
-        MeterComponent& meterComponent,
-        SkeletonComponent& skeletonComponent,
-        StaticModelComponent& staticModelComponent,
-        TransformComponent& transformComponent
+        World& world
     );
 
     Shader& LoadVertexShader_P(std::string name);

@@ -2,16 +2,11 @@
 #include <stdint.h>
 #include "../Types/Inputs.h"
 #include "ParticleManager.h"
+#include "./Components/ComponentList.h"
+
 class Camera;
 class SpreadManager;
 class World;
-class GroundTraceComponent;
-class MeterComponent;
-class MovementComponent;
-class SkeletonComponent;
-class SpreadActivatorComponent;
-class TransformComponent;
-class VelocityComponent;
 
 const int TIME_TO_CUT = 16;
 const int CUT_COOLDOWN_TIME = 16;
@@ -21,21 +16,15 @@ class PlayerController {
 public:
     PlayerController();
     void Init(
-        ParticleManager& particleManager, 
-        TransformComponent& transformComponent
+        ComponentList& components,
+        ParticleManager& particleManager
     );
 
     void Execute(
+        ComponentList& components,
         World& world, 
         SpreadManager& spreadManager, 
         Camera& camera,
-        GroundTraceComponent& groundTraceComponent,
-        MeterComponent& meterComponent,
-        MovementComponent& movementComponent,
-        SkeletonComponent& skeletonComponent,
-        SpreadActivatorComponent& spreadActivatorComponent,
-        TransformComponent& transformComponent,
-        VelocityComponent& velocityComponent,
         Inputs inputs
     );
 

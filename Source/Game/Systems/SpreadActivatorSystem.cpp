@@ -18,24 +18,22 @@ constexpr EntityKey groundKey = GetEntityKey<GroundTraceComponent>();
 constexpr EntityKey meterKey = GetEntityKey<MeterComponent>();
 
 void SpreadActivatorSystem::Execute(
-    std::array<Entity, MAX_ENTITIES>& entities, 
+    EntityList& entities, 
+    ComponentList& components,
     SpreadManager& spreadManager,
-    World& world,
-    GroundTraceComponent& groundTraceComponent,
-    MeterComponent& meterComponent,
-    SpreadActivatorComponent& spreadActivatorComponent,
-    SpreadDetectComponent& spreadDetectComponent,
-    TransformComponent& transformComponent
+    World& world
 ) {
+    auto& groundTraceComponent = std::get<GroundTraceComponent&>(components);
+    auto& meterComponent = std::get<MeterComponent&>(components);
+    auto& spreadActivatorComponent = std::get<SpreadActivatorComponent&>(components);
+    auto& spreadDetectComponent = std::get<SpreadDetectComponent&>(components);
+    auto &transformComponent = std::get<TransformComponent&>(components);
+
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
-            continue;
+        if(!entities[i].ShouldUpdate(key)) continue;
 
         bool onGround = false;
-        if (entity.MatchesKey(groundKey))
+        if (entities[i].MatchesKey(groundKey))
             onGround = groundTraceComponent.onGround[i];
         if (!onGround && spreadActivatorComponent.groundOnly[i])
             continue;
@@ -45,14 +43,14 @@ void SpreadActivatorSystem::Execute(
             continue;
 
         int* meter = nullptr;
-        if (entity.MatchesKey(meterKey))
+        if (entities[i].MatchesKey(meterKey))
             meter = &meterComponent.meter[i];
 
         // TODO : Is the has detect here necessary? Can maybe just assign it
         // by default
         const int& amount = spreadActivatorComponent.amount[i];
         const vec3 position = transformComponent.transform[i].position;
-        const bool hasDetect = entity.MatchesKey(detectKey);
+        const bool hasDetect = entities[i].MatchesKey(detectKey);
         
         if (radius > 0) {
             const AddSpreadInfo addSpreadInfo = spreadManager.AddSpread(

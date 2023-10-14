@@ -15,6 +15,7 @@ struct Hitbox : public Collider {
 class HitboxComponent: public Component {
 public:
     std::array<Hitbox, MAX_ENTITIES> hitbox;
+    std::array<int, MAX_ENTITIES> cooldown;
 
     HitboxComponent() {
 
@@ -35,5 +36,6 @@ public:
         hitbox[entity].active = GetBoolean(data, "active", false);
         hitbox[entity].useVelocity = GetBoolean(data, "use_velocity", false);
         hitbox[entity].directionInfluence = GetFloat(data, "direction_influence", false);
+        cooldown[entity] = 0;
     }
 };

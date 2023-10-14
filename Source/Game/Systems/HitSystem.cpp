@@ -11,7 +11,7 @@
 using namespace glm;
 
 const int HITSTUN = 4;
-const int HURTCOOLDOWN = 16;
+const int HITCOOLDOWN = 16;
 
 constexpr EntityKey hitKey = GetEntityKey<HitboxComponent, TransformComponent>();
 constexpr EntityKey hurtKey = GetEntityKey<HurtboxComponent, TransformComponent>();
@@ -27,8 +27,8 @@ void HitSystem::Execute(
     HitList hitList;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(hurtKey)) continue;
-        int& cooldown = hurtboxComponent.hurtbox[i].cooldown;
+        if (!entities[i].ShouldUpdate(hitKey)) continue;
+        int& cooldown = hitboxComponent.cooldown[i];
         if (cooldown > 0)
             cooldown--;
     }
@@ -36,6 +36,7 @@ void HitSystem::Execute(
     for (int h = 0; h < MAX_ENTITIES; h++) {
         if (!entities[h].ShouldUpdate(hitKey)) continue;
         if (!hitboxComponent.hitbox[h].active) continue;
+        if (hitboxComponent.cooldown[h] > 0) continue;
         const Transform& hitterTransform = transformComponent.transform[h];
         const Hitbox& hitbox = hitboxComponent.hitbox[h];
 
@@ -45,7 +46,6 @@ void HitSystem::Execute(
 
             const Transform& targetTransform = transformComponent.transform[t];
             const Hurtbox& hurtbox = hurtboxComponent.hurtbox[t];
-            if (hurtbox.cooldown > 0) continue;
             
             Collision collision = Collision::GetCollision(
                 hitterTransform, 
@@ -92,7 +92,7 @@ void HitSystem::Execute(
 
         entities[hit.hitter].stunTimer_ = HITSTUN;
         entities[hit.target].stunTimer_ = HITSTUN;
-        hurtbox.cooldown = HURTCOOLDOWN;
+        hitboxComponent.cooldown[hit.hitter] = HITCOOLDOWN;
     }
 }
 

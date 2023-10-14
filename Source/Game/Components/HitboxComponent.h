@@ -3,8 +3,11 @@
 #include "../Collision/Collider.h"
 
 struct Hitbox : public Collider {
+    bool useVelocity;
+    float directionInfluence;
     float horizontalKb;
     float verticalKb;
+
     int damage;
     bool active;
 };
@@ -26,9 +29,11 @@ public:
         hitbox[entity].radius = GetFloat(data, "radius");
         hitbox[entity].top = GetFloat(data, "top");
         hitbox[entity].bottom = GetFloat(data, "bottom");
-        hitbox[entity].horizontalKb = GetFloat(data, "horizontal_kb");
-        hitbox[entity].verticalKb = GetFloat(data, "vertical_kb");
+        hitbox[entity].horizontalKb = GetFloat(data, "horizontal_kb", GetFloat(data, "horizontal_vel_mult", 1.0f));
+        hitbox[entity].verticalKb = GetFloat(data, "vertical_kb", 1.0f);
         hitbox[entity].damage = GetInt(data, "damage");
         hitbox[entity].active = GetBoolean(data, "active", false);
+        hitbox[entity].useVelocity = GetBoolean(data, "use_velocity", false);
+        hitbox[entity].directionInfluence = GetFloat(data, "direction_influence", false);
     }
 };

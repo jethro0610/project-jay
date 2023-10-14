@@ -1,14 +1,12 @@
 #include "WalkerController.h"
-#include "../../Constants/TimeConstants.h"
-#include "../../Helpers/Random.h"
-#include "../World/World.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/SkeletonComponent.h"
 #include "../Components/TransformComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../ParticleManager.h"
-#include <glm/vec3.hpp>
-#include <glm/gtx/string_cast.hpp>
+#include "../../Helpers/Random.h"
+#include "../../Constants/TimeConstants.h"
+#include "../World/World.h"
 using namespace glm;
 
 void WalkerController::Init(

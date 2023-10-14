@@ -3,7 +3,7 @@
 #include "../Collision/Collider.h"
 
 struct Hurtbox : public Collider {
-    float cooldown;
+    int cooldown;
 };
 
 class HurtboxComponent: public Component {
@@ -23,5 +23,6 @@ public:
         hurtbox[entity].radius = GetFloat(data, "radius");
         hurtbox[entity].top = GetFloat(data, "top");
         hurtbox[entity].bottom = GetFloat(data, "bottom");
+        hurtbox[entity].cooldown = 0;
     }
 };

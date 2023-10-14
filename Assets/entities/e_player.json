@@ -54,10 +54,12 @@
             "recieve": true
         },
         "hitbox": {
+            "use_velocity": true,
             "radius": 4.0,
-            "top": 4.0,
-            "horizontal_kb": 50.0,
-            "vertical_kb": 50.0,
+            "top": 3.0,
+            "horizontal_vel_mult": 0.95,
+            "vertical_kb": 35.0,
+            "direction_influence": 0.5,
             "active": true
         },
         "velocity": {

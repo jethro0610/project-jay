@@ -44,7 +44,6 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         std::string name = GetString(data, "skeleton", "null_skeleton");
-
         skeleton[entity] = &renderer->GetSkeleton(name);
         pose[entity].resize(skeleton[entity]->bones_.size());
         renderPose[entity].resize(skeleton[entity]->bones_.size());

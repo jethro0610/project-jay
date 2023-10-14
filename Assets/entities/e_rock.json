@@ -29,7 +29,8 @@
         "hurtbox": {
             "radius": 2.0,
             "top": 1.0,
-            "bottom": 1.0
+            "bottom": 1.0,
+            "rotate": true
         },
         "projectile": {
             "type": "target",

@@ -7,6 +7,16 @@
 
 - Some enemies stay in center, others at border
 
+- Animation for up and strong hits
+- Hitbox clank
+- Enemy model
+- Enemy spread removal
+- Enemy jumP
+
+- Projectiles are hittable too, as up and strong hits
+- Add reflecting hits
+- Rework projectiles
+
 - Nosise texture sample on CPU
 - Spread array instead of map
 

@@ -1,4 +1,5 @@
 #include "WalkerController.h"
+#include "../Components/HitboxComponent.h"
 #include "../Components/MovementComponent.h"
 #include "../Components/SkeletonComponent.h"
 #include "../Components/TransformComponent.h"
@@ -36,6 +37,7 @@ void WalkerController::Update(
     auto& movementComponent = components.Get<MovementComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
     auto& velocityComponent = components.Get<VelocityComponent>();
+    auto& hitboxComponent = components.Get<HitboxComponent>();
 
     vec3& position = transformComponent.transform[entity_].position; 
     vec3& desiredMovement = movementComponent.desiredMovement[entity_];
@@ -48,6 +50,7 @@ void WalkerController::Update(
     }
 
     if (stopTime_ > 0.0f) {
+        hitboxComponent.hitbox[entity_].active = false;
         desiredMovement = vec3(0.0f);
         stopTime_ -= TIMESTEP;
         return;
@@ -57,6 +60,8 @@ void WalkerController::Update(
     desiredMovement = vec3(targetPosition_.x - position.x, 0.0f, targetPosition_.y - position.z);
     if (length(desiredMovement) > 0.0f)
         desiredMovement = normalize(desiredMovement);
+
+    hitboxComponent.hitbox[entity_].active = true; 
 }
 
 void WalkerController::FindNewTarget(World& world) {

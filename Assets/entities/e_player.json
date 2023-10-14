@@ -60,7 +60,12 @@
             "horizontal_vel_mult": 0.95,
             "vertical_kb": 35.0,
             "direction_influence": 0.5,
-            "active": true
+            "active": true,
+            "hitlag": 4
+        },
+        "hurtbox": {
+            "radius": 2.0,
+            "top": 1.0
         },
         "velocity": {
             "use_gravity": true

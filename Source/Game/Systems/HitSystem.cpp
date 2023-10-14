@@ -10,8 +10,7 @@
 #include "../../Logging/Logger.h"
 using namespace glm;
 
-const int HITSTUN = 4;
-const int HITCOOLDOWN = 16;
+const int HURTCOOLDOWN = 16;
 
 constexpr EntityKey hitKey = GetEntityKey<HitboxComponent, TransformComponent>();
 constexpr EntityKey hurtKey = GetEntityKey<HurtboxComponent, TransformComponent>();
@@ -27,8 +26,9 @@ void HitSystem::Execute(
     HitList hitList;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(hitKey)) continue;
-        int& cooldown = hitboxComponent.cooldown[i];
+        if (!entities[i].ShouldUpdate(hurtKey)) continue;
+        hurtboxComponent.hurt[i] = false;
+        int& cooldown = hurtboxComponent.cooldown[i];
         if (cooldown > 0)
             cooldown--;
     }
@@ -36,13 +36,14 @@ void HitSystem::Execute(
     for (int h = 0; h < MAX_ENTITIES; h++) {
         if (!entities[h].ShouldUpdate(hitKey)) continue;
         if (!hitboxComponent.hitbox[h].active) continue;
-        if (hitboxComponent.cooldown[h] > 0) continue;
         const Transform& hitterTransform = transformComponent.transform[h];
         const Hitbox& hitbox = hitboxComponent.hitbox[h];
+        hitboxComponent.hit[h] = false;
 
         for (int t = 0; t < MAX_ENTITIES; t++) {
             if (!entities[t].ShouldUpdate(hurtKey)) continue;
             if (h == t) continue;
+            if (hurtboxComponent.cooldown[t] > 0) continue;
 
             const Transform& targetTransform = transformComponent.transform[t];
             const Hurtbox& hurtbox = hurtboxComponent.hurtbox[t];
@@ -61,8 +62,10 @@ void HitSystem::Execute(
     for (const Hit& hit : hitList) {
         Hitbox& hitbox = hitboxComponent.hitbox[hit.hitter];
         Hurtbox& hurtbox = hurtboxComponent.hurtbox[hit.target];
-        const vec3 normalizeRes = normalize(hit.collision.resolution);
+        if (!hurtbox.recieveKnockback)
+            continue;
 
+        const vec3 normalizeRes = normalize(hit.collision.resolution);
         if (hitbox.useVelocity) {
             // Get the planar velocity of the hitter
             vec3 velocity = velocityComponent.velocity[hit.hitter];
@@ -86,13 +89,17 @@ void HitSystem::Execute(
                 normalizeRes * hitboxComponent.hitbox[hit.hitter].horizontalKb + 
                 Transform::worldUp * hitboxComponent.hitbox[hit.hitter].verticalKb;
         }
-        velocityComponent.angularVelocity[hit.target] = quat(
-            cross(Transform::worldUp, normalizeRes * length(velocityComponent.velocity[hit.target]) * 0.001f)
-        );
 
-        entities[hit.hitter].stunTimer_ = HITSTUN;
-        entities[hit.target].stunTimer_ = HITSTUN;
-        hitboxComponent.cooldown[hit.hitter] = HITCOOLDOWN;
+        if (hurtbox.rotate)
+            velocityComponent.angularVelocity[hit.target] = quat(
+                cross(Transform::worldUp, normalizeRes * length(velocityComponent.velocity[hit.target]) * 0.001f)
+            );
+
+        entities[hit.hitter].stunTimer_ = hitbox.hitlag;
+        entities[hit.target].stunTimer_ = hitbox.hitlag;
+        hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
+        hurtboxComponent.hurt[hit.target] = true;
+        hitboxComponent.hit[hit.hitter] = true;
     }
 }
 

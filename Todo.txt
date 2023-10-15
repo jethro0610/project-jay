@@ -12,6 +12,7 @@
 - Enemy model
 - Enemy spread removal
 - Enemy jumP
+- Freeze emitters with entity
 
 - Projectiles are hittable too, as up and strong hits
 - Add reflecting hits

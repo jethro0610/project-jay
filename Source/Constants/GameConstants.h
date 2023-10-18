@@ -1,4 +1,4 @@
 #pragma once
 #include <stdint.h>
 const float METEOR_SPEED = 50.0f;
-const int MAX_SEED = 4096;
+const int MAX_SEED = 2048;

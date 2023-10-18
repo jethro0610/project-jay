@@ -49,7 +49,7 @@ const int RENDER_VIEW = 1;
 const int POST_PROCESS_VIEW = 2;
 const int UI_VIEW = 3;
 
-Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
+Renderer::Renderer(GLFWwindow* window) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
     width_ = 1280;
@@ -104,7 +104,8 @@ Renderer::Renderer(FastNoiseLite& noise, GLFWwindow* window) {
     WorldVertex::Init();
     TextureQuadVertex::Init();
 
-    noiseTexture_ = MakeNoiseTexture_P(noise, 4096, 1024);
+    FastNoiseLite fNoise_temp;
+    noiseTexture_ = MakeNoiseTexture_P(fNoise_temp, 4096, 1024);
     vec4 noiseProps;
     noiseProps.x = 1024;
     noiseProps.y = 1.0f / (1024 * 2.0f);

@@ -1,6 +1,6 @@
 #ifndef SHARED_SHADER
 #pragma once
-class FastNoiseLite;
+class Noise;
 #endif
 
 struct WorldProperties {
@@ -12,7 +12,7 @@ struct WorldProperties {
     float edgePower;
 
     #ifndef SHARED_SHADER
-    FastNoiseLite& noise;
+    Noise& noise;
     #else
     int noise;
     #endif

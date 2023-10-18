@@ -28,7 +28,7 @@ public:
 
 private:
     Platform platform_;
-    FastNoiseLite noise_;
+    // FastNoiseLite noise_;
     EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;

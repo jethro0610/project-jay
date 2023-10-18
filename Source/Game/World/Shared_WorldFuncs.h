@@ -3,12 +3,12 @@
 #pragma once
 #include <glm/vec2.hpp> 
 #include <glm/gtx/compatibility.hpp> 
-#include <FastNoiseLite.h>
+#include "../../Types/Noise.h"
 #include "../../Logging/Logger.h"
 #include "../../Logging/ScreenText.h"
 #include "Shared_WorldProperties.h"
-#define NOISE_TYPE FastNoiseLite&
-#define SAMPLENOISE(noisePos) noise.GetNoise(noisePos.x, noisePos.y)
+#define NOISE_TYPE Noise&
+#define SAMPLENOISE(noisePos) noise.Sample(noisePos.x + 2048, noisePos.y + 2048)
 #define INLINE inline
 using namespace glm;
 
@@ -26,7 +26,7 @@ uniform vec4 u_noiseProps;
 uniform vec4 u_worldMeshOffset;
 SAMPLER2D(s_worldNoise, 15);
 #define NOISE_TYPE float
-#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos * u_noiseProps.y + vec2(0.5f, 0.5f), 0)
+#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos / 2048.0f + vec2(0.5f, 0.5f), 0)
 #define INLINE 
 
 #endif

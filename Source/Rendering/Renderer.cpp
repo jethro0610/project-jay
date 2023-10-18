@@ -17,7 +17,7 @@ void Renderer::Render(
 ) {
     StartFrame_P();
 
-    RenderWorld_P(world);
+    // RenderWorld_P(world);
     RenderEntities_P(entities, components);
     RenderSpread_P(spreadManager);
     RenderSeed_P(seedManager);

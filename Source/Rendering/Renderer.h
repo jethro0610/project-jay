@@ -30,7 +30,7 @@ class ParticleManager;
 class Renderer {
 public:
     #ifdef _PC
-    Renderer(FastNoiseLite& noise, GLFWwindow* window);
+    Renderer(GLFWwindow* window);
     #endif
     Camera* camera_;
 

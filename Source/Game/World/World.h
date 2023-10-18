@@ -4,14 +4,13 @@
 #include <glm/gtx/hash.hpp>
 #include <vector>
 #include <unordered_set>
-#include "TerrainModifier.h"
+#include "../../Types/Noise.h"
 #include "Shared_WorldProperties.h"
-
-class FastNoiseLite;
+#include "TerrainModifier.h"
 
 class World {
 public:
-    World(FastNoiseLite& noise);
+    World();
 
     glm::vec2 GetDistance(glm::vec2 position) const;
     glm::vec2 GetDistance(glm::vec3 position) const;
@@ -22,4 +21,7 @@ public:
     glm::vec3 GetNormal(glm::vec3 position) const;
 
     WorldProperties properties_;
+
+private:
+    Noise noise_;
 };

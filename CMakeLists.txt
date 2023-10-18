@@ -53,6 +53,7 @@ file(GLOB SOURCES
     Source/Rendering/Skeleton.cpp
 
     Source/Types/Gamepad.cpp
+    Source/Types/Noise.cpp
     Source/Types/Transform.cpp
 
     Source/Rendering/PC_Renderer.cpp

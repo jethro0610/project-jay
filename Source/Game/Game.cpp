@@ -169,7 +169,6 @@ void Game::Update() {
         );
         timeAccumlulator_ -= TIMESTEP;
     }
-
     SkeletonSystem::InterpPoses(
         entityManager_.entities_,
         entityManager_.components_,

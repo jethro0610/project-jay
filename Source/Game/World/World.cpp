@@ -4,7 +4,7 @@
 
 using namespace glm;
 
-World::World(FastNoiseLite& noise):
+World::World():
     properties_({
         0.0f,
         128.0f,
@@ -12,7 +12,7 @@ World::World(FastNoiseLite& noise):
         128.0f,
         0.075f,
         2.0f,
-        noise
+        noise_
     })
 {
 

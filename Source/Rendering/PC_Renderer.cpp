@@ -347,7 +347,7 @@ void Renderer::InitWorldMesh_P() {
 Texture Renderer::MakeNoiseTexture_P(Noise& noise) {
     return bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F,
-        BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
+        BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
         bgfx::copy(noise.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
     );
 }

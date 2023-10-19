@@ -27,7 +27,7 @@ uniform vec4 u_noiseProps;
 uniform vec4 u_worldMeshOffset;
 SAMPLER2D(s_worldNoise, 15);
 #define NOISE_TYPE float
-#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos / 1024.0f, 0)
+#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos / 1024.0f + vec2(0.5f, 0.5f), 0)
 #define SAMPLENOISEFAST(noisePos) (1 + 1)
 #define INLINE 
 

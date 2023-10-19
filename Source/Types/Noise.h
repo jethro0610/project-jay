@@ -1,12 +1,12 @@
 #pragma once
 #include <glm/vec2.hpp>
 
-const int NOISE_RESOLUTION = 1024;
+const int NOISE_RESOLUTION = 4096;
 const int HALF_RESOLUTION = NOISE_RESOLUTION / 2;
 
 class Noise {
 public:
-    Noise(float range = 2048.0f); 
+    Noise(float range = 1024.0f); 
     Noise(const Noise&) = delete;
     Noise& operator=(const Noise&) = delete;
     ~Noise();

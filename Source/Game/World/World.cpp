@@ -19,26 +19,19 @@ World::World(Noise& noise):
 
 }
 
-vec2 World::GetDistance(const vec2& position) const {
-    return getWorldDistance(position, properties_);
+vec2 World::GetDistance(const vec2& position, NoiseAccuracy accuracy) const {
+    return getWorldDistance(position, properties_, accuracy);
 }
 
-vec2 World::GetDistanceFast(const vec2& position) const {
-    return getWorldDistanceFast(position, properties_);
+vec2 World::GetDistance(const vec3& position, NoiseAccuracy accuracy) const {
+    return GetDistance(vec2(position.x, position.z), accuracy);
 }
 
-vec2 World::GetDistance(const vec3& position) const {
-    return GetDistance(vec2(position.x, position.z));
-}
-
-vec2 World::GetDistanceFast(const vec3& position) const {
-    return GetDistanceFast(vec2(position.x, position.z));
-}
-
-float World::GetHeight(const vec2& position) const {
+float World::GetHeight(const vec2& position, NoiseAccuracy accuracy) const {
     vec2 worldDistance = getWorldDistance(
         position,
-        properties_ 
+        properties_,
+        accuracy
     );
 
     if (worldDistance.x > 32.0f)
@@ -47,39 +40,18 @@ float World::GetHeight(const vec2& position) const {
     return worldDistance.y;
 }
 
-float World::GetHeightFast(const vec2& position) const {
-    vec2 worldDistance = getWorldDistanceFast(
-        position,
-        properties_ 
-    );
-
-    if (worldDistance.x > 32.0f)
-        return -INFINITY;
-
-    return worldDistance.y;
-}
-
-
-float World::GetHeight(const vec3& position) const {
-    float height = GetHeight(vec2(position.x, position.z));
+float World::GetHeight(const vec3& position, NoiseAccuracy accuracy) const {
+    float height = GetHeight(vec2(position.x, position.z), accuracy);
     if (position.y < height - 1.0f)
         return -INFINITY;
 
     return height;
 }
 
-float World::GetHeightFast(const vec3& position) const {
-    float height = GetHeightFast(vec2(position.x, position.z));
-    if (position.y < height - 1.0f)
-        return -INFINITY;
-
-    return height;
+vec3 World::GetNormal(const vec2& position, NoiseAccuracy accuracy) const {
+    return getWorldNormal(position, properties_, accuracy);
 }
 
-vec3 World::GetNormal(const vec2& position) const {
-    return getWorldNormal(position, properties_);
-}
-
-vec3 World::GetNormal(const vec3& position) const {
-    return GetNormal(vec2(position.x, position.z));
+vec3 World::GetNormal(const vec3& position, NoiseAccuracy accuracy) const {
+    return GetNormal(vec2(position.x, position.z), accuracy);
 }

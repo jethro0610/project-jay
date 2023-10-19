@@ -12,18 +12,14 @@ class World {
 public:
     World(Noise& noise);
 
-    glm::vec2 GetDistance(const glm::vec2& position) const;
-    glm::vec2 GetDistanceFast(const glm::vec2& position) const;
-    glm::vec2 GetDistance(const glm::vec3& position) const;
-    glm::vec2 GetDistanceFast(const glm::vec3& position) const;
+    glm::vec2 GetDistance(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;
+    glm::vec2 GetDistance(const glm::vec3& position, NoiseAccuracy accuracy = NA_Normal) const;
 
-    float GetHeight(const glm::vec2& position) const;
-    float GetHeightFast(const glm::vec2& position) const;
-    float GetHeight(const glm::vec3& position) const;
-    float GetHeightFast(const glm::vec3& position) const;
+    float GetHeight(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;
+    float GetHeight(const glm::vec3& position, NoiseAccuracy accuracy = NA_Normal) const;
 
-    glm::vec3 GetNormal(const glm::vec2& position) const;
-    glm::vec3 GetNormal(const glm::vec3& position) const;
+    glm::vec3 GetNormal(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;
+    glm::vec3 GetNormal(const glm::vec3& position, NoiseAccuracy accuracy = NA_Normal) const;
 
     WorldProperties properties_;
 

@@ -8,10 +8,12 @@
 #include "../Time.h"
 #include "../../Constants/TimeConstants.h"
 #include "../../Helpers/Random.h"
+#include "../../Logging/ScreenText.h"
 using namespace glm;
 
 // TODO: Track any entity that bubbles onto it
 void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 offset) {
+    // TODO: Remove oldest seed instead
     if (seeds_.size() >= MAX_SEED)
         seeds_.remove(0);
 
@@ -39,6 +41,7 @@ void SeedManager::CalculatePositions(
 ) {
     auto& meterComponent = components.Get<MeterComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
+    SCREENLINE(11, "Seeds : " + std::to_string(seeds_.size()));
 
     for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];
@@ -52,7 +55,7 @@ void SeedManager::CalculatePositions(
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
-        float height = world.GetHeightFast(vec2(positions_[i].x, positions_[i].z))  + 0.25f;
+        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z), NA_Low) + 0.25f;
         if (positions_[i].y < height)
             positions_[i].y = height;
 

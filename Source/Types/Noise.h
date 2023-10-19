@@ -1,8 +1,15 @@
 #pragma once
 #include <glm/vec2.hpp>
+#include <FastNoiseLite.h>
 
 const int NOISE_RESOLUTION = 4096;
 const int HALF_RESOLUTION = NOISE_RESOLUTION / 2;
+
+enum NoiseAccuracy {
+    NA_High,
+    NA_Normal,
+    NA_Low 
+};
 
 class Noise {
 public:
@@ -11,13 +18,13 @@ public:
     Noise& operator=(const Noise&) = delete;
     ~Noise();
 
-    float Sample(float x, float y);
-    float Sample(const glm::vec2& position) { return Sample(position.x, position.y ); }
-    float SampleFast(float x, float y);
-    float SampleFast(const glm::vec2& position) { return SampleFast(position.x, position.y); }
+    float Sample(float x, float y, NoiseAccuracy accuracy = NA_Normal);
+    float Sample(const glm::vec2& position, NoiseAccuracy accuracy= NA_Normal) { return Sample(position.x, position.y, accuracy); }
     float* GetData() { return (float*)data_; }
 
 private:
     float range_;
+    float scale_;
     float data_[NOISE_RESOLUTION][NOISE_RESOLUTION];
+    FastNoiseLite fNoise_;
 };

@@ -55,5 +55,8 @@ float Noise::Sample(float x, float y, NoiseAccuracy accuracy) {
             int sY = (int)y % NOISE_RESOLUTION;//std::clamp((int)y, 0, NOISE_RESOLUTION);
             return data_[sY][sX];
         }
+        
+        default:
+            return 0.0f;
     }
 }

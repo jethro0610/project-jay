@@ -30,6 +30,7 @@ public:
     vector_contig<Seed, MAX_SEED> seeds_;
     std::array<glm::vec4, MAX_SEED> positions_;
 
+    void RemoveOldest();
     void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
     void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2, EntityID capturer = NULL_ENTITY);
 

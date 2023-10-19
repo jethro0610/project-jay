@@ -11,11 +11,24 @@
 #include "../../Logging/ScreenText.h"
 using namespace glm;
 
+void SeedManager::RemoveOldest() {
+    int oldest = -1;
+    float age = INFINITY;
+
+    for (int i = 0; i < seeds_.size(); i++) {
+        if (seeds_[i].startTime < age) {
+            oldest = i;
+            age = seeds_[i].startTime;
+        }
+    }
+
+    seeds_.remove(oldest);
+}
+
 // TODO: Track any entity that bubbles onto it
 void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 offset) {
-    // TODO: Remove oldest seed instead
     if (seeds_.size() >= MAX_SEED)
-        seeds_.remove(0);
+        RemoveOldest();
 
     Seed seed {
         vec4(position, 0.0f),

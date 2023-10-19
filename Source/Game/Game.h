@@ -12,7 +12,6 @@
 #include "../Rendering/Renderer.h"
 #include "./AI/WalkerController.h"
 #include "World/World.h"
-#include <FastNoiseLite.h>
 
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
@@ -28,7 +27,7 @@ public:
 
 private:
     Platform platform_;
-    // FastNoiseLite noise_;
+    Noise noise_;
     EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;

@@ -8,7 +8,8 @@
 #include "../../Logging/ScreenText.h"
 #include "Shared_WorldProperties.h"
 #define NOISE_TYPE Noise&
-#define SAMPLENOISE(noisePos) noise.Sample(noisePos.x + 2048, noisePos.y + 2048)
+#define SAMPLENOISE(noisePos) noise.Sample(noisePos)
+#define SAMPLENOISEFAST(noisePos) noise.SampleFast(noisePos)
 #define INLINE inline
 using namespace glm;
 
@@ -26,7 +27,8 @@ uniform vec4 u_noiseProps;
 uniform vec4 u_worldMeshOffset;
 SAMPLER2D(s_worldNoise, 15);
 #define NOISE_TYPE float
-#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos / 2048.0f + vec2(0.5f, 0.5f), 0)
+#define SAMPLENOISE(noisePos) texture2DLod(s_worldNoise, noisePos / 1024.0f, 0)
+#define SAMPLENOISEFAST(noisePos) (1 + 1)
 #define INLINE 
 
 #endif
@@ -35,15 +37,30 @@ INLINE float sampleNoise(vec2 position, NOISE_TYPE noise) {
     return SAMPLENOISE(position);
 }
 
+INLINE float sampleNoiseFast(vec2 position, NOISE_TYPE noise) {
+    return SAMPLENOISEFAST(position);
+}
+
 INLINE float sampleNoise(vec2 position, float scale, NOISE_TYPE noise) {
     vec2 samplePos = position * scale;
     return sampleNoise(samplePos, noise);
+}
+
+INLINE float sampleNoiseFast(vec2 position, float scale, NOISE_TYPE noise) {
+    vec2 samplePos = position * scale;
+    return sampleNoiseFast(samplePos, noise);
 }
 
 INLINE float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise) {
     if (position.x != 0.0f || position.y != 0.0f)
         position = normalize(position) * jaggedness;
     return sampleNoise(position, noise);
+}
+
+INLINE float sampleNoiseBlobFast(vec2 position, float jaggedness, NOISE_TYPE noise) {
+    if (position.x != 0.0f || position.y != 0.0f)
+        position = normalize(position) * jaggedness;
+    return sampleNoiseFast(position, noise);
 }
 
 INLINE vec2 getWorldDistance(vec2 position, WorldProperties props) {
@@ -57,6 +74,23 @@ INLINE vec2 getWorldDistance(vec2 position, WorldProperties props) {
     float edgeHeight = -pow(edgeCloseness, props.edgePower);
 
     float terrainVal = sampleNoise(position, 0.75f, props.noise);
+    terrainVal = (terrainVal + 1.0f) * 0.5f;
+    float terrainHeight = terrainVal * 12.0f;
+
+    return vec2(edgeDistance, terrainHeight + edgeHeight);
+}
+
+INLINE vec2 getWorldDistanceFast(vec2 position, WorldProperties props) {
+    float blobVal = sampleNoiseBlobFast(position, props.edgeJaggedness, props.noise);
+    blobVal = (blobVal + 1.0f) * 0.5f;
+
+    float blobRadius = props.minRadius + blobVal * (props.maxRadius - props.minRadius);
+    float curRadius = length(position);
+    float edgeDistance = curRadius - blobRadius;
+    float edgeCloseness = max(1.0f + edgeDistance * props.edgeFalloff, 0.0f);
+    float edgeHeight = -pow(edgeCloseness, props.edgePower);
+
+    float terrainVal = sampleNoiseFast(position, 0.75f, props.noise);
     terrainVal = (terrainVal + 1.0f) * 0.5f;
     float terrainHeight = terrainVal * 12.0f;
 

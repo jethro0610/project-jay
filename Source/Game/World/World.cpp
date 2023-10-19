@@ -4,7 +4,8 @@
 
 using namespace glm;
 
-World::World():
+World::World(Noise& noise):
+    noise_(noise),
     properties_({
         0.0f,
         128.0f,
@@ -12,21 +13,29 @@ World::World():
         128.0f,
         0.075f,
         2.0f,
-        noise_
+        noise
     })
 {
 
 }
 
-vec2 World::GetDistance(vec2 position) const {
+vec2 World::GetDistance(const vec2& position) const {
     return getWorldDistance(position, properties_);
 }
 
-vec2 World::GetDistance(vec3 position) const {
+vec2 World::GetDistanceFast(const vec2& position) const {
+    return getWorldDistanceFast(position, properties_);
+}
+
+vec2 World::GetDistance(const vec3& position) const {
     return GetDistance(vec2(position.x, position.z));
 }
 
-float World::GetHeight(vec2 position) const {
+vec2 World::GetDistanceFast(const vec3& position) const {
+    return GetDistanceFast(vec2(position.x, position.z));
+}
+
+float World::GetHeight(const vec2& position) const {
     vec2 worldDistance = getWorldDistance(
         position,
         properties_ 
@@ -38,7 +47,20 @@ float World::GetHeight(vec2 position) const {
     return worldDistance.y;
 }
 
-float World::GetHeight(vec3 position) const {
+float World::GetHeightFast(const vec2& position) const {
+    vec2 worldDistance = getWorldDistanceFast(
+        position,
+        properties_ 
+    );
+
+    if (worldDistance.x > 32.0f)
+        return -INFINITY;
+
+    return worldDistance.y;
+}
+
+
+float World::GetHeight(const vec3& position) const {
     float height = GetHeight(vec2(position.x, position.z));
     if (position.y < height - 1.0f)
         return -INFINITY;
@@ -46,10 +68,18 @@ float World::GetHeight(vec3 position) const {
     return height;
 }
 
-vec3 World::GetNormal(vec2 position) const {
+float World::GetHeightFast(const vec3& position) const {
+    float height = GetHeightFast(vec2(position.x, position.z));
+    if (position.y < height - 1.0f)
+        return -INFINITY;
+
+    return height;
+}
+
+vec3 World::GetNormal(const vec2& position) const {
     return getWorldNormal(position, properties_);
 }
 
-vec3 World::GetNormal(vec3 position) const {
+vec3 World::GetNormal(const vec3& position) const {
     return GetNormal(vec2(position.x, position.z));
 }

@@ -5,7 +5,6 @@
 #include <glm/mat3x3.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <iostream>
-#include <FastNoiseLite.h>
 #include <random>
 #include <nlohmann/json.hpp>
 
@@ -49,7 +48,7 @@ const int RENDER_VIEW = 1;
 const int POST_PROCESS_VIEW = 2;
 const int UI_VIEW = 3;
 
-Renderer::Renderer(GLFWwindow* window) {
+Renderer::Renderer(Noise& noise, GLFWwindow* window) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
     width_ = 1280;
@@ -104,8 +103,8 @@ Renderer::Renderer(GLFWwindow* window) {
     WorldVertex::Init();
     TextureQuadVertex::Init();
 
-    FastNoiseLite fNoise_temp;
-    noiseTexture_ = MakeNoiseTexture_P(fNoise_temp, 4096, 1024);
+    noiseTexture_ = MakeNoiseTexture_P(noise);
+    textures_["t_g_noise"] = noiseTexture_;
     vec4 noiseProps;
     noiseProps.x = 1024;
     noiseProps.y = 1.0f / (1024 * 2.0f);
@@ -345,29 +344,12 @@ void Renderer::InitWorldMesh_P() {
     delete[] worldIndices;
 }
 
-Texture Renderer::MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance) {
-    Texture texture;
-    float halfResolution = resolution /  2.0f;
-    float scale = distance / halfResolution;
-
-    float* textureData = new float[resolution * resolution];
-    for (int x = 0; x < resolution; x++) 
-    for (int y = 0; y < resolution; y++)  {
-        float offsetX = (x - halfResolution) * scale;
-        float offsetY = (y - halfResolution) * scale;
-        int index = y * resolution + x;
-
-        textureData[index] = noise.GetNoise(offsetX, offsetY);
-    };
-
-    texture = bgfx::createTexture2D(resolution, resolution, false, 1, 
+Texture Renderer::MakeNoiseTexture_P(Noise& noise) {
+    return bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_NONE,
-        bgfx::copy(textureData, sizeof(float) * resolution * resolution)
+        bgfx::copy(noise.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
     );
-    delete[] textureData;
-
-    return texture;
 }
 
 void Renderer::StartFrame_P() {

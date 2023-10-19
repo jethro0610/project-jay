@@ -21,7 +21,7 @@
 #endif
 
 class Camera;
-class FastNoiseLite;
+class Noise;
 class SeedManager;
 class SpreadManager;
 class World;
@@ -30,7 +30,7 @@ class ParticleManager;
 class Renderer {
 public:
     #ifdef _PC
-    Renderer(GLFWwindow* window);
+    Renderer(Noise& noise, GLFWwindow* window);
     #endif
     Camera* camera_;
 
@@ -126,7 +126,7 @@ private:
     Uniform u_worldMeshOffset_;
     Uniform u_noiseProps_;
 
-    Texture MakeNoiseTexture_P(FastNoiseLite& noise, int resolution, float distance);
+    Texture MakeNoiseTexture_P(Noise& noise);
 
     std::unordered_map<std::string, Shader> vertexShaders_;
     std::unordered_map<std::string, Shader> fragmentShaders_;

@@ -1,3 +1,19 @@
+- Enemy that launches spread clearing projectile that circles, also has hitbox
+    - Can only be knocked down by hitting the projectile
+
+- Enemy like Mario Galaxy tree, hitting bounces you back and clears spread forward
+    - Can hit other enemies and also targets
+
+- Enemy that launches light seeds that allows people to see
+
+- Bird that grabs stuff, including player
+
+- Sticky holdable that allows next attack to stick entity to another
+
+- Holdable ligth beam attack knocksdown anything
+
+- Some enemies have eyes others dont
+
 - Sea Dock Bells 
     - Enemy that stuns when hit with sound waves
 

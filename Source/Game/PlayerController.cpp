@@ -7,6 +7,7 @@
 #include "World/SpreadManager.h"
 #include "World/World.h"
 #include "../Game/Components/GroundTraceComponent.h"
+#include "../Game/Components/HitboxComponent.h"
 #include "../Game/Components/MeterComponent.h"
 #include "../Game/Components/MovementComponent.h"
 #include "../Game/Components/SkeletonComponent.h"
@@ -43,6 +44,7 @@ void PlayerController::Execute(
     Inputs inputs
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& hitboxComponent = components.Get<HitboxComponent>();
     auto& meterComponent = components.Get<MeterComponent>();
     auto& movementComponent = components.Get<MovementComponent>();
     auto& skeletonComponent = components.Get<SkeletonComponent>();
@@ -76,6 +78,29 @@ void PlayerController::Execute(
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
     spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
+
+    if (inputs.pushHigh && highCooldown_ <= 0 && strongCooldown_ <= 0)
+        highCooldown_ = HIGH_TIME;
+
+    if (inputs.pushStrong && highCooldown_ <= 0 && strongCooldown_ <= 0)
+        strongCooldown_ = STRONG_TIME;
+
+    // TODO: Multiple hitboxes, just activate instead of modifying KBs
+    if (highCooldown_ > 0) {
+        hitboxComponent.hitbox[PLAYER_ENTITY].active = true;
+        hitboxComponent.hitbox[PLAYER_ENTITY].horizontalKb = 0.95f;
+        hitboxComponent.hitbox[PLAYER_ENTITY].verticalKb = 35.0f;
+        highCooldown_--;
+    }
+    else if (strongCooldown_ > 0) {
+        hitboxComponent.hitbox[PLAYER_ENTITY].active = true;
+        hitboxComponent.hitbox[PLAYER_ENTITY].horizontalKb = 1.25f;
+        hitboxComponent.hitbox[PLAYER_ENTITY].verticalKb = 45.0f;
+        strongCooldown_--;
+    }
+    else
+        hitboxComponent.hitbox[PLAYER_ENTITY].active = false;
+
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;

@@ -8,6 +8,9 @@ struct Inputs {
     bool flow;
     bool cut;
 
+    bool pushHigh;
+    bool pushStrong;
+
     Inputs() {
         forwardInput = 0.0f;
         sideInput = 0.0f;

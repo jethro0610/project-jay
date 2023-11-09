@@ -8,6 +8,15 @@
 - Some enemies stay in center, others at border
 
 - Animation for up and strong hits
+- Each character comes back unless the player takes them
+  out in a level
+    - Stun enemies without killing
+    - What about "vermin" ie. stuff just getting in the way
+
+- Each level is an episode
+- Characters you haven't seen interact will at some point in
+  weird ways
+
 - Hitbox clank
 - Enemy model
 - Enemy spread removal

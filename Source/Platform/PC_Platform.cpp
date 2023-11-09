@@ -121,7 +121,7 @@ void Platform::PollGamepad() {
 
     if (!glfwJoystickPresent(GLFW_JOYSTICK_1))
         return;
-
+    
     GLFWgamepadstate state;
     if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state) == GLFW_FALSE)
         return;

@@ -10,6 +10,7 @@ class Entity;
 struct Hit {
     EntityID hitter;
     EntityID target;
+    int hitboxId;
     Collision collision;
 };
 

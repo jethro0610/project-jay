@@ -1,6 +1,10 @@
 #pragma once
 #include "Component.h"
+#include "../../Logging/Logger.h"
+#include <vector_const.h>
 #include "../Collision/Collider.h"
+
+const int MAX_HITBOXES = 8;
 
 struct Hitbox : public Collider {
     bool useVelocity;
@@ -15,7 +19,7 @@ struct Hitbox : public Collider {
 
 class HitboxComponent: public Component {
 public:
-    std::array<Hitbox, MAX_ENTITIES> hitbox;
+    std::array<vector_const<Hitbox, MAX_HITBOXES>, MAX_ENTITIES> hitboxes;
     std::array<bool, MAX_ENTITIES> hit;
 
     HitboxComponent() {
@@ -28,16 +32,26 @@ public:
     static constexpr int GetID() { return 16; }
 
     void Load(nlohmann::json& data, EntityID entity) {
-        hitbox[entity].radius = GetFloat(data, "radius");
-        hitbox[entity].top = GetFloat(data, "top");
-        hitbox[entity].bottom = GetFloat(data, "bottom");
-        hitbox[entity].horizontalKb = GetFloat(data, "horizontal_kb", GetFloat(data, "horizontal_vel_mult", 1.0f));
-        hitbox[entity].verticalKb = GetFloat(data, "vertical_kb", 1.0f);
-        hitbox[entity].damage = GetInt(data, "damage");
-        hitbox[entity].active = GetBoolean(data, "active", false);
-        hitbox[entity].useVelocity = GetBoolean(data, "use_velocity", false);
-        hitbox[entity].directionInfluence = GetFloat(data, "direction_influence", false);
-        hitbox[entity].hitlag = GetInt(data, "hitlag", 3);
+        hitboxes[entity].resize(0);
         hit[entity] = false;
+
+        if (!data.contains("hitboxes"))
+            return;
+
+        auto hitboxesData = data["hitboxes"];
+        for (auto& hitboxData : hitboxesData) {
+            Hitbox hitbox;
+            hitbox.radius = GetFloat(hitboxData, "radius");
+            hitbox.top = GetFloat(hitboxData, "top");
+            hitbox.bottom = GetFloat(hitboxData, "bottom");
+            hitbox.horizontalKb = GetFloat(hitboxData, "horizontal_kb", GetFloat(hitboxData, "horizontal_vel_mult", 1.0f));
+            hitbox.verticalKb = GetFloat(hitboxData, "vertical_kb", 1.0f);
+            hitbox.damage = GetInt(hitboxData, "damage");
+            hitbox.active = GetBoolean(hitboxData, "active", false);
+            hitbox.useVelocity = GetBoolean(hitboxData, "use_velocity", false);
+            hitbox.directionInfluence = GetFloat(hitboxData, "direction_influence", false);
+            hitbox.hitlag = GetInt(hitboxData, "hitlag", 3);
+            hitboxes[entity].push_back(hitbox);
+        }
     }
 };

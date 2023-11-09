@@ -85,22 +85,16 @@ void PlayerController::Execute(
     if (inputs.pushStrong && highCooldown_ <= 0 && strongCooldown_ <= 0)
         strongCooldown_ = STRONG_TIME;
 
-    // TODO: Multiple hitboxes, just activate instead of modifying KBs
+    hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = false;
+    hitboxComponent.hitboxes[PLAYER_ENTITY][1].active = false;
     if (highCooldown_ > 0) {
-        hitboxComponent.hitbox[PLAYER_ENTITY].active = true;
-        hitboxComponent.hitbox[PLAYER_ENTITY].horizontalKb = 0.95f;
-        hitboxComponent.hitbox[PLAYER_ENTITY].verticalKb = 35.0f;
+        hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = true;
         highCooldown_--;
     }
     else if (strongCooldown_ > 0) {
-        hitboxComponent.hitbox[PLAYER_ENTITY].active = true;
-        hitboxComponent.hitbox[PLAYER_ENTITY].horizontalKb = 1.25f;
-        hitboxComponent.hitbox[PLAYER_ENTITY].verticalKb = 45.0f;
+        hitboxComponent.hitboxes[PLAYER_ENTITY][1].active = true;
         strongCooldown_--;
     }
-    else
-        hitboxComponent.hitbox[PLAYER_ENTITY].active = false;
-
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;

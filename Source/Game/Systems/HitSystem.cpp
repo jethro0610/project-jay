@@ -35,33 +35,36 @@ void HitSystem::Execute(
 
     for (int h = 0; h < MAX_ENTITIES; h++) {
         if (!entities[h].ShouldUpdate(hitKey)) continue;
-        if (!hitboxComponent.hitbox[h].active) continue;
-        const Transform& hitterTransform = transformComponent.transform[h];
-        const Hitbox& hitbox = hitboxComponent.hitbox[h];
-        hitboxComponent.hit[h] = false;
+        for (int b = 0; b < hitboxComponent.hitboxes[h].size(); b++) {
+            if (!hitboxComponent.hitboxes[h][b].active) continue;
+            const Transform& hitterTransform = transformComponent.transform[h];
+            const Hitbox& hitbox = hitboxComponent.hitboxes[h][b];
+            hitboxComponent.hit[h] = false;
 
-        for (int t = 0; t < MAX_ENTITIES; t++) {
-            if (!entities[t].ShouldUpdate(hurtKey)) continue;
-            if (h == t) continue;
-            if (hurtboxComponent.cooldown[t] > 0) continue;
+            for (int t = 0; t < MAX_ENTITIES; t++) {
+                if (!entities[t].ShouldUpdate(hurtKey)) continue;
+                if (h == t) continue;
+                if (hurtboxComponent.cooldown[t] > 0) continue;
 
-            const Transform& targetTransform = transformComponent.transform[t];
-            const Hurtbox& hurtbox = hurtboxComponent.hurtbox[t];
-            
-            Collision collision = Collision::GetCollision(
-                hitterTransform, 
-                hitbox, 
-                targetTransform, 
-                hurtbox 
-            );
-            if (collision.isColliding)
-                hitList.push_back({h, t, collision});
+                const Transform& targetTransform = transformComponent.transform[t];
+                const Hurtbox& hurtbox = hurtboxComponent.hurtbox[t];
+                
+                Collision collision = Collision::GetCollision(
+                    hitterTransform, 
+                    hitbox, 
+                    targetTransform, 
+                    hurtbox 
+                );
+                if (collision.isColliding)
+                    hitList.push_back({h, t, b, collision});
+            }
         }
     }
 
     for (const Hit& hit : hitList) {
-        Hitbox& hitbox = hitboxComponent.hitbox[hit.hitter];
+        Hitbox& hitbox = hitboxComponent.hitboxes[hit.hitter][hit.hitboxId];
         Hurtbox& hurtbox = hurtboxComponent.hurtbox[hit.target];
+        
         if (!hurtbox.recieveKnockback)
             continue;
 
@@ -80,14 +83,14 @@ void HitSystem::Execute(
             velocity = lerp(velocity, normalizeRes, hitbox.directionInfluence);
 
             // Apply the planar velocity and vertical knockback
-            velocity = normalize(velocity) * magnitude * hitboxComponent.hitbox[hit.hitter].horizontalKb;
-            velocity.y = hitboxComponent.hitbox[hit.hitter].verticalKb;
+            velocity = normalize(velocity) * magnitude * hitbox.horizontalKb;
+            velocity.y = hitbox.verticalKb;
             velocityComponent.velocity[hit.target] = velocity;
         }
         else {
             velocityComponent.velocity[hit.target] = 
-                normalizeRes * hitboxComponent.hitbox[hit.hitter].horizontalKb + 
-                Transform::worldUp * hitboxComponent.hitbox[hit.hitter].verticalKb;
+                normalizeRes * hitbox.horizontalKb + 
+                Transform::worldUp * hitbox.verticalKb;
         }
 
         if (hurtbox.rotate)

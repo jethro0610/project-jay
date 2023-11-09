@@ -50,7 +50,7 @@ void WalkerController::Update(
     }
 
     if (stopTime_ > 0.0f) {
-        hitboxComponent.hitbox[entity_].active = false;
+        hitboxComponent.hitboxes[entity_][0].active = false;
         desiredMovement = vec3(0.0f);
         stopTime_ -= TIMESTEP;
         return;
@@ -61,7 +61,7 @@ void WalkerController::Update(
     if (length(desiredMovement) > 0.0f)
         desiredMovement = normalize(desiredMovement);
 
-    hitboxComponent.hitbox[entity_].active = true; 
+    hitboxComponent.hitboxes[entity_][0].active = true; 
 }
 
 void WalkerController::FindNewTarget(World& world) {

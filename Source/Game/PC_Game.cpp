@@ -78,7 +78,7 @@ void Game::FlushInputs_P() {
     // Have to toggle on flush since released keys are cleared per game update
     // and not per program update. Clearing happens in this function
     #ifdef _DEBUG
-    if (platform_.pressedKeys_['Q'])
+    if (platform_.pressedKeys_['`'])
         ScreenText::Toggle();
     
     if (platform_.pressedKeys_[GLFW_KEY_ESCAPE])

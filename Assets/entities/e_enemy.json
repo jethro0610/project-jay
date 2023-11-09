@@ -36,12 +36,16 @@
             "recieve": true
         },
         "hitbox": {
-            "radius": 2.0,
-            "top": 2.0,
-            "horizontal_kb": 35.0,
-            "vertical_kb": 35.0,
-            "active": true,
-            "hitlag": 8
+            "hitboxes": [
+                {
+                    "radius": 2.0,
+                    "top": 2.0,
+                    "horizontal_kb": 35.0,
+                    "vertical_kb": 35.0,
+                    "active": true,
+                    "hitlag": 8
+                }
+            ]
         }
     }
 }

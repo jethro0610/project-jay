@@ -54,14 +54,28 @@
             "recieve": true
         },
         "hitbox": {
-            "use_velocity": true,
-            "radius": 4.0,
-            "top": 2.0,
-            "horizontal_vel_mult": 0.95,
-            "vertical_kb": 35.0,
-            "direction_influence": 0.5,
-            "active": true,
-            "hitlag": 4
+            "hitboxes": [
+                {
+                    "use_velocity": true,
+                    "radius": 4.0,
+                    "top": 2.0,
+                    "horizontal_vel_mult": 0.95,
+                    "vertical_kb": 35.0,
+                    "direction_influence": 0.5,
+                    "active": false,
+                    "hitlag": 6
+                },
+                {
+                    "use_velocity": true,
+                    "radius": 4.0,
+                    "top": 2.0,
+                    "horizontal_vel_mult": 2.0,
+                    "vertical_kb": 45.0,
+                    "direction_influence": 0.5,
+                    "active": false,
+                    "hitlag": 10
+                }
+            ]
         },
         "hurtbox": {
             "radius": 2.0,

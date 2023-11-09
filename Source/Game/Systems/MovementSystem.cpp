@@ -96,7 +96,7 @@ void MovementSystem::Execute (
             velocity.z = planarVelocity.z;
         }
 
-        if (movementComponent.tiltStrength[i] != 0.0f) {
+        if (movementComponent.tiltStrength[i] != 0.0f && !MoveMode::Lock) {
             float desiredTilt = dot(
                 desiredMovement,
                 transformComponent.transform[i].GetRightVector()

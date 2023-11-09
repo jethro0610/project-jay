@@ -114,7 +114,7 @@ void PlayerController::Execute(
     if (highCooldown_ > 0 || strongCooldown_ > 0){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Lock;
     }
-    if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {
+    else if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
     }
     else if (cutCooldown_ > 0) {

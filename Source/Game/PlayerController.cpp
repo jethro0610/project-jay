@@ -111,6 +111,9 @@ void PlayerController::Execute(
     }
 
     bool isDoingAction = false;
+    if (highCooldown_ > 0 || strongCooldown_ > 0){
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Lock;
+    }
     if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
     }

@@ -70,6 +70,9 @@ void MovementSystem::Execute (
             CalculateLineMovement(desiredMovement, speed, velocity, rotation);
             break;
 
+        case MoveMode::Lock:
+            break;
+
         default:
             break;
         }
@@ -217,3 +220,4 @@ void MovementSystem::CalculateLineMovement(
     velocity.x = lineDirection.x * speed;
     velocity.z = lineDirection.z * speed;
 }
+

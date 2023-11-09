@@ -25,6 +25,7 @@ enum MoveMode {
     Flow,
     Line,
     Air,
+    Lock,
     NumberOfModes
 };
 

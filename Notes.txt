@@ -1,3 +1,9 @@
+- Character that bell that spawns spread for player
+    - Some levels player can uses this spread to move it somewhere else using cut
+
+- Character that pops out of ground and creates hills
+    - Breaks spread in radius however
+
 - Enemy that launches spread clearing projectile that circles, also has hitbox
     - Can only be knocked down by hitting the projectile
 

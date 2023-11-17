@@ -27,13 +27,13 @@ void SkeletonSystem::CalculatePoses(
         float& time = skeletonComponent.time[i];
         float& transitionLength = skeletonComponent.transitionLength[i];
         float& transitionTime = skeletonComponent.transitionTime[i];
-        float & nextPoseUpdate = skeletonComponent.nextPoseUpdate[i];
         int framerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
 
         if (animationIndex != nextAnimationIndex) {
             prevAnimationIndex = animationIndex;
             animationIndex = nextAnimationIndex; 
             prevTime = time;
+            time = 0.0f;
 
             transitionLength = 0.35f;
             transitionTime = 0.0f;
@@ -41,7 +41,7 @@ void SkeletonSystem::CalculatePoses(
 
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
 
-        if (transitionTime > transitionLength) {
+        if (transitionTime >= transitionLength || transitionLength == 0.0f) {
             skeletonComponent.skeleton[i]->GetPose(
                 skeletonComponent.pose[i],
                 animationIndex,
@@ -67,11 +67,12 @@ void SkeletonSystem::CalculatePoses(
 
         if (framerate == 0)
             continue;
+        
+        int frame = floor(skeletonComponent.time[i] * 60.0f);
+        int framesTillUpate = 60 / framerate;
 
-        if (skeletonComponent.time[i] >= skeletonComponent.nextPoseUpdate[i]) {
+        if (frame % framesTillUpate == 0)
             skeletonComponent.renderPose[i] = skeletonComponent.pose[i];
-            skeletonComponent.nextPoseUpdate[i] += 1.0f / framerate;
-        }
 
         skeletonComponent.transitionThisTick[i] = false;
     }

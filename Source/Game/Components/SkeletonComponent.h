@@ -25,15 +25,12 @@ public:
     std::array<float, MAX_ENTITIES> transitionLength;
     std::array<bool, MAX_ENTITIES> transitionThisTick;
 
-    std::array<float, MAX_ENTITIES> nextPoseUpdate; 
-
     SkeletonComponent() {
         skeleton.fill(nullptr);
         prevAnimationIndex.fill(0);
         animationIndex.fill(0);
         time.fill(0.0f);
         transitionTime.fill(0.0f);
-        nextPoseUpdate.fill(0.0f);
     };
 
     SkeletonComponent(const SkeletonComponent&) = delete;

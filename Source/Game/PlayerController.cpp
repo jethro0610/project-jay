@@ -6,6 +6,7 @@
 #include "../Constants/GameConstants.h"
 #include "World/SpreadManager.h"
 #include "World/World.h"
+#include "../Game/Entity/Entity.h"
 #include "../Game/Components/GroundTraceComponent.h"
 #include "../Game/Components/HitboxComponent.h"
 #include "../Game/Components/MeterComponent.h"
@@ -37,12 +38,16 @@ void PlayerController::Init(
 }
 
 void PlayerController::Execute(
+    EntityList& entities,
     ComponentList& components,
     World& world, 
     SpreadManager& spreadManager, 
     Camera& camera,
     Inputs inputs
 ) {
+    if (entities[PLAYER_ENTITY].stunTimer_ > 0)
+        return;
+
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& hitboxComponent = components.Get<HitboxComponent>();
     auto& meterComponent = components.Get<MeterComponent>();
@@ -113,6 +118,7 @@ void PlayerController::Execute(
     bool isDoingAction = false;
     if (highCooldown_ > 0 || strongCooldown_ > 0){
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Lock;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 4;
     }
     else if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;

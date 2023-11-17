@@ -108,6 +108,7 @@ void Game::Update() {
             world_
         );
         playerController_.Execute(
+            entityManager_.entities_,
             entityManager_.components_,
             world_,
             spreadManager_,

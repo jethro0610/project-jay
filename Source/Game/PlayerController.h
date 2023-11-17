@@ -3,6 +3,7 @@
 #include "../Types/Inputs.h"
 #include "ParticleManager.h"
 #include "./Components/ComponentList.h"
+#include "./Entity/EntityList.h"
 
 class Camera;
 class SpreadManager;
@@ -12,8 +13,8 @@ const int TIME_TO_CUT = 16;
 const int CUT_COOLDOWN_TIME = 16;
 const int MAX_ACTION_METER = 250;
 
-const int HIGH_TIME = 15;
-const int STRONG_TIME = 15;
+const int HIGH_TIME = 30;
+const int STRONG_TIME = 30;
 
 class PlayerController {
 public:
@@ -24,6 +25,7 @@ public:
     );
 
     void Execute(
+        EntityList& entitities,
         ComponentList& components,
         World& world, 
         SpreadManager& spreadManager, 

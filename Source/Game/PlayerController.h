@@ -13,8 +13,8 @@ const int TIME_TO_CUT = 16;
 const int CUT_COOLDOWN_TIME = 16;
 const int MAX_ACTION_METER = 250;
 
-const int HIGH_TIME = 30;
-const int STRONG_TIME = 30;
+const int HIGH_TIME = 25;
+const int STRONG_TIME = 25;
 
 class PlayerController {
 public:

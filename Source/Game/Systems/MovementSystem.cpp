@@ -96,7 +96,7 @@ void MovementSystem::Execute (
             velocity.z = planarVelocity.z;
         }
 
-        if (movementComponent.tiltStrength[i] != 0.0f && !MoveMode::Lock) {
+        if (movementComponent.tiltStrength[i] != 0.0f && movementComponent.moveMode[i] != MoveMode::Lock) {
             float desiredTilt = dot(
                 desiredMovement,
                 transformComponent.transform[i].GetRightVector()
@@ -108,6 +108,8 @@ void MovementSystem::Execute (
                 movementComponent.tiltSpeed[i]
             );
         }
+        else
+            transformComponent.tilt[i] = 0.0f;
     }
 
     // NOTE: Currently the velocity is stored as planar, so the normal of the surface isn't actually in the velocity.

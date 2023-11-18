@@ -27,7 +27,12 @@ void SkeletonSystem::CalculatePoses(
         float& time = skeletonComponent.time[i];
         float& transitionLength = skeletonComponent.transitionLength[i];
         float& transitionTime = skeletonComponent.transitionTime[i];
-        int framerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
+        int prevFramerate = skeletonComponent.skeleton[i]->GetFramerate(prevAnimationIndex);
+        int curFramerate = skeletonComponent.skeleton[i]->GetFramerate(animationIndex);
+
+        int framerate = transitionTime < transitionLength ? 
+            std::lerp(prevFramerate, curFramerate, std::clamp(transitionTime / transitionLength, 0.0f, 1.0f)) :
+            curFramerate;
 
         if (animationIndex != nextAnimationIndex) {
             prevAnimationIndex = animationIndex;
@@ -37,6 +42,8 @@ void SkeletonSystem::CalculatePoses(
 
             transitionLength = 0.35f;
             transitionTime = 0.0f;
+            if (nextAnimationIndex == 4)
+                transitionTime = transitionLength;
         }
 
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];

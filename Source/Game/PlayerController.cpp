@@ -84,22 +84,26 @@ void PlayerController::Execute(
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
     spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
 
-    if (inputs.pushHigh && highCooldown_ <= 0 && strongCooldown_ <= 0)
-        highCooldown_ = HIGH_TIME;
+    if (!inputs.attack)
+        releasedCharge_ = true;
 
-    if (inputs.pushStrong && highCooldown_ <= 0 && strongCooldown_ <= 0)
-        strongCooldown_ = STRONG_TIME;
+    if (inputs.attack && attackTimer_ <= 0 && releasedCharge_)
+        charge_++;
+
+    if (!inputs.attack && charge_ > 0 || charge_ >= MAX_CHARGE) {
+        charge_ = 0;
+        attackTimer_ = ATTACK_TIME;
+        releasedCharge_ = false;
+    }
 
     hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = false;
     hitboxComponent.hitboxes[PLAYER_ENTITY][1].active = false;
-    if (highCooldown_ > 0) {
+    if (attackTimer_ > 0)
+        attackTimer_--;
+
+    float attackFrames = ATTACK_TIME - attackTimer_;
+    if (attackFrames > ATTACK_ACTIVE_START && attackFrames < ATTACK_ACTIVE_END)
         hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = true;
-        highCooldown_--;
-    }
-    else if (strongCooldown_ > 0) {
-        hitboxComponent.hitboxes[PLAYER_ENTITY][1].active = true;
-        strongCooldown_--;
-    }
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;
@@ -116,8 +120,12 @@ void PlayerController::Execute(
     }
 
     bool isDoingAction = false;
-    if (highCooldown_ > 0 || strongCooldown_ > 0){
-        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Lock;
+    if (charge_ > 0) {
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 5;
+    }
+    else if (attackTimer_ > 0) {
+        movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Line;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 4;
     }
     else if (!groundTraceComponent.onGround[PLAYER_ENTITY]) {

@@ -13,8 +13,11 @@ const int TIME_TO_CUT = 16;
 const int CUT_COOLDOWN_TIME = 16;
 const int MAX_ACTION_METER = 250;
 
-const int HIGH_TIME = 25;
-const int STRONG_TIME = 25;
+const int ATTACK_TIME = 25;
+const int ATTACK_ACTIVE_START = 2;
+const int ATTACK_ACTIVE_END = 15;
+
+const int MAX_CHARGE = 75;
 
 class PlayerController {
 public:
@@ -41,6 +44,7 @@ private:
     ParticleEmitter* cloudEmitter_;
     ParticleEmitter* sparkEmitter_;
 
-    int highCooldown_;
-    int strongCooldown_;
+    int attackTimer_;
+    int charge_;
+    bool releasedCharge_;
 };

@@ -8,6 +8,7 @@
 - Prev state hold on transitions
 - Transition config in skeleton component
 - Strong attack animation
+    - Maybe just have it be a charge so no separate buttons
 - Attack active frames
 - Use GLB
 

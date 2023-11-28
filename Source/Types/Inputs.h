@@ -8,8 +8,7 @@ struct Inputs {
     bool flow;
     bool cut;
 
-    bool pushHigh;
-    bool pushStrong;
+    bool attack;
 
     Inputs() {
         forwardInput = 0.0f;

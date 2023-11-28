@@ -54,7 +54,6 @@ void SeedManager::CalculatePositions(
 ) {
     auto& meterComponent = components.Get<MeterComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
-    SCREENLINE(11, "Seeds : " + std::to_string(seeds_.size()));
 
     for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];

@@ -87,8 +87,10 @@ void PlayerController::Execute(
     if (!inputs.attack)
         releasedCharge_ = true;
 
-    if (inputs.attack && attackTimer_ <= 0 && releasedCharge_)
+    if (inputs.attack && attackTimer_ <= 0 && releasedCharge_) {
         charge_++;
+        attackHitbox_ = charge_ < STRONG_CHARGE ? 0 : 1;
+    }
 
     if (!inputs.attack && charge_ > 0 || charge_ >= MAX_CHARGE) {
         charge_ = 0;
@@ -96,14 +98,15 @@ void PlayerController::Execute(
         releasedCharge_ = false;
     }
 
-    hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = false;
-    hitboxComponent.hitboxes[PLAYER_ENTITY][1].active = false;
+    for (Hitbox& hitbox : hitboxComponent.hitboxes[PLAYER_ENTITY])
+        hitbox.active = false;
+
     if (attackTimer_ > 0)
         attackTimer_--;
-
+    
     float attackFrames = ATTACK_TIME - attackTimer_;
     if (attackFrames > ATTACK_ACTIVE_START && attackFrames < ATTACK_ACTIVE_END)
-        hitboxComponent.hitboxes[PLAYER_ENTITY][0].active = true;
+        hitboxComponent.hitboxes[PLAYER_ENTITY][attackHitbox_].active = true;
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;
@@ -184,4 +187,5 @@ void PlayerController::Execute(
     SCREENLINE(8, "Y: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.y));
     SCREENLINE(9, "Z: " + std::to_string(transformComponent.transform[PLAYER_ENTITY].position.z));
     SCREENLINE(10, "Cut Cooldown: " + std::to_string(cutCooldown_));
+    SCREENLINE(11, "Hitbox: " + std::to_string(attackHitbox_));
 }

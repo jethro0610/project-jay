@@ -18,6 +18,7 @@ const int ATTACK_ACTIVE_START = 2;
 const int ATTACK_ACTIVE_END = 15;
 
 const int MAX_CHARGE = 75;
+const int STRONG_CHARGE = 15;
 
 class PlayerController {
 public:
@@ -45,6 +46,7 @@ private:
     ParticleEmitter* sparkEmitter_;
 
     int attackTimer_;
+    int attackHitbox_;
     int charge_;
     bool releasedCharge_;
 };

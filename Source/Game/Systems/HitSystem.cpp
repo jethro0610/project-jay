@@ -78,6 +78,9 @@ void HitSystem::Execute(
             float magnitude = length(velocity);
             velocity /= magnitude;
 
+            // Esnure the object goes the minimum knockback 
+            magnitude = max(magnitude, hitbox.minHorizontalKb);
+
             // Apply the direction influence. This is based on the resolution vector
             // as it pushes the object in the direction of its collision
             velocity = lerp(velocity, normalizeRes, hitbox.directionInfluence);

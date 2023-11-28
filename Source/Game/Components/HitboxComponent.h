@@ -11,6 +11,7 @@ struct Hitbox : public Collider {
     float directionInfluence;
     float horizontalKb;
     float verticalKb;
+    float minHorizontalKb;
 
     int hitlag;
     int damage;
@@ -46,6 +47,7 @@ public:
             hitbox.bottom = GetFloat(hitboxData, "bottom");
             hitbox.horizontalKb = GetFloat(hitboxData, "horizontal_kb", GetFloat(hitboxData, "horizontal_vel_mult", 1.0f));
             hitbox.verticalKb = GetFloat(hitboxData, "vertical_kb", 1.0f);
+            hitbox.minHorizontalKb = GetFloat(hitboxData, "min_horizontal_kb", 0.0f);
             hitbox.damage = GetInt(hitboxData, "damage");
             hitbox.active = GetBoolean(hitboxData, "active", false);
             hitbox.useVelocity = GetBoolean(hitboxData, "use_velocity", false);

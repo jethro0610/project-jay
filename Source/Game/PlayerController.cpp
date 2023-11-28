@@ -101,12 +101,12 @@ void PlayerController::Execute(
     for (Hitbox& hitbox : hitboxComponent.hitboxes[PLAYER_ENTITY])
         hitbox.active = false;
 
-    if (attackTimer_ > 0)
-        attackTimer_--;
-    
     float attackFrames = ATTACK_TIME - attackTimer_;
     if (attackFrames > ATTACK_ACTIVE_START && attackFrames < ATTACK_ACTIVE_END)
         hitboxComponent.hitboxes[PLAYER_ENTITY][attackHitbox_].active = true;
+
+    if (attackTimer_ > 0)
+        attackTimer_--;
 
     if (movementComponent.speed[PLAYER_ENTITY] > 24.0f)
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 1;
@@ -172,9 +172,6 @@ void PlayerController::Execute(
 
         velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
-
-        // spreadActivatorComponent.radius[PLAYER_ENTITY] = 12;
-        // spreadActivatorComponent.amount[PLAYER_ENTITY] = 64;
     } 
 
     SCREENLINE(1, "Speed: " + std::to_string(movementComponent.speed[PLAYER_ENTITY]));

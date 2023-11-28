@@ -60,6 +60,7 @@
                     "radius": 2.0,
                     "top": 2.0,
                     "horizontal_vel_mult": 0.95,
+                    "min_horizontal_kb": 15.0,
                     "vertical_kb": 35.0,
                     "direction_influence": 0.5,
                     "active": false,
@@ -70,8 +71,9 @@
                     "radius": 2.0,
                     "top": 2.0,
                     "horizontal_vel_mult": 1.25,
-                    "vertical_kb": 45.0,
-                    "direction_influence": 0.5,
+                    "min_horizontal_kb": 25.0,
+                    "vertical_kb": 30.0,
+                    "direction_influence": 0.05,
                     "active": false,
                     "hitlag": 8
                 }

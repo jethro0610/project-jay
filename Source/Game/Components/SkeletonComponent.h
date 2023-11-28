@@ -1,6 +1,7 @@
 #pragma once
 #include <bitset>
 #include <string>
+#include <vector>
 #include "Component.h"
 #include "../../Helpers/Assert.h"
 #include "../../Rendering/Renderer.h"
@@ -24,6 +25,7 @@ public:
     std::array<float, MAX_ENTITIES> transitionTime;
     std::array<float, MAX_ENTITIES> transitionLength;
     std::array<bool, MAX_ENTITIES> transitionThisTick;
+    std::array<std::vector<float>, MAX_ENTITIES> transitions;
 
     SkeletonComponent() {
         skeleton.fill(nullptr);
@@ -45,5 +47,19 @@ public:
         pose[entity].resize(skeleton[entity]->bones_.size());
         renderPose[entity].resize(skeleton[entity]->bones_.size());
         prevPose[entity].resize(skeleton[entity]->bones_.size());
+
+        int numAnimation = skeleton[entity]->animations_.size();
+        transitions[entity].resize(numAnimation);
+        for (int i = 0; i < numAnimation; i++)
+            transitions[entity][i] = 0.35f;
+
+        if (!data.contains("transitions"))
+            return;
+        auto& transitionsData = data["transitions"];
+        for (auto& transitionData : transitionsData)
+            transitions[entity][transitionData["index"]] = transitionData["length"];
+
+        for (int i = 0; i < numAnimation; i++)
+            DEBUGLOG(transitions[entity][i]);
     }
 };

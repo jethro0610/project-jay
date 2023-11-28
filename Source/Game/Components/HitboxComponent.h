@@ -39,7 +39,7 @@ public:
         if (!data.contains("hitboxes"))
             return;
 
-        auto hitboxesData = data["hitboxes"];
+        auto& hitboxesData = data["hitboxes"];
         for (auto& hitboxData : hitboxesData) {
             Hitbox hitbox;
             hitbox.radius = GetFloat(hitboxData, "radius");

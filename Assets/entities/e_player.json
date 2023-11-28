@@ -19,12 +19,8 @@
         },
         "skeleton": {
             "skeleton": "sk_char",
-            "state_bindings": [
-                [0, 0],
-                [1, 10],
-                [2, 6],
-                [3, 0],
-                [4, 7]
+            "transitions": [
+                { "index": 4, "length": 0.0 }
             ]
         },
         "ground_trace": {

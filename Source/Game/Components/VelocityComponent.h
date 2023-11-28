@@ -12,6 +12,7 @@ public:
     std::array<glm::vec3, MAX_ENTITIES> velocity;
     std::array<glm::quat, MAX_ENTITIES> angularVelocity;
     std::array<bool, MAX_ENTITIES> useGravity;
+    std::array<int, MAX_ENTITIES> timeMultiplier;
 
     VelocityComponent() {
         velocity.fill(glm::vec3(0.0f, 0.0f, 0.0f));

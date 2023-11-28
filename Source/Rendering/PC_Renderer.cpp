@@ -714,6 +714,7 @@ Model& Renderer::LoadModel_P(std::string name) {
     file.read((char*)&skeleton.ribbons_, sizeof(Ribbons));
     DEBUGLOG("Loaded skeleton " << name);
 
+    assert(modelHeader.numAnimations <= MAX_ANIMATIONS);
     skeleton.animations_.resize(modelHeader.numAnimations);
     for (int i = 0; i < modelHeader.numAnimations; i++) {
         AnimationHeader animationHeader;

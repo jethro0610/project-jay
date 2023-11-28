@@ -5,7 +5,6 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
-- Transition config in skeleton component
 - Use GLB
 
 - Some enemies stay in center, others at border
@@ -29,6 +28,8 @@
 - Projectiles are hittable too, as up and strong hits
 - Add reflecting hits
 - Rework projectiles
+
+- Convert all vectors to fixed
 
 - Nosise texture sample on CPU
 - Spread array instead of map

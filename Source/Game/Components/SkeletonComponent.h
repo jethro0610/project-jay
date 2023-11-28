@@ -25,7 +25,7 @@ public:
     std::array<float, MAX_ENTITIES> transitionTime;
     std::array<float, MAX_ENTITIES> transitionLength;
     std::array<bool, MAX_ENTITIES> transitionThisTick;
-    std::array<std::vector<float>, MAX_ENTITIES> transitions;
+    std::array<vector_const<float, MAX_ANIMATIONS>, MAX_ENTITIES> transitions;
 
     SkeletonComponent() {
         skeleton.fill(nullptr);

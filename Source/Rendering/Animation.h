@@ -5,6 +5,8 @@
 #include "RenderConstants.h"
 #include "../Types/Transform.h"
 
+const int MAX_ANIMATIONS = 32;
+
 struct AnimationHeader {
     char name[MAX_ANIMATION_NAME];
     int numKeyframes;

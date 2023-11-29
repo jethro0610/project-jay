@@ -128,7 +128,6 @@ void Renderer::TEMP_LoadTestData() {
     LoadModel_P("st_tree");
     spreadModel_ = LoadModel_P("st_flower");
     LoadModel_P("sk_char");
-    LoadModel_P("sk_test_skel"); 
 
     Texture bricksC = LoadTexture_P("t_bricks_c");
     Texture bricksN = LoadTexture_P("t_bricks_n");

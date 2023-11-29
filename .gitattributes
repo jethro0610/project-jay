@@ -5,3 +5,4 @@
 *.jsk filter=lfs diff=lfs merge=lfs -text
 *.jan filter=lfs diff=lfs merge=lfs -text
 *.dds filter=lfs diff=lfs merge=lfs -text
+*.glb filter=lfs diff=lfs merge=lfs -text

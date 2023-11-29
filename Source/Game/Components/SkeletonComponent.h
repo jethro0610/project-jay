@@ -58,8 +58,5 @@ public:
         auto& transitionsData = data["transitions"];
         for (auto& transitionData : transitionsData)
             transitions[entity][transitionData["index"]] = transitionData["length"];
-
-        for (int i = 0; i < numAnimation; i++)
-            DEBUGLOG(transitions[entity][i]);
     }
 };

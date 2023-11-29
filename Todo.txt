@@ -5,8 +5,6 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
-- Use GLB
-
 - Some enemies stay in center, others at border
 
 - Animation for up and strong hits
@@ -30,8 +28,6 @@
 - Rework projectiles
 
 - Convert all vectors to fixed
-
-- Nosise texture sample on CPU
 - Spread array instead of map
 
 - Object that spurts out and player has to destroy it.
@@ -49,9 +45,6 @@
 - Use color uniform for seed
 
 - Seperate assets from Renderer
-
-- Trails and particles system
-    - Particle groups
 
 - Hittable that clears way more spread on landing, but gives
   lots of seed. Also does more damage
@@ -95,7 +88,6 @@
 - Gust cut enemy
     - Blows large beam that cuts lots of spread down
 
-- Release ski to hit
 - Fog
 - Crystal
 - Usables
@@ -104,11 +96,6 @@
 - Ground moving cutter enemy (leafy disk)
 
 - const refs for strings
-
-- Optimize seed position calculation
-    - World Height taking the most time, optimize that
-        - Maybe pregenerate the noise and just use bilinear filtering
-    - Worst case takes around 1.3ms
 
 - Optimize Skeleton pose calculation
     - Going from Matrix -> Transform -> Matrix is inefficient. How to avoid this?    

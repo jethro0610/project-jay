@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Remove cutting
+
 - Some enemies stay in center, others at border
 
 - Animation for up and strong hits

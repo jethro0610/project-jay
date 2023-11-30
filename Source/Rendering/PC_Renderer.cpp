@@ -123,6 +123,7 @@ Renderer::Renderer(Noise& noise, GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
+    LoadModel_P("st_comet");
     LoadModel_P("st_sphere");
     LoadModel_P("st_rock");
     LoadModel_P("st_tree");

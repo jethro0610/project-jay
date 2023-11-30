@@ -8,7 +8,7 @@ public:
     std::array<std::string, MAX_ENTITIES> entityToSpawn;
     std::array<int, MAX_ENTITIES> interval;
     std::array<float, MAX_ENTITIES> radius;
-    std::array<bool, MAX_ENTITIES> launch;
+    std::array<bool, MAX_ENTITIES> planar;
 
     std::array<std::vector<glm::vec3>, MAX_ENTITIES> offsets;
 
@@ -33,7 +33,7 @@ public:
         entityToSpawn[entity] = GetString(data, "entity", "");
         interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
         radius[entity] = GetFloat(data, "radius", 0.0f);
-        launch[entity] = GetBoolean(data, "launch", false);
+        planar[entity] = GetBoolean(data, "planar");
 
         if (!data.contains("offsets")) {
             offsets[entity].push_back(glm::vec3(0.0f, 0.0f, 0.0f));

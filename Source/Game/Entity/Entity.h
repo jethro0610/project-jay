@@ -6,6 +6,7 @@
 class Entity {
 public:
     bool alive_;
+    bool spawnedThisTick_;
     EntityKey key_;
     int stunTimer_;
 
@@ -13,6 +14,7 @@ public:
         alive_ = false;
         key_ = 0;
         stunTimer_ = 0;
+        spawnedThisTick_ = true;
     }
 
     bool ShouldUpdate() const {

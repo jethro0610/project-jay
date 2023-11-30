@@ -11,7 +11,6 @@
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
-constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent>();
     
 void IntervalSpawnSystem::Execute(
     EntityList& entities,
@@ -33,7 +32,9 @@ void IntervalSpawnSystem::Execute(
         if (timer >= intervalSpawnComponent.interval[i]) {
             Transform spawnTransform;
             vec3 offset = intervalSpawnComponent.offsets[i][rand() % intervalSpawnComponent.offsets[i].size()];
-            vec3 radialOffset = RandomVector(intervalSpawnComponent.radius[i]);
+            vec3 radialOffset = intervalSpawnComponent.planar[i] ? 
+                RandomVectorPlanar(intervalSpawnComponent.radius[i]) :
+                RandomVector(intervalSpawnComponent.radius[i]);
             spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
             // NOTE: Need to use the transform to get the child transform, instead of just adding position
 

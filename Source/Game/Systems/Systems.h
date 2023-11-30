@@ -15,3 +15,4 @@
 #include "PushSystem.h"
 #include "IntervalSpawnSystem.h"
 #include "SkeletonSystem.h"
+#include "SpawnSystem.h"

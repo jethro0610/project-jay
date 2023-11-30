@@ -28,52 +28,59 @@ void Game::Init() {
     playerTransform.position = vec3(0.0f, 50.0f, 0.0f);
     entityManager_.CreateEntity("e_player", playerTransform);
 
-    entityManager_.LoadEntity("e_rock");
-    Transform rockTransform;
+    // entityManager_.LoadEntity("e_rock");
+    // Transform rockTransform;
+    //
+    // for (int j = 0; j < 6; j++) {
+    //     float x0 = (rand() % 200) - 100;
+    //     float z0 = (rand() % 200) - 100;
+    //     for (int i = 0; i < 4; i++) {
+    //         vec2 planarPos = RandomVector2D(15.0f); 
+    //         rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
+    //
+    //         float rx = (rand() % 360);
+    //         float ry = (rand() % 360);
+    //         float rz = (rand() % 360);
+    //         rockTransform.rotation = quat(vec3(rx, ry, rz));
+    //
+    //         float scale = RandomFloatRange(1.5f, 3.0);
+    //         rockTransform.scale = vec3(scale);
+    //         entityManager_.CreateEntity("e_rock", rockTransform);
+    //     }
+    // }
+    //
+    // // entityManager_.LoadEntity("target_test");
+    // // Transform targetTransform;
+    // // targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    // // targetTransform.scale = vec3(3.0f);
+    // // entityManager_.CreateEntity("target_test", targetTransform);
+    //
+    // entityManager_.LoadEntity("e_tree");
+    // Transform treeTransform;
+    // treeTransform.position = vec3(50.0f, 10.0f, 50.0f);
+    // entityManager_.CreateEntity("e_tree", treeTransform);
+    //
+    // treeTransform.position = vec3(-27.0f, 0.0f, -43.0f);
+    // treeTransform.rotation = quat(vec3(0.0f, 33.0f, 0.0f));
+    // entityManager_.CreateEntity("e_tree", treeTransform);
+    //
+    // treeTransform.position = vec3(-38.0f, 5.0f, 105.0f);
+    // treeTransform.rotation = quat(vec3(0.0f, 15.0f, 0.0f));
+    // entityManager_.CreateEntity("e_tree", treeTransform);
+    //
+    // entityManager_.LoadEntity("e_enemy");
+    // Transform enemyTransform;
+    // enemyTransform.position = vec3(0.0f, 100.0f, 0.0f);
+    // enemyTransform.scale = vec3(3.0f);
+    // EntityID walkerEnt = entityManager_.CreateEntity("e_enemy", enemyTransform);
+    // testWalker.Init(walkerEnt, entityManager_.components_, particleManager_, world_);
+    //
 
-    for (int j = 0; j < 6; j++) {
-        float x0 = (rand() % 200) - 100;
-        float z0 = (rand() % 200) - 100;
-        for (int i = 0; i < 4; i++) {
-            vec2 planarPos = RandomVector2D(15.0f); 
-            rockTransform.position =  vec3(x0 + planarPos.x, 20.0f, z0 + planarPos.y);
-
-            float rx = (rand() % 360);
-            float ry = (rand() % 360);
-            float rz = (rand() % 360);
-            rockTransform.rotation = quat(vec3(rx, ry, rz));
-
-            float scale = RandomFloatRange(1.5f, 3.0);
-            rockTransform.scale = vec3(scale);
-            entityManager_.CreateEntity("e_rock", rockTransform);
-        }
-    }
-
-    // entityManager_.LoadEntity("target_test");
-    // Transform targetTransform;
-    // targetTransform.position = vec3(50.0f, 15.0f, 50.0f);
-    // targetTransform.scale = vec3(3.0f);
-    // entityManager_.CreateEntity("target_test", targetTransform);
-
-    entityManager_.LoadEntity("e_tree");
-    Transform treeTransform;
-    treeTransform.position = vec3(50.0f, 10.0f, 50.0f);
-    entityManager_.CreateEntity("e_tree", treeTransform);
-
-    treeTransform.position = vec3(-27.0f, 0.0f, -43.0f);
-    treeTransform.rotation = quat(vec3(0.0f, 33.0f, 0.0f));
-    entityManager_.CreateEntity("e_tree", treeTransform);
-
-    treeTransform.position = vec3(-38.0f, 5.0f, 105.0f);
-    treeTransform.rotation = quat(vec3(0.0f, 15.0f, 0.0f));
-    entityManager_.CreateEntity("e_tree", treeTransform);
-
-    entityManager_.LoadEntity("e_enemy");
-    Transform enemyTransform;
-    enemyTransform.position = vec3(0.0f, 100.0f, 0.0f);
-    enemyTransform.scale = vec3(3.0f);
-    EntityID walkerEnt = entityManager_.CreateEntity("e_enemy", enemyTransform);
-    testWalker.Init(walkerEnt, entityManager_.components_, particleManager_, world_);
+    entityManager_.LoadEntity("e_comet");
+    entityManager_.LoadEntity("e_comet_spawner");
+    Transform spawnerTransform;
+    spawnerTransform.position = vec3(0.0f, 100.0f, 0.0f);
+    entityManager_.CreateEntity("e_comet_spawner", spawnerTransform);
 
     camera_.target_ = PLAYER_ENTITY;
     playerController_.Init(entityManager_.components_, particleManager_);
@@ -103,10 +110,10 @@ void Game::Update() {
             entityManager_.components_,
             spreadManager_
         );
-        testWalker.Update(
-            entityManager_.components_,
-            world_
-        );
+        // testWalker.Update(
+        //     entityManager_.components_,
+        //     world_
+        // );
         playerController_.Execute(
             entityManager_.entities_,
             entityManager_.components_,
@@ -167,6 +174,9 @@ void Game::Update() {
             entityManager_.components_,
             entityManager_.spawnList_,
             seedManager_
+        );
+        SpawnSystem::ClearSpawns(
+            entityManager_.entities_
         );
         timeAccumlulator_ -= TIMESTEP;
     }

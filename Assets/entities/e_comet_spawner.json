@@ -1,0 +1,10 @@
+{
+    "components": {
+        "interval_spawner": {
+            "interval": 0.5,
+            "radius": 100.0,
+            "entity": "e_comet",
+            "planar": true
+        }
+    }
+}

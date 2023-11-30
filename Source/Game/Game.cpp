@@ -137,6 +137,7 @@ void Game::Update() {
         GroundTraceSystem::Execute(
             entityManager_.entities_,
             entityManager_.components_,
+            entityManager_.destroyList_,
             world_
         );
         GroundStickSystem::Stick(

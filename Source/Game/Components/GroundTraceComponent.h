@@ -20,6 +20,8 @@ public:
     std::array<float, MAX_ENTITIES> groundPosition;
     std::array<glm::vec3, MAX_ENTITIES> groundNormal;
 
+    std::array<bool, MAX_ENTITIES> destroyOnGround;
+
     GroundTraceComponent() {
         onGround.fill(false);
         enteredGround.fill(false);
@@ -27,6 +29,7 @@ public:
         onGroundLastFrame.fill(false);
         groundPosition.fill(0.0f);
         groundNormal.fill(glm::vec3(0.0f, 0.0f, 0.0f));
+        destroyOnGround.fill(false);
     };
     GroundTraceComponent(const GroundTraceComponent&) = delete;
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
@@ -40,5 +43,6 @@ public:
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);
         zeroVelocity[entity] = GetBoolean(data, "zero_velocity", false);
         alignStrength[entity] = GetFloat(data, "align_strength", 0.0f);
+        destroyOnGround[entity] = GetBoolean(data, "destroy_on_ground", false);
     }
 };

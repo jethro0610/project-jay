@@ -11,6 +11,7 @@ constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>
 void GroundTraceSystem::Execute(
     EntityList& entities,
     ComponentList& components,
+    DestroyList& destroyList,
     World& world
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
@@ -53,5 +54,8 @@ void GroundTraceSystem::Execute(
         }
         else
             groundTraceComponent.exitedGround[i] = false;
+
+        if (groundTraceComponent.destroyOnGround[i] && groundTraceComponent.onGround[i])
+            destroyList.push_back(i);
     }
 }

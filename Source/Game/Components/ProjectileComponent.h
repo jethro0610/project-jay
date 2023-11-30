@@ -12,6 +12,7 @@ public:
     // TODO: Target
 
     ProjectileComponent() {
+        launchOnSpawn.fill(false);
         minLaunchVelocity.fill(glm::vec3(0.0f));
         maxLaunchVelocity.fill(glm::vec3(0.0f));
     }

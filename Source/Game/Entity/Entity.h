@@ -10,6 +10,7 @@ public:
     EntityKey key_;
     int stunTimer_;
     int seedsOnDestroy_;
+    int seedsRadius_;
 
     Entity() {
         alive_ = false;
@@ -17,6 +18,7 @@ public:
         stunTimer_ = 0;
         spawnedThisTick_ = true;
         seedsOnDestroy_ = 0;
+        seedsRadius_ = 0;
     }
 
     bool ShouldUpdate() const {

@@ -150,7 +150,7 @@ void PlayerController::Execute(
         sparkEmitter_->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 2;
         isDoingAction = true;
         actionMeter_ += 2;
     }
@@ -158,7 +158,7 @@ void PlayerController::Execute(
         cloudEmitter_->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
-        spreadActivatorComponent.radius[PLAYER_ENTITY] = 1;
+        spreadActivatorComponent.radius[PLAYER_ENTITY] = 2;
     }
 
     if (!isDoingAction && actionMeter_ > 0)

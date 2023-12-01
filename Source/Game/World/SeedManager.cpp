@@ -36,7 +36,13 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
         capturer,
         GlobalTime::GetTime(),
-        GlobalTime::GetTime() + MIN_REMOVE_TIME
+        GlobalTime::GetTime() + MIN_REMOVE_TIME,
+        RandomVector(
+            vec3(0.0f, 0.0f, 0.0f),
+            vec3(60.0f, 60.0f, 60.0f)
+        ),
+        RandomFloatRange(0.25f, 1.0f),
+        RandomFloatRange(0.0f, 2.0f)
     };
     seeds_.push_back(seed);
 }
@@ -59,6 +65,8 @@ void SeedManager::CalculatePositions(
         Seed& seed = seeds_[i];
 
         float timeSinceStart = GlobalTime::GetTime() - seed.startTime;
+        float clampStartTime = min(timeSinceStart, 1.0f);
+        float easeStartTime = 1.0f - (1.0f - clampStartTime) * (1.0f - clampStartTime);
         vec3 physicsOffset;
 
         float logisitic = 1 + expf(-SEED_EASE_SPEED * timeSinceStart);
@@ -67,9 +75,13 @@ void SeedManager::CalculatePositions(
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
-        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z), NA_Low) + 0.25f;
+        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z), NA_Low) + 4.0f * easeStartTime;
         if (positions_[i].y < height)
             positions_[i].y = height;
+        
+        positions_[i].x += sin(GlobalTime::GetTime() + seed.jitterOffset.x) * 1.0f * easeStartTime;
+        positions_[i].y += (sin(GlobalTime::GetTime() + seed.jitterOffset.y) * 4.0f * seed.jitterRange + seed.heightOffset) * easeStartTime;
+        positions_[i].z += sin(GlobalTime::GetTime() + seed.jitterOffset.z) * 1.0f * easeStartTime;
 
         float timeSinceCapture = GlobalTime::GetTime() - seed.captureTime;
         if (seed.targetEntity == NULL_ENTITY || timeSinceCapture < 0.0f)
@@ -78,6 +90,7 @@ void SeedManager::CalculatePositions(
         timeSinceCapture *= 3.0f;
         if (timeSinceCapture >= 1.0f) {
             meterComponent.meter[seed.targetEntity] += 1;
+            meterComponent.meter[seed.targetEntity] = min(meterComponent.meter[seed.targetEntity], meterComponent.maxMeter[seed.targetEntity]);
             seeds_.remove(i--);
             continue;
         }

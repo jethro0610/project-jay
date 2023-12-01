@@ -62,6 +62,7 @@ EntityID EntityManager::CreateEntity(const std::string& name, const Transform& t
         component->Load(componentData.value(), createdEntity);
     }
     entities_[createdEntity].seedsOnDestroy_ = GetInt(entityData, "seeds_on_destroy", 0);
+    entities_[createdEntity].seedsRadius_ = GetInt(entityData, "seed_radius", 0);
 
     return createdEntity;
 }

@@ -195,6 +195,7 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_cloud");
     LoadMaterial_P("m_spark");
     LoadMaterial_P("m_brick");
+    LoadMaterial_P("m_comet");
 
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");

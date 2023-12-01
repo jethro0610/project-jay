@@ -19,7 +19,7 @@ void SeedOnDestroySystem::Execute(
         seedManager.CreateMultipleSeed(
             transformComponent.transform[entityId].position, 
             entity.seedsOnDestroy_,
-            15
+            entity.seedsRadius_
         );
     }
 }

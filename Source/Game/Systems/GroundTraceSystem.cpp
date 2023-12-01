@@ -55,7 +55,11 @@ void GroundTraceSystem::Execute(
         else
             groundTraceComponent.exitedGround[i] = false;
 
-        if (groundTraceComponent.destroyOnGround[i] && groundTraceComponent.onGround[i])
+        if (
+            groundTraceComponent.destroyOnGround[i] && 
+            groundTraceComponent.onGround[i]
+        ) {
             destroyList.push_back(i);
+        }
     }
 }

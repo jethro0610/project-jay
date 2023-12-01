@@ -23,6 +23,9 @@ struct Seed {
     EntityID targetEntity;
     float startTime;
     float captureTime;
+    glm::vec3 jitterOffset;
+    float jitterRange;
+    float heightOffset;
 };
 
 class SeedManager {

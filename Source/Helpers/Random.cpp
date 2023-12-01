@@ -24,7 +24,7 @@ vec3 RandomVector(float maxDist) {
     return direction * dist;
 }
 
-vec3 RandomVector(glm::vec3& min, glm::vec3& max) {
+vec3 RandomVector(const glm::vec3& min, const glm::vec3& max) {
     float x = RandomFloatRange(min.x, max.x);
     float y = RandomFloatRange(min.y, max.y);
     float z = RandomFloatRange(min.z, max.z);
@@ -32,7 +32,7 @@ vec3 RandomVector(glm::vec3& min, glm::vec3& max) {
     return vec3(x, y, z);
 }
 
-vec4 RandomVec4(glm::vec4& min, glm::vec4& max) {
+vec4 RandomVec4(const glm::vec4& min, const glm::vec4& max) {
     float x = RandomFloatRange(min.x, max.x);
     float y = RandomFloatRange(min.y, max.y);
     float z = RandomFloatRange(min.z, max.z);

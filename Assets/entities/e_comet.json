@@ -1,5 +1,6 @@
 {
-    "seeds_on_destroy": 100,
+    "seeds_on_destroy": 150,
+    "seed_radius": 15,
     "components": {
         "transform": {
             "interpolate": true
@@ -8,11 +9,11 @@
             "model": "st_comet",
             "materials": 
             [
-                "m_brick"
+                "m_comet"
             ]
         },
         "ground_trace": {
-            "distance": 1.0,
+            "distance": 2.0,
             "destroy_on_ground": true
         },
         "velocity": {
@@ -20,8 +21,8 @@
         },
         "projectile": {
             "launch_on_spawn": true,
-            "min_launch_velocity": { "x": -50.0, "y": -75.0, "z": -50.0 },
-            "max_launch_velocity": { "x": 50.0, "y": -75.0, "z": 50.0 }
+            "min_launch_velocity": { "x": 35.0, "y": -150.0, "z": 35.0 },
+            "max_launch_velocity": { "x": 55.0, "y": -150.0, "z": 55.0 }
         }
     }
 }

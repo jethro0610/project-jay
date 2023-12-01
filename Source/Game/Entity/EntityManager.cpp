@@ -61,6 +61,8 @@ EntityID EntityManager::CreateEntity(const std::string& name, const Transform& t
         entities_[createdEntity].AddComponentById(componentId);
         component->Load(componentData.value(), createdEntity);
     }
+    entities_[createdEntity].seedsOnDestroy_ = GetInt(entityData, "seeds_on_destroy", 0);
+
     return createdEntity;
 }
 
@@ -77,7 +79,7 @@ void EntityManager::SpawnEntities() {
     spawnList_.clear();
 }
 
-void EntityManager::DestoryEntities() {
+void EntityManager::DestroyEntities() {
     for (const EntityID& entity : destroyList_)
         DestroyEntity(entity);
 

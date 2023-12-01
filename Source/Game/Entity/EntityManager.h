@@ -16,6 +16,8 @@
 #include "../Components/Components.h"
 #include "../Components/ComponentList.h"
 
+class SpreadManager;
+
 class EntityManager {
 public:
     std::array<Entity, MAX_ENTITIES> entities_;
@@ -39,7 +41,7 @@ public:
     DestroyList destroyList_;
 
     void SpawnEntities();
-    void DestoryEntities();
+    void DestroyEntities();
 
 private:
     #define COMPONENTEXPANSION(TYPE, VAR) TYPE VAR;

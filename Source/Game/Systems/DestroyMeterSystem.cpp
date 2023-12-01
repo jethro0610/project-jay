@@ -1,7 +1,6 @@
 #include "DestroyMeterSystem.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../World/SeedManager.h"
 #include "../Components/MeterComponent.h"
 #include "../Components/TransformComponent.h"
 
@@ -10,8 +9,7 @@ constexpr EntityKey key = GetEntityKey<MeterComponent, TransformComponent>();
 void DestroyMeterSystem::Execute(
     EntityList& entities,
     ComponentList& components,
-    DestroyList& destroyList,
-    SeedManager& seedManager
+    DestroyList& destroyList
 ) {
     auto& meterComponent = components.Get<MeterComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
@@ -20,11 +18,6 @@ void DestroyMeterSystem::Execute(
         if (!entities[i].ShouldUpdate(key)) continue;
         if (meterComponent.destroyOnNone[i] && meterComponent.meter[i] <= 0) {
             destroyList.push_back(i);
-            seedManager.CreateMultipleSeed(
-                transformComponent.transform[i].position,
-                meterComponent.numDestroySeeds[i],
-                15
-            );
         }
     }
 }

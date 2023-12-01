@@ -1,4 +1,5 @@
 {
+    "seeds_on_destroy": 100,
     "components": {
         "transform": {
             "interpolate": true

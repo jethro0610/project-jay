@@ -5,6 +5,8 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Spawn seeds when destroyed
+
 - Remove cutting
 
 - Some enemies stay in center, others at border

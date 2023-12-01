@@ -9,12 +9,14 @@ public:
     bool spawnedThisTick_;
     EntityKey key_;
     int stunTimer_;
+    int seedsOnDestroy_;
 
     Entity() {
         alive_ = false;
         key_ = 0;
         stunTimer_ = 0;
         spawnedThisTick_ = true;
+        seedsOnDestroy_ = 0;
     }
 
     bool ShouldUpdate() const {

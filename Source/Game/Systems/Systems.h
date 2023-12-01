@@ -16,3 +16,4 @@
 #include "IntervalSpawnSystem.h"
 #include "SkeletonSystem.h"
 #include "SpawnSystem.h"
+#include "SeedOnDestroySystem.h"

@@ -9,7 +9,6 @@ namespace DestroyMeterSystem {
     void Execute(
         EntityList& entities,
         ComponentList& components,
-        DestroyList& destroyList,
-        SeedManager& seedManager
+        DestroyList& destroyList
     );
 }

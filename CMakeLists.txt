@@ -28,6 +28,7 @@ file(GLOB SOURCES
     Source/Game/Systems/IntervalSpawnSystem.cpp
     Source/Game/Systems/SkeletonSystem.cpp
     Source/Game/Systems/SpawnSystem.cpp
+    Source/Game/Systems/SeedOnDestroySystem.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp

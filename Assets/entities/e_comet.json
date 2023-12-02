@@ -17,12 +17,13 @@
             "destroy_on_ground": true
         },
         "velocity": {
-            "use_gravity": false
+            "use_gravity": true 
         },
         "projectile": {
             "launch_on_spawn": true,
             "min_launch_velocity": { "x": 35.0, "y": -150.0, "z": 35.0 },
-            "max_launch_velocity": { "x": 55.0, "y": -150.0, "z": 55.0 }
+            "max_launch_velocity": { "x": 55.0, "y": -150.0, "z": 55.0 },
+            "emitter": "p_sparkle"
         }
     }
 }

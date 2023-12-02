@@ -24,12 +24,13 @@ void ParticleEmitter::Update(float deltaTime) {
         if (timer_ >= properties_->spawnInterval) {
             Emmit();
             timer_ = 0.0f;
+            lastTransform_ = transform_;
         }
     }
-    else
+    else {
         timer_ = 0.0f;
-
-    lastTransform_ = transform_;
+        lastTransform_ = transform_;
+    }
 }
 
 void ParticleEmitter::Emmit() {

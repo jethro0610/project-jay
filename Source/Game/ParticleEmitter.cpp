@@ -19,15 +19,15 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.scale = mix(particle.initialScale, properties_->endScale, particle.time);
     }
 
-    if (active_) {
+    if (active_)
         timer_ += deltaTime;
-        if (timer_ >= properties_->spawnInterval) {
-            Emmit();
-            timer_ = 0.0f;
-            lastTransform_ = transform_;
-        }
-    }
     else {
+        timer_ = 0.0f;
+        lastTransform_ = transform_;
+    }
+
+    if (timer_ >= properties_->spawnInterval) {
+        Emmit();
         timer_ = 0.0f;
         lastTransform_ = transform_;
     }

@@ -7,7 +7,7 @@
 #include "../Types/Transform.h"
 #include "../Rendering/Material.h"
 
-const int MAX_PARTICLES = 512;
+const int MAX_PARTICLES = 2048;
 
 struct Particle {
     glm::vec4 initialPosition;

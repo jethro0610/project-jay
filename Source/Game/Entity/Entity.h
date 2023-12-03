@@ -1,7 +1,11 @@
 #pragma once
 #include <bitset>
 #include <initializer_list> 
+#include <vector_const.h>
 #include "EntityKey.h"
+
+const int MAX_ENTITY_EMITTERS = 8;
+class ParticleEmitter;
 
 class Entity {
 public:
@@ -11,6 +15,7 @@ public:
     int stunTimer_;
     int seedsOnDestroy_;
     int seedsRadius_;
+    vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
 
     Entity() {
         alive_ = false;

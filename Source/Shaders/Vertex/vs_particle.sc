@@ -11,8 +11,8 @@ uniform vec4 u_cameraRight;
 #define i_position i_data1
 #define i_velocity i_data2
 #define i_rotation i_data3.x
-#define i_scale i_data3.y
-#define i_initialScale i_data3.z
+#define i_initialScale i_data3.x
+#define i_scale i_data3.z
 #define i_time i_data3.w
 
 void main() {

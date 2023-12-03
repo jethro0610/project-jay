@@ -10,6 +10,7 @@
 #include "EntityID.h"
 #include "EntityKey.h"
 #include "EntityLimits.h"
+#include "../ParticleManager.h"
 #include "SpawnList.h"
 #include "DestroyList.h"
 
@@ -24,7 +25,7 @@ public:
     std::deque<EntityID> usableEntities_;
     std::unordered_map<std::string, nlohmann::json> entityData_;
 
-    EntityManager();
+    EntityManager(ParticleManager& particleManager);
     void LoadEntity(const std::string& name);
     EntityID CreateEntity(const Transform& transform = Transform());
     EntityID CreateEntity(const std::string& name, const Transform& transform = Transform());
@@ -50,6 +51,7 @@ private:
     #undef COMPONENTEXPANSION 
     #undef TAILEXPANSION 
 
+    ParticleManager& particleManager_;
     std::unordered_map<std::string, Component*> componentMap_;
     std::unordered_map<std::string, int> componentIds_;
 };

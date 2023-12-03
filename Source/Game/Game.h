@@ -28,11 +28,11 @@ public:
 private:
     Platform platform_;
     Noise noise_;
+    ParticleManager particleManager_;
     EntityManager entityManager_;
     Renderer renderer_;
     Camera camera_;
     World world_;
-    ParticleManager particleManager_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;

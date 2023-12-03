@@ -14,7 +14,6 @@ void Game::Init() {
     srand(time(0));
     entityManager_.components_.Get<SkeletonComponent>().renderer = &renderer_;
     entityManager_.components_.Get<StaticModelComponent>().renderer = &renderer_;
-    entityManager_.components_.Get<ProjectileComponent>().particleManager = &particleManager_;
 
     particleManager_.LoadEmitterProperty("p_sparkle", renderer_);
     particleManager_.LoadEmitterProperty("p_dust", renderer_);

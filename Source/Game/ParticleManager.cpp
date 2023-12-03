@@ -33,10 +33,14 @@ void ParticleManager::Update(float deltaTime) {
         if (!emitters_[i].alive_)
             continue;
 
+        if (emitters_[i].release_)
+            emitters_[i].active_ = false;
+
         emitters_[i].Update(deltaTime);
-        if (emitters_[i].release_) {
-            emitters_[i].alive_ = false;
-            emitters_[i].release_ = false;
+
+        // Only release once the emitter is finished
+        if (emitters_[i].release_ && emitters_[i].particles_.size() == 0) {
+            emitters_[i] = ParticleEmitter();
             usableEmitters_.push_front(i);
         }
     }

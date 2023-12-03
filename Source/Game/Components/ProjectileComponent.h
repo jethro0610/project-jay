@@ -7,13 +7,9 @@
 
 class ProjectileComponent : public Component {
 public:
-    // Assign this particle manager first
-    ParticleManager* particleManager;
-
     std::array<bool, MAX_ENTITIES> launchOnSpawn;
     std::array<glm::vec3, MAX_ENTITIES> minLaunchVelocity;
     std::array<glm::vec3, MAX_ENTITIES> maxLaunchVelocity;
-    std::array<ParticleEmitter*, MAX_ENTITIES> emitter;
 
     // TODO: Target
 
@@ -21,7 +17,6 @@ public:
         launchOnSpawn.fill(false);
         minLaunchVelocity.fill(glm::vec3(0.0f));
         maxLaunchVelocity.fill(glm::vec3(0.0f));
-        emitter.fill(nullptr);
     }
 
     static constexpr std::string GetName() { return "projectile"; }
@@ -31,7 +26,5 @@ public:
         launchOnSpawn[entity] = GetBoolean(data, "launch_on_spawn");
         minLaunchVelocity[entity] = GetVec3(data, "min_launch_velocity");
         maxLaunchVelocity[entity] = GetVec3(data, "max_launch_velocity");
-        if (data.contains("emitter"))
-            emitter[entity] = particleManager->RequestEmitter(data["emitter"]);
     }
 };

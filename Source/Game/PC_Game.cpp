@@ -13,11 +13,11 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods
 Game::Game():
     timeAccumlulator_(0.0f),
     noise_(1024.0f),
-    entityManager_(),
+    particleManager_(),
+    entityManager_(particleManager_),
     renderer_(noise_, platform_.window_),
     camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
     world_(noise_),
-    particleManager_(),
     seedManager_(),
     spreadManager_(seedManager_, world_),
     playerController_(),

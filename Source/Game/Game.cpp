@@ -80,7 +80,7 @@ void Game::Init() {
     entityManager_.LoadEntity("e_comet");
     entityManager_.LoadEntity("e_comet_spawner");
     Transform spawnerTransform;
-    spawnerTransform.position = vec3(0.0f, 100.0f, 0.0f);
+    spawnerTransform.position = vec3(0.0f, 200.0f, 0.0f);
     entityManager_.CreateEntity("e_comet_spawner", spawnerTransform);
 
     camera_.target_ = PLAYER_ENTITY;

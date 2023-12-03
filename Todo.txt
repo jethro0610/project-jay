@@ -5,6 +5,10 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Particle velocity based on object rotation
+- Use Enitity emitters on Player and PlayerController
+- Break particles
+
 - Spawn seeds when destroyed
 
 - Remove cutting

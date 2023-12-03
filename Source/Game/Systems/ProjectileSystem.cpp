@@ -40,7 +40,8 @@ void ProjectileSystem::Execute(
         if (entity.spawnedThisTick_ && projectileComponent.launchOnSpawn[i])
             Launch(entities, components, i);
 
-        if (entity.emitters_[0] != nullptr)
+
+        for (ParticleEmitter* emitter : entity.emitters_)
             entity.emitters_[0]->active_ = true;
     }
 }

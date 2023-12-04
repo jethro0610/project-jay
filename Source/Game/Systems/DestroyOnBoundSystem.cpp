@@ -16,6 +16,6 @@ void DestroyOnBoundSystem::Execute(
         if (!entity.ShouldUpdate(key)) continue;
 
         if (transformComponent.transform[i].position.y < Y_BOUND)
-            destroyList.push_back(i);
+            destroyList.push_back({i, false});
     }
 }

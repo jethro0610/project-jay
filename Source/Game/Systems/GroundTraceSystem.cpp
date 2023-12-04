@@ -59,7 +59,7 @@ void GroundTraceSystem::Execute(
             groundTraceComponent.destroyOnGround[i] && 
             groundTraceComponent.onGround[i]
         ) {
-            destroyList.push_back(i);
+            destroyList.push_back({i, true});
         }
     }
 }

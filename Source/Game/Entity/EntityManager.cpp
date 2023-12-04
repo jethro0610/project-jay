@@ -99,8 +99,8 @@ void EntityManager::SpawnEntities() {
 }
 
 void EntityManager::DestroyEntities() {
-    for (const EntityID& entity : destroyList_)
-        DestroyEntity(entity);
+    for (const DestroyInfo& destroyInfo : destroyList_)
+        DestroyEntity(destroyInfo.entityId);
 
     destroyList_.clear();
 }

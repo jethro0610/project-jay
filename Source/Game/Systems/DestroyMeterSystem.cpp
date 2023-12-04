@@ -17,7 +17,7 @@ void DestroyMeterSystem::Execute(
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
         if (meterComponent.destroyOnNone[i] && meterComponent.meter[i] <= 0) {
-            destroyList.push_back(i);
+            destroyList.push_back({i, true});
         }
     }
 }

@@ -12,12 +12,12 @@ void SeedOnDestroySystem::Execute(
     TransformComponent& transformComponent = componentList.Get<TransformComponent>();
 
     for (int i = 0; i < destroyList.size(); i++) {
-        const EntityID entityId = destroyList[i];
-        const Entity& entity = entityList[entityId];
-        if (entity.seedsOnDestroy_ <= 0) continue;
+        const DestroyInfo destroyInfo = destroyList[i];
+        const Entity& entity = entityList[destroyInfo.entityId];
+        if (entity.seedsOnDestroy_ <= 0 || !destroyInfo.doDestroyEffects) continue;
 
         seedManager.CreateMultipleSeed(
-            transformComponent.transform[entityId].position, 
+            transformComponent.transform[destroyInfo.entityId].position, 
             entity.seedsOnDestroy_,
             entity.seedsRadius_
         );

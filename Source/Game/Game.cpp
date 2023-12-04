@@ -169,6 +169,11 @@ void Game::Update() {
             entityManager_.components_,
             entityManager_.destroyList_
         );
+        DestroyOnBoundSystem::Execute(
+            entityManager_.entities_,
+            entityManager_.components_,
+            entityManager_.destroyList_
+        );
         IntervalSpawnSystem::Execute(
             entityManager_.entities_,
             entityManager_.components_,

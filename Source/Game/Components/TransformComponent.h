@@ -17,6 +17,8 @@ public:
     std::array<float, MAX_ENTITIES> lastTilt;
     std::array<float, MAX_ENTITIES> tilt;
 
+    std::array<bool, MAX_ENTITIES> destroyOnBound;
+
     TransformComponent() {
         interpolate.fill(false);
         targetable.fill(false);
@@ -25,6 +27,7 @@ public:
         up.fill(Transform::worldUp);
         lastTilt.fill(0.0f);
         tilt.fill(0.0f);
+        destroyOnBound.fill(false);
     };
     TransformComponent(const TransformComponent&) = delete;
     TransformComponent& operator=(const TransformComponent&) = delete;
@@ -36,5 +39,6 @@ public:
         interpolate[entity] = data["interpolate"].get<bool>();
         targetable[entity] = GetBoolean(data, "targetable", false);
         useTilt[entity] = GetBoolean(data, "use_tilt", false);
+        destroyOnBound[entity] = GetBoolean(data, "destroy_on_bound", false);
     }
 };

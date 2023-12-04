@@ -84,7 +84,6 @@ void Game::Init() {
     entityManager_.CreateEntity("e_comet_spawner", spawnerTransform);
 
     camera_.target_ = PLAYER_ENTITY;
-    playerController_.Init(entityManager_.components_, particleManager_);
 }
 
 void Game::Update() {
@@ -190,7 +189,6 @@ void Game::Update() {
             entityManager_.destroyList_,
             seedManager_
         );
-        
         timeAccumlulator_ -= TIMESTEP;
     }
     SkeletonSystem::InterpPoses(
@@ -213,6 +211,10 @@ void Game::Update() {
         entityManager_.components_
     );
     camera_.Update(inputs_);
+    ParticleAttachSystem::Execute(
+        entityManager_.entities_,
+        entityManager_.components_
+    );
     particleManager_.Update(GlobalTime::GetDeltaTime());
     renderer_.Render(
         entityManager_.entities_, 

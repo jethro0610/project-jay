@@ -1,4 +1,9 @@
 {
+    "emitters": [
+        "p_dust",
+        "p_cloud",
+        "p_spark"
+    ],
     "components": {
         "transform": {
             "interpolate": true,

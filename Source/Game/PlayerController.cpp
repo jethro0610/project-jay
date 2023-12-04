@@ -24,19 +24,6 @@ PlayerController::PlayerController() {
     cutCooldown_ = 0;
 }
 
-void PlayerController::Init(
-    ComponentList& components,
-    ParticleManager& particleManager
-) {
-    auto& transform = components.Get<TransformComponent>().renderTransform[PLAYER_ENTITY];
-    dustEmitter_ = particleManager.RequestEmitter("p_dust");
-    dustEmitter_->parent_ = &transform;
-    cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
-    cloudEmitter_->parent_ = &transform;
-    sparkEmitter_ = particleManager.RequestEmitter("p_spark");
-    sparkEmitter_->parent_ = &transform;
-}
-
 void PlayerController::Execute(
     EntityList& entities,
     ComponentList& components,
@@ -45,6 +32,7 @@ void PlayerController::Execute(
     Camera& camera,
     Inputs inputs
 ) {
+    const Entity& entity = entities[PLAYER_ENTITY];
     if (entities[PLAYER_ENTITY].stunTimer_ > 0)
         return;
 
@@ -57,10 +45,12 @@ void PlayerController::Execute(
     auto& transformComponent = components.Get<TransformComponent>();
     auto& velocityComponent = components.Get<VelocityComponent>();
 
-    dustEmitter_->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
-    cloudEmitter_->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
-    cloudEmitter_->active_ = false;
-    sparkEmitter_->active_ = false;
+    entity.emitters_[DUST_EMITTER]->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
+    entity.emitters_[CLOUD_EMITTER]->active_ = false;
+    entity.emitters_[SPARK_EMITTER]->active_ = false;
+
+    // TODO: Move this to a general system
+    entity.emitters_[CLOUD_EMITTER]->velocityOffset_ = velocityComponent.velocity[PLAYER_ENTITY] * 0.75f;
 
     vec3& position = transformComponent.transform[PLAYER_ENTITY].position;
     quat cameraPlanarRotation = quat(vec3(0.0f, camera.lookX_, 0.0f));
@@ -147,7 +137,7 @@ void PlayerController::Execute(
         actionMeter_ += 1;
     } 
     else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
-        sparkEmitter_->active_ = true;
+        entity.emitters_[SPARK_EMITTER]->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 2;
@@ -155,7 +145,7 @@ void PlayerController::Execute(
         actionMeter_ += 2;
     }
     else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
-        cloudEmitter_->active_ = true;
+        entity.emitters_[CLOUD_EMITTER]->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;
         spreadActivatorComponent.radius[PLAYER_ENTITY] = 2;

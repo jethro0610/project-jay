@@ -72,8 +72,8 @@ EntityID EntityManager::CreateEntity(const std::string& name, const Transform& t
         ASSERT((emittersData.size() <= MAX_ENTITY_EMITTERS), "Too many emitters on entity");
         for (int i = 0; i < emittersData.size(); i++) {
             ParticleEmitter* emitter = particleManager_.RequestEmitter(emittersData[i].get<std::string>());
-            emitter->parent_ = &components_.Get<TransformComponent>().renderTransform[createdEntity];
-            emitter->lastTransform_ = components_.Get<TransformComponent>().renderTransform[createdEntity];
+            emitter->transform_ = components_.Get<TransformComponent>().renderTransform[createdEntity];
+            emitter->lastTransform_ = emitter->transform_;
             entities_[createdEntity].emitters_.push_back(emitter);
         }
     }

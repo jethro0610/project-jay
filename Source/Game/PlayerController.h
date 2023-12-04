@@ -9,24 +9,24 @@ class Camera;
 class SpreadManager;
 class World;
 
-const int TIME_TO_CUT = 16;
-const int CUT_COOLDOWN_TIME = 16;
-const int MAX_ACTION_METER = 250;
-
-const int ATTACK_TIME = 25;
-const int ATTACK_ACTIVE_START = 2;
-const int ATTACK_ACTIVE_END = 15;
-
-const int MAX_CHARGE = 75;
-const int STRONG_CHARGE = 15;
-
 class PlayerController {
 public:
+    static const int TIME_TO_CUT = 16;
+    static const int CUT_COOLDOWN_TIME = 16;
+    static const int MAX_ACTION_METER = 250;
+
+    static const int ATTACK_TIME = 25;
+    static const int ATTACK_ACTIVE_START = 2;
+    static const int ATTACK_ACTIVE_END = 15;
+
+    static const int MAX_CHARGE = 75;
+    static const int STRONG_CHARGE = 15;
+
+    static const int DUST_EMITTER = 0;
+    static const int CLOUD_EMITTER = 1;
+    static const int SPARK_EMITTER = 2;
+
     PlayerController();
-    void Init(
-        ComponentList& components,
-        ParticleManager& particleManager
-    );
 
     void Execute(
         EntityList& entitities,
@@ -41,9 +41,6 @@ private:
     int actionMeter_;
     int cutTimer_;
     int cutCooldown_;
-    ParticleEmitter* dustEmitter_;
-    ParticleEmitter* cloudEmitter_;
-    ParticleEmitter* sparkEmitter_;
 
     int attackTimer_;
     int attackHitbox_;

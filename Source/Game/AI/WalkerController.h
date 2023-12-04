@@ -20,7 +20,7 @@ public:
     EntityID entity_;
     glm::vec2 targetPosition_;
     float stopTime_;
-    ParticleEmitter* cloudEmitter_;
+    // ParticleEmitter* cloudEmitter_;
 
     void Init(
         EntityID entity, 

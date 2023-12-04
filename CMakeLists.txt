@@ -30,6 +30,7 @@ file(GLOB SOURCES
     Source/Game/Systems/SpawnSystem.cpp
     Source/Game/Systems/SeedOnDestroySystem.cpp
     Source/Game/Systems/DestroyOnBoundSystem.cpp
+    Source/Game/Systems/ParticleAttachSystem.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp

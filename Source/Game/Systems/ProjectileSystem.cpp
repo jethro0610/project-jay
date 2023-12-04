@@ -40,9 +40,8 @@ void ProjectileSystem::Execute(
         if (entity.spawnedThisTick_ && projectileComponent.launchOnSpawn[i])
             Launch(entities, components, i);
 
-
+        // TODO: Check if projectile was launched
         for (ParticleEmitter* emitter : entity.emitters_)
-            entity.emitters_[0]->active_ = true;
+            emitter->active_ = true;
     }
 }
-    

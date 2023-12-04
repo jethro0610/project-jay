@@ -5,8 +5,6 @@ using namespace glm;
 
 void ParticleEmitter::Update(float deltaTime) {
     ASSERT(alive_ == true, "Using dead particle emitter");
-    if (parent_ != nullptr)
-        transform_ = *parent_;
 
     for (int i = 0; i < particles_.size(); i++) {
         Particle& particle = particles_[i];

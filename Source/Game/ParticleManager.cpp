@@ -14,6 +14,7 @@ ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
     usableEmitters_.pop_front();
     if (usableEmitters_.size() <= 0)
         usableEmitters_.push_front(emitterIndex + 1);
+    ASSERT((emitterIndex < MAX_EMITTERS), "Too many emitters");
 
     ParticleEmitter& emitter = emitters_[emitterIndex];
     emitter.alive_ = true;

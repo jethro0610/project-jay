@@ -8,6 +8,7 @@
 - Particle velocity based on object rotation
 - Use Enitity emitters on Player and PlayerController
 - Break particles
+- Break objects that go under
 
 - Spawn seeds when destroyed
 

@@ -17,3 +17,4 @@
 #include "SkeletonSystem.h"
 #include "SpawnSystem.h"
 #include "SeedOnDestroySystem.h"
+#include "DestroyOnBoundSystem.h"

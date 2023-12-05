@@ -2,9 +2,9 @@
 #include "../Entity/DestroyList.h"
 #include "../Components/ComponentList.h"
 
-const int Y_BOUND = -10;
 
 namespace DestroyOnBoundSystem {
+    const int Y_BOUND = -50;
     void Execute(
         EntityList& entities,
         ComponentList& components,

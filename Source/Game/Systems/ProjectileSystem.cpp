@@ -23,6 +23,7 @@ void Launch(
         projectileComponent.minLaunchVelocity[projectile],
         projectileComponent.maxLaunchVelocity[projectile]
     );
+    projectileComponent.launched[projectile] = true;
 }
 
 void ProjectileSystem::Execute(
@@ -40,8 +41,16 @@ void ProjectileSystem::Execute(
         if (entity.spawnedThisTick_ && projectileComponent.launchOnSpawn[i])
             Launch(entities, components, i);
 
-        // TODO: Check if projectile was launched
+        if (!projectileComponent.launched[i])
+            continue;
+
         for (ParticleEmitter* emitter : entity.emitters_)
             emitter->active_ = true;
+
+        vec3 normVel = normalize(velocityComponent.velocity[i]);
+        transformComponent.transform[i].rotation = quatLookAtRH(
+            normVel, 
+            Transform::worldUp
+        );
     }
 }

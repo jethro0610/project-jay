@@ -39,7 +39,7 @@ void Camera::Update(Inputs inputs) {
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
-    lookY_ = clamp(lookY_, radians(-80.0f), radians(20.0f));
+    lookY_ = clamp(lookY_, radians(-50.0f), radians(5.0f));
 
     if (target_ == NULL_ENTITY) {
         // Move and use first person look when there is no entity to track

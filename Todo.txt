@@ -5,9 +5,13 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Weave obstacles
+- Level clearance
 - Particle velocity based on object rotation
-- Use Enitity emitters on Player and PlayerController
-- Break particles
+- Move constants to namespaces
+- Particles on break
+- Bloom
+- Skybox
 
 - Spawn seeds when destroyed
 

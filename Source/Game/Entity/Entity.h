@@ -21,7 +21,7 @@ public:
         alive_ = false;
         key_ = 0;
         stunTimer_ = 0;
-        spawnedThisTick_ = true;
+        spawnedThisTick_ = false;
         seedsOnDestroy_ = 0;
         seedsRadius_ = 0;
     }

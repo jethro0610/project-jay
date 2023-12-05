@@ -43,6 +43,7 @@ EntityID EntityManager::CreateEntity(const Transform& transform) {
         usableEntities_.push_front(createdEntity + 1);
 
     entities_[createdEntity].alive_ = true;
+    entities_[createdEntity].spawnedThisTick_ = true;
     components_.Get<TransformComponent>().transform[createdEntity] = transform;
     components_.Get<TransformComponent>().transformLastUpdate[createdEntity] = transform;
     components_.Get<TransformComponent>().renderTransform[createdEntity] = transform;

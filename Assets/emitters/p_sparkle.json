@@ -1,6 +1,6 @@
 {
     "material": "m_cloud",
-    "spawn_interval": 0.05,
+    "spawn_interval": 0.025,
     "spawn_count": 50,
     "lifetime": 0.5,
     "scale_range": [0.5, 1.0],

@@ -6,7 +6,8 @@
     ],
     "components": {
         "transform": {
-            "interpolate": true
+            "interpolate": true,
+            "destroy_on_bound": true
         },
         "static_model": {
             "model": "st_comet",
@@ -20,7 +21,7 @@
             "destroy_on_ground": true
         },
         "velocity": {
-            "use_gravity": true 
+            "use_gravity": true
         },
         "projectile": {
             "launch_on_spawn": true,

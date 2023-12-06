@@ -1,7 +1,7 @@
 {
     "vertex": "vs_inst_billboard",
     "fragment": "fs_seed",
-    "cast_shadows": true,
+    "cast_shadows": false,
     "vertex_shadow": "vs_inst_billboard_s",
     "fragment_shadow": "fs_depth_s",
     "textures": []

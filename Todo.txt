@@ -5,21 +5,30 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Levels progress with time, certain things spawn in, events etc.
+    - Plan around these events and setup the level as quikly as possible for optimal flowers
+
+- Level editor
+    - Level storage
+    - Noise editor
+    - Object gimbal
+    - Ground aligner
+    - Pause
+    - Seamless edit and move mode
+    - Filler Pillar
 - Weave obstacles
 - Level clearance
 - Particle velocity based on object rotation
-- Move constants to namespaces
 - Particles on break
 - Bloom
 - Skybox
 
-- Spawn seeds when destroyed
+- Move constants to namespaces
 
 - Remove cutting
 
 - Some enemies stay in center, others at border
 
-- Animation for up and strong hits
 - Each character comes back unless the player takes them
   out in a level
     - Stun enemies without killing

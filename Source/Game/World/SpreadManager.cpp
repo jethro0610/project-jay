@@ -57,7 +57,7 @@ bool SpreadManager::AddSpread(const ivec2& key) {
     transform.position.x += randOffset.x;
     transform.position.z += randOffset.y;
     vec2 pos2d = vec2(transform.position.x, transform.position.z);
-    transform.position.y = world_.GetHeight(pos2d) + RandomFloatRange(0.15f, 0.75f);
+    transform.position.y = world_.GetHeight(pos2d) + RandomFloatRange(0.15f, 1.00f);
     transform.scale = vec3(RandomFloatRange(0.35f, 1.0f));
     transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
     transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;

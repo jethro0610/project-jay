@@ -83,6 +83,12 @@ void Game::Init() {
     spawnerTransform.position = vec3(0.0f, 200.0f, 0.0f);
     entityManager_.CreateEntity("e_comet_spawner", spawnerTransform);
 
+    entityManager_.LoadEntity("e_tpillar");
+    Transform boulderTransform;
+    boulderTransform.position = vec3(50.0f, 15.0f, 50.0f);
+    boulderTransform.scale = vec3(20.0f, 50.0f, 20.0f);
+    entityManager_.CreateEntity("e_tpillar", boulderTransform);
+    
     camera_.target_ = PLAYER_ENTITY;
 }
 

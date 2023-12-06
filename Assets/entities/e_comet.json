@@ -1,6 +1,6 @@
 {
-    "seeds_on_destroy": 150,
-    "seed_radius": 20,
+    "seeds_on_destroy": 160,
+    "seed_radius": 18,
     "emitters": [
         "p_sparkle"
     ],

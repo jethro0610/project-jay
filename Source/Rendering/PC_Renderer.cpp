@@ -123,6 +123,8 @@ Renderer::Renderer(Noise& noise, GLFWwindow* window) {
 }
 
 void Renderer::TEMP_LoadTestData() {
+    LoadModel_P("st_tpillar");
+    LoadModel_P("st_boulder");
     LoadModel_P("st_comet");
     LoadModel_P("st_sphere");
     LoadModel_P("st_rock");
@@ -196,6 +198,8 @@ void Renderer::TEMP_LoadTestData() {
     LoadMaterial_P("m_spark");
     LoadMaterial_P("m_brick");
     LoadMaterial_P("m_comet");
+    LoadMaterial_P("m_boulder");
+    LoadMaterial_P("m_tpillar");
 
     worldMaterial_ = LoadMaterial_P("m_world");
     postProcessMaterial_ = LoadMaterial_P("m_postprocess");

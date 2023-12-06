@@ -11,6 +11,7 @@
 #include "../Types/Transform.h"
 #include "../Rendering/Renderer.h"
 #include "./AI/WalkerController.h"
+#include "LevelLoader.h"
 #include "World/World.h"
 
 #ifdef _PC
@@ -30,6 +31,7 @@ private:
     Noise noise_;
     ParticleManager particleManager_;
     EntityManager entityManager_;
+    LevelLoader levelLoader_;
     Renderer renderer_;
     Camera camera_;
     World world_;

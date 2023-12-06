@@ -15,6 +15,7 @@ Game::Game():
     noise_(1024.0f),
     particleManager_(),
     entityManager_(particleManager_),
+    levelLoader_(entityManager_),
     renderer_(noise_, platform_.window_),
     camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
     world_(noise_),

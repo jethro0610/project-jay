@@ -1,0 +1,51 @@
+{
+    "player_transform": {
+        "position": {
+            "x": 0.0,
+            "y": 10.0,
+            "z": 0.0
+        }
+    },
+    "entities": [
+        {
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": 25.0,
+                    "y": 15.0,
+                    "z": 25.0
+                },
+                "scale": {
+                    "x": 10.0,
+                    "y": 20.0,
+                    "z": 10.0
+                }
+            }
+        },
+        {
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": -25.0,
+                    "y": 15.0,
+                    "z": -25.0
+                },
+                "scale": {
+                    "x": 10.0,
+                    "y": 20.0,
+                    "z": 10.0
+                }
+            }
+        },
+        {
+            "name": "e_comet_spawner",
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 200.0,
+                    "z": 0.0
+                }
+            }
+        }
+    ]   
+}

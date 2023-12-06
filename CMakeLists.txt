@@ -44,6 +44,7 @@ file(GLOB SOURCES
     Source/Game/PlayerController.cpp
     Source/Game/Time.cpp
     Source/Game/ParticleEmitter.cpp
+    Source/Game/LevelLoader.cpp
 
     Source/Game/World/World.cpp
     Source/Game/ParticleManager.cpp

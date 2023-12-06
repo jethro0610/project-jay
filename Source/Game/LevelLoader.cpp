@@ -10,8 +10,6 @@ entityManager_(entityManager)
 
 void LevelLoader::UnloadLevel() {
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (i == PLAYER_ENTITY)
-            continue;
         if (!entityManager_.entities_[i].alive_)
             continue;
 
@@ -22,15 +20,11 @@ void LevelLoader::UnloadLevel() {
 
 void LevelLoader::LoadLevel(const std::string& name) {
     UnloadLevel();
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
 
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
 
     nlohmann::json data = nlohmann::json::parse(inFile);
-
-    transformComponent.transform[PLAYER_ENTITY] = GetTransform(data, "player_transform");
-
     auto& entitiesData = data["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {

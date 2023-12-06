@@ -25,10 +25,6 @@ void Game::Init() {
 
     // Create the player entity
     entityManager_.LoadEntity("e_player");
-    Transform playerTransform;
-    playerTransform.position = vec3(0.0f, 50.0f, 0.0f);
-    entityManager_.CreateEntity("e_player", playerTransform);
-
     entityManager_.LoadEntity("e_tpillar");
     entityManager_.LoadEntity("e_comet_spawner");
     entityManager_.LoadEntity("e_comet");

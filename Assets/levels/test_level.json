@@ -1,12 +1,15 @@
 {
-    "player_transform": {
-        "position": {
-            "x": 0.0,
-            "y": 10.0,
-            "z": 0.0
-        }
-    },
     "entities": [
+        {
+            "name": "e_player",
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 10.0,
+                    "z": 0.0
+                }
+            }
+        },
         {
             "name": "e_tpillar",
             "transform": {

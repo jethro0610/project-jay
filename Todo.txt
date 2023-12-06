@@ -5,6 +5,10 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Level structure
+    - Parse files to determine dependecies
+    - Separate graphics loading from renderer
+
 - Levels progress with time, certain things spawn in, events etc.
     - Plan around these events and setup the level as quikly as possible for optimal flowers
 

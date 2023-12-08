@@ -24,7 +24,7 @@ public:
     static constexpr std::string GetName() { return "projectile"; }
     static constexpr int GetID() { return 6; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         launchOnSpawn[entity] = GetBoolean(data, "launch_on_spawn");
         minLaunchVelocity[entity] = GetVec3(data, "min_launch_velocity");
         maxLaunchVelocity[entity] = GetVec3(data, "max_launch_velocity");

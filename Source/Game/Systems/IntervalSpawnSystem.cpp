@@ -38,10 +38,10 @@ void IntervalSpawnSystem::Execute(
             spawnTransform.position = transformComponent.transform[i].position + offset + radialOffset;
             // NOTE: Need to use the transform to get the child transform, instead of just adding position
 
-            if (intervalSpawnComponent.entityToSpawn[i] == "e_seed")
-                seedManager.CreateSeed(spawnTransform.position);
-            else
-                spawnList.push_back({intervalSpawnComponent.entityToSpawn[i], spawnTransform});
+            // if (intervalSpawnComponent.entityToSpawn[i] == nullptr)
+            //     seedManager.CreateSeed(spawnTransform.position);
+            // else
+            spawnList.push_back({intervalSpawnComponent.entityToSpawn[i], spawnTransform});
 
             timer = 0;
         }

@@ -29,6 +29,7 @@ public:
 private:
     Platform platform_;
     Noise noise_;
+    ResourceManager resourceManager_;
     ParticleManager particleManager_;
     EntityManager entityManager_;
     LevelLoader levelLoader_;

@@ -12,22 +12,22 @@ using namespace std::chrono;
 
 void Game::Init() {
     srand(time(0));
-    entityManager_.components_.Get<SkeletonComponent>().renderer = &renderer_;
-    entityManager_.components_.Get<StaticModelComponent>().renderer = &renderer_;
+    entityManager_.components_.Get<SkeletonComponent>().resourceManager = &resourceManager_;
+    entityManager_.components_.Get<StaticModelComponent>().resourceManager = &resourceManager_;
 
-    particleManager_.LoadEmitterProperty("p_sparkle", renderer_);
-    particleManager_.LoadEmitterProperty("p_dust", renderer_);
-    particleManager_.LoadEmitterProperty("p_cloud", renderer_);
-    particleManager_.LoadEmitterProperty("p_spark", renderer_);
+    resourceManager_.LoadEmitterProperties("p_sparkle");
+    resourceManager_.LoadEmitterProperties("p_dust");
+    resourceManager_.LoadEmitterProperties("p_cloud");
+    resourceManager_.LoadEmitterProperties("p_spark");
 
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
     // Create the player entity
-    entityManager_.LoadEntity("e_player");
-    entityManager_.LoadEntity("e_tpillar");
-    entityManager_.LoadEntity("e_comet_spawner");
-    entityManager_.LoadEntity("e_comet");
+    resourceManager_.LoadEntityDescription("e_player");
+    resourceManager_.LoadEntityDescription("e_tpillar");
+    resourceManager_.LoadEntityDescription("e_comet_spawner");
+    resourceManager_.LoadEntityDescription("e_comet");
     levelLoader_.LoadLevel("test_level");
 
     camera_.target_ = PLAYER_ENTITY;

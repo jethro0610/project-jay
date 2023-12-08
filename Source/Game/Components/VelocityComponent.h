@@ -24,7 +24,7 @@ public:
     static constexpr std::string GetName() { return "velocity"; }
     static constexpr int GetID() { return 11; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         useGravity[entity] = GetBoolean(data, "use_gravity");
     }
 };

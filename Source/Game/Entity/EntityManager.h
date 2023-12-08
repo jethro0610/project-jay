@@ -10,12 +10,14 @@
 #include "EntityID.h"
 #include "EntityKey.h"
 #include "EntityLimits.h"
-#include "../ParticleManager.h"
 #include "SpawnList.h"
 #include "DestroyList.h"
 
 #include "../Components/Components.h"
 #include "../Components/ComponentList.h"
+
+#include "../ResourceManager.h"
+#include "../ParticleManager.h"
 
 class SpreadManager;
 
@@ -25,10 +27,9 @@ public:
     std::deque<EntityID> usableEntities_;
     std::unordered_map<std::string, nlohmann::json> entityData_;
 
-    EntityManager(ParticleManager& particleManager);
-    void LoadEntity(const std::string& name);
+    EntityManager(ResourceManager& resourceManager, ParticleManager& particleManager);
     EntityID CreateEntity(const Transform& transform = Transform());
-    EntityID CreateEntity(const std::string& name, const Transform& transform = Transform());
+    EntityID CreateEntity(nlohmann::json* descripition, const Transform& transform = Transform());
     void DestroyEntity(EntityID entityToDestroy);
 
     template <class T>
@@ -51,7 +52,8 @@ private:
     #undef COMPONENTEXPANSION 
     #undef TAILEXPANSION 
 
-    ParticleManager& particleManager_;
     std::unordered_map<std::string, Component*> componentMap_;
     std::unordered_map<std::string, int> componentIds_;
+    ResourceManager& resourceManager_;
+    ParticleManager& particleManager_;
 };

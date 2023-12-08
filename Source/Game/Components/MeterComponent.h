@@ -17,11 +17,9 @@ public:
     static constexpr std::string GetName() { return "meter"; }
     static constexpr int GetID() { return 13; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
-        meter[entity] = data["initial_meter"].get<int>();
-        if (data.contains("max_meter"))
-            maxMeter[entity] = data["max_meter"].get<int>();
-
+    void Load(nlohmann::json* data, EntityID entity) {
+        meter[entity] = GetInt(data, "initial_meter");
+        maxMeter[entity] = GetInt(data, "max_meter");
         destroyOnNone[entity] = GetBoolean(data, "destroy_on_none");
     }
 };

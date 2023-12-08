@@ -4,12 +4,12 @@
 #include <vector>
 #include "Component.h"
 #include "../../Helpers/Assert.h"
-#include "../../Rendering/Renderer.h"
+#include "../ResourceManager.h"
 #include "../../Rendering/Skeleton.h"
 
 class SkeletonComponent : public Component {
 public:
-    Renderer* renderer;
+    ResourceManager* resourceManager;
 
     std::array<Skeleton*, MAX_ENTITIES> skeleton;
     std::array<Pose, MAX_ENTITIES> pose; // OPTIMIZATION: Can reserve Poses in Renderer then request a pointer
@@ -41,9 +41,9 @@ public:
     static constexpr std::string GetName() { return "skeleton"; }
     static constexpr int GetID() { return 14; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         std::string name = GetString(data, "skeleton", "null_skeleton");
-        skeleton[entity] = &renderer->GetSkeleton(name);
+        skeleton[entity] = resourceManager->GetSkeleton(name);
         pose[entity].resize(skeleton[entity]->bones_.size());
         renderPose[entity].resize(skeleton[entity]->bones_.size());
         prevPose[entity].resize(skeleton[entity]->bones_.size());
@@ -53,9 +53,9 @@ public:
         for (int i = 0; i < numAnimation; i++)
             transitions[entity][i] = 0.35f;
 
-        if (!data.contains("transitions"))
+        if (!data->contains("transitions"))
             return;
-        auto& transitionsData = data["transitions"];
+        auto& transitionsData = (*data)["transitions"];
         for (auto& transitionData : transitionsData)
             transitions[entity][transitionData["index"]] = transitionData["length"];
     }

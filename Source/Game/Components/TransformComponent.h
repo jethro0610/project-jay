@@ -35,8 +35,8 @@ public:
     static constexpr std::string GetName() { return "transform"; }
     static constexpr int GetID() { return 10; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
-        interpolate[entity] = data["interpolate"].get<bool>();
+    void Load(nlohmann::json* data, EntityID entity) {
+        interpolate[entity] = GetBoolean(data, "targetable", false);
         targetable[entity] = GetBoolean(data, "targetable", false);
         useTilt[entity] = GetBoolean(data, "use_tilt", false);
         destroyOnBound[entity] = GetBoolean(data, "destroy_on_bound", false);

@@ -9,7 +9,7 @@ ParticleManager::ParticleManager() {
     usableEmitters_.push_front(0);
 }
 
-ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
+ParticleEmitter* ParticleManager::RequestEmitter(EmitterProperties* properties) {
     int emitterIndex = usableEmitters_.front();
     usableEmitters_.pop_front();
     if (usableEmitters_.size() <= 0)
@@ -18,11 +18,7 @@ ParticleEmitter* ParticleManager::RequestEmitter(std::string name) {
 
     ParticleEmitter& emitter = emitters_[emitterIndex];
     emitter.alive_ = true;
-    emitters_[emitterIndex].properties_ = &GetFromMap<EmitterProperties>(
-        emitterProps_, 
-        name, 
-        "Tried using unloaded particle emitter " + name
-    );
+    emitters_[emitterIndex].properties_ = properties;
 
     // TODO: Set particles array to 0 on emitter
     return &emitters_[emitterIndex]; 
@@ -45,38 +41,4 @@ void ParticleManager::Update(float deltaTime) {
             usableEmitters_.push_front(i);
         }
     }
-}
-
-void ParticleManager::LoadEmitterProperty(std::string name, Renderer& renderer) {
-    ForceMapUnique(emitterProps_, name, "Emitter " + name + " is already loaded");
-
-    std::ifstream inFile("emitters/" + name + ".json");
-    ASSERT(inFile.is_open(), "Failed to load emitter" + name);
-
-    nlohmann::json data = nlohmann::json::parse(inFile);
-    EmitterProperties properties;
-
-    properties.material = &renderer.GetMaterial(GetString(data, "material", "null_material"));
-    properties.localSpace = GetBoolean(data, "local_space");
-
-    properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);
-    properties.spawnCount = GetInt(data, "spawn_count", 1);
-    properties.lifetime = GetFloat(data, "lifetime", 1.0f);
-
-    auto scaleRange = data["scale_range"];
-    properties.minScale = scaleRange[0];
-    properties.maxScale = scaleRange[1];
-    properties.endScale = GetFloat(data, "end_scale");
-
-    properties.spawnRadius = GetFloat(data, "spawn_radius", 0.0f);
-    auto velocityRange = data["velocity_range"];
-    properties.minVelocity = GetVec4(velocityRange[0]);
-    properties.maxVelocity = GetVec4(velocityRange[1]);
-    properties.acceleration = GetVec4(data, "acceleration");
-
-    properties.startColor = GetVec4(data, "start_color");
-    properties.endColor = GetVec4(data, "end_color");
-
-    emitterProps_[name] = properties; 
-    DEBUGLOG("Loaded entity " << name);
 }

@@ -1,11 +1,14 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include "Component.h"
+#include "../ResourceManager.h"
 #include "../../Logging/Logger.h"
 
 class IntervalSpawnComponent : public Component {
 public:
-    std::array<std::string, MAX_ENTITIES> entityToSpawn;
+    ResourceManager* resourceManager;
+
+    std::array<nlohmann::json*, MAX_ENTITIES> entityToSpawn;
     std::array<int, MAX_ENTITIES> interval;
     std::array<float, MAX_ENTITIES> radius;
     std::array<bool, MAX_ENTITIES> planar;
@@ -26,20 +29,20 @@ public:
     static constexpr std::string GetName() { return "interval_spawner"; }
     static constexpr int GetID() { return 3; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         offsets[entity].clear();
         offsets[entity].shrink_to_fit();
         
-        entityToSpawn[entity] = GetString(data, "entity", "");
+        entityToSpawn[entity] = resourceManager->GetEntityDescription(GetString(data, "entity", ""));
         interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
         radius[entity] = GetFloat(data, "radius", 0.0f);
         planar[entity] = GetBoolean(data, "planar");
 
-        if (!data.contains("offsets")) {
+        if (!data->contains("offsets")) {
             offsets[entity].push_back(glm::vec3(0.0f, 0.0f, 0.0f));
         }
         else {
-            auto jOffsets = data["offsets"];
+            auto& jOffsets = (*data)["offsets"];
             for (auto& jOffset : jOffsets)
                 offsets[entity].push_back(glm::vec3(jOffset["x"], jOffset["y"], jOffset["z"]));
         }

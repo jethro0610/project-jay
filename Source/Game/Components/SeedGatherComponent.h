@@ -15,7 +15,7 @@ public:
     static constexpr std::string GetName() { return "seed_gather"; }
     static constexpr int GetID() { return 18; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         radius[entity] = GetFloat(data, "radius");
     }
 };

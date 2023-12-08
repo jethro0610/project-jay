@@ -1,8 +1,8 @@
 #include "Game.h"
 #include "Time.h"
-
 #include <sstream>
 #include <iostream>
+#include <GLFW/glfw3.h>
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -13,10 +13,11 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods
 Game::Game():
     timeAccumlulator_(0.0f),
     noise_(1024.0f),
+    resourceManager_(),
     particleManager_(),
-    entityManager_(particleManager_),
-    levelLoader_(entityManager_),
-    renderer_(noise_, platform_.window_),
+    entityManager_(resourceManager_, particleManager_),
+    levelLoader_(resourceManager_, entityManager_),
+    renderer_(resourceManager_),
     camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
     world_(noise_),
     seedManager_(),

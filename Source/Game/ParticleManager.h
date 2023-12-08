@@ -13,11 +13,8 @@ public:
     ParticleManager();
     std::array<ParticleEmitter, MAX_EMITTERS> emitters_; 
     std::deque<int> usableEmitters_;
-
-    std::unordered_map<std::string, EmitterProperties> emitterProps_;
     
-    ParticleEmitter* RequestEmitter(std::string name);
+    ParticleEmitter* RequestEmitter(EmitterProperties* properties);
 
     void Update(float deltaTime);
-    void LoadEmitterProperty(std::string name, Renderer& renderer);
 };

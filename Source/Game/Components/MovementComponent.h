@@ -53,7 +53,7 @@ public:
     static constexpr std::string GetName() { return "movement"; }
     static constexpr int GetID() { return 4; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         minSpeed[entity] = GetFloat(data, "min_speed", DEFAULT_MIN_SPEED);
         maxSpeed[entity] = GetFloat(data, "max_speed", DEFAULT_MAX_SPEED);
         speed[entity] = minSpeed[entity];

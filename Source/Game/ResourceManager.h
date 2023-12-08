@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <nlohmann/json.hpp>
 #include <unordered_set>
@@ -5,7 +6,6 @@
 #include "../Rendering/Model.h"
 #include "../Rendering/Skeleton.h"
 #include "../Rendering/Material.h"
-#include "../Rendering/Texture.h"
 #include "../Types/Noise.h"
 #include "ParticleEmitter.h"
 
@@ -36,8 +36,6 @@ public:
     void LoadEntityDescription(const std::string& name);
     void LoadEmitterProperties(const std::string& name);
 
-    // All assets will be referred by a pointer so objects
-    // can choose to null them
     Material* GetMaterial(const std::string& name);
     Model* GetModel(const std::string& name);
     Skeleton* GetSkeleton(const std::string& name);

@@ -4,11 +4,20 @@
 #include "../Helpers/LoadHelpers.h"
 
 #include "../Rendering/PC_VertexTypes.h"
+using namespace glm;
 
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout SkeletalVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
+
+const float WORLD_MESH_SIZE = 64.0f;
+const float WORLD_MESH_DENSITY = 0.5f;
+
+const float SHADOW_DISTANCE = 1000.0f;
+const float SHADOW_FORWARD = 60.0f;
+const float SHADOW_RANGE = 120.0f;
+const int SHADOW_RESOLUTION = 2048;
 
 ResourceManager::ResourceManager() {
     StaticVertex::Init();
@@ -43,8 +52,8 @@ void ResourceManager::LoadRenderTextures() {
     globals_.insert("t_g_shadow");
 
     textures_["t_g_render_c"] = bgfx::createTexture2D(
-        renderWidth_,
-        renderHeight_,
+        1920,
+        1080,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
@@ -53,8 +62,8 @@ void ResourceManager::LoadRenderTextures() {
     globals_.insert("t_g_render_c");
 
     textures_["t_g_render_d"] = bgfx::createTexture2D(
-        renderWidth_,
-        renderHeight_,
+        1920,
+        1080,
         false,
         1,
         bgfx::TextureFormat::D16,
@@ -63,8 +72,8 @@ void ResourceManager::LoadRenderTextures() {
     globals_.insert("t_g_render_d");
 
     textures_["t_g_post_c"] = bgfx::createTexture2D(
-        renderWidth_,
-        renderHeight_,
+        1920,
+        1080,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
@@ -97,6 +106,7 @@ void ResourceManager::LoadGlobalQuad() {
 }
 
 void ResourceManager::LoadGlobalTerrain() {
+    Mesh worldMesh;
     int size = ceil(WORLD_MESH_SIZE * WORLD_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
@@ -107,7 +117,7 @@ void ResourceManager::LoadGlobalTerrain() {
         vec3 position = vec3(x / WORLD_MESH_DENSITY, 0.0f, y / WORLD_MESH_DENSITY);
         vertices[index] = { position };
     };
-    worldMesh_.vertexBuffer = bgfx::createVertexBuffer(
+    worldMesh.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
             vertices, 
             sizeof(WorldVertex) * numVertices
@@ -135,13 +145,17 @@ void ResourceManager::LoadGlobalTerrain() {
         worldIndices[count++] = i3;
         worldIndices[count++] = i0;
     };
-    worldMesh_.indexBuffer = bgfx::createIndexBuffer(
+    worldMesh.indexBuffer = bgfx::createIndexBuffer(
         bgfx::copy(
             worldIndices, 
             sizeof(uint16_t) * numIndices
         )
     );
     delete[] worldIndices;
+
+    Model worldModel;
+    worldModel.meshes.push_back(worldMesh);
+    models_["st_g_terrain"] = worldModel;
 }
 
 #define MEMORYFROMFILE(path)                                    \
@@ -312,6 +326,7 @@ void ResourceManager::LoadEntityDescription(const std::string& name) {
     ASSERT(inFile.is_open(), "Failed to load entity " + name);
 
     entityDescs_[name] = nlohmann::json::parse(inFile);
+    DEBUGLOG("Loaded entity " << name);
 }
 
 void ResourceManager::LoadEmitterProperties(const std::string& name) {

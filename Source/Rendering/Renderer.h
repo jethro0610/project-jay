@@ -8,7 +8,6 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-#include "Texture.h"
 
 #include "../Game/Entity/EntityList.h"
 #include "../Game/Components/ComponentList.h"
@@ -54,7 +53,7 @@ private:
     glm::mat4 shadowProjectionMatrix_;
     glm::mat4 shadowMatrix_;
 
-    Texture* noiseTexture_;
+    TextureHandle noiseTexture_;
 
     Model* spread_;
     Mesh* quad_;

@@ -17,7 +17,7 @@ public:
     static constexpr std::string GetName() { return "spread_activator"; }
     static constexpr int GetID() { return 7; }
 
-    void Load(nlohmann::json& data, EntityID entity) {
+    void Load(nlohmann::json* data, EntityID entity) {
         groundOnly[entity] = GetBoolean(data, "ground_only", true);
     }
 };

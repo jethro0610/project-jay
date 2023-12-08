@@ -1,10 +1,10 @@
 #pragma once
-#include <string>
+#include <nlohmann/json.hpp>
 #include <vector_const.h>
 #include "../../Types/Transform.h"
 
 struct Spawn {
-    std::string name;
+    nlohmann::json* description;
     Transform transform;
 };
 typedef vector_const<Spawn, 512> SpawnList;

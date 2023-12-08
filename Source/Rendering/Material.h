@@ -2,6 +2,7 @@
 #include <vector_const.h>
 #include <glm/mat4x4.hpp>
 #include "RenderDefs.h"
+#include "Texture.h"
 
 const int MAX_TEXTURES_PER_MATERIAL = 8;
 const int SHADOW_TEXINDEX = 14;
@@ -14,9 +15,9 @@ enum TriangleType {
 };
 
 struct Material {
-    MaterialShaderHandle shader;
-    MaterialShaderHandle shadowShader;
-    vector_const<TextureHandle, MAX_TEXTURES_PER_MATERIAL> textures;
+    MaterialShaderHandle shaderHandle;
+    MaterialShaderHandle shadowShaderHandle;
+    vector_const<Texture*, MAX_TEXTURES_PER_MATERIAL> textures;
     bool castShadows;
     TriangleType triangleType;
     glm::mat4 properties;

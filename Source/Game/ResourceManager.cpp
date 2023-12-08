@@ -9,8 +9,8 @@ ShaderHandle ResourceManager::GetFragmentShader(const std::string& name) {
     return GetFromMap<ShaderHandle>(fragmentShaders_, name, "Tried using unloaded fragment shader " + name);
 }
 
-TextureHandle ResourceManager::GetTexture(const std::string& name) {
-    return GetFromMap<TextureHandle>(textures_, name, "Tried using unloaded texture " + name);
+Texture* ResourceManager::GetTexture(const std::string& name) {
+    return &GetFromMap<Texture>(textures_, name, "Tried using unloaded texture " + name);
 }
 
 Model* ResourceManager::GetModel(const std::string& name) {

@@ -30,55 +30,55 @@ ResourceManager::ResourceManager() {
 // TODO: Noise texture
 
 void ResourceManager::LoadGlobals() {
-    textures_["t_g_noise"] = bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
+    textures_["t_g_noise"] = {bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
         bgfx::copy(noise_.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
-    );
+    )};
     LoadRenderTextures();
     LoadGlobalQuad();
     LoadGlobalTerrain();
 }
 
 void ResourceManager::LoadRenderTextures() {
-    textures_["t_g_shadow"] = bgfx::createTexture2D(
+    textures_["t_g_shadow"] = {bgfx::createTexture2D(
         SHADOW_RESOLUTION,
         SHADOW_RESOLUTION,
         false,
         1,
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
-    );
+    )};
     globals_.insert("t_g_shadow");
 
-    textures_["t_g_render_c"] = bgfx::createTexture2D(
+    textures_["t_g_render_c"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
-    );
+    )};
     globals_.insert("t_g_render_c");
 
-    textures_["t_g_render_d"] = bgfx::createTexture2D(
+    textures_["t_g_render_d"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
         1,
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
-    );
+    )};
     globals_.insert("t_g_render_d");
 
-    textures_["t_g_post_c"] = bgfx::createTexture2D(
+    textures_["t_g_post_c"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
         1,
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
-    );
+    )};
     globals_.insert("t_g_post_c");
 }
 
@@ -206,9 +206,9 @@ void ResourceManager::LoadTexture(const std::string& name) {
     if (memory == nullptr)
         abort();
 
-    TextureHandle texture = bgfx::createTexture(memory);
+    TextureHandle handle = bgfx::createTexture(memory);
     DEBUGLOG("Loaded texture " << name);
-    textures_[name] = texture;
+    textures_[name] = { handle };
 }
 
 void ResourceManager::LoadMaterial(const std::string& name) {
@@ -225,13 +225,13 @@ void ResourceManager::LoadMaterial(const std::string& name) {
 
     ShaderHandle vertexShader = GetVertexShader(GetString(data, "vertex"));
     ShaderHandle fragmentShader = GetFragmentShader(GetString(data, "fragment"));
-    material.shader = bgfx::createProgram(vertexShader, fragmentShader);
+    material.shaderHandle = bgfx::createProgram(vertexShader, fragmentShader);
 
     material.castShadows = GetBoolean(data, "cast_shadows");
     if (material.castShadows) {
         ShaderHandle vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
         ShaderHandle fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
-        material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
+        material.shadowShaderHandle = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
     }
 
     if (data.contains("textures")) {

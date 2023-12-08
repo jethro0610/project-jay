@@ -198,101 +198,10 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_ = resourceManager.GetMaterial("m_text");
 }
 
-// void Renderer::TEMP_LoadTestData() {
-//     LoadModel("st_tpillar");
-//     LoadModel("st_boulder");
-//     LoadModel("st_comet");
-//     LoadModel("st_sphere");
-//     LoadModel("st_rock");
-//     LoadModel("st_tree");
-//     spreadModel_ = LoadModel("st_flower");
-//     LoadModel("sk_char");
-//
-//     Texture bricksC = LoadTexture("t_bricks_c");
-//     Texture bricksN = LoadTexture("t_bricks_n");
-//     Texture grassC = LoadTexture("t_grass_c");
-//     Texture grassN = LoadTexture("t_grass_n");
-//     Texture marbleC = LoadTexture("t_marble_c");
-//     Texture rockC = LoadTexture("t_rock_c");
-//     Texture rockN = LoadTexture("t_rock_n");
-//     Texture crackM = LoadTexture("t_crack_m");
-//     Texture treeC = LoadTexture("t_tree_c");
-//     Texture treeN = LoadTexture("t_tree_n");
-//     Texture leavesM = LoadTexture("t_leaves_m");
-//     Texture flowerM = LoadTexture("t_flower_m");
-//     Texture font = LoadTexture("t_font");
-//     Texture hairM = LoadTexture("t_hair_m");
-//
-//     LoadVertexShader("vs_static");
-//     LoadVertexShader("vs_static_s");
-//     LoadVertexShader("vs_static_crack");
-//     LoadVertexShader("vs_skeletal");
-//     LoadVertexShader("vs_skeletal_s");
-//     LoadVertexShader("vs_inst");
-//     LoadVertexShader("vs_spread");
-//     LoadVertexShader("vs_inst_s");
-//     LoadVertexShader("vs_inst_billboard");
-//     LoadVertexShader("vs_inst_billboard_s");
-//     LoadVertexShader("vs_world");
-//     LoadVertexShader("vs_world_s");
-//     LoadVertexShader("vs_screenquad");
-//     LoadVertexShader("vs_glyph");
-//     LoadVertexShader("vs_uibar");
-//     LoadVertexShader("vs_particle");
-//     LoadVertexShader("vs_particle_stretch");
-//     LoadVertexShader("vs_particle_trail");
-//
-//     LoadFragmentShader("fs_depth_s");
-//     LoadFragmentShader("fs_depth_masked_s");
-//
-//     LoadFragmentShader("fs_dfsa");
-//     LoadFragmentShader("fs_dfsa_color");
-//     LoadFragmentShader("fs_dfsa_color_masked");
-//     LoadFragmentShader("fs_dfsa_crack");
-//
-//     LoadFragmentShader("fs_flower");
-//     LoadFragmentShader("fs_seed");
-//     LoadFragmentShader("fs_particle");
-//     LoadFragmentShader("fs_leaves_strand");
-//     LoadFragmentShader("fs_world");
-//
-//     LoadFragmentShader("fs_blit");
-//     LoadFragmentShader("fs_text");
-//     LoadFragmentShader("fs_uibar");
-//     LoadFragmentShader("fs_postprocess");
-//
-//     LoadMaterial("m_player");
-//     LoadMaterial("m_playerskin");
-//     LoadMaterial("m_playershirt");
-//     LoadMaterial("m_hair");
-//     LoadMaterial("m_rock");
-//     LoadMaterial("m_tree");
-//     LoadMaterial("m_willowleaves");
-//     LoadMaterial("m_test_skel");
-//     LoadMaterial("m_dust");
-//     LoadMaterial("m_cloud");
-//     LoadMaterial("m_spark");
-//     LoadMaterial("m_brick");
-//     LoadMaterial("m_comet");
-//     LoadMaterial("m_boulder");
-//     LoadMaterial("m_tpillar");
-//
-//     worldMaterial_ = LoadMaterial("m_world");
-//     postProcessMaterial_ = LoadMaterial("m_postprocess");
-//     spreadMaterials_[0] = LoadMaterial("m_flower");
-//     spreadMaterials_[1] = LoadMaterial("m_stem");
-//     seedMaterial_ = LoadMaterial("m_seed");
-//     textMaterial_ = LoadMaterial("m_text");
-//     barMaterial_ = LoadMaterial("m_uibar");
-//     blitMaterial_ = LoadMaterial("m_preuiblit");
-//
-//     DEBUGLOG("Succesfully loaded all test assets");
-// }
-
 // TODO: InitBuffer functions into one generic function
-void Renderer::InitShadowBuffer(TextureHandle shadowBufferTexture) {
+void Renderer::InitShadowBuffer(Texture* shadowBufferTexture) {
     shadowBufferTexture_ = shadowBufferTexture;
-    shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture);
+    shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture->handle);
 
     bgfx::setViewFrameBuffer(SHADOW_VIEW, shadowBuffer_);
     bgfx::setViewClear(SHADOW_VIEW, BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
@@ -302,19 +211,20 @@ void Renderer::InitShadowBuffer(TextureHandle shadowBufferTexture) {
     bgfx::setUniform(u_shadowResolution_, &shadowResolution);
 }
 
-void Renderer::InitRenderBuffer(TextureHandle renderColorTexture, TextureHandle renderDepthTexture) {
+void Renderer::InitRenderBuffer(Texture* renderColorTexture, Texture* renderDepthTexture) {
     renderBufferTextures_[0] = renderColorTexture;
     renderBufferTextures_[1] = renderDepthTexture;
-    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_.data());
+    TextureHandle handles[] = { renderBufferTextures_[0]->handle, renderBufferTextures_[1]->handle };
+    renderBuffer_ = bgfx::createFrameBuffer(2, handles);
 
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
-void Renderer::InitPostProcessBuffer(TextureHandle postProcessTexture) {
+void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
     postProcessTexture_ = postProcessTexture;
-    postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture);
+    postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture->handle);
     bgfx::setViewFrameBuffer(POSTROCESS_VIEW, postProcessBuffer_);
     bgfx::setViewClear(POSTROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(POSTROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
@@ -406,15 +316,15 @@ void Renderer::RenderMesh(
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;
-        MaterialShaderHandle shader;
+        MaterialShaderHandle shaderHandle;
         if (curPass == 0) {
             view = RENDER_VIEW;
-            shader = material->shader;
+            shaderHandle = material->shaderHandle;
             SetTexturesFromMaterial(material, true);
         }
         else {
             view = SHADOW_VIEW;
-            shader = material->shadowShader;
+            shaderHandle = material->shadowShaderHandle;
             SetTexturesFromMaterial(material, false);
         }
 
@@ -423,7 +333,7 @@ void Renderer::RenderMesh(
 
         bgfx::setVertexBuffer(0, mesh->vertexBuffer);
         bgfx::setIndexBuffer(mesh->indexBuffer);
-        bgfx::submit(view, shader);
+        bgfx::submit(view, shaderHandle);
 
         if (material->triangleType > ONE_SIDED) {
             curFace++;
@@ -458,7 +368,7 @@ void Renderer::RenderWorld(World& world) {
         vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
-        bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_);
+        bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_->handle);
         RenderMesh(terrain_, terrainMaterial_);
     };
 }
@@ -563,14 +473,14 @@ void Renderer::RenderPostProcess() {
     SetTexturesFromMaterial(postProcessMaterial_, false);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(POSTROCESS_VIEW, postProcessMaterial_->shader);
+    bgfx::submit(POSTROCESS_VIEW, postProcessMaterial_->shaderHandle);
 }
 
 void Renderer::RenderBlit() {
-    bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]);
+    bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]->handle);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_->shader);
+    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
 }
 
 void Renderer::RenderUI(ComponentList& components) {
@@ -581,7 +491,7 @@ void Renderer::RenderUI(ComponentList& components) {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_->shader);
+    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
 }
 
 void Renderer::RenderScreenText() {
@@ -596,20 +506,20 @@ void Renderer::RenderScreenText() {
     memcpy(instanceBuffer.data, ScreenText::GetText(), sizeof(vec4) * count);
     bgfx::setInstanceDataBuffer(&instanceBuffer);
 
-    bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]);
+    bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]->handle);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_->shader);
+    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
     bgfx::setState(BGFX_STATE_DEFAULT);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
     for (int i = 0; i < material->textures.size(); i++)
-        bgfx::setTexture(i, samplers_[i], material->textures[i]);
+        bgfx::setTexture(i, samplers_[i], material->textures[i]->handle);
 
     if (shadowMap)
-        bgfx::setTexture(SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_);
+        bgfx::setTexture(SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_->handle);
 }
 
 void Renderer::SetLightDirection(const vec3& direction) {

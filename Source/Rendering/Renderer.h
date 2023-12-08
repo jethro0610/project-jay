@@ -46,14 +46,10 @@ private:
     int renderWidth_;
     int renderHeight_;
 
-    glm::vec3 lightDirection_;
-    glm::mat4 viewMatrix_;
-    glm::mat4 projectionMatrix_;
-    glm::mat4 shadowViewMatrix_;
-    glm::mat4 shadowProjectionMatrix_;
-    glm::mat4 shadowMatrix_;
-
-    TextureHandle noiseTexture_;
+    std::array<Texture*, 2> renderBufferTextures_;
+    Texture* noiseTexture_;
+    Texture* shadowBufferTexture_;
+    Texture* postProcessTexture_;
 
     Model* spread_;
     Mesh* quad_;
@@ -67,19 +63,22 @@ private:
     Material* postProcessMaterial_;
     Material* textMaterial_;
 
-    void InitShadowBuffer(TextureHandle shadowBufferTexture);
-    void InitRenderBuffer(TextureHandle renderColorTexture, TextureHandle renderDepthTexture);
-    void InitPostProcessBuffer(TextureHandle postProcessTexture);
+    glm::vec3 lightDirection_;
+    glm::mat4 viewMatrix_;
+    glm::mat4 projectionMatrix_;
+    glm::mat4 shadowViewMatrix_;
+    glm::mat4 shadowProjectionMatrix_;
+    glm::mat4 shadowMatrix_;
+
+    void InitShadowBuffer(Texture* shadowBufferTexture);
+    void InitRenderBuffer(Texture* renderColorTexture, Texture* renderDepthTexture);
+    void InitPostProcessBuffer(Texture* postProcessTexture);
     void InitUIBuffer();
 
     FrameBufferHandle backBuffer_;
     FrameBufferHandle shadowBuffer_;
     FrameBufferHandle renderBuffer_;
     FrameBufferHandle postProcessBuffer_;
-
-    std::array<TextureHandle, 2> renderBufferTextures_;
-    TextureHandle shadowBufferTexture_;
-    TextureHandle postProcessTexture_;
 
     std::array<TextureSamplerHandle, MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSamplerHandle shadowSampler_;

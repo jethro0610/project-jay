@@ -15,17 +15,17 @@ void Renderer::Render(
     SpreadManager& spreadManager,
     World& world
 ) {
-    StartFrame_P();
+    StartFrame();
 
-    RenderWorld_P(world);
-    RenderEntities_P(entities, components);
-    RenderSpread_P(spreadManager);
-    RenderSeed_P(seedManager);
-    RenderParticles_P(particleManager);
-    RenderPostProcess_P();
-    RenderBlit_P();
-    RenderUI_P(components);
-    RenderScreenText_P();
+    RenderWorld(world);
+    RenderEntities(entities, components);
+    RenderSpread(spreadManager);
+    RenderSeed(seedManager);
+    RenderParticles(particleManager);
+    RenderPostProcess();
+    RenderBlit();
+    RenderUI(components);
+    RenderScreenText();
 
-    PresentFrame_P();
+    PresentFrame();
 }

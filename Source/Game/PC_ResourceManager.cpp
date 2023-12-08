@@ -18,6 +18,8 @@ ResourceManager::ResourceManager() {
     LoadGlobals();
 }
 
+// TODO: Noise texture
+
 void ResourceManager::LoadGlobals() {
     textures_["t_g_noise"] = bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F,
@@ -90,8 +92,8 @@ void ResourceManager::LoadGlobalQuad() {
     indices[5] = 0;
     quadMesh.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
     quad.meshes.push_back(quadMesh);
-    models_["m_g_quad"] = quad;
-    globals_.insert("m_g_quad");
+    models_["st_g_quad"] = quad;
+    globals_.insert("st_g_quad");
 }
 
 void ResourceManager::LoadGlobalTerrain() {
@@ -166,7 +168,7 @@ void ResourceManager::LoadVertexShader(const std::string& name) {
     if (memory == nullptr)
         abort();
 
-    Shader shader = bgfx::createShader(memory);
+    ShaderHandle shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded vertex shader " << name);
     vertexShaders_[name] = shader;
 }
@@ -178,7 +180,7 @@ void ResourceManager::LoadFragmentShader(const std::string& name) {
     if (memory == nullptr)
         abort();
 
-    Shader shader = bgfx::createShader(memory);
+    ShaderHandle shader = bgfx::createShader(memory);
     DEBUGLOG("Loaded fragment shader " << name);
     fragmentShaders_[name] = shader;
 }
@@ -190,7 +192,7 @@ void ResourceManager::LoadTexture(const std::string& name) {
     if (memory == nullptr)
         abort();
 
-    Texture texture = bgfx::createTexture(memory);
+    TextureHandle texture = bgfx::createTexture(memory);
     DEBUGLOG("Loaded texture " << name);
     textures_[name] = texture;
 }
@@ -207,14 +209,14 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
         material.triangleType = TWO_SIDED_NEGATIVE_BACK;
 
-    Shader& vertexShader = GetVertexShader(GetString(data, "vertex"));
-    Shader& fragmentShader = GetFragmentShader(GetString(data, "fragment"));
+    ShaderHandle vertexShader = GetVertexShader(GetString(data, "vertex"));
+    ShaderHandle fragmentShader = GetFragmentShader(GetString(data, "fragment"));
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
 
     material.castShadows = GetBoolean(data, "cast_shadows");
     if (material.castShadows) {
-        Shader& vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
-        Shader& fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
+        ShaderHandle vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
+        ShaderHandle fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
         material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
     }
 
@@ -321,7 +323,7 @@ void ResourceManager::LoadEmitterProperties(const std::string& name) {
     nlohmann::json data = nlohmann::json::parse(inFile);
     EmitterProperties properties;
 
-    properties.material = &GetMaterial(GetString(data, "material", "null_material"));
+    properties.material = GetMaterial(GetString(data, "material", "null_material"));
     properties.localSpace = GetBoolean(data, "local_space");
 
     properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);

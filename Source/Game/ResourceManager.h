@@ -5,11 +5,13 @@
 #include "../Rendering/Model.h"
 #include "../Rendering/Skeleton.h"
 #include "../Rendering/Material.h"
+#include "../Rendering/Texture.h"
 #include "../Types/Noise.h"
 #include "ParticleEmitter.h"
 
-typedef std::unordered_map<std::string, Shader> ShaderResources;
-typedef std::unordered_map<std::string, Texture> TextureResources;
+typedef std::unordered_map<std::string, ShaderHandle> ShaderResources;
+typedef std::unordered_map<std::string, TextureHandle> TextureResources;
+
 typedef std::unordered_map<std::string, Material> MaterialResources;
 typedef std::unordered_map<std::string, Model> ModelResources;
 typedef std::unordered_map<std::string, Skeleton> SkeletonResources;
@@ -34,18 +36,21 @@ public:
     void LoadEntityDescription(const std::string& name);
     void LoadEmitterProperties(const std::string& name);
 
-    const Material& GetMaterial(const std::string& name);
-    const Model& GetModel(const std::string& name);
-    const Skeleton& GetSkeleton(const std::string& name);
-    const nlohmann::json& GetEntityDescription(const std::string& name);
-    const EmitterProperties& GetEmitterProperties(const std::string& name);
+    // All assets will be referred by a pointer so objects
+    // can choose to null them
+    Material* GetMaterial(const std::string& name);
+    Model* GetModel(const std::string& name);
+    Skeleton* GetSkeleton(const std::string& name);
+    nlohmann::json* GetEntityDescription(const std::string& name);
+    EmitterProperties* GetEmitterProperties(const std::string& name);
+    TextureHandle GetTexture(const std::string& name);
 
 private:
     // Since these are accessed via higher level structs,
-    // they are kept private
-    const Shader& GetVertexShader(const std::string& name);
-    const Shader& GetFragmentShader(const std::string& name);
-    const Texture& GetTexture(const std::string& name);
+    // they are kept private. Note that these are handles,
+    // so no reference is used.
+    ShaderHandle GetVertexShader(const std::string& name);
+    ShaderHandle GetFragmentShader(const std::string& name);
 
     std::unordered_set<std::string> globals_;
     Noise noise_;

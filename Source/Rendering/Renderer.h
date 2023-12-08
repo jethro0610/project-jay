@@ -1,8 +1,4 @@
 #pragma once
-#ifdef _PC
-#include <GLFW/glfw3.h>
-#endif
-
 #include <array>
 #include <glm/mat4x4.hpp>
 #include <string>
@@ -12,6 +8,7 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
+#include "Texture.h"
 
 #include "../Game/Entity/EntityList.h"
 #include "../Game/Components/ComponentList.h"
@@ -31,7 +28,7 @@ class ParticleManager;
 class Renderer {
 public:
     #ifdef _PC
-    Renderer(ResourceManager& resourceManager, Noise& noise, GLFWwindow* window);
+    Renderer(ResourceManager& resourceManager);
     #endif
     Camera* camera_;
 
@@ -57,95 +54,84 @@ private:
     glm::mat4 shadowProjectionMatrix_;
     glm::mat4 shadowMatrix_;
 
-    const Texture& noiseTexture_;
+    Texture* noiseTexture_;
 
-    const Model& spreadModel_;
-    const Model& quadModel_;
-    const Model& terrainModel_;
+    Model* spread_;
+    Mesh* quad_;
+    Mesh* terrain_;
 
-    const Material& postProcessMaterial_;
-    const Material& terrainMaterial_;
-    const Material& blitMaterial_;
+    std::array<Material*, Model::MAX_MESHES_PER_MODEL> spreadMaterials_;
+    Material* terrainMaterial_;
+    Material* seedMaterial_;
+    Material* barMaterial_;
+    Material* blitMaterial_;
+    Material* postProcessMaterial_;
+    Material* textMaterial_;
 
-    // std::array<Material, 2> spreadMaterials_;
-    // Material seedMaterial_;
-    // Material textMaterial_;
-    // Material barMaterial_;
-    // Material blitMaterial_;
-    //
+    void InitShadowBuffer(TextureHandle shadowBufferTexture);
+    void InitRenderBuffer(TextureHandle renderColorTexture, TextureHandle renderDepthTexture);
+    void InitPostProcessBuffer(TextureHandle postProcessTexture);
+    void InitUIBuffer();
 
-    void InitShadowBuffer(const Texture& shadowBufferTexture);
-    void InitRenderBuffer(const Texture& renderColorTexture, const Texture& renderDepthTexture);
-    void InitPostProcessBuffer(const Texture& postProcessTexture);
-    void InitUIBuffer_P();
+    FrameBufferHandle backBuffer_;
+    FrameBufferHandle shadowBuffer_;
+    FrameBufferHandle renderBuffer_;
+    FrameBufferHandle postProcessBuffer_;
 
-    FrameBuffer backBuffer_;
-    FrameBuffer shadowBuffer_;
-    FrameBuffer renderBuffer_;
-    FrameBuffer postProcessBuffer_;
-    // Texture shadowBufferTexture_;
-    // std::array<Texture, 2> renderBufferTextures_;
-    // Texture postProcessTexture_;
+    std::array<TextureHandle, 2> renderBufferTextures_;
+    TextureHandle shadowBufferTexture_;
+    TextureHandle postProcessTexture_;
 
-    std::array<TextureSampler, MAX_TEXTURES_PER_MATERIAL> samplers_;
-    TextureSampler shadowSampler_;
-    TextureSampler worldNoiseSampler_;
+    std::array<TextureSamplerHandle, MAX_TEXTURES_PER_MATERIAL> samplers_;
+    TextureSamplerHandle shadowSampler_;
+    TextureSamplerHandle worldNoiseSampler_;
 
-    Uniform u_shadowUp_;
-    Uniform u_shadowRight_;
-    Uniform u_shadowMatrix_;
-    Uniform u_shadowResolution_;
-    Uniform u_pose_;
-    Uniform u_materialProps_;
-    Uniform u_particleProps_;
-    Uniform u_normalMult_;
-    Uniform u_lightDirection_;
-    Uniform u_timeResolution_;
-    Uniform u_cameraPosition_;
-    Uniform u_cameraUp_;
-    Uniform u_cameraRight_;
-    Uniform u_randomVec_;
-    Uniform u_meter_;
-    Uniform u_worldProps_;
-    Uniform u_worldMeshOffset_;
-    Uniform u_noiseProps_;
-
-    // Texture MakeNoiseTexture_P(Noise& noise);
-
-    const ShaderResources& vertexShaders_;
-    const ShaderResources& fragmentShaders_;
-    const ModelResources& models_;
-    const SkeletonResources& skeletons_;
-    const TextureResources& textures_;
-    const MaterialResources& materials_;
+    UniformHandle u_shadowUp_;
+    UniformHandle u_shadowRight_;
+    UniformHandle u_shadowMatrix_;
+    UniformHandle u_shadowResolution_;
+    UniformHandle u_pose_;
+    UniformHandle u_materialProps_;
+    UniformHandle u_particleProps_;
+    UniformHandle u_normalMult_;
+    UniformHandle u_lightDirection_;
+    UniformHandle u_timeResolution_;
+    UniformHandle u_cameraPosition_;
+    UniformHandle u_cameraUp_;
+    UniformHandle u_cameraRight_;
+    UniformHandle u_randomVec_;
+    UniformHandle u_meter_;
+    UniformHandle u_worldProps_;
+    UniformHandle u_worldMeshOffset_;
+    UniformHandle u_noiseProps_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
-    void SetTexturesFromMaterial_P(Material& material, bool shadowMap = true);
-    void SetLightDirection_P(glm::vec3 direction);
+    void SetTexturesFromMaterial(Material* material, bool shadowMap = true);
+    void SetLightDirection(const glm::vec3& direction);
 
-    void StartFrame_P();
-    void Clear_P();
-    void RenderMesh_P(
-        Mesh& mesh, 
-        Material& material, 
-        InstanceBuffer* instanceBuffer = nullptr, 
+    void StartFrame();
+    void Clear();
+    void RenderMesh(
+        Mesh* mesh, 
+        Material* material, 
+        InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr 
     );
-    void RenderWorld_P(World& world);
-    void RenderEntities_P(
+    void RenderWorld(World& world);
+    void RenderEntities(
         EntityList& entities, 
         ComponentList& components
     );
-    void RenderSpread_P(SpreadManager& spreadManager);
-    void RenderSeed_P(SeedManager& seedManager);
-    void RenderParticles_P(ParticleManager& particleManager);
-    void RenderPostProcess_P();
-    void RenderBlit_P();
-    void RenderUI_P(ComponentList& components);
+    void RenderSpread(SpreadManager& spreadManager);
+    void RenderSeed(SeedManager& seedManager);
+    void RenderParticles(ParticleManager& particleManager);
+    void RenderPostProcess();
+    void RenderBlit();
+    void RenderUI(ComponentList& components);
     #ifdef _DEBUG
-    void RenderScreenText_P();
+    void RenderScreenText();
     #endif
-    void PresentFrame_P();
+    void PresentFrame();
 };
 

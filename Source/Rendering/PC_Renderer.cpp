@@ -40,25 +40,12 @@ const int SHADOW_RESOLUTION = 2048;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
-const int POST_PROCESS_VIEW = 2;
+const int POSTROCESS_VIEW = 2;
 const int UI_VIEW = 3;
 
-Renderer::Renderer(ResourceManager& resourceManager, Noise& noise, GLFWwindow* window) {
+Renderer::Renderer(ResourceManager& resourceManager) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
-    width_ = 1280;
-    height_ = 720;
-
-    DEBUGLOG("Starting BGFX...");
-    bgfx::Init init; 
-    init.type = bgfx::RendererType::Count;
-    init.resolution.width = width_;
-    init.resolution.height = height_;
-    init.resolution.reset = BGFX_RESET_NONE;
-    init.platformData.nwh = GETHANDLE(window);
-    init.platformData.ndt = GETDISPLAY();
-    bgfx::init(init);
-    DEBUGLOG("Succesfully started BGFX");
 
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
@@ -89,7 +76,7 @@ Renderer::Renderer(ResourceManager& resourceManager, Noise& noise, GLFWwindow* w
     u_worldMeshOffset_= bgfx::createUniform("u_worldMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
 
-    SetLightDirection_P(vec3(1.0f, -1.0f, 1.0f));
+    SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
 
     vec4 noiseProps;
     noiseProps.x = 1024;
@@ -98,107 +85,207 @@ Renderer::Renderer(ResourceManager& resourceManager, Noise& noise, GLFWwindow* w
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 
-    InitShadowBuffer_P();
-    InitRenderBuffer_P();
-    InitPostProcessBuffer_P();
-    InitUIBuffer_P();
+    noiseTexture_ = resourceManager.GetTexture("t_g_noise");
 
-    // TEMP_LoadTestData();
+
+    InitShadowBuffer(resourceManager.GetTexture("t_g_shadow"));
+    InitRenderBuffer(resourceManager.GetTexture("t_g_render_c"), resourceManager.GetTexture("t_g_render_d"));
+    InitPostProcessBuffer(resourceManager.GetTexture("t_g_post"));
+    InitUIBuffer();
+
+    resourceManager.LoadModel("st_tpillar");
+    resourceManager.LoadModel("st_boulder");
+    resourceManager.LoadModel("st_comet");
+    resourceManager.LoadModel("st_sphere");
+    resourceManager.LoadModel("st_rock");
+    resourceManager.LoadModel("st_tree");
+    resourceManager.LoadModel("st_flower");
+    resourceManager.LoadModel("sk_char");
+
+    resourceManager.LoadTexture("t_bricks_c");
+    resourceManager.LoadTexture("t_bricks_n");
+    resourceManager.LoadTexture("t_grass_c");
+    resourceManager.LoadTexture("t_grass_n");
+    resourceManager.LoadTexture("t_marble_c");
+    resourceManager.LoadTexture("t_rock_c");
+    resourceManager.LoadTexture("t_rock_n");
+    resourceManager.LoadTexture("t_crack_m");
+    resourceManager.LoadTexture("t_tree_c");
+    resourceManager.LoadTexture("t_tree_n");
+    resourceManager.LoadTexture("t_leaves_m");
+    resourceManager.LoadTexture("t_flower_m");
+    resourceManager.LoadTexture("t_font");
+    resourceManager.LoadTexture("t_hair_m");
+
+    resourceManager.LoadVertexShader("vs_static");
+    resourceManager.LoadVertexShader("vs_static_s");
+    resourceManager.LoadVertexShader("vs_static_crack");
+    resourceManager.LoadVertexShader("vs_skeletal");
+    resourceManager.LoadVertexShader("vs_skeletal_s");
+    resourceManager.LoadVertexShader("vs_inst");
+    resourceManager.LoadVertexShader("vs_spread");
+    resourceManager.LoadVertexShader("vs_inst_s");
+    resourceManager.LoadVertexShader("vs_inst_billboard");
+    resourceManager.LoadVertexShader("vs_inst_billboard_s");
+    resourceManager.LoadVertexShader("vs_world");
+    resourceManager.LoadVertexShader("vs_world_s");
+    resourceManager.LoadVertexShader("vs_screenquad");
+    resourceManager.LoadVertexShader("vs_glyph");
+    resourceManager.LoadVertexShader("vs_uibar");
+    resourceManager.LoadVertexShader("vs_particle");
+    resourceManager.LoadVertexShader("vs_particle_stretch");
+    resourceManager.LoadVertexShader("vs_particle_trail");
+
+    resourceManager.LoadFragmentShader("fs_depth_s");
+    resourceManager.LoadFragmentShader("fs_depth_masked_s");
+
+    resourceManager.LoadFragmentShader("fs_dfsa");
+    resourceManager.LoadFragmentShader("fs_dfsa_color");
+    resourceManager.LoadFragmentShader("fs_dfsa_color_masked");
+    resourceManager.LoadFragmentShader("fs_dfsa_crack");
+
+    resourceManager.LoadFragmentShader("fs_flower");
+    resourceManager.LoadFragmentShader("fs_seed");
+    resourceManager.LoadFragmentShader("fs_particle");
+    resourceManager.LoadFragmentShader("fs_leaves_strand");
+    resourceManager.LoadFragmentShader("fs_world");
+
+    resourceManager.LoadFragmentShader("fs_blit");
+    resourceManager.LoadFragmentShader("fs_text");
+    resourceManager.LoadFragmentShader("fs_uibar");
+    resourceManager.LoadFragmentShader("fs_postprocess");
+
+    resourceManager.LoadMaterial("m_player");
+    resourceManager.LoadMaterial("m_playerskin");
+    resourceManager.LoadMaterial("m_playershirt");
+    resourceManager.LoadMaterial("m_hair");
+    resourceManager.LoadMaterial("m_rock");
+    resourceManager.LoadMaterial("m_tree");
+    resourceManager.LoadMaterial("m_willowleaves");
+    resourceManager.LoadMaterial("m_test_skel");
+    resourceManager.LoadMaterial("m_dust");
+    resourceManager.LoadMaterial("m_cloud");
+    resourceManager.LoadMaterial("m_spark");
+    resourceManager.LoadMaterial("m_brick");
+    resourceManager.LoadMaterial("m_comet");
+    resourceManager.LoadMaterial("m_boulder");
+    resourceManager.LoadMaterial("m_tpillar");
+
+    resourceManager.LoadMaterial("m_world");
+    resourceManager.LoadMaterial("m_postprocess");
+    resourceManager.LoadMaterial("m_seed");
+    resourceManager.LoadMaterial("m_text");
+    resourceManager.LoadMaterial("m_uibar");
+    resourceManager.LoadMaterial("m_preuiblit");
+
+    terrain_ = &resourceManager.GetModel("st_g_terrain")->meshes[0];
+    quad_ = &resourceManager.GetModel("st_g_quad")->meshes[0];
+    spread_ = resourceManager.GetModel("st_g_spread");
+
+    spreadMaterials_[0] = resourceManager.GetMaterial("m_flower");
+    spreadMaterials_[1] = resourceManager.GetMaterial("m_stem");
+    terrainMaterial_ = resourceManager.GetMaterial("m_g_terrain");
+    seedMaterial_ = resourceManager.GetMaterial("m_g_seed");
+    barMaterial_ = resourceManager.GetMaterial("m_g_bar");
+    blitMaterial_ = resourceManager.GetMaterial("m_g_preuiblit");
+    postProcessMaterial_ = resourceManager.GetMaterial("m_g_postprocess");
+    textMaterial_ = resourceManager.GetMaterial("m_g_text");
 }
 
 // void Renderer::TEMP_LoadTestData() {
-//     LoadModel_P("st_tpillar");
-//     LoadModel_P("st_boulder");
-//     LoadModel_P("st_comet");
-//     LoadModel_P("st_sphere");
-//     LoadModel_P("st_rock");
-//     LoadModel_P("st_tree");
-//     spreadModel_ = LoadModel_P("st_flower");
-//     LoadModel_P("sk_char");
+//     LoadModel("st_tpillar");
+//     LoadModel("st_boulder");
+//     LoadModel("st_comet");
+//     LoadModel("st_sphere");
+//     LoadModel("st_rock");
+//     LoadModel("st_tree");
+//     spreadModel_ = LoadModel("st_flower");
+//     LoadModel("sk_char");
 //
-//     Texture bricksC = LoadTexture_P("t_bricks_c");
-//     Texture bricksN = LoadTexture_P("t_bricks_n");
-//     Texture grassC = LoadTexture_P("t_grass_c");
-//     Texture grassN = LoadTexture_P("t_grass_n");
-//     Texture marbleC = LoadTexture_P("t_marble_c");
-//     Texture rockC = LoadTexture_P("t_rock_c");
-//     Texture rockN = LoadTexture_P("t_rock_n");
-//     Texture crackM = LoadTexture_P("t_crack_m");
-//     Texture treeC = LoadTexture_P("t_tree_c");
-//     Texture treeN = LoadTexture_P("t_tree_n");
-//     Texture leavesM = LoadTexture_P("t_leaves_m");
-//     Texture flowerM = LoadTexture_P("t_flower_m");
-//     Texture font = LoadTexture_P("t_font");
-//     Texture hairM = LoadTexture_P("t_hair_m");
+//     Texture bricksC = LoadTexture("t_bricks_c");
+//     Texture bricksN = LoadTexture("t_bricks_n");
+//     Texture grassC = LoadTexture("t_grass_c");
+//     Texture grassN = LoadTexture("t_grass_n");
+//     Texture marbleC = LoadTexture("t_marble_c");
+//     Texture rockC = LoadTexture("t_rock_c");
+//     Texture rockN = LoadTexture("t_rock_n");
+//     Texture crackM = LoadTexture("t_crack_m");
+//     Texture treeC = LoadTexture("t_tree_c");
+//     Texture treeN = LoadTexture("t_tree_n");
+//     Texture leavesM = LoadTexture("t_leaves_m");
+//     Texture flowerM = LoadTexture("t_flower_m");
+//     Texture font = LoadTexture("t_font");
+//     Texture hairM = LoadTexture("t_hair_m");
 //
-//     LoadVertexShader_P("vs_static");
-//     LoadVertexShader_P("vs_static_s");
-//     LoadVertexShader_P("vs_static_crack");
-//     LoadVertexShader_P("vs_skeletal");
-//     LoadVertexShader_P("vs_skeletal_s");
-//     LoadVertexShader_P("vs_inst");
-//     LoadVertexShader_P("vs_spread");
-//     LoadVertexShader_P("vs_inst_s");
-//     LoadVertexShader_P("vs_inst_billboard");
-//     LoadVertexShader_P("vs_inst_billboard_s");
-//     LoadVertexShader_P("vs_world");
-//     LoadVertexShader_P("vs_world_s");
-//     LoadVertexShader_P("vs_screenquad");
-//     LoadVertexShader_P("vs_glyph");
-//     LoadVertexShader_P("vs_uibar");
-//     LoadVertexShader_P("vs_particle");
-//     LoadVertexShader_P("vs_particle_stretch");
-//     LoadVertexShader_P("vs_particle_trail");
+//     LoadVertexShader("vs_static");
+//     LoadVertexShader("vs_static_s");
+//     LoadVertexShader("vs_static_crack");
+//     LoadVertexShader("vs_skeletal");
+//     LoadVertexShader("vs_skeletal_s");
+//     LoadVertexShader("vs_inst");
+//     LoadVertexShader("vs_spread");
+//     LoadVertexShader("vs_inst_s");
+//     LoadVertexShader("vs_inst_billboard");
+//     LoadVertexShader("vs_inst_billboard_s");
+//     LoadVertexShader("vs_world");
+//     LoadVertexShader("vs_world_s");
+//     LoadVertexShader("vs_screenquad");
+//     LoadVertexShader("vs_glyph");
+//     LoadVertexShader("vs_uibar");
+//     LoadVertexShader("vs_particle");
+//     LoadVertexShader("vs_particle_stretch");
+//     LoadVertexShader("vs_particle_trail");
 //
-//     LoadFragmentShader_P("fs_depth_s");
-//     LoadFragmentShader_P("fs_depth_masked_s");
+//     LoadFragmentShader("fs_depth_s");
+//     LoadFragmentShader("fs_depth_masked_s");
 //
-//     LoadFragmentShader_P("fs_dfsa");
-//     LoadFragmentShader_P("fs_dfsa_color");
-//     LoadFragmentShader_P("fs_dfsa_color_masked");
-//     LoadFragmentShader_P("fs_dfsa_crack");
+//     LoadFragmentShader("fs_dfsa");
+//     LoadFragmentShader("fs_dfsa_color");
+//     LoadFragmentShader("fs_dfsa_color_masked");
+//     LoadFragmentShader("fs_dfsa_crack");
 //
-//     LoadFragmentShader_P("fs_flower");
-//     LoadFragmentShader_P("fs_seed");
-//     LoadFragmentShader_P("fs_particle");
-//     LoadFragmentShader_P("fs_leaves_strand");
-//     LoadFragmentShader_P("fs_world");
+//     LoadFragmentShader("fs_flower");
+//     LoadFragmentShader("fs_seed");
+//     LoadFragmentShader("fs_particle");
+//     LoadFragmentShader("fs_leaves_strand");
+//     LoadFragmentShader("fs_world");
 //
-//     LoadFragmentShader_P("fs_blit");
-//     LoadFragmentShader_P("fs_text");
-//     LoadFragmentShader_P("fs_uibar");
-//     LoadFragmentShader_P("fs_postprocess");
+//     LoadFragmentShader("fs_blit");
+//     LoadFragmentShader("fs_text");
+//     LoadFragmentShader("fs_uibar");
+//     LoadFragmentShader("fs_postprocess");
 //
-//     LoadMaterial_P("m_player");
-//     LoadMaterial_P("m_playerskin");
-//     LoadMaterial_P("m_playershirt");
-//     LoadMaterial_P("m_hair");
-//     LoadMaterial_P("m_rock");
-//     LoadMaterial_P("m_tree");
-//     LoadMaterial_P("m_willowleaves");
-//     LoadMaterial_P("m_test_skel");
-//     LoadMaterial_P("m_dust");
-//     LoadMaterial_P("m_cloud");
-//     LoadMaterial_P("m_spark");
-//     LoadMaterial_P("m_brick");
-//     LoadMaterial_P("m_comet");
-//     LoadMaterial_P("m_boulder");
-//     LoadMaterial_P("m_tpillar");
+//     LoadMaterial("m_player");
+//     LoadMaterial("m_playerskin");
+//     LoadMaterial("m_playershirt");
+//     LoadMaterial("m_hair");
+//     LoadMaterial("m_rock");
+//     LoadMaterial("m_tree");
+//     LoadMaterial("m_willowleaves");
+//     LoadMaterial("m_test_skel");
+//     LoadMaterial("m_dust");
+//     LoadMaterial("m_cloud");
+//     LoadMaterial("m_spark");
+//     LoadMaterial("m_brick");
+//     LoadMaterial("m_comet");
+//     LoadMaterial("m_boulder");
+//     LoadMaterial("m_tpillar");
 //
-//     worldMaterial_ = LoadMaterial_P("m_world");
-//     postProcessMaterial_ = LoadMaterial_P("m_postprocess");
-//     spreadMaterials_[0] = LoadMaterial_P("m_flower");
-//     spreadMaterials_[1] = LoadMaterial_P("m_stem");
-//     seedMaterial_ = LoadMaterial_P("m_seed");
-//     textMaterial_ = LoadMaterial_P("m_text");
-//     barMaterial_ = LoadMaterial_P("m_uibar");
-//     blitMaterial_ = LoadMaterial_P("m_preuiblit");
+//     worldMaterial_ = LoadMaterial("m_world");
+//     postProcessMaterial_ = LoadMaterial("m_postprocess");
+//     spreadMaterials_[0] = LoadMaterial("m_flower");
+//     spreadMaterials_[1] = LoadMaterial("m_stem");
+//     seedMaterial_ = LoadMaterial("m_seed");
+//     textMaterial_ = LoadMaterial("m_text");
+//     barMaterial_ = LoadMaterial("m_uibar");
+//     blitMaterial_ = LoadMaterial("m_preuiblit");
 //
 //     DEBUGLOG("Succesfully loaded all test assets");
 // }
 
 // TODO: InitBuffer functions into one generic function
-void Renderer::InitShadowBuffer(const Texture& shadowBufferTexture) {
+void Renderer::InitShadowBuffer(TextureHandle shadowBufferTexture) {
+    shadowBufferTexture_ = shadowBufferTexture;
     shadowBuffer_ = bgfx::createFrameBuffer(1, &shadowBufferTexture);
 
     bgfx::setViewFrameBuffer(SHADOW_VIEW, shadowBuffer_);
@@ -209,29 +296,31 @@ void Renderer::InitShadowBuffer(const Texture& shadowBufferTexture) {
     bgfx::setUniform(u_shadowResolution_, &shadowResolution);
 }
 
-void Renderer::InitRenderBuffer(const Texture& renderColorTexture, const Texture& renderDepthTexture) {
-    const Texture renderBufferTextures[] = {renderColorTexture, renderDepthTexture};
-    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures);
+void Renderer::InitRenderBuffer(TextureHandle renderColorTexture, TextureHandle renderDepthTexture) {
+    renderBufferTextures_[0] = renderColorTexture;
+    renderBufferTextures_[1] = renderDepthTexture;
+    renderBuffer_ = bgfx::createFrameBuffer(2, renderBufferTextures_.data());
 
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
-void Renderer::InitPostProcessBuffer(const Texture& postProcessTexture) {
+void Renderer::InitPostProcessBuffer(TextureHandle postProcessTexture) {
+    postProcessTexture_ = postProcessTexture;
     postProcessBuffer_ = bgfx::createFrameBuffer(1, &postProcessTexture);
-    bgfx::setViewFrameBuffer(POST_PROCESS_VIEW, postProcessBuffer_);
-    bgfx::setViewClear(POST_PROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(POST_PROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
+    bgfx::setViewFrameBuffer(POSTROCESS_VIEW, postProcessBuffer_);
+    bgfx::setViewClear(POSTROCESS_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
+    bgfx::setViewRect(POSTROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
-void Renderer::InitUIBuffer_P() {
+void Renderer::InitUIBuffer() {
     bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
     bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(UI_VIEW, 0, 0, width_, height_);
 }
 
-void Renderer::StartFrame_P() {
+void Renderer::StartFrame() {
     viewMatrix_ = camera_->GetViewMatrix();
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
 
@@ -264,33 +353,33 @@ void Renderer::StartFrame_P() {
     bgfx::touch(0);
 }
 
-void Renderer::Clear_P() {
+void Renderer::Clear() {
     return;
 }
 
-void Renderer::PresentFrame_P() {
+void Renderer::PresentFrame() {
     bgfx::frame(); 
 }
 
-void Renderer::RenderMesh_P(
-    Mesh& mesh, 
-    Material& material, 
-    InstanceBuffer* instanceBuffer, 
+void Renderer::RenderMesh(
+    Mesh* mesh, 
+    Material* material, 
+    InstanceBufferHandle* instanceBuffer, 
     glm::mat4* modelMatrix,
     GPUPose* pose 
 ) {
     vec4 normalMult;
 
     int numOfRenders = 1;
-    if (material.castShadows)
+    if (material->castShadows)
         numOfRenders *= 2;
-    if (material.triangleType > ONE_SIDED)
+    if (material->triangleType > ONE_SIDED)
         numOfRenders *= 2;
 
     int curPass = 0;
     int curFace = 0;
 
-    mat4 transposeProps = transpose(material.properties);
+    mat4 transposeProps = transpose(material->properties);
 
     for (int n = 0; n < numOfRenders; n++) {
         bgfx::setUniform(u_materialProps_, &transposeProps);
@@ -301,7 +390,7 @@ void Renderer::RenderMesh_P(
 
         if (curFace == 1) {
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
-            normalMult.x = material.triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
+            normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
             normalMult.y = -1.0f;
         }
         else {
@@ -311,26 +400,26 @@ void Renderer::RenderMesh_P(
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;
-        MaterialShader shader;
+        MaterialShaderHandle shader;
         if (curPass == 0) {
             view = RENDER_VIEW;
-            shader = material.shader;
-            SetTexturesFromMaterial_P(material, true);
+            shader = material->shader;
+            SetTexturesFromMaterial(material, true);
         }
         else {
             view = SHADOW_VIEW;
-            shader = material.shadowShader;
-            SetTexturesFromMaterial_P(material, false);
+            shader = material->shadowShader;
+            SetTexturesFromMaterial(material, false);
         }
 
         if (instanceBuffer != nullptr)
             bgfx::setInstanceDataBuffer(instanceBuffer);
 
-        bgfx::setVertexBuffer(0, mesh.vertexBuffer);
-        bgfx::setIndexBuffer(mesh.indexBuffer);
+        bgfx::setVertexBuffer(0, mesh->vertexBuffer);
+        bgfx::setIndexBuffer(mesh->indexBuffer);
         bgfx::submit(view, shader);
 
-        if (material.triangleType > ONE_SIDED) {
+        if (material->triangleType > ONE_SIDED) {
             curFace++;
 
             // When two faces have been rendered,
@@ -345,7 +434,7 @@ void Renderer::RenderMesh_P(
     }
 }
 
-void Renderer::RenderWorld_P(World& world) {
+void Renderer::RenderWorld(World& world) {
     vec4 worldProps[2];
     worldProps[0].x = 0.0f;
     worldProps[0].y = world.properties_.minRadius;
@@ -364,13 +453,13 @@ void Renderer::RenderWorld_P(World& world) {
         bgfx::setUniform(u_worldMeshOffset_, &offset);
 
         bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_);
-        RenderMesh_P(worldMesh_, worldMaterial_);
+        RenderMesh(terrain_, terrainMaterial_);
     };
 }
 
 EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
 EntityKey constexpr skeletonKey = GetEntityKey<SkeletonComponent>();
-void Renderer::RenderEntities_P(
+void Renderer::RenderEntities(
     EntityList& entities, 
     ComponentList& components
 ) {
@@ -401,14 +490,14 @@ void Renderer::RenderEntities_P(
             );
         }
         for (int m = 0; m < model.meshes.size(); m++) {
-            Material& material = *staticModelComponent.materials[i][m];
-            Mesh& mesh = model.meshes[m];
-            RenderMesh_P(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
+            Material* material = staticModelComponent.materials[i][m];
+            Mesh* mesh = &model.meshes[m];
+            RenderMesh(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
         }
     }
 }
 
-void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
+void Renderer::RenderSpread(SpreadManager& spreadManager) {
     uint32_t count = spreadManager.GetCount();
     if (count == 0)
         return;
@@ -417,14 +506,14 @@ void Renderer::RenderSpread_P(SpreadManager& spreadManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
 
-    for (int m = 0; m < spreadModel_.meshes.size(); m++) {
-        Mesh& mesh = spreadModel_.meshes[m];
-        Material& material = spreadMaterials_[m];
-        RenderMesh_P(mesh, material, &instanceBuffer);
+    for (int m = 0; m < spread_->meshes.size(); m++) {
+        Mesh* mesh = &spread_->meshes[m];
+        Material* material = spreadMaterials_[m];
+        RenderMesh(mesh, material, &instanceBuffer);
     }
 }
 
-void Renderer::RenderSeed_P(SeedManager& seedManager) {
+void Renderer::RenderSeed(SeedManager& seedManager) {
     uint32_t count = seedManager.seeds_.size();
     if (count == 0)
         return;
@@ -433,10 +522,10 @@ void Renderer::RenderSeed_P(SeedManager& seedManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
-    RenderMesh_P(quad_, seedMaterial_, &instanceBuffer);
+    RenderMesh(quad_, seedMaterial_, &instanceBuffer);
 }
 
-void Renderer::RenderParticles_P(ParticleManager& particleManager) {
+void Renderer::RenderParticles(ParticleManager& particleManager) {
     mat4 particleProps;
     mat4 modelMatrix;
     for (int i = 0; i < MAX_EMITTERS; i++) {
@@ -460,36 +549,36 @@ void Renderer::RenderParticles_P(ParticleManager& particleManager) {
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
         memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
-        RenderMesh_P(quad_, *emitter.properties_->material, &instanceBuffer);
+        RenderMesh(quad_, emitter.properties_->material, &instanceBuffer);
     }
 }
 
-void Renderer::RenderPostProcess_P() {
-    SetTexturesFromMaterial_P(postProcessMaterial_, false);
-    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-    bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(POST_PROCESS_VIEW, postProcessMaterial_.shader);
+void Renderer::RenderPostProcess() {
+    SetTexturesFromMaterial(postProcessMaterial_, false);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(POSTROCESS_VIEW, postProcessMaterial_->shader);
 }
 
-void Renderer::RenderBlit_P() {
-    bgfx::setTexture(0, samplers_[0], blitMaterial_.textures[0]);
-    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-    bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_.shader);
+void Renderer::RenderBlit() {
+    bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, blitMaterial_->shader);
 }
 
-void Renderer::RenderUI_P(ComponentList& components) {
+void Renderer::RenderUI(ComponentList& components) {
     auto& meterComponent = components.Get<MeterComponent>();
 
     vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 
-    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-    bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_.shader);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, barMaterial_->shader);
 }
 
-void Renderer::RenderScreenText_P() {
+void Renderer::RenderScreenText() {
     if (!ScreenText::IsEnabled())
         return;
 
@@ -501,23 +590,23 @@ void Renderer::RenderScreenText_P() {
     memcpy(instanceBuffer.data, ScreenText::GetText(), sizeof(vec4) * count);
     bgfx::setInstanceDataBuffer(&instanceBuffer);
 
-    bgfx::setTexture(0, samplers_[0], textMaterial_.textures[0]);
+    bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]);
 
-    bgfx::setVertexBuffer(0, quad_.vertexBuffer);
-    bgfx::setIndexBuffer(quad_.indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_.shader);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, textMaterial_->shader);
     bgfx::setState(BGFX_STATE_DEFAULT);
 }
 
-void Renderer::SetTexturesFromMaterial_P(Material& material, bool shadowMap) {
-    for (int i = 0; i < material.textures.size(); i++)
-        bgfx::setTexture(i, samplers_[i], material.textures[i]);
+void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
+    for (int i = 0; i < material->textures.size(); i++)
+        bgfx::setTexture(i, samplers_[i], material->textures[i]);
 
     if (shadowMap)
         bgfx::setTexture(SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_);
 }
 
-void Renderer::SetLightDirection_P(vec3 direction) {
+void Renderer::SetLightDirection(const vec3& direction) {
     quat directionQuat = quatLookAtRH(normalize(direction), Transform::worldUp);
     lightDirection_ = rotate(directionQuat, Transform::worldForward);
     vec4 shadowRight = vec4(rotate(directionQuat, Transform::worldRight), 0.0f);

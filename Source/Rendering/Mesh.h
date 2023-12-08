@@ -7,6 +7,6 @@ struct MeshFileHeader {
 };
 
 struct Mesh {
-    VertexBuffer vertexBuffer;
-    IndexBuffer indexBuffer;
+    VertexBufferHandle vertexBuffer;
+    IndexBufferHandle indexBuffer;
 };

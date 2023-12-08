@@ -1,9 +1,21 @@
+#ifdef __linux__ 
+    #define GLFW_EXPOSE_NATIVE_X11
+    #define GETHANDLE(window) (void*)(uintptr_t)glfwGetX11Window(window)
+    #define GETDISPLAY() (void*)glfwGetX11Display();
+#elif _WIN32
+    #define GLFW_EXPOSE_NATIVE_WIN32
+    #define GETHANDLE(window) glfwGetWin32Window(window)
+    #define GETDISPLAY() nullptr
+#endif
+
 #include "PC_Platform.h"
 #include <assert.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
+#include <bgfx/bgfx.h>
 #include "../Logging/Logger.h"
 #include "../Helpers/Assert.h"
 
@@ -33,6 +45,16 @@ Platform::Platform() {
 
     LoadMappingFile();
 
+    DEBUGLOG("Starting BGFX...");
+    bgfx::Init init; 
+    init.type = bgfx::RendererType::Count;
+    init.resolution.width = 1280;
+    init.resolution.height = 720;
+    init.resolution.reset = BGFX_RESET_NONE;
+    init.platformData.nwh = GETHANDLE(window_);
+    init.platformData.ndt = GETDISPLAY();
+    bgfx::init(init);
+    DEBUGLOG("Succesfully started BGFX");
     DEBUGLOG("Succesfully started platform");
     platform_ = this;
 }

@@ -7,7 +7,7 @@
 #include "../Components/VelocityComponent.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../World/World.h"
+#include "../World/Terrain.h"
 #include "../../Logging/Logger.h"
 #include "../../Constants/TimeConstants.h"
 using namespace glm;
@@ -18,7 +18,7 @@ constexpr EntityKey velocityKey = GetEntityKey<VelocityComponent>();
 void GroundStickSystem::Stick(
     EntityList& entities, 
     ComponentList& components,
-    World& world
+    Terrain& world
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& transformComponent = components.Get<TransformComponent>();

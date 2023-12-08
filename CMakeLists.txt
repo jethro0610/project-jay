@@ -48,7 +48,7 @@ file(GLOB SOURCES
     Source/Game/ResourceManager.cpp
     Source/Game/PC_ResourceManager.cpp
 
-    Source/Game/World/World.cpp
+    Source/Game/World/Terrain.cpp
     Source/Game/ParticleManager.cpp
     Source/Game/World/SeedManager.cpp
     Source/Game/World/SpreadManager.cpp

@@ -7,10 +7,10 @@
 #include "Animation.h"
 #include "Bone.h"
 #include "Ribbon.h"
-#include "RenderConstants.h"
+#include "SkeletonConstants.h"
 #include "../Types/Transform.h"
+using namespace SkeletonConstants;
 
-const int MAX_RIBBON_CHAINS = 4;
 typedef vector_const<std::pair<int, int>, MAX_RIBBON_CHAINS> RibbonChainList; 
 
 class Skeleton {

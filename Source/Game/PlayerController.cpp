@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "../Constants/GameConstants.h"
 #include "World/SpreadManager.h"
-#include "World/World.h"
+#include "World/Terrain.h"
 #include "../Game/Entity/Entity.h"
 #include "../Game/Components/GroundTraceComponent.h"
 #include "../Game/Components/HitboxComponent.h"
@@ -27,7 +27,7 @@ PlayerController::PlayerController() {
 void PlayerController::Execute(
     EntityList& entities,
     ComponentList& components,
-    World& world, 
+    Terrain& terrain, 
     SpreadManager& spreadManager, 
     Camera& camera,
     Inputs inputs

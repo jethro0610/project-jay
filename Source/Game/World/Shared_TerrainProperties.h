@@ -3,7 +3,7 @@
 class Noise;
 #endif
 
-struct WorldProperties {
+struct TerrainProperties {
     float minHeight;
     float minRadius;
     float maxRadius;

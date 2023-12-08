@@ -1,11 +1,11 @@
 #pragma once
 #include "SystemInc.h"
-class World;
+class Terrain;
 
 namespace GroundStickSystem {
     void Stick(
         EntityList& entities, 
         ComponentList& components,
-        World& world
+        Terrain& world
     );
 }

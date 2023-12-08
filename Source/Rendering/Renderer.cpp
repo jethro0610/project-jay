@@ -13,11 +13,11 @@ void Renderer::Render(
     ParticleManager& particleManager, 
     SeedManager& seedManager,
     SpreadManager& spreadManager,
-    World& world
+    Terrain& terrain 
 ) {
     StartFrame();
 
-    RenderWorld(world);
+    RenderTerrain(terrain);
     RenderEntities(entities, components);
     RenderSpread(spreadManager);
     RenderSeed(seedManager);

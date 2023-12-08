@@ -2,13 +2,12 @@
 #include <vector>
 #include <vector_const.h>
 #include "Bone.h"
-#include "RenderConstants.h"
+#include "AnimationConstants.h"
 #include "../Types/Transform.h"
 
-const int MAX_ANIMATIONS = 32;
 
 struct AnimationHeader {
-    char name[MAX_ANIMATION_NAME];
+    char name[AnimationConstants::MAX_ANIMATION_NAME];
     int numKeyframes;
     int framerate;
     float speedInfluence;

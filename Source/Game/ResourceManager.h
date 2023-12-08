@@ -40,6 +40,8 @@ public:
     EmitterProperties* GetEmitterProperties(const std::string& name);
     Texture* GetTexture(const std::string& name);
 
+    Noise noise_;
+
 private:
     void LoadGlobals();
     void LoadRenderTextures();
@@ -53,7 +55,7 @@ private:
     ShaderHandle GetFragmentShader(const std::string& name);
 
     std::unordered_set<std::string> globals_;
-    Noise noise_;
+
     ShaderResources vertexShaders_;
     ShaderResources fragmentShaders_;
     TextureResources textures_;

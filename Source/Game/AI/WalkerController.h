@@ -3,7 +3,7 @@
 #include "../Entity/EntityID.h"
 #include "../Components/ComponentList.h"
 
-class World;
+class Terrain;
 class ParticleEmitter;
 class ParticleManager;
 
@@ -26,13 +26,13 @@ public:
         EntityID entity, 
         ComponentList& components,
         ParticleManager& particleManager,
-        World& world
+        Terrain& terrain
     );
 
     void Update(
         ComponentList& componentList,
-        World& world
+        Terrain& terrain 
     );
 
-    void FindNewTarget(World& world);
+    void FindNewTarget(Terrain& terrain);
 };

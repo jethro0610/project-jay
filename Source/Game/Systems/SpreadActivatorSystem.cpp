@@ -3,7 +3,7 @@
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
 #include "../World/SpreadManager.h"
-#include "../World/World.h"
+#include "../World/Terrain.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/MeterComponent.h"
 #include "../Components/SpreadActivatorComponent.h"
@@ -21,7 +21,7 @@ void SpreadActivatorSystem::Execute(
     EntityList& entities, 
     ComponentList& components,
     SpreadManager& spreadManager,
-    World& world
+    Terrain& terrain
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& meterComponent = components.Get<MeterComponent>();

@@ -1,7 +1,7 @@
 #include "GroundTraceSystem.h"
 #include "../Entity/Entity.h"
 #include "../Entity/EntityKey.h"
-#include "../World/World.h"
+#include "../World/Terrain.h"
 #include "../Components/GroundTraceComponent.h"
 #include "../Components/TransformComponent.h"
 using namespace glm;
@@ -12,7 +12,7 @@ void GroundTraceSystem::Execute(
     EntityList& entities,
     ComponentList& components,
     DestroyList& destroyList,
-    World& world
+    Terrain& terrain
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
@@ -24,9 +24,9 @@ void GroundTraceSystem::Execute(
         groundTraceComponent.onGroundLastFrame[i] = groundTraceComponent.onGround[i];
 
         vec3 position = transformComponent.transform[i].position;
-        float groundHeight = world.GetHeight(position);
+        float groundHeight = terrain.GetHeight(position);
         groundTraceComponent.groundPosition[i] = groundHeight;
-        groundTraceComponent.groundNormal[i] = world.GetNormal(position);
+        groundTraceComponent.groundNormal[i] = terrain.GetNormal(position);
         float distanceToSurface = position.y - groundHeight;
 
         if (distanceToSurface < traceDistance) {

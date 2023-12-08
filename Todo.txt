@@ -5,6 +5,9 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
+- Shadow constants
+- Terrain constants
+
 - Resource Manager
     - How to handle global models?
         - Maybe just make them into actual files instead of generating at runtime?

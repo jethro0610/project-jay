@@ -7,7 +7,7 @@
 
 class Camera;
 class SpreadManager;
-class World;
+class Terrain;
 
 class PlayerController {
 public:
@@ -31,7 +31,7 @@ public:
     void Execute(
         EntityList& entitities,
         ComponentList& components,
-        World& world, 
+        Terrain& terrain, 
         SpreadManager& spreadManager, 
         Camera& camera,
         Inputs inputs

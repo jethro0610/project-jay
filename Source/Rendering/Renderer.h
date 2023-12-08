@@ -21,7 +21,7 @@ class Camera;
 class Noise;
 class SeedManager;
 class SpreadManager;
-class World;
+class Terrain;
 class ParticleManager;
 
 class Renderer {
@@ -37,7 +37,7 @@ public:
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        World& world
+        Terrain& terrain
     );
 
 private:
@@ -80,9 +80,9 @@ private:
     FrameBufferHandle renderBuffer_;
     FrameBufferHandle postProcessBuffer_;
 
-    std::array<TextureSamplerHandle, MAX_TEXTURES_PER_MATERIAL> samplers_;
+    std::array<TextureSamplerHandle, MaterialConstants::MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSamplerHandle shadowSampler_;
-    TextureSamplerHandle worldNoiseSampler_;
+    TextureSamplerHandle terrainNoiseSampler_;
 
     UniformHandle u_shadowUp_;
     UniformHandle u_shadowRight_;
@@ -99,8 +99,8 @@ private:
     UniformHandle u_cameraRight_;
     UniformHandle u_randomVec_;
     UniformHandle u_meter_;
-    UniformHandle u_worldProps_;
-    UniformHandle u_worldMeshOffset_;
+    UniformHandle u_terrainProps_;
+    UniformHandle u_terrainMeshOffset_;
     UniformHandle u_noiseProps_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
@@ -116,7 +116,7 @@ private:
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr 
     );
-    void RenderWorld(World& world);
+    void RenderTerrain (Terrain& terrain);
     void RenderEntities(
         EntityList& entities, 
         ComponentList& components

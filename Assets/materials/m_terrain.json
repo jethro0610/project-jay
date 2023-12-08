@@ -1,6 +1,6 @@
 {
-    "vertex": "vs_world",
-    "fragment": "fs_world",
+    "vertex": "vs_terrain",
+    "fragment": "fs_terrain",
     "textures": [
         "t_grass_c",
         "t_grass_n",

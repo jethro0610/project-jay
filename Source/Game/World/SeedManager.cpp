@@ -55,7 +55,7 @@ void SeedManager::CreateMultipleSeed(glm::ivec3 position, int amount, int radius
 
 void SeedManager::CalculatePositions(
     ComponentList& components,
-    World& world,
+    Terrain& terrain,
     float interpTime
 ) {
     auto& meterComponent = components.Get<MeterComponent>();
@@ -75,7 +75,7 @@ void SeedManager::CalculatePositions(
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
         positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
 
-        float height = world.GetHeight(vec2(positions_[i].x, positions_[i].z), NA_Low) + 4.0f * easeStartTime;
+        float height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z), NA_Low) + 4.0f * easeStartTime;
         if (positions_[i].y < height)
             positions_[i].y = height;
         

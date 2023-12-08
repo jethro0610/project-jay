@@ -1,13 +1,13 @@
 #pragma once
 #include "SystemInc.h"
 #include "../Entity/DestroyList.h"
-class World;
+class Terrain;
 
 namespace GroundTraceSystem {
     void Execute(
         EntityList& entities,
         ComponentList& components,
         DestroyList& destroyList,
-        World& world
+        Terrain& terrain 
     );
 }

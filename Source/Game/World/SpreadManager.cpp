@@ -11,17 +11,17 @@
 #include "../Time.h"
 #include "../../Types/Transform.h"
 #include "../Components/TransformComponent.h"
-#include "World.h"
+#include "Terrain.h"
 #include "../../Helpers/Random.h"
 #include "../../Logging/Logger.h"
 using namespace glm;
 
 SpreadManager::SpreadManager(
     SeedManager& seedManager,
-    World& world
+    Terrain& terrain 
 ) :
     seedManager_(seedManager),
-    world_(world),
+    terrain_(terrain),
     count_(0)
 { 
 
@@ -57,10 +57,10 @@ bool SpreadManager::AddSpread(const ivec2& key) {
     transform.position.x += randOffset.x;
     transform.position.z += randOffset.y;
     vec2 pos2d = vec2(transform.position.x, transform.position.z);
-    transform.position.y = world_.GetHeight(pos2d) + RandomFloatRange(0.15f, 1.00f);
+    transform.position.y = terrain_.GetHeight(pos2d) + RandomFloatRange(0.15f, 1.00f);
     transform.scale = vec3(RandomFloatRange(0.35f, 1.0f));
     transform.rotation = angleAxis(RandomFloatRange(0, 360.0f), Transform::worldUp);
-    transform.rotation = quat(orientation(world_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
+    transform.rotation = quat(orientation(terrain_.GetNormal(pos2d), Transform::worldUp)) * transform.rotation;
     vec3 randomEuler = RandomVector(radians(15.0f));
     transform.rotation = quat(randomEuler) * transform.rotation;
 

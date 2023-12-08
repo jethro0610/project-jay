@@ -1,23 +1,22 @@
 #include "ResourceManager.h"
+#include "../Rendering/ShadowConstants.h"
+#include "../Rendering/AnimationConstants.h"
+#include "../Game/World/TerrainConstants.h"
 #include "../Helpers/MapCheck.h"
 #include "../Helpers/Assert.h"
 #include "../Helpers/LoadHelpers.h"
-
 #include "../Rendering/PC_VertexTypes.h"
+
 using namespace glm;
+using namespace ShadowConstants;
+using namespace TerrainConstants;
+using namespace AnimationConstants;
+using namespace MaterialConstants;
 
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout SkeletalVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
-
-const float WORLD_MESH_SIZE = 64.0f;
-const float WORLD_MESH_DENSITY = 0.5f;
-
-const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_FORWARD = 60.0f;
-const float SHADOW_RANGE = 120.0f;
-const int SHADOW_RESOLUTION = 2048;
 
 ResourceManager::ResourceManager() {
     StaticVertex::Init();
@@ -107,14 +106,14 @@ void ResourceManager::LoadGlobalQuad() {
 
 void ResourceManager::LoadGlobalTerrain() {
     Mesh worldMesh;
-    int size = ceil(WORLD_MESH_SIZE * WORLD_MESH_DENSITY) + 1;
+    int size = ceil(TERRAIN_MESH_SIZE * TERRAIN_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
     WorldVertex* vertices =  new WorldVertex[numVertices];
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++) {
         uint16_t index = y * size + x;
-        vec3 position = vec3(x / WORLD_MESH_DENSITY, 0.0f, y / WORLD_MESH_DENSITY);
+        vec3 position = vec3(x / TERRAIN_MESH_DENSITY, 0.0f, y / TERRAIN_MESH_DENSITY);
         vertices[index] = { position };
     };
     worldMesh.vertexBuffer = bgfx::createVertexBuffer(

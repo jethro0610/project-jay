@@ -21,22 +21,20 @@
 #include "../Game/Entity/Entity.h"
 #include "../Game/World/SpreadManager.h"
 #include "../Game/World/SeedManager.h"
+#include "../Game/World/Terrain.h"
 
 #include "../Helpers/MapCheck.h"
 #include "../Helpers/LoadHelpers.h"
 #include "../Logging/Logger.h"
+#include "ShadowConstants.h"
+#include "../Game/World/TerrainConstants.h"
 
 #include "PC_VertexTypes.h"
 
 using namespace glm;
-
-const float WORLD_MESH_SIZE = 64.0f;
-const float WORLD_MESH_DENSITY = 0.5f;
-
-const float SHADOW_DISTANCE = 1000.0f;
-const float SHADOW_FORWARD = 60.0f;
-const float SHADOW_RANGE = 120.0f;
-const int SHADOW_RESOLUTION = 2048;
+using namespace ShadowConstants;
+using namespace MaterialConstants;
+using namespace TerrainConstants;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -57,7 +55,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
-    worldNoiseSampler_ = bgfx::createUniform("s_samplerWorldNoise", bgfx::UniformType::Sampler);
+    terrainNoiseSampler_ = bgfx::createUniform("s_samplerTerrainNoise", bgfx::UniformType::Sampler);
 
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
@@ -74,8 +72,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
-    u_worldProps_ = bgfx::createUniform("u_worldProps", bgfx::UniformType::Vec4, 2);
-    u_worldMeshOffset_= bgfx::createUniform("u_worldMeshOffset", bgfx::UniformType::Vec4);
+    u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
+    u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
 
     SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
@@ -129,8 +127,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadVertexShader("vs_inst_s");
     resourceManager.LoadVertexShader("vs_inst_billboard");
     resourceManager.LoadVertexShader("vs_inst_billboard_s");
-    resourceManager.LoadVertexShader("vs_world");
-    resourceManager.LoadVertexShader("vs_world_s");
+    resourceManager.LoadVertexShader("vs_terrain");
+    resourceManager.LoadVertexShader("vs_terrain_s");
     resourceManager.LoadVertexShader("vs_screenquad");
     resourceManager.LoadVertexShader("vs_glyph");
     resourceManager.LoadVertexShader("vs_uibar");
@@ -150,7 +148,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadFragmentShader("fs_seed");
     resourceManager.LoadFragmentShader("fs_particle");
     resourceManager.LoadFragmentShader("fs_leaves_strand");
-    resourceManager.LoadFragmentShader("fs_world");
+    resourceManager.LoadFragmentShader("fs_terrain");
 
     resourceManager.LoadFragmentShader("fs_blit");
     resourceManager.LoadFragmentShader("fs_text");
@@ -173,11 +171,11 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadMaterial("m_boulder");
     resourceManager.LoadMaterial("m_tpillar");
 
-    resourceManager.LoadMaterial("m_world");
+    resourceManager.LoadMaterial("m_terrain");
     resourceManager.LoadMaterial("m_flower");
     resourceManager.LoadMaterial("m_stem");
-    resourceManager.LoadMaterial("m_world");
-    resourceManager.LoadMaterial("m_world");
+    resourceManager.LoadMaterial("m_terrain");
+    resourceManager.LoadMaterial("m_terrain");
     resourceManager.LoadMaterial("m_postprocess");
     resourceManager.LoadMaterial("m_seed");
     resourceManager.LoadMaterial("m_text");
@@ -190,7 +188,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     spreadMaterials_[0] = resourceManager.GetMaterial("m_flower");
     spreadMaterials_[1] = resourceManager.GetMaterial("m_stem");
-    terrainMaterial_ = resourceManager.GetMaterial("m_world");
+    terrainMaterial_ = resourceManager.GetMaterial("m_terrain");
     seedMaterial_ = resourceManager.GetMaterial("m_seed");
     barMaterial_ = resourceManager.GetMaterial("m_uibar");
     blitMaterial_ = resourceManager.GetMaterial("m_preuiblit");
@@ -350,25 +348,25 @@ void Renderer::RenderMesh(
     }
 }
 
-void Renderer::RenderWorld(World& world) {
-    vec4 worldProps[2];
-    worldProps[0].x = 0.0f;
-    worldProps[0].y = world.properties_.minRadius;
-    worldProps[0].z = world.properties_.maxRadius;
-    worldProps[0].w = world.properties_.edgeJaggedness;
-    worldProps[1].x = world.properties_.edgeFalloff;
-    worldProps[1].y = world.properties_.edgePower;
+void Renderer::RenderTerrain(Terrain& terrain) {
+    vec4 terrainProps[2];
+    terrainProps[0].x = 0.0f;
+    terrainProps[0].y = terrain.properties_.minRadius;
+    terrainProps[0].z = terrain.properties_.maxRadius;
+    terrainProps[0].w = terrain.properties_.edgeJaggedness;
+    terrainProps[1].x = terrain.properties_.edgeFalloff;
+    terrainProps[1].y = terrain.properties_.edgePower;
 
     // Can use instancing here if necessary
-    int radius = world.properties_.maxRadius / WORLD_MESH_SIZE;
+    int radius = terrain.properties_.maxRadius / TERRAIN_MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
-        bgfx::setUniform(u_worldProps_, worldProps, 2);
-        vec4 offset = vec4(x * WORLD_MESH_SIZE, 0.0f, y * WORLD_MESH_SIZE, 0.0f);
-        bgfx::setUniform(u_worldMeshOffset_, &offset);
+        bgfx::setUniform(u_terrainProps_, terrainProps, 2);
+        vec4 offset = vec4(x * TERRAIN_MESH_SIZE, 0.0f, y * TERRAIN_MESH_SIZE, 0.0f);
+        bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        bgfx::setTexture(WORLD_NOISE_TEXINDEX, worldNoiseSampler_, noiseTexture_->handle);
+        bgfx::setTexture(TERRAIN_NOISE_TEXINDEX, terrainNoiseSampler_, noiseTexture_->handle);
         RenderMesh(terrain_, terrainMaterial_);
     };
 }

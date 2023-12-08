@@ -65,7 +65,7 @@ void Game::Update() {
         playerController_.Execute(
             entityManager_.entities_,
             entityManager_.components_,
-            world_,
+            terrain_,
             spreadManager_,
             camera_,
             inputs_
@@ -86,12 +86,12 @@ void Game::Update() {
             entityManager_.entities_,
             entityManager_.components_,
             entityManager_.destroyList_,
-            world_
+            terrain_
         );
         GroundStickSystem::Stick(
             entityManager_.entities_,
             entityManager_.components_,
-            world_
+            terrain_ 
         );
         VelocitySystem::Apply(
             entityManager_.entities_,
@@ -106,7 +106,7 @@ void Game::Update() {
             entityManager_.entities_,
             entityManager_.components_,
             spreadManager_,
-            world_
+            terrain_
         );
         SkeletonSystem::CalculatePoses(
             entityManager_.entities_,
@@ -151,7 +151,7 @@ void Game::Update() {
     );
     seedManager_.CalculatePositions(
         entityManager_.components_,
-        world_,
+        terrain_,
         timeAccumlulator_
     );
     seedManager_.GetCaptures(
@@ -170,6 +170,6 @@ void Game::Update() {
         particleManager_,
         seedManager_,
         spreadManager_, 
-        world_
+        terrain_ 
     );
 }

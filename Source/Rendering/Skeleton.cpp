@@ -4,8 +4,10 @@
 #include "../Logging/ScreenText.h"
 #include "../Game/Time.h"
 #include <glm/gtx/string_cast.hpp>
+#include "AnimationConstants.h"
 
 using namespace glm;
+using namespace AnimationConstants;
 
 Transform Skeleton::GetLocalBoneTransform(
     const Animation& animation, 

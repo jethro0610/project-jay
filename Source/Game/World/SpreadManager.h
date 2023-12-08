@@ -10,7 +10,7 @@
 #include "../../Constants/SpreadConstants.h"
 #include "../Entity/EntityID.h"
 #include "SpreadKey.h"
-class World;
+class Terrain;
 class SeedManager;
 class TransformComponent;
 
@@ -29,7 +29,7 @@ class SpreadManager {
 public:
     SpreadManager(
         SeedManager& seedManager,
-        World& world
+        Terrain& terrain
     );
     SpreadManager(const SpreadManager&) = delete;
 
@@ -70,7 +70,7 @@ private:
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
 
-    World& world_;
+    Terrain& terrain_;
     SeedManager& seedManager_;
     vector_contig<SpreadKey, 8192> viableAddKeys_;
 

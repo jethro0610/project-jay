@@ -7,14 +7,14 @@
 #include "../ParticleManager.h"
 #include "../../Helpers/Random.h"
 #include "../../Constants/TimeConstants.h"
-#include "../World/World.h"
+#include "../World/Terrain.h"
 using namespace glm;
 
 void WalkerController::Init(
     EntityID entity, 
     ComponentList& components,
     ParticleManager& particleManager,
-    World& world
+    Terrain& terrain 
 ) {
     auto& transformComponent = components.Get<TransformComponent>();
 
@@ -27,12 +27,12 @@ void WalkerController::Init(
     // cloudEmitter_ = particleManager.RequestEmitter("p_cloud");
     // cloudEmitter_->parent_ = &transformComponent.transform[entity_];
 
-    FindNewTarget(world);
+    FindNewTarget(terrain);
 }
 
 void WalkerController::Update(
     ComponentList& components,
-    World& world
+    Terrain& terrain
 ) {
     auto& movementComponent = components.Get<MovementComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
@@ -45,7 +45,7 @@ void WalkerController::Update(
     // cloudEmitter_->active_ = false;
 
     if (distance(vec2(position.x, position.z), targetPosition_) < 1.0f && stopTime_ <= 0.0f) {
-        FindNewTarget(world);
+        FindNewTarget(terrain);
         stopTime_ = 5.0f;
     }
 
@@ -64,13 +64,13 @@ void WalkerController::Update(
     hitboxComponent.hitboxes[entity_][0].active = true; 
 }
 
-void WalkerController::FindNewTarget(World& world) {
+void WalkerController::FindNewTarget(Terrain& terrain) {
     vec2 initPos = targetPosition_;
     do {
         targetPosition_ = initPos + RandomVector2D(MIN_WALK_DISTANCE, MAX_WALK_DISTANCE);
     }
     while (
         any(isnan(targetPosition_)) ||
-        world.GetDistance(targetPosition_).x > -128.0f
+        terrain.GetDistance(targetPosition_).x > -128.0f
     );
 }

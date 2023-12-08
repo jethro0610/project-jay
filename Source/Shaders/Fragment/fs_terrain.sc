@@ -4,7 +4,7 @@ $input v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangen
 #include <dither.sh>
 
 #define SHARED_SHADER
-#include <Shared_WorldFuncs.h>
+#include <Shared_TerrainFuncs.h>
 
 SAMPLER2D(s_color, 0);
 SAMPLER2D(s_normal, 1);
@@ -16,7 +16,7 @@ static float SAMPLE_SCALE = 1.0f / (MAX_NOISE_POS * 2.0f);
 void main() {
     vec3 lightDirection = u_lightDirection.xyz; 
 
-    // OPTIMIZATION: This check is run on every world chunk, but we
+    // OPTIMIZATION: This check is run on every terrain chunk, but we
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
     float fade = max(v_edgeDistance, 0.0f);

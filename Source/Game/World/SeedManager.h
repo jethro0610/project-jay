@@ -3,7 +3,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <vector_contig.h>
-#include "World.h"
+#include "Terrain.h"
 #include "../../Constants/GameConstants.h"
 #include "../Entity/EntityID.h"
 #include "../Entity/EntityList.h"
@@ -39,7 +39,7 @@ public:
 
     void CalculatePositions(
         ComponentList& components,
-        World& world,
+        Terrain& terrain,
         float interpTime
     );
 

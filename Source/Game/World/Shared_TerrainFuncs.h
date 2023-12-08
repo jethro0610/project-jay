@@ -6,7 +6,7 @@
 #include "../../Types/Noise.h"
 #include "../../Logging/Logger.h"
 #include "../../Logging/ScreenText.h"
-#include "Shared_WorldProperties.h"
+#include "Shared_TerrainProperties.h"
 #define NOISE_TYPE Noise&
 #define ACCURACY_TYPE NoiseAccuracy
 #define ACCURACY_DEFAULT NA_Normal 
@@ -16,21 +16,21 @@ using namespace glm;
 
 #else
 
-#include <Shared_WorldProperties.h>
-uniform vec4 u_worldProps[2];
-#define u_minHeight u_worldProps[0].x
-#define u_minRadius u_worldProps[0].y
-#define u_maxRadius u_worldProps[0].z
-#define u_edgeJaggedness u_worldProps[0].w
-#define u_edgeFalloff u_worldProps[1].x
-#define u_edgePower u_worldProps[1].y
+#include <Shared_TerrainProperties.h>
+uniform vec4 u_terrainProps[2];
+#define u_minHeight u_terrainProps[0].x
+#define u_minRadius u_terrainProps[0].y
+#define u_maxRadius u_terrainProps[0].z
+#define u_edgeJaggedness u_terrainProps[0].w
+#define u_edgeFalloff u_terrainProps[1].x
+#define u_edgePower u_terrainProps[1].y
 uniform vec4 u_noiseProps;
-uniform vec4 u_worldMeshOffset;
-SAMPLER2D(s_worldNoise, 15);
+uniform vec4 u_terrainMeshOffset;
+SAMPLER2D(s_terrainNoise, 15);
 #define NOISE_TYPE float
 #define ACCURACY_TYPE int 
 #define ACCURACY_DEFAULT 0
-#define SAMPLENOISE(noisePos, accuracy) texture2DLod(s_worldNoise, noisePos / 1024.0f + vec2(0.5f, 0.5f), 0)
+#define SAMPLENOISE(noisePos, accuracy) texture2DLod(s_terrainNoise, noisePos / 1024.0f + vec2(0.5f, 0.5f), 0)
 #define INLINE 
 
 #endif
@@ -50,7 +50,7 @@ INLINE float sampleNoiseBlob(vec2 position, float jaggedness, NOISE_TYPE noise, 
     return sampleNoise(position, noise, accuracy);
 }
 
-INLINE vec2 getWorldDistance(vec2 position, WorldProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
+INLINE vec2 getTerrainDistance(vec2 position, TerrainProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
     float blobVal = sampleNoiseBlob(position, props.edgeJaggedness, props.noise, accuracy);
     blobVal = (blobVal + 1.0f) * 0.5f;
 
@@ -67,13 +67,13 @@ INLINE vec2 getWorldDistance(vec2 position, WorldProperties props, ACCURACY_TYPE
     return vec2(edgeDistance, terrainHeight + edgeHeight);
 }
 
-INLINE vec3 getWorldNormal(vec2 position, WorldProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
+INLINE vec3 getTerrainNormal(vec2 position, TerrainProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
     vec2 dX = position - vec2(1.0f, 0.0f);
     vec2 dZ = position - vec2(0.0f, 1.0f);
 
-    float height = getWorldDistance(position, props, accuracy).y;
-    float gradX = getWorldDistance(dX, props, accuracy).y - height;
-    float gradZ = getWorldDistance(dZ, props, accuracy).y - height;
+    float height = getTerrainDistance(position, props, accuracy).y;
+    float gradX = getTerrainDistance(dX, props, accuracy).y - height;
+    float gradZ = getTerrainDistance(dZ, props, accuracy).y - height;
 
     return normalize(vec3(gradX, 1.0f, gradZ));
 }

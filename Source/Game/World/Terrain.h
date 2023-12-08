@@ -5,12 +5,12 @@
 #include <vector>
 #include <unordered_set>
 #include "../../Types/Noise.h"
-#include "Shared_WorldProperties.h"
+#include "Shared_TerrainProperties.h"
 #include "TerrainModifier.h"
 
-class World {
+class Terrain {
 public:
-    World(Noise& noise);
+    Terrain(Noise& noise);
 
     glm::vec2 GetDistance(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;
     glm::vec2 GetDistance(const glm::vec3& position, NoiseAccuracy accuracy = NA_Normal) const;
@@ -21,7 +21,7 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, NoiseAccuracy accuracy = NA_Normal) const;
 
-    WorldProperties properties_;
+    TerrainProperties properties_;
 
 private:
     Noise& noise_;

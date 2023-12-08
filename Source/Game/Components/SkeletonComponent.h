@@ -6,6 +6,11 @@
 #include "../../Helpers/Assert.h"
 #include "../ResourceManager.h"
 #include "../../Rendering/Skeleton.h"
+#include "../../Rendering/SkeletonConstants.h"
+#include "../../Rendering/AnimationConstants.h"
+
+using namespace SkeletonConstants;
+using namespace AnimationConstants;
 
 class SkeletonComponent : public Component {
 public:

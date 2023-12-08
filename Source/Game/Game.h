@@ -12,7 +12,7 @@
 #include "../Rendering/Renderer.h"
 #include "./AI/WalkerController.h"
 #include "LevelLoader.h"
-#include "World/World.h"
+#include "World/Terrain.h"
 
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
@@ -28,14 +28,13 @@ public:
 
 private:
     Platform platform_;
-    Noise noise_;
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
     EntityManager entityManager_;
     LevelLoader levelLoader_;
     Renderer renderer_;
     Camera camera_;
-    World world_;
+    Terrain terrain_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;

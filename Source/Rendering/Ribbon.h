@@ -1,6 +1,6 @@
 #pragma once
 #include <vector_const.h>
-#include "RenderConstants.h"
+#include "SkeletonConstants.h"
 
 struct RibbonDesc {
     int start;
@@ -9,4 +9,4 @@ struct RibbonDesc {
     float tailPower;
     float tailRatio;
 };
-typedef vector_const<RibbonDesc, MAX_RIBBONS> Ribbons;
+typedef vector_const<RibbonDesc, SkeletonConstants::MAX_RIBBONS> Ribbons;

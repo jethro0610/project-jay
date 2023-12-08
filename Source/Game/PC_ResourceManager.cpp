@@ -218,38 +218,38 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     Material material;
 
     material.triangleType = ONE_SIDED;
-    if (GetBoolean(data, "two_sided"))
+    if (GetBoolean(&data, "two_sided"))
         material.triangleType = TWO_SIDED;
-    if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
+    if (GetBoolean(&data, "negative_back") && material.triangleType == TWO_SIDED)
         material.triangleType = TWO_SIDED_NEGATIVE_BACK;
 
-    ShaderHandle vertexShader = GetVertexShader(GetString(data, "vertex"));
-    ShaderHandle fragmentShader = GetFragmentShader(GetString(data, "fragment"));
+    ShaderHandle vertexShader = GetVertexShader(GetString(&data, "vertex"));
+    ShaderHandle fragmentShader = GetFragmentShader(GetString(&data, "fragment"));
     material.shader = bgfx::createProgram(vertexShader, fragmentShader);
 
-    material.castShadows = GetBoolean(data, "cast_shadows");
+    material.castShadows = GetBoolean(&data, "cast_shadows");
     if (material.castShadows) {
-        ShaderHandle vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
-        ShaderHandle fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
+        ShaderHandle vertexShadowShader = GetVertexShader(GetString(&data, "vertex_shadow"));
+        ShaderHandle fragmentShadowShader = GetFragmentShader(GetString(&data, "fragment_shadow"));
         material.shadowShader = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
     }
 
     if (data.contains("textures")) {
-        auto textureNames = data["textures"];
+        auto& textureNames = data["textures"];
         ASSERT((textureNames.size() <= MAX_TEXTURES_PER_MATERIAL), "Too many textures on material " + name);
-        for (std::string textureName : textureNames)
+        for (const std::string& textureName : textureNames)
             material.textures.push_back(GetTexture(textureName));
     }
 
-    material.properties[0][0] = GetFloat(data, "specular_power", 32.0f);
-    material.properties[0][1] = GetFloat(data, "specular_threshhold", 0.3f);
-    material.properties[0][2] = GetFloat(data, "specular_brightness", 1.5f);
+    material.properties[0][0] = GetFloat(&data, "specular_power", 32.0f);
+    material.properties[0][1] = GetFloat(&data, "specular_threshhold", 0.3f);
+    material.properties[0][2] = GetFloat(&data, "specular_brightness", 1.5f);
 
-    material.properties[1][0] = GetFloat(data, "fresnel_power", 4.0f);
-    material.properties[1][1] = GetFloat(data, "fresnel_scale", 1.0f);
-    material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
+    material.properties[1][0] = GetFloat(&data, "fresnel_power", 4.0f);
+    material.properties[1][1] = GetFloat(&data, "fresnel_scale", 1.0f);
+    material.properties[1][2] = GetFloat(&data, "fresnel_brightness", 1.0f);
 
-    material.properties[3] = GetVec4(data, "color");
+    material.properties[3] = GetVec4(&data, "color");
     
     materials_[name] = material;
     DEBUGLOG("Loaded material " << name);
@@ -338,26 +338,26 @@ void ResourceManager::LoadEmitterProperties(const std::string& name) {
     nlohmann::json data = nlohmann::json::parse(inFile);
     EmitterProperties properties;
 
-    properties.material = GetMaterial(GetString(data, "material", "null_material"));
-    properties.localSpace = GetBoolean(data, "local_space");
+    properties.material = GetMaterial(GetString(&data, "material", "null_material"));
+    properties.localSpace = GetBoolean(&data, "local_space");
 
-    properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);
-    properties.spawnCount = GetInt(data, "spawn_count", 1);
-    properties.lifetime = GetFloat(data, "lifetime", 1.0f);
+    properties.spawnInterval = GetFloat(&data, "spawn_interval", 1.0f);
+    properties.spawnCount = GetInt(&data, "spawn_count", 1);
+    properties.lifetime = GetFloat(&data, "lifetime", 1.0f);
 
-    auto scaleRange = data["scale_range"];
+    auto& scaleRange = data["scale_range"];
     properties.minScale = scaleRange[0];
     properties.maxScale = scaleRange[1];
-    properties.endScale = GetFloat(data, "end_scale");
+    properties.endScale = GetFloat(&data, "end_scale");
 
-    properties.spawnRadius = GetFloat(data, "spawn_radius", 0.0f);
-    auto velocityRange = data["velocity_range"];
-    properties.minVelocity = GetVec4(velocityRange[0]);
-    properties.maxVelocity = GetVec4(velocityRange[1]);
-    properties.acceleration = GetVec4(data, "acceleration");
+    properties.spawnRadius = GetFloat(&data, "spawn_radius", 0.0f);
+    auto& velocityRange = data["velocity_range"];
+    properties.minVelocity = GetVec4(&velocityRange[0]);
+    properties.maxVelocity = GetVec4(&velocityRange[1]);
+    properties.acceleration = GetVec4(&data, "acceleration");
 
-    properties.startColor = GetVec4(data, "start_color");
-    properties.endColor = GetVec4(data, "end_color");
+    properties.startColor = GetVec4(&data, "start_color");
+    properties.endColor = GetVec4(&data, "end_color");
 
     emitterProps_[name] = properties; 
     DEBUGLOG("Loaded emitter " << name);

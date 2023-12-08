@@ -46,6 +46,8 @@ const int UI_VIEW = 3;
 Renderer::Renderer(ResourceManager& resourceManager) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
+    width_ = 1280;
+    height_ = 720;
 
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
@@ -90,7 +92,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     InitShadowBuffer(resourceManager.GetTexture("t_g_shadow"));
     InitRenderBuffer(resourceManager.GetTexture("t_g_render_c"), resourceManager.GetTexture("t_g_render_d"));
-    InitPostProcessBuffer(resourceManager.GetTexture("t_g_post"));
+    InitPostProcessBuffer(resourceManager.GetTexture("t_g_post_c"));
     InitUIBuffer();
 
     resourceManager.LoadModel("st_tpillar");
@@ -172,6 +174,10 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadMaterial("m_tpillar");
 
     resourceManager.LoadMaterial("m_world");
+    resourceManager.LoadMaterial("m_flower");
+    resourceManager.LoadMaterial("m_stem");
+    resourceManager.LoadMaterial("m_world");
+    resourceManager.LoadMaterial("m_world");
     resourceManager.LoadMaterial("m_postprocess");
     resourceManager.LoadMaterial("m_seed");
     resourceManager.LoadMaterial("m_text");
@@ -180,16 +186,16 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     terrain_ = &resourceManager.GetModel("st_g_terrain")->meshes[0];
     quad_ = &resourceManager.GetModel("st_g_quad")->meshes[0];
-    spread_ = resourceManager.GetModel("st_g_spread");
+    spread_ = resourceManager.GetModel("st_flower");
 
     spreadMaterials_[0] = resourceManager.GetMaterial("m_flower");
     spreadMaterials_[1] = resourceManager.GetMaterial("m_stem");
-    terrainMaterial_ = resourceManager.GetMaterial("m_g_terrain");
-    seedMaterial_ = resourceManager.GetMaterial("m_g_seed");
-    barMaterial_ = resourceManager.GetMaterial("m_g_bar");
-    blitMaterial_ = resourceManager.GetMaterial("m_g_preuiblit");
-    postProcessMaterial_ = resourceManager.GetMaterial("m_g_postprocess");
-    textMaterial_ = resourceManager.GetMaterial("m_g_text");
+    terrainMaterial_ = resourceManager.GetMaterial("m_world");
+    seedMaterial_ = resourceManager.GetMaterial("m_seed");
+    barMaterial_ = resourceManager.GetMaterial("m_uibar");
+    blitMaterial_ = resourceManager.GetMaterial("m_preuiblit");
+    postProcessMaterial_ = resourceManager.GetMaterial("m_postprocess");
+    textMaterial_ = resourceManager.GetMaterial("m_text");
 }
 
 // void Renderer::TEMP_LoadTestData() {

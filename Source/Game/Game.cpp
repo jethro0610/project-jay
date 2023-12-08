@@ -14,6 +14,7 @@ void Game::Init() {
     srand(time(0));
     entityManager_.components_.Get<SkeletonComponent>().resourceManager = &resourceManager_;
     entityManager_.components_.Get<StaticModelComponent>().resourceManager = &resourceManager_;
+    entityManager_.components_.Get<IntervalSpawnComponent>().resourceManager = &resourceManager_;
 
     resourceManager_.LoadEmitterProperties("p_sparkle");
     resourceManager_.LoadEmitterProperties("p_dust");

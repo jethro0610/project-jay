@@ -36,7 +36,7 @@ public:
     static constexpr int GetID() { return 10; }
 
     void Load(nlohmann::json* data, EntityID entity) {
-        interpolate[entity] = GetBoolean(data, "targetable", false);
+        interpolate[entity] = GetBoolean(data, "interpolate", false);
         targetable[entity] = GetBoolean(data, "targetable", false);
         useTilt[entity] = GetBoolean(data, "use_tilt", false);
         destroyOnBound[entity] = GetBoolean(data, "destroy_on_bound", false);

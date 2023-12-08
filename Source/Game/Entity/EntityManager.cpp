@@ -40,7 +40,7 @@ EntityID EntityManager::CreateEntity(const Transform& transform) {
     return createdEntity;
 }
 
-EntityID EntityManager::CreateEntity(nlohmann::json* description, const Transform& transform) {
+EntityID EntityManager::CreateEntity(EntityDescription* description, const Transform& transform) {
     EntityID createdEntity = CreateEntity(transform);
 
     for (auto& componentData : (*description)["components"].items()) {

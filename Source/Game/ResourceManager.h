@@ -6,6 +6,7 @@
 #include "../Rendering/Model.h"
 #include "../Rendering/Skeleton.h"
 #include "../Rendering/Material.h"
+#include "Entity/EntityDescription.h"
 #include "../Types/Noise.h"
 #include "ParticleEmitter.h"
 
@@ -39,7 +40,7 @@ public:
     Material* GetMaterial(const std::string& name);
     Model* GetModel(const std::string& name);
     Skeleton* GetSkeleton(const std::string& name);
-    nlohmann::json* GetEntityDescription(const std::string& name);
+    EntityDescription* GetEntityDescription(const std::string& name);
     EmitterProperties* GetEmitterProperties(const std::string& name);
     TextureHandle GetTexture(const std::string& name);
 

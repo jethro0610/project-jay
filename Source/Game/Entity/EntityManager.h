@@ -29,7 +29,7 @@ public:
 
     EntityManager(ResourceManager& resourceManager, ParticleManager& particleManager);
     EntityID CreateEntity(const Transform& transform = Transform());
-    EntityID CreateEntity(nlohmann::json* descripition, const Transform& transform = Transform());
+    EntityID CreateEntity(EntityDescription* descripition, const Transform& transform = Transform());
     void DestroyEntity(EntityID entityToDestroy);
 
     template <class T>

@@ -29,7 +29,7 @@ public:
     static constexpr std::string GetName() { return "interval_spawner"; }
     static constexpr int GetID() { return 3; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         offsets[entity].clear();
         offsets[entity].shrink_to_fit();
         
@@ -38,11 +38,11 @@ public:
         radius[entity] = GetFloat(data, "radius", 0.0f);
         planar[entity] = GetBoolean(data, "planar");
 
-        if (!data->contains("offsets")) {
+        if (!data.contains("offsets")) {
             offsets[entity].push_back(glm::vec3(0.0f, 0.0f, 0.0f));
         }
         else {
-            auto& jOffsets = (*data)["offsets"];
+            auto& jOffsets = data["offsets"];
             for (auto& jOffset : jOffsets)
                 offsets[entity].push_back(glm::vec3(jOffset["x"], jOffset["y"], jOffset["z"]));
         }

@@ -29,7 +29,7 @@ void LevelLoader::LoadLevel(const std::string& name) {
     auto& entitiesData = data["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
-        entityTransform = GetTransform(&entityData, "transform");
+        entityTransform = GetTransform(entityData, "transform");
         entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
     }
     entityManager_.SpawnEntities();

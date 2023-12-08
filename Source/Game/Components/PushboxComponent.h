@@ -23,7 +23,7 @@ public:
     static constexpr std::string GetName() { return "pushbox"; }
     static constexpr int GetID() { return 0; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         pushbox[entity].radius = GetFloat(data, "radius");
         pushbox[entity].top = GetFloat(data, "top", 0.0f);
         pushbox[entity].bottom = GetFloat(data, "bottom", 0.0f);

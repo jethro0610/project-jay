@@ -10,5 +10,5 @@ struct Component {
     Component(){};
 
 public:
-    virtual void Load(nlohmann::json* data, EntityID entity) = 0;
+    virtual void Load(nlohmann::json& data, EntityID entity) = 0;
 };

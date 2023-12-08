@@ -16,7 +16,7 @@ public:
     static constexpr std::string GetName() { return "trample"; }
     static constexpr int GetID() { return 15; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         radius[entity] = GetInt(data, "radius");
         groundEntryRadius[entity] = GetInt(data, "ground_entry_radius");
     }

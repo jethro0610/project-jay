@@ -37,7 +37,7 @@ public:
     static constexpr std::string GetName() { return "ground_trace"; }
     static constexpr int GetID() { return 1; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         distance[entity] = GetFloat(data, "distance", 1.0f);
         stick[entity] = GetBoolean(data, "stick", false);
         stickOffset[entity] = GetFloat(data, "stick_offset", 0.0f);

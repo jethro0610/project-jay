@@ -41,7 +41,7 @@ public:
     static constexpr std::string GetName() { return "skeleton"; }
     static constexpr int GetID() { return 14; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         std::string name = GetString(data, "skeleton", "null_skeleton");
         skeleton[entity] = resourceManager->GetSkeleton(name);
         pose[entity].resize(skeleton[entity]->bones_.size());
@@ -53,9 +53,9 @@ public:
         for (int i = 0; i < numAnimation; i++)
             transitions[entity][i] = 0.35f;
 
-        if (!data->contains("transitions"))
+        if (!data.contains("transitions"))
             return;
-        auto& transitionsData = (*data)["transitions"];
+        auto& transitionsData = data["transitions"];
         for (auto& transitionData : transitionsData)
             transitions[entity][transitionData["index"]] = transitionData["length"];
     }

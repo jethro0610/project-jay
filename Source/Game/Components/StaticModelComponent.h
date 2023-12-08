@@ -26,7 +26,7 @@ public:
     static constexpr std::string GetName() { return "static_model"; }
     static constexpr int GetID() { return 9; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
         materials[entity].clear();
         materials[entity].shrink_to_fit();
 
@@ -34,7 +34,7 @@ public:
         std::string name = GetString(data, "model", "null_model");
         model[entity] = resourceManager->GetModel(name);
 
-        auto& materialData = (*data)["materials"];
+        auto& materialData = data["materials"];
         for (auto& materialName : materialData)
             materials[entity].push_back(resourceManager->GetMaterial(materialName));
     }

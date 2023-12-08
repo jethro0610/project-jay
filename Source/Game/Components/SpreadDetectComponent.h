@@ -24,6 +24,6 @@ public:
     static constexpr std::string GetName() { return "spread_detect"; }
     static constexpr int GetID() { return 8; }
 
-    void Load(nlohmann::json* data, EntityID entity) {
+    void Load(nlohmann::json& data, EntityID entity) {
     }
 };

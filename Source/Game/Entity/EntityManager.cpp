@@ -52,10 +52,10 @@ EntityID EntityManager::CreateEntity(nlohmann::json* description, const Transfor
         );
         int componentId = componentIds_[componentName];
         entities_[createdEntity].AddComponentById(componentId);
-        component->Load(&componentData.value(), createdEntity);
+        component->Load(componentData.value(), createdEntity);
     }
-    entities_[createdEntity].seedsOnDestroy_ = GetInt(description, "seeds_on_destroy", 0);
-    entities_[createdEntity].seedsRadius_ = GetInt(description, "seed_radius", 0);
+    entities_[createdEntity].seedsOnDestroy_ = GetInt(*description, "seeds_on_destroy", 0);
+    entities_[createdEntity].seedsRadius_ = GetInt(*description, "seed_radius", 0);
 
     if (description->contains("emitters")) {
         const auto& emittersData = (*description)["emitters"];

@@ -1,4 +1,6 @@
 #include <string>
+#include <nlohmann/json.hpp>
+
 class EntityManager;
 
 class LevelLoader {

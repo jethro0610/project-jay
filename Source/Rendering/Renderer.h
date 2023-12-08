@@ -15,6 +15,7 @@
 
 #include "../Game/Entity/EntityList.h"
 #include "../Game/Components/ComponentList.h"
+#include "../Game/ResourceManager.h"
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -30,7 +31,7 @@ class ParticleManager;
 class Renderer {
 public:
     #ifdef _PC
-    Renderer(Noise& noise, GLFWwindow* window);
+    Renderer(ResourceManager& resourceManager, Noise& noise, GLFWwindow* window);
     #endif
     Camera* camera_;
 
@@ -42,21 +43,6 @@ public:
         SpreadManager& spreadManager,
         World& world
     );
-
-    Shader& LoadVertexShader_P(std::string name);
-    Shader& LoadFragmentShader_P(std::string name);
-    Model& LoadModel_P(std::string name);
-    Texture& LoadTexture_P(std::string name);
-    Material& LoadMaterial_P(std::string name);
-
-    void TEMP_LoadTestData();
-
-    Shader& GetVertexShader(std::string name);
-    Shader& GetFragmentShader(std::string name);
-    Model& GetModel(std::string name);
-    Skeleton& GetSkeleton(std::string name);
-    Texture& GetTexture(std::string name);
-    Material& GetMaterial(std::string name);
 
 private:
     int width_;
@@ -71,35 +57,35 @@ private:
     glm::mat4 shadowProjectionMatrix_;
     glm::mat4 shadowMatrix_;
 
-    Model spreadModel_;
-    Mesh quad_;
-    Mesh worldMesh_;
+    const Texture& noiseTexture_;
 
-    Material postProcessMaterial_;
-    Material worldMaterial_;
-    std::array<Material, 2> spreadMaterials_;
-    Material seedMaterial_;
-    Material textMaterial_;
-    Material barMaterial_;
-    Material blitMaterial_;
+    const Model& spreadModel_;
+    const Model& quadModel_;
+    const Model& terrainModel_;
 
-    Texture noiseTexture_;
+    const Material& postProcessMaterial_;
+    const Material& terrainMaterial_;
+    const Material& blitMaterial_;
 
-    void InitQuad_P();
-    void InitWorldMesh_P();
+    // std::array<Material, 2> spreadMaterials_;
+    // Material seedMaterial_;
+    // Material textMaterial_;
+    // Material barMaterial_;
+    // Material blitMaterial_;
+    //
 
-    void InitShadowBuffer_P();
-    void InitRenderBuffer_P();
-    void InitPostProcessBuffer_P();
+    void InitShadowBuffer(const Texture& shadowBufferTexture);
+    void InitRenderBuffer(const Texture& renderColorTexture, const Texture& renderDepthTexture);
+    void InitPostProcessBuffer(const Texture& postProcessTexture);
     void InitUIBuffer_P();
 
     FrameBuffer backBuffer_;
     FrameBuffer shadowBuffer_;
     FrameBuffer renderBuffer_;
     FrameBuffer postProcessBuffer_;
-    Texture shadowBufferTexture_;
-    std::array<Texture, 2> renderBufferTextures_;
-    Texture postProcessTexture_;
+    // Texture shadowBufferTexture_;
+    // std::array<Texture, 2> renderBufferTextures_;
+    // Texture postProcessTexture_;
 
     std::array<TextureSampler, MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSampler shadowSampler_;
@@ -109,9 +95,7 @@ private:
     Uniform u_shadowRight_;
     Uniform u_shadowMatrix_;
     Uniform u_shadowResolution_;
-
     Uniform u_pose_;
-
     Uniform u_materialProps_;
     Uniform u_particleProps_;
     Uniform u_normalMult_;
@@ -126,18 +110,18 @@ private:
     Uniform u_worldMeshOffset_;
     Uniform u_noiseProps_;
 
-    Texture MakeNoiseTexture_P(Noise& noise);
+    // Texture MakeNoiseTexture_P(Noise& noise);
 
-    std::unordered_map<std::string, Shader> vertexShaders_;
-    std::unordered_map<std::string, Shader> fragmentShaders_;
-    std::unordered_map<std::string, Model> models_;
-    std::unordered_map<std::string, Skeleton> skeletons_;
-    std::unordered_map<std::string, Texture> textures_;
-    std::unordered_map<std::string, Material> materials_;
+    const ShaderResources& vertexShaders_;
+    const ShaderResources& fragmentShaders_;
+    const ModelResources& models_;
+    const SkeletonResources& skeletons_;
+    const TextureResources& textures_;
+    const MaterialResources& materials_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
-
     void SetTexturesFromMaterial_P(Material& material, bool shadowMap = true);
+    void SetLightDirection_P(glm::vec3 direction);
 
     void StartFrame_P();
     void Clear_P();
@@ -163,7 +147,5 @@ private:
     void RenderScreenText_P();
     #endif
     void PresentFrame_P();
-
-    void SetLightDirection_P(glm::vec3 direction);
 };
 

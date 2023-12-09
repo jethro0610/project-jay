@@ -1,9 +1,6 @@
 #pragma once
-#include <bitset>
 #include <glm/vec3.hpp>
 #include "Component.h"
-#include "../ParticleEmitter.h"
-#include "../ParticleManager.h"
 
 class ProjectileComponent : public Component {
 public:

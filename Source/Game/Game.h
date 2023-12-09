@@ -1,18 +1,15 @@
 #pragma once
 #include "Camera.h"
-#include "Entity/EntityManager.h"
-#include "../Types/Gamepad.h"
-#include "../Types/Inputs.h"
+#include "Game/Entity/EntityManager.h"
+#include "Types/Inputs.h"
 #include "PlayerController.h"
-#include "ParticleManager.h"
-#include "World/SeedManager.h"
-#include "World/SpreadManager.h"
+#include "Particle/ParticleManager.h"
+#include "Seed/SeedManager.h"
+#include "Spread/SpreadManager.h"
 #include "Systems/Systems.h"
-#include "../Types/Transform.h"
-#include "../Rendering/Renderer.h"
-#include "./AI/WalkerController.h"
+#include "Rendering/Renderer.h"
 #include "LevelLoader.h"
-#include "World/Terrain.h"
+#include "Terrain/Terrain.h"
 
 #ifdef _PC
 #include "../Platform/PC_Platform.h"
@@ -42,8 +39,6 @@ private:
     Inputs inputs_;
 
     float timeAccumlulator_;
-
-    WalkerController testWalker;
 
     void UpdateInputs_P();
     void PollGamepadInputs_P();

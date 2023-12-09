@@ -1,5 +1,5 @@
 #include "ResourceManager.h"
-#include "../Helpers/MapCheck.h"
+#include "Helpers/MapCheck.h"
 
 ShaderHandle ResourceManager::GetVertexShader(const std::string& name) {
     return GetFromMap<ShaderHandle>(vertexShaders_, name, "Tried using unloaded vertex shader " + name);

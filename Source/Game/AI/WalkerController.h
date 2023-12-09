@@ -1,7 +1,6 @@
 #pragma once
+#include "Game/Systems/SystemInc.h"
 #include <glm/vec2.hpp>
-#include "../Entity/EntityID.h"
-#include "../Components/ComponentList.h"
 
 class Terrain;
 class ParticleEmitter;

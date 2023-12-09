@@ -1,6 +1,6 @@
 #include "Terrain.h"
-#include <FastNoiseLite.h>
 #include "Shared_TerrainFuncs.h"
+#include <FastNoiseLite.h>
 
 using namespace glm;
 

@@ -1,5 +1,5 @@
+#include "Logging/Logger.h"
 #include <string>
-#include "../Logging/Logger.h"
 
 #ifdef _DEBUG
 template <class T, class M>

@@ -1,8 +1,6 @@
 #pragma once
-#include <bitset>
-#include <initializer_list> 
-#include <vector_const.h>
 #include "EntityKey.h"
+#include <vector_const.h>
 
 const int MAX_ENTITY_EMITTERS = 8;
 class ParticleEmitter;

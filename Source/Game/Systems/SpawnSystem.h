@@ -1,4 +1,4 @@
-#include "../Entity/EntityList.h"
+#include "Game/Entity/EntityList.h"
 namespace SpawnSystem {
     void ClearSpawns(EntityList& entities);
 }

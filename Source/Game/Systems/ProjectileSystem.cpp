@@ -1,10 +1,9 @@
 #include "ProjectileSystem.h"
-#include "../Components/ProjectileComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../../Helpers/Random.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
+#include "Game/Components/ProjectileComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Game/Particle/ParticleEmitter.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 constexpr EntityKey projectileKey = GetEntityKey<ProjectileComponent, TransformComponent, VelocityComponent>();

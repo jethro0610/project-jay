@@ -1,9 +1,6 @@
-#include <nlohmann/json.hpp>
 #include "ParticleManager.h"
-#include "../Helpers/MapCheck.h"
-#include "../Helpers/Assert.h"
-#include "../Helpers/LoadHelpers.h"
-#include "../Rendering/Renderer.h"
+#include "Helpers/Assert.h"
+#include <nlohmann/json.hpp>
 
 ParticleManager::ParticleManager() {
     usableEmitters_.push_front(0);

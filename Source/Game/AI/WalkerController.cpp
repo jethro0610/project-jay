@@ -1,13 +1,12 @@
 #include "WalkerController.h"
-#include "../Components/HitboxComponent.h"
-#include "../Components/MovementComponent.h"
-#include "../Components/SkeletonComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../ParticleManager.h"
-#include "../../Helpers/Random.h"
-#include "../../Constants/TimeConstants.h"
-#include "../World/Terrain.h"
+#include "Game/Components/HitboxComponent.h"
+#include "Game/Components/MovementComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Game/Particle/ParticleManager.h"
+#include "Game/Time/Time.h"
+#include "Game/Terrain/Terrain.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 void WalkerController::Init(
@@ -52,7 +51,7 @@ void WalkerController::Update(
     if (stopTime_ > 0.0f) {
         hitboxComponent.hitboxes[entity_][0].active = false;
         desiredMovement = vec3(0.0f);
-        stopTime_ -= TIMESTEP;
+        stopTime_ -= GlobalTime::TIMESTEP;
         return;
     }
     // cloudEmitter_->active_ = true;

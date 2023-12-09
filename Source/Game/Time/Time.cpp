@@ -1,7 +1,5 @@
-#include <chrono>
-#include <math.h>
 #include "Time.h"
-#include "../Constants/TimeConstants.h"
+#include <chrono>
 
 GlobalTime* GlobalTime::time_ = nullptr;
 

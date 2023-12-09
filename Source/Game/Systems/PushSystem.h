@@ -1,9 +1,9 @@
 #pragma once
+#include "SystemInc.h"
 #include <glm/vec3.hpp>
 #include <vector_const.h>
-#include "SystemInc.h"
-#include "../Collision/Collision.h"
-#include "../Entity/EntityID.h"
+#include "Game/Collision/Collision.h"
+#include "Game/Entity/EntityID.h"
 
 class Entity;
 class PushboxComponent;

@@ -1,9 +1,6 @@
 #pragma once
-#include <stdint.h>
-#include "../Types/Inputs.h"
-#include "ParticleManager.h"
-#include "./Components/ComponentList.h"
-#include "./Entity/EntityList.h"
+#include "Game/Systems/SystemInc.h"
+#include "Types/Inputs.h"
 
 class Camera;
 class SpreadManager;

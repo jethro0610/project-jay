@@ -1,11 +1,8 @@
 #pragma once
-#include <bitset>
-#include <string>
 #include "Component.h"
-#include "../../Helpers/Assert.h"
-#include "../../Rendering/Material.h"
-#include "../../Rendering/Model.h"
-#include "../ResourceManager.h"
+#include "Game/ResourceManager.h"
+#include "Helpers/Assert.h"
+#include <string>
 
 class StaticModelComponent : public Component {
 public:

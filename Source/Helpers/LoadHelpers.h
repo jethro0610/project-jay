@@ -1,10 +1,10 @@
 #pragma once
+#include "Types/Transform.h"
 #include <nlohmann/json.hpp>
 #include <string>
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include "../Types/Transform.h"
 
 bool GetBoolean(nlohmann::json& data, const std::string& property, bool defaultReturn = false);
 int GetInt(nlohmann::json& data, const std::string& property, int defaultReturn = 0);

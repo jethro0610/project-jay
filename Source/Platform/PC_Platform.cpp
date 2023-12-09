@@ -9,15 +9,14 @@
 #endif
 
 #include "PC_Platform.h"
+#include "Logging/Logger.h"
+#include "Helpers/Assert.h"
 #include <assert.h>
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <bgfx/bgfx.h>
-#include "../Logging/Logger.h"
-#include "../Helpers/Assert.h"
 
 Platform* Platform::platform_ = nullptr;
 

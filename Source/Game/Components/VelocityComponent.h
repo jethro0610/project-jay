@@ -1,8 +1,7 @@
 #pragma once
+#include "Component.h"
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
-#include "Component.h"
-#include "../../Helpers/LoadHelpers.h"
 
 const float GRAVITY_ACCELERATION = 1.0f;
 const float MAX_GRAVITY = 120.0f;

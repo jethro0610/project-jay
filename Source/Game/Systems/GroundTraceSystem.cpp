@@ -1,9 +1,7 @@
 #include "GroundTraceSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../World/Terrain.h"
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Terrain/Terrain.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();

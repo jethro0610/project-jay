@@ -1,6 +1,4 @@
-#include "../Components/ComponentList.h"
-#include "../Entity/EntityList.h"
-#include "../Entity/DestroyList.h"
+#include "SystemInc.h"
 class SeedManager;
 
 namespace SeedOnDestroySystem {

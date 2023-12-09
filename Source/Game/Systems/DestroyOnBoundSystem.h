@@ -1,7 +1,4 @@
-#include "../Entity/EntityList.h"
-#include "../Entity/DestroyList.h"
-#include "../Components/ComponentList.h"
-
+#include "Game/Systems/SystemInc.h"
 
 namespace DestroyOnBoundSystem {
     const int Y_BOUND = -50;

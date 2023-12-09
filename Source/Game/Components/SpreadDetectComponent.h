@@ -1,8 +1,7 @@
 #pragma once
-#include <glm/vec2.hpp>
-#include <queue>
 #include "Component.h"
-#include "../World/SpreadKey.h"
+#include "Game/Spread/SpreadKey.h"
+#include <glm/vec2.hpp>
 
 const int MAX_DETECT = 16;
 const int MAX_ADD_DISTANCE = 2;

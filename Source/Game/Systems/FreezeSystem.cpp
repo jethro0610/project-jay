@@ -1,6 +1,6 @@
 #include "FreezeSystem.h"
-#include "../Entity/EntityLimits.h"
-#include "../Entity/Entity.h"
+#include "Game/Entity/EntityLimits.h"
+#include "Game/Entity/Entity.h"
 
 void FreezeSytem::Execute(EntityList& entities) {
     for(int i = 0; i < MAX_ENTITIES; i++) {

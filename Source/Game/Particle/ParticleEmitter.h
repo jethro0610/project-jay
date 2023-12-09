@@ -1,11 +1,10 @@
 #pragma once
-#include <array>
+#include "Types/Transform.h"
+#include "Rendering/Material.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include <vector_contig.h>
-#include "../Types/Transform.h"
-#include "../Rendering/Material.h"
 
 const int MAX_PARTICLES = 2048;
 

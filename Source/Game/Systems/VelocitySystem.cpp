@@ -1,12 +1,7 @@
 #include "VelocitySystem.h"
-#include <glm/vec3.hpp>
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../../Constants/TimeConstants.h"
-#include "../../Logging/ScreenText.h"
-#include "../../Logging/Logger.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Game/Time/Time.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent, VelocityComponent>();
@@ -45,7 +40,7 @@ void VelocitySystem::Apply(
         vec3& velocity = velocityComponent.velocity[i];
         quat& angularVelocity = velocityComponent.angularVelocity[i];
 
-        transformComponent.transform[i].position += velocity * TIMESTEP;
+        transformComponent.transform[i].position += velocity * GlobalTime::TIMESTEP;
         transformComponent.transform[i].rotation = angularVelocity * transformComponent.transform[i].rotation;
     }
 }

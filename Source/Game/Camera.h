@@ -1,9 +1,9 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
-#include "../Game/Entity/EntityID.h"
-#include "../Types/Transform.h"
-#include "../Types/Inputs.h"
+#include "Game/Entity/EntityID.h"
+#include "Types/Transform.h"
+#include "Types/Inputs.h"
 class TransformComponent;
 
 class Camera {

@@ -1,17 +1,12 @@
 #include "ResourceManager.h"
-#include "../Rendering/ShadowConstants.h"
-#include "../Rendering/AnimationConstants.h"
-#include "../Game/World/TerrainConstants.h"
-#include "../Helpers/MapCheck.h"
-#include "../Helpers/Assert.h"
-#include "../Helpers/LoadHelpers.h"
-#include "../Rendering/PC_VertexTypes.h"
+#include "Rendering/PC_VertexTypes.h"
+#include "Rendering/ShadowConstants.h"
+#include "Game/Terrain/Terrain.h"
+#include "Helpers/MapCheck.h"
+#include "Helpers/Assert.h"
+#include "Helpers/LoadHelpers.h"
 
 using namespace glm;
-using namespace ShadowConstants;
-using namespace TerrainConstants;
-using namespace AnimationConstants;
-using namespace MaterialConstants;
 
 bgfx::VertexLayout StaticVertex::layout;
 bgfx::VertexLayout SkeletalVertex::layout;
@@ -41,8 +36,8 @@ void ResourceManager::LoadGlobals() {
 
 void ResourceManager::LoadRenderTextures() {
     textures_["t_g_shadow"] = {bgfx::createTexture2D(
-        SHADOW_RESOLUTION,
-        SHADOW_RESOLUTION,
+        ShadowConstants::SHADOW_RESOLUTION,
+        ShadowConstants::SHADOW_RESOLUTION,
         false,
         1,
         bgfx::TextureFormat::D16,
@@ -106,14 +101,14 @@ void ResourceManager::LoadGlobalQuad() {
 
 void ResourceManager::LoadGlobalTerrain() {
     Mesh worldMesh;
-    int size = ceil(TERRAIN_MESH_SIZE * TERRAIN_MESH_DENSITY) + 1;
+    int size = ceil(Terrain::TERRAIN_MESH_SIZE * Terrain::TERRAIN_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
     WorldVertex* vertices =  new WorldVertex[numVertices];
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++) {
         uint16_t index = y * size + x;
-        vec3 position = vec3(x / TERRAIN_MESH_DENSITY, 0.0f, y / TERRAIN_MESH_DENSITY);
+        vec3 position = vec3(x / Terrain::TERRAIN_MESH_DENSITY, 0.0f, y / Terrain::TERRAIN_MESH_DENSITY);
         vertices[index] = { position };
     };
     worldMesh.vertexBuffer = bgfx::createVertexBuffer(
@@ -235,7 +230,7 @@ void ResourceManager::LoadMaterial(const std::string& name) {
 
     if (data.contains("textures")) {
         auto& textureNames = data["textures"];
-        ASSERT((textureNames.size() <= MAX_TEXTURES_PER_MATERIAL), "Too many textures on material " + name);
+        ASSERT((textureNames.size() <= Material::MAX_TEXTURES_PER_MATERIAL), "Too many textures on material " + name);
         for (const std::string& textureName : textureNames)
             material.textures.push_back(GetTexture(textureName));
     }
@@ -295,7 +290,7 @@ void ResourceManager::LoadModel(const std::string& name) {
     file.read((char*)&skeleton.ribbons_, sizeof(Ribbons));
     DEBUGLOG("Loaded skeleton " << name);
 
-    assert(modelHeader.numAnimations <= MAX_ANIMATIONS);
+    assert(modelHeader.numAnimations <= Animation::MAX_ANIMATIONS);
     skeleton.animations_.resize(modelHeader.numAnimations);
     for (int i = 0; i < modelHeader.numAnimations; i++) {
         AnimationHeader animationHeader;

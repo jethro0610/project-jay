@@ -1,8 +1,6 @@
 #include "TransformSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/TransformComponent.h"
-#include "../../Constants/TimeConstants.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Time/Time.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TransformComponent>();
@@ -31,7 +29,7 @@ void TransformSystem::UpdateRenderTransforms(
     float interpTime
 ) {
     auto& transformComponent = components.Get<TransformComponent>();
-    float interpAmount = interpTime / TIMESTEP;
+    float interpAmount = interpTime / GlobalTime::TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];

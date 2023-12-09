@@ -1,8 +1,6 @@
 #include "ParticleAttachSystem.h"
-#include "../ParticleEmitter.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Particle/ParticleEmitter.h"
+#include "Game/Components/TransformComponent.h"
 
 constexpr EntityKey key = GetEntityKey<TransformComponent>();
 

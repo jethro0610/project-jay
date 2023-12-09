@@ -1,5 +1,5 @@
 #include "SpawnSystem.h"
-#include "../Entity/Entity.h"
+#include "Game/Entity/Entity.h"
 
 void SpawnSystem::ClearSpawns(
     EntityList& entities

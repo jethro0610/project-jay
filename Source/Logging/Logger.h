@@ -1,6 +1,6 @@
 #pragma once
-#include <fstream>
 #include <iostream>
+#include <fstream>
 
 #ifdef _DEBUG
 #define DEBUGLOG(str) do { Logger::Get()->outfile_ << str << std::endl; std::cout << str << std::endl; } while(false)

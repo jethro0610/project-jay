@@ -42,16 +42,16 @@ file(GLOB SOURCES
     Source/Game/Camera.cpp
     Source/Game/Game.cpp
     Source/Game/PlayerController.cpp
-    Source/Game/Time.cpp
-    Source/Game/ParticleEmitter.cpp
+    Source/Game/Time/Time.cpp
+    Source/Game/Particle/ParticleEmitter.cpp
     Source/Game/LevelLoader.cpp
     Source/Game/ResourceManager.cpp
     Source/Game/PC_ResourceManager.cpp
 
-    Source/Game/World/Terrain.cpp
-    Source/Game/ParticleManager.cpp
-    Source/Game/World/SeedManager.cpp
-    Source/Game/World/SpreadManager.cpp
+    Source/Game/Terrain/Terrain.cpp
+    Source/Game/Particle/ParticleManager.cpp
+    Source/Game/Seed/SeedManager.cpp
+    Source/Game/Spread/SpreadManager.cpp
 
     Source/Logging/Logger.cpp
     Source/Logging/ScreenText.cpp
@@ -83,6 +83,7 @@ set(BX_AMALGAMATED              ON  CACHE INTERNAL "" FORCE)
 set(BGFX_BUILD_TOOLS            OFF CACHE INTERNAL "" FORCE)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/Libraries/bgfx.cmake)
+include_directories("Source/")
 include_directories("Libraries/bgfx.cmake/include")
 
 set(GLFW_BUILD_DOCS         OFF CACHE INTERNAL "" FORCE)

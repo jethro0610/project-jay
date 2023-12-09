@@ -1,40 +1,24 @@
 #include "Renderer.h"
-#include <fstream>
+#include "PC_VertexTypes.h"
+#include "ShadowConstants.h"
+#include "Game/Components/MeterComponent.h"
+#include "Game/Components/SkeletonComponent.h"
+#include "Game/Components/StaticModelComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Particle/ParticleManager.h"
+#include "Game/Spread/SpreadManager.h"
+#include "Game/Seed/SeedManager.h"
+#include "Game/Terrain/Terrain.h"
+#include "Game/Time/Time.h"
+#include "Game/Camera.h"
+#include "Helpers/MapCheck.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include <iostream>
-#include <random>
 #include <nlohmann/json.hpp>
 
-#include "../Game/Camera.h"
-
-#include "../Game/Time.h"
-#include "../Game/Entity/EntityKey.h"
-#include "../Game/Components/MeterComponent.h"
-#include "../Game/Components/SkeletonComponent.h"
-#include "../Game/Components/StaticModelComponent.h"
-#include "../Game/Components/TransformComponent.h"
-
-#include "../Game/ParticleManager.h"
-#include "../Game/Entity/Entity.h"
-#include "../Game/World/SpreadManager.h"
-#include "../Game/World/SeedManager.h"
-#include "../Game/World/Terrain.h"
-
-#include "../Helpers/MapCheck.h"
-#include "../Helpers/LoadHelpers.h"
-#include "../Logging/Logger.h"
-#include "ShadowConstants.h"
-#include "../Game/World/TerrainConstants.h"
-
-#include "PC_VertexTypes.h"
-
 using namespace glm;
-using namespace ShadowConstants;
-using namespace MaterialConstants;
-using namespace TerrainConstants;
 
 const int SHADOW_VIEW = 0;
 const int RENDER_VIEW = 1;
@@ -48,9 +32,16 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     height_ = 720;
 
     projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
-    shadowProjectionMatrix_ = orthoRH_ZO(-SHADOW_RANGE, SHADOW_RANGE, -SHADOW_RANGE, SHADOW_RANGE, 0.5f, SHADOW_DISTANCE);
+    shadowProjectionMatrix_ = orthoRH_ZO(
+        -ShadowConstants::SHADOW_RANGE, 
+        ShadowConstants::SHADOW_RANGE, 
+        -ShadowConstants::SHADOW_RANGE, 
+        ShadowConstants::SHADOW_RANGE, 
+        0.5f, 
+        ShadowConstants::SHADOW_DISTANCE
+    );
 
-    for (int i = 0; i < MAX_TEXTURES_PER_MATERIAL; i++) {
+    for (int i = 0; i < Material::MAX_TEXTURES_PER_MATERIAL; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
@@ -61,7 +52,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
-    u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, MAX_BONES);
+    u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, Bone::MAX_BONES);
     u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
     u_particleProps_ = bgfx::createUniform("u_particleProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
@@ -203,9 +194,9 @@ void Renderer::InitShadowBuffer(Texture* shadowBufferTexture) {
 
     bgfx::setViewFrameBuffer(SHADOW_VIEW, shadowBuffer_);
     bgfx::setViewClear(SHADOW_VIEW, BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
-    bgfx::setViewRect(SHADOW_VIEW, 0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+    bgfx::setViewRect(SHADOW_VIEW, 0, 0, ShadowConstants::SHADOW_RESOLUTION, ShadowConstants::SHADOW_RESOLUTION);
 
-    vec4 shadowResolution = vec4(SHADOW_RESOLUTION, SHADOW_RESOLUTION, 0.0f, 0.0f);
+    vec4 shadowResolution = vec4(ShadowConstants::SHADOW_RESOLUTION, ShadowConstants::SHADOW_RESOLUTION, 0.0f, 0.0f);
     bgfx::setUniform(u_shadowResolution_, &shadowResolution);
 }
 
@@ -245,8 +236,8 @@ void Renderer::StartFrame() {
     vec3 cameraPos = camera_->transform_.position;
     cameraPos.y = 0.0f;
 
-    vec3 lookPosition = cameraPos + forward * SHADOW_FORWARD;
-    vec3 lightPosition = -lightDirection_ * SHADOW_DISTANCE * 0.75f + lookPosition;
+    vec3 lookPosition = cameraPos + forward * ShadowConstants::SHADOW_FORWARD;
+    vec3 lightPosition = -lightDirection_ * ShadowConstants::SHADOW_DISTANCE * 0.75f + lookPosition;
     shadowViewMatrix_ = lookAtRH(lightPosition, lookPosition, Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
     bgfx::setViewTransform(SHADOW_VIEW, &shadowViewMatrix_, &shadowProjectionMatrix_);
@@ -298,7 +289,7 @@ void Renderer::RenderMesh(
     for (int n = 0; n < numOfRenders; n++) {
         bgfx::setUniform(u_materialProps_, &transposeProps);
         if (pose != nullptr)
-            bgfx::setUniform(u_pose_, pose->data(), MAX_BONES);
+            bgfx::setUniform(u_pose_, pose->data(), Bone::MAX_BONES);
         if (modelMatrix != nullptr)
             bgfx::setTransform(modelMatrix);
 
@@ -358,15 +349,15 @@ void Renderer::RenderTerrain(Terrain& terrain) {
     terrainProps[1].y = terrain.properties_.edgePower;
 
     // Can use instancing here if necessary
-    int radius = terrain.properties_.maxRadius / TERRAIN_MESH_SIZE;
+    int radius = terrain.properties_.maxRadius / Terrain::TERRAIN_MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
         bgfx::setUniform(u_terrainProps_, terrainProps, 2);
-        vec4 offset = vec4(x * TERRAIN_MESH_SIZE, 0.0f, y * TERRAIN_MESH_SIZE, 0.0f);
+        vec4 offset = vec4(x * Terrain::TERRAIN_MESH_SIZE, 0.0f, y * Terrain::TERRAIN_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        bgfx::setTexture(TERRAIN_NOISE_TEXINDEX, terrainNoiseSampler_, noiseTexture_->handle);
+        bgfx::setTexture(Material::TERRAIN_NOISE_TEXINDEX, terrainNoiseSampler_, noiseTexture_->handle);
         RenderMesh(terrain_, terrainMaterial_);
     };
 }
@@ -497,7 +488,7 @@ void Renderer::RenderScreenText() {
         return;
 
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
-    uint32_t count = MAX_LINES * CHARS_PER_LINE;
+    uint32_t count = ScreenText::MAX_LINES * ScreenText::CHARS_PER_LINE;
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
@@ -517,7 +508,7 @@ void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
         bgfx::setTexture(i, samplers_[i], material->textures[i]->handle);
 
     if (shadowMap)
-        bgfx::setTexture(SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_->handle);
+        bgfx::setTexture(Material::SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_->handle);
 }
 
 void Renderer::SetLightDirection(const vec3& direction) {

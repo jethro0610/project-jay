@@ -1,13 +1,9 @@
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtx/compatibility.hpp>
 #include "HitSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/HitboxComponent.h"
-#include "../Components/HurtboxComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../../Logging/Logger.h"
+#include <glm/gtx/compatibility.hpp>
+#include "Game/Components/HitboxComponent.h"
+#include "Game/Components/HurtboxComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
 using namespace glm;
 
 const int HURTCOOLDOWN = 16;

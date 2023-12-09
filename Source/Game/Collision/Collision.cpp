@@ -1,8 +1,6 @@
-#include <assert.h>
+#include "Collision.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "Collision.h"
-#include "../../Logging/Logger.h"
 using namespace glm;
 
 Collision Collision::GetCollision(

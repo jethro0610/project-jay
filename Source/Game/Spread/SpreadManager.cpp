@@ -1,19 +1,13 @@
-#include <array>
+#include "SpreadManager.h"
 #include <math.h>
-#include <numbers>
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include "SpreadManager.h"
-#include "../../Helpers/Assert.h"
-#include "../../Constants/GameConstants.h"
-#include "SeedManager.h"
-#include "../Time.h"
-#include "../../Types/Transform.h"
-#include "../Components/TransformComponent.h"
-#include "Terrain.h"
-#include "../../Helpers/Random.h"
-#include "../../Logging/Logger.h"
+#include "Game/Seed/SeedManager.h"
+#include "Game/Time/Time.h"
+#include "Game/Terrain/Terrain.h"
+#include "Types/Transform.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 SpreadManager::SpreadManager(

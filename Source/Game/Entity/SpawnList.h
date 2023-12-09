@@ -1,7 +1,7 @@
 #pragma once
-#include <vector_const.h>
 #include "EntityDescription.h"
-#include "../../Types/Transform.h"
+#include "Types/Transform.h"
+#include <vector_const.h>
 
 struct Spawn {
     EntityDescription* description;

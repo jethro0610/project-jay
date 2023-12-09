@@ -1,7 +1,6 @@
 #pragma once
-#include <glm/vec3.hpp>
-#include <bitset>
 #include "Component.h"
+#include <glm/vec3.hpp>
 
 const float DEFAULT_MIN_SPEED = 12.0f;
 const float DEFAULT_MAX_SPEED = 120.0f;

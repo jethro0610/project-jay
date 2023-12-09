@@ -1,7 +1,5 @@
 #include "Game.h"
-#include "Time.h"
-#include <sstream>
-#include <iostream>
+#include "Time/Time.h"
 #include <GLFW/glfw3.h>
 
 #ifdef _DEBUG

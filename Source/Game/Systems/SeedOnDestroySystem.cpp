@@ -1,7 +1,7 @@
 #include "SeedOnDestroySystem.h"
-#include "../Entity/Entity.h"
-#include "../World/SeedManager.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Entity/Entity.h"
+#include "Game/Seed/SeedManager.h"
+#include "Game/Components/TransformComponent.h"
 
 void SeedOnDestroySystem::Execute(
     EntityList& entityList,

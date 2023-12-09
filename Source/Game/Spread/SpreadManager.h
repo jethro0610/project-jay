@@ -1,15 +1,11 @@
 #pragma once
-#include <set>
+#include "Game/Entity/EntityID.h"
+#include "SpreadKey.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
-#include <deque>
 #include <unordered_set>
-#include <algorithm>
 #include <vector_contig.h>
-#include "../../Constants/SpreadConstants.h"
-#include "../Entity/EntityID.h"
-#include "SpreadKey.h"
 class Terrain;
 class SeedManager;
 class TransformComponent;
@@ -27,6 +23,8 @@ struct SpreadRenderData {
 
 class SpreadManager {
 public:
+    static constexpr float SPREAD_DIST = 2.0f;
+    static constexpr int MAX_SPREAD = 16384;
     SpreadManager(
         SeedManager& seedManager,
         Terrain& terrain

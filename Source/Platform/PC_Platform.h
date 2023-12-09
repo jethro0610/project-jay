@@ -1,6 +1,6 @@
 #pragma once
+#include "Types/Gamepad.h"
 #include <bitset>
-#include "../Types/Gamepad.h"
 class GLFWwindow;
 
 const int NUM_KEYS = 349;

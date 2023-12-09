@@ -1,9 +1,9 @@
 #pragma once
+#include "Helpers/LoadHelpers.h"
+#include "Game/Entity/EntityLimits.h"
+#include "Game/Entity/EntityID.h"
 #include <nlohmann/json.hpp>
 #include <algorithm>
-#include "../../Helpers/LoadHelpers.h"
-#include "../Entity/EntityLimits.h"
-#include "../Entity/EntityID.h"
 
 const int MAX_COMPONENT_TYPES = 32;
 struct Component {

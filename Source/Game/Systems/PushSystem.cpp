@@ -1,8 +1,6 @@
 #include "PushSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/PushboxComponent.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Components/PushboxComponent.h"
+#include "Game/Components/TransformComponent.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<PushboxComponent, TransformComponent>();

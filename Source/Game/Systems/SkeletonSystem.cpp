@@ -1,9 +1,7 @@
 #include "SkeletonSystem.h"
-#include "../Entity/Entity.h"
-#include "../Components/SkeletonComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Time.h"
-#include "../../Constants/TimeConstants.h"
+#include "Game/Components/SkeletonComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Time/Time.h"
 
 constexpr EntityKey key = GetEntityKey<SkeletonComponent, TransformComponent>();
 
@@ -17,8 +15,8 @@ void SkeletonSystem::CalculatePoses(
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;
 
-        skeletonComponent.time[i] += TIMESTEP;
-        skeletonComponent.prevTime[i] += TIMESTEP;
+        skeletonComponent.time[i] += GlobalTime::TIMESTEP;
+        skeletonComponent.prevTime[i] += GlobalTime::TIMESTEP;
 
         int& prevAnimationIndex = skeletonComponent.prevAnimationIndex[i];
         int& nextAnimationIndex = skeletonComponent.nextAnimationIndex[i];
@@ -69,7 +67,7 @@ void SkeletonSystem::CalculatePoses(
                 transformComponent.transform[i],
                 transformComponent.transformLastUpdate[i]
             );
-            transitionTime += TIMESTEP;
+            transitionTime += GlobalTime::TIMESTEP;
         }
 
         if (framerate == 0)
@@ -92,7 +90,7 @@ void SkeletonSystem::InterpPoses(
 ) {
     auto& skeletonComponent = components.Get<SkeletonComponent>();
     auto& transformComponent = components.Get<TransformComponent>();
-    const float interpAmount = interpTime / TIMESTEP;
+    const float interpAmount = interpTime / GlobalTime::TIMESTEP;
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         if (!entities[i].ShouldUpdate(key)) continue;

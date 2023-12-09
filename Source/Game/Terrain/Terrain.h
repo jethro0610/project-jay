@@ -1,15 +1,15 @@
 #pragma once
+#include "Types/Noise.h"
+#include "Shared_TerrainProperties.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
-#include <vector>
-#include <unordered_set>
-#include "../../Types/Noise.h"
-#include "Shared_TerrainProperties.h"
-#include "TerrainModifier.h"
 
 class Terrain {
 public:
+    static constexpr float TERRAIN_MESH_SIZE = 64.0f;
+    static constexpr float TERRAIN_MESH_DENSITY = 0.5f;
+
     Terrain(Noise& noise);
 
     glm::vec2 GetDistance(const glm::vec2& position, NoiseAccuracy accuracy = NA_Normal) const;

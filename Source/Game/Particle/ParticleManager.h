@@ -1,8 +1,7 @@
 #pragma once
 #include "ParticleEmitter.h"
+#include <array>
 #include <deque>
-#include <tuple>
-#include <unordered_map>
 
 class Renderer;
 

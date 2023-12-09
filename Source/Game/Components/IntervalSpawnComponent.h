@@ -1,8 +1,7 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include "Component.h"
-#include "../ResourceManager.h"
-#include "../../Logging/Logger.h"
+#include "Game/ResourceManager.h"
 
 class IntervalSpawnComponent : public Component {
 public:

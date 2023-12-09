@@ -1,6 +1,7 @@
 #pragma once
-#include <vector_const.h>
 #include "EntityID.h"
+#include <vector_const.h>
+
 struct DestroyInfo {
     EntityID entityId;
     bool doDestroyEffects;

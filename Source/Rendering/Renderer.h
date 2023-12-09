@@ -1,17 +1,17 @@
 #pragma once
-#include <array>
-#include <glm/mat4x4.hpp>
-#include <string>
-#include <unordered_map>
+#include "Game/Systems/SystemInc.h"
 #include "RenderDefs.h"
 #include "Animation.h"
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-
-#include "../Game/Entity/EntityList.h"
-#include "../Game/Components/ComponentList.h"
-#include "../Game/ResourceManager.h"
+#include "Game/Entity/EntityList.h"
+#include "Game/Components/ComponentList.h"
+#include "Game/ResourceManager.h"
+#include <array>
+#include <glm/mat4x4.hpp>
+#include <string>
+#include <unordered_map>
 
 #ifdef _DEBUG
 #include "../Logging/ScreenText.h"
@@ -80,7 +80,7 @@ private:
     FrameBufferHandle renderBuffer_;
     FrameBufferHandle postProcessBuffer_;
 
-    std::array<TextureSamplerHandle, MaterialConstants::MAX_TEXTURES_PER_MATERIAL> samplers_;
+    std::array<TextureSamplerHandle, Material::MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSamplerHandle shadowSampler_;
     TextureSamplerHandle terrainNoiseSampler_;
 

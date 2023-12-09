@@ -1,23 +1,18 @@
 #pragma once
-#include <deque>
-#include <nlohmann/json.hpp>
-#include <string>
-#include <tuple>
-#include "../../Types/Transform.h"
-#include "../../Helpers/Assert.h"
-#include "../../Logging/Logger.h"
 #include "Entity.h"
 #include "EntityID.h"
-#include "EntityKey.h"
 #include "EntityLimits.h"
 #include "SpawnList.h"
 #include "DestroyList.h"
-
-#include "../Components/Components.h"
-#include "../Components/ComponentList.h"
-
-#include "../ResourceManager.h"
-#include "../ParticleManager.h"
+#include "Types/Transform.h"
+#include "Game/Components/Components.h"
+#include "Game/Components/ComponentList.h"
+#include "Game/ResourceManager.h"
+#include "Game/Particle/ParticleManager.h"
+#include "Helpers/Assert.h"
+#include <deque>
+#include <nlohmann/json.hpp>
+#include <string>
 
 class SpreadManager;
 

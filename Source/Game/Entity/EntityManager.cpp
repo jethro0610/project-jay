@@ -1,6 +1,5 @@
 #include "EntityManager.h"
-#include "../../Helpers/MapCheck.h"
-#include "../../Logging/Logger.h"
+#include "Helpers/MapCheck.h"
 
 EntityManager::EntityManager(ResourceManager& resourceManager, ParticleManager& particleManager) : 
 components_(

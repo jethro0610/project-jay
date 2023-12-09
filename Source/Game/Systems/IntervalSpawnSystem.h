@@ -1,6 +1,5 @@
 #pragma once
 #include "SystemInc.h"
-#include "../Entity/SpawnList.h"
 
 class EntityManager;
 class SeedManager;

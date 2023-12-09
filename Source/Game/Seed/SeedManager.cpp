@@ -1,14 +1,10 @@
 #include <glm/gtx/compatibility.hpp>
 #include "SeedManager.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/MeterComponent.h"
-#include "../Components/SeedGatherComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Time.h"
-#include "../../Constants/TimeConstants.h"
-#include "../../Helpers/Random.h"
-#include "../../Logging/ScreenText.h"
+#include "Game/Components/MeterComponent.h"
+#include "Game/Components/SeedGatherComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Time/Time.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 void SeedManager::RemoveOldest() {

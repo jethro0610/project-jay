@@ -1,14 +1,11 @@
+#include "MovementSystem.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "MovementSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/MovementComponent.h"
-#include "../Components/SpreadDetectComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../../Logging/Logger.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/MovementComponent.h"
+#include "Game/Components/SpreadDetectComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<

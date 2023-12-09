@@ -1,17 +1,11 @@
 #pragma once
-#include <array>
-#include <glm/mat4x4.hpp>
-#include <unordered_map>
-#include <utility>
-#include <vector_const.h>
 #include "Animation.h"
 #include "Bone.h"
 #include "Ribbon.h"
-#include "SkeletonConstants.h"
-#include "../Types/Transform.h"
-using namespace SkeletonConstants;
+#include "Types/Transform.h"
+#include <glm/mat4x4.hpp>
+#include <vector_const.h>
 
-typedef vector_const<std::pair<int, int>, MAX_RIBBON_CHAINS> RibbonChainList; 
 
 class Skeleton {
 public:

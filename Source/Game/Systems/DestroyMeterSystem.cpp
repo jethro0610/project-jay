@@ -1,8 +1,6 @@
 #include "DestroyMeterSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../Components/MeterComponent.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Components/MeterComponent.h"
+#include "Game/Components/TransformComponent.h"
 
 constexpr EntityKey key = GetEntityKey<MeterComponent, TransformComponent>();
 

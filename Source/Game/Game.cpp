@@ -1,11 +1,7 @@
+#include "Game.h"
+#include "Time/Time.h"
 #include <glm/vec3.hpp>
 #include <ctime>
-#include "Game.h"
-#include "../Constants/GameConstants.h"
-#include "../Constants/TimeConstants.h"
-#include "Time.h"
-#include "../Logging/Logger.h"
-#include "../Helpers/Random.h"
 using namespace glm;
 
 using namespace std::chrono;
@@ -36,7 +32,7 @@ void Game::Init() {
 
 void Game::Update() {
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
-    while (timeAccumlulator_ >= TIMESTEP) {
+    while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
         FlushInputs_P();
         entityManager_.SpawnEntities();
         entityManager_.DestroyEntities();
@@ -137,7 +133,7 @@ void Game::Update() {
             entityManager_.destroyList_,
             seedManager_
         );
-        timeAccumlulator_ -= TIMESTEP;
+        timeAccumlulator_ -= GlobalTime::TIMESTEP;
     }
     SkeletonSystem::InterpPoses(
         entityManager_.entities_,

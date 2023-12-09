@@ -1,12 +1,10 @@
 #ifndef SHARED_SHADER 
 
 #pragma once
+#include "Types/Noise.h"
+#include "Shared_TerrainProperties.h"
 #include <glm/vec2.hpp> 
 #include <glm/gtx/compatibility.hpp> 
-#include "../../Types/Noise.h"
-#include "../../Logging/Logger.h"
-#include "../../Logging/ScreenText.h"
-#include "Shared_TerrainProperties.h"
 #define NOISE_TYPE Noise&
 #define ACCURACY_TYPE NoiseAccuracy
 #define ACCURACY_DEFAULT NA_Normal 

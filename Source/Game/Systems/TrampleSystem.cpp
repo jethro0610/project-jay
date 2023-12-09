@@ -1,10 +1,8 @@
-#include <glm/vec3.hpp>
 #include "TrampleSystem.h"
-#include "../Entity/Entity.h"
-#include "../World/SpreadManager.h"
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/TrampleComponent.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/TrampleComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Spread/SpreadManager.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<TrampleComponent, TransformComponent>();

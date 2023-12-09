@@ -1,8 +1,7 @@
 #pragma once
 #include "Component.h"
-#include "../../Logging/Logger.h"
+#include "Game/Collision/Collider.h"
 #include <vector_const.h>
-#include "../Collision/Collider.h"
 
 const int MAX_HITBOXES = 8;
 

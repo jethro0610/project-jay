@@ -1,6 +1,6 @@
 #include "LevelLoader.h"
-#include "../Helpers/LoadHelpers.h"
-#include "Entity/EntityManager.h"
+#include "Helpers/LoadHelpers.h"
+#include "Game/Entity/EntityManager.h"
 
 LevelLoader::LevelLoader(ResourceManager& resourceManager, EntityManager& entityManager) :
 resourceManager_(resourceManager),

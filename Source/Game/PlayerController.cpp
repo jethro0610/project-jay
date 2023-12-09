@@ -1,21 +1,19 @@
+#include "PlayerController.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/HitboxComponent.h"
+#include "Game/Components/MeterComponent.h"
+#include "Game/Components/MovementComponent.h"
+#include "Game/Components/SkeletonComponent.h"
+#include "Game/Components/SpreadActivatorComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Camera.h"
+#include "Spread/SpreadManager.h"
+#include "Terrain/Terrain.h"
+#include "Logging/ScreenText.h"
 #include <glm/vec3.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/string_cast.hpp>
-#include "PlayerController.h"
-#include "Camera.h"
-#include "../Constants/GameConstants.h"
-#include "World/SpreadManager.h"
-#include "World/Terrain.h"
-#include "../Game/Entity/Entity.h"
-#include "../Game/Components/GroundTraceComponent.h"
-#include "../Game/Components/HitboxComponent.h"
-#include "../Game/Components/MeterComponent.h"
-#include "../Game/Components/MovementComponent.h"
-#include "../Game/Components/SkeletonComponent.h"
-#include "../Game/Components/SpreadActivatorComponent.h"
-#include "../Game/Components/TransformComponent.h"
-#include "../Game/Components/VelocityComponent.h"
-#include "../Logging/ScreenText.h"
 using namespace glm;
 
 PlayerController::PlayerController() {

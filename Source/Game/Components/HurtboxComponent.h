@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "../Collision/Collider.h"
+#include "Game/Collision/Collider.h"
 
 struct Hurtbox : public Collider {
     bool recieveKnockback;

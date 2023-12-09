@@ -1,15 +1,12 @@
-#include <math.h>
 #include "SpreadActivatorSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../World/SpreadManager.h"
-#include "../World/Terrain.h"
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/MeterComponent.h"
-#include "../Components/SpreadActivatorComponent.h"
-#include "../Components/SpreadDetectComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/MeterComponent.h"
+#include "Game/Components/SpreadActivatorComponent.h"
+#include "Game/Components/SpreadDetectComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Spread/SpreadManager.h"
+#include "Game/Terrain/Terrain.h"
+#include <math.h>
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<SpreadActivatorComponent, TransformComponent>();

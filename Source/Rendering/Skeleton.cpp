@@ -1,20 +1,19 @@
-#include "../Helpers/Assert.h"
 #include "Skeleton.h"
-#include "../Logging/Logger.h"
-#include "../Logging/ScreenText.h"
-#include "../Game/Time.h"
+// #include "Game/Time/Time.h"
+// #include "Logging/Logger.h"
+// #include "Logging/ScreenText.h"
+// #include "Helpers/Assert.h"
+#include <array>
 #include <glm/gtx/string_cast.hpp>
-#include "AnimationConstants.h"
 
 using namespace glm;
-using namespace AnimationConstants;
 
 Transform Skeleton::GetLocalBoneTransform(
     const Animation& animation, 
     float time, 
     int boneIndex
 ) const {
-    int keyframe = (int)floorf(time * KEYFRAMES_PER_SECOND) % animation.keyframes.size();
+    int keyframe = (int)floorf(time * Animation::KEYFRAMES_PER_SECOND) % animation.keyframes.size();
     return animation.keyframes[keyframe].pose[boneIndex];
 }
 
@@ -65,7 +64,7 @@ void Skeleton::GetPose(
     desiredPose[0] = GetLocalBoneTransform(animations_[animationIndex], time, 0).ToMatrix();
     GetPose_Recursive(desiredPose, animations_[animationIndex], time, 0); 
 
-    std::array<bool, MAX_BONES> isRibbon;
+    std::array<bool, Bone::MAX_BONES> isRibbon;
     isRibbon.fill(false);
 
     for (const RibbonDesc& ribbon : ribbons_) {
@@ -110,7 +109,7 @@ void Skeleton::GetBlendedPose(
     for (int i = 0; i < bones_.size(); i++)
         desiredPose[i] = Transform::Lerp(prevDesiredPose[i], desiredPose[i], blend);
 
-    std::array<bool, MAX_BONES> isRibbon;
+    std::array<bool, Bone::MAX_BONES> isRibbon;
     isRibbon.fill(false);
 
     for (const RibbonDesc& ribbon : ribbons_) {
@@ -140,7 +139,7 @@ void Skeleton::ComputeRibbonChain(
     const Transform& lastTransform,
     float speedInfluence
 ) const {
-    std::array<float, MAX_BONES> desiredDistances;
+    std::array<float, Bone::MAX_BONES> desiredDistances;
     int numChainBones = (ribbon.end - ribbon.start) + 1;
     pose[ribbon.start] = desiredPose[ribbon.start];
 

@@ -2,14 +2,11 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/compatibility.hpp>
-#include "../Components/GroundTraceComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../World/Terrain.h"
-#include "../../Logging/Logger.h"
-#include "../../Constants/TimeConstants.h"
+#include "Game/Components/GroundTraceComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Game/Terrain/Terrain.h"
+#include "Game/Time/Time.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<GroundTraceComponent, TransformComponent>();
@@ -37,7 +34,7 @@ void GroundStickSystem::Stick(
             vec3& velocity = velocityComponent.velocity[i];
             float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
             float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
-            float stickVelocity = distanceToGround / TIMESTEP;
+            float stickVelocity = distanceToGround / GlobalTime::TIMESTEP;
             if (velocity.y <= stickVelocity + 5.0f) {
                 velocity.y = stickVelocity;
 

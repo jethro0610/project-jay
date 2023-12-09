@@ -1,9 +1,7 @@
 #include "SpreadDetectSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../World/SpreadManager.h"
-#include "../Components/SpreadDetectComponent.h"
-#include "../Components/TransformComponent.h"
+#include "Game/Components/SpreadDetectComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Spread/SpreadManager.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<SpreadDetectComponent, TransformComponent>();

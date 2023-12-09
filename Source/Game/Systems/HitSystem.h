@@ -1,9 +1,8 @@
 #pragma once
 #include <vector_const.h>
 #include "SystemInc.h"
-#include "../Entity/EntityID.h"
-#include "../Collision/Collision.h"
-#include "../Components/ComponentList.h"
+#include "Game/Collision/Collision.h"
+#include "Game/Components/ComponentList.h"
 
 class Entity;
 
@@ -16,7 +15,6 @@ struct Hit {
 
 const int MAX_HITS = 128;
 typedef vector_const<Hit, MAX_HITS> HitList;
-
 
 namespace HitSystem {           
     void Execute(

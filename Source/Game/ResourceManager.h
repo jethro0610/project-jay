@@ -9,7 +9,7 @@
 #include "../Rendering/Texture.h"
 #include "Entity/EntityDescription.h"
 #include "../Types/Noise.h"
-#include "ParticleEmitter.h"
+#include "Particle/ParticleEmitter.h"
 
 typedef std::unordered_map<std::string, ShaderHandle> ShaderResources;
 

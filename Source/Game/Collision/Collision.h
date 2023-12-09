@@ -1,6 +1,6 @@
 #pragma once
-#include "./Collider.h"
-#include "../../Types/Transform.h"
+#include "Collider.h"
+#include "Types/Transform.h"
 
 struct Collision {
     bool isColliding;

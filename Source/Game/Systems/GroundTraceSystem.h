@@ -1,6 +1,6 @@
 #pragma once
 #include "SystemInc.h"
-#include "../Entity/DestroyList.h"
+#include "Game/Entity/DestroyList.h"
 class Terrain;
 
 namespace GroundTraceSystem {

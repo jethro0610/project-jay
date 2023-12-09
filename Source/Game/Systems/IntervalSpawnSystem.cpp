@@ -1,13 +1,10 @@
 #include "IntervalSpawnSystem.h"
-#include "ProjectileSystem.h"
-#include "../Entity/Entity.h"
-#include "../Entity/EntityKey.h"
-#include "../World/SeedManager.h"
-#include "../Components/IntervalSpawnComponent.h"
-#include "../Components/ProjectileComponent.h"
-#include "../Components/TransformComponent.h"
-#include "../Components/VelocityComponent.h"
-#include "../../Helpers/Random.h"
+#include "Game/Seed/SeedManager.h"
+#include "Game/Components/IntervalSpawnComponent.h"
+#include "Game/Components/ProjectileComponent.h"
+#include "Game/Components/TransformComponent.h"
+#include "Game/Components/VelocityComponent.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();

@@ -1,7 +1,7 @@
-#include <glm/gtx/compatibility.hpp>
 #include "Camera.h"
-#include "Time.h"
-#include "../Game/Components/TransformComponent.h"
+#include "Game/Time/Time.h"
+#include "Game/Components/TransformComponent.h"
+#include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
 Camera::Camera(TransformComponent& transformComponent, float trackDistance, vec3 startPosition):

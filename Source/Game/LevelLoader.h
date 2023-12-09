@@ -1,6 +1,6 @@
+#include "ResourceManager.h"
 #include <string>
 #include <nlohmann/json.hpp>
-#include "ResourceManager.h"
 
 class EntityManager;
 

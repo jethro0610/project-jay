@@ -5,15 +5,7 @@
 - Clean up dependencies
 - Rename to World to Terrain
 
-- Shadow constants
-- Terrain constants
-
 - Resource Manager
-    - How to handle global models?
-        - Maybe just make them into actual files instead of generating at runtime?
-    - Noise Textures
-        - Maybe noise should be a resource
-        - Would be a fixed array instead of a map
 
 - Level structure
     - Parse files to determine dependecies

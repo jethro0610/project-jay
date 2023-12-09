@@ -24,7 +24,7 @@ ResourceManager::ResourceManager() {
 // TODO: Noise texture
 
 void ResourceManager::LoadGlobals() {
-    textures_["t_g_noise"] = {bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
+    textures_["t_noise"] = {bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
         bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
         bgfx::copy(noise_.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
@@ -35,7 +35,7 @@ void ResourceManager::LoadGlobals() {
 }
 
 void ResourceManager::LoadRenderTextures() {
-    textures_["t_g_shadow"] = {bgfx::createTexture2D(
+    textures_["t_shadowmap"] = {bgfx::createTexture2D(
         ShadowConstants::SHADOW_RESOLUTION,
         ShadowConstants::SHADOW_RESOLUTION,
         false,
@@ -43,9 +43,9 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
     )};
-    globals_.insert("t_g_shadow");
+    globals_.insert("t_shadowmap");
 
-    textures_["t_g_render_c"] = {bgfx::createTexture2D(
+    textures_["t_render_c"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -53,9 +53,9 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
     )};
-    globals_.insert("t_g_render_c");
+    globals_.insert("t_render_c");
 
-    textures_["t_g_render_d"] = {bgfx::createTexture2D(
+    textures_["t_render_d"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -63,9 +63,9 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     )};
-    globals_.insert("t_g_render_d");
+    globals_.insert("t_render_d");
 
-    textures_["t_g_post_c"] = {bgfx::createTexture2D(
+    textures_["t_post_c"] = {bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -73,7 +73,7 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
     )};
-    globals_.insert("t_g_post_c");
+    globals_.insert("t_post_c");
 }
 
 void ResourceManager::LoadGlobalQuad() {
@@ -95,12 +95,12 @@ void ResourceManager::LoadGlobalQuad() {
     indices[5] = 0;
     quadMesh.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
     quad.meshes.push_back(quadMesh);
-    models_["st_g_quad"] = quad;
-    globals_.insert("st_g_quad");
+    models_["st_quad"] = quad;
+    globals_.insert("st_quad");
 }
 
 void ResourceManager::LoadGlobalTerrain() {
-    Mesh worldMesh;
+    Mesh terrainMesh;
     int size = ceil(Terrain::TERRAIN_MESH_SIZE * Terrain::TERRAIN_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
@@ -111,18 +111,18 @@ void ResourceManager::LoadGlobalTerrain() {
         vec3 position = vec3(x / Terrain::TERRAIN_MESH_DENSITY, 0.0f, y / Terrain::TERRAIN_MESH_DENSITY);
         vertices[index] = { position };
     };
-    worldMesh.vertexBuffer = bgfx::createVertexBuffer(
+    terrainMesh.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
             vertices, 
             sizeof(WorldVertex) * numVertices
         ), 
         WorldVertex::layout
     );
-    DEBUGLOG("Created world mesh with " << numVertices << " vertices");
+    DEBUGLOG("Created terrain mesh with " << numVertices << " vertices");
     delete[] vertices;
     
     int numIndices = (size - 1) * (size - 1) * 6;
-    uint16_t* worldIndices = new uint16_t[numIndices];
+    uint16_t* terrainIndices = new uint16_t[numIndices];
     int count = 0;
     for (int x = 0; x < size - 1; x++)
     for (int y = 0; y < size - 1; y++) {
@@ -131,25 +131,26 @@ void ResourceManager::LoadGlobalTerrain() {
         uint16_t i2 = (y + 1) * size + (x + 1);
         uint16_t i3 = (y + 0) * size + (x + 1);
         
-        worldIndices[count++] = i0;
-        worldIndices[count++] = i1;
-        worldIndices[count++] = i2;
+        terrainIndices[count++] = i0;
+        terrainIndices[count++] = i1;
+        terrainIndices[count++] = i2;
 
-        worldIndices[count++] = i2;
-        worldIndices[count++] = i3;
-        worldIndices[count++] = i0;
+        terrainIndices[count++] = i2;
+        terrainIndices[count++] = i3;
+        terrainIndices[count++] = i0;
     };
-    worldMesh.indexBuffer = bgfx::createIndexBuffer(
+    terrainMesh.indexBuffer = bgfx::createIndexBuffer(
         bgfx::copy(
-            worldIndices, 
+            terrainIndices, 
             sizeof(uint16_t) * numIndices
         )
     );
-    delete[] worldIndices;
+    delete[] terrainIndices;
 
-    Model worldModel;
-    worldModel.meshes.push_back(worldMesh);
-    models_["st_g_terrain"] = worldModel;
+    Model terrainModel;
+    terrainModel.meshes.push_back(terrainMesh);
+    models_["st_terrainsheet"] = terrainModel;
+    globals_.insert("st_terrainsheet");
 }
 
 #define MEMORYFROMFILE(path)                                    \

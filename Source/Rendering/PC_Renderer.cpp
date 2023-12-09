@@ -77,12 +77,12 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 
-    noiseTexture_ = resourceManager.GetTexture("t_g_noise");
+    noiseTexture_ = resourceManager.GetTexture("t_noise");
 
 
-    InitShadowBuffer(resourceManager.GetTexture("t_g_shadow"));
-    InitRenderBuffer(resourceManager.GetTexture("t_g_render_c"), resourceManager.GetTexture("t_g_render_d"));
-    InitPostProcessBuffer(resourceManager.GetTexture("t_g_post_c"));
+    InitShadowBuffer(resourceManager.GetTexture("t_shadowmap"));
+    InitRenderBuffer(resourceManager.GetTexture("t_render_c"), resourceManager.GetTexture("t_render_d"));
+    InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
     resourceManager.LoadModel("st_tpillar");
@@ -174,8 +174,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadMaterial("m_uibar");
     resourceManager.LoadMaterial("m_preuiblit");
 
-    terrain_ = &resourceManager.GetModel("st_g_terrain")->meshes[0];
-    quad_ = &resourceManager.GetModel("st_g_quad")->meshes[0];
+    terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
+    quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
     spread_ = resourceManager.GetModel("st_flower");
 
     spreadMaterials_[0] = resourceManager.GetMaterial("m_flower");

@@ -1,0 +1,41 @@
+{
+    "vertex_shaders": [
+        "vs_static",
+        "vs_static_s",
+        "vs_skeletal",
+        "vs_skeletal_s",
+        "vs_inst",
+        "vs_inst_s",
+        "vs_inst_billboard",
+        "vs_inst_billboard_s",
+        "vs_terrain",
+        "vs_terrain_s",
+        "vs_screenquad",
+        "vs_glyph",
+        "vs_uibar",
+        "vs_particle",
+        "vs_particle_stretch",
+        "vs_particle_trail"
+    ],
+    "fragment_shaders": [
+        "fs_dfsa",
+        "fs_dfsa_color",
+        "fs_dfsa_color",
+        "fs_depth_s",
+        "fs_depth_masked_s",
+        "fs_blit",
+        "fs_text",
+        "fs_postprocess",
+        "fs_uibar",
+        "fs_terrain"
+    ],
+    "textures": [
+        "t_font"
+    ],
+    "materials": [
+        "m_postprocess",
+        "m_preuiblit",
+        "m_text",
+        "m_uibar"
+    ]
+}

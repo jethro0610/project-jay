@@ -109,43 +109,14 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadTexture("t_font");
     resourceManager.LoadTexture("t_hair_m");
 
-    resourceManager.LoadVertexShader("vs_static");
-    resourceManager.LoadVertexShader("vs_static_s");
     resourceManager.LoadVertexShader("vs_static_crack");
-    resourceManager.LoadVertexShader("vs_skeletal");
-    resourceManager.LoadVertexShader("vs_skeletal_s");
-    resourceManager.LoadVertexShader("vs_inst");
-    resourceManager.LoadVertexShader("vs_spread");
-    resourceManager.LoadVertexShader("vs_inst_s");
-    resourceManager.LoadVertexShader("vs_inst_billboard");
-    resourceManager.LoadVertexShader("vs_inst_billboard_s");
-    resourceManager.LoadVertexShader("vs_terrain");
-    resourceManager.LoadVertexShader("vs_terrain_s");
-    resourceManager.LoadVertexShader("vs_screenquad");
-    resourceManager.LoadVertexShader("vs_glyph");
-    resourceManager.LoadVertexShader("vs_uibar");
-    resourceManager.LoadVertexShader("vs_particle");
-    resourceManager.LoadVertexShader("vs_particle_stretch");
-    resourceManager.LoadVertexShader("vs_particle_trail");
-
-    resourceManager.LoadFragmentShader("fs_depth_s");
-    resourceManager.LoadFragmentShader("fs_depth_masked_s");
-
-    resourceManager.LoadFragmentShader("fs_dfsa");
-    resourceManager.LoadFragmentShader("fs_dfsa_color");
-    resourceManager.LoadFragmentShader("fs_dfsa_color_masked");
     resourceManager.LoadFragmentShader("fs_dfsa_crack");
 
+    // Rename these since they aren't global
     resourceManager.LoadFragmentShader("fs_flower");
     resourceManager.LoadFragmentShader("fs_seed");
-    resourceManager.LoadFragmentShader("fs_particle");
+    resourceManager.LoadFragmentShader("fs_particle"); // This needs to be generic, use an image now
     resourceManager.LoadFragmentShader("fs_leaves_strand");
-    resourceManager.LoadFragmentShader("fs_terrain");
-
-    resourceManager.LoadFragmentShader("fs_blit");
-    resourceManager.LoadFragmentShader("fs_text");
-    resourceManager.LoadFragmentShader("fs_uibar");
-    resourceManager.LoadFragmentShader("fs_postprocess");
 
     resourceManager.LoadMaterial("m_player");
     resourceManager.LoadMaterial("m_playerskin");
@@ -162,17 +133,11 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadMaterial("m_comet");
     resourceManager.LoadMaterial("m_boulder");
     resourceManager.LoadMaterial("m_tpillar");
-
     resourceManager.LoadMaterial("m_terrain");
     resourceManager.LoadMaterial("m_flower");
     resourceManager.LoadMaterial("m_stem");
-    resourceManager.LoadMaterial("m_terrain");
-    resourceManager.LoadMaterial("m_terrain");
-    resourceManager.LoadMaterial("m_postprocess");
     resourceManager.LoadMaterial("m_seed");
     resourceManager.LoadMaterial("m_text");
-    resourceManager.LoadMaterial("m_uibar");
-    resourceManager.LoadMaterial("m_preuiblit");
 
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];

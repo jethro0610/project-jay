@@ -48,11 +48,13 @@ private:
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
 
+    // Move spread model to level class
     Model* spread_;
     Mesh* quad_;
     Mesh* terrain_;
 
     std::array<Material*, Model::MAX_MESHES_PER_MODEL> spreadMaterials_;
+    // Move terrain and seed material to level class
     Material* terrainMaterial_;
     Material* seedMaterial_;
     Material* barMaterial_;

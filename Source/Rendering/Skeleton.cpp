@@ -1,8 +1,4 @@
 #include "Skeleton.h"
-// #include "Game/Time/Time.h"
-// #include "Logging/Logger.h"
-// #include "Logging/ScreenText.h"
-// #include "Helpers/Assert.h"
 #include <array>
 #include <glm/gtx/string_cast.hpp>
 

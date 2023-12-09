@@ -1,14 +1,14 @@
 #pragma once
-#include "Camera.h"
-#include "Game/Entity/EntityManager.h"
+#include "Camera/Camera.h"
+#include "Entity/EntityManager.h"
 #include "Types/Inputs.h"
-#include "PlayerController.h"
+#include "Controller/PlayerController.h"
 #include "Particle/ParticleManager.h"
 #include "Seed/SeedManager.h"
 #include "Spread/SpreadManager.h"
 #include "Systems/Systems.h"
 #include "Rendering/Renderer.h"
-#include "LevelLoader.h"
+#include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
 
 #ifdef _PC

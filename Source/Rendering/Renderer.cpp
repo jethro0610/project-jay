@@ -1,6 +1,6 @@
 #include "Renderer.h"
-#include "../Game/Camera.h"
-#include "../Helpers/MapCheck.h"
+#include "Camera/Camera.h"
+#include "Helpers/MapCheck.h"
 using namespace glm;
 
 mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {

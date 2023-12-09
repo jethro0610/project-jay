@@ -42,11 +42,11 @@ void Game::UpdateInputs_P() {
     inputs_.forwardInput = 0.0f;
     inputs_.sideInput = 0.0f;
 
-    inputs_.cut = platform_.heldKeys_[' '] || platform_.gamepad_.heldButtons_[GAMEPAD_Y];
-    inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[GAMEPAD_RTRIGGER] || platform_.gamepad_.heldButtons_[GAMEPAD_RSHOULDER];
-    inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[GAMEPAD_LTRIGGER] || platform_.gamepad_.heldButtons_[GAMEPAD_LSHOULDER]; 
+    inputs_.cut = platform_.heldKeys_[' '] || platform_.gamepad_.heldButtons_[Gamepad::Y];
+    inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::RTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::RSHOULDER];
+    inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::LTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::LSHOULDER]; 
 
-    inputs_.attack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[GAMEPAD_Y];
+    inputs_.attack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[Gamepad::Y];
 
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])

@@ -9,65 +9,73 @@ set(CMAKE_BUILD_TYPE Debug)
 project(ProjectJay)
 
 file(GLOB SOURCES
-    Source/Game/Entity/Entity.cpp
-    Source/Game/Entity/EntityManager.cpp
+    Source/Entity/Entity.cpp
+    Source/Entity/EntityManager.cpp
 
-    Source/Game/Systems/PushSystem.cpp
-    Source/Game/Systems/HitSystem.cpp
-    Source/Game/Systems/DestroyMeterSystem.cpp
-    Source/Game/Systems/FreezeSystem.cpp
-    Source/Game/Systems/GroundTraceSystem.cpp
-    Source/Game/Systems/MovementSystem.cpp
-    Source/Game/Systems/TransformSystem.cpp
-    Source/Game/Systems/SpreadActivatorSystem.cpp
-    Source/Game/Systems/SpreadDetectSystem.cpp
-    Source/Game/Systems/TrampleSystem.cpp
-    Source/Game/Systems/GroundStickSystem.cpp
-    Source/Game/Systems/VelocitySystem.cpp
-    Source/Game/Systems/ProjectileSystem.cpp
-    Source/Game/Systems/IntervalSpawnSystem.cpp
-    Source/Game/Systems/SkeletonSystem.cpp
-    Source/Game/Systems/SpawnSystem.cpp
-    Source/Game/Systems/SeedOnDestroySystem.cpp
-    Source/Game/Systems/DestroyOnBoundSystem.cpp
-    Source/Game/Systems/ParticleAttachSystem.cpp
+    Source/Systems/PushSystem.cpp
+    Source/Systems/HitSystem.cpp
+    Source/Systems/DestroyMeterSystem.cpp
+    Source/Systems/FreezeSystem.cpp
+    Source/Systems/GroundTraceSystem.cpp
+    Source/Systems/MovementSystem.cpp
+    Source/Systems/TransformSystem.cpp
+    Source/Systems/SpreadActivatorSystem.cpp
+    Source/Systems/SpreadDetectSystem.cpp
+    Source/Systems/TrampleSystem.cpp
+    Source/Systems/GroundStickSystem.cpp
+    Source/Systems/VelocitySystem.cpp
+    Source/Systems/ProjectileSystem.cpp
+    Source/Systems/IntervalSpawnSystem.cpp
+    Source/Systems/SkeletonSystem.cpp
+    Source/Systems/SpawnSystem.cpp
+    Source/Systems/SeedOnDestroySystem.cpp
+    Source/Systems/DestroyOnBoundSystem.cpp
+    Source/Systems/ParticleAttachSystem.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp
 
-    Source/Game/Collision/Collision.cpp
+    Source/Collision/Collision.cpp
 
-    Source/Game/AI/WalkerController.cpp
+    Source/AI/WalkerController.cpp
 
-    Source/Game/Camera.cpp
-    Source/Game/Game.cpp
-    Source/Game/PlayerController.cpp
-    Source/Game/Time/Time.cpp
-    Source/Game/Particle/ParticleEmitter.cpp
-    Source/Game/LevelLoader.cpp
-    Source/Game/ResourceManager.cpp
-    Source/Game/PC_ResourceManager.cpp
+    Source/Camera/Camera.cpp
 
-    Source/Game/Terrain/Terrain.cpp
-    Source/Game/Particle/ParticleManager.cpp
-    Source/Game/Seed/SeedManager.cpp
-    Source/Game/Spread/SpreadManager.cpp
+    Source/Controller/PlayerController.cpp
+
+    Source/Time/Time.cpp
+    
+    Source/Particle/ParticleEmitter.cpp
+    Source/Particle/ParticleManager.cpp
+
+    Source/Level/LevelLoader.cpp
+
+    Source/Resource/ResourceManager.cpp
+    Source/Resource/PC_ResourceManager.cpp
+
+    Source/Terrain/Terrain.cpp
+
+    Source/Seed/SeedManager.cpp
+
+    Source/Spread/SpreadManager.cpp
 
     Source/Logging/Logger.cpp
     Source/Logging/ScreenText.cpp
+    Source/Logging/PC_ScreenText.cpp
 
     Source/Rendering/Renderer.cpp
     Source/Rendering/Skeleton.cpp
+    Source/Rendering/PC_Renderer.cpp
 
     Source/Types/Gamepad.cpp
     Source/Types/Noise.cpp
     Source/Types/Transform.cpp
 
-    Source/Rendering/PC_Renderer.cpp
-    Source/Game/PC_Game.cpp
     Source/Platform/PC_Platform.cpp
+
+    Source/Game/Game.cpp
+    Source/Game/PC_Game.cpp
     Source/Entry/PC_Main.cpp
-    Source/Logging/PC_ScreenText.cpp
 )
 
 set(BGFX_AMALGAMATED            ON  CACHE INTERNAL "" FORCE)

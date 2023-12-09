@@ -1,6 +1,6 @@
 #pragma once
-#include <vector_const.h>
 #include "Mesh.h"
+#include <vector_const.h>
 
 struct ModelFileHeader {    
     int numMeshes;

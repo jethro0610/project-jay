@@ -1,20 +1,16 @@
 #pragma once
-#include "Game/Systems/SystemInc.h"
+#include "Systems/SystemInc.h"
 #include "RenderDefs.h"
 #include "Animation.h"
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-#include "Game/Entity/EntityList.h"
-#include "Game/Components/ComponentList.h"
-#include "Game/ResourceManager.h"
+#include "Entity/EntityList.h"
 #include <array>
 #include <glm/mat4x4.hpp>
-#include <string>
-#include <unordered_map>
 
 #ifdef _DEBUG
-#include "../Logging/ScreenText.h"
+#include "Logging/ScreenText.h"
 #endif
 
 class Camera;
@@ -23,6 +19,7 @@ class SeedManager;
 class SpreadManager;
 class Terrain;
 class ParticleManager;
+class ResourceManager;
 
 class Renderer {
 public:

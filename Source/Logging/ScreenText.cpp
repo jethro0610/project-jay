@@ -1,5 +1,5 @@
-#include <assert.h>
 #include "ScreenText.h"
+#include <assert.h>
 
 ScreenText* ScreenText::screenText_ = nullptr;
 

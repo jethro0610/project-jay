@@ -1,7 +1,5 @@
 #include "Logger.h"
 #include <assert.h>
-#include <ctype.h>
-#include <cstdio>
 #include <iostream>
 #include <filesystem>
 Logger* Logger::logger_ = nullptr;

@@ -1,6 +1,5 @@
 #include "Noise.h"
 #include <algorithm>
-#include "../Logging/Logger.h"
 
 Noise::Noise(float range):
     range_(range)

@@ -1,28 +1,26 @@
 #pragma once
 #include <bitset>
-#include <stdint.h>
-
-const int GAMEPAD_A = 0;
-const int GAMEPAD_B = 1;
-const int GAMEPAD_X = 2;
-const int GAMEPAD_Y = 3;
-const int GAMEPAD_UP = 11;
-const int GAMEPAD_DOWN = 13;
-const int GAMEPAD_LEFT = 14;
-const int GAMEPAD_RIGHT = 12;
-const int GAMEPAD_LSHOULDER = 4;
-const int GAMEPAD_RSHOULDER = 5;
-const int GAMEPAD_RTRIGGER = 15;
-const int GAMEPAD_LTRIGGER = 16;
-const int GAMEPAD_LTHUMB = 9;
-const int GAMEPAD_RTHUMB = 10;
-const int GAMEPAD_START = 7;
-const int GAMEPAD_SELECT = 6;
-const int GAMEPAD_BUTTONS = 17;
-const int TRIGGER_LIMIT = 0.5f;
 
 class Gamepad {
 public:
+    static constexpr int A = 0;
+    static constexpr int B = 1;
+    static constexpr int X = 2;
+    static constexpr int Y = 3;
+    static constexpr int UP = 11;
+    static constexpr int DOWN = 13;
+    static constexpr int LEFT = 14;
+    static constexpr int RIGHT = 12;
+    static constexpr int LSHOULDER = 4;
+    static constexpr int RSHOULDER = 5;
+    static constexpr int RTRIGGER = 15;
+    static constexpr int LTRIGGER = 16;
+    static constexpr int LTHUMB = 9;
+    static constexpr int RTHUMB = 10;
+    static constexpr int START = 7;
+    static constexpr int SELECT = 6;
+    static constexpr int BUTTONS = 17;
+    static constexpr float TRIGGER_LIMIT = 0.5f;
     Gamepad();
 
     float leftStickX_;
@@ -34,9 +32,9 @@ public:
     float leftTrigger_;
     float rightTrigger_;
 
-    std::bitset<GAMEPAD_BUTTONS> heldButtons_;
-    std::bitset<GAMEPAD_BUTTONS> pressedButtons_;
-    std::bitset<GAMEPAD_BUTTONS> releasedButtons_;
+    std::bitset<BUTTONS> heldButtons_;
+    std::bitset<BUTTONS> pressedButtons_;
+    std::bitset<BUTTONS> releasedButtons_;
 
     void SetButtonHeld(int btn, bool held);
 };

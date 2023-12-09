@@ -1,7 +1,7 @@
+#include "Transform.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <sstream>
-#include "Transform.h"
 using namespace glm;
 
 vec3 Transform::worldForward = vec3(0.0f, 0.0f, -1.0f);

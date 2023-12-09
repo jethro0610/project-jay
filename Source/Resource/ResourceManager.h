@@ -12,7 +12,6 @@
 #include "Particle/ParticleEmitter.h"
 
 typedef std::unordered_map<std::string, ShaderHandle> ShaderResources;
-
 typedef std::unordered_map<std::string, Texture> TextureResources;
 typedef std::unordered_map<std::string, Material> MaterialResources;
 typedef std::unordered_map<std::string, Model> ModelResources;
@@ -50,7 +49,7 @@ private:
 
     // Since these are accessed via higher level structs,
     // they are kept private. Note that these are handles,
-    // so no reference is used.
+    // so no pointer is used.
     ShaderHandle GetVertexShader(const std::string& name);
     ShaderHandle GetFragmentShader(const std::string& name);
 

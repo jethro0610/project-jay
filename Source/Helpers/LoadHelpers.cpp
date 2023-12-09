@@ -86,7 +86,7 @@ Transform GetTransform(nlohmann::json& data, const std::string& property, const 
 
     returnTransform.position = GetVec3(transformData, "position", glm::vec3(0.0f));
     returnTransform.scale = GetVec3(transformData, "scale", glm::vec3(1.0f, 1.0f, 1.0f));
-    returnTransform.rotation = GetQuat(transformData, "rotation", glm::quat());
+    returnTransform.rotation = glm::quat(GetVec3(transformData, "rotation", glm::vec3(0.0f)));
 
     return returnTransform;
 }

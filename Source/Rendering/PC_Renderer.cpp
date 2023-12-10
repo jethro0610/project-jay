@@ -135,7 +135,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadMaterial("m_flower");
     resourceManager.LoadMaterial("m_stem");
     resourceManager.LoadMaterial("m_seed");
-    resourceManager.LoadMaterial("m_text");
 
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];

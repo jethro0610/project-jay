@@ -40,14 +40,22 @@ void ResourceManager::LoadGlobalFile() {
     ASSERT(inFile.is_open(), "Failed to load global file");
 
     auto globals = nlohmann::json::parse(inFile);
-    for (auto& vertexShader : globals["vertex_shaders"])
+    for (auto& vertexShader : globals["vertex_shaders"]) {
         LoadVertexShader(vertexShader);
-    for (auto& fragmentShader : globals["fragment_shaders"])
+        globals_.insert(vertexShader);
+    }
+    for (auto& fragmentShader : globals["fragment_shaders"]) {
         LoadFragmentShader(fragmentShader);
-    for (auto& texture: globals["textures"])
+        globals_.insert(fragmentShader);
+    }
+    for (auto& texture: globals["textures"]) {
         LoadTexture(texture);
-    for (auto& material : globals["materials"])
+        globals_.insert(texture);
+    }
+    for (auto& material : globals["materials"]) {
         LoadMaterial(material);
+        globals_.insert(material);
+    }
 }
 
 void ResourceManager::LoadRenderTextures() {
@@ -223,6 +231,7 @@ void ResourceManager::LoadTexture(const std::string& name) {
 }
 
 void ResourceManager::LoadMaterial(const std::string& name) {
+    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
     std::ifstream inFile("materials/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load material " + name);
     nlohmann::json data = nlohmann::json::parse(inFile);

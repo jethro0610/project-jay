@@ -1,4 +1,5 @@
 #include "Resource/ResourceManager.h"
+#include "Resource/DependencyList.h"
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -13,4 +14,5 @@ public:
 private:
     ResourceManager& resourceManager_;
     EntityManager& entityManager_;
+    DependencyList GenerateDepedencyList(nlohmann::json& levelData);
 };

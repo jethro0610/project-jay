@@ -79,7 +79,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     noiseTexture_ = resourceManager.GetTexture("t_noise");
 
-
     InitShadowBuffer(resourceManager.GetTexture("t_shadowmap"));
     InitRenderBuffer(resourceManager.GetTexture("t_render_c"), resourceManager.GetTexture("t_render_d"));
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
@@ -106,7 +105,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     resourceManager.LoadTexture("t_tree_n");
     resourceManager.LoadTexture("t_leaves_m");
     resourceManager.LoadTexture("t_flower_m");
-    resourceManager.LoadTexture("t_font");
     resourceManager.LoadTexture("t_hair_m");
 
     resourceManager.LoadVertexShader("vs_static_crack");
@@ -189,6 +187,7 @@ void Renderer::InitUIBuffer() {
     bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
     bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(UI_VIEW, 0, 0, width_, height_);
+    bgfx::setViewMode(UI_VIEW, bgfx::ViewMode::DepthAscending);
 }
 
 void Renderer::StartFrame() {
@@ -435,10 +434,11 @@ void Renderer::RenderBlit() {
     bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]->handle);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
+    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle, 0);
 }
 
 void Renderer::RenderUI(ComponentList& components) {
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
     auto& meterComponent = components.Get<MeterComponent>();
 
     vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
@@ -446,7 +446,8 @@ void Renderer::RenderUI(ComponentList& components) {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
+    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle, 1);
+    bgfx::setState(BGFX_STATE_DEFAULT);
 }
 
 void Renderer::RenderScreenText() {
@@ -465,7 +466,7 @@ void Renderer::RenderScreenText() {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
+    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle, 2);
     bgfx::setState(BGFX_STATE_DEFAULT);
 }
 

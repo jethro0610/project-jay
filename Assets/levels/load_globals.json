@@ -15,12 +15,13 @@
         "vs_uibar",
         "vs_particle",
         "vs_particle_stretch",
-        "vs_particle_trail"
+        "vs_particle_trail",
+        "vs_spread"
     ],
     "fragment_shaders": [
         "fs_dfsa",
         "fs_dfsa_color",
-        "fs_dfsa_color",
+        "fs_dfsa_color_masked",
         "fs_depth_s",
         "fs_depth_masked_s",
         "fs_blit",

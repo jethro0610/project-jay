@@ -32,6 +32,22 @@ void ResourceManager::LoadGlobals() {
     LoadRenderTextures();
     LoadGlobalQuad();
     LoadGlobalTerrain();
+    LoadGlobalFile();
+}
+
+void ResourceManager::LoadGlobalFile() {
+    std::ifstream inFile("levels/load_globals.json");
+    ASSERT(inFile.is_open(), "Failed to load global file");
+
+    auto globals = nlohmann::json::parse(inFile);
+    for (auto& vertexShader : globals["vertex_shaders"])
+        LoadVertexShader(vertexShader);
+    for (auto& fragmentShader : globals["fragment_shaders"])
+        LoadFragmentShader(fragmentShader);
+    for (auto& texture: globals["textures"])
+        LoadTexture(texture);
+    for (auto& material : globals["materials"])
+        LoadMaterial(material);
 }
 
 void ResourceManager::LoadRenderTextures() {

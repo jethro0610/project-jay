@@ -43,6 +43,7 @@ public:
 
 private:
     void LoadGlobals();
+    void LoadGlobalFile();
     void LoadRenderTextures();
     void LoadGlobalQuad();
     void LoadGlobalTerrain();

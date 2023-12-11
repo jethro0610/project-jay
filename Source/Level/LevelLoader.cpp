@@ -21,12 +21,16 @@ void LevelLoader::UnloadLevel() {
 }
 
 void LevelLoader::LoadLevel(const std::string& name) {
-    UnloadLevel();
 
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
-
     nlohmann::json data = nlohmann::json::parse(inFile);
+    
+    DependencyList dependencies = GenerateDepedencyList(data);
+    resourceManager_.UnloadUnusedDependencies(dependencies);
+    resourceManager_.LoadDependencies(dependencies);
+
+    UnloadLevel();
     auto& entitiesData = data["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
@@ -35,21 +39,20 @@ void LevelLoader::LoadLevel(const std::string& name) {
     }
     entityManager_.SpawnEntities();
 
-    GenerateDepedencyList(data);
 }
 
 void ParseVertexShader(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.vertexShaders.contains(name)) return;
     list.vertexShaders.insert(name);
 }
 
 void ParseFragmentShader(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.fragmentShaders.contains(name)) return;
     list.fragmentShaders.insert(name);
 }
 
 void ParseMaterial(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.materials.contains(name)) return;
     list.materials.insert(name);
     std::ifstream materialFile("materials/" + name + ".json");
     nlohmann::json materialData = nlohmann::json::parse(materialFile);
@@ -73,7 +76,7 @@ void ParseMaterials(nlohmann::json& materialNames, DependencyList& list) {
 }
 
 void ParseEmitterProperty(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.emitterProperties.contains(name)) return;
     list.emitterProperties.insert(name);    
     std::ifstream emitterFile("emitters/" + name + ".json");
     nlohmann::json emitterData = nlohmann::json::parse(emitterFile);
@@ -87,12 +90,12 @@ void ParseEmitterProperties(nlohmann::json& emitterNames, DependencyList& list) 
 }
 
 void ParseModel(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.models.contains(name)) return;
     list.models.insert(name);
 }
 
 void ParseEntity(const std::string& name, DependencyList& list) {
-    DEBUGLOG("Parse: " << name);
+    if (list.entityDescriptions.contains(name)) return;
     list.entityDescriptions.insert(name);
     std::ifstream entityFile("entities/" + name + ".json");
     nlohmann::json entityData = nlohmann::json::parse(entityFile);

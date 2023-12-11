@@ -2,7 +2,9 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include <unordered_set>
-#include "Rendering/RenderDefs.h"
+#include "Resource/ResourceStore.h"
+#include "Rendering/VertexShader.h"
+#include "Rendering/FragmentShader.h"
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
@@ -10,17 +12,19 @@
 #include "Entity/EntityDescription.h"
 #include "Types/Noise.h"
 #include "Particle/ParticleEmitter.h"
-
-typedef std::unordered_map<std::string, ShaderHandle> ShaderResources;
-typedef std::unordered_map<std::string, Texture> TextureResources;
-typedef std::unordered_map<std::string, Material> MaterialResources;
-typedef std::unordered_map<std::string, Model> ModelResources;
-typedef std::unordered_map<std::string, Skeleton> SkeletonResources;
-typedef std::unordered_map<std::string, EntityDescription> EntityDescResources;
-typedef std::unordered_map<std::string, EmitterProperties> EmitterPropResources;
+#include "Resource/DependencyList.h"
 
 class ResourceManager {
 public:
+    static constexpr int MAX_VERTEX_SHADERS = 32; // Wrap shaders?
+    static constexpr int MAX_FRAGMENT_SHADERS = 32;
+    static constexpr int MAX_TEXTURES = 32;
+    static constexpr int MAX_MATERIALS = 32;
+    static constexpr int MAX_MODELS = 32; // Separate meshes?
+    static constexpr int MAX_SKELETONS = 32; // Separate animations?
+    static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;
+    static constexpr int MAX_EMITTER_PROPERTIES = 32;
+
     ResourceManager();
 
     void LoadVertexShader(const std::string& name);
@@ -32,12 +36,24 @@ public:
     void LoadEntityDescription(const std::string& name);
     void LoadEmitterProperties(const std::string& name);
 
+    void UnloadVertexShader(const std::string& name);
+    void UnloadFragmentShader(const std::string& name);
+    void UnloadTexture(const std::string& name);
+    void UnloadMaterial(const std::string& name);
+    void UnloadModel(const std::string& name);
+    void UnloadSkeleton(const std::string& name);
+    void UnloadEntityDescription(const std::string& name);
+    void UnloadEmitterProperties(const std::string& name);
+
     Material* GetMaterial(const std::string& name);
     Model* GetModel(const std::string& name);
     Skeleton* GetSkeleton(const std::string& name);
     EntityDescription* GetEntityDescription(const std::string& name);
     EmitterProperties* GetEmitterProperties(const std::string& name);
     Texture* GetTexture(const std::string& name);
+
+    void LoadDependencies(DependencyList& depdencyList);
+    void UnloadUnusedDependencies(DependencyList& depdencyList);
 
     Noise noise_;
 
@@ -49,19 +65,19 @@ private:
     void LoadGlobalTerrain();
 
     // Since these are accessed via higher level structs,
-    // they are kept private. Note that these are handles,
-    // so no pointer is used.
-    ShaderHandle GetVertexShader(const std::string& name);
-    ShaderHandle GetFragmentShader(const std::string& name);
+    // they are kept private.
+    VertexShader* GetVertexShader(const std::string& name);
+    FragmentShader* GetFragmentShader(const std::string& name);
 
     std::unordered_set<std::string> globals_;
 
-    ShaderResources vertexShaders_;
-    ShaderResources fragmentShaders_;
-    TextureResources textures_;
-    MaterialResources materials_;
-    ModelResources models_;
-    SkeletonResources skeletons_;
-    EntityDescResources entityDescs_;
-    EmitterPropResources emitterProps_;
+    // Kinda uneven that these are handles, maybe wrap them like textures
+    ResourceStore<VertexShader, MAX_VERTEX_SHADERS> vertexShaders_;
+    ResourceStore<FragmentShader, MAX_FRAGMENT_SHADERS> fragmentShaders_;
+    ResourceStore<Texture, MAX_TEXTURES> textures_;
+    ResourceStore<Material, MAX_MATERIALS> materials_;
+    ResourceStore<Model, MAX_MODELS> models_;
+    ResourceStore<Skeleton, MAX_SKELETONS> skeletons_;
+    ResourceStore<EntityDescription, MAX_ENTIY_DESCRIPTIONS> entityDescs_;
+    ResourceStore<EmitterProperties, MAX_EMITTER_PROPERTIES> emitterProps_;
 };

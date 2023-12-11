@@ -84,54 +84,11 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
-    resourceManager.LoadModel("st_tpillar");
-    resourceManager.LoadModel("st_boulder");
-    resourceManager.LoadModel("st_comet");
-    resourceManager.LoadModel("st_sphere");
-    resourceManager.LoadModel("st_rock");
-    resourceManager.LoadModel("st_tree");
-    resourceManager.LoadModel("st_flower");
-    resourceManager.LoadModel("sk_char");
-
-    resourceManager.LoadTexture("t_bricks_c");
-    resourceManager.LoadTexture("t_bricks_n");
-    resourceManager.LoadTexture("t_grass_c");
-    resourceManager.LoadTexture("t_grass_n");
-    resourceManager.LoadTexture("t_marble_c");
-    resourceManager.LoadTexture("t_rock_c");
-    resourceManager.LoadTexture("t_rock_n");
-    resourceManager.LoadTexture("t_crack_m");
-    resourceManager.LoadTexture("t_tree_c");
-    resourceManager.LoadTexture("t_tree_n");
-    resourceManager.LoadTexture("t_leaves_m");
-    resourceManager.LoadTexture("t_flower_m");
-    resourceManager.LoadTexture("t_hair_m");
-
-    resourceManager.LoadVertexShader("vs_static_crack");
-    resourceManager.LoadFragmentShader("fs_dfsa_crack");
-
     // Rename these since they aren't global
     resourceManager.LoadFragmentShader("fs_flower");
     resourceManager.LoadFragmentShader("fs_seed");
     resourceManager.LoadFragmentShader("fs_particle"); // This needs to be generic, use an image now
-    resourceManager.LoadFragmentShader("fs_leaves_strand");
 
-    resourceManager.LoadMaterial("m_player");
-    resourceManager.LoadMaterial("m_playerskin");
-    resourceManager.LoadMaterial("m_playershirt");
-    resourceManager.LoadMaterial("m_hair");
-    resourceManager.LoadMaterial("m_rock");
-    resourceManager.LoadMaterial("m_tree");
-    resourceManager.LoadMaterial("m_willowleaves");
-    resourceManager.LoadMaterial("m_test_skel");
-    resourceManager.LoadMaterial("m_dust");
-    resourceManager.LoadMaterial("m_cloud");
-    resourceManager.LoadMaterial("m_spark");
-    resourceManager.LoadMaterial("m_brick");
-    resourceManager.LoadMaterial("m_comet");
-    resourceManager.LoadMaterial("m_boulder");
-    resourceManager.LoadMaterial("m_tpillar");
-    resourceManager.LoadMaterial("m_terrain");
     resourceManager.LoadMaterial("m_flower");
     resourceManager.LoadMaterial("m_stem");
     resourceManager.LoadMaterial("m_seed");

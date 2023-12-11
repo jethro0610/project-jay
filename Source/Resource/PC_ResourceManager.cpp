@@ -24,11 +24,17 @@ ResourceManager::ResourceManager() {
 // TODO: Noise texture
 
 void ResourceManager::LoadGlobals() {
-    textures_["t_noise"] = {bgfx::createTexture2D(NOISE_RESOLUTION, NOISE_RESOLUTION, false, 1, 
+    textures_.Add("t_noise") = { bgfx::createTexture2D(
+        NOISE_RESOLUTION, 
+        NOISE_RESOLUTION, 
+        false, 
+        1, 
         bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
         bgfx::copy(noise_.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
     )};
+    globals_.insert("t_noise");
+
     LoadRenderTextures();
     LoadGlobalQuad();
     LoadGlobalTerrain();
@@ -59,7 +65,7 @@ void ResourceManager::LoadGlobalFile() {
 }
 
 void ResourceManager::LoadRenderTextures() {
-    textures_["t_shadowmap"] = {bgfx::createTexture2D(
+    textures_.Add("t_shadowmap") = { bgfx::createTexture2D(
         ShadowConstants::SHADOW_RESOLUTION,
         ShadowConstants::SHADOW_RESOLUTION,
         false,
@@ -69,7 +75,7 @@ void ResourceManager::LoadRenderTextures() {
     )};
     globals_.insert("t_shadowmap");
 
-    textures_["t_render_c"] = {bgfx::createTexture2D(
+    textures_.Add("t_render_c") = { bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -79,7 +85,7 @@ void ResourceManager::LoadRenderTextures() {
     )};
     globals_.insert("t_render_c");
 
-    textures_["t_render_d"] = {bgfx::createTexture2D(
+    textures_.Add("t_render_d") = { bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -89,7 +95,7 @@ void ResourceManager::LoadRenderTextures() {
     )};
     globals_.insert("t_render_d");
 
-    textures_["t_post_c"] = {bgfx::createTexture2D(
+    textures_.Add("t_post_c") = { bgfx::createTexture2D(
         1920,
         1080,
         false,
@@ -101,9 +107,10 @@ void ResourceManager::LoadRenderTextures() {
 }
 
 void ResourceManager::LoadGlobalQuad() {
+    Model& quad = models_.Add("st_quad");
+    Mesh& quadMesh = quad.meshes.push_back();
+
     TextureQuadVertex vertices[4];
-    Model quad;
-    Mesh quadMesh;
     vertices[0] = { glm::vec2(-0.5f, -0.5f), glm::vec2( 0.0f, 1.0f) };
     vertices[1] = { glm::vec2( 0.5f, -0.5f), glm::vec2( 1.0f, 1.0f) };
     vertices[2] = { glm::vec2( 0.5f,  0.5f), glm::vec2( 1.0f, 0.0f) };
@@ -118,13 +125,12 @@ void ResourceManager::LoadGlobalQuad() {
     indices[4] = 3;
     indices[5] = 0;
     quadMesh.indexBuffer = bgfx::createIndexBuffer(bgfx::copy(indices, sizeof(indices)));
-    quad.meshes.push_back(quadMesh);
-    models_["st_quad"] = quad;
     globals_.insert("st_quad");
 }
 
 void ResourceManager::LoadGlobalTerrain() {
-    Mesh terrainMesh;
+    Model& terrainModel = models_.Add("st_terrainsheet");
+    Mesh& terrainMesh = terrainModel.meshes.push_back();
     int size = ceil(Terrain::TERRAIN_MESH_SIZE * Terrain::TERRAIN_MESH_DENSITY) + 1;
 
     int numVertices = size * size;
@@ -170,10 +176,6 @@ void ResourceManager::LoadGlobalTerrain() {
         )
     );
     delete[] terrainIndices;
-
-    Model terrainModel;
-    terrainModel.meshes.push_back(terrainMesh);
-    models_["st_terrainsheet"] = terrainModel;
     globals_.insert("st_terrainsheet");
 }
 
@@ -195,47 +197,55 @@ void ResourceManager::LoadGlobalTerrain() {
     file.close()
 
 void ResourceManager::LoadVertexShader(const std::string& name) {
-    ForceMapUnique(vertexShaders_, name, "Vertex shader " + name + " is already loaded");
+    VertexShader& shader = vertexShaders_.Add(name);
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    ShaderHandle shader = bgfx::createShader(memory);
+    shader.handle = bgfx::createShader(memory);
     DEBUGLOG("Loaded vertex shader " << name);
-    vertexShaders_[name] = shader;
+}
+void ResourceManager::UnloadVertexShader(const std::string& name) {
+    bgfx::destroy(vertexShaders_.Get(name).handle);
+    vertexShaders_.Remove(name);
 }
 
 void ResourceManager::LoadFragmentShader(const std::string& name) {
-    ForceMapUnique(fragmentShaders_, name, "Fragment shader " + name + " is already loaded");
+    FragmentShader& shader = fragmentShaders_.Add(name);
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    ShaderHandle shader = bgfx::createShader(memory);
+    shader.handle = bgfx::createShader(memory);
     DEBUGLOG("Loaded fragment shader " << name);
-    fragmentShaders_[name] = shader;
+}
+void ResourceManager::UnloadFragmentShader(const std::string& name) {
+    bgfx::destroy(fragmentShaders_.Get(name).handle);
+    fragmentShaders_.Remove(name);
 }
 
 void ResourceManager::LoadTexture(const std::string& name) {
-    ForceMapUnique(textures_, name, "Texture " + name + " is already loaded");
+    Texture& texture = textures_.Add(name);
     std::string path = "./textures/" + name + ".dds";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
         abort();
 
-    TextureHandle handle = bgfx::createTexture(memory);
+    texture.handle = bgfx::createTexture(memory);
     DEBUGLOG("Loaded texture " << name);
-    textures_[name] = { handle };
+}
+void ResourceManager::UnloadTexture(const std::string& name) {
+    bgfx::destroy(textures_.Get(name).handle);
+    textures_.Remove(name);
 }
 
 void ResourceManager::LoadMaterial(const std::string& name) {
-    ForceMapUnique(materials_, name, "Material " + name + " is already loaded");
+    Material& material = materials_.Add(name);
     std::ifstream inFile("materials/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load material " + name);
     nlohmann::json data = nlohmann::json::parse(inFile);
-    Material material;
 
     material.triangleType = ONE_SIDED;
     if (GetBoolean(data, "two_sided"))
@@ -243,15 +253,15 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
         material.triangleType = TWO_SIDED_NEGATIVE_BACK;
 
-    ShaderHandle vertexShader = GetVertexShader(GetString(data, "vertex"));
-    ShaderHandle fragmentShader = GetFragmentShader(GetString(data, "fragment"));
-    material.shaderHandle = bgfx::createProgram(vertexShader, fragmentShader);
+    VertexShader* vertexShader = GetVertexShader(GetString(data, "vertex"));
+    FragmentShader* fragmentShader = GetFragmentShader(GetString(data, "fragment"));
+    material.shaderHandle = bgfx::createProgram(vertexShader->handle, fragmentShader->handle);
 
     material.castShadows = GetBoolean(data, "cast_shadows");
     if (material.castShadows) {
-        ShaderHandle vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
-        ShaderHandle fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
-        material.shadowShaderHandle = bgfx::createProgram(vertexShadowShader, fragmentShadowShader);
+        VertexShader* vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
+        FragmentShader* fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
+        material.shadowShaderHandle = bgfx::createProgram(vertexShadowShader->handle, fragmentShadowShader->handle);
     }
 
     if (data.contains("textures")) {
@@ -270,14 +280,14 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
 
     material.properties[3] = GetVec4(data, "color");
-    
-    materials_[name] = material;
     DEBUGLOG("Loaded material " << name);
+}
+void ResourceManager::UnloadMaterial(const std::string& name) {
+    materials_.Remove(name);
 }
 
 void ResourceManager::LoadModel(const std::string& name) {
-    ForceMapUnique(models_, name, "Model " + name + " is already loaded");
-    Model& model = models_[name];
+    Model& model = models_.Add("name");
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -311,7 +321,7 @@ void ResourceManager::LoadModel(const std::string& name) {
         return;
     }
 
-    Skeleton& skeleton = skeletons_[name];
+    Skeleton& skeleton = skeletons_.Add(name);
     file.read((char*)&skeleton.bones_, sizeof(Bones));
     file.read((char*)&skeleton.ribbons_, sizeof(Ribbons));
     DEBUGLOG("Loaded skeleton " << name);
@@ -331,32 +341,42 @@ void ResourceManager::LoadModel(const std::string& name) {
     }
 
     file.close();
-    models_[name] = model;
     DEBUGLOG(
         "Loaded skeletal model " << name << " with " << 
         (int)model.meshes.size() << " meshes" << " and " <<
         modelHeader.numAnimations << " animations"
     );
 }
+void ResourceManager::UnloadModel(const std::string& name) {
+    Model& model = models_.Get(name);
+    for (Mesh& mesh : model.meshes) {
+        bgfx::destroy(mesh.indexBuffer);
+        bgfx::destroy(mesh.vertexBuffer);
+    }
+    
+    skeletons_.Remove(name);
+}
 
 void ResourceManager::LoadEntityDescription(const std::string& name) {
-    ForceMapUnique(entityDescs_, name, "Entity description " + name + " is already loaded");
+    EntityDescription& description = entityDescs_.Add(name);
 
     std::ifstream inFile("entities/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load entity " + name);
 
-    entityDescs_[name] = nlohmann::json::parse(inFile);
+    description = nlohmann::json::parse(inFile);
     DEBUGLOG("Loaded entity " << name);
+}
+void ResourceManager::UnloadEntityDescription(const std::string& name) {
+    entityDescs_.Remove(name);
 }
 
 void ResourceManager::LoadEmitterProperties(const std::string& name) {
-    ForceMapUnique(emitterProps_, name, "Emitter " + name + " is already loaded");
+    EmitterProperties& properties = emitterProps_.Add(name);
 
     std::ifstream inFile("emitters/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load emitter" + name);
 
     nlohmann::json data = nlohmann::json::parse(inFile);
-    EmitterProperties properties;
 
     properties.material = GetMaterial(GetString(data, "material", "null_material"));
     properties.localSpace = GetBoolean(data, "local_space");
@@ -379,6 +399,8 @@ void ResourceManager::LoadEmitterProperties(const std::string& name) {
     properties.startColor = GetVec4(data, "start_color");
     properties.endColor = GetVec4(data, "end_color");
 
-    emitterProps_[name] = properties; 
     DEBUGLOG("Loaded emitter " << name);
+}
+void ResourceManager::UnloadEmitterProperties(const std::string& name) {
+    emitterProps_.Remove(name);
 }

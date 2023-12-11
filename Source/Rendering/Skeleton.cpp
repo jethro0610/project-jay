@@ -4,6 +4,12 @@
 
 using namespace glm;
 
+Skeleton::Skeleton() {
+    bones_ = {};
+    ribbons_ = {};
+    animations_ = {};
+}
+
 Transform Skeleton::GetLocalBoneTransform(
     const Animation& animation, 
     float time, 

@@ -6,6 +6,10 @@
 struct Bone {
     static constexpr int MAX_BONE_CHILDREN = 8;
     static constexpr int MAX_BONES = 64;
+    Bone() {
+        inverseBindMatrix = {};
+        children = {};
+    }
     glm::mat4 inverseBindMatrix;
     vector_const<int, MAX_BONE_CHILDREN> children;
 };

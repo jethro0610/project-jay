@@ -15,6 +15,8 @@ public:
                                         // This makes the relationship clearer and they
                                         // will deallocate with the skeleton
 
+    Skeleton();
+
     void GetPose_Recursive(Pose& pose, const Animation& animation, float time, int boneIndex) const;
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;

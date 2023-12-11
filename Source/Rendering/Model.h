@@ -10,5 +10,8 @@ struct ModelFileHeader {
 
 struct Model {
     static const int MAX_MESHES_PER_MODEL = 24;
+    Model() {
+        meshes = {};
+    }
     vector_const<Mesh, MAX_MESHES_PER_MODEL> meshes;
 };

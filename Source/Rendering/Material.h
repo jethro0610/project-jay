@@ -15,6 +15,15 @@ struct Material {
     static constexpr int SHADOW_TEXINDEX = 14;
     static constexpr int TERRAIN_NOISE_TEXINDEX = 15;
 
+    Material() {
+        shaderHandle = BGFX_INVALID_HANDLE;
+        shadowShaderHandle = BGFX_INVALID_HANDLE;
+        textures = {};
+        castShadows = false;
+        triangleType = TriangleType::ONE_SIDED;
+        properties = {};
+    }
+
     // If necessary, can typedef this so there's separate
     // VS and FS instead of one shader program
     MaterialShaderHandle shaderHandle;

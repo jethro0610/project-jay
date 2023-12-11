@@ -12,19 +12,10 @@ void Game::Init() {
     entityManager_.components_.Get<StaticModelComponent>().resourceManager = &resourceManager_;
     entityManager_.components_.Get<IntervalSpawnComponent>().resourceManager = &resourceManager_;
 
-    resourceManager_.LoadEmitterProperties("p_sparkle");
-    resourceManager_.LoadEmitterProperties("p_dust");
-    resourceManager_.LoadEmitterProperties("p_cloud");
-    resourceManager_.LoadEmitterProperties("p_spark");
-
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
     // Create the player entity
-    resourceManager_.LoadEntityDescription("e_player");
-    resourceManager_.LoadEntityDescription("e_tpillar");
-    resourceManager_.LoadEntityDescription("e_comet_spawner");
-    resourceManager_.LoadEntityDescription("e_comet");
     levelLoader_.LoadLevel("test_level");
 
     camera_.target_ = PLAYER_ENTITY;

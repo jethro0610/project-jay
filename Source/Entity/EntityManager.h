@@ -20,7 +20,6 @@ class EntityManager {
 public:
     std::array<Entity, MAX_ENTITIES> entities_;
     std::deque<EntityID> usableEntities_;
-    std::unordered_map<std::string, nlohmann::json> entityData_;
 
     EntityManager(ResourceManager& resourceManager, ParticleManager& particleManager);
     EntityID CreateEntity(const Transform& transform = Transform());

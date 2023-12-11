@@ -19,6 +19,22 @@ struct Particle {
 };
 
 struct EmitterProperties {
+    EmitterProperties() {
+        material = nullptr;
+        localSpace = false;
+        spawnInterval = 0.0f;
+        spawnCount = 0.0f;
+        lifetime = 0.0f;
+        minScale = 0.0f;
+        maxScale = 0.0f;
+        endScale = 0.0f;
+        spawnRadius = 0.0f;
+        minVelocity = {};
+        maxVelocity = {};
+        acceleration = {};
+        startColor = {};
+        endColor = {};
+    }
     Material* material;
     bool localSpace;
     float spawnInterval;

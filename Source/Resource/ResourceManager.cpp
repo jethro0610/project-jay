@@ -1,34 +1,107 @@
 #include "ResourceManager.h"
-#include "Helpers/MapCheck.h"
 
-ShaderHandle ResourceManager::GetVertexShader(const std::string& name) {
-    return GetFromMap<ShaderHandle>(vertexShaders_, name, "Tried using unloaded vertex shader " + name);
+void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
+    for(const std::string& name : dependencyList.vertexShaders) {
+        if (!vertexShaders_.GetMap().contains(name))
+            LoadVertexShader(name);
+    }
+
+    for(const std::string& name : dependencyList.fragmentShaders) {
+        if (!fragmentShaders_.GetMap().contains(name))
+            LoadFragmentShader(name);
+    }
+
+    for(const std::string& name : dependencyList.textures) {
+        if (!textures_.GetMap().contains(name))
+            LoadTexture(name);
+    }
+
+    for(const std::string& name : dependencyList.materials) {
+        if (!materials_.GetMap().contains(name))
+            LoadMaterial(name);
+    }
+
+    for(const std::string& name : dependencyList.models) {
+        if (!models_.GetMap().contains(name))
+            LoadModel(name);
+    }
+
+    for(const std::string& name : dependencyList.entityDescriptions) {
+        if (!entityDescs_.GetMap().contains(name))
+            LoadEntityDescription(name);
+    }
+
+    for(const std::string& name : dependencyList.emitterProperties) {
+        if (!emitterProps_.GetMap().contains(name))
+            LoadEmitterProperties(name);
+    }
 }
 
-ShaderHandle ResourceManager::GetFragmentShader(const std::string& name) {
-    return GetFromMap<ShaderHandle>(fragmentShaders_, name, "Tried using unloaded fragment shader " + name);
+void ResourceManager::UnloadUnusedDependencies(DependencyList& dependencyList) {
+    for(const auto& element : vertexShaders_.GetMap()) {
+        if (!dependencyList.vertexShaders.contains(element.first) && !globals_.contains(element.first))
+            UnloadVertexShader(element.first);
+    }
+
+    for(const auto& element : fragmentShaders_.GetMap()) {
+        if (!dependencyList.fragmentShaders.contains(element.first) && !globals_.contains(element.first))
+            UnloadFragmentShader(element.first);
+    }
+
+    for(const auto& element : textures_.GetMap()) {
+        if (!dependencyList.textures.contains(element.first) && !globals_.contains(element.first))
+            UnloadTexture(element.first);
+    }
+
+    for(const auto& element : materials_.GetMap()) {
+        if (!dependencyList.materials.contains(element.first) && !globals_.contains(element.first))
+            UnloadMaterial(element.first);
+    }
+
+    for(const auto& element : models_.GetMap()) {
+        if (!dependencyList.models.contains(element.first) && !globals_.contains(element.first))
+            UnloadModel(element.first);
+    }
+
+    for(const auto& element : entityDescs_.GetMap()) {
+        if (!dependencyList.entityDescriptions.contains(element.first) && !globals_.contains(element.first))
+            UnloadEntityDescription(element.first);
+    }
+
+    for(const auto& element : emitterProps_.GetMap()) {
+        if (!dependencyList.emitterProperties.contains(element.first) && !globals_.contains(element.first))
+            UnloadEmitterProperties(element.first);
+    }
+}
+
+VertexShader* ResourceManager::GetVertexShader(const std::string& name) {
+    return &vertexShaders_.Get(name);
+}
+
+FragmentShader* ResourceManager::GetFragmentShader(const std::string& name) {
+    return &fragmentShaders_.Get(name);
 }
 
 Texture* ResourceManager::GetTexture(const std::string& name) {
-    return &GetFromMap<Texture>(textures_, name, "Tried using unloaded texture " + name);
-}
-
-Model* ResourceManager::GetModel(const std::string& name) {
-    return &GetFromMap<Model>(models_, name, "Tried using unloaded model " + name);
-}
-
-Skeleton* ResourceManager::GetSkeleton(const std::string& name) {
-    return &GetFromMap<Skeleton>(skeletons_, name, "Tried using unloaded skeleton " + name);
+    return &textures_.Get(name);
 }
 
 Material* ResourceManager::GetMaterial(const std::string& name) {
-    return &GetFromMap<Material>(materials_, name, "Tried using unloaded material " + name);
+    return &materials_.Get(name);
 }
 
-nlohmann::json* ResourceManager::GetEntityDescription(const std::string& name) {
-    return &GetFromMap<nlohmann::json>(entityDescs_, name, "Tried using unloaded entity description " + name);
+Model* ResourceManager::GetModel(const std::string& name) {
+    return &models_.Get(name);
+}
+
+Skeleton* ResourceManager::GetSkeleton(const std::string& name) {
+    return &skeletons_.Get(name);
+}
+
+EntityDescription* ResourceManager::GetEntityDescription(const std::string& name) {
+    return &entityDescs_.Get(name);
 }
 
 EmitterProperties* ResourceManager::GetEmitterProperties(const std::string& name) {
-    return &GetFromMap<EmitterProperties>(emitterProps_, name, "Tried using unloaded emitter properties " + name);
+    return &emitterProps_.Get(name);
 }

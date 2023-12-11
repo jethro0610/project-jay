@@ -84,14 +84,22 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
+    resourceManager.LoadModel("st_flower");
+
     // Rename these since they aren't global
     resourceManager.LoadFragmentShader("fs_flower");
     resourceManager.LoadFragmentShader("fs_seed");
     resourceManager.LoadFragmentShader("fs_particle"); // This needs to be generic, use an image now
 
+    resourceManager.LoadTexture("t_flower_m");
     resourceManager.LoadMaterial("m_flower");
     resourceManager.LoadMaterial("m_stem");
     resourceManager.LoadMaterial("m_seed");
+
+    resourceManager.LoadTexture("t_grass_c");
+    resourceManager.LoadTexture("t_grass_n");
+    resourceManager.LoadTexture("t_marble_c");
+    resourceManager.LoadMaterial("m_terrain");
 
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];

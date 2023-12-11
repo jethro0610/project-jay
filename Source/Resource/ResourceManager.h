@@ -16,12 +16,12 @@
 
 class ResourceManager {
 public:
-    static constexpr int MAX_VERTEX_SHADERS = 32; // Wrap shaders?
+    static constexpr int MAX_VERTEX_SHADERS = 32;
     static constexpr int MAX_FRAGMENT_SHADERS = 32;
     static constexpr int MAX_TEXTURES = 32;
     static constexpr int MAX_MATERIALS = 32;
-    static constexpr int MAX_MODELS = 32; // Separate meshes?
-    static constexpr int MAX_SKELETONS = 32; // Separate animations?
+    static constexpr int MAX_MODELS = 32;
+    static constexpr int MAX_SKELETONS = 32;
     static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;
     static constexpr int MAX_EMITTER_PROPERTIES = 32;
 

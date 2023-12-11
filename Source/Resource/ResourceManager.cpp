@@ -1,6 +1,7 @@
 #include "ResourceManager.h"
 
 void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
+    DEBUGLOG("Loading deps");
     for(const std::string& name : dependencyList.vertexShaders) {
         if (!vertexShaders_.GetMap().contains(name))
             LoadVertexShader(name);

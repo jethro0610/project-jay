@@ -27,7 +27,7 @@ void LevelLoader::LoadLevel(const std::string& name) {
     nlohmann::json data = nlohmann::json::parse(inFile);
     
     DependencyList dependencies = GenerateDepedencyList(data);
-    resourceManager_.UnloadUnusedDependencies(dependencies);
+    // resourceManager_.UnloadUnusedDependencies(dependencies);
     resourceManager_.LoadDependencies(dependencies);
 
     UnloadLevel();
@@ -100,16 +100,26 @@ void ParseEntity(const std::string& name, DependencyList& list) {
     std::ifstream entityFile("entities/" + name + ".json");
     nlohmann::json entityData = nlohmann::json::parse(entityFile);
 
+    if (entityData.contains("emitters"))
+        ParseEmitterProperties(entityData["emitters"], list);
+
     if (entityData["components"].contains("static_model")) {
         auto& modelData = entityData["components"]["static_model"];
         ParseModel(modelData["model"].get<std::string>(), list);
         ParseMaterials(modelData["materials"], list);
     }
+
+    if (entityData["components"].contains("interval_spawner")) {
+        auto& spawnerData = entityData["components"]["interval_spawner"];
+        ParseEntity(spawnerData["entity"], list);
+    }
+
 }
 
 void ParseLevelEntities(nlohmann::json& entitiesData, DependencyList& list) {
-    for (auto& entityData : entitiesData)
+    for (auto& entityData : entitiesData) {
         ParseEntity(entityData["name"].get<std::string>(), list);
+    }
 }
 
 DependencyList LevelLoader::GenerateDepedencyList(nlohmann::json& levelData) {

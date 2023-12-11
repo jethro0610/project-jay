@@ -287,7 +287,7 @@ void ResourceManager::UnloadMaterial(const std::string& name) {
 }
 
 void ResourceManager::LoadModel(const std::string& name) {
-    Model& model = models_.Add("name");
+    Model& model = models_.Add(name);
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
     if (!file.is_open()) {

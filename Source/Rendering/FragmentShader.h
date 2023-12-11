@@ -1,5 +1,5 @@
 #pragma once
-#import "RenderDefs.h"
+#include "RenderDefs.h"
 
 struct FragmentShader {
     ShaderHandle handle;

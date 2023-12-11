@@ -13,7 +13,7 @@ public:
     T& Add(const std::string& name) {
         ForceMapUnique(resourceMap_, name, "Already loaded resource " + name);
         int next = resources_.push_back();
-        resourceMap_[name] = resources_[next];
+        resourceMap_[name] = next;
         return resources_[next];
     }
     T& Get(const std::string& name) { 

@@ -1,34 +1,10 @@
-- Remove normal from WorldVS
-- Remove _P
-- Privatize some variables
-- Fix Xbox Series controller on Linux
-- Clean up dependencies
-- Rename to World to Terrain
-
-- Resource Manager
-    - Level
-    - Separate skeleton and animation
-
-- Rename spread to flower
-
-- Level structure
-    - Parse files to determine dependecies
-    - Separate graphics loading from renderer
-
-- Levels progress with time, certain things spawn in, events etc.
-    - Plan around these events and setup the level as quikly as possible for optimal flowers
-
-- Generically disable depth on UI rendering
-- Rename InitBuffer to InitView
-
 - Level editor
-    - Level storage
-    - Noise editor
+    - Entity selector and spawner
     - Object gimbal
     - Ground aligner
+    - Noise editor
     - Pause
-    - Seamless edit and move mode
-    - Filler Pillar
+
 - Weave obstacles
 - Level clearance
 - Particle velocity based on object rotation
@@ -36,7 +12,16 @@
 - Bloom
 - Skybox
 
-- Move constants to namespaces
+- Levels progress with time, certain things spawn in, events etc.
+    - Plan around these events and setup the level as quikly as possible for optimal flowers
+
+- Remove state setting from Render functions
+
+- Rename InitBuffer to InitView
+
+- Separate skeleton and animation
+
+- Rename spread to flower
 
 - Remove cutting
 

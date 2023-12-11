@@ -126,7 +126,7 @@ void Renderer::InitUIBuffer() {
     bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
     bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(UI_VIEW, 0, 0, width_, height_);
-    bgfx::setViewMode(UI_VIEW, bgfx::ViewMode::DepthAscending);
+    bgfx::setViewMode(UI_VIEW, bgfx::ViewMode::Sequential);
 }
 
 void Renderer::StartFrame() {
@@ -374,10 +374,11 @@ void Renderer::RenderPostProcess() {
 }
 
 void Renderer::RenderBlit() {
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
     bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]->handle);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle, 0);
+    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
 }
 
 void Renderer::RenderUI(ComponentList& components) {
@@ -389,8 +390,7 @@ void Renderer::RenderUI(ComponentList& components) {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle, 1);
-    bgfx::setState(BGFX_STATE_DEFAULT);
+    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
 }
 
 void Renderer::RenderScreenText() {
@@ -409,8 +409,7 @@ void Renderer::RenderScreenText() {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle, 2);
-    bgfx::setState(BGFX_STATE_DEFAULT);
+    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

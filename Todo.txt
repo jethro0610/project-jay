@@ -6,6 +6,10 @@
 - Rename to World to Terrain
 
 - Resource Manager
+    - Level
+    - Separate skeleton and animation
+
+- Rename spread to flower
 
 - Level structure
     - Parse files to determine dependecies

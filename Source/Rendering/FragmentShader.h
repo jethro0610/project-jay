@@ -4,7 +4,7 @@
 struct FragmentShader {
     ShaderHandle handle;
     FragmentShader() {
-        handle = BGFX_INVALID_HANDLE;
+        handle = DEFAULT_HANDLE;
     }
     FragmentShader(ShaderHandle h) {
         handle = h;

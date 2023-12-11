@@ -1,5 +1,6 @@
 #include "Resource/ResourceManager.h"
 #include "Resource/DependencyList.h"
+#include "LevelProperties.h"
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -9,7 +10,7 @@ class LevelLoader {
 public:
     LevelLoader(ResourceManager& resourceManager, EntityManager& entityManager);
     void UnloadLevel();
-    void LoadLevel(const std::string& name);
+    void LoadLevel(const std::string& name, LevelProperties& outProperties);
 
 private:
     ResourceManager& resourceManager_;

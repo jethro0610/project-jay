@@ -14,6 +14,7 @@
 #endif
 
 class Camera;
+class LevelProperties;
 class Noise;
 class SeedManager;
 class SpreadManager;
@@ -31,6 +32,7 @@ public:
     void Render(
         EntityList& entities,
         ComponentList& components,
+        LevelProperties& levelProperties,
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
@@ -48,15 +50,9 @@ private:
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
 
-    // Move spread model to level class
-    Model* spread_;
     Mesh* quad_;
     Mesh* terrain_;
 
-    std::array<Material*, Model::MAX_MESHES_PER_MODEL> spreadMaterials_;
-    // Move terrain and seed material to level class
-    Material* terrainMaterial_;
-    Material* seedMaterial_;
     Material* barMaterial_;
     Material* blitMaterial_;
     Material* postProcessMaterial_;
@@ -115,13 +111,17 @@ private:
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr 
     );
-    void RenderTerrain (Terrain& terrain);
+    void RenderTerrain (Terrain& terrain, Material* material);
     void RenderEntities(
         EntityList& entities, 
         ComponentList& components
     );
-    void RenderSpread(SpreadManager& spreadManager);
-    void RenderSeed(SeedManager& seedManager);
+    void RenderSpread(
+        SpreadManager& spreadManager, 
+        Model* model, 
+        vector_const<Material*, Model::MAX_MESHES_PER_MODEL>& materials
+    );
+    void RenderSeed(SeedManager& seedManagerm, Material* material);
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();

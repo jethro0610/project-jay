@@ -16,7 +16,7 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
 
     // Create the player entity
-    levelLoader_.LoadLevel("test_level");
+    levelLoader_.LoadLevel("test_level", levelProperties_);
 
     camera_.target_ = PLAYER_ENTITY;
 }
@@ -154,6 +154,7 @@ void Game::Update() {
     renderer_.Render(
         entityManager_.entities_, 
         entityManager_.components_,
+        levelProperties_,
         particleManager_,
         seedManager_,
         spreadManager_, 

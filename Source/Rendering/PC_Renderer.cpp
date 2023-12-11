@@ -12,7 +12,6 @@
 #include "Time/Time.h"
 #include "Camera/Camera.h"
 #include "Resource/ResourceManager.h"
-#include "Helpers/MapCheck.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -77,38 +76,14 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 
-    noiseTexture_ = resourceManager.GetTexture("t_noise");
-
     InitShadowBuffer(resourceManager.GetTexture("t_shadowmap"));
     InitRenderBuffer(resourceManager.GetTexture("t_render_c"), resourceManager.GetTexture("t_render_d"));
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
-    resourceManager.LoadModel("st_flower");
-
-    // Rename these since they aren't global
-    resourceManager.LoadFragmentShader("fs_flower");
-    resourceManager.LoadFragmentShader("fs_seed");
-    resourceManager.LoadFragmentShader("fs_particle"); // This needs to be generic, use an image now
-
-    resourceManager.LoadTexture("t_flower_m");
-    resourceManager.LoadMaterial("m_flower");
-    resourceManager.LoadMaterial("m_stem");
-    resourceManager.LoadMaterial("m_seed");
-
-    resourceManager.LoadTexture("t_grass_c");
-    resourceManager.LoadTexture("t_grass_n");
-    resourceManager.LoadTexture("t_marble_c");
-    resourceManager.LoadMaterial("m_terrain");
-
+    noiseTexture_ = resourceManager.GetTexture("t_noise");
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
-    spread_ = resourceManager.GetModel("st_flower");
-
-    spreadMaterials_[0] = resourceManager.GetMaterial("m_flower");
-    spreadMaterials_[1] = resourceManager.GetMaterial("m_stem");
-    terrainMaterial_ = resourceManager.GetMaterial("m_terrain");
-    seedMaterial_ = resourceManager.GetMaterial("m_seed");
     barMaterial_ = resourceManager.GetMaterial("m_uibar");
     blitMaterial_ = resourceManager.GetMaterial("m_preuiblit");
     postProcessMaterial_ = resourceManager.GetMaterial("m_postprocess");
@@ -268,7 +243,7 @@ void Renderer::RenderMesh(
     }
 }
 
-void Renderer::RenderTerrain(Terrain& terrain) {
+void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
     vec4 terrainProps[2];
     terrainProps[0].x = 0.0f;
     terrainProps[0].y = terrain.properties_.minRadius;
@@ -287,7 +262,7 @@ void Renderer::RenderTerrain(Terrain& terrain) {
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
         bgfx::setTexture(Material::TERRAIN_NOISE_TEXINDEX, terrainNoiseSampler_, noiseTexture_->handle);
-        RenderMesh(terrain_, terrainMaterial_);
+        RenderMesh(terrain_, material);
     };
 }
 
@@ -331,7 +306,11 @@ void Renderer::RenderEntities(
     }
 }
 
-void Renderer::RenderSpread(SpreadManager& spreadManager) {
+void Renderer::RenderSpread(
+    SpreadManager& spreadManager, 
+    Model* model,
+    vector_const<Material*, Model::MAX_MESHES_PER_MODEL>& materials
+) {
     uint32_t count = spreadManager.GetCount();
     if (count == 0)
         return;
@@ -340,14 +319,14 @@ void Renderer::RenderSpread(SpreadManager& spreadManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
     memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
 
-    for (int m = 0; m < spread_->meshes.size(); m++) {
-        Mesh* mesh = &spread_->meshes[m];
-        Material* material = spreadMaterials_[m];
+    for (int m = 0; m < model->meshes.size(); m++) {
+        Mesh* mesh = &model->meshes[m];
+        Material* material = materials[m];
         RenderMesh(mesh, material, &instanceBuffer);
     }
 }
 
-void Renderer::RenderSeed(SeedManager& seedManager) {
+void Renderer::RenderSeed(SeedManager& seedManager, Material* material) {
     uint32_t count = seedManager.seeds_.size();
     if (count == 0)
         return;
@@ -356,7 +335,7 @@ void Renderer::RenderSeed(SeedManager& seedManager) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
-    RenderMesh(quad_, seedMaterial_, &instanceBuffer);
+    RenderMesh(quad_, material, &instanceBuffer);
 }
 
 void Renderer::RenderParticles(ParticleManager& particleManager) {

@@ -4,7 +4,7 @@
 struct VertexShader {
     ShaderHandle handle;
     VertexShader() {
-        handle = BGFX_INVALID_HANDLE;
+        handle = DEFAULT_HANDLE;
     }
     VertexShader(ShaderHandle h) {
         handle = h;

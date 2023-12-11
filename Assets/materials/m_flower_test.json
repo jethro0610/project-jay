@@ -1,7 +1,7 @@
 {
     "two_sided": true,
     "vertex": "vs_spread",
-    "fragment": "fs_flower",
+    "fragment": "fs_flower_test",
     "cast_shadows": true,
     "vertex_shadow": "vs_inst_s",
     "fragment_shadow": "fs_depth_masked_s",

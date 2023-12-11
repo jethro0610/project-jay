@@ -2,7 +2,6 @@
 #include "Rendering/PC_VertexTypes.h"
 #include "Rendering/ShadowConstants.h"
 #include "Terrain/Terrain.h"
-#include "Helpers/MapCheck.h"
 #include "Helpers/Assert.h"
 #include "Helpers/LoadHelpers.h"
 

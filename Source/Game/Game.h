@@ -8,6 +8,7 @@
 #include "Spread/SpreadManager.h"
 #include "Systems/Systems.h"
 #include "Rendering/Renderer.h"
+#include "Level/LevelProperties.h"
 #include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
 
@@ -25,6 +26,7 @@ public:
 
 private:
     Platform platform_;
+    LevelProperties levelProperties_;
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
     EntityManager entityManager_;

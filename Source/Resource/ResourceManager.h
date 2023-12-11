@@ -45,6 +45,8 @@ public:
     void UnloadEntityDescription(const std::string& name);
     void UnloadEmitterProperties(const std::string& name);
 
+    VertexShader* GetVertexShader(const std::string& name);
+    FragmentShader* GetFragmentShader(const std::string& name);
     Material* GetMaterial(const std::string& name);
     Model* GetModel(const std::string& name);
     Skeleton* GetSkeleton(const std::string& name);
@@ -63,11 +65,6 @@ private:
     void LoadRenderTextures();
     void LoadGlobalQuad();
     void LoadGlobalTerrain();
-
-    // Since these are accessed via higher level structs,
-    // they are kept private.
-    VertexShader* GetVertexShader(const std::string& name);
-    FragmentShader* GetFragmentShader(const std::string& name);
 
     std::unordered_set<std::string> globals_;
 

@@ -4,7 +4,7 @@
 struct Texture {
     TextureHandle handle;
     Texture() {
-        handle = BGFX_INVALID_HANDLE;
+        handle = DEFAULT_HANDLE;
     }
     Texture(TextureHandle h) {
         handle = h;

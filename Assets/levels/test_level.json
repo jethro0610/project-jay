@@ -1,4 +1,17 @@
 {
+    "spread": {
+        "model": "st_flower_test",
+        "materials": [
+            "m_flower_test",
+            "m_stem_test"
+        ]
+    },
+    "terrain": {
+        "material": "m_terrain_grass"
+    },
+    "seed": {
+        "material": "m_seed_test"
+    },
     "entities": [
         {
             "name": "e_player",

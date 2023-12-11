@@ -20,25 +20,32 @@ void LevelLoader::UnloadLevel() {
     entityManager_.DestroyEntities();
 }
 
-void LevelLoader::LoadLevel(const std::string& name) {
+void LevelLoader::LoadLevel(const std::string& name, LevelProperties& outProperties) {
 
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
-    nlohmann::json data = nlohmann::json::parse(inFile);
+    nlohmann::json levelData = nlohmann::json::parse(inFile);
     
-    DependencyList dependencies = GenerateDepedencyList(data);
-    // resourceManager_.UnloadUnusedDependencies(dependencies);
+    DependencyList dependencies = GenerateDepedencyList(levelData );
+    resourceManager_.UnloadUnusedDependencies(dependencies);
     resourceManager_.LoadDependencies(dependencies);
 
     UnloadLevel();
-    auto& entitiesData = data["entities"];
+    auto& entitiesData = levelData["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         entityTransform = GetTransform(entityData, "transform");
         entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
     }
     entityManager_.SpawnEntities();
+    
+    outProperties.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
+    outProperties.spreadMaterials.clear();
+    for (auto& materialName : levelData["spread"]["materials"])
+        outProperties.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
 
+    outProperties.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
+    outProperties.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
 }
 
 void ParseVertexShader(const std::string& name, DependencyList& list) {
@@ -124,6 +131,10 @@ void ParseLevelEntities(nlohmann::json& entitiesData, DependencyList& list) {
 
 DependencyList LevelLoader::GenerateDepedencyList(nlohmann::json& levelData) {
     DependencyList list;
+    ParseModel(levelData["spread"]["model"], list);
+    ParseMaterials(levelData["spread"]["materials"], list);
+    ParseMaterial(levelData["terrain"]["material"], list);
+    ParseMaterial(levelData["seed"]["material"], list);
     ParseLevelEntities(levelData["entities"], list);
     return list;
 }

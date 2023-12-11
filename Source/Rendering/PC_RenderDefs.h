@@ -14,3 +14,5 @@ typedef bgfx::UniformHandle TextureSamplerHandle;
 typedef bgfx::FrameBufferHandle FrameBufferHandle;
 
 typedef int View;
+
+#define DEFAULT_HANDLE BGFX_INVALID_HANDLE

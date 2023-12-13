@@ -24,6 +24,9 @@ public:
     static constexpr int GetID() { return 11; }
 
     void Load(nlohmann::json& data, EntityID entity) {
+        velocity[entity] = glm::vec3(0.0f);
+        angularVelocity[entity] = glm::vec3(0.0f);
+
         useGravity[entity] = GetBoolean(data, "use_gravity");
     }
 };

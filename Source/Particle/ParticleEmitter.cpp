@@ -56,3 +56,14 @@ void ParticleEmitter::Emmit() {
         particles_.push_back(particle); 
     }
 }
+
+void ParticleEmitter::Reset() {
+    alive_ = false;
+    active_ = false;
+    release_ = false;
+    transform_ = Transform();
+    properties_ = nullptr;
+    timer_ = 0.0f;
+    velocityOffset_ = glm::vec3(0.0f);
+    particles_.clear();
+}

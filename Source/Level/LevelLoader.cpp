@@ -1,51 +1,63 @@
 #include "LevelLoader.h"
 #include "Helpers/LoadHelpers.h"
 #include "Entity/EntityManager.h"
+#include "Spread/SpreadManager.h"
+#include "Seed/SeedManager.h"
 #include "Logging/Logger.h"
 
-LevelLoader::LevelLoader(ResourceManager& resourceManager, EntityManager& entityManager) :
+LevelLoader::LevelLoader(
+    EntityManager& entityManager, 
+    ParticleManager& particleManager,
+    ResourceManager& resourceManager,
+    SeedManager& seedManager,
+    SpreadManager& spreadManager
+) :
+entityManager_(entityManager),
+particleManager_(particleManager),
 resourceManager_(resourceManager),
-entityManager_(entityManager)
+seedManager_(seedManager),
+spreadManager_(spreadManager)
 {
     
 }
 
-void LevelLoader::UnloadLevel() {
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entityManager_.entities_[i].alive_)
-            continue;
-
-        entityManager_.destroyList_.push_back({i, false});
-    }
-    entityManager_.DestroyEntities();
-}
-
 void LevelLoader::LoadLevel(const std::string& name, LevelProperties& outProperties) {
-
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
-    nlohmann::json levelData = nlohmann::json::parse(inFile);
-    
-    DependencyList dependencies = GenerateDepedencyList(levelData );
+    levelData_ = nlohmann::json::parse(inFile);
+
+    DependencyList dependencies = GenerateDepedencyList(levelData_);
     resourceManager_.UnloadUnusedDependencies(dependencies);
     resourceManager_.LoadDependencies(dependencies);
+    
+    outProperties.spreadModel = resourceManager_.GetModel(levelData_["spread"]["model"]);
+    outProperties.spreadMaterials.clear();
+    for (auto& materialName : levelData_["spread"]["materials"])
+        outProperties.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
 
-    UnloadLevel();
-    auto& entitiesData = levelData["entities"];
+    outProperties.terrainMaterial = resourceManager_.GetMaterial(levelData_["terrain"]["material"]);
+    outProperties.seedMaterial = resourceManager_.GetMaterial(levelData_["seed"]["material"]);
+
+    LoadLevel();
+}
+
+void LevelLoader::ClearLevel() {
+    entityManager_.Reset();
+    particleManager_.Reset();
+    spreadManager_.Reset();
+    seedManager_.Reset();
+}
+
+void LevelLoader::LoadLevel() {
+    ClearLevel();
+
+    auto& entitiesData = levelData_["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         entityTransform = GetTransform(entityData, "transform");
         entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
     }
     entityManager_.SpawnEntities();
-    
-    outProperties.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
-    outProperties.spreadMaterials.clear();
-    for (auto& materialName : levelData["spread"]["materials"])
-        outProperties.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
-
-    outProperties.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
-    outProperties.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
 }
 
 void ParseVertexShader(const std::string& name, DependencyList& list) {

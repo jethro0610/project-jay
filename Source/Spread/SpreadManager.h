@@ -59,6 +59,7 @@ public:
     void Trample(const SpreadKey& key);
     void Trample(const glm::vec3& position);
     void Trample(const glm::vec3& position, int radius);
+    void Reset();
 
 private:
     bool AddSpread(const SpreadKey& key); 

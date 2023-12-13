@@ -39,3 +39,11 @@ void ParticleManager::Update(float deltaTime) {
         }
     }
 }
+
+void ParticleManager::Reset() {
+    for (int i = 0; i < MAX_EMITTERS; i++)
+        emitters_[i].Reset();
+
+    usableEmitters_.clear();
+    usableEmitters_.push_front(0);
+}

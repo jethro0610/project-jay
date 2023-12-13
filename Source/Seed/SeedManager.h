@@ -44,4 +44,6 @@ public:
         EntityList& entities,
         ComponentList& components
     );
+
+    void Reset();
 };

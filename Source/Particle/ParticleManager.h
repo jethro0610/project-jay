@@ -16,4 +16,6 @@ public:
     ParticleEmitter* RequestEmitter(EmitterProperties* properties);
 
     void Update(float deltaTime);
+
+    void Reset();
 };

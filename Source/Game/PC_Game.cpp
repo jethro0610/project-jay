@@ -13,7 +13,13 @@ Game::Game():
     resourceManager_(),
     particleManager_(),
     entityManager_(resourceManager_, particleManager_),
-    levelLoader_(resourceManager_, entityManager_),
+    levelLoader_(
+        entityManager_,
+        particleManager_, 
+        resourceManager_, 
+        seedManager_,
+        spreadManager_
+    ),
     renderer_(resourceManager_),
     camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
     terrain_(resourceManager_.noise_),
@@ -99,6 +105,9 @@ void Game::FlushInputs_P() {
     
     if (platform_.pressedKeys_[GLFW_KEY_ESCAPE])
         running_ = false;
+
+    if (platform_.pressedKeys_['Q'])
+        editor_.StartEditing();
     #endif
 
     platform_.FlushKeys();

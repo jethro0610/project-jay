@@ -79,4 +79,5 @@ struct ParticleEmitter {
 
     void Update(float deltaTime);
     void Emmit();
+    void Reset();
 };

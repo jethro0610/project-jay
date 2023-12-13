@@ -123,3 +123,7 @@ void SeedManager::GetCaptures(
         }
     }
 }
+
+void SeedManager::Reset() {
+    seeds_.clear();
+}

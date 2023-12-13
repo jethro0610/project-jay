@@ -34,8 +34,9 @@ void Editor::StartEditing() {
     target_ = NULL_ENTITY;
     mode_ = EM_Camera;
     camera_.target_ = NULL_ENTITY;
-    ScreenText::Clear();
-    ScreenText::SetEnabled(true);
+    // ScreenText::Clear();
+    ScreenText::SetEnabled(false);
+    levelLoader_.LoadLevel();
 }
 
 void Editor::StopEditing() {
@@ -65,12 +66,12 @@ void Editor::SetMode(EditorMode mode) {
 }
 
 void Editor::Update() {
-    if (platform_.pressedKeys_['1'])  {
+    if (platform_.pressedKeys_['1'])
         SetMode(EM_Camera);
-    }
-    if (platform_.pressedKeys_['2']) {
+    if (platform_.pressedKeys_['2'])
         SetMode(EM_Mouse);
-    }
+    if (platform_.pressedKeys_['Q'])
+        StopEditing();
 
     if (mode_ == EM_Camera)
         camera_.Update(inputs_);

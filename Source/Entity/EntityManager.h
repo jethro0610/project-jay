@@ -38,6 +38,7 @@ public:
 
     void SpawnEntities();
     void DestroyEntities();
+    void Reset();
 
 private:
     #define COMPONENTEXPANSION(TYPE, VAR) TYPE VAR;

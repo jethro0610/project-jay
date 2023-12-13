@@ -94,3 +94,15 @@ void EntityManager::DestroyEntities() {
 
     destroyList_.clear();
 }
+
+void EntityManager::Reset() {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities_[i].alive_)
+            continue;
+
+        destroyList_.push_back({i, false});
+    }
+    DestroyEntities();
+    usableEntities_.clear();
+    usableEntities_.push_back(0);
+}

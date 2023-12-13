@@ -185,3 +185,11 @@ void SpreadManager::Trample(const glm::vec3& position, int radius) {
         Trample(key);
     } }
 }
+
+void SpreadManager::Reset() {
+    count_ = 0;
+    renderData_.clear();
+    viableAddKeys_.clear();
+    keyIndices_.clear();
+    tramples_.clear();
+}

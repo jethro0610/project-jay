@@ -39,6 +39,13 @@ public:
         Terrain& terrain
     );
 
+    void RenderMinimal(
+        EntityList& entities,
+        ComponentList& components,
+        LevelProperties& levelProperties,
+        Terrain& terrain
+    );
+
 private:
     int width_;
     int height_;

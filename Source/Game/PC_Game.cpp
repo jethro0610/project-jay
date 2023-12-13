@@ -20,6 +20,16 @@ Game::Game():
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     playerController_(),
+    editor_(
+        camera_, 
+        entityManager_, 
+        inputs_, levelLoader_, 
+        levelProperties_, 
+        platform_, 
+        renderer_, 
+        terrain_,
+        running_
+    ),
     running_(true)
 {
     Init();
@@ -34,7 +44,15 @@ Game::Game():
         platform_.UpdateMouseMovement();
         platform_.PollGamepad();
         UpdateInputs_P();
-        Update();
+
+        #ifdef _DEBUG
+        if (!editor_.IsActive())
+            Update();
+        else
+            editor_.Update();
+        #else
+            Update(); 
+        #endif
     }
 }
 

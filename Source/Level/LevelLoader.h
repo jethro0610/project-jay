@@ -1,3 +1,4 @@
+#pragma once
 #include "Resource/ResourceManager.h"
 #include "Resource/DependencyList.h"
 #include "LevelProperties.h"

@@ -28,7 +28,9 @@ public:
     static ScreenText* Get();
     static bool IsEnabled();
     static void SetLine(int line, const std::string& text);
+    static void Clear();
     static TextGlyph* GetText();
     static void Toggle();
     static void Init();
+    static void SetEnabled(bool enabled);
 };

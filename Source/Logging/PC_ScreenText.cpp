@@ -18,3 +18,11 @@ void ScreenText::SetLine(int line, const std::string& text) {
             screenText_->text_ [line][i].w = (float)' ' - 32;
     }
 }
+
+void ScreenText::Clear() {
+    for (int line = 0; line < MAX_LINES; line++) {
+        for (int i = 0; i < CHARS_PER_LINE; i++) {
+            screenText_->text_ [line][i].w = (float)' ' - 32;
+        }
+    }
+}

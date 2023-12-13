@@ -39,9 +39,9 @@ void Camera::Update(Inputs inputs) {
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;
-    lookY_ = clamp(lookY_, radians(-50.0f), radians(5.0f));
 
     if (target_ == NULL_ENTITY) {
+        lookY_ = clamp(lookY_, radians(-89.0f), radians(89.0f));
         // Move and use first person look when there is no entity to track
         transform_.rotation = quat(vec3(lookY_, lookX_, 0.0f));
         vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime;
@@ -49,6 +49,7 @@ void Camera::Update(Inputs inputs) {
         transform_.position += forwardMovement + rightMovement;
     }
     else {
+        lookY_ = clamp(lookY_, radians(-50.0f), radians(5.0f));
         vec3 trackPosition = transformComponent_.renderTransform[target_].position;
         smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
         if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {

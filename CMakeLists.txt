@@ -73,6 +73,8 @@ file(GLOB SOURCES
 
     Source/Platform/PC_Platform.cpp
 
+    Source/Editor/Editor.cpp
+
     Source/Game/Game.cpp
     Source/Game/PC_Game.cpp
     Source/Entry/PC_Main.cpp

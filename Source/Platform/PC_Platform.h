@@ -36,6 +36,7 @@ public:
     void FlushMouse();
 
     void PollGamepad();
+    void SetMouseVisible(bool visible);
 
 private:
     static Platform* platform_;

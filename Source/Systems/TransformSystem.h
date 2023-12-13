@@ -11,4 +11,8 @@ namespace TransformSystem {
         ComponentList& components,
         float interpTime
     );
+    void ForceRenderTransforms(
+        EntityList& entities,
+        ComponentList& components
+    );
 }

@@ -13,7 +13,11 @@
 #include "Terrain/Terrain.h"
 
 #ifdef _PC
-#include "../Platform/PC_Platform.h"
+#include "Platform/PC_Platform.h"
+#endif
+
+#ifdef _DEBUG
+#include "Editor/Editor.h"
 #endif
 
 class Game {
@@ -23,6 +27,7 @@ public:
 
     bool running_;
     void Update();
+    void EditModeUpdate();
 
 private:
     Platform platform_;
@@ -37,6 +42,9 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
+    #ifdef _DEBUG
+    Editor editor_;
+    #endif
 
     Inputs inputs_;
 

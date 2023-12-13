@@ -19,6 +19,7 @@ void Game::Init() {
     levelLoader_.LoadLevel("test_level", levelProperties_);
 
     camera_.target_ = PLAYER_ENTITY;
+    editor_.StartEditing();
 }
 
 void Game::Update() {

@@ -30,3 +30,21 @@ void Renderer::Render(
 
     PresentFrame();
 }
+
+void Renderer::RenderMinimal(
+    EntityList& entities,
+    ComponentList& components,
+    LevelProperties& levelProperties,
+    Terrain& terrain 
+) {
+    StartFrame();
+
+    RenderTerrain(terrain, levelProperties.terrainMaterial);
+    RenderEntities(entities, components);
+    RenderPostProcess();
+    RenderBlit();
+    RenderUI(components);
+    RenderScreenText();
+
+    PresentFrame();
+}

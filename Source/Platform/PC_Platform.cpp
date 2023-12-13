@@ -181,3 +181,7 @@ void LoadMappingFile() {
     const char* mappingData = text.c_str();
     ASSERT((glfwUpdateGamepadMappings(mappingData) == GLFW_TRUE), "Input mapping file invalid");
 }
+
+void Platform::SetMouseVisible(bool visible) {
+    glfwSetInputMode(window_, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+}

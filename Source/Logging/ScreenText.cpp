@@ -19,6 +19,10 @@ void ScreenText::Toggle() {
     screenText_->enabled_ = !screenText_->enabled_;
 }
 
+void ScreenText::SetEnabled(bool enabled) {
+    screenText_->enabled_ = enabled;
+}
+
 void ScreenText::Init() {
     assert(screenText_== nullptr);
     screenText_ = new ScreenText();

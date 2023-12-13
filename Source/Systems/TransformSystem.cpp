@@ -60,3 +60,20 @@ void TransformSystem::UpdateRenderTransforms(
         transformComponent.renderTransform[i].rotation = deltaRot * transformComponent.renderTransform[i].rotation;
     }
 }
+
+void TransformSystem::ForceRenderTransforms(
+    EntityList& entities,
+    ComponentList& components
+) {
+    auto& transformComponent = components.Get<TransformComponent>();
+
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.ShouldUpdate())
+            continue;
+        if (!entity.MatchesKey(key))
+            continue;
+
+        transformComponent.renderTransform[i] = transformComponent.transform[i];
+    }
+}

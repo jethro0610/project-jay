@@ -7,7 +7,7 @@ class IntervalSpawnComponent : public Component {
 public:
     ResourceManager* resourceManager;
 
-    std::array<nlohmann::json*, MAX_ENTITIES> entityToSpawn;
+    std::array<EntityDescription*, MAX_ENTITIES> entityToSpawn;
     std::array<int, MAX_ENTITIES> interval;
     std::array<float, MAX_ENTITIES> radius;
     std::array<bool, MAX_ENTITIES> planar;

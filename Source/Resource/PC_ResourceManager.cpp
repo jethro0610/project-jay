@@ -362,7 +362,12 @@ void ResourceManager::LoadEntityDescription(const std::string& name) {
     std::ifstream inFile("entities/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load entity " + name);
 
-    description = nlohmann::json::parse(inFile);
+    description.data = nlohmann::json::parse(inFile);
+
+    #ifdef _DEBUG
+    description.DBG_name = name;
+    #endif
+
     DEBUGLOG("Loaded entity " << name);
 }
 void ResourceManager::UnloadEntityDescription(const std::string& name) {

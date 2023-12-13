@@ -42,7 +42,9 @@ EntityID EntityManager::CreateEntity(const Transform& transform) {
 EntityID EntityManager::CreateEntity(EntityDescription* description, const Transform& transform) {
     EntityID createdEntity = CreateEntity(transform);
 
-    for (auto& componentData : (*description)["components"].items()) {
+    entities_[createdEntity].DBG_name_ = description->DBG_name;
+
+    for (auto& componentData : description->data["components"].items()) {
         std::string componentName = componentData.key();
         Component* component = GetFromMap<Component*>(
             componentMap_, 
@@ -53,11 +55,11 @@ EntityID EntityManager::CreateEntity(EntityDescription* description, const Trans
         entities_[createdEntity].AddComponentById(componentId);
         component->Load(componentData.value(), createdEntity);
     }
-    entities_[createdEntity].seedsOnDestroy_ = GetInt(*description, "seeds_on_destroy", 0);
-    entities_[createdEntity].seedsRadius_ = GetInt(*description, "seed_radius", 0);
+    entities_[createdEntity].seedsOnDestroy_ = GetInt(description->data, "seeds_on_destroy", 0);
+    entities_[createdEntity].seedsRadius_ = GetInt(description->data, "seed_radius", 0);
 
-    if (description->contains("emitters")) {
-        const auto& emittersData = (*description)["emitters"];
+    if (description->data.contains("emitters")) {
+        const auto& emittersData = description->data["emitters"];
         ASSERT((emittersData.size() <= MAX_ENTITY_EMITTERS), "Too many emitters on entity");
         for (int i = 0; i < emittersData.size(); i++) {
             EmitterProperties* properties = resourceManager_.GetEmitterProperties(emittersData[i].get<std::string>());

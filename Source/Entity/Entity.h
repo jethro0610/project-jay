@@ -15,6 +15,10 @@ public:
     int seedsRadius_;
     vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
 
+    #ifdef _DEBUG
+    std::string DBG_name_;
+    #endif
+
     Entity() {
         alive_ = false;
         key_ = 0;

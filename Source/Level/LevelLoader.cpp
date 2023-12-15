@@ -58,52 +58,6 @@ void LevelLoader::LoadLevel(const std::string& name) {
     entityManager_.SpawnEntities();
 }
 
-#ifdef _DEBUG
-void LevelLoader::SaveLevel() {
-    nlohmann::json level;
-
-    level["spread"]["model"] = levelProperties_.spreadModel->DBG_name;
-    for (Material* material : levelProperties_.spreadMaterials)
-        level["spread"]["materials"].push_back(material->DBG_name);
-
-    level["terrain"]["material"] = levelProperties_.terrainMaterial->DBG_name;
-    level["seed"]["material"] = levelProperties_.seedMaterial->DBG_name;
-    
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager_.entities_[i];
-        if (!entity.alive_) continue;
-        
-        nlohmann::json entityData; 
-        entityData["name"] = entity.DBG_name;
-        Transform& transform = transformComponent.transform[i];
-
-        entityData["transform"]["position"]["x"] = transform.position.x;
-        entityData["transform"]["position"]["y"] = transform.position.y;
-        entityData["transform"]["position"]["z"] = transform.position.z;
-
-        entityData["transform"]["scale"]["x"] = transform.scale.x;
-        entityData["transform"]["scale"]["y"] = transform.scale.y;
-        entityData["transform"]["scale"]["z"] = transform.scale.z;
-
-        glm::vec3 eulerRotation = glm::eulerAngles(transform.rotation);
-        entityData["transform"]["rotation"]["x"] = eulerRotation.x;
-        entityData["transform"]["rotation"]["y"] = eulerRotation.y;
-        entityData["transform"]["rotation"]["z"] = eulerRotation.z;
-
-        level["entities"].push_back(entityData);
-    }
-    std::ofstream assetLevelFile("../Assets/levels/" + DBG_levelName_ + ".json");
-    assetLevelFile << std::setw(4) << level << std::endl;
-    assetLevelFile.close();
-
-    std::ofstream workingLevelFile("levels/" + DBG_levelName_ + ".json");
-    workingLevelFile<< std::setw(4) << level << std::endl;
-    workingLevelFile.close();
-    DEBUGLOG("Saved level: " << DBG_levelName_);
-}
-#endif
-
 void LevelLoader::ClearLevel() {
     entityManager_.Reset();
     particleManager_.Reset();

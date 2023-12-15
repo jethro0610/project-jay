@@ -43,6 +43,8 @@ public:
 
     void SetMode(EditorMode mode);
 
+    void SaveLevel();
+
 private:
     Camera& camera_;
     EntityManager& entityManager_;

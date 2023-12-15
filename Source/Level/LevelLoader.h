@@ -24,8 +24,7 @@ public:
     void ClearLevel();
 
     #ifdef _DEBUG
-    void SaveLevel();
-    std::string DBG_levelName_;
+    std::string DBG_currentLevel;
     #endif 
 
 private:

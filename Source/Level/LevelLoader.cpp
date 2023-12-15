@@ -93,8 +93,13 @@ void LevelLoader::SaveLevel() {
 
         level["entities"].push_back(entityData);
     }
-    std::ofstream levelFile("../Assets/levels/" + DBG_levelName_ + ".json");
-    levelFile << std::setw(4) << level << std::endl;
+    std::ofstream assetLevelFile("../Assets/levels/" + DBG_levelName_ + ".json");
+    assetLevelFile << std::setw(4) << level << std::endl;
+    assetLevelFile.close();
+
+    std::ofstream workingLevelFile("levels/" + DBG_levelName_ + ".json");
+    workingLevelFile<< std::setw(4) << level << std::endl;
+    workingLevelFile.close();
     DEBUGLOG("Saved level: " << DBG_levelName_);
 }
 #endif

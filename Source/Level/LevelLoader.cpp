@@ -30,7 +30,7 @@ void LevelLoader::LoadLevel(const std::string& name) {
     ClearLevel();
 
     #ifdef _DEBUG
-    DBG_levelName_ = name;
+    DBG_currentLevel = name;
     #endif
 
     std::ifstream inFile("levels/" + name + ".json");

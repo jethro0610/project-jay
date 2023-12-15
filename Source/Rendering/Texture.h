@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderDefs.h"
+#include "Debug/DebugName.h"
 
 struct Texture {
     TextureHandle handle;
@@ -9,4 +10,6 @@ struct Texture {
     Texture(TextureHandle h) {
         handle = h;
     }
+
+    USE_DEBUG_NAME;
 };

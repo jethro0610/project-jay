@@ -15,8 +15,7 @@ void Game::Init() {
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
-    // Create the player entity
-    levelLoader_.LoadLevel("test_level", levelProperties_);
+    levelLoader_.LoadLevel("test_level");
 
     camera_.target_ = PLAYER_ENTITY;
     editor_.StartEditing();

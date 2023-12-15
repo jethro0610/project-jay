@@ -3,12 +3,14 @@
 #include "Bone.h"
 #include "Ribbon.h"
 #include "Types/Transform.h"
+#include "Debug/DebugName.h"
 #include <glm/mat4x4.hpp>
 #include <vector_const.h>
 
 
 class Skeleton {
 public:
+    USE_DEBUG_NAME;
     Bones bones_;
     Ribbons ribbons_;
     std::vector<Animation> animations_; // Animations are stored directly on skeleton.

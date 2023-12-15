@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderDefs.h"
 #include "Texture.h"
+#include "Debug/DebugName.h"
 #include <vector_const.h>
 #include <glm/mat4x4.hpp>
 
@@ -11,6 +12,7 @@ enum TriangleType {
 };
 
 struct Material {
+    USE_DEBUG_NAME;
     static constexpr int MAX_TEXTURES_PER_MATERIAL = 8;
     static constexpr int SHADOW_TEXINDEX = 14;
     static constexpr int TERRAIN_NOISE_TEXINDEX = 15;

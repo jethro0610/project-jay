@@ -1,5 +1,6 @@
 #pragma once
 #include "EntityKey.h"
+#include "Debug/DebugName.h"
 #include <vector_const.h>
 
 const int MAX_ENTITY_EMITTERS = 8;
@@ -7,6 +8,7 @@ class ParticleEmitter;
 
 class Entity {
 public:
+    USE_DEBUG_NAME;
     bool alive_;
     bool spawnedThisTick_;
     EntityKey key_;
@@ -14,10 +16,6 @@ public:
     int seedsOnDestroy_;
     int seedsRadius_;
     vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
-
-    #ifdef _DEBUG
-    std::string DBG_name_;
-    #endif
 
     Entity() {
         alive_ = false;

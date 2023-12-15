@@ -1,6 +1,7 @@
 #pragma once
 #include "Types/Transform.h"
 #include "Rendering/Material.h"
+#include  "Debug/DebugName.h"
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
@@ -19,6 +20,7 @@ struct Particle {
 };
 
 struct EmitterProperties {
+    USE_DEBUG_NAME;
     EmitterProperties() {
         material = nullptr;
         localSpace = false;

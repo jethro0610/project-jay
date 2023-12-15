@@ -1,9 +1,8 @@
 #pragma once
+#include "Debug/DebugName.h"
 #include <nlohmann/json.hpp>
 #include <string>
 struct EntityDescription {
-    #ifdef _DEBUG
-    std::string DBG_name;
-    #endif
+    USE_DEBUG_NAME;
     nlohmann::json data;
 };

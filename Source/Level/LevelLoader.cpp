@@ -4,15 +4,20 @@
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
 #include "Logging/Logger.h"
+#ifdef _DEBUG
+#include <fstream>
+#endif
 
 LevelLoader::LevelLoader(
     EntityManager& entityManager, 
+    LevelProperties& levelProperties,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
     SeedManager& seedManager,
     SpreadManager& spreadManager
 ) :
 entityManager_(entityManager),
+levelProperties_(levelProperties),
 particleManager_(particleManager),
 resourceManager_(resourceManager),
 seedManager_(seedManager),
@@ -21,35 +26,28 @@ spreadManager_(spreadManager)
     
 }
 
-void LevelLoader::LoadLevel(const std::string& name, LevelProperties& outProperties) {
+void LevelLoader::LoadLevel(const std::string& name) {
+    ClearLevel();
+
+    #ifdef _DEBUG
+    DBG_levelName_ = name;
+    #endif
+
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
-    levelData_ = nlohmann::json::parse(inFile);
+    nlohmann::json levelData_ = nlohmann::json::parse(inFile);
 
     DependencyList dependencies = GenerateDepedencyList(levelData_);
     resourceManager_.UnloadUnusedDependencies(dependencies);
     resourceManager_.LoadDependencies(dependencies);
     
-    outProperties.spreadModel = resourceManager_.GetModel(levelData_["spread"]["model"]);
-    outProperties.spreadMaterials.clear();
+    levelProperties_.spreadModel = resourceManager_.GetModel(levelData_["spread"]["model"]);
+    levelProperties_.spreadMaterials.clear();
     for (auto& materialName : levelData_["spread"]["materials"])
-        outProperties.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
+        levelProperties_.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
 
-    outProperties.terrainMaterial = resourceManager_.GetMaterial(levelData_["terrain"]["material"]);
-    outProperties.seedMaterial = resourceManager_.GetMaterial(levelData_["seed"]["material"]);
-
-    LoadLevel();
-}
-
-void LevelLoader::ClearLevel() {
-    entityManager_.Reset();
-    particleManager_.Reset();
-    spreadManager_.Reset();
-    seedManager_.Reset();
-}
-
-void LevelLoader::LoadLevel() {
-    ClearLevel();
+    levelProperties_.terrainMaterial = resourceManager_.GetMaterial(levelData_["terrain"]["material"]);
+    levelProperties_.seedMaterial = resourceManager_.GetMaterial(levelData_["seed"]["material"]);
 
     auto& entitiesData = levelData_["entities"];
     Transform entityTransform;
@@ -58,6 +56,54 @@ void LevelLoader::LoadLevel() {
         entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
     }
     entityManager_.SpawnEntities();
+}
+
+#ifdef _DEBUG
+void LevelLoader::SaveLevel() {
+    nlohmann::json level;
+
+    level["spread"]["model"] = levelProperties_.spreadModel->DBG_name;
+    for (Material* material : levelProperties_.spreadMaterials)
+        level["spread"]["materials"].push_back(material->DBG_name);
+
+    level["terrain"]["material"] = levelProperties_.terrainMaterial->DBG_name;
+    level["seed"]["material"] = levelProperties_.seedMaterial->DBG_name;
+    
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entityManager_.entities_[i];
+        if (!entity.alive_) continue;
+        
+        nlohmann::json entityData; 
+        entityData["name"] = entity.DBG_name;
+        Transform& transform = transformComponent.transform[i];
+
+        entityData["transform"]["position"]["x"] = transform.position.x;
+        entityData["transform"]["position"]["y"] = transform.position.y;
+        entityData["transform"]["position"]["z"] = transform.position.z;
+
+        entityData["transform"]["scale"]["x"] = transform.scale.x;
+        entityData["transform"]["scale"]["y"] = transform.scale.y;
+        entityData["transform"]["scale"]["z"] = transform.scale.z;
+
+        glm::vec3 eulerRotation = glm::eulerAngles(transform.rotation);
+        entityData["transform"]["rotation"]["x"] = eulerRotation.x;
+        entityData["transform"]["rotation"]["y"] = eulerRotation.y;
+        entityData["transform"]["rotation"]["z"] = eulerRotation.z;
+
+        level["entities"].push_back(entityData);
+    }
+    std::ofstream levelFile("../Assets/levels/" + DBG_levelName_ + ".json");
+    levelFile << std::setw(4) << level << std::endl;
+    DEBUGLOG("Saved level: " << DBG_levelName_);
+}
+#endif
+
+void LevelLoader::ClearLevel() {
+    entityManager_.Reset();
+    particleManager_.Reset();
+    spreadManager_.Reset();
+    seedManager_.Reset();
 }
 
 void ParseVertexShader(const std::string& name, DependencyList& list) {

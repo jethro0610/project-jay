@@ -12,7 +12,8 @@
 
 enum EditorMode {
     EM_Camera,
-    EM_Mouse
+    EM_Mouse,
+    EM_PlanarMove
 };
 
 class Editor {
@@ -34,7 +35,12 @@ public:
     void StartEditing();
     void StopEditing();
     bool IsActive() const { return active_; };
+
     void Update();
+    void CameraUpdate();
+    void MouseUpdate();
+    void PlanarMoveUpdate();
+
     void SetMode(EditorMode mode);
 
 private:

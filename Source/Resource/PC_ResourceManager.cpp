@@ -32,6 +32,7 @@ void ResourceManager::LoadGlobals() {
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
         bgfx::copy(noise_.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
     )};
+    ASSIGN_DEBUG_NAME(textures_.Get("t_noise"), "t_noise");
     globals_.insert("t_noise");
 
     LoadRenderTextures();
@@ -72,6 +73,7 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
     )};
+    ASSIGN_DEBUG_NAME(textures_.Get("t_shadowmap"), "t_shadowmap");
     globals_.insert("t_shadowmap");
 
     textures_.Add("t_render_c") = { bgfx::createTexture2D(
@@ -92,6 +94,7 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::D16,
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     )};
+    ASSIGN_DEBUG_NAME(textures_.Get("t_render_d"), "t_render_d");
     globals_.insert("t_render_d");
 
     textures_.Add("t_post_c") = { bgfx::createTexture2D(
@@ -102,11 +105,13 @@ void ResourceManager::LoadRenderTextures() {
         bgfx::TextureFormat::BGRA8,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP
     )};
+    ASSIGN_DEBUG_NAME(textures_.Get("t_post_c"), "t_post_c");
     globals_.insert("t_post_c");
 }
 
 void ResourceManager::LoadGlobalQuad() {
     Model& quad = models_.Add("st_quad");
+    ASSIGN_DEBUG_NAME(quad, "st_quad");
     Mesh& quadMesh = quad.meshes.push_back();
 
     TextureQuadVertex vertices[4];
@@ -129,6 +134,7 @@ void ResourceManager::LoadGlobalQuad() {
 
 void ResourceManager::LoadGlobalTerrain() {
     Model& terrainModel = models_.Add("st_terrainsheet");
+    ASSIGN_DEBUG_NAME(terrainModel, "st_terrainsheet");
     Mesh& terrainMesh = terrainModel.meshes.push_back();
     int size = ceil(Terrain::TERRAIN_MESH_SIZE * Terrain::TERRAIN_MESH_DENSITY) + 1;
 
@@ -197,6 +203,7 @@ void ResourceManager::LoadGlobalTerrain() {
 
 void ResourceManager::LoadVertexShader(const std::string& name) {
     VertexShader& shader = vertexShaders_.Add(name);
+    ASSIGN_DEBUG_NAME(shader, name);
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
@@ -212,6 +219,7 @@ void ResourceManager::UnloadVertexShader(const std::string& name) {
 
 void ResourceManager::LoadFragmentShader(const std::string& name) {
     FragmentShader& shader = fragmentShaders_.Add(name);
+    ASSIGN_DEBUG_NAME(shader, name);
     std::string path = "./shaders/" + name + ".bin";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
@@ -227,6 +235,7 @@ void ResourceManager::UnloadFragmentShader(const std::string& name) {
 
 void ResourceManager::LoadTexture(const std::string& name) {
     Texture& texture = textures_.Add(name);
+    ASSIGN_DEBUG_NAME(texture, name);
     std::string path = "./textures/" + name + ".dds";
     MEMORYFROMFILE(path);
     if (memory == nullptr)
@@ -242,6 +251,7 @@ void ResourceManager::UnloadTexture(const std::string& name) {
 
 void ResourceManager::LoadMaterial(const std::string& name) {
     Material& material = materials_.Add(name);
+    ASSIGN_DEBUG_NAME(material, name);
     std::ifstream inFile("materials/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load material " + name);
     nlohmann::json data = nlohmann::json::parse(inFile);
@@ -287,6 +297,7 @@ void ResourceManager::UnloadMaterial(const std::string& name) {
 
 void ResourceManager::LoadModel(const std::string& name) {
     Model& model = models_.Add(name);
+    ASSIGN_DEBUG_NAME(model, name);
     std::ifstream file;
     file.open("./models/" + name + ".jmd", std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -358,6 +369,7 @@ void ResourceManager::UnloadModel(const std::string& name) {
 
 void ResourceManager::LoadEntityDescription(const std::string& name) {
     EntityDescription& description = entityDescs_.Add(name);
+    ASSIGN_DEBUG_NAME(description, name);
 
     std::ifstream inFile("entities/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load entity " + name);
@@ -376,6 +388,7 @@ void ResourceManager::UnloadEntityDescription(const std::string& name) {
 
 void ResourceManager::LoadEmitterProperties(const std::string& name) {
     EmitterProperties& properties = emitterProps_.Add(name);
+    ASSIGN_DEBUG_NAME(properties, name);
 
     std::ifstream inFile("emitters/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load emitter" + name);

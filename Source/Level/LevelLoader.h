@@ -14,21 +14,26 @@ class LevelLoader {
 public:
     LevelLoader(
         EntityManager& entityManager, 
+        LevelProperties& levelProperties_,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager
     );
-    void LoadLevel(const std::string& name, LevelProperties& outProperties);
+    void LoadLevel(const std::string& name);
     void ClearLevel();
-    void LoadLevel();
+
+    #ifdef _DEBUG
+    void SaveLevel();
+    std::string DBG_levelName_;
+    #endif 
 
 private:
     EntityManager& entityManager_;
+    LevelProperties& levelProperties_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;
     SeedManager& seedManager_;
     SpreadManager& spreadManager_;
     DependencyList GenerateDepedencyList(nlohmann::json& levelData);
-    nlohmann::json levelData_;
 };

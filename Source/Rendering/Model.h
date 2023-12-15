@@ -1,5 +1,6 @@
 #pragma once
 #include "Mesh.h"
+#include "Debug/DebugName.h"
 #include <vector_const.h>
 
 struct ModelFileHeader {    
@@ -14,4 +15,6 @@ struct Model {
         meshes = {};
     }
     vector_const<Mesh, MAX_MESHES_PER_MODEL> meshes;
+
+    USE_DEBUG_NAME;
 };

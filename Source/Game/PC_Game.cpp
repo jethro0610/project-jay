@@ -15,6 +15,7 @@ Game::Game():
     entityManager_(resourceManager_, particleManager_),
     levelLoader_(
         entityManager_,
+        levelProperties_,
         particleManager_, 
         resourceManager_, 
         seedManager_,
@@ -106,7 +107,7 @@ void Game::FlushInputs_P() {
     if (platform_.pressedKeys_[GLFW_KEY_ESCAPE])
         running_ = false;
 
-    if (platform_.pressedKeys_['Q'])
+    if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_['E'])
         editor_.StartEditing();
     #endif
 

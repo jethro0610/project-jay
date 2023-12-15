@@ -41,8 +41,7 @@ EntityID EntityManager::CreateEntity(const Transform& transform) {
 
 EntityID EntityManager::CreateEntity(EntityDescription* description, const Transform& transform) {
     EntityID createdEntity = CreateEntity(transform);
-
-    entities_[createdEntity].DBG_name_ = description->DBG_name;
+    ASSIGN_DEBUG_NAME(entities_[createdEntity], description->DBG_name);
 
     for (auto& componentData : description->data["components"].items()) {
         std::string componentName = componentData.key();

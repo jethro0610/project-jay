@@ -33,6 +33,7 @@ Game::Game():
         inputs_, levelLoader_, 
         levelProperties_, 
         platform_, 
+        resourceManager_,
         renderer_, 
         terrain_,
         running_

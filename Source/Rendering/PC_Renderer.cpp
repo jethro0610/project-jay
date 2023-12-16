@@ -31,7 +31,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1280;
     height_ = 720;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)width_, (float)height_, 0.5f, 1000.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 

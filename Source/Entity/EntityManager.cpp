@@ -69,6 +69,26 @@ EntityID EntityManager::CreateEntity(EntityDescription* description, const Trans
         }
     }
 
+    #ifdef _DEBUG
+    if (description->data.contains("debug_collider")) {
+        nlohmann::json& colliderData = description->data["debug_collider"];
+        entities_[createdEntity].DBG_collider.radius = GetFloat(colliderData, "radius", 0.0f);
+        entities_[createdEntity].DBG_collider.top = GetFloat(colliderData, "top", 0.0f);
+        entities_[createdEntity].DBG_collider.bottom = GetFloat(colliderData, "bottom", 0.0f);
+    }
+    else if (description->data["components"].contains("pushbox")) {
+        nlohmann::json& colliderData = description->data["components"]["pushbox"];
+        entities_[createdEntity].DBG_collider.radius = GetFloat(colliderData, "radius", 0.0f);
+        entities_[createdEntity].DBG_collider.top = GetFloat(colliderData, "top", 0.0f);
+        entities_[createdEntity].DBG_collider.bottom = GetFloat(colliderData, "bottom", 0.0f);
+    }
+    else {
+        entities_[createdEntity].DBG_collider.radius = 1.0f;
+        entities_[createdEntity].DBG_collider.top = 1.0f;
+        entities_[createdEntity].DBG_collider.bottom = 1.0f;
+    }
+    #endif
+
     return createdEntity;
 }
 

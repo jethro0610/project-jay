@@ -17,9 +17,13 @@
 using namespace glm;
 
 PlayerController::PlayerController() {
-    actionMeter_ = 0; 
+    actionMeter_ = 0;
     cutTimer_ = 0;
     cutCooldown_ = 0;
+    attackTimer_ = 0;
+    attackHitbox_ = 0;
+    charge_ = 0;
+    releasedCharge_ = 0;
 }
 
 void PlayerController::Execute(

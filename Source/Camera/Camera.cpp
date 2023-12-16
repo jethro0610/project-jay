@@ -25,13 +25,18 @@ Camera::Camera(TransformComponent& transformComponent, float trackDistance, Enti
 }
 
 mat4 Camera::GetViewMatrix() const {
-    vec3 forward = rotate(transform_.rotation, Transform::worldForward);
-    vec3 up = rotate(transform_.rotation, Transform::worldUp);
-
     return lookAtRH(
         transform_.position,
-        transform_.position + forward,
-        Transform::worldUp 
+        transform_.position + transform_.GetForwardVector(),
+        transform_.GetUpVector() 
+    );
+}
+
+mat4 Camera::GetViewOnlyMatrix() const {
+    return lookAtRH(
+        vec3(0.0f),
+        transform_.GetForwardVector(),
+        transform_.GetUpVector()
     );
 }
 

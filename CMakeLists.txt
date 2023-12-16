@@ -36,6 +36,7 @@ file(GLOB SOURCES
     Source/Helpers/Random.cpp
 
     Source/Collision/Collision.cpp
+    Source/Collision/Ray.cpp
 
     Source/AI/WalkerController.cpp
 

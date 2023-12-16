@@ -46,6 +46,8 @@ public:
         Terrain& terrain
     );
 
+    glm::mat4 GetProjectionMatrix() const { return projectionMatrix_; };
+
 private:
     int width_;
     int height_;

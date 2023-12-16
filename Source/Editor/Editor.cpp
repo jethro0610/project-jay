@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "Rendering/Renderer.h"
 #include "Systems/Systems.h"
+#include "Collision/Ray.h"
 #include <GLFW/glfw3.h>
 using namespace glm;
 
@@ -11,6 +12,7 @@ Editor::Editor(
     LevelLoader& levelLoader,
     LevelProperties& levelProperties,
     Platform& platform, 
+    ResourceManager& resourceManager,
     Renderer& renderer,
     Terrain& terrain,
     bool& running
@@ -21,24 +23,23 @@ inputs_(inputs),
 levelLoader_(levelLoader),
 levelProperties_(levelProperties),
 platform_(platform),
+resourceManager_(resourceManager),
 renderer_(renderer),
 terrain_(terrain),
 running_(running)
 {
     active_ = false;
     target_ = NULL_ENTITY;
-    mode_ = EM_Camera;
+    mode_ = EM_Mouse;
 }
 
 void Editor::StartEditing() {
     active_ = true;
     target_ = NULL_ENTITY;
-    mode_ = EM_Camera;
+    SetMode(EM_Mouse);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
     levelLoader_.LoadLevel(levelLoader_.DBG_currentLevel);
-
-    target_ = 1;
 }
 
 void Editor::StopEditing() {
@@ -53,34 +54,30 @@ void Editor::StopEditing() {
 
 void Editor::SetMode(EditorMode mode) {
     mode_ = mode;
-    switch (mode_) {
-        case EM_Camera: {
-            platform_.SetMouseVisible(false); 
-            break;
-        }
-
-        case EM_Mouse: {
-            platform_.SetMouseVisible(true); 
-            break;
-        }
-        
-        case EM_PlanarMove: {
-            platform_.SetMouseVisible(false); 
-            break;
-        }
-
-        default:
-            break;
-    }
+    if (mode == EM_Mouse)
+        platform_.SetMouseVisible(true);
+    else
+        platform_.SetMouseVisible(false);
 }
 
 void Editor::Update() {
-    if (platform_.pressedKeys_['1'])
-        SetMode(EM_Camera);
-    if (platform_.pressedKeys_['2'])
+    if (platform_.pressedKeys_[GLFW_KEY_TAB])
         SetMode(EM_Mouse);
-    if (platform_.pressedKeys_['3'])
+    if (platform_.pressedKeys_['Q'])
+        SetMode(EM_Camera);
+
+    if (platform_.pressedKeys_['E'] && !platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL])
         SetMode(EM_PlanarMove);
+    if (platform_.pressedKeys_['R'])
+        SetMode(EM_VeritcalMove);
+    if (platform_.pressedKeys_['T'])
+        SetMode(EM_AlignMove);
+
+    if (platform_.pressedKeys_['X'])
+        SetMode(EM_PlanarScale);
+    if (platform_.pressedKeys_['Z'])
+        SetMode(EM_VerticalScale);
+
     if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_['E'])
         StopEditing();
 
@@ -95,8 +92,28 @@ void Editor::Update() {
             break;
         }
 
+        case EM_AlignMove: {
+            AlignMoveUpdate();
+            break;
+        }
+
         case EM_PlanarMove: {
             PlanarMoveUpdate();
+            break;
+        }
+
+        case EM_VeritcalMove: {
+            VerticalMoveUpdate();
+            break;
+        }
+
+        case EM_PlanarScale: {
+            PlanarScaleUpdate();
+            break;
+        }
+
+        case EM_VerticalScale: {
+            VerticalScaleUpdate();
             break;
         }
 
@@ -108,6 +125,7 @@ void Editor::Update() {
         entityManager_.entities_,
         entityManager_.components_
     );
+    entityManager_.SpawnEntities();
     renderer_.RenderMinimal(
         entityManager_.entities_, 
         entityManager_.components_,
@@ -122,7 +140,47 @@ void Editor::CameraUpdate() {
 }
 
 void Editor::MouseUpdate() {
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    if (platform_.pressedKeys_[LEFT_MOUSE_KEY]) {
+        target_ = NULL_ENTITY;
+        float maxDist = INFINITY;
+        vec3 mouseRay = GetMouseRay();
+        for (int i = 0; i < MAX_ENTITIES; i++) {
+            const Entity& entity = entityManager_.entities_[i];
+            if (!entity.alive_) continue;
 
+            Transform& transform = transformComponent.transform[i];
+            float dist = distance(camera_.transform_.position, transform.position);
+            if (
+                Ray::RayHitCollider(camera_.transform_.position, mouseRay, transform, entity.DBG_collider) &&
+                dist < maxDist
+            ) {
+                maxDist = dist;
+                target_ =  i;
+            }
+        }
+    }
+}
+
+void Editor::AlignMoveUpdate() {
+    if (target_ == NULL_ENTITY) return;
+
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    Transform& transform = transformComponent.transform[target_];
+
+    vec3 planarCameraForward = camera_.transform_.GetForwardVector();
+    planarCameraForward.y = 0.0f;
+    planarCameraForward = normalize(planarCameraForward);
+
+    vec3 planarCameraRight = camera_.transform_.GetRightVector();
+    planarCameraRight.y = 0.0f;
+    planarCameraRight = normalize(planarCameraRight);
+
+    transform.position += 
+        planarCameraForward * -(float)platform_.deltaMouseY_ * 0.1f +
+        planarCameraRight * (float)platform_.deltaMouseX_ * 0.1f;
+
+    transform.position.y = terrain_.GetHeight(vec2(transform.position.x, transform.position.z));
 }
 
 void Editor::PlanarMoveUpdate() {
@@ -140,8 +198,33 @@ void Editor::PlanarMoveUpdate() {
     planarCameraRight = normalize(planarCameraRight);
 
     transform.position += 
-        planarCameraForward * -(float)platform_.deltaMouseY_ * 0.5f +
-        planarCameraRight * (float)platform_.deltaMouseX_ * 0.5f;
+        planarCameraForward * -(float)platform_.deltaMouseY_ * 0.1f +
+        planarCameraRight * (float)platform_.deltaMouseX_ * 0.1f;
+}
+
+void Editor::VerticalMoveUpdate() {
+    if (target_ == NULL_ENTITY) return;
+
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    Transform& transform = transformComponent.transform[target_];
+    transform.position.y += -(float)platform_.deltaMouseY_ * 0.1f;
+}
+
+void Editor::PlanarScaleUpdate() {
+    if (target_ == NULL_ENTITY) return;
+
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    Transform& transform = transformComponent.transform[target_];
+    transform.scale.x += (float)platform_.deltaMouseX_ * 0.1f;
+    transform.scale.z += (float)platform_.deltaMouseX_ * 0.1f;
+}
+
+void Editor::VerticalScaleUpdate() {
+    if (target_ == NULL_ENTITY) return;
+
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    Transform& transform = transformComponent.transform[target_];
+    transform.scale.y -= (float)platform_.deltaMouseY_ * 0.1f;
 }
 
 // Since editor is PC only this will just be in the regular file
@@ -198,4 +281,17 @@ void Editor::SaveLevel() {
     workingLevelFile<< std::setw(4) << level << std::endl;
     workingLevelFile.close();
     DEBUGLOG("Saved level: " << levelLoader_.DBG_currentLevel);
+}
+
+vec3 Editor::GetMouseRay() {
+    float mouseX = platform_.mouseX_ / (1280  * 0.5f) - 1.0f;
+    float mouseY = platform_.mouseY_ / (720 * 0.5f) - 1.0f;
+
+    glm::mat4 invVP = glm::inverse(renderer_.GetProjectionMatrix() * camera_.GetViewOnlyMatrix());
+    glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);
+    glm::vec4 worldPos = invVP * screenPos;
+
+    glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
+
+    return dir;
 }

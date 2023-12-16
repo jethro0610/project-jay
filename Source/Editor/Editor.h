@@ -5,6 +5,7 @@
 #include "Terrain/Terrain.h"
 #include "Level/LevelLoader.h"
 #include "Level/LevelProperties.h"
+#include "Resource/ResourceManager.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
@@ -13,7 +14,11 @@
 enum EditorMode {
     EM_Camera,
     EM_Mouse,
-    EM_PlanarMove
+    EM_AlignMove,
+    EM_PlanarMove,
+    EM_VeritcalMove,
+    EM_PlanarScale,
+    EM_VerticalScale
 };
 
 class Editor {
@@ -25,6 +30,7 @@ public:
         LevelLoader& levelLoader,
         LevelProperties& levelProperties,
         Platform& platform, 
+        ResourceManager& resourceManager,
         Renderer& renderer,
         Terrain& terrain,
         bool& running
@@ -39,11 +45,17 @@ public:
     void Update();
     void CameraUpdate();
     void MouseUpdate();
+    void AlignMoveUpdate();
     void PlanarMoveUpdate();
+    void VerticalMoveUpdate();
+    void PlanarScaleUpdate();
+    void VerticalScaleUpdate();
 
     void SetMode(EditorMode mode);
 
     void SaveLevel();
+
+    glm::vec3 GetMouseRay();
 
 private:
     Camera& camera_;
@@ -53,6 +65,7 @@ private:
     LevelProperties& levelProperties_;
     Platform& platform_;
     Renderer& renderer_;
+    ResourceManager& resourceManager_;
     Terrain& terrain_;
 
     void FlushInputs();

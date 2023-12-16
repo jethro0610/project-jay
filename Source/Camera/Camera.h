@@ -21,6 +21,8 @@ public:
 
     void Update(Inputs inputs);
     glm::mat4 GetViewMatrix() const;
+    glm::mat4 GetViewOnlyMatrix() const;
+
 private:
     TransformComponent& transformComponent_;
 };

@@ -1,6 +1,9 @@
 #pragma once
 #include "EntityKey.h"
 #include "Debug/DebugName.h"
+#ifdef _DEBUG
+#include "Collision/Collider.h"
+#endif
 #include <vector_const.h>
 
 const int MAX_ENTITY_EMITTERS = 8;
@@ -16,6 +19,9 @@ public:
     int seedsOnDestroy_;
     int seedsRadius_;
     vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
+    #ifdef _DEBUG
+    Collider DBG_collider;
+    #endif
 
     Entity() {
         alive_ = false;

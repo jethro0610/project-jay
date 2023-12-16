@@ -18,7 +18,8 @@ enum EditorMode {
     EM_PlanarMove,
     EM_VeritcalMove,
     EM_PlanarScale,
-    EM_VerticalScale
+    EM_VerticalScale,
+    EM_Scale
 };
 
 class Editor {
@@ -50,6 +51,7 @@ public:
     void VerticalMoveUpdate();
     void PlanarScaleUpdate();
     void VerticalScaleUpdate();
+    void ScaleUpdate();
 
     void SetMode(EditorMode mode);
 

@@ -77,6 +77,8 @@ void Editor::Update() {
         SetMode(EM_PlanarScale);
     if (platform_.pressedKeys_['Z'])
         SetMode(EM_VerticalScale);
+    if (platform_.pressedKeys_['C'])
+        SetMode(EM_Scale);
 
     if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_['E'])
         StopEditing();
@@ -114,6 +116,11 @@ void Editor::Update() {
 
         case EM_VerticalScale: {
             VerticalScaleUpdate();
+            break;
+        }
+
+        case EM_Scale: {
+            ScaleUpdate();
             break;
         }
 
@@ -215,8 +222,8 @@ void Editor::PlanarScaleUpdate() {
 
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     Transform& transform = transformComponent.transform[target_];
-    transform.scale.x += (float)platform_.deltaMouseX_ * 0.1f;
-    transform.scale.z += (float)platform_.deltaMouseX_ * 0.1f;
+    transform.scale.x = max(transform.scale.x + (float)platform_.deltaMouseX_ * 0.1f, 0.05f);
+    transform.scale.z = max(transform.scale.z + (float)platform_.deltaMouseX_ * 0.1f, 0.05f);
 }
 
 void Editor::VerticalScaleUpdate() {
@@ -224,7 +231,17 @@ void Editor::VerticalScaleUpdate() {
 
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     Transform& transform = transformComponent.transform[target_];
-    transform.scale.y -= (float)platform_.deltaMouseY_ * 0.1f;
+    transform.scale.y = max(transform.scale.y -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
+}
+
+void Editor::ScaleUpdate() {
+    if (target_ == NULL_ENTITY) return;
+
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+    Transform& transform = transformComponent.transform[target_];
+    transform.scale.x = max(transform.scale.x -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
+    transform.scale.y = max(transform.scale.y -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
+    transform.scale.z = max(transform.scale.z -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
 }
 
 // Since editor is PC only this will just be in the regular file

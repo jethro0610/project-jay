@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "Material.h"
 #include "Entity/EntityList.h"
+#include "Text/Text.h"
 #include <array>
 #include <glm/mat4x4.hpp>
 
@@ -106,6 +107,7 @@ private:
     UniformHandle u_terrainProps_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_noiseProps_;
+    UniformHandle u_textProps_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
     void SetTexturesFromMaterial(Material* material, bool shadowMap = true);
@@ -135,6 +137,7 @@ private:
     void RenderPostProcess();
     void RenderBlit();
     void RenderUI(ComponentList& components);
+    void RenderText(Text& text);
     #ifdef _DEBUG
     void RenderScreenText();
     #endif

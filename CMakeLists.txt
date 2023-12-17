@@ -60,6 +60,7 @@ file(GLOB SOURCES
 
     Source/Spread/SpreadManager.cpp
 
+    Source/Text/Text.cpp
     Source/Logging/Logger.cpp
     Source/Logging/ScreenText.cpp
     Source/Logging/PC_ScreenText.cpp

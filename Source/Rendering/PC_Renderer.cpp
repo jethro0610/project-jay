@@ -66,7 +66,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
-
+    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4);
+    DEBUGLOG(bgfx::getCaps()->limits.maxUniforms);
     SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
 
     vec4 noiseProps;
@@ -393,23 +394,32 @@ void Renderer::RenderUI(ComponentList& components) {
     bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
 }
 
-void Renderer::RenderScreenText() {
-    if (!ScreenText::IsEnabled())
-        return;
-
+void Renderer::RenderText(Text& text) {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
-    uint32_t count = ScreenText::MAX_LINES * ScreenText::CHARS_PER_LINE;
+    uint32_t count = text.length_;
+
+    bgfx::setUniform(u_textProps_, &text.properties_);
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
-    memcpy(instanceBuffer.data, ScreenText::GetText(), sizeof(vec4) * count);
+    memcpy(instanceBuffer.data, text.glyphs_.data(), sizeof(vec4) * count);
     bgfx::setInstanceDataBuffer(&instanceBuffer);
 
+    // TODO: Move text material to Text class?
     bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]->handle);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
+}
+
+void Renderer::RenderScreenText() {
+    if (!ScreenText::IsEnabled())
+        return;
+
+    for (Text& text : ScreenText::GetText()) {
+        RenderText(text);
+    }
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

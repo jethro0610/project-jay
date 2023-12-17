@@ -5,8 +5,9 @@
 #include <glm/vec3.hpp>
 
 struct Glyph {
+    float index;
     float character;
-    glm::vec3 padding;
+    glm::vec2 padding;
 };
 
 struct TextProperties {
@@ -22,17 +23,20 @@ public:
     Text();
     TextProperties properties_;
     std::array<Glyph, MAX_CHARS> glyphs_;
+    int length_;
 
     float& operator[](int index) {
+        assert(index < length_);
         return glyphs_[index].character;
     }
 
-    void operator=(const std::string& text) { 
+    void operator=(const std::string& str) { 
         for (int i = 0; i < MAX_CHARS; i++) {
-            if (i < text.length())
-                glyphs_[i].character = (float)text[i] - 32;
+            if (i < str.length())
+                glyphs_[i].character = (float)str[i] - 32;
             else
                 glyphs_[i].character = (float)' ' - 32;
         }
+        length_ = str.length();
     }
 };

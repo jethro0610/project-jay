@@ -20,7 +20,8 @@ enum EditorMode {
     EM_VeritcalMove,
     EM_PlanarScale,
     EM_VerticalScale,
-    EM_Scale
+    EM_Scale,
+    EM_Spawn,
 };
 
 class Editor {
@@ -42,6 +43,8 @@ public:
     Text modeText_;
     Text targetText_;
 
+    Text inputText_;
+
     void StartEditing();
     void StopEditing();
     bool IsActive() const { return active_; };
@@ -55,6 +58,7 @@ public:
     void PlanarScaleUpdate();
     void VerticalScaleUpdate();
     void ScaleUpdate();
+    void SpawnUpdate();
 
     void SetMode(EditorMode mode);
 

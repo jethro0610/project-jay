@@ -27,6 +27,8 @@ public:
     std::string DBG_currentLevel;
     #endif 
 
+    DependencyList GenerateEntityDependencyList(const std::string& entityName);
+
 private:
     EntityManager& entityManager_;
     LevelProperties& levelProperties_;
@@ -34,5 +36,6 @@ private:
     ResourceManager& resourceManager_;
     SeedManager& seedManager_;
     SpreadManager& spreadManager_;
+
     DependencyList GenerateDepedencyList(nlohmann::json& levelData);
 };

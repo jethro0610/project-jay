@@ -440,6 +440,7 @@ void Renderer::RenderScreenText() {
 void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.modeText_);
     RenderText(editor.targetText_);
+    RenderText(editor.inputText_);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

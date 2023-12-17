@@ -2,7 +2,6 @@
     - Reset when press 0 (scale, rotation)
     - Selection highlight
     - Rotation
-    - Entity spawner
     - Noise editor
     - Pause
 

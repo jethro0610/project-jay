@@ -1,4 +1,5 @@
 #pragma once
+#include "Logging/Logger.h"
 #include <array>
 #include <string>
 #include <glm/vec2.hpp>
@@ -35,9 +36,34 @@ public:
     std::array<Glyph, MAX_CHARS> glyphs_;
     int length_;
 
-    float& operator[](int index) {
-        assert(index < length_);
-        return glyphs_[index].character;
+    void RemoveLast() {
+        if (length_ == 0) return;
+        length_--;
+    }
+
+    void Clear() {
+        length_ = 0;
+    }
+
+    std::string ToString() {
+        std::string str;
+        for (int i = 0; i < length_; i++)
+            str += (char)glyphs_[i].character + 32; 
+        return str;
+    }
+
+    void operator+=(const std::string& str) {
+        assert(length_ + str.length() <= MAX_CHARS);
+        for (int i = 0; i < str.length(); i++) {
+            glyphs_[i + length_].character = str[i];
+        }
+        length_ += str.length();
+    }
+
+    void operator+=(int chr) {
+        assert(length_ + 1 <= MAX_CHARS);
+        glyphs_[length_].character = chr - 32;
+        length_++;
     }
 
     void operator=(const std::string& str) { 

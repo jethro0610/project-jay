@@ -44,12 +44,18 @@ running_(running)
     targetText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
     targetText_.properties_.hAnchor = Text::RIGHT_ALIGN;
     targetText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+
+    inputText_.properties_.scale = 40.0f;
+    inputText_.properties_.hAlignment = Text::LEFT_ALIGN;
+    inputText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    inputText_.properties_.hAnchor = Text::LEFT_ALIGN;
+    inputText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 }
 
 void Editor::StartEditing() {
     active_ = true;
     SetTarget(NULL_ENTITY);
-    SetMode(EM_Mouse);
+    SetMode(EM_Camera);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
     levelLoader_.LoadLevel(levelLoader_.DBG_currentLevel);
@@ -99,6 +105,9 @@ std::string GetModeName(EditorMode mode) {
         case EM_Scale:
             return "Uniform Scale";
 
+        case EM_Spawn:
+            return "Spawn Entity";
+
         default:
             return "Unknown";
     }
@@ -111,28 +120,55 @@ void Editor::SetMode(EditorMode mode) {
     else
         platform_.SetMouseVisible(false);
 
+    if (mode_ == EM_Camera)
+        inputText_.Clear();
+
     modeText_ = GetModeName(mode_);
+    FlushInputs();
 }
 
 void Editor::Update() {
+    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
+
     if (platform_.pressedKeys_[GLFW_KEY_TAB])
-        SetMode(EM_Mouse);
-    if (platform_.pressedKeys_['Q'])
         SetMode(EM_Camera);
 
-    if (platform_.pressedKeys_['E'] && !platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL])
-        SetMode(EM_PlanarMove);
-    if (platform_.pressedKeys_['R'])
-        SetMode(EM_VeritcalMove);
-    if (platform_.pressedKeys_['T'])
-        SetMode(EM_AlignMove);
+    if (mode_ != EM_Spawn) {
+        if (platform_.pressedKeys_['Q'])
+            SetMode(EM_Mouse);
 
-    if (platform_.pressedKeys_['X'])
-        SetMode(EM_PlanarScale);
-    if (platform_.pressedKeys_['Z'])
-        SetMode(EM_VerticalScale);
-    if (platform_.pressedKeys_['C'])
-        SetMode(EM_Scale);
+        if (platform_.pressedKeys_['E'] && !platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL])
+            SetMode(EM_PlanarMove);
+        if (platform_.pressedKeys_['R'])
+            SetMode(EM_VeritcalMove);
+        if (platform_.pressedKeys_['T'])
+            SetMode(EM_AlignMove);
+
+        if (platform_.pressedKeys_['X'])
+            SetMode(EM_PlanarScale);
+        if (platform_.pressedKeys_['Z'])
+            SetMode(EM_VerticalScale);
+        if (platform_.pressedKeys_['C'])
+            SetMode(EM_Scale);
+        if (platform_.pressedKeys_['I'])
+            SetMode(EM_Spawn);
+
+        if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_ != NULL_ENTITY) {
+            entityManager_.destroyList_.push_back({target_, false});
+            SetTarget(NULL_ENTITY);
+        }
+
+        if (
+            platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && 
+            platform_.pressedKeys_['D'] && 
+            target_ != NULL_ENTITY
+        ) {
+            entityManager_.spawnList_.push_back({
+                resourceManager_.GetEntityDescription(entityManager_.entities_[target_].DBG_name), 
+                transformComponent.transform[target_]
+            });
+        }
+    }
 
     if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_['E'])
         StopEditing();
@@ -178,6 +214,11 @@ void Editor::Update() {
             break;
         }
 
+        case EM_Spawn: {
+            SpawnUpdate();
+            break;
+        }
+
         default:
             break;
     }
@@ -186,6 +227,7 @@ void Editor::Update() {
         entityManager_.entities_,
         entityManager_.components_
     );
+    entityManager_.DestroyEntities();
     entityManager_.SpawnEntities();
     renderer_.RenderEdit(
         entityManager_.entities_, 
@@ -297,6 +339,50 @@ void Editor::ScaleUpdate() {
     transform.scale.x = max(transform.scale.x -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
     transform.scale.y = max(transform.scale.y -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
     transform.scale.z = max(transform.scale.z -(float)platform_.deltaMouseY_ * 0.1f, 0.05f);
+}
+
+void Editor::SpawnUpdate() {
+    if (platform_.pressedKeys_[GLFW_KEY_BACKSPACE]) 
+        inputText_.RemoveLast();
+
+    for (int i = 0; i < NUM_KEYS; i++) {
+        if (i < GLFW_KEY_SPACE || i > 'Z')
+            continue;
+
+        if (!platform_.pressedKeys_[i])
+            continue;
+
+        if (
+            !platform_.heldKeys_[GLFW_KEY_LEFT_SHIFT] &&
+            !platform_.heldKeys_[GLFW_KEY_RIGHT_SHIFT]
+        )
+            inputText_ += tolower(i);
+        else if (i == '-')
+            inputText_ += 95;
+        else
+            inputText_ += i;
+    }
+
+    if (platform_.pressedKeys_[GLFW_KEY_ENTER]) {
+        const std::string entityName = "e_" + inputText_.ToString();
+        inputText_.Clear();
+        SetMode(EM_Mouse);
+
+        if (!resourceManager_.HasEntityDescription(entityName)) {
+            if (!std::filesystem::exists("entities/" + entityName + ".json"))
+                return;
+
+            DependencyList dList = levelLoader_.GenerateEntityDependencyList(entityName);
+            resourceManager_.LoadDependencies(dList);
+        }
+
+        Transform spawnTransform;
+        spawnTransform.position = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
+        entityManager_.spawnList_.push_back({
+            resourceManager_.GetEntityDescription(entityName),
+            spawnTransform
+        });
+    }
 }
 
 // Since editor is PC only this will just be in the regular file

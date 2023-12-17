@@ -146,6 +146,13 @@ void ParseLevelEntities(nlohmann::json& entitiesData, DependencyList& list) {
     }
 }
 
+// Move this to resource manager?
+DependencyList LevelLoader::GenerateEntityDependencyList(const std::string& entityName) {
+    DependencyList list;
+    ParseEntity(entityName, list);
+    return list;
+}
+
 DependencyList LevelLoader::GenerateDepedencyList(nlohmann::json& levelData) {
     DependencyList list;
     ParseModel(levelData["spread"]["model"], list);

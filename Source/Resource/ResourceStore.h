@@ -10,6 +10,10 @@ private:
     std::unordered_map<std::string, int> resourceMap_;
 
 public:
+    bool Has(const std::string& name) {
+        return resourceMap_.contains(name);
+    }
+
     T& Add(const std::string& name) {
         ForceMapUnique(resourceMap_, name, "Already loaded resource " + name);
         int next = resources_.push_back();

@@ -54,6 +54,15 @@ public:
     EmitterProperties* GetEmitterProperties(const std::string& name);
     Texture* GetTexture(const std::string& name);
 
+    bool HasVertexShader(const std::string& name);
+    bool HasFragmentShader(const std::string& name);
+    bool HasMaterial(const std::string& name);
+    bool HasModel(const std::string& name);
+    bool HasSkeleton(const std::string& name);
+    bool HasEntityDescription(const std::string& name);
+    bool HasEmitterProperties(const std::string& name);
+    bool HasTexture(const std::string& name);
+
     void LoadDependencies(DependencyList& depdencyList);
     void UnloadUnusedDependencies(DependencyList& depdencyList);
 

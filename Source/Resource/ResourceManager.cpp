@@ -106,3 +106,35 @@ EntityDescription* ResourceManager::GetEntityDescription(const std::string& name
 EmitterProperties* ResourceManager::GetEmitterProperties(const std::string& name) {
     return &emitterProps_.Get(name);
 }
+
+bool ResourceManager::HasVertexShader(const std::string& name) {
+    return vertexShaders_.Has(name);
+}
+
+bool ResourceManager::HasFragmentShader(const std::string& name) {
+    return fragmentShaders_.Has(name);
+}
+
+bool ResourceManager::HasTexture(const std::string& name) {
+    return textures_.Has(name);
+}
+
+bool ResourceManager::HasMaterial(const std::string& name) {
+    return materials_.Has(name);
+}
+
+bool ResourceManager::HasModel(const std::string& name) {
+    return models_.Has(name);
+}
+
+bool ResourceManager::HasSkeleton(const std::string& name) {
+    return skeletons_.Has(name);
+}
+
+bool ResourceManager::HasEntityDescription(const std::string& name) {
+    return entityDescs_.Has(name);
+}
+
+bool ResourceManager::HasEmitterProperties(const std::string& name) {
+    return emitterProps_.Has(name);
+}

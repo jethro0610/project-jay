@@ -12,6 +12,7 @@ Text::Text() {
     for (int i = 0; i < MAX_CHARS; i++) {
         glyphs_[i].index = i;
     }
+    length_ = 0;
 }
 
 Text::Text(const glm::vec2& position, float scale, float kerning) {

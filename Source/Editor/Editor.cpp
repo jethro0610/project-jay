@@ -33,16 +33,16 @@ running_(running)
     mode_ = EM_Mouse;
 
     modeText_.properties_.scale = 40.0f;
-    modeText_.properties_.hAlignment = Text::LEFT_ALIGN;
+    modeText_.properties_.hAlignment = Text::RIGHT_ALIGN;
     modeText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    modeText_.properties_.hAnchor = Text::LEFT_ALIGN;
+    modeText_.properties_.hAnchor = Text::RIGHT_ALIGN;
     modeText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 
     targetText_.properties_.scale = 40.0f;
     targetText_.properties_.position.y -= 40.0f;
-    targetText_.properties_.hAlignment = Text::LEFT_ALIGN;
+    targetText_.properties_.hAlignment = Text::RIGHT_ALIGN;
     targetText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    targetText_.properties_.hAnchor = Text::LEFT_ALIGN;
+    targetText_.properties_.hAnchor = Text::RIGHT_ALIGN;
     targetText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 }
 
@@ -68,9 +68,9 @@ void Editor::StopEditing() {
 void Editor::SetTarget(EntityID target) {
     target_ = target;
     if (target_ == NULL_ENTITY)
-        targetText_ = "Entity: None";
+        targetText_ = "";
     else
-        targetText_ = "Entity: " + entityManager_.entities_[target_].DBG_name + '(' + std::to_string(target_) + ')';
+        targetText_ = entityManager_.entities_[target_].DBG_name + '(' + std::to_string(target_) + ')';
 }
 
 std::string GetModeName(EditorMode mode) {

@@ -1,4 +1,5 @@
 #pragma once
+#include "Text/Text.h"
 #include <string>
 
 #ifdef _DEBUG
@@ -7,21 +8,17 @@
 #define SCREENLINE(text)
 #endif
 
-#ifdef _PC
-#include <glm/vec4.hpp>
-typedef glm::vec4 TextGlyph;
-#endif
-
 class ScreenText {
 public:
     static constexpr int MAX_LINES = 12;
-    static constexpr int CHARS_PER_LINE = 32;
+    static constexpr float SCALE = 48.0f;
+    static constexpr float KERNING = 0.5f;
 
 private:
     ScreenText();
     ~ScreenText();
     static ScreenText* screenText_;
-    TextGlyph text_[MAX_LINES][CHARS_PER_LINE];
+    std::array<Text, MAX_LINES> text_;
     bool enabled_;
 
 public:
@@ -29,7 +26,7 @@ public:
     static bool IsEnabled();
     static void SetLine(int line, const std::string& text);
     static void Clear();
-    static TextGlyph* GetText();
+    static std::array<Text, MAX_LINES>& GetText() { return screenText_->text_; }
     static void Toggle();
     static void Init();
     static void SetEnabled(bool enabled);

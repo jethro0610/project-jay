@@ -15,6 +15,7 @@
 #endif
 
 class Camera;
+class Editor;
 class LevelProperties;
 class Noise;
 class SeedManager;
@@ -40,9 +41,10 @@ public:
         Terrain& terrain
     );
 
-    void RenderMinimal(
+    void RenderEdit(
         EntityList& entities,
         ComponentList& components,
+        Editor& editor,
         LevelProperties& levelProperties,
         Terrain& terrain
     );
@@ -138,6 +140,7 @@ private:
     void RenderBlit();
     void RenderUI(ComponentList& components);
     void RenderText(Text& text);
+    void RenderEditor(Editor& editor);
     #ifdef _DEBUG
     void RenderScreenText();
     #endif

@@ -29,13 +29,26 @@ terrain_(terrain),
 running_(running)
 {
     active_ = false;
-    target_ = NULL_ENTITY;
+    SetTarget(NULL_ENTITY);
     mode_ = EM_Mouse;
+
+    modeText_.properties_.scale = 40.0f;
+    modeText_.properties_.hAlignment = Text::LEFT_ALIGN;
+    modeText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    modeText_.properties_.hAnchor = Text::LEFT_ALIGN;
+    modeText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+
+    targetText_.properties_.scale = 40.0f;
+    targetText_.properties_.position.y -= 40.0f;
+    targetText_.properties_.hAlignment = Text::LEFT_ALIGN;
+    targetText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    targetText_.properties_.hAnchor = Text::LEFT_ALIGN;
+    targetText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 }
 
 void Editor::StartEditing() {
     active_ = true;
-    target_ = NULL_ENTITY;
+    SetTarget(NULL_ENTITY);
     SetMode(EM_Mouse);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
@@ -44,12 +57,51 @@ void Editor::StartEditing() {
 
 void Editor::StopEditing() {
     active_ = false;
-    target_ = NULL_ENTITY;
+    SetTarget(NULL_ENTITY);
     camera_.target_ = PLAYER_ENTITY;
     platform_.SetMouseVisible(false);
     ScreenText::Clear();
     ScreenText::SetEnabled(false);
     SaveLevel();
+}
+
+void Editor::SetTarget(EntityID target) {
+    target_ = target;
+    if (target_ == NULL_ENTITY)
+        targetText_ = "Entity: None";
+    else
+        targetText_ = "Entity: " + entityManager_.entities_[target_].DBG_name + '(' + std::to_string(target_) + ')';
+}
+
+std::string GetModeName(EditorMode mode) {
+    switch(mode) {
+        case EM_Camera:
+            return "Free Camera";
+        
+        case EM_Mouse:
+            return "Cursor";
+
+        case EM_AlignMove:
+            return "Terrain Aligned Translation";
+
+        case EM_PlanarMove:
+            return "Planar Translation";
+
+        case EM_VeritcalMove:
+            return "Vertical Translation";
+
+        case EM_PlanarScale:
+            return "Planar Scale";
+
+        case EM_VerticalScale:
+            return "Vertical Scale";
+
+        case EM_Scale:
+            return "Uniform Scale";
+
+        default:
+            return "Unknown";
+    }
 }
 
 void Editor::SetMode(EditorMode mode) {
@@ -58,6 +110,8 @@ void Editor::SetMode(EditorMode mode) {
         platform_.SetMouseVisible(true);
     else
         platform_.SetMouseVisible(false);
+
+    modeText_ = GetModeName(mode_);
 }
 
 void Editor::Update() {
@@ -133,9 +187,10 @@ void Editor::Update() {
         entityManager_.components_
     );
     entityManager_.SpawnEntities();
-    renderer_.RenderMinimal(
+    renderer_.RenderEdit(
         entityManager_.entities_, 
         entityManager_.components_,
+        *this,
         levelProperties_,
         terrain_ 
     );
@@ -149,7 +204,7 @@ void Editor::CameraUpdate() {
 void Editor::MouseUpdate() {
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     if (platform_.pressedKeys_[LEFT_MOUSE_KEY]) {
-        target_ = NULL_ENTITY;
+        SetTarget(NULL_ENTITY);
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
         for (int i = 0; i < MAX_ENTITIES; i++) {
@@ -163,7 +218,7 @@ void Editor::MouseUpdate() {
                 dist < maxDist
             ) {
                 maxDist = dist;
-                target_ =  i;
+                SetTarget(i);
             }
         }
     }

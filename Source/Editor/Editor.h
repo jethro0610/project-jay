@@ -6,6 +6,7 @@
 #include "Level/LevelLoader.h"
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
+#include "Text/Text.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
@@ -38,6 +39,8 @@ public:
     );
     EditorMode mode_;
     EntityID target_;
+    Text modeText_;
+    Text targetText_;
 
     void StartEditing();
     void StopEditing();
@@ -71,6 +74,7 @@ private:
     Terrain& terrain_;
 
     void FlushInputs();
+    void SetTarget(EntityID target);
 
     bool active_;
     bool& running_;

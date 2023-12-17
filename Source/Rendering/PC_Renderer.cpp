@@ -12,6 +12,7 @@
 #include "Time/Time.h"
 #include "Camera/Camera.h"
 #include "Resource/ResourceManager.h"
+#include "Editor/Editor.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -397,6 +398,8 @@ void Renderer::RenderUI(ComponentList& components) {
 void Renderer::RenderText(Text& text) {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
     uint32_t count = text.length_;
+    if (count == 0)
+        return;
     
     mat4 textProps;
     textProps[0][0] = text.properties_.position.x;
@@ -432,6 +435,11 @@ void Renderer::RenderScreenText() {
     for (Text& text : ScreenText::GetText()) {
         RenderText(text);
     }
+}
+
+void Renderer::RenderEditor(Editor& editor) {
+    RenderText(editor.modeText_);
+    RenderText(editor.targetText_);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

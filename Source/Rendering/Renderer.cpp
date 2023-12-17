@@ -31,9 +31,10 @@ void Renderer::Render(
     PresentFrame();
 }
 
-void Renderer::RenderMinimal(
+void Renderer::RenderEdit(
     EntityList& entities,
     ComponentList& components,
+    Editor& editor,
     LevelProperties& levelProperties,
     Terrain& terrain 
 ) {
@@ -43,7 +44,7 @@ void Renderer::RenderMinimal(
     RenderEntities(entities, components);
     RenderPostProcess();
     RenderBlit();
-    RenderScreenText();
+    RenderEditor(editor);
 
     PresentFrame();
 }

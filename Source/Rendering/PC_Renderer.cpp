@@ -66,7 +66,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
-    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4);
+    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
     DEBUGLOG(bgfx::getCaps()->limits.maxUniforms);
     SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
 
@@ -397,8 +397,20 @@ void Renderer::RenderUI(ComponentList& components) {
 void Renderer::RenderText(Text& text) {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
     uint32_t count = text.length_;
+    
+    mat4 textProps;
+    textProps[0][0] = text.properties_.position.x;
+    textProps[0][1] = text.properties_.position.y;
+    textProps[0][2] = text.properties_.scale;
+    textProps[0][3] = text.properties_.kerning;
+    textProps[1][0] = text.properties_.hAlignment;
+    textProps[1][1] = text.properties_.vAlignment;
+    textProps[1][2] = text.properties_.hAnchor;
+    textProps[1][3] = text.properties_.vAnchor;
+    textProps[2][0] = (float)text.length_;
+    textProps = transpose(textProps);
 
-    bgfx::setUniform(u_textProps_, &text.properties_);
+    bgfx::setUniform(u_textProps_, &textProps);
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));

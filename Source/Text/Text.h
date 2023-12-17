@@ -14,11 +14,21 @@ struct TextProperties {
     glm::vec2 position;
     float scale;
     float kerning;
+    float hAlignment;
+    float vAlignment;
+    float hAnchor;
+    float vAnchor;
 };
 
 class Text {
 public:
     static constexpr int MAX_CHARS = 64;
+    static constexpr float LEFT_ALIGN = 0.0f;
+    static constexpr float RIGHT_ALIGN = 1.0f;
+    static constexpr float TOP_ALIGN = 0.0f;
+    static constexpr float BOTTOM_ALIGN = 1.0f;
+    static constexpr float CENTER_ALIGN = 0.5f;
+
     Text(const glm::vec2& position, float scale, float kerning);
     Text();
     TextProperties properties_;

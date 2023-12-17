@@ -43,7 +43,6 @@ void Renderer::RenderMinimal(
     RenderEntities(entities, components);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(components);
     RenderScreenText();
 
     PresentFrame();

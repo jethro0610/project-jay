@@ -21,6 +21,7 @@ public:
     vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
     #ifdef _DEBUG
     Collider DBG_collider;
+    bool DBG_selected;
     #endif
 
     Entity() {

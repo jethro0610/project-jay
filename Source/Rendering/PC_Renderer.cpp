@@ -12,7 +12,6 @@
 #include "Time/Time.h"
 #include "Camera/Camera.h"
 #include "Resource/ResourceManager.h"
-#include "Editor/Editor.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -67,8 +66,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
-    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
-    DEBUGLOG(bgfx::getCaps()->limits.maxUniforms);
+
     SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
 
     vec4 noiseProps;
@@ -301,7 +299,13 @@ void Renderer::RenderEntities(
             );
         }
         for (int m = 0; m < model.meshes.size(); m++) {
+            #ifdef _DEBUG
+            Material* material = entity.DBG_selected ? 
+                staticModelComponent.selectedMaterials[i][m] : 
+                staticModelComponent.materials[i][m];
+            #else
             Material* material = staticModelComponent.materials[i][m];
+            #endif
             Mesh* mesh = &model.meshes[m];
             RenderMesh(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
         }
@@ -395,52 +399,23 @@ void Renderer::RenderUI(ComponentList& components) {
     bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
 }
 
-void Renderer::RenderText(Text& text) {
-    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
-    uint32_t count = text.length_;
-    if (count == 0)
+void Renderer::RenderScreenText() {
+    if (!ScreenText::IsEnabled())
         return;
-    
-    mat4 textProps;
-    textProps[0][0] = text.properties_.position.x;
-    textProps[0][1] = text.properties_.position.y;
-    textProps[0][2] = text.properties_.scale;
-    textProps[0][3] = text.properties_.kerning;
-    textProps[1][0] = text.properties_.hAlignment;
-    textProps[1][1] = text.properties_.vAlignment;
-    textProps[1][2] = text.properties_.hAnchor;
-    textProps[1][3] = text.properties_.vAnchor;
-    textProps[2][0] = (float)text.length_;
-    textProps = transpose(textProps);
 
-    bgfx::setUniform(u_textProps_, &textProps);
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+    uint32_t count = ScreenText::MAX_LINES * ScreenText::CHARS_PER_LINE;
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
-    memcpy(instanceBuffer.data, text.glyphs_.data(), sizeof(vec4) * count);
+    memcpy(instanceBuffer.data, ScreenText::GetText(), sizeof(vec4) * count);
     bgfx::setInstanceDataBuffer(&instanceBuffer);
 
-    // TODO: Move text material to Text class?
     bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]->handle);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
-}
-
-void Renderer::RenderScreenText() {
-    if (!ScreenText::IsEnabled())
-        return;
-
-    for (Text& text : ScreenText::GetText()) {
-        RenderText(text);
-    }
-}
-
-void Renderer::RenderEditor(Editor& editor) {
-    RenderText(editor.modeText_);
-    RenderText(editor.targetText_);
-    RenderText(editor.inputText_);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

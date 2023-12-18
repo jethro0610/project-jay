@@ -293,7 +293,7 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     #ifdef _DEBUG
     Material& selectedMaterial = materials_.Add(name + "_selected");
     selectedMaterial = material;
-    selectedMaterial.shaderHandle = bgfx::createProgram(vertexShader->handle, GetFragmentShader("fs_selected")); 
+    selectedMaterial.shaderHandle = bgfx::createProgram(vertexShader->handle, GetFragmentShader("fs_selected")->handle); 
     #endif
     DEBUGLOG("Loaded material " << name);
 }

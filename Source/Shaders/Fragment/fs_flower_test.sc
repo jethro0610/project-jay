@@ -17,7 +17,7 @@ void main() {
     vec3 normal = v_normal;
 
     float brightness = getBrightness(normal, v_wposition, v_sposition);
-    float edge = (1.0f - alpha) * 0.5f; 
+    brightness = max(brightness, 0.35f);
 
     gl_FragColor = vec4(color * (brightness), 1.0f);
 }

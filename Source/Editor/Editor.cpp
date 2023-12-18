@@ -135,13 +135,14 @@ void Editor::SetMode(EditorMode mode) {
 void Editor::Update() {
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
 
-    if (platform_.pressedKeys_[GLFW_KEY_TAB])
-        SetMode(EM_Camera);
+    if (platform_.pressedKeys_[GLFW_KEY_TAB]) {
+        if (mode_ != EM_Mouse)
+            SetMode(EM_Mouse);
+        else
+            SetMode(EM_Camera);
+    }
 
     if (mode_ != EM_Spawn) {
-        if (platform_.pressedKeys_['Q'])
-            SetMode(EM_Mouse);
-
         if (platform_.pressedKeys_['E'] && !platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL])
             SetMode(EM_PlanarMove);
         if (platform_.pressedKeys_['R'])

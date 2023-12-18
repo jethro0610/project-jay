@@ -2,12 +2,12 @@
 #pragma once
 class Noise;
 class Terrain;
-#endif
-
 enum TerrainAccuracy {
     TA_Normal,
     TA_Low
 };
+#endif
+#define TERRAIN_RANGE 1024.0f
 
 struct TerrainProperties {
     float minHeight;
@@ -20,6 +20,6 @@ struct TerrainProperties {
     #ifndef SHARED_SHADER
     Terrain& terrain;
     #else
-    int noise;
+    int terrain;
     #endif
 };

@@ -15,21 +15,42 @@ Terrain::Terrain():
         *this
     })
 {
-    FastNoiseLite fNoise;
-    range_ = 1024.0f;
-    scale_ = range_ / RESOLUTION;
+    noiseLayers_[0].active_ = true;
+    noiseLayers_[0].multiplier_ = 1.0f;
+
+    noiseLayers_[1].active_ = true;
+    noiseLayers_[1].seed_ = 50124;
+    noiseLayers_[1].frequency_ = 0.1f;
+    noiseLayers_[1].multiplier_ = 2.0f;
+}
+
+void Terrain::GenerateHeightmap() {
     for (int x = 0; x < RESOLUTION; x++) 
     for (int y = 0; y < RESOLUTION; y++)  {
-        heightmap_[y][x] = fNoise.GetNoise(x, x);
+        heightmap_[y][x] = 0.0f;
+
+        for (NoiseLayer& layer : noiseLayers_) {
+            if (!layer.active_) continue;
+
+            FastNoiseLite noise(layer.seed_);
+            float layerVal = noise.GetNoise(
+                (float)x * layer.frequency_, 
+                (float)y * layer.frequency_
+            );
+            layerVal *= layer.multiplier_;
+            layerVal = std::pow(layerVal, layer.exponent_);
+
+            heightmap_[y][x] += layerVal;
+        }
     };
 }
 
 float Terrain::SampleHeightmap(float x, float y, TerrainAccuracy accuracy) const {
     switch (accuracy) {
         case TA_Normal: {
-            x /= scale_;
+            x *= WORLD_TO_TERRAIN_SCALAR;
             x += HALF_RESOLUTION;
-            y /= scale_;
+            y *= WORLD_TO_TERRAIN_SCALAR;
             y += HALF_RESOLUTION;
 
             int sX = std::clamp((int)x, 0, RESOLUTION);
@@ -48,9 +69,9 @@ float Terrain::SampleHeightmap(float x, float y, TerrainAccuracy accuracy) const
         }
 
         case TA_Low: {
-            x /= scale_;
+            x *= WORLD_TO_TERRAIN_SCALAR;
             x += HALF_RESOLUTION;
-            y /= scale_;
+            y *= WORLD_TO_TERRAIN_SCALAR;
             y += HALF_RESOLUTION;
 
             int sX = (int)x % RESOLUTION;//std::clamp((int)x, 0, RESOLUTION);

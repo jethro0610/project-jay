@@ -4,12 +4,29 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 
+struct NoiseLayer {
+    bool active_;
+    int seed_;
+    float frequency_;
+    float multiplier_;
+    float exponent_;
+
+    NoiseLayer() {
+        active_ = false;
+        seed_ = 1337;
+        frequency_ = 0.25f;
+        multiplier_ = 1.0f;
+        exponent_ = 1.0f;
+    }
+};
+
 class Terrain {
 public:
     static constexpr float TERRAIN_MESH_SIZE = 64.0f;
     static constexpr float TERRAIN_MESH_DENSITY = 0.5f;
     static constexpr int RESOLUTION = 4096;
     static constexpr int HALF_RESOLUTION = RESOLUTION / 2;
+    static constexpr float WORLD_TO_TERRAIN_SCALAR = RESOLUTION / TERRAIN_RANGE;
 
     Terrain();
 
@@ -27,10 +44,11 @@ public:
 
     float* GetHeightmap() const { return (float*)heightmap_; }
 
+    void GenerateHeightmap();
+
     TerrainProperties properties_;
 
 private:
     float heightmap_[RESOLUTION][RESOLUTION];
-    float range_;
-    float scale_;
+    std::array<NoiseLayer, 4> noiseLayers_;
 };

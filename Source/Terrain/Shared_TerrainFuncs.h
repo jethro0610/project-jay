@@ -27,7 +27,7 @@ SAMPLER2D(s_terrainHeightmap, 15);
 #define TERRAIN_TYPE float
 #define ACCURACY_TYPE int 
 #define ACCURACY_DEFAULT 0
-#define SAMPLEHEIGHTMAP(pos, accuracy) texture2DLod(s_terrainHeightmap, pos / 1024.0f + vec2(0.5f, 0.5f), 0)
+#define SAMPLEHEIGHTMAP(pos, accuracy) texture2DLod(s_terrainHeightmap, pos / TERRAIN_RANGE + vec2(0.5f, 0.5f), 0)
 #define INLINE 
 
 #endif

@@ -70,7 +70,6 @@ file(GLOB SOURCES
     Source/Rendering/PC_Renderer.cpp
 
     Source/Types/Gamepad.cpp
-    Source/Types/Noise.cpp
     Source/Types/Transform.cpp
 
     Source/Platform/PC_Platform.cpp

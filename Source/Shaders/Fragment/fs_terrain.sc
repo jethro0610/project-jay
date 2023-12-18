@@ -20,7 +20,7 @@ void main() {
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
     float fade = max(v_edgeDistance, 0.0f);
-    fade -= 16.0f + sampleNoise(v_wposition.xz, 8.0f) * 8.0f;
+    fade -= 16.0f + sampleHeightmap(v_wposition.xz, 8.0f) * 8.0f;
     fade *= 0.05f;
     DITHERDISCARD(fade);
 

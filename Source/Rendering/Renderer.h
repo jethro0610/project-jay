@@ -17,7 +17,6 @@
 class Camera;
 class Editor;
 class LevelProperties;
-class Noise;
 class SeedManager;
 class SpreadManager;
 class Terrain;
@@ -58,7 +57,7 @@ private:
     int renderHeight_;
 
     std::array<Texture*, 2> renderBufferTextures_;
-    Texture* noiseTexture_;
+    Texture* heightmapTexture_;
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
 
@@ -89,7 +88,7 @@ private:
 
     std::array<TextureSamplerHandle, Material::MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSamplerHandle shadowSampler_;
-    TextureSamplerHandle terrainNoiseSampler_;
+    TextureSamplerHandle terrainHeightmapSampler_;
 
     UniformHandle u_shadowUp_;
     UniformHandle u_shadowRight_;
@@ -108,7 +107,6 @@ private:
     UniformHandle u_meter_;
     UniformHandle u_terrainProps_;
     UniformHandle u_terrainMeshOffset_;
-    UniformHandle u_noiseProps_;
     UniformHandle u_textProps_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);

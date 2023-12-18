@@ -47,7 +47,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
-    terrainNoiseSampler_ = bgfx::createUniform("s_samplerTerrainNoise", bgfx::UniformType::Sampler);
+    terrainHeightmapSampler_ = bgfx::createUniform("s_samplerTerrainHeightmap", bgfx::UniformType::Sampler);
 
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
@@ -66,15 +66,9 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
-    u_noiseProps_ = bgfx::createUniform("u_noiseProps", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
     DEBUGLOG(bgfx::getCaps()->limits.maxUniforms);
     SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
-
-    vec4 noiseProps;
-    noiseProps.x = 1024;
-    noiseProps.y = 1.0f / (1024 * 2.0f);
-    bgfx::setUniform(u_noiseProps_, &noiseProps);
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 
@@ -83,7 +77,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
-    noiseTexture_ = resourceManager.GetTexture("t_noise");
+    heightmapTexture_ = resourceManager.GetTexture("t_heightmap");
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
     barMaterial_ = resourceManager.GetMaterial("m_uibar");
@@ -263,7 +257,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
         vec4 offset = vec4(x * Terrain::TERRAIN_MESH_SIZE, 0.0f, y * Terrain::TERRAIN_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        bgfx::setTexture(Material::TERRAIN_NOISE_TEXINDEX, terrainNoiseSampler_, noiseTexture_->handle);
+        bgfx::setTexture(Material::TERRAIN_HEIGHTMAP_TEXINDEX, terrainHeightmapSampler_, heightmapTexture_->handle);
         RenderMesh(terrain_, material);
     };
 }

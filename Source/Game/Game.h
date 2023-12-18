@@ -32,13 +32,13 @@ public:
 private:
     Platform platform_;
     LevelProperties levelProperties_;
+    Terrain terrain_;
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
     EntityManager entityManager_;
     LevelLoader levelLoader_;
     Renderer renderer_;
     Camera camera_;
-    Terrain terrain_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;

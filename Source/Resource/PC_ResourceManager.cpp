@@ -12,29 +12,30 @@ bgfx::VertexLayout SkeletalVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
-ResourceManager::ResourceManager() {
+ResourceManager::ResourceManager(Terrain& terrain) {
     StaticVertex::Init();
     SkeletalVertex::Init();
     WorldVertex::Init();
     TextureQuadVertex::Init();
+    GenerateHeightmapTexture(terrain);
     LoadGlobals();
 }
 
-// TODO: Noise texture
-
-void ResourceManager::LoadGlobals() {
-    textures_.Add("t_noise") = { bgfx::createTexture2D(
-        NOISE_RESOLUTION, 
-        NOISE_RESOLUTION, 
+void ResourceManager::GenerateHeightmapTexture(Terrain& terrain) {
+    textures_.Add("t_heightmap") = { bgfx::createTexture2D(
+        Terrain::RESOLUTION, 
+        Terrain::RESOLUTION, 
         false, 
         1, 
         bgfx::TextureFormat::R32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
-        bgfx::copy(noise_.GetData(), sizeof(float) * NOISE_RESOLUTION * NOISE_RESOLUTION)
+        bgfx::copy(terrain.GetHeightmap(), sizeof(float) * Terrain::RESOLUTION * Terrain::RESOLUTION)
     )};
-    ASSIGN_DEBUG_NAME(textures_.Get("t_noise"), "t_noise");
-    globals_.insert("t_noise");
+    ASSIGN_DEBUG_NAME(textures_.Get("t_heightmap"), "t_heightmap");
+    globals_.insert("t_heightmap");
+}
 
+void ResourceManager::LoadGlobals() {
     LoadRenderTextures();
     LoadGlobalQuad();
     LoadGlobalTerrain();

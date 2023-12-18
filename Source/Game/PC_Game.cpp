@@ -10,7 +10,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods
 
 Game::Game():
     timeAccumlulator_(0.0f),
-    resourceManager_(),
+    terrain_(),
+    resourceManager_(terrain_),
     particleManager_(),
     entityManager_(resourceManager_, particleManager_),
     levelLoader_(
@@ -23,7 +24,6 @@ Game::Game():
     ),
     renderer_(resourceManager_),
     camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
-    terrain_(resourceManager_.noise_),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     playerController_(),

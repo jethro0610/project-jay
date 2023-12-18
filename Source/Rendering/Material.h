@@ -15,7 +15,7 @@ struct Material {
     USE_DEBUG_NAME;
     static constexpr int MAX_TEXTURES_PER_MATERIAL = 8;
     static constexpr int SHADOW_TEXINDEX = 14;
-    static constexpr int TERRAIN_NOISE_TEXINDEX = 15;
+    static constexpr int TERRAIN_HEIGHTMAP_TEXINDEX = 15;
 
     Material() {
         shaderHandle = BGFX_INVALID_HANDLE;

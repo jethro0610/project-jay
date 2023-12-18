@@ -10,9 +10,9 @@
 #include "Rendering/Material.h"
 #include "Rendering/Texture.h"
 #include "Entity/EntityDescription.h"
-#include "Types/Noise.h"
 #include "Particle/ParticleEmitter.h"
 #include "Resource/DependencyList.h"
+#include "Terrain/Terrain.h"
 
 class ResourceManager {
 public:
@@ -25,7 +25,7 @@ public:
     static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;
     static constexpr int MAX_EMITTER_PROPERTIES = 32;
 
-    ResourceManager();
+    ResourceManager(Terrain& terrain);
 
     void LoadVertexShader(const std::string& name);
     void LoadFragmentShader(const std::string& name);
@@ -66,7 +66,7 @@ public:
     void LoadDependencies(DependencyList& depdencyList);
     void UnloadUnusedDependencies(DependencyList& depdencyList);
 
-    Noise noise_;
+    void GenerateHeightmapTexture(Terrain& terrain);
 
 private:
     void LoadGlobals();

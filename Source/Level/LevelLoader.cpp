@@ -135,7 +135,8 @@ void ParseEntity(const std::string& name, DependencyList& list) {
 
     if (entityData["components"].contains("interval_spawner")) {
         auto& spawnerData = entityData["components"]["interval_spawner"];
-        ParseEntity(spawnerData["entity"], list);
+        if (GetBoolean(spawnerData, "seed") == false)
+            ParseEntity(spawnerData["entity"], list);
     }
 
 }

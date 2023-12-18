@@ -31,9 +31,11 @@ float getDSABrightness(vec3 normal, vec3 wPosition) {
     brightness = max(brightness, step(PROP_SPEC_THRESH, specular) * PROP_SPEC_BRIGHTNESS);
     #endif
 
+    #ifndef NOCEL
     brightness = max(brightness, step(0.75f, brightness) * 1.0f);
     brightness = max(brightness, step(0.25f, brightness) * 0.75f);
     brightness = max(brightness, step(0.00f, brightness) * 0.25f);
+    #endif
 
     return brightness;
 }

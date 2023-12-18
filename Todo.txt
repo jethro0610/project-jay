@@ -1,10 +1,16 @@
+- Pillars on test level are bell towers 
+    - Sound wave effect
+- Inbetween are bell flowers that bloom
+
+- Timed entities
+
 - Level editor
+    - Noise editor
     - Rotation
     - Reset when press 0 (scale, rotation)
     - Multidelete
     - Multispawn
         - Randomize rotaiton and scale, decide uniform
-    - Noise editor
     - Pause
 
 - Weave obstacles

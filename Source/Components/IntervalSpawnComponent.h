@@ -11,6 +11,7 @@ public:
     std::array<int, MAX_ENTITIES> interval;
     std::array<float, MAX_ENTITIES> radius;
     std::array<bool, MAX_ENTITIES> planar;
+    std::array<bool, MAX_ENTITIES> seed;
 
     std::array<std::vector<glm::vec3>, MAX_ENTITIES> offsets;
 
@@ -32,7 +33,13 @@ public:
         offsets[entity].clear();
         offsets[entity].shrink_to_fit();
         
-        entityToSpawn[entity] = resourceManager->GetEntityDescription(GetString(data, "entity", ""));
+        if (GetBoolean(data, "seed", false)) {
+            entityToSpawn[entity] = nullptr;
+            seed[entity] = true;
+        }
+        else
+            entityToSpawn[entity] = resourceManager->GetEntityDescription(GetString(data, "entity", ""));
+
         interval[entity] = GetFloat(data, "interval", 1.0f) * 60;
         radius[entity] = GetFloat(data, "radius", 0.0f);
         planar[entity] = GetBoolean(data, "planar");

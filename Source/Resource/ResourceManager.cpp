@@ -39,6 +39,7 @@ void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
 }
 
 void ResourceManager::UnloadUnusedDependencies(DependencyList& dependencyList) {
+    return;
     for(const auto& element : vertexShaders_.GetMap()) {
         if (!dependencyList.vertexShaders.contains(element.first) && !globals_.contains(element.first))
             UnloadVertexShader(element.first);

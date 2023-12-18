@@ -12,6 +12,9 @@ public:
 
     std::array<Model*, MAX_ENTITIES> model;
     std::array<std::vector<Material*>, MAX_ENTITIES> materials;
+    #ifdef _DEBUG
+    std::array<std::vector<Material*>, MAX_ENTITIES> selectedMaterials;
+    #endif
 
     StaticModelComponent() {
         model.fill(nullptr);
@@ -32,7 +35,11 @@ public:
         model[entity] = resourceManager->GetModel(name);
 
         auto& materialData = data["materials"];
-        for (auto& materialName : materialData)
+        for (auto& materialName : materialData) {
             materials[entity].push_back(resourceManager->GetMaterial(materialName));
+            #ifdef _DEBUG
+            selectedMaterials[entity].push_back(resourceManager->GetMaterial(materialName.get<std::string>() + "_selected"));
+            #endif
+        }
     }
 };

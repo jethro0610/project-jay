@@ -28,7 +28,8 @@
         "fs_text",
         "fs_postprocess",
         "fs_uibar",
-        "fs_terrain"
+        "fs_terrain",
+        "fs_selected"
     ],
     "textures": [
         "t_font"

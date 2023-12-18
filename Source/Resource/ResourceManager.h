@@ -19,7 +19,7 @@ public:
     static constexpr int MAX_VERTEX_SHADERS = 32;
     static constexpr int MAX_FRAGMENT_SHADERS = 32;
     static constexpr int MAX_TEXTURES = 32;
-    static constexpr int MAX_MATERIALS = 32;
+    static constexpr int MAX_MATERIALS = 64;
     static constexpr int MAX_MODELS = 32;
     static constexpr int MAX_SKELETONS = 32;
     static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;

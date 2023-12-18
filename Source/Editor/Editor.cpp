@@ -72,11 +72,16 @@ void Editor::StopEditing() {
 }
 
 void Editor::SetTarget(EntityID target) {
+    if (target_ != NULL_ENTITY)
+        entityManager_.entities_[target_].DBG_selected = false;
+
     target_ = target;
     if (target_ == NULL_ENTITY)
         targetText_ = "";
-    else
+    else {
         targetText_ = entityManager_.entities_[target_].DBG_name + '(' + std::to_string(target_) + ')';
+        entityManager_.entities_[target_].DBG_selected = true;
+    }
 }
 
 std::string GetModeName(EditorMode mode) {

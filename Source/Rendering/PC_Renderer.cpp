@@ -301,7 +301,13 @@ void Renderer::RenderEntities(
             );
         }
         for (int m = 0; m < model.meshes.size(); m++) {
+            #ifdef _DEBUG
+            Material* material = entity.DBG_selected ?
+                staticModelComponent.selectedMaterials[i][m] :
+                staticModelComponent.materials[i][m];
+            #else
             Material* material = staticModelComponent.materials[i][m];
+            #endif
             Mesh* mesh = &model.meshes[m];
             RenderMesh(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
         }

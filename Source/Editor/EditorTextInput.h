@@ -7,7 +7,7 @@ class EditorTextInput {
 public:
     EditorTextInput(Platform& platform);
     void ReadInput();
-    void SetLabel(const std::string& label) { label_ = label; }
+    void SetLabel(const std::string& label);
     void Clear();
     const std::string& Get() { return input_; }
     Text text_;

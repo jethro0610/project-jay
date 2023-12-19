@@ -439,8 +439,8 @@ void Renderer::RenderScreenText() {
 
 void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.modeText_);
-    RenderText(editor.targetText_);
-    RenderText(editor.promptText_);
+    RenderText(editor.target_.text_);
+    RenderText(editor.textInput_.text_);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

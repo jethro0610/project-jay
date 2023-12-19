@@ -8,5 +8,6 @@ public:
     int GetBinding() override { return 'I'; }
     void OnStart() override;
     void OnEnd() override;
+    void OnConfirm() override;
     void Update() override;
 };

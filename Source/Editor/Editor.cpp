@@ -64,18 +64,18 @@ EXPANDMODES
     modeText_.properties_.hAnchor = Text::RIGHT_ALIGN;
     modeText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 
-    targetText_.properties_.scale = 40.0f;
-    targetText_.properties_.position.y -= 40.0f;
-    targetText_.properties_.hAlignment = Text::RIGHT_ALIGN;
-    targetText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    targetText_.properties_.hAnchor = Text::RIGHT_ALIGN;
-    targetText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    target_.text_.properties_.scale = 40.0f;
+    target_.text_.properties_.position.y -= 40.0f;
+    target_.text_.properties_.hAlignment = Text::RIGHT_ALIGN;
+    target_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    target_.text_.properties_.hAnchor = Text::RIGHT_ALIGN;
+    target_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 
-    promptText_.properties_.scale = 40.0f;
-    promptText_.properties_.hAlignment = Text::LEFT_ALIGN;
-    promptText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    promptText_.properties_.hAnchor = Text::LEFT_ALIGN;
-    promptText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    textInput_.text_.properties_.scale = 40.0f;
+    textInput_.text_.properties_.hAlignment = Text::LEFT_ALIGN;
+    textInput_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    textInput_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
+    textInput_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 }
 
 void Editor::StartEditing() {
@@ -119,7 +119,6 @@ void Editor::Update() {
         FlushInputs();
         return;
     }
-
 
     if (mode_ == &defaultMode_) {
         for (EditorMode* mode : modes_) {

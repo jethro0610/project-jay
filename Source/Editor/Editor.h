@@ -32,10 +32,6 @@ public:
     EditorTarget target_;
     EditorTextInput textInput_;
     Text modeText_;
-    Text targetText_;
-
-    std::string inputString_;
-    Text promptText_;
 
     void StartEditing();
     void StopEditing();

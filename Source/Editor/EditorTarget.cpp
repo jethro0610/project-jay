@@ -14,7 +14,7 @@ void EditorTarget::Set(EntityID target) {
     // Select the new target
     if (target != NULL_ENTITY) {
         entityManager_.entities_[target].DBG_selected = true;
-        text_ = entityManager_.entities_[target].DBG_name;
+        text_ = entityManager_.entities_[target].DBG_name + '(' + std::to_string(target) + ')';
     }
     else
         text_ = "";

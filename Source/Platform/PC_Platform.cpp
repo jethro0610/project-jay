@@ -102,6 +102,12 @@ void CursorCallback(GLFWwindow* window, double x, double y) {
     Platform* platform = Platform::Get();
     platform->mouseX_ = x;
     platform->mouseY_ = y;
+
+    if (platform->changedVisibility_) {
+        platform->lastMouseX_ = x;
+        platform->lastMouseY_ = y;
+        platform->changedVisibility_ = false;
+    }
 }
 
 void Platform::UpdateMouseMovement() {
@@ -184,6 +190,5 @@ void LoadMappingFile() {
 
 void Platform::SetMouseVisible(bool visible) {
     glfwSetInputMode(window_, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-    lastMouseX_ = mouseX_;
-    lastMouseY_ = mouseY_;
+    changedVisibility_ = true;
 }

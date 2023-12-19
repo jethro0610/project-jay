@@ -24,6 +24,7 @@ public:
     double lastMouseY_;
     double deltaMouseX_;
     double deltaMouseY_;
+    bool changedVisibility_;
 
     static Platform* Get();
     static GLFWwindow* GetWindow();

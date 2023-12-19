@@ -33,9 +33,11 @@ public:
     virtual void Update() { };
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }
+    bool requiresTarget_;
 
 protected:
     bool mouseVisibile_;
+
     Camera& camera_;
     EntityManager& entityManager_;
     Inputs& inputs_;

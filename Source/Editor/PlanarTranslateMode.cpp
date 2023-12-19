@@ -6,6 +6,7 @@ PlanarTranslateMode::PlanarTranslateMode(EditorModeArgs args):
 EditorMode(args)
 {
     mouseVisibile_ = false;
+    requiresTarget_ = true;
 }
 
 void PlanarTranslateMode::Update() {

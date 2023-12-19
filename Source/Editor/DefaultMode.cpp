@@ -7,6 +7,7 @@ DefaultMode::DefaultMode(EditorModeArgs args):
 EditorMode(args)
 {
     mouseVisibile_ = true;
+    requiresTarget_ = false;
     submode_ = DS_Cursor;
 }
 

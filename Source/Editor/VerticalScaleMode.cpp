@@ -5,6 +5,7 @@ VerticalScaleMode::VerticalScaleMode(EditorModeArgs args):
 EditorMode(args) 
 {
     mouseVisibile_ = false;
+    requiresTarget_ = true;
 }
 
 void VerticalScaleMode::Update() {

@@ -5,6 +5,7 @@ SpawnMode::SpawnMode(EditorModeArgs args):
 EditorMode(args)
 {
     mouseVisibile_ = false;
+    requiresTarget_ = false;
 }
 
 void SpawnMode::OnStart() {

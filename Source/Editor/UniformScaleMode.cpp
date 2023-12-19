@@ -5,6 +5,7 @@ UniformScaleMode::UniformScaleMode(EditorModeArgs args):
 EditorMode(args) 
 {
     mouseVisibile_ = false;
+    requiresTarget_ = true;
 }
 
 void UniformScaleMode::Update() {

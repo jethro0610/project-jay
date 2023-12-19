@@ -97,6 +97,7 @@ void Editor::StopEditing() {
 
 void Editor::SetMode(EditorMode* mode) {
     if (mode_ == mode) return;
+    if (mode->requiresTarget_ && target_.Get() == NULL_ENTITY) return;
 
     if (mode_ != nullptr)
         mode_->OnEnd();

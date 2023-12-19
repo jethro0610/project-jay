@@ -6,6 +6,7 @@ TerrainTranslateMode::TerrainTranslateMode(EditorModeArgs args):
 EditorMode(args)
 {
     mouseVisibile_ = false;
+    requiresTarget_ = true;
 }
 
 void TerrainTranslateMode::Update() {

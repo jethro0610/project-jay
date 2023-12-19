@@ -80,13 +80,9 @@ file(GLOB SOURCES
     Source/Editor/EditorTextInput.cpp
 
     Source/Editor/DefaultMode.cpp
-    Source/Editor/PlanarScaleMode.cpp
-    Source/Editor/PlanarTranslateMode.cpp
+    Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp
-    Source/Editor/TerrainTranslateMode.cpp
-    Source/Editor/UniformScaleMode.cpp
-    Source/Editor/VerticalScaleMode.cpp
-    Source/Editor/VerticalTranslateMode.cpp
+    Source/Editor/TranslateMode.cpp
 
     Source/Game/Game.cpp
     Source/Game/PC_Game.cpp

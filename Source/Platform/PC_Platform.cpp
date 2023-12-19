@@ -184,4 +184,6 @@ void LoadMappingFile() {
 
 void Platform::SetMouseVisible(bool visible) {
     glfwSetInputMode(window_, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    lastMouseX_ = mouseX_;
+    lastMouseY_ = mouseY_;
 }

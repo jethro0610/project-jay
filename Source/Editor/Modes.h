@@ -1,9 +1,5 @@
 #pragma once
 #include "DefaultMode.h"
-#include "PlanarScaleMode.h"
-#include "PlanarTranslateMode.h"
+#include "TranslateMode.h"
+#include "ScaleMode.h"
 #include "SpawnMode.h"
-#include "TerrainTranslateMode.h"
-#include "UniformScaleMode.h"
-#include "VerticalScaleMode.h"
-#include "VerticalTranslateMode.h"

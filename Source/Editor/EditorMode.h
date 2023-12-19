@@ -30,6 +30,8 @@ public:
     EditorMode(EditorModeArgs args);
     virtual void OnStart();
     virtual void OnEnd() { };
+    virtual void OnConfirm() { };
+    virtual void OnCancel() { };
     virtual void Update() { };
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }

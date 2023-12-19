@@ -120,12 +120,24 @@ void Editor::Update() {
         return;
     }
 
-    for (EditorMode* mode : modes_) {
-        if (platform_.pressedKeys_[mode->GetBinding()]) {
-            SetMode(mode);
-            break;
+
+    if (mode_ == &defaultMode_) {
+        for (EditorMode* mode : modes_) {
+            if (platform_.pressedKeys_[mode->GetBinding()]) {
+                SetMode(mode);
+                break;
+            }
         }
     }
+    else if (platform_.pressedKeys_[defaultMode_.GetBinding()]) {
+        mode_->OnCancel();
+        SetMode(defaultMode_);
+    }
+    else if (platform_.pressedKeys_[GLFW_KEY_ENTER]) {
+        mode_->OnConfirm();
+        SetMode(defaultMode_);
+    }
+
     mode_->Update();
 
     TransformSystem::ForceRenderTransforms(

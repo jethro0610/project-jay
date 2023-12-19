@@ -57,7 +57,6 @@ EXPANDMODES
     #undef TAILMODEEXPANSION
 
     active_ = false;
-    SetMode(cameraMode_);
 
     modeText_.properties_.scale = 40.0f;
     modeText_.properties_.hAlignment = Text::RIGHT_ALIGN;
@@ -82,7 +81,8 @@ EXPANDMODES
 void Editor::StartEditing() {
     active_ = true;
     target_.Set(NULL_ENTITY);
-    SetMode(cameraMode_);
+    SetMode(defaultMode_);
+    defaultMode_.SetSubmode(DS_Camera);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
     levelLoader_.LoadLevel(levelLoader_.DBG_currentLevel);

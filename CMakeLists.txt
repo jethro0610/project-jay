@@ -79,8 +79,7 @@ file(GLOB SOURCES
     Source/Editor/EditorTarget.cpp
     Source/Editor/EditorTextInput.cpp
 
-    Source/Editor/CameraMode.cpp
-    Source/Editor/CursorMode.cpp
+    Source/Editor/DefaultMode.cpp
     Source/Editor/PlanarScaleMode.cpp
     Source/Editor/PlanarTranslateMode.cpp
     Source/Editor/SpawnMode.cpp

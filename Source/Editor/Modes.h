@@ -1,6 +1,5 @@
 #pragma once
-#include "CameraMode.h"
-#include "CursorMode.h"
+#include "DefaultMode.h"
 #include "PlanarScaleMode.h"
 #include "PlanarTranslateMode.h"
 #include "SpawnMode.h"

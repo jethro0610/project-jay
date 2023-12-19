@@ -1,7 +1,6 @@
 #pragma once
 #define EXPANDMODES \
-    MODEEXPANSION(CameraMode, cameraMode_) \
-    MODEEXPANSION(CursorMode, cursorMode_) \
+    MODEEXPANSION(DefaultMode, defaultMode_) \
     MODEEXPANSION(PlanarScaleMode, planarScaleMode_) \
     MODEEXPANSION(PlanarTranslateMode, planarTranslateMode_) \
     MODEEXPANSION(SpawnMode, spawnMode_) \

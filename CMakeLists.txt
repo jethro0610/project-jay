@@ -75,6 +75,19 @@ file(GLOB SOURCES
     Source/Platform/PC_Platform.cpp
 
     Source/Editor/Editor.cpp
+    Source/Editor/EditorMode.cpp
+    Source/Editor/EditorTarget.cpp
+    Source/Editor/EditorTextInput.cpp
+
+    Source/Editor/CameraMode.cpp
+    Source/Editor/CursorMode.cpp
+    Source/Editor/PlanarScaleMode.cpp
+    Source/Editor/PlanarTranslateMode.cpp
+    Source/Editor/SpawnMode.cpp
+    Source/Editor/TerrainTranslateMode.cpp
+    Source/Editor/UniformScaleMode.cpp
+    Source/Editor/VerticalScaleMode.cpp
+    Source/Editor/VerticalTranslateMode.cpp
 
     Source/Game/Game.cpp
     Source/Game/PC_Game.cpp

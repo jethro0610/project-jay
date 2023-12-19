@@ -7,22 +7,13 @@
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
 #include "Text/Text.h"
+#include "EditorTarget.h"
+#include "Modes.h"
+#include "ExpandModes.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
 #endif
-
-enum EditorMode {
-    EM_Camera,
-    EM_Mouse,
-    EM_AlignMove,
-    EM_PlanarMove,
-    EM_VeritcalMove,
-    EM_PlanarScale,
-    EM_VerticalScale,
-    EM_Scale,
-    EM_Spawn,
-};
 
 class Editor {
 public:
@@ -38,35 +29,28 @@ public:
         Terrain& terrain,
         bool& running
     );
-    EditorMode mode_;
-    EntityID target_;
+    EditorTarget target_;
+    EditorTextInput textInput_;
     Text modeText_;
     Text targetText_;
 
-    Text inputText_;
+    std::string inputString_;
+    Text promptText_;
 
     void StartEditing();
     void StopEditing();
     bool IsActive() const { return active_; };
 
     void Update();
-    void CameraUpdate();
-    void MouseUpdate();
-    void AlignMoveUpdate();
-    void PlanarMoveUpdate();
-    void VerticalMoveUpdate();
-    void PlanarScaleUpdate();
-    void VerticalScaleUpdate();
-    void ScaleUpdate();
-    void SpawnUpdate();
-
-    void SetMode(EditorMode mode);
-
+    void SetMode(EditorMode& mode);
+    void SetMode(EditorMode* mode);
     void SaveLevel();
 
-    glm::vec3 GetMouseRay();
-
 private:
+    EditorMode* mode_;
+
+    std::vector<EditorMode*> modes_;
+
     Camera& camera_;
     EntityManager& entityManager_;
     Inputs& inputs_;
@@ -76,9 +60,15 @@ private:
     Renderer& renderer_;
     ResourceManager& resourceManager_;
     Terrain& terrain_;
+    EditorModeArgs args_;
+
+    #define MODEEXPANSION(TYPE, VAR) TYPE VAR;
+    #define TAILMODEEXPANSION(TYPE, VAR) TYPE VAR;
+    EXPANDMODES 
+    #undef MODEEXPANSION 
+    #undef TAILMODEEXPANSION
 
     void FlushInputs();
-    void SetTarget(EntityID target);
 
     bool active_;
     bool& running_;

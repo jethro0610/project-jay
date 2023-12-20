@@ -105,7 +105,6 @@ private:
     UniformHandle u_cameraRight_;
     UniformHandle u_randomVec_;
     UniformHandle u_meter_;
-    UniformHandle u_terrainProps_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_textProps_;
 

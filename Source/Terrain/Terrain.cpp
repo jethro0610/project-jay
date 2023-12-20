@@ -2,39 +2,24 @@
 #include "Shared_TerrainFuncs.h"
 #include "Logging/Logger.h"
 #include <FastNoiseLite.h>
-
+#include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
-Terrain::Terrain():
-    properties_({
-        0.0f,
-        128.0f,
-        256.0f,
-        128.0f,
-        0.075f,
-        2.0f,
-        *this
-    })
-{
-    blobProperties_.seed_ = 1337;
-    blobProperties_.frequency_ = 100.0f;
-    blobProperties_.maxRadius_ = 150.0f;
-    blobProperties_.minRadius_ = 150.0f;
-
+Terrain::Terrain() {
     GenerateTerrainMap();
 }
 
 void Terrain::GenerateTerrainMap() {
-    FastNoiseLite blobNoise(blobProperties_.seed_);
+    FastNoiseLite blobNoise(blobProperties_.seed);
     for (int x = 0; x < RESOLUTION; x++) 
     for (int y = 0; y < RESOLUTION; y++)  {
         vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
         vec2 samplePos = normalize(pos);
-        samplePos *= blobProperties_.frequency_;
+        samplePos *= blobProperties_.frequency;
         float noiseVal = blobNoise.GetNoise(samplePos.x, samplePos.y);
         noiseVal = (noiseVal + 1.0f) * 0.5f;
 
-        float blobRadius = lerp(blobProperties_.minRadius_, blobProperties_.maxRadius_, noiseVal);
+        float blobRadius = lerp(blobProperties_.minRadius, blobProperties_.maxRadius, noiseVal);
         float curRadius = length(pos) / WORLD_TO_TERRAIN_SCALAR;
 
         terrainMap_[y][x].x = curRadius - blobRadius;
@@ -42,7 +27,7 @@ void Terrain::GenerateTerrainMap() {
 
     std::array<FastNoiseLite, 4> noises;
     for (int i = 0; i < 4; i++)
-        noises[i].SetSeed(noiseLayers_[i].seed_);
+        noises[i].SetSeed(noiseLayers_[i].seed);
 
     for (int x = 0; x < RESOLUTION; x++) 
     for (int y = 0; y < RESOLUTION; y++)  {
@@ -50,14 +35,15 @@ void Terrain::GenerateTerrainMap() {
 
         for (int i = 0; i < 4; i++) {
             const NoiseLayer& layer = noiseLayers_[i];
-            if (!layer.active_) continue;
+            if (!layer.active) continue;
 
             float layerVal = noises[i].GetNoise(
-                (float)x * layer.frequency_, 
-                (float)y * layer.frequency_
+                (float)x * layer.frequency, 
+                (float)y * layer.frequency
             );
-            layerVal *= layer.multiplier_;
-            layerVal = std::pow(layerVal, layer.exponent_);
+            layerVal = (layerVal + 1.0f) * 0.5f;
+            layerVal = std::pow(layerVal, layer.exponent);
+            layerVal *= layer.multiplier;
 
             terrainMap_[y][x].y += layerVal;
         }
@@ -111,7 +97,7 @@ glm::vec2 Terrain::SampleTerrainMap(const glm::vec2& position, TerrainAccuracy a
 }
 
 vec2 Terrain::GetDistance(const vec2& position, TerrainAccuracy accuracy) const {
-    return getTerrainDistance(position, properties_, accuracy);
+    return getTerrainDistance(position, *this, accuracy);
 }
 
 vec2 Terrain::GetDistance(const vec3& position, TerrainAccuracy accuracy) const {
@@ -121,7 +107,7 @@ vec2 Terrain::GetDistance(const vec3& position, TerrainAccuracy accuracy) const 
 float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
     vec2 worldDistance = getTerrainDistance(
         position,
-        properties_,
+        *this,
         accuracy
     );
 
@@ -140,7 +126,7 @@ float Terrain::GetHeight(const vec3& position, TerrainAccuracy accuracy) const {
 }
 
 vec3 Terrain::GetNormal(const vec2& position, TerrainAccuracy accuracy) const {
-    return getTerrainNormal(position, properties_, accuracy);
+    return getTerrainNormal(position, *this, accuracy);
 }
 
 vec3 Terrain::GetNormal(const vec3& position, TerrainAccuracy accuracy) const {

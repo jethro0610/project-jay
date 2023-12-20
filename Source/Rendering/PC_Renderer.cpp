@@ -64,7 +64,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
-    u_terrainProps_ = bgfx::createUniform("u_terrainProps", bgfx::UniformType::Vec4, 2);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
     DEBUGLOG(bgfx::getCaps()->limits.maxUniforms);
@@ -240,20 +239,10 @@ void Renderer::RenderMesh(
 }
 
 void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
-    vec4 terrainProps[2];
-    terrainProps[0].x = 0.0f;
-    terrainProps[0].y = terrain.properties_.minRadius;
-    terrainProps[0].z = terrain.properties_.maxRadius;
-    terrainProps[0].w = terrain.properties_.edgeJaggedness;
-    terrainProps[1].x = terrain.properties_.edgeFalloff;
-    terrainProps[1].y = terrain.properties_.edgePower;
-
-    // Can use instancing here if necessary
-    int radius = terrain.properties_.maxRadius / Terrain::TERRAIN_MESH_SIZE;
+    int radius = terrain.blobProperties_.maxRadius / Terrain::TERRAIN_MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
-        bgfx::setUniform(u_terrainProps_, terrainProps, 2);
         vec4 offset = vec4(x * Terrain::TERRAIN_MESH_SIZE, 0.0f, y * Terrain::TERRAIN_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 

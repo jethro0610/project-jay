@@ -5,19 +5,9 @@ $input a_position, a_normal
 #include <Shared_TerrainFuncs.h>
 
 void main() {
-    TerrainProperties props = {
-        u_minHeight,
-        u_minRadius,
-        u_maxRadius,
-        u_edgeJaggedness,
-        u_edgeFalloff,
-        u_edgePower,
-        0.0f
-    };
-
     a_position += u_terrainMeshOffset;
     vec2 position2d = a_position.xz;
-    vec2 terrainDistance = getTerrainDistance(position2d, props);
+    vec2 terrainDistance = getTerrainDistance(position2d);
 
     vec3 position = vec3(a_position.x, terrainDistance.y, a_position.z);
     gl_Position = mul(u_viewProj, vec4(position, 1.0f));

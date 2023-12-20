@@ -1,34 +1,46 @@
 #pragma once
-#include "Shared_TerrainProperties.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 
 struct NoiseLayer {
-    bool active_;
-    int seed_;
-    float frequency_;
-    float multiplier_;
-    float exponent_;
+    bool active;
+    int seed;
+    float frequency;
+    float multiplier;
+    float exponent;
 
     NoiseLayer() {
-        active_ = false;
-        seed_ = 1337;
-        frequency_ = 0.15f;
-        multiplier_ = 1.0f;
-        exponent_ = 1.0f;
+        active = false;
+        seed = 1337;
+        frequency = 0.15f;
+        multiplier = 12.0f;
+        exponent = 1.0f;
     }
 };
 
 struct BlobProperties {
-    int seed_;
-    float frequency_;
-    float minRadius_;
-    float maxRadius_;
+    int seed;
+    float frequency;
+    float minRadius;
+    float maxRadius;
+
+    BlobProperties() {
+        seed = 1337;
+        frequency = 100.0f;
+        minRadius = 150.0f;
+        maxRadius = 150.0f;
+    }
+};
+
+enum TerrainAccuracy {
+    TA_Low,
+    TA_Normal
 };
 
 class Terrain {
 public:
+    static constexpr float TERRAIN_RANGE = 1024.0f;
     static constexpr float TERRAIN_MESH_SIZE = 64.0f;
     static constexpr float TERRAIN_MESH_DENSITY = 0.5f;
     static constexpr int RESOLUTION = 4096;
@@ -52,8 +64,6 @@ public:
     float* GetTerrainMap() const { return (float*)terrainMap_; }
 
     void GenerateTerrainMap();
-
-    TerrainProperties properties_;
 
     std::array<NoiseLayer, 4> noiseLayers_;
     BlobProperties blobProperties_;

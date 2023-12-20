@@ -34,6 +34,7 @@ file(GLOB SOURCES
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp
+    Source/Helpers/StringConversion.cpp
 
     Source/Collision/Collision.cpp
     Source/Collision/Ray.cpp
@@ -79,6 +80,7 @@ file(GLOB SOURCES
     Source/Editor/EditorTarget.cpp
     Source/Editor/EditorTextInput.cpp
 
+    Source/Editor/BlobEditMode.cpp
     Source/Editor/DefaultMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp

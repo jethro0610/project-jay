@@ -141,71 +141,77 @@ bool TerrainEditMode::OnConfirm() {
         case TE_Activate: {
             if (input == "y") {
                 terrain_.noiseLayers_[targetLayer_].active_ = true;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
             else if (input == "n") {
                 SetPhase(TE_SelectNoiseLayer);
             }
+            break;
         }
 
         case TE_Deactivate: {
             if (input == "y") {
                 terrain_.noiseLayers_[targetLayer_].active_ = false;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectNoiseLayer);
             }
             else if (input == "n") {
                 SetPhase(TE_SelectProperty);
             }
+            break;
         }
 
         case TE_Seed: {
             StringToInt seed = ToInt(input);
             if (input == "r") {
                 terrain_.noiseLayers_[targetLayer_].seed_= rand() % 10000;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
             else if (seed.valid) {
                 terrain_.noiseLayers_[targetLayer_].seed_ = seed.value;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
+            break;
         }
 
         case TE_Frequency: {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
                 terrain_.noiseLayers_[targetLayer_].frequency_ = frequency.value;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
+            break;
         }
 
         case TE_Multiplier: {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
                 terrain_.noiseLayers_[targetLayer_].multiplier_ = multiplier.value;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
+            break;
         }
 
         case TE_Exponent: {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
                 terrain_.noiseLayers_[targetLayer_].exponent_ = exponent.value;
-                terrain_.GenerateHeightmap();
-                resourceManager_.GenerateHeightmapTexture(terrain_);
+                terrain_.GenerateTerrainMap();
+                resourceManager_.GenerateTerrainMapTexture(terrain_);
                 SetPhase(TE_SelectProperty);
             }
+            break;
         }
     }
     textInput_.ClearInput();

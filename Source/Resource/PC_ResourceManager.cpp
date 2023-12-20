@@ -17,23 +17,34 @@ ResourceManager::ResourceManager(Terrain& terrain) {
     SkeletalVertex::Init();
     WorldVertex::Init();
     TextureQuadVertex::Init();
-    GenerateHeightmapTexture(terrain);
+    GenerateTerrainMapTexture(terrain);
     LoadGlobals();
 }
 
-void ResourceManager::GenerateHeightmapTexture(Terrain& terrain) {
-    if (textures_.Has("t_terrainmap"))
-        UnloadTexture("t_terrainmap");
+void ResourceManager::GenerateTerrainMapTexture(Terrain& terrain) {
+    if (!textures_.Has("t_terrainmap")) {
+        textures_.Add("t_terrainmap") = { bgfx::createTexture2D(
+            Terrain::RESOLUTION, 
+            Terrain::RESOLUTION, 
+            false, 
+            1, 
+            bgfx::TextureFormat::RG32F,
+            BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+            NULL
+        )};
+    }
 
-    textures_.Add("t_terrainmap") = { bgfx::createTexture2D(
-        Terrain::RESOLUTION, 
-        Terrain::RESOLUTION, 
-        false, 
-        1, 
-        bgfx::TextureFormat::RG32F,
-        BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+    bgfx::updateTexture2D(
+        textures_.Get("t_terrainmap").handle,
+        0,
+        0,
+        0,
+        0,
+        Terrain::RESOLUTION,
+        Terrain::RESOLUTION,
         bgfx::copy(terrain.GetTerrainMap(), sizeof(vec2) * Terrain::RESOLUTION * Terrain::RESOLUTION)
-    )};
+    );
+
     ASSIGN_DEBUG_NAME(textures_.Get("t_terrainmap"), "t_terrainmap");
     globals_.insert("t_terrainmap");
 }

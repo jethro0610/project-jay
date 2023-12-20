@@ -77,7 +77,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitUIBuffer();
 
-    heightmapTexture_ = resourceManager.GetTexture("t_heightmap");
+    terrainMapTexture_ = resourceManager.GetTexture("t_terrainmap");
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
     barMaterial_ = resourceManager.GetMaterial("m_uibar");

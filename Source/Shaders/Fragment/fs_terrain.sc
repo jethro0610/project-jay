@@ -19,8 +19,7 @@ void main() {
     // OPTIMIZATION: This check is run on every terrain chunk, but we
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
-    float fade = max(v_edgeDistance, 0.0f);
-    fade -= 16.0f + sampleHeightmap(v_wposition.xz, 8.0f) * 8.0f;
+    float fade = max(v_edgeDistance + 12.0f, 0.0f);
     fade *= 0.05f;
     DITHERDISCARD(fade);
 

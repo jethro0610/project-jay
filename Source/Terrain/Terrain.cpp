@@ -1,5 +1,6 @@
 #include "Terrain.h"
 #include "Shared_TerrainFuncs.h"
+#include "Logging/Logger.h"
 #include <FastNoiseLite.h>
 
 using namespace glm;
@@ -16,17 +17,10 @@ Terrain::Terrain():
     })
 {
     blobProperties_.seed_ = 1337;
-    blobProperties_.frequency_ = 0.2f;
-    blobProperties_.maxRadius_ = 100.0f;
-    blobProperties_.minRadius_ = 100.0f;
+    blobProperties_.frequency_ = 100.0f;
+    blobProperties_.maxRadius_ = 150.0f;
+    blobProperties_.minRadius_ = 150.0f;
 
-    noiseLayers_[0].active_ = true;
-    noiseLayers_[0].multiplier_ = 1.0f;
-
-    noiseLayers_[1].active_ = true;
-    noiseLayers_[1].seed_ = 50124;
-    noiseLayers_[1].frequency_ = 0.1f;
-    noiseLayers_[1].multiplier_ = 2.0f;
     GenerateTerrainMap();
 }
 
@@ -34,7 +28,6 @@ void Terrain::GenerateTerrainMap() {
     FastNoiseLite blobNoise(blobProperties_.seed_);
     for (int x = 0; x < RESOLUTION; x++) 
     for (int y = 0; y < RESOLUTION; y++)  {
-        terrainMap_[y][x].x = 0.0f;
         vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
         vec2 samplePos = normalize(pos);
         samplePos *= blobProperties_.frequency_;
@@ -45,31 +38,33 @@ void Terrain::GenerateTerrainMap() {
         float curRadius = length(pos) / WORLD_TO_TERRAIN_SCALAR;
 
         terrainMap_[y][x].x = curRadius - blobRadius;
-        terrainMap_[y][x].y = min(0.0f, terrainMap_[y][x].x);
     };
 
-    // std::array<FastNoiseLite, 4> noises;
-    // for (int i = 0; i < 4; i++)
-    //     noises[i].SetSeed(noiseLayers_[i].seed_);
-    //
-    // for (int x = 0; x < RESOLUTION; x++) 
-    // for (int y = 0; y < RESOLUTION; y++)  {
-    //     terrainMap_[y][x].y = 0.0f;
-    //
-    //     for (int i = 0; i < 4; i++) {
-    //         const NoiseLayer& layer = noiseLayers_[i];
-    //         if (!layer.active_) continue;
-    //
-    //         float layerVal = noises[i].GetNoise(
-    //             (float)x * layer.frequency_, 
-    //             (float)y * layer.frequency_
-    //         );
-    //         layerVal *= layer.multiplier_;
-    //         layerVal = std::pow(layerVal, layer.exponent_);
-    //
-    //         terrainMap_[y][x] += layerVal;
-    //     }
-    // }
+    std::array<FastNoiseLite, 4> noises;
+    for (int i = 0; i < 4; i++)
+        noises[i].SetSeed(noiseLayers_[i].seed_);
+
+    for (int x = 0; x < RESOLUTION; x++) 
+    for (int y = 0; y < RESOLUTION; y++)  {
+        terrainMap_[y][x].y = 0.0f;
+
+        for (int i = 0; i < 4; i++) {
+            const NoiseLayer& layer = noiseLayers_[i];
+            if (!layer.active_) continue;
+
+            float layerVal = noises[i].GetNoise(
+                (float)x * layer.frequency_, 
+                (float)y * layer.frequency_
+            );
+            layerVal *= layer.multiplier_;
+            layerVal = std::pow(layerVal, layer.exponent_);
+
+            terrainMap_[y][x].y += layerVal;
+        }
+
+        float edgeDistance = max((terrainMap_[y][x].x + 24.0f) * 0.05f, 0.0f);
+        terrainMap_[y][x].y += min(0.0f, -pow(edgeDistance, 2.0f));
+    }
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {
@@ -130,7 +125,7 @@ float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
         accuracy
     );
 
-    if (worldDistance.x < 0.0f)
+    if (worldDistance.x > 0.0f)
         return -INFINITY;
 
     return worldDistance.y;

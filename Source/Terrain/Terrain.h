@@ -14,7 +14,7 @@ struct NoiseLayer {
     NoiseLayer() {
         active_ = false;
         seed_ = 1337;
-        frequency_ = 0.25f;
+        frequency_ = 0.15f;
         multiplier_ = 1.0f;
         exponent_ = 1.0f;
     }

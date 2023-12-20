@@ -66,7 +66,7 @@ public:
     void LoadDependencies(DependencyList& depdencyList);
     void UnloadUnusedDependencies(DependencyList& depdencyList);
 
-    void GenerateHeightmapTexture(Terrain& terrain);
+    void GenerateTerrainMapTexture(Terrain& terrain);
 
 private:
     void LoadGlobals();

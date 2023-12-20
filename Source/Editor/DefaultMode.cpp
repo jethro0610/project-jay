@@ -6,13 +6,13 @@ using namespace glm;
 DefaultMode::DefaultMode(EditorModeArgs args):
 EditorMode(args)
 {
-    mouseVisibile_ = true;
+    mouseVisibile_ = false;
     requiresTarget_ = false;
     submode_ = DS_Cursor;
 }
 
 void DefaultMode::OnStart() {
-    submode_ = DS_Cursor;
+    submode_ = DS_Camera;
     EditorMode::OnStart();
 }
 

@@ -16,7 +16,7 @@ enum TerrainEditPhase {
 class TerrainEditMode : public EditorMode {
 public:
     TerrainEditMode(EditorModeArgs args); 
-    int GetBinding() override { return 'Y'; }
+    int GetBinding() override { return 'M'; }
     std::string GetName() override { return "Terrain Edit"; };
     void OnStart() override;
     void OnEnd() override;

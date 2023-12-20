@@ -90,6 +90,7 @@ void Editor::StartEditing() {
 
 void Editor::StopEditing() {
     active_ = false;
+    target_.Set(NULL_ENTITY);
     camera_.target_ = PLAYER_ENTITY;
     platform_.SetMouseVisible(false);
     SaveLevel();

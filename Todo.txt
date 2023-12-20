@@ -1,6 +1,9 @@
 - Terrain editor
     - Blob editor
+        - Blob property on shader
+    - Single layer preview
     - Remove * 12.0f height multiplier, use layer multipliers instead
+    - Compute shader calculate heightmap
     - On modified terrain, track grounded entities and reground them after generation
 
 - Pillars on test level are bell towers 

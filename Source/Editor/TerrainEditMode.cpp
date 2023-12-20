@@ -143,6 +143,7 @@ bool TerrainEditMode::OnConfirm() {
                 terrain_.noiseLayers_[targetLayer_].active_ = true;
                 terrain_.GenerateHeightmap();
                 resourceManager_.GenerateHeightmapTexture(terrain_);
+                SetPhase(TE_SelectProperty);
             }
             else if (input == "n") {
                 SetPhase(TE_SelectNoiseLayer);
@@ -154,6 +155,7 @@ bool TerrainEditMode::OnConfirm() {
                 terrain_.noiseLayers_[targetLayer_].active_ = false;
                 terrain_.GenerateHeightmap();
                 resourceManager_.GenerateHeightmapTexture(terrain_);
+                SetPhase(TE_SelectNoiseLayer);
             }
             else if (input == "n") {
                 SetPhase(TE_SelectProperty);

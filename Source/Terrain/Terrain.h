@@ -1,4 +1,5 @@
 #pragma once
+#include "Shared_TerrainConstants.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
@@ -40,13 +41,7 @@ enum TerrainAccuracy {
 
 class Terrain {
 public:
-    static constexpr float TERRAIN_RANGE = 1024.0f;
-    static constexpr float TERRAIN_MESH_SIZE = 64.0f;
-    static constexpr float TERRAIN_MESH_DENSITY = 0.5f;
-    static constexpr int RESOLUTION = 4096;
-    static constexpr int HALF_RESOLUTION = RESOLUTION / 2;
-    static constexpr float WORLD_TO_TERRAIN_SCALAR = RESOLUTION / TERRAIN_RANGE;
-
+    USE_TERRAIN_CONSTANTS
     Terrain();
 
     glm::vec2 SampleTerrainMap(float x, float y, TerrainAccuracy accuracy = TA_Normal) const;

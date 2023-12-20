@@ -151,14 +151,14 @@ void ResourceManager::LoadGlobalTerrain() {
     Model& terrainModel = models_.Add("st_terrainsheet");
     ASSIGN_DEBUG_NAME(terrainModel, "st_terrainsheet");
     Mesh& terrainMesh = terrainModel.meshes.push_back();
-    int size = ceil(Terrain::TERRAIN_MESH_SIZE * Terrain::TERRAIN_MESH_DENSITY) + 1;
+    int size = ceil(Terrain::MESH_SIZE * Terrain::MESH_DENSITY) + 1;
 
     int numVertices = size * size;
     WorldVertex* vertices =  new WorldVertex[numVertices];
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++) {
         uint16_t index = y * size + x;
-        vec3 position = vec3(x / Terrain::TERRAIN_MESH_DENSITY, 0.0f, y / Terrain::TERRAIN_MESH_DENSITY);
+        vec3 position = vec3(x / Terrain::MESH_DENSITY, 0.0f, y / Terrain::MESH_DENSITY);
         vertices[index] = { position };
     };
     terrainMesh.vertexBuffer = bgfx::createVertexBuffer(

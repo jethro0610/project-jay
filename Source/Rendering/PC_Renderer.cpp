@@ -239,11 +239,11 @@ void Renderer::RenderMesh(
 }
 
 void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
-    int radius = terrain.blobProperties_.maxRadius / Terrain::TERRAIN_MESH_SIZE;
+    int radius = terrain.blobProperties_.maxRadius / Terrain::MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
-        vec4 offset = vec4(x * Terrain::TERRAIN_MESH_SIZE, 0.0f, y * Terrain::TERRAIN_MESH_SIZE, 0.0f);
+        vec4 offset = vec4(x * Terrain::MESH_SIZE, 0.0f, y * Terrain::MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
         bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);

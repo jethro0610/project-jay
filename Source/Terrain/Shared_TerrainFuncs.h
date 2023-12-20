@@ -12,7 +12,7 @@
 using namespace glm;
 
 #else
-
+#include <Shared_TerrainConstants.h>
 uniform vec4 u_terrainMeshOffset;
 SAMPLER2D(s_terrainMap, 15);
 
@@ -20,7 +20,7 @@ SAMPLER2D(s_terrainMap, 15);
 #define TERRAIN_DEFAULT = 0
 #define ACCURACY_TYPE int 
 #define ACCURACY_DEFAULT = 0
-#define SAMPLETERRAINMAP(pos, accuracy) texture2DLod(s_terrainMap, pos / 1024.0f + vec2(0.5f, 0.5f), 0)
+#define SAMPLETERRAINMAP(pos, accuracy) texture2DLod(s_terrainMap, pos / TERRAIN_RANGE + vec2(0.5f, 0.5f), 0)
 #define INLINE 
 
 #endif

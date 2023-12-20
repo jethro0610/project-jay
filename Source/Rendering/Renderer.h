@@ -57,7 +57,7 @@ private:
     int renderHeight_;
 
     std::array<Texture*, 2> renderBufferTextures_;
-    Texture* heightmapTexture_;
+    Texture* terrainMapTexture_;
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
 
@@ -88,7 +88,7 @@ private:
 
     std::array<TextureSamplerHandle, Material::MAX_TEXTURES_PER_MATERIAL> samplers_;
     TextureSamplerHandle shadowSampler_;
-    TextureSamplerHandle terrainHeightmapSampler_;
+    TextureSamplerHandle terrainMapSampler_;
 
     UniformHandle u_shadowUp_;
     UniformHandle u_shadowRight_;

@@ -20,6 +20,13 @@ struct NoiseLayer {
     }
 };
 
+struct BlobProperties {
+    int seed_;
+    float frequency_;
+    float minRadius_;
+    float maxRadius_;
+};
+
 class Terrain {
 public:
     static constexpr float TERRAIN_MESH_SIZE = 64.0f;
@@ -30,8 +37,8 @@ public:
 
     Terrain();
 
-    float SampleHeightmap(float x, float y, TerrainAccuracy accuracy = TA_Normal) const;
-    float SampleHeightmap(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec2 SampleTerrainMap(float x, float y, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec2 SampleTerrainMap(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
 
     glm::vec2 GetDistance(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec2 GetDistance(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
@@ -42,13 +49,15 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
-    float* GetHeightmap() const { return (float*)heightmap_; }
+    float* GetTerrainMap() const { return (float*)terrainMap_; }
 
-    void GenerateHeightmap();
+    void GenerateTerrainMap();
 
     TerrainProperties properties_;
+
     std::array<NoiseLayer, 4> noiseLayers_;
+    BlobProperties blobProperties_;
 
 private:
-    float heightmap_[RESOLUTION][RESOLUTION];
+    glm::vec2 terrainMap_[RESOLUTION][RESOLUTION];
 };

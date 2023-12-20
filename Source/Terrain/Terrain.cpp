@@ -15,6 +15,11 @@ Terrain::Terrain():
         *this
     })
 {
+    blobProperties_.seed_ = 1337;
+    blobProperties_.frequency_ = 0.2f;
+    blobProperties_.maxRadius_ = 100.0f;
+    blobProperties_.minRadius_ = 100.0f;
+
     noiseLayers_[0].active_ = true;
     noiseLayers_[0].multiplier_ = 1.0f;
 
@@ -22,31 +27,52 @@ Terrain::Terrain():
     noiseLayers_[1].seed_ = 50124;
     noiseLayers_[1].frequency_ = 0.1f;
     noiseLayers_[1].multiplier_ = 2.0f;
-    GenerateHeightmap();
+    GenerateTerrainMap();
 }
 
-void Terrain::GenerateHeightmap() {
+void Terrain::GenerateTerrainMap() {
+    FastNoiseLite blobNoise(blobProperties_.seed_);
     for (int x = 0; x < RESOLUTION; x++) 
     for (int y = 0; y < RESOLUTION; y++)  {
-        heightmap_[y][x] = 0.0f;
+        terrainMap_[y][x].x = 0.0f;
+        vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
+        vec2 samplePos = normalize(pos);
+        samplePos *= blobProperties_.frequency_;
+        float noiseVal = blobNoise.GetNoise(samplePos.x, samplePos.y);
+        noiseVal = (noiseVal + 1.0f) * 0.5f;
 
-        for (NoiseLayer& layer : noiseLayers_) {
-            if (!layer.active_) continue;
+        float blobRadius = lerp(blobProperties_.minRadius_, blobProperties_.maxRadius_, noiseVal);
+        float curRadius = length(pos) / WORLD_TO_TERRAIN_SCALAR;
 
-            FastNoiseLite noise(layer.seed_);
-            float layerVal = noise.GetNoise(
-                (float)x * layer.frequency_, 
-                (float)y * layer.frequency_
-            );
-            layerVal *= layer.multiplier_;
-            layerVal = std::pow(layerVal, layer.exponent_);
-
-            heightmap_[y][x] += layerVal;
-        }
+        terrainMap_[y][x].x = curRadius - blobRadius;
+        terrainMap_[y][x].y = min(0.0f, terrainMap_[y][x].x);
     };
+
+    // std::array<FastNoiseLite, 4> noises;
+    // for (int i = 0; i < 4; i++)
+    //     noises[i].SetSeed(noiseLayers_[i].seed_);
+    //
+    // for (int x = 0; x < RESOLUTION; x++) 
+    // for (int y = 0; y < RESOLUTION; y++)  {
+    //     terrainMap_[y][x].y = 0.0f;
+    //
+    //     for (int i = 0; i < 4; i++) {
+    //         const NoiseLayer& layer = noiseLayers_[i];
+    //         if (!layer.active_) continue;
+    //
+    //         float layerVal = noises[i].GetNoise(
+    //             (float)x * layer.frequency_, 
+    //             (float)y * layer.frequency_
+    //         );
+    //         layerVal *= layer.multiplier_;
+    //         layerVal = std::pow(layerVal, layer.exponent_);
+    //
+    //         terrainMap_[y][x] += layerVal;
+    //     }
+    // }
 }
 
-float Terrain::SampleHeightmap(float x, float y, TerrainAccuracy accuracy) const {
+glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {
     switch (accuracy) {
         case TA_Normal: {
             x *= WORLD_TO_TERRAIN_SCALAR;
@@ -63,10 +89,10 @@ float Terrain::SampleHeightmap(float x, float y, TerrainAccuracy accuracy) const
             float b = y - sY;
 
             return 
-                (1 - b) * (1 - a) * heightmap_[sY][sX] +
-                b * (1 - a) * heightmap_[sY1][sX] +
-                (1 - b) * a * heightmap_[sY][sX1] +
-                b * a * heightmap_[sY1][sX1];
+                (1 - b) * (1 - a) * terrainMap_[sY][sX] +
+                b * (1 - a) * terrainMap_[sY1][sX] +
+                (1 - b) * a * terrainMap_[sY][sX1] +
+                b * a * terrainMap_[sY1][sX1];
         }
 
         case TA_Low: {
@@ -77,16 +103,16 @@ float Terrain::SampleHeightmap(float x, float y, TerrainAccuracy accuracy) const
 
             int sX = (int)x % RESOLUTION;//std::clamp((int)x, 0, RESOLUTION);
             int sY = (int)y % RESOLUTION;//std::clamp((int)y, 0, RESOLUTION);
-            return heightmap_[sY][sX];
+            return terrainMap_[sY][sX];
         }
         
         default:
-            return 0.0f;
+            return vec2(0.0f, 0.0f);
     }
 }
 
-float Terrain::SampleHeightmap(const glm::vec2& position, TerrainAccuracy accuracy) const {
-    return SampleHeightmap(position.x, position.y, accuracy);
+glm::vec2 Terrain::SampleTerrainMap(const glm::vec2& position, TerrainAccuracy accuracy) const {
+    return SampleTerrainMap(position.x, position.y, accuracy);
 }
 
 vec2 Terrain::GetDistance(const vec2& position, TerrainAccuracy accuracy) const {
@@ -104,7 +130,7 @@ float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
         accuracy
     );
 
-    if (worldDistance.x > 32.0f)
+    if (worldDistance.x < 0.0f)
         return -INFINITY;
 
     return worldDistance.y;

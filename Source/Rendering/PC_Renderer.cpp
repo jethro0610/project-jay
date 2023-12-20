@@ -47,7 +47,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
-    terrainHeightmapSampler_ = bgfx::createUniform("s_samplerTerrainHeightmap", bgfx::UniformType::Sampler);
+    terrainMapSampler_ = bgfx::createUniform("s_samplerTerrainMap", bgfx::UniformType::Sampler);
 
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
@@ -257,7 +257,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
         vec4 offset = vec4(x * Terrain::TERRAIN_MESH_SIZE, 0.0f, y * Terrain::TERRAIN_MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        bgfx::setTexture(Material::TERRAIN_HEIGHTMAP_TEXINDEX, terrainHeightmapSampler_, heightmapTexture_->handle);
+        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
         RenderMesh(terrain_, material);
     };
 }

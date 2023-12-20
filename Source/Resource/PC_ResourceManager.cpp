@@ -22,20 +22,20 @@ ResourceManager::ResourceManager(Terrain& terrain) {
 }
 
 void ResourceManager::GenerateHeightmapTexture(Terrain& terrain) {
-    if (textures_.Has("t_heightmap"))
-        UnloadTexture("t_heightmap");
+    if (textures_.Has("t_terrainmap"))
+        UnloadTexture("t_terrainmap");
 
-    textures_.Add("t_heightmap") = { bgfx::createTexture2D(
+    textures_.Add("t_terrainmap") = { bgfx::createTexture2D(
         Terrain::RESOLUTION, 
         Terrain::RESOLUTION, 
         false, 
         1, 
-        bgfx::TextureFormat::R32F,
+        bgfx::TextureFormat::RG32F,
         BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
-        bgfx::copy(terrain.GetHeightmap(), sizeof(float) * Terrain::RESOLUTION * Terrain::RESOLUTION)
+        bgfx::copy(terrain.GetTerrainMap(), sizeof(vec2) * Terrain::RESOLUTION * Terrain::RESOLUTION)
     )};
-    ASSIGN_DEBUG_NAME(textures_.Get("t_heightmap"), "t_heightmap");
-    globals_.insert("t_heightmap");
+    ASSIGN_DEBUG_NAME(textures_.Get("t_terrainmap"), "t_terrainmap");
+    globals_.insert("t_terrainmap");
 }
 
 void ResourceManager::LoadGlobals() {

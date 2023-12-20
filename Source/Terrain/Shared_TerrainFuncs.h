@@ -8,7 +8,7 @@
 #define TERRAIN_TYPE Terrain&
 #define ACCURACY_TYPE TerrainAccuracy
 #define ACCURACY_DEFAULT TA_Normal 
-#define SAMPLEHEIGHTMAP(pos, accuracy) terrain.SampleHeightmap(pos, accuracy)
+#define SAMPLETERRAINMAP(pos, accuracy) terrain.SampleTerrainMap(pos, accuracy)
 #define INLINE inline
 using namespace glm;
 
@@ -23,7 +23,7 @@ uniform vec4 u_terrainProps[2];
 #define u_edgeFalloff u_terrainProps[1].x
 #define u_edgePower u_terrainProps[1].y
 uniform vec4 u_terrainMeshOffset;
-SAMPLER2D(s_terrainHeightmap, 15);
+SAMPLER2D(s_terrainMap, 15);
 #define TERRAIN_TYPE float
 #define ACCURACY_TYPE int 
 #define ACCURACY_DEFAULT 0
@@ -32,36 +32,15 @@ SAMPLER2D(s_terrainHeightmap, 15);
 
 #endif
 
-INLINE float sampleHeightmap(vec2 position, TERRAIN_TYPE terrain, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
-    return SAMPLEHEIGHTMAP(position, accuracy);
-}
-
-INLINE float sampleHeightmap(vec2 position, float scale, TERRAIN_TYPE noise, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
-    vec2 samplePos = position * scale;
-    return sampleHeightmap(samplePos, noise, accuracy);
-}
-
-INLINE float sampleBlob(vec2 position, float jaggedness, TERRAIN_TYPE terrain, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
-    if (position.x != 0.0f || position.y != 0.0f)
-        position = normalize(position) * jaggedness;
-    return sampleHeightmap(position, terrain, accuracy);
+INLINE vec2 sampleTerrainMap(vec2 position, TERRAIN_TYPE terrain, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
+    return SAMPLETERRAINMAP(position, accuracy);
 }
 
 INLINE vec2 getTerrainDistance(vec2 position, TerrainProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {
-    float blobVal = sampleBlob(position, props.edgeJaggedness, props.terrain, accuracy);
-    blobVal = (blobVal + 1.0f) * 0.5f;
+    vec2 terrainVal = sampleTerrainMap(position, props.terrain, accuracy);
+    float terrainHeight = terrainVal.y * 12.0f;
 
-    float blobRadius = props.minRadius + blobVal * (props.maxRadius - props.minRadius);
-    float curRadius = length(position);
-    float edgeDistance = curRadius - blobRadius;
-    float edgeCloseness = max(1.0f + edgeDistance * props.edgeFalloff, 0.0f);
-    float edgeHeight = -pow(edgeCloseness, props.edgePower);
-
-    float terrainVal = sampleHeightmap(position, 0.75f, props.terrain, accuracy);
-    terrainVal = (terrainVal + 1.0f) * 0.5f;
-    float terrainHeight = terrainVal * 12.0f;
-
-    return vec2(edgeDistance, terrainHeight + edgeHeight);
+    return vec2(terrainVal.x, terrainHeight);
 }
 
 INLINE vec3 getTerrainNormal(vec2 position, TerrainProperties props, ACCURACY_TYPE accuracy = ACCURACY_DEFAULT) {

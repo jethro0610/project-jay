@@ -22,6 +22,7 @@ Terrain::Terrain():
     noiseLayers_[1].seed_ = 50124;
     noiseLayers_[1].frequency_ = 0.1f;
     noiseLayers_[1].multiplier_ = 2.0f;
+    GenerateHeightmap();
 }
 
 void Terrain::GenerateHeightmap() {

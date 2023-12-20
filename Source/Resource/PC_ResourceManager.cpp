@@ -22,7 +22,9 @@ ResourceManager::ResourceManager(Terrain& terrain) {
 }
 
 void ResourceManager::GenerateHeightmapTexture(Terrain& terrain) {
-    terrain.GenerateHeightmap();
+    if (textures_.Has("t_heightmap"))
+        UnloadTexture("t_heightmap");
+
     textures_.Add("t_heightmap") = { bgfx::createTexture2D(
         Terrain::RESOLUTION, 
         Terrain::RESOLUTION, 

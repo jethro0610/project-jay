@@ -133,8 +133,8 @@ void Editor::Update() {
         SetMode(defaultMode_);
     }
     else if (platform_.pressedKeys_[GLFW_KEY_ENTER]) {
-        mode_->OnConfirm();
-        SetMode(defaultMode_);
+        if (mode_->OnConfirm())
+            SetMode(defaultMode_);
     }
 
     mode_->Update();

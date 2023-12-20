@@ -82,6 +82,7 @@ file(GLOB SOURCES
     Source/Editor/DefaultMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp
+    Source/Editor/TerrainEditMode.cpp
     Source/Editor/TranslateMode.cpp
 
     Source/Game/Game.cpp

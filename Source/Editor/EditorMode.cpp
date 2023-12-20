@@ -13,7 +13,6 @@ modeText_(args.modeText),
 target_(args.target),
 textInput_(args.textInput)
 {
-
 }
 
 void EditorMode::OnStart() { 

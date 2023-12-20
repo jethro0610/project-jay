@@ -18,6 +18,11 @@ void EditorTextInput::Clear() {
     text_.Clear();
 }
 
+void EditorTextInput::ClearInput() {
+    input_.clear();
+    text_ = label_ + input_;
+}
+
 void EditorTextInput::ReadInput() {
     bool modified = false;
     if (platform_.pressedKeys_[GLFW_KEY_BACKSPACE] && input_.length() > 0) {

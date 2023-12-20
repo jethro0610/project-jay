@@ -17,12 +17,12 @@ void SpawnMode::OnEnd() {
     textInput_.Clear();
 }
 
-void SpawnMode::OnConfirm() {
+bool SpawnMode::OnConfirm() {
     const std::string entityName = "e_" + textInput_.Get();
 
     if (!resourceManager_.HasEntityDescription(entityName)) {
         if (!std::filesystem::exists("entities/" + entityName + ".json"))
-            return;
+            return false;
 
         DependencyList dList = levelLoader_.GenerateEntityDependencyList(entityName);
         resourceManager_.LoadDependencies(dList);
@@ -34,6 +34,8 @@ void SpawnMode::OnConfirm() {
         resourceManager_.GetEntityDescription(entityName),
         spawnTransform
     });
+
+    return true;
 }
 
 void SpawnMode::Update() {

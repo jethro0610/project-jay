@@ -9,6 +9,7 @@ public:
     void ReadInput();
     void SetLabel(const std::string& label);
     void Clear();
+    void ClearInput();
     const std::string& Get() { return input_; }
     Text text_;
 

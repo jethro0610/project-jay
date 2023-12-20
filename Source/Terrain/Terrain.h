@@ -47,8 +47,8 @@ public:
     void GenerateHeightmap();
 
     TerrainProperties properties_;
+    std::array<NoiseLayer, 4> noiseLayers_;
 
 private:
     float heightmap_[RESOLUTION][RESOLUTION];
-    std::array<NoiseLayer, 4> noiseLayers_;
 };

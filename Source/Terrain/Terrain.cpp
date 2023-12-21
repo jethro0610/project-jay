@@ -5,6 +5,7 @@
 #include "Resource/ResourceManager.h"
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
+#include <thread>
 using namespace glm;
 
 Terrain::Terrain(
@@ -19,13 +20,52 @@ resourceManager_(resourceManager)
     } }
 }
 
+void TestStatic() {
+
+}
+
 void Terrain::GenerateTerrainMap(
     const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
     const BlobProperties& blob
 ) {
     FastNoiseLite blobNoise(blob.seed);
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
+    std::array<FastNoiseLite, 4> noises;
+    for (int i = 0; i < 4; i++)
+        noises[i].SetSeed(noiseLayers[i].seed);
+
+    const auto cores = std::thread::hardware_concurrency();
+    int sectionSize = RESOLUTION / cores;
+
+    std::vector<std::thread> threads;
+    for (int i = 0; i < cores; i++) {
+        int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
+        threads.push_back(std::thread([this, noiseLayers, blob, blobNoise, noises, sectionSize, i, add] {
+            this->GenerateTerrainMapSection(
+                noiseLayers,
+                blob,
+                blobNoise,
+                noises,
+                ivec2(i * sectionSize, 0),
+                ivec2((i + 1) * sectionSize + add, RESOLUTION)
+            ); 
+        }));
+    }
+    for (std::thread& t : threads)
+        t.join();
+     
+    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+}
+
+void Terrain::GenerateTerrainMapSection(
+    const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
+    const BlobProperties& blob,
+    const FastNoiseLite& blobNoise,
+    const std::array<FastNoiseLite, 4>& noises,
+    const glm::ivec2& start,
+    const glm::ivec2& end
+) {
+    for (int x = start.x; x < end.x; x++) {
+    for (int y = start.y; y < end.y; y++) {
         vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
         vec2 samplePos = normalize(pos);
         samplePos *= blob.frequency;
@@ -38,12 +78,8 @@ void Terrain::GenerateTerrainMap(
         terrainMap_[y][x].x = curRadius - blobRadius;
     } }
 
-    std::array<FastNoiseLite, 4> noises;
-    for (int i = 0; i < 4; i++)
-        noises[i].SetSeed(noiseLayers[i].seed);
-
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
+    for (int x = start.x; x < end.x; x++) {
+    for (int y = start.y; y < end.y; y++) {
         terrainMap_[y][x].y = 0.0f;
 
         for (int i = 0; i < 4; i++) {
@@ -64,8 +100,6 @@ void Terrain::GenerateTerrainMap(
         float edgeDistance = max((terrainMap_[y][x].x + EDGE_OFFSET) * 0.1f, 0.0f);
         terrainMap_[y][x].y += min(0.0f, -pow(edgeDistance, 2.0f));
     }}
-
-    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {

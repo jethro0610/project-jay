@@ -1,6 +1,5 @@
 - Terrain editor
     - Separate X and Y frequencies
-    - Mutlithread generation
     - Re-aligin grounded entities
     - Single layer preview
     - Compute shader calculate heightmap
@@ -12,13 +11,16 @@
 - Timed entities
 
 - Level editor
-    - Noise editor
     - Rotation
     - Reset when press 0 (scale, rotation)
+    - Save
+    - New level/open level
     - Multidelete
     - Multispawn
         - Randomize rotaiton and scale, decide uniform
     - Pause
+
+- Generic threading(workers n shit)
 
 - Weave obstacles
 - Level clearance

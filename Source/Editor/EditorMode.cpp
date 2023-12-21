@@ -1,4 +1,7 @@
 #include "EditorMode.h"
+#include "Platform/PC_Platform.h"
+#include "Text/Text.h"
+
 EditorMode::EditorMode(EditorModeArgs args):
 camera_(args.camera),
 entityManager_(args.entityManager),

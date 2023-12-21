@@ -1,6 +1,9 @@
 #include "Editor.h"
+#include "Camera/Camera.h"
+#include "Level/LevelLoader.h"
 #include "Rendering/Renderer.h"
 #include "Systems/Systems.h"
+#include "Terrain/Terrain.h"
 #include "Collision/Ray.h"
 #include <GLFW/glfw3.h>
 using namespace glm;
@@ -85,7 +88,7 @@ void Editor::StartEditing() {
     defaultMode_.SetSubmode(DS_Camera);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
-    levelLoader_.LoadLevel(levelLoader_.DBG_currentLevel);
+    levelLoader_.ReloadLevel();
 }
 
 void Editor::StopEditing() {
@@ -177,6 +180,21 @@ void Editor::SaveLevel() {
 
     level["terrain"]["material"] = levelProperties_.terrainMaterial->DBG_name;
     level["seed"]["material"] = levelProperties_.seedMaterial->DBG_name;
+    
+    level["blob"]["seed"] = levelProperties_.blob.seed;
+    level["blob"]["frequency"] = levelProperties_.blob.frequency;
+    level["blob"]["minRadius"] = levelProperties_.blob.minRadius;
+    level["blob"]["maxRadius"] = levelProperties_.blob.maxRadius;
+
+    for (int i = 0; i < NoiseLayer::MAX; i++) {
+        nlohmann::json noiseLayerData;
+        noiseLayerData["active"] = levelProperties_.noiseLayers[i].active;
+        noiseLayerData["seed"] = levelProperties_.noiseLayers[i].seed;
+        noiseLayerData["frequency"] = levelProperties_.noiseLayers[i].frequency;
+        noiseLayerData["multiplier"] = levelProperties_.noiseLayers[i].multiplier;
+        noiseLayerData["exponent"] = levelProperties_.noiseLayers[i].exponent;
+        level["noise_layers"][i] = noiseLayerData;
+    }
     
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     for (int i = 0; i < MAX_ENTITIES; i++) {

@@ -121,7 +121,11 @@ private:
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr 
     );
-    void RenderTerrain (Terrain& terrain, Material* material);
+    void RenderTerrain(
+        Terrain& terrain, 
+        Material* material,
+        float maxRadius
+    );
     void RenderEntities(
         EntityList& entities, 
         ComponentList& components

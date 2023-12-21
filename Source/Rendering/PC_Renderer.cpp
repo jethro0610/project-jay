@@ -238,8 +238,8 @@ void Renderer::RenderMesh(
     }
 }
 
-void Renderer::RenderTerrain(Terrain& terrain, Material* material) {
-    int radius = terrain.blobProperties_.maxRadius / Terrain::MESH_SIZE;
+void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadius) {
+    int radius = maxRadius / Terrain::MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 

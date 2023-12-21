@@ -3,6 +3,7 @@
 #include "Entity/EntityManager.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
+#include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
 #ifdef _DEBUG
 #include <fstream>
@@ -14,16 +15,37 @@ LevelLoader::LevelLoader(
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
     SeedManager& seedManager,
-    SpreadManager& spreadManager
+    SpreadManager& spreadManager,
+    Terrain& terrain
 ) :
 entityManager_(entityManager),
 levelProperties_(levelProperties),
 particleManager_(particleManager),
 resourceManager_(resourceManager),
 seedManager_(seedManager),
-spreadManager_(spreadManager)
+spreadManager_(spreadManager),
+terrain_(terrain)
 {
     
+}
+
+void LevelLoader::ReloadLevel() {
+    ClearLevel();
+    std::ifstream inFile("levels/" + DBG_currentLevel + ".json");
+    ASSERT(inFile.is_open(), "Failed to load level " + DBG_currentLevel);
+    nlohmann::json levelData = nlohmann::json::parse(inFile);
+
+    DependencyList dependencies = GenerateDepedencyList(levelData);
+    resourceManager_.UnloadUnusedDependencies(dependencies);
+    resourceManager_.LoadDependencies(dependencies);
+    
+    auto& entitiesData = levelData["entities"];
+    Transform entityTransform;
+    for (auto& entityData : entitiesData) {
+        entityTransform = GetTransform(entityData, "transform");
+        entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
+    }
+    entityManager_.SpawnEntities();
 }
 
 void LevelLoader::LoadLevel(const std::string& name) {
@@ -35,21 +57,41 @@ void LevelLoader::LoadLevel(const std::string& name) {
 
     std::ifstream inFile("levels/" + name + ".json");
     ASSERT(inFile.is_open(), "Failed to load level " + name);
-    nlohmann::json levelData_ = nlohmann::json::parse(inFile);
+    nlohmann::json levelData = nlohmann::json::parse(inFile);
 
-    DependencyList dependencies = GenerateDepedencyList(levelData_);
+    DependencyList dependencies = GenerateDepedencyList(levelData);
     resourceManager_.UnloadUnusedDependencies(dependencies);
     resourceManager_.LoadDependencies(dependencies);
     
-    levelProperties_.spreadModel = resourceManager_.GetModel(levelData_["spread"]["model"]);
+    levelProperties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
     levelProperties_.spreadMaterials.clear();
-    for (auto& materialName : levelData_["spread"]["materials"])
+    for (auto& materialName : levelData["spread"]["materials"])
         levelProperties_.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
 
-    levelProperties_.terrainMaterial = resourceManager_.GetMaterial(levelData_["terrain"]["material"]);
-    levelProperties_.seedMaterial = resourceManager_.GetMaterial(levelData_["seed"]["material"]);
+    levelProperties_.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
+    levelProperties_.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
 
-    auto& entitiesData = levelData_["entities"];
+    if (levelData.contains("blob")) {
+        levelProperties_.blob.seed = levelData["blob"]["seed"];
+        levelProperties_.blob.frequency = levelData["blob"]["frequency"];
+        levelProperties_.blob.minRadius = levelData["blob"]["minRadius"];
+        levelProperties_.blob.maxRadius = levelData["blob"]["maxRadius"];
+    }
+
+    if (levelData.contains("noise_layers")) {
+        for (int i = 0; i < NoiseLayer::MAX; i++) {
+            nlohmann::json& noiseLayerData = levelData["noise_layers"][i];
+            levelProperties_.noiseLayers[i].active = noiseLayerData["active"];
+            levelProperties_.noiseLayers[i].seed = noiseLayerData["seed"];
+            levelProperties_.noiseLayers[i].frequency = noiseLayerData["frequency"];
+            levelProperties_.noiseLayers[i].multiplier = noiseLayerData["multiplier"];
+            levelProperties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
+        }
+    }
+
+    terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+
+    auto& entitiesData = levelData["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         entityTransform = GetTransform(entityData, "transform");

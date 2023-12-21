@@ -1,14 +1,20 @@
 #pragma once
-#include "Platform/PC_Platform.h"
-#include "EditorTarget.h"
-#include "EditorTextInput.h"
-#include "Entity/EntityManager.h"
-#include "Camera/Camera.h"
-#include "Terrain/Terrain.h"
-#include "Level/LevelLoader.h"
-#include "Level/LevelProperties.h"
-#include "Resource/ResourceManager.h"
-#include "Text/Text.h"
+#include <string>
+
+class Camera;
+class EntityManager;
+class Inputs;
+class LevelLoader;
+class LevelProperties;
+class Platform;
+class Renderer;
+class Terrain;
+class Text;
+class LevelLoader;
+class ResourceManager;
+
+class EditorTarget;
+class EditorTextInput;
 
 struct EditorModeArgs {
     Camera& camera;

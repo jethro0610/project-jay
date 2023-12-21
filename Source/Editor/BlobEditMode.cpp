@@ -1,4 +1,7 @@
 #include "BlobEditMode.h"
+#include "Level/LevelProperties.h"
+#include "Terrain/Terrain.h"
+#include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"
 
 BlobEditMode::BlobEditMode(EditorModeArgs args):
@@ -24,25 +27,25 @@ void BlobEditMode::SetPhase(BlobEditPhase phase) {
         }
 
         case BE_Seed: {
-            std::string seed = std::to_string(terrain_.blobProperties_.seed);
+            std::string seed = std::to_string(levelProperties_.blob.seed);
             textInput_.SetLabel("Set Blob Seed (" + seed + "): "); 
             break;
         }
 
         case BE_Frequency: {
-            std::string freq = std::to_string(terrain_.blobProperties_.frequency);
+            std::string freq = std::to_string(levelProperties_.blob.frequency);
             textInput_.SetLabel("Set Blob Frequency (" + freq + "): "); 
             break;
         }
 
         case BE_MinRadius: {
-            std::string minRadius = std::to_string(terrain_.blobProperties_.minRadius);
+            std::string minRadius = std::to_string(levelProperties_.blob.minRadius);
             textInput_.SetLabel("Set Blob Min Radius(" + minRadius + "): "); 
             break;
         }
 
         case BE_MaxRadius: {
-            std::string maxRadius = std::to_string(terrain_.blobProperties_.maxRadius);
+            std::string maxRadius = std::to_string(levelProperties_.blob.maxRadius);
             textInput_.SetLabel("Set Blob Max Radius (" + maxRadius + "): "); 
             break;
         }
@@ -71,15 +74,13 @@ bool BlobEditMode::OnConfirm() {
         case BE_Seed: {
             StringToInt seed = ToInt(input);
             if (input == "r") {
-                terrain_.blobProperties_.seed = rand() % 10000;
-                terrain_.GenerateTerrainMap();
-                resourceManager_.GenerateTerrainMapTexture(terrain_);
+                levelProperties_.blob.seed = rand() % 10000;
+                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
                 SetPhase(BE_SelectProperty);
             }
             else if (seed.valid) {
-                terrain_.blobProperties_.seed  = seed.value;
-                terrain_.GenerateTerrainMap();
-                resourceManager_.GenerateTerrainMapTexture(terrain_);
+                levelProperties_.blob.seed  = seed.value;
+                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -88,9 +89,8 @@ bool BlobEditMode::OnConfirm() {
         case BE_Frequency: {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
-                terrain_.blobProperties_.frequency  = frequency.value;
-                terrain_.GenerateTerrainMap();
-                resourceManager_.GenerateTerrainMapTexture(terrain_);
+                levelProperties_.blob.frequency  = frequency.value;
+                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -99,9 +99,8 @@ bool BlobEditMode::OnConfirm() {
         case BE_MinRadius: {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
-                terrain_.blobProperties_.minRadius  = multiplier.value;
-                terrain_.GenerateTerrainMap();
-                resourceManager_.GenerateTerrainMapTexture(terrain_);
+                levelProperties_.blob.minRadius  = multiplier.value;
+                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -110,9 +109,8 @@ bool BlobEditMode::OnConfirm() {
         case BE_MaxRadius: {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
-                terrain_.blobProperties_.maxRadius  = exponent.value;
-                terrain_.GenerateTerrainMap();
-                resourceManager_.GenerateTerrainMapTexture(terrain_);
+                levelProperties_.blob.maxRadius  = exponent.value;
+                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
                 SetPhase(BE_SelectProperty);
             }
             break;

@@ -12,7 +12,6 @@
 #include "Entity/EntityDescription.h"
 #include "Particle/ParticleEmitter.h"
 #include "Resource/DependencyList.h"
-#include "Terrain/Terrain.h"
 
 class ResourceManager {
 public:
@@ -25,7 +24,7 @@ public:
     static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;
     static constexpr int MAX_EMITTER_PROPERTIES = 32;
 
-    ResourceManager(Terrain& terrain);
+    ResourceManager();
 
     void LoadVertexShader(const std::string& name);
     void LoadFragmentShader(const std::string& name);
@@ -66,12 +65,13 @@ public:
     void LoadDependencies(DependencyList& depdencyList);
     void UnloadUnusedDependencies(DependencyList& depdencyList);
 
-    void GenerateTerrainMapTexture(Terrain& terrain);
+    void UpdateTerrainMapTexture(glm::vec2* terrainMap);
 
 private:
     void LoadGlobals();
     void LoadGlobalFile();
     void LoadRenderTextures();
+    void CreateTerrainMapTexture();
     void LoadGlobalQuad();
     void LoadGlobalTerrain();
 

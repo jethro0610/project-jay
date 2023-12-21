@@ -1,6 +1,9 @@
 #include "DefaultMode.h"
+#include "Camera/Camera.h"
+#include "Platform/PC_Platform.h"
 #include "Collision/Ray.h"
 #include "Rendering/Renderer.h"
+#include "EditorTarget.h"
 using namespace glm;
 
 DefaultMode::DefaultMode(EditorModeArgs args):

@@ -1,15 +1,17 @@
 #pragma once
-#include "Platform/PC_Platform.h"
-#include "Entity/EntityManager.h"
-#include "Camera/Camera.h"
-#include "Terrain/Terrain.h"
-#include "Level/LevelLoader.h"
-#include "Level/LevelProperties.h"
-#include "Resource/ResourceManager.h"
-#include "Text/Text.h"
 #include "EditorTarget.h"
+#include "EditorTextInput.h"
 #include "Modes.h"
 #include "ExpandModes.h"
+
+class Camera;
+class EntityManager;
+class Inputs;
+class Terrain;
+class LevelLoader;
+class LevelProperties;
+class Renderer;
+class ResourceManager;
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"

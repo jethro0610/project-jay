@@ -1,5 +1,8 @@
 #include "SpawnMode.h"
-#include <GLFW/glfw3.h>
+#include "Camera/Camera.h"
+#include "Entity/EntityManager.h"
+#include "Level/LevelLoader.h"
+#include "EditorTextInput.h"
 
 SpawnMode::SpawnMode(EditorModeArgs args):
 EditorMode(args)

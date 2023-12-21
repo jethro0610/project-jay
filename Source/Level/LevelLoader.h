@@ -9,6 +9,7 @@ class EntityManager;
 class ParticleManager;
 class SpreadManager;
 class SeedManager;
+class Terrain;
 
 class LevelLoader {
 public:
@@ -18,8 +19,10 @@ public:
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         SeedManager& seedManager,
-        SpreadManager& spreadManager
+        SpreadManager& spreadManager,
+        Terrain& terrain
     );
+    void ReloadLevel();
     void LoadLevel(const std::string& name);
     void ClearLevel();
 
@@ -36,6 +39,7 @@ private:
     ResourceManager& resourceManager_;
     SeedManager& seedManager_;
     SpreadManager& spreadManager_;
+    Terrain& terrain_;
 
     DependencyList GenerateDepedencyList(nlohmann::json& levelData);
 };

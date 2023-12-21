@@ -32,9 +32,9 @@ public:
 private:
     Platform platform_;
     LevelProperties levelProperties_;
-    Terrain terrain_;
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
+    Terrain terrain_;
     EntityManager entityManager_;
     LevelLoader levelLoader_;
     Renderer renderer_;

@@ -12,16 +12,16 @@ bgfx::VertexLayout SkeletalVertex::layout;
 bgfx::VertexLayout WorldVertex::layout;
 bgfx::VertexLayout TextureQuadVertex::layout;
 
-ResourceManager::ResourceManager(Terrain& terrain) {
+ResourceManager::ResourceManager() {
     StaticVertex::Init();
     SkeletalVertex::Init();
     WorldVertex::Init();
     TextureQuadVertex::Init();
-    GenerateTerrainMapTexture(terrain);
+    CreateTerrainMapTexture();
     LoadGlobals();
 }
 
-void ResourceManager::GenerateTerrainMapTexture(Terrain& terrain) {
+void ResourceManager::CreateTerrainMapTexture() {
     if (!textures_.Has("t_terrainmap")) {
         textures_.Add("t_terrainmap") = { bgfx::createTexture2D(
             Terrain::RESOLUTION, 
@@ -34,6 +34,11 @@ void ResourceManager::GenerateTerrainMapTexture(Terrain& terrain) {
         )};
     }
 
+    ASSIGN_DEBUG_NAME(textures_.Get("t_terrainmap"), "t_terrainmap");
+    globals_.insert("t_terrainmap");
+}
+
+void ResourceManager::UpdateTerrainMapTexture(glm::vec2* terrainMap) {
     bgfx::updateTexture2D(
         textures_.Get("t_terrainmap").handle,
         0,
@@ -42,11 +47,8 @@ void ResourceManager::GenerateTerrainMapTexture(Terrain& terrain) {
         0,
         Terrain::RESOLUTION,
         Terrain::RESOLUTION,
-        bgfx::copy(terrain.GetTerrainMap(), sizeof(vec2) * Terrain::RESOLUTION * Terrain::RESOLUTION)
+        bgfx::copy(terrainMap, sizeof(glm::vec2) * Terrain::RESOLUTION * Terrain::RESOLUTION)
     );
-
-    ASSIGN_DEBUG_NAME(textures_.Get("t_terrainmap"), "t_terrainmap");
-    globals_.insert("t_terrainmap");
 }
 
 void ResourceManager::LoadGlobals() {

@@ -1,4 +1,9 @@
 #include "TranslateMode.h"
+#include "Camera/Camera.h"
+#include "Entity/EntityManager.h"
+#include "Platform/PC_Platform.h"
+#include "Terrain/Terrain.h"
+#include "EditorTarget.h"
 using namespace glm;
 
 TranslateMode::TranslateMode(EditorModeArgs args):

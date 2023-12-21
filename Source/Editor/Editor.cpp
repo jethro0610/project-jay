@@ -190,7 +190,8 @@ void Editor::SaveLevel() {
         nlohmann::json noiseLayerData;
         noiseLayerData["active"] = levelProperties_.noiseLayers[i].active;
         noiseLayerData["seed"] = levelProperties_.noiseLayers[i].seed;
-        noiseLayerData["frequency"] = levelProperties_.noiseLayers[i].frequency;
+        noiseLayerData["frequency"]["x"] = levelProperties_.noiseLayers[i].frequency.x;
+        noiseLayerData["frequency"]["y"] = levelProperties_.noiseLayers[i].frequency.y;
         noiseLayerData["multiplier"] = levelProperties_.noiseLayers[i].multiplier;
         noiseLayerData["exponent"] = levelProperties_.noiseLayers[i].exponent;
         level["noise_layers"][i] = noiseLayerData;

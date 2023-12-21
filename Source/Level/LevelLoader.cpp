@@ -83,7 +83,8 @@ void LevelLoader::LoadLevel(const std::string& name) {
             nlohmann::json& noiseLayerData = levelData["noise_layers"][i];
             levelProperties_.noiseLayers[i].active = noiseLayerData["active"];
             levelProperties_.noiseLayers[i].seed = noiseLayerData["seed"];
-            levelProperties_.noiseLayers[i].frequency = noiseLayerData["frequency"];
+            levelProperties_.noiseLayers[i].frequency.x = noiseLayerData["frequency"]["x"];
+            levelProperties_.noiseLayers[i].frequency.y = noiseLayerData["frequency"]["y"];
             levelProperties_.noiseLayers[i].multiplier = noiseLayerData["multiplier"];
             levelProperties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
         }

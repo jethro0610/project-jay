@@ -331,28 +331,40 @@
         {
             "active": true,
             "exponent": 1.0,
-            "frequency": 0.17499999701976776,
+            "frequency": {
+                "x": 0.17499999701976776,
+                "y": 0.17499999701976776
+            },
             "multiplier": 16.0,
             "seed": 3762
         },
         {
             "active": true,
             "exponent": 1.0,
-            "frequency": 0.07500000298023224,
+            "frequency": {
+                "x": 0.07500000298023224,
+                "y": 0.07500000298023224
+            },
             "multiplier": 20.0,
             "seed": 883
         },
         {
             "active": false,
             "exponent": 1.0,
-            "frequency": 0.15000000596046448,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
             "multiplier": 12.0,
             "seed": 1337
         },
         {
             "active": false,
             "exponent": 1.0,
-            "frequency": 0.15000000596046448,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
             "multiplier": 12.0,
             "seed": 1337
         }

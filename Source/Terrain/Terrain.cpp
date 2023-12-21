@@ -113,8 +113,8 @@ void Terrain::GenerateTerrainMapSection(
             if (!layer.active) continue;
 
             float layerVal = noises[i].GetNoise(
-                (float)x * layer.frequency, 
-                (float)y * layer.frequency
+                (float)x * layer.frequency.x, 
+                (float)y * layer.frequency.y
             );
             layerVal = (layerVal + 1.0f) * 0.5f;
             layerVal = std::pow(layerVal, layer.exponent);

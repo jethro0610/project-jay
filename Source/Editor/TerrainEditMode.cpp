@@ -44,15 +44,16 @@ void TerrainEditMode::SetPhase(TerrainEditPhase phase) {
             break;
         }
 
-        case TE_Seed: {
+        case TE_Seed: { 
             std::string seed = std::to_string(levelProperties_.noiseLayers[targetLayer_].seed);
             textInput_.SetLabel("Set Layer " + LayerName() + " Seed (" + seed + "): "); 
             break;
         }
 
         case TE_Frequency: {
-            std::string freq = std::to_string(levelProperties_.noiseLayers[targetLayer_].frequency);
-            textInput_.SetLabel("Set Layer " + LayerName() + " Frequency (" + freq + "): "); 
+            std::string xFreq = std::to_string(levelProperties_.noiseLayers[targetLayer_].frequency.x);
+            std::string yFreq = std::to_string(levelProperties_.noiseLayers[targetLayer_].frequency.y);
+            textInput_.SetLabel("Set Layer " + LayerName() + " Frequency (" + xFreq + "," + yFreq + "): "); 
             break;
         }
 
@@ -144,9 +145,16 @@ bool TerrainEditMode::OnConfirm() {
         }
 
         case TE_Frequency: {
-            StringToFloat frequency = ToFloat(input);
+            StringToVec2 frequency = ToVec2(input, levelProperties_.noiseLayers[targetLayer_].frequency);
+            StringToFloat uniformFrequency = ToFloat(input);
             if (frequency.valid) {
                 levelProperties_.noiseLayers[targetLayer_].frequency = frequency.value;
+                modified = true;
+                SetPhase(TE_SelectProperty);
+            }
+            else if (uniformFrequency.valid) {
+                levelProperties_.noiseLayers[targetLayer_].frequency.x = uniformFrequency.value;
+                levelProperties_.noiseLayers[targetLayer_].frequency.y = uniformFrequency.value;
                 modified = true;
                 SetPhase(TE_SelectProperty);
             }

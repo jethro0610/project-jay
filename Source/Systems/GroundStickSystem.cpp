@@ -35,15 +35,24 @@ void GroundStickSystem::Stick(
             float offsetGroundHeight = groundTraceComponent.groundPosition[i] + groundTraceComponent.stickOffset[i];
             float distanceToGround = offsetGroundHeight - transformComponent.transform[i].position.y;  
             float stickVelocity = distanceToGround / GlobalTime::TIMESTEP;
-            if (velocity.y <= stickVelocity + 5.0f) {
-                velocity.y = stickVelocity;
 
-                if (groundTraceComponent.zeroVelocity[i]) {
-                    velocity.x = 0.0f;
-                    velocity.z = 0.0f;
-                    velocityComponent.angularVelocity[i] = quat(1.0f, 0.0f, 0.0f, 0.0f);
-                }
+            velocity.y = stickVelocity;
+            if (groundTraceComponent.zeroVelocity[i]) {
+                velocity.x = 0.0f;
+                velocity.z = 0.0f;
+                velocityComponent.angularVelocity[i] = quat(1.0f, 0.0f, 0.0f, 0.0f);
             }
+
+            // Allow jumping once velocity is reached
+            // if (velocity.y <= stickVelocity + 5.0f) {
+            //     velocity.y = stickVelocity;
+            //
+            //     if (groundTraceComponent.zeroVelocity[i]) {
+            //         velocity.x = 0.0f;
+            //         velocity.z = 0.0f;
+            //         velocityComponent.angularVelocity[i] = quat(1.0f, 0.0f, 0.0f, 0.0f);
+            //     }
+            // }
         }
     }
 }

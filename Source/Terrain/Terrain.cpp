@@ -134,8 +134,10 @@ float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
 
 float Terrain::GetHeight(const vec3& position, TerrainAccuracy accuracy) const {
     float height = GetHeight(vec2(position.x, position.z), accuracy);
-    if (position.y < height - 1.0f)
-        return -INFINITY;
+    // If the position is below 10 units of the ground,
+    // count it as un grounded
+    // if (position.y < height - 10.0f)
+    //     return -INFINITY;
 
     return height;
 }

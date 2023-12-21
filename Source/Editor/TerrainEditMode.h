@@ -27,5 +27,5 @@ private:
     void SetPhase(TerrainEditPhase phase); 
     TerrainEditPhase phase_;
     int targetLayer_;
-    std::string LayerName() { return std::to_string(targetLayer_); } 
+    std::string LayerName() { return std::to_string(targetLayer_ + 1); } 
 };

@@ -90,6 +90,11 @@ void DefaultMode::Update() {
         default:
             break;
     }
+
+    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.Get() != NULL_ENTITY) {
+        entityManager_.destroyList_.push_back({target_.Get(), false});
+        target_.Set(NULL_ENTITY);
+    }
 }
 
 void DefaultMode::CameraUpdate() {

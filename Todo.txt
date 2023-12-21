@@ -1,6 +1,4 @@
 - Terrain editor
-    - Separate X and Y frequencies
-    - Re-aligin grounded entities
     - Single layer preview
 
 - Pillars on test level are bell towers 

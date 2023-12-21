@@ -4,6 +4,7 @@
 #include "Terrain/Terrain.h"
 #include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"
+#include <format>
 
 BlobEditMode::BlobEditMode(EditorModeArgs args):
 EditorMode(args) {
@@ -34,19 +35,19 @@ void BlobEditMode::SetPhase(BlobEditPhase phase) {
         }
 
         case BE_Frequency: {
-            std::string freq = std::to_string(levelProperties_.blob.frequency);
+            std::string freq = std::format("{:.3f}", levelProperties_.blob.frequency);
             textInput_.SetLabel("Set Blob Frequency (" + freq + "): "); 
             break;
         }
 
         case BE_MinRadius: {
-            std::string minRadius = std::to_string(levelProperties_.blob.minRadius);
+            std::string minRadius = std::format("{:.3f}", levelProperties_.blob.minRadius);
             textInput_.SetLabel("Set Blob Min Radius(" + minRadius + "): "); 
             break;
         }
 
         case BE_MaxRadius: {
-            std::string maxRadius = std::to_string(levelProperties_.blob.maxRadius);
+            std::string maxRadius = std::format("{:.3f}", levelProperties_.blob.maxRadius);
             textInput_.SetLabel("Set Blob Max Radius (" + maxRadius + "): "); 
             break;
         }
@@ -60,6 +61,7 @@ void BlobEditMode::Update() {
 bool BlobEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
     bool modified = false;
+    bool exit = false;
     switch(phase_) {
         case BE_SelectProperty: {
             if (input == "s")
@@ -70,6 +72,8 @@ bool BlobEditMode::OnConfirm() {
                 SetPhase(BE_MinRadius);
             else if (input == "x")
                 SetPhase(BE_MaxRadius);
+            else if (input == "b")
+                exit = true;
             break;
         }
 
@@ -85,6 +89,9 @@ bool BlobEditMode::OnConfirm() {
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
+            else if (input == "b") {
+                SetPhase(BE_SelectProperty);
+            }
             break;
         }
 
@@ -93,6 +100,9 @@ bool BlobEditMode::OnConfirm() {
             if (frequency.valid) {
                 levelProperties_.blob.frequency  = frequency.value;
                 modified = false;
+                SetPhase(BE_SelectProperty);
+            }
+            else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -105,6 +115,9 @@ bool BlobEditMode::OnConfirm() {
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
+            else if (input == "b") {
+                SetPhase(BE_SelectProperty);
+            }
             break;
         }
 
@@ -113,6 +126,9 @@ bool BlobEditMode::OnConfirm() {
             if (exponent.valid) {
                 levelProperties_.blob.maxRadius  = exponent.value;
                 modified = false;
+                SetPhase(BE_SelectProperty);
+            }
+            else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -129,5 +145,5 @@ bool BlobEditMode::OnConfirm() {
         );
     }
 
-    return false;
+    return exit;
 }

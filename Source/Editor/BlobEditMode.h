@@ -13,7 +13,7 @@ enum BlobEditPhase {
 class BlobEditMode : public EditorMode {
 public:
     BlobEditMode(EditorModeArgs args); 
-    int GetBinding() override { return 'B'; }
+    int GetBinding() override { return 'N'; }
     std::string GetName() override { return "Terrain Edit"; };
     void OnStart() override;
     void OnEnd() override;

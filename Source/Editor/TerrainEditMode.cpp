@@ -5,6 +5,7 @@
 #include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"
 #include <GLFW/glfw3.h>
+#include <format>
 
 TerrainEditMode::TerrainEditMode(EditorModeArgs args):
 EditorMode(args)
@@ -51,20 +52,20 @@ void TerrainEditMode::SetPhase(TerrainEditPhase phase) {
         }
 
         case TE_Frequency: {
-            std::string xFreq = std::to_string(levelProperties_.noiseLayers[targetLayer_].frequency.x);
-            std::string yFreq = std::to_string(levelProperties_.noiseLayers[targetLayer_].frequency.y);
+            std::string xFreq = std::format("{:.3f}", levelProperties_.noiseLayers[targetLayer_].frequency.x);
+            std::string yFreq = std::format("{:.3f}", levelProperties_.noiseLayers[targetLayer_].frequency.y);
             textInput_.SetLabel("Set Layer " + LayerName() + " Frequency (" + xFreq + "," + yFreq + "): "); 
             break;
         }
 
         case TE_Multiplier: {
-            std::string mult = std::to_string(levelProperties_.noiseLayers[targetLayer_].multiplier);
+            std::string mult = std::format("{:.3f}", levelProperties_.noiseLayers[targetLayer_].multiplier);
             textInput_.SetLabel("Set Layer " + LayerName() + " Multiplier (" + mult + "): "); 
             break;
         }
 
         case TE_Exponent: {
-            std::string exp = std::to_string(levelProperties_.noiseLayers[targetLayer_].exponent);
+            std::string exp = std::format("{:.3f}", levelProperties_.noiseLayers[targetLayer_].exponent);
             textInput_.SetLabel("Set Layer " + LayerName() + " Exponent (" + exp + "): "); 
             break;
         }
@@ -78,6 +79,7 @@ void TerrainEditMode::Update() {
 bool TerrainEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
     bool modified = false;
+    bool exit = false;
     switch(phase_) {
         case TE_SelectNoiseLayer: {
             StringToInt layer = ToInt(input);
@@ -87,6 +89,9 @@ bool TerrainEditMode::OnConfirm() {
                     SetPhase(TE_SelectProperty);
                 else
                     SetPhase(TE_Activate);
+            }
+            else if (input == "b") {
+                exit = true;
             }
             break;
         }
@@ -102,6 +107,8 @@ bool TerrainEditMode::OnConfirm() {
                 SetPhase(TE_Multiplier);
             else if (input == "e")
                 SetPhase(TE_Exponent);
+            else if (input == "b")
+                SetPhase(TE_SelectNoiseLayer);
             break;
         }
 
@@ -111,7 +118,7 @@ bool TerrainEditMode::OnConfirm() {
                 modified = true;
                 SetPhase(TE_SelectProperty);
             }
-            else if (input == "n") {
+            else if (input == "n" || input == "b") {
                 SetPhase(TE_SelectNoiseLayer);
             }
             break;
@@ -123,7 +130,7 @@ bool TerrainEditMode::OnConfirm() {
                 modified = true;
                 SetPhase(TE_SelectNoiseLayer);
             }
-            else if (input == "n") {
+            else if (input == "n" || input == "b") {
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -139,6 +146,9 @@ bool TerrainEditMode::OnConfirm() {
             else if (seed.valid) {
                 levelProperties_.noiseLayers[targetLayer_].seed = seed.value;
                 modified = true;
+                SetPhase(TE_SelectProperty);
+            }
+            else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -158,6 +168,9 @@ bool TerrainEditMode::OnConfirm() {
                 modified = true;
                 SetPhase(TE_SelectProperty);
             }
+            else if (input == "b") {
+                SetPhase(TE_SelectProperty);
+            }
             break;
         }
 
@@ -168,6 +181,9 @@ bool TerrainEditMode::OnConfirm() {
                 modified = true;
                 SetPhase(TE_SelectProperty);
             }
+            else if (input == "b") {
+                SetPhase(TE_SelectProperty);
+            }
             break;
         }
 
@@ -176,6 +192,9 @@ bool TerrainEditMode::OnConfirm() {
             if (exponent.valid) {
                 levelProperties_.noiseLayers[targetLayer_].exponent = exponent.value;
                 modified = true;
+                SetPhase(TE_SelectProperty);
+            }
+            else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -192,5 +211,5 @@ bool TerrainEditMode::OnConfirm() {
         );
     }
 
-    return false;
+    return exit;
 }

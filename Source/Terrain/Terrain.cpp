@@ -3,6 +3,7 @@
 #include "Logging/Logger.h"
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
+#include "Components/TransformComponent.h"
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
 #include <thread>
@@ -33,9 +34,9 @@ void Terrain::GenerateTerrainMap(
     for (int i = 0; i < 4; i++)
         noises[i].SetSeed(noiseLayers[i].seed);
 
+    // TODO: Make this into a generic threaded loop calculator
     const auto cores = std::thread::hardware_concurrency();
     int sectionSize = RESOLUTION / cores;
-
     std::vector<std::thread> threads;
     for (int i = 0; i < cores; i++) {
         int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
@@ -54,6 +55,31 @@ void Terrain::GenerateTerrainMap(
         t.join();
      
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+}
+
+void Terrain::GenerateTerrainMap(
+    const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
+    const BlobProperties& blob,
+    EntityList& entities,
+    ComponentList& components
+) {
+    TransformComponent& transformComponent = components.Get<TransformComponent>();
+    vector_const<EntityID , MAX_ENTITIES> entitiesToRespoition;
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        const Entity& entity = entities[i];
+        if (!entity.alive_) continue;
+            
+        Transform& transform = transformComponent.transform[i];
+        if (abs(transform.position.y - GetHeight(transform.position)) < 0.5f)
+            entitiesToRespoition.push_back(i);
+    }
+
+    GenerateTerrainMap(noiseLayers, blob);
+
+    for (EntityID e : entitiesToRespoition) {
+        Transform& transform = transformComponent.transform[e];
+        transform.position.y = GetHeight(transform.position);
+    }
 }
 
 void Terrain::GenerateTerrainMapSection(

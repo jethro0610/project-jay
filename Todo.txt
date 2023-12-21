@@ -2,7 +2,6 @@
     - Separate X and Y frequencies
     - Re-aligin grounded entities
     - Single layer preview
-    - Compute shader calculate heightmap
 
 - Pillars on test level are bell towers 
     - Sound wave effect

@@ -1,4 +1,5 @@
 #include "TerrainEditMode.h"
+#include "Entity/EntityManager.h"
 #include "Level/LevelProperties.h"
 #include "Terrain/Terrain.h"
 #include "EditorTextInput.h"
@@ -75,6 +76,7 @@ void TerrainEditMode::Update() {
 
 bool TerrainEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
+    bool modified = false;
     switch(phase_) {
         case TE_SelectNoiseLayer: {
             StringToInt layer = ToInt(input);
@@ -105,7 +107,7 @@ bool TerrainEditMode::OnConfirm() {
         case TE_Activate: {
             if (input == "y") {
                 levelProperties_.noiseLayers[targetLayer_].active = true;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             else if (input == "n") {
@@ -117,7 +119,7 @@ bool TerrainEditMode::OnConfirm() {
         case TE_Deactivate: {
             if (input == "y") {
                 levelProperties_.noiseLayers[targetLayer_].active = false;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectNoiseLayer);
             }
             else if (input == "n") {
@@ -130,12 +132,12 @@ bool TerrainEditMode::OnConfirm() {
             StringToInt seed = ToInt(input);
             if (input == "r") {
                 levelProperties_.noiseLayers[targetLayer_].seed = rand() % 10000;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             else if (seed.valid) {
                 levelProperties_.noiseLayers[targetLayer_].seed = seed.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -145,7 +147,7 @@ bool TerrainEditMode::OnConfirm() {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
                 levelProperties_.noiseLayers[targetLayer_].frequency = frequency.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -155,7 +157,7 @@ bool TerrainEditMode::OnConfirm() {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
                 levelProperties_.noiseLayers[targetLayer_].multiplier = multiplier.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             break;
@@ -165,12 +167,22 @@ bool TerrainEditMode::OnConfirm() {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
                 levelProperties_.noiseLayers[targetLayer_].exponent = exponent.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = true;
                 SetPhase(TE_SelectProperty);
             }
             break;
         }
     }
     textInput_.ClearInput();
+
+    if (modified) {
+        terrain_.GenerateTerrainMap(
+            levelProperties_.noiseLayers, 
+            levelProperties_.blob,
+            entityManager_.entities_,
+            entityManager_.components_
+        );
+    }
+
     return false;
 }

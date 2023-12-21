@@ -1,4 +1,5 @@
 #include "BlobEditMode.h"
+#include "Entity/EntityManager.h"
 #include "Level/LevelProperties.h"
 #include "Terrain/Terrain.h"
 #include "EditorTextInput.h"
@@ -58,6 +59,7 @@ void BlobEditMode::Update() {
 
 bool BlobEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
+    bool modified = false;
     switch(phase_) {
         case BE_SelectProperty: {
             if (input == "s")
@@ -75,12 +77,12 @@ bool BlobEditMode::OnConfirm() {
             StringToInt seed = ToInt(input);
             if (input == "r") {
                 levelProperties_.blob.seed = rand() % 10000;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = false;
                 SetPhase(BE_SelectProperty);
             }
             else if (seed.valid) {
                 levelProperties_.blob.seed  = seed.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = false;
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -90,7 +92,7 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
                 levelProperties_.blob.frequency  = frequency.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = false;
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -100,7 +102,7 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
                 levelProperties_.blob.minRadius  = multiplier.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = false;
                 SetPhase(BE_SelectProperty);
             }
             break;
@@ -110,12 +112,22 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
                 levelProperties_.blob.maxRadius  = exponent.value;
-                terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+                modified = false;
                 SetPhase(BE_SelectProperty);
             }
             break;
         }
     }
     textInput_.ClearInput();
+
+    if (modified) {
+        terrain_.GenerateTerrainMap(
+            levelProperties_.noiseLayers,
+            levelProperties_.blob,
+            entityManager_.entities_,
+            entityManager_.components_
+        );
+    }
+
     return false;
 }

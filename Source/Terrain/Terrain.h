@@ -3,11 +3,13 @@
 #include "BlobProperties.h"
 #include "NoiseLayer.h"
 #include "Rendering/Texture.h"
+#include "Systems/SystemInc.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 #include <FastNoiseLite.h>
 
+class ComponentList;
 class LevelProperties;
 class ResourceManager;
 
@@ -39,6 +41,12 @@ public:
     void GenerateTerrainMap(
         const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
         const BlobProperties& blob
+    );
+    void GenerateTerrainMap(
+        const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
+        const BlobProperties& blob,
+        EntityList& entities,
+        ComponentList& components
     );
     void GenerateTerrainMapSection(
         const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,

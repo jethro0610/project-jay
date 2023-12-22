@@ -52,6 +52,7 @@ file(GLOB SOURCES
 
     Source/Level/LevelLoader.cpp
 
+    Source/Resource/DependencyList.cpp
     Source/Resource/ResourceManager.cpp
     Source/Resource/PC_ResourceManager.cpp
 
@@ -76,6 +77,7 @@ file(GLOB SOURCES
     Source/Platform/PC_Platform.cpp
 
     Source/Editor/Editor.cpp
+    Source/Editor/EditorLevel.cpp
     Source/Editor/EditorMode.cpp
     Source/Editor/EditorTarget.cpp
     Source/Editor/EditorTextInput.cpp
@@ -83,6 +85,7 @@ file(GLOB SOURCES
     Source/Editor/BlobEditMode.cpp
     Source/Editor/CloneMode.cpp
     Source/Editor/DefaultMode.cpp
+    Source/Editor/OpenLevelMode.cpp
     Source/Editor/RotateMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp

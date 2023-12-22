@@ -2,7 +2,6 @@
 #include "EditorMode.h"
 #include <glm/gtx/quaternion.hpp>
 
-
 class RotateMode : public EditorMode {
     enum RotateSubmode {
         RS_Free,

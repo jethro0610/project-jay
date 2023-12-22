@@ -48,6 +48,10 @@ public:
         Terrain& terrain
     );
 
+    void RenderEditorOnly(
+        Editor& editor
+    );
+
     glm::mat4 GetProjectionMatrix() const { return projectionMatrix_; };
 
 private:

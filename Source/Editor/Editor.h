@@ -1,6 +1,7 @@
 #pragma once
 #include "EditorTarget.h"
 #include "EditorTextInput.h"
+#include "EditorLevel.h"
 #include "Modes.h"
 #include "ExpandModes.h"
 
@@ -42,7 +43,6 @@ public:
     void Update();
     void SetMode(EditorMode& mode);
     void SetMode(EditorMode* mode);
-    void SaveLevel();
 
 private:
     EditorMode* mode_;
@@ -58,6 +58,7 @@ private:
     Renderer& renderer_;
     ResourceManager& resourceManager_;
     Terrain& terrain_;
+    EditorLevel level_;
     EditorModeArgs args_;
 
     #define MODEEXPANSION(TYPE, VAR) TYPE VAR;

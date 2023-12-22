@@ -2,6 +2,7 @@
 #include "Camera/Camera.h"
 #include "Entity/EntityManager.h"
 #include "Level/LevelLoader.h"
+#include "Resource/DependencyList.h"
 #include "EditorTextInput.h"
 
 SpawnMode::SpawnMode(EditorModeArgs args):
@@ -27,8 +28,8 @@ bool SpawnMode::OnConfirm() {
         if (!std::filesystem::exists("entities/" + entityName + ".json"))
             return false;
 
-        DependencyList dList = levelLoader_.GenerateEntityDependencyList(entityName);
-        resourceManager_.LoadDependencies(dList);
+        DependencyList deps = DependencyList::GenerateFromEntity(entityName);
+        resourceManager_.LoadDependencies(deps);
     }
 
     Transform spawnTransform;

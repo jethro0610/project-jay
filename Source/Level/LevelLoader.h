@@ -22,15 +22,8 @@ public:
         SpreadManager& spreadManager,
         Terrain& terrain
     );
-    void ReloadLevel();
-    void LoadLevel(const std::string& name);
+    bool LoadLevel(const std::string& name, bool loadTerrain = true);
     void ClearLevel();
-
-    #ifdef _DEBUG
-    std::string DBG_currentLevel;
-    #endif 
-
-    DependencyList GenerateEntityDependencyList(const std::string& entityName);
 
 private:
     EntityManager& entityManager_;
@@ -40,6 +33,4 @@ private:
     SeedManager& seedManager_;
     SpreadManager& spreadManager_;
     Terrain& terrain_;
-
-    DependencyList GenerateDepedencyList(nlohmann::json& levelData);
 };

@@ -29,39 +29,17 @@ terrain_(terrain)
     
 }
 
-void LevelLoader::ReloadLevel() {
-    ClearLevel();
-    std::ifstream inFile("levels/" + DBG_currentLevel + ".json");
-    ASSERT(inFile.is_open(), "Failed to load level " + DBG_currentLevel);
-    nlohmann::json levelData = nlohmann::json::parse(inFile);
-
-    DependencyList dependencies = GenerateDepedencyList(levelData);
-    resourceManager_.UnloadUnusedDependencies(dependencies);
-    resourceManager_.LoadDependencies(dependencies);
-    
-    auto& entitiesData = levelData["entities"];
-    Transform entityTransform;
-    for (auto& entityData : entitiesData) {
-        entityTransform = GetTransform(entityData, "transform");
-        entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
-    }
-    entityManager_.SpawnEntities();
-}
-
-void LevelLoader::LoadLevel(const std::string& name) {
-    ClearLevel();
-
-    #ifdef _DEBUG
-    DBG_currentLevel = name;
-    #endif
-
+bool LevelLoader::LoadLevel(const std::string& name, bool loadTerrain) {
     std::ifstream inFile("levels/" + name + ".json");
-    ASSERT(inFile.is_open(), "Failed to load level " + name);
+    if (!inFile.is_open())
+        return false;
+
+    ClearLevel();
     nlohmann::json levelData = nlohmann::json::parse(inFile);
 
-    DependencyList dependencies = GenerateDepedencyList(levelData);
-    resourceManager_.UnloadUnusedDependencies(dependencies);
-    resourceManager_.LoadDependencies(dependencies);
+    DependencyList deps = DependencyList::GenerateFromLevel(levelData);
+    resourceManager_.UnloadUnusedDependencies(deps);
+    resourceManager_.LoadDependencies(deps);
     
     levelProperties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
     levelProperties_.spreadMaterials.clear();
@@ -90,7 +68,8 @@ void LevelLoader::LoadLevel(const std::string& name) {
         }
     }
 
-    terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
+    if (loadTerrain)
+        terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
 
     auto& entitiesData = levelData["entities"];
     Transform entityTransform;
@@ -99,6 +78,8 @@ void LevelLoader::LoadLevel(const std::string& name) {
         entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
     }
     entityManager_.SpawnEntities();
+
+    return true;
 }
 
 void LevelLoader::ClearLevel() {
@@ -106,103 +87,4 @@ void LevelLoader::ClearLevel() {
     particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
-}
-
-void ParseVertexShader(const std::string& name, DependencyList& list) {
-    if (list.vertexShaders.contains(name)) return;
-    list.vertexShaders.insert(name);
-}
-
-void ParseFragmentShader(const std::string& name, DependencyList& list) {
-    if (list.fragmentShaders.contains(name)) return;
-    list.fragmentShaders.insert(name);
-}
-
-void ParseMaterial(const std::string& name, DependencyList& list) {
-    if (list.materials.contains(name)) return;
-    list.materials.insert(name);
-    std::ifstream materialFile("materials/" + name + ".json");
-    nlohmann::json materialData = nlohmann::json::parse(materialFile);
-
-    ParseVertexShader(materialData["vertex"].get<std::string>(), list);
-    ParseFragmentShader(materialData["fragment"].get<std::string>(), list);
-
-    if (materialData.contains("vertex_shadow"))
-        ParseVertexShader(materialData["vertex_shadow"].get<std::string>(), list);
-    if (materialData.contains("fragment_shadow"))
-        ParseFragmentShader(materialData["fragment_shadow"].get<std::string>(), list);
-
-    list.materials.insert(name);
-    for (auto& textureName : materialData["textures"])
-        list.textures.insert(textureName);
-}
-
-void ParseMaterials(nlohmann::json& materialNames, DependencyList& list) {
-    for (auto& materialName : materialNames)
-        ParseMaterial(materialName, list);
-}
-
-void ParseEmitterProperty(const std::string& name, DependencyList& list) {
-    if (list.emitterProperties.contains(name)) return;
-    list.emitterProperties.insert(name);    
-    std::ifstream emitterFile("emitters/" + name + ".json");
-    nlohmann::json emitterData = nlohmann::json::parse(emitterFile);
-
-    ParseMaterial(emitterData["material"].get<std::string>(), list);
-}
-
-void ParseEmitterProperties(nlohmann::json& emitterNames, DependencyList& list) {
-    for (auto& emitterName : emitterNames)
-        ParseEmitterProperty(emitterName, list);
-}
-
-void ParseModel(const std::string& name, DependencyList& list) {
-    if (list.models.contains(name)) return;
-    list.models.insert(name);
-}
-
-void ParseEntity(const std::string& name, DependencyList& list) {
-    if (list.entityDescriptions.contains(name)) return;
-    list.entityDescriptions.insert(name);
-    std::ifstream entityFile("entities/" + name + ".json");
-    nlohmann::json entityData = nlohmann::json::parse(entityFile);
-
-    if (entityData.contains("emitters"))
-        ParseEmitterProperties(entityData["emitters"], list);
-
-    if (entityData["components"].contains("static_model")) {
-        auto& modelData = entityData["components"]["static_model"];
-        ParseModel(modelData["model"].get<std::string>(), list);
-        ParseMaterials(modelData["materials"], list);
-    }
-
-    if (entityData["components"].contains("interval_spawner")) {
-        auto& spawnerData = entityData["components"]["interval_spawner"];
-        if (GetBoolean(spawnerData, "seed") == false)
-            ParseEntity(spawnerData["entity"], list);
-    }
-
-}
-
-void ParseLevelEntities(nlohmann::json& entitiesData, DependencyList& list) {
-    for (auto& entityData : entitiesData) {
-        ParseEntity(entityData["name"].get<std::string>(), list);
-    }
-}
-
-// Move this to resource manager?
-DependencyList LevelLoader::GenerateEntityDependencyList(const std::string& entityName) {
-    DependencyList list;
-    ParseEntity(entityName, list);
-    return list;
-}
-
-DependencyList LevelLoader::GenerateDepedencyList(nlohmann::json& levelData) {
-    DependencyList list;
-    ParseModel(levelData["spread"]["model"], list);
-    ParseMaterials(levelData["spread"]["materials"], list);
-    ParseMaterial(levelData["terrain"]["material"], list);
-    ParseMaterial(levelData["seed"]["material"], list);
-    ParseLevelEntities(levelData["entities"], list);
-    return list;
 }

@@ -5,12 +5,12 @@
 - Timed entities
 
 - Level editor
-    - Save
+    - Modes init boolean defaults
     - New level/open level
+    - Save
     - Multidelete
     - Multispawn
         - Randomize rotaiton and scale, decide uniform
-    - Pause
 
 - Generic threading(workers n shit)
 

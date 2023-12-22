@@ -11,7 +11,9 @@ EditorMode(args)
 {
     mouseVisibile_ = false;
     requiresTarget_ = false;
-    submode_ = DS_Cursor;
+    requiresLevel_ = false;
+    ctrl_ = false;
+    submode_ = DS_Camera;
 }
 
 void DefaultMode::OnStart() {

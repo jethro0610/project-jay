@@ -2,6 +2,7 @@
 #include "Entity/EntityManager.h"
 #include "Level/LevelProperties.h"
 #include "Terrain/Terrain.h"
+#include "EditorLevel.h"
 #include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"
 #include <format>
@@ -29,25 +30,25 @@ void BlobEditMode::SetPhase(BlobEditPhase phase) {
         }
 
         case BE_Seed: {
-            std::string seed = std::to_string(levelProperties_.blob.seed);
+            std::string seed = std::to_string(level_.properties_.blob.seed);
             textInput_.SetLabel("Set Blob Seed (" + seed + "): "); 
             break;
         }
 
         case BE_Frequency: {
-            std::string freq = std::format("{:.3f}", levelProperties_.blob.frequency);
+            std::string freq = std::format("{:.3f}", level_.properties_.blob.frequency);
             textInput_.SetLabel("Set Blob Frequency (" + freq + "): "); 
             break;
         }
 
         case BE_MinRadius: {
-            std::string minRadius = std::format("{:.3f}", levelProperties_.blob.minRadius);
+            std::string minRadius = std::format("{:.3f}", level_.properties_.blob.minRadius);
             textInput_.SetLabel("Set Blob Min Radius(" + minRadius + "): "); 
             break;
         }
 
         case BE_MaxRadius: {
-            std::string maxRadius = std::format("{:.3f}", levelProperties_.blob.maxRadius);
+            std::string maxRadius = std::format("{:.3f}", level_.properties_.blob.maxRadius);
             textInput_.SetLabel("Set Blob Max Radius (" + maxRadius + "): "); 
             break;
         }
@@ -80,12 +81,12 @@ bool BlobEditMode::OnConfirm() {
         case BE_Seed: {
             StringToInt seed = ToInt(input);
             if (input == "r") {
-                levelProperties_.blob.seed = rand() % 10000;
+                level_.properties_.blob.seed = rand() % 10000;
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
             else if (seed.valid) {
-                levelProperties_.blob.seed  = seed.value;
+                level_.properties_.blob.seed  = seed.value;
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
@@ -98,7 +99,7 @@ bool BlobEditMode::OnConfirm() {
         case BE_Frequency: {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
-                levelProperties_.blob.frequency  = frequency.value;
+                level_.properties_.blob.frequency  = frequency.value;
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
@@ -111,7 +112,7 @@ bool BlobEditMode::OnConfirm() {
         case BE_MinRadius: {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
-                levelProperties_.blob.minRadius  = multiplier.value;
+                level_.properties_.blob.minRadius  = multiplier.value;
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
@@ -124,7 +125,7 @@ bool BlobEditMode::OnConfirm() {
         case BE_MaxRadius: {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
-                levelProperties_.blob.maxRadius  = exponent.value;
+                level_.properties_.blob.maxRadius  = exponent.value;
                 modified = false;
                 SetPhase(BE_SelectProperty);
             }
@@ -138,8 +139,8 @@ bool BlobEditMode::OnConfirm() {
 
     if (modified) {
         terrain_.GenerateTerrainMap(
-            levelProperties_.noiseLayers,
-            levelProperties_.blob,
+            level_.properties_.noiseLayers,
+            level_.properties_.blob,
             entityManager_.entities_,
             entityManager_.components_
         );

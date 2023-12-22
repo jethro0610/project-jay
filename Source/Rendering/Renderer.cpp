@@ -48,3 +48,9 @@ void Renderer::RenderEdit(
 
     PresentFrame();
 }
+
+void Renderer::RenderEditorOnly(Editor& editor) {
+    StartFrame();
+    RenderEditor(editor);
+    PresentFrame();
+}

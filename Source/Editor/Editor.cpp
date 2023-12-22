@@ -30,19 +30,24 @@ resourceManager_(resourceManager),
 renderer_(renderer),
 terrain_(terrain),
 running_(running),
+level_(
+    entityManager_,
+    levelLoader_,
+    levelProperties_,
+    terrain_
+),
 target_(entityManager),
 textInput_(platform),
 args_({
     camera, 
     entityManager, 
     inputs, 
-    levelLoader, 
-    levelProperties, 
     platform, 
     renderer, 
     resourceManager, 
     terrain, 
     modeText_,
+    level_,
     target_, 
     textInput_
 }),
@@ -88,7 +93,9 @@ void Editor::StartEditing() {
     defaultMode_.SetSubmode(DS_Camera);
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
-    levelLoader_.ReloadLevel();
+
+    if (level_.hasLevel_)
+        level_.Reset();
 }
 
 void Editor::StopEditing() {
@@ -98,7 +105,7 @@ void Editor::StopEditing() {
     target_.Set(NULL_ENTITY);
     camera_.target_ = PLAYER_ENTITY;
     platform_.SetMouseVisible(false);
-    SaveLevel();
+    level_.Save();
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -120,7 +127,8 @@ void Editor::SetMode(EditorMode& mode) {
 void Editor::Update() {
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     
-    if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_['E']) {
+    bool holdingCtrl = platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL];
+    if (holdingCtrl && platform_.pressedKeys_['E']) {
         StopEditing();
         FlushInputs();
         return;
@@ -128,7 +136,7 @@ void Editor::Update() {
 
     if (mode_ == &defaultMode_) {
         for (EditorMode* mode : modes_) {
-            if (platform_.pressedKeys_[mode->GetBinding()]) {
+            if (platform_.pressedKeys_[mode->GetBinding()] && mode->CanSwitch(holdingCtrl)) {
                 SetMode(mode);
                 break;
             }
@@ -144,20 +152,25 @@ void Editor::Update() {
     }
 
     mode_->Update();
-
-    TransformSystem::ForceRenderTransforms(
-        entityManager_.entities_,
-        entityManager_.components_
-    );
-    entityManager_.DestroyEntities();
-    entityManager_.SpawnEntities();
-    renderer_.RenderEdit(
-        entityManager_.entities_, 
-        entityManager_.components_,
-        *this,
-        levelProperties_,
-        terrain_ 
-    );
+    
+    if (level_.hasLevel_) {
+        TransformSystem::ForceRenderTransforms(
+            entityManager_.entities_,
+            entityManager_.components_
+        );
+        entityManager_.DestroyEntities();
+        entityManager_.SpawnEntities();
+        renderer_.RenderEdit(
+            entityManager_.entities_, 
+            entityManager_.components_,
+            *this,
+            levelProperties_,
+            terrain_ 
+        );
+    }
+    else {
+        renderer_.RenderEditorOnly(*this);
+    }
     FlushInputs();
 }
 
@@ -171,64 +184,4 @@ void Editor::FlushInputs() {
     platform_.FlushKeys();
     platform_.gamepad_.pressedButtons_.reset();
     platform_.gamepad_.releasedButtons_.reset();
-}
-
-void Editor::SaveLevel() {
-    nlohmann::json level;
-
-    level["spread"]["model"] = levelProperties_.spreadModel->DBG_name;
-    for (Material* material : levelProperties_.spreadMaterials)
-        level["spread"]["materials"].push_back(material->DBG_name);
-
-    level["terrain"]["material"] = levelProperties_.terrainMaterial->DBG_name;
-    level["seed"]["material"] = levelProperties_.seedMaterial->DBG_name;
-    
-    level["blob"]["seed"] = levelProperties_.blob.seed;
-    level["blob"]["frequency"] = levelProperties_.blob.frequency;
-    level["blob"]["minRadius"] = levelProperties_.blob.minRadius;
-    level["blob"]["maxRadius"] = levelProperties_.blob.maxRadius;
-
-    for (int i = 0; i < NoiseLayer::MAX; i++) {
-        nlohmann::json noiseLayerData;
-        noiseLayerData["active"] = levelProperties_.noiseLayers[i].active;
-        noiseLayerData["seed"] = levelProperties_.noiseLayers[i].seed;
-        noiseLayerData["frequency"]["x"] = levelProperties_.noiseLayers[i].frequency.x;
-        noiseLayerData["frequency"]["y"] = levelProperties_.noiseLayers[i].frequency.y;
-        noiseLayerData["multiplier"] = levelProperties_.noiseLayers[i].multiplier;
-        noiseLayerData["exponent"] = levelProperties_.noiseLayers[i].exponent;
-        level["noise_layers"][i] = noiseLayerData;
-    }
-    
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entityManager_.entities_[i];
-        if (!entity.alive_) continue;
-        
-        nlohmann::json entityData; 
-        entityData["name"] = entity.DBG_name;
-        Transform& transform = transformComponent.transform[i];
-
-        entityData["transform"]["position"]["x"] = transform.position.x;
-        entityData["transform"]["position"]["y"] = transform.position.y;
-        entityData["transform"]["position"]["z"] = transform.position.z;
-
-        entityData["transform"]["scale"]["x"] = transform.scale.x;
-        entityData["transform"]["scale"]["y"] = transform.scale.y;
-        entityData["transform"]["scale"]["z"] = transform.scale.z;
-
-        glm::vec3 eulerRotation = glm::eulerAngles(transform.rotation);
-        entityData["transform"]["rotation"]["x"] = eulerRotation.x;
-        entityData["transform"]["rotation"]["y"] = eulerRotation.y;
-        entityData["transform"]["rotation"]["z"] = eulerRotation.z;
-
-        level["entities"].push_back(entityData);
-    }
-    std::ofstream assetLevelFile("../Assets/levels/" + levelLoader_.DBG_currentLevel + ".json");
-    assetLevelFile << std::setw(4) << level << std::endl;
-    assetLevelFile.close();
-
-    std::ofstream workingLevelFile("levels/" + levelLoader_.DBG_currentLevel + ".json");
-    workingLevelFile<< std::setw(4) << level << std::endl;
-    workingLevelFile.close();
-    DEBUGLOG("Saved level: " << levelLoader_.DBG_currentLevel);
 }

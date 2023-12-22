@@ -62,7 +62,6 @@ void TranslateMode::SetSubmode(TranslateSubmode submode) {
 void TranslateMode::Update() {
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
-    float delta = deltaX_ + deltaY_;
 
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     Transform& transform = transformComponent.transform[target_.Get()];

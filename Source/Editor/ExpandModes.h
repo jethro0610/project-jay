@@ -1,6 +1,7 @@
 #pragma once
 #define EXPANDMODES \
     MODEEXPANSION(BlobEditMode, blobEditMode_) \
+    MODEEXPANSION(CloneMode, cloneMode_) \
     MODEEXPANSION(DefaultMode, defaultMode_) \
     MODEEXPANSION(ScaleMode, scaleMode_) \
     MODEEXPANSION(SpawnMode, spawnMode_) \

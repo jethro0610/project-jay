@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include "EntityID.h"
 #include "EntityLimits.h"
-#include "SpawnList.h"
+#include "EntitySpawner.h"
 #include "DestroyList.h"
 #include "Types/Transform.h"
 #include "Components/Components.h"
@@ -33,11 +33,12 @@ public:
     }
 
     ComponentList components_;
-    SpawnList spawnList_;
+    EntitySpawner spawner_;
     DestroyList destroyList_;
 
     void SpawnEntities();
     void DestroyEntities();
+    void ClearEntitySpawnFlags();
     void Reset();
 
 private:

@@ -81,6 +81,7 @@ file(GLOB SOURCES
     Source/Editor/EditorTextInput.cpp
 
     Source/Editor/BlobEditMode.cpp
+    Source/Editor/CloneMode.cpp
     Source/Editor/DefaultMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp

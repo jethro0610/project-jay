@@ -12,7 +12,7 @@ constexpr EntityKey key = GetEntityKey<IntervalSpawnComponent>();
 void IntervalSpawnSystem::Execute(
     EntityList& entities,
     ComponentList& components,
-    SpawnList& spawnList,
+    EntitySpawner& spawner,
     SeedManager& seedManager
 ) {
     auto& intervalSpawnComponent = components.Get<IntervalSpawnComponent>();
@@ -38,7 +38,7 @@ void IntervalSpawnSystem::Execute(
             if (intervalSpawnComponent.entityToSpawn[i] == nullptr)
                 seedManager.CreateSeed(spawnTransform.position);
             else
-                spawnList.push_back({intervalSpawnComponent.entityToSpawn[i], spawnTransform});
+                spawner.Spawn(intervalSpawnComponent.entityToSpawn[i], spawnTransform);
 
             timer = 0;
         }

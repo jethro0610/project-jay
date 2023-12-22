@@ -43,7 +43,7 @@ void LevelLoader::ReloadLevel() {
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         entityTransform = GetTransform(entityData, "transform");
-        entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
+        entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
     }
     entityManager_.SpawnEntities();
 }
@@ -96,7 +96,7 @@ void LevelLoader::LoadLevel(const std::string& name) {
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         entityTransform = GetTransform(entityData, "transform");
-        entityManager_.spawnList_.push_back({resourceManager_.GetEntityDescription(entityData["name"]), entityTransform});
+        entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
     }
     entityManager_.SpawnEntities();
 }

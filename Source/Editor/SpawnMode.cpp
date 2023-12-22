@@ -33,10 +33,7 @@ bool SpawnMode::OnConfirm() {
 
     Transform spawnTransform;
     spawnTransform.position = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
-    entityManager_.spawnList_.push_back({
-        resourceManager_.GetEntityDescription(entityName),
-        spawnTransform
-    });
+    entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityName), spawnTransform);
 
     return true;
 }

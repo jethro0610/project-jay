@@ -103,10 +103,25 @@ void EntityManager::DestroyEntity(EntityID entityToDestroy) {
 }
 
 void EntityManager::SpawnEntities() {
-    for (const Spawn& spawn : spawnList_)
-        CreateEntity(spawn.description, spawn.transform);
+    for (int i = 0; i < spawner_.spawns_.size(); i++) {
+        EntityID spawnedEntity = CreateEntity(spawner_.spawns_[i].description, spawner_.spawns_[i].transform);
+        if (spawner_.promises_[i] != nullptr) {
+            spawner_.promises_[i]->spawned = true;
+            spawner_.promises_[i]->id = spawnedEntity;
+        }
+    }
+    spawner_.spawns_.clear();
+    spawner_.promises_.clear();
+}
 
-    spawnList_.clear();
+void EntityManager::ClearEntitySpawnFlags() {
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        Entity& entity = entities_[i];
+        if (!entity.alive_)
+            continue;
+
+        entity.spawnedThisTick_ = false;
+    }
 }
 
 void EntityManager::DestroyEntities() {

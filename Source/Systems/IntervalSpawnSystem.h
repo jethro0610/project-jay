@@ -8,7 +8,7 @@ namespace IntervalSpawnSystem {
     void Execute(
         EntityList& entities,
         ComponentList& components,
-        SpawnList& spawnList,
+        EntitySpawner& spawner,
         SeedManager& seedManager
     );
 };

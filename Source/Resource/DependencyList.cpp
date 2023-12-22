@@ -16,6 +16,10 @@ void ParseFragmentShader(const std::string& name, DependencyList& list) {
 void ParseMaterial(const std::string& name, DependencyList& list) {
     if (list.materials.contains(name)) return;
     list.materials.insert(name);
+    #ifdef _DEBUG
+    list.materials.insert(name + "_selected");
+    #endif
+
     std::ifstream materialFile("materials/" + name + ".json");
     nlohmann::json materialData = nlohmann::json::parse(materialFile);
 

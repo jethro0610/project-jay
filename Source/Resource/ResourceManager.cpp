@@ -1,7 +1,6 @@
 #include "ResourceManager.h"
 
 void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
-    DEBUGLOG("Loading deps");
     for(const std::string& name : dependencyList.vertexShaders) {
         if (!vertexShaders_.GetMap().contains(name))
             LoadVertexShader(name);
@@ -39,41 +38,63 @@ void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
 }
 
 void ResourceManager::UnloadUnusedDependencies(DependencyList& dependencyList) {
-    return;
+    std::vector<std::string> unloads;
+
     for(const auto& element : vertexShaders_.GetMap()) {
         if (!dependencyList.vertexShaders.contains(element.first) && !globals_.contains(element.first))
-            UnloadVertexShader(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadVertexShader(unload);
+    unloads.clear();
 
     for(const auto& element : fragmentShaders_.GetMap()) {
         if (!dependencyList.fragmentShaders.contains(element.first) && !globals_.contains(element.first))
-            UnloadFragmentShader(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadFragmentShader(unload);
+    unloads.clear();
 
     for(const auto& element : textures_.GetMap()) {
         if (!dependencyList.textures.contains(element.first) && !globals_.contains(element.first))
-            UnloadTexture(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadTexture(unload);
+    unloads.clear();
 
     for(const auto& element : materials_.GetMap()) {
         if (!dependencyList.materials.contains(element.first) && !globals_.contains(element.first))
-            UnloadMaterial(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadMaterial(unload);
+    unloads.clear();
 
     for(const auto& element : models_.GetMap()) {
         if (!dependencyList.models.contains(element.first) && !globals_.contains(element.first))
-            UnloadModel(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadModel(unload);
+    unloads.clear();
 
     for(const auto& element : entityDescs_.GetMap()) {
         if (!dependencyList.entityDescriptions.contains(element.first) && !globals_.contains(element.first))
-            UnloadEntityDescription(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadEntityDescription(unload);
+    unloads.clear();
 
     for(const auto& element : emitterProps_.GetMap()) {
         if (!dependencyList.emitterProperties.contains(element.first) && !globals_.contains(element.first))
-            UnloadEmitterProperties(element.first);
+            unloads.push_back(element.first);
     }
+    for (const std::string& unload : unloads)
+        UnloadEmitterProperties(unload);
+    unloads.clear();
 }
 
 VertexShader* ResourceManager::GetVertexShader(const std::string& name) {

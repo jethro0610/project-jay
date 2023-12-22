@@ -78,6 +78,10 @@ void ResourceManager::LoadGlobalFile() {
     for (auto& material : globals["materials"]) {
         LoadMaterial(material);
         globals_.insert(material);
+
+        #ifdef _DEBUG
+        globals_.insert(material.get<std::string>() + "_selected");
+        #endif
     }
 }
 
@@ -231,6 +235,7 @@ void ResourceManager::LoadVertexShader(const std::string& name) {
 }
 void ResourceManager::UnloadVertexShader(const std::string& name) {
     bgfx::destroy(vertexShaders_.Get(name).handle);
+    DEBUGLOG("Unloaded vertex shader " << name);
     vertexShaders_.Remove(name);
 }
 
@@ -247,6 +252,7 @@ void ResourceManager::LoadFragmentShader(const std::string& name) {
 }
 void ResourceManager::UnloadFragmentShader(const std::string& name) {
     bgfx::destroy(fragmentShaders_.Get(name).handle);
+    DEBUGLOG("Unloaded fragment shader " << name);
     fragmentShaders_.Remove(name);
 }
 
@@ -263,6 +269,7 @@ void ResourceManager::LoadTexture(const std::string& name) {
 }
 void ResourceManager::UnloadTexture(const std::string& name) {
     bgfx::destroy(textures_.Get(name).handle);
+    DEBUGLOG("Unloaded texture " << name);
     textures_.Remove(name);
 }
 
@@ -310,11 +317,13 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     #ifdef _DEBUG
     Material& selectedMaterial = materials_.Add(name + "_selected");
     selectedMaterial = material;
+    ASSIGN_DEBUG_NAME(selectedMaterial, name + "_selected");
     selectedMaterial.shaderHandle = bgfx::createProgram(vertexShader->handle, GetFragmentShader("fs_selected")->handle); 
     #endif
     DEBUGLOG("Loaded material " << name);
 }
 void ResourceManager::UnloadMaterial(const std::string& name) {
+    DEBUGLOG("Unloaded material " << name);
     materials_.Remove(name);
 }
 
@@ -387,7 +396,11 @@ void ResourceManager::UnloadModel(const std::string& name) {
         bgfx::destroy(mesh.vertexBuffer);
     }
     
-    skeletons_.Remove(name);
+    DEBUGLOG("Unloaded model " << name);
+    models_.Remove(name);
+
+    if (skeletons_.Has(name))
+        skeletons_.Remove(name);
 }
 
 void ResourceManager::LoadEntityDescription(const std::string& name) {
@@ -406,6 +419,7 @@ void ResourceManager::LoadEntityDescription(const std::string& name) {
     DEBUGLOG("Loaded entity " << name);
 }
 void ResourceManager::UnloadEntityDescription(const std::string& name) {
+    DEBUGLOG("Unloaded entity " << name);
     entityDescs_.Remove(name);
 }
 
@@ -442,5 +456,6 @@ void ResourceManager::LoadEmitterProperties(const std::string& name) {
     DEBUGLOG("Loaded emitter " << name);
 }
 void ResourceManager::UnloadEmitterProperties(const std::string& name) {
+    DEBUGLOG("Unloaded emitter " << name);
     emitterProps_.Remove(name);
 }

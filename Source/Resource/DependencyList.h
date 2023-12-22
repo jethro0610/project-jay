@@ -1,7 +1,9 @@
 #pragma once
+#include "Rendering/Model.h"
 #include <set>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <vector_const.h>
 
 struct DependencyList {
     std::set<std::string> vertexShaders;
@@ -16,4 +18,10 @@ struct DependencyList {
     static DependencyList GenerateFromEntity(const std::string& name);
     static DependencyList GenerateFromLevel(nlohmann::json& levelData);
     static DependencyList GenerateFromLevel(const std::string& name);
+    static DependencyList GenerateFromLevelProperties(
+        const std::string& seedMaterial,
+        const std::string& spreadModel,
+        const std::vector<std::string>& spreadMaterials,
+        const std::string& terrainMaterial
+    );
 };

@@ -9,11 +9,13 @@ EditorLevel::EditorLevel(
     EntityManager& entityManager,
     LevelLoader& levelLoader,
     LevelProperties& properties,
+    ResourceManager& resourceManager,
     Terrain& terrain
 ):
 entityManager_(entityManager),
 levelLoader_(levelLoader),
 properties_(properties),
+resourceManager_(resourceManager),
 terrain_(terrain)
 {
     name_ = ""; 
@@ -86,10 +88,26 @@ void EditorLevel::New(const std::string& name) {
     hasLevel_ = true;
     levelLoader_.ClearLevel();
 
+    DependencyList deps = DependencyList::GenerateFromLevelProperties(
+        "m_seed_test",
+        "st_flower_test",
+        { "m_flower_test", "m_stem_test" },
+        "m_terrain_grass"
+    );
+    resourceManager_.UnloadUnusedDependencies(deps);
+    resourceManager_.LoadDependencies(deps);
+    properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
+    properties_.spreadModel = resourceManager_.GetModel("st_flower_test");
+    properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_flower_test"));
+    properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_stem_test"));
+    properties_.terrainMaterial = resourceManager_.GetMaterial("m_terrain_grass");
+
     // TODO: Assign other level properties
     for (NoiseLayer& noiseLayer : properties_.noiseLayers)
         noiseLayer = {};
     properties_.blob = {};
+
+    properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
 
     terrain_.GenerateTerrainMap(properties_.noiseLayers, properties_.blob);
 }

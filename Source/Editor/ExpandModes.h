@@ -3,6 +3,7 @@
     MODEEXPANSION(BlobEditMode, blobEditMode_) \
     MODEEXPANSION(CloneMode, cloneMode_) \
     MODEEXPANSION(DefaultMode, defaultMode_) \
+    MODEEXPANSION(NewLevelMode, newLevelMode_) \
     MODEEXPANSION(OpenLevelMode, openLevelMode_) \
     MODEEXPANSION(RotateMode, rotateMode_) \
     MODEEXPANSION(ScaleMode, scaleMode_) \

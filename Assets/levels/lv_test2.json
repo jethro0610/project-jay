@@ -1,0 +1,85 @@
+{
+    "blob": {
+        "frequency": 100.0,
+        "maxRadius": 150.0,
+        "minRadius": 150.0,
+        "seed": 1337
+    },
+    "entities": [
+        {
+            "name": "e_player",
+            "transform": {
+                "position": {
+                    "x": -2.0975780487060547,
+                    "y": 1.5667214393615723,
+                    "z": 3.0076684951782227
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            }
+        }
+    ],
+    "noise_layers": [
+        {
+            "active": true,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        }
+    ],
+    "seed": {
+        "material": "m_seed_test"
+    },
+    "spread": {
+        "materials": [
+            "m_flower_test",
+            "m_stem_test"
+        ],
+        "model": "st_flower_test"
+    },
+    "terrain": {
+        "material": "m_terrain_grass"
+    }
+}

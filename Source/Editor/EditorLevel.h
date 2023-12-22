@@ -4,6 +4,7 @@
 class EntityManager;
 class LevelLoader;
 class LevelProperties;
+class ResourceManager;
 class Terrain;
 
 class EditorLevel {
@@ -12,6 +13,7 @@ public:
         EntityManager& entityManager,
         LevelLoader& levelLoader,
         LevelProperties& levelProperties,
+        ResourceManager& resourceManager,
         Terrain& terrain
     );
 
@@ -27,5 +29,6 @@ public:
 private:
     EntityManager& entityManager_;
     LevelLoader& levelLoader_;
+    ResourceManager& resourceManager_;
     Terrain& terrain_;
 };

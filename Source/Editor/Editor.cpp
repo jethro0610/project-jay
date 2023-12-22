@@ -34,6 +34,7 @@ level_(
     entityManager_,
     levelLoader_,
     levelProperties_,
+    resourceManager_,
     terrain_
 ),
 target_(entityManager),

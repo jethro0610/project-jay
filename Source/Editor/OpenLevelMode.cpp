@@ -16,7 +16,7 @@ void OpenLevelMode::OnStart() {
 }
 
 bool OpenLevelMode::OnConfirm() {
-    return level_.Load(textInput_.Get());
+    return level_.Load("lv_" + textInput_.Get());
 }
 
 void OpenLevelMode::OnEnd() {

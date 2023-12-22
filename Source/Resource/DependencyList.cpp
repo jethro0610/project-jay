@@ -37,6 +37,11 @@ void ParseMaterials(nlohmann::json& materialNames, DependencyList& list) {
         ParseMaterial(materialName, list);
 }
 
+void ParseMaterials(const std::vector<std::string>& materialNames, DependencyList& list) {
+    for (const std::string& materialName : materialNames)
+        ParseMaterial(materialName, list);
+}
+
 void ParseEmitterProperty(const std::string& name, DependencyList& list) {
     if (list.emitterProperties.contains(name)) return;
     list.emitterProperties.insert(name);    
@@ -92,9 +97,9 @@ DependencyList DependencyList::GenerateFromEntity(nlohmann::json& entityData) {
 }
 
 DependencyList DependencyList::GenerateFromEntity(const std::string& name) {
-    std::ifstream entityFile("entities/" + name + ".json");
-    nlohmann::json levelData = nlohmann::json::parse(entityFile);
-    return GenerateFromLevel(levelData);
+    DependencyList list;
+    ParseEntity(name, list);
+    return list;
 }
 
 DependencyList DependencyList::GenerateFromLevel(nlohmann::json& levelData) {
@@ -111,4 +116,18 @@ DependencyList DependencyList::GenerateFromLevel(const std::string& name) {
     std::ifstream levelFile("levels/" + name + ".json");
     nlohmann::json levelData = nlohmann::json::parse(levelFile);
     return GenerateFromLevel(levelData);
+}
+
+DependencyList DependencyList::GenerateFromLevelProperties(
+    const std::string& seedMaterial,
+    const std::string& spreadModel,
+    const std::vector<std::string>& spreadMaterials,
+    const std::string& terrainMaterial
+) {
+    DependencyList list;
+    ParseMaterial(seedMaterial, list);
+    ParseModel(spreadModel, list);
+    ParseMaterials(spreadMaterials, list);
+    ParseMaterial(terrainMaterial, list);
+    return list;
 }

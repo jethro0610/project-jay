@@ -6,8 +6,10 @@
 
 - Level editor
     - Modes init boolean defaults
-    - New level/open level
-    - Save
+    - Save level
+    - Notifications
+    - Skeleton fix
+    - Properties editor
     - Multidelete
     - Multispawn
         - Randomize rotaiton and scale, decide uniform

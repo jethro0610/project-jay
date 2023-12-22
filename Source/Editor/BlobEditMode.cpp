@@ -82,12 +82,12 @@ bool BlobEditMode::OnConfirm() {
             StringToInt seed = ToInt(input);
             if (input == "r") {
                 level_.properties_.blob.seed = rand() % 10000;
-                modified = false;
+                modified = true;
                 SetPhase(BE_SelectProperty);
             }
             else if (seed.valid) {
                 level_.properties_.blob.seed  = seed.value;
-                modified = false;
+                modified = true;
                 SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
@@ -100,7 +100,7 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat frequency = ToFloat(input);
             if (frequency.valid) {
                 level_.properties_.blob.frequency  = frequency.value;
-                modified = false;
+                modified = true;
                 SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
@@ -113,7 +113,7 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat multiplier = ToFloat(input);
             if (multiplier.valid) {
                 level_.properties_.blob.minRadius  = multiplier.value;
-                modified = false;
+                modified = true;
                 SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
@@ -126,7 +126,7 @@ bool BlobEditMode::OnConfirm() {
             StringToFloat exponent = ToFloat(input);
             if (exponent.valid) {
                 level_.properties_.blob.maxRadius  = exponent.value;
-                modified = false;
+                modified = true;
                 SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {

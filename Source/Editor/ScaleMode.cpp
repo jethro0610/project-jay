@@ -34,6 +34,7 @@ void ScaleMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = SS_Uniform;
+    fromZero_ = false;
     startScale_ = transform.scale;
 
     EditorMode::OnStart();
@@ -61,30 +62,38 @@ void ScaleMode::Update() {
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     Transform& transform = transformComponent.transform[target_.Get()];
 
+    if (platform_.pressedKeys_['0']) {
+        deltaX_ = 0.0f;
+        deltaY_ = 0.0f;
+        fromZero_ = !fromZero_;
+    }
+
     if (platform_.pressedKeys_['P'])
         SetSubmode(SS_Planar);
     else if (platform_.pressedKeys_['V'])
         SetSubmode(SS_Vertical);
-    if (platform_.pressedKeys_['U'])
+    else if (platform_.pressedKeys_['U'])
         SetSubmode(SS_Uniform);
+
+    vec3 referenceScale = fromZero_ ? vec3(1.0f) : startScale_;
 
     switch (submode_) {
         case SS_Uniform:
-            transform.scale.x = startScale_.x + delta;
-            transform.scale.y = startScale_.y + delta;
-            transform.scale.z = startScale_.z + delta;
+            transform.scale.x = referenceScale.x + delta;
+            transform.scale.y = referenceScale.y + delta;
+            transform.scale.z = referenceScale.z + delta;
             break;
 
         case SS_Planar:
-            transform.scale.x = startScale_.x + delta;
-            transform.scale.y = startScale_.y;
-            transform.scale.z = startScale_.x + delta;
+            transform.scale.x = referenceScale.x + delta;
+            transform.scale.y = referenceScale.y;
+            transform.scale.z = referenceScale.x + delta;
             break;
 
         case SS_Vertical:
-            transform.scale.x = startScale_.x;
-            transform.scale.y = startScale_.y + delta;
-            transform.scale.z = startScale_.z;
+            transform.scale.x = referenceScale.x;
+            transform.scale.y = referenceScale.y + delta;
+            transform.scale.z = referenceScale.z;
             break;
     }
 }

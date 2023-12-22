@@ -5,8 +5,6 @@
 - Timed entities
 
 - Level editor
-    - Rotation
-    - Reset when press 0 (scale, rotation)
     - Save
     - New level/open level
     - Multidelete

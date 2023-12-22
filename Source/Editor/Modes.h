@@ -2,6 +2,7 @@
 #include "BlobEditMode.h"
 #include "CloneMode.h"
 #include "DefaultMode.h"
+#include "RotateMode.h"
 #include "TerrainEditMode.h"
 #include "TranslateMode.h"
 #include "ScaleMode.h"

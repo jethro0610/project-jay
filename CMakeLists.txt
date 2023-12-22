@@ -83,6 +83,7 @@ file(GLOB SOURCES
     Source/Editor/BlobEditMode.cpp
     Source/Editor/CloneMode.cpp
     Source/Editor/DefaultMode.cpp
+    Source/Editor/RotateMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp
     Source/Editor/TerrainEditMode.cpp

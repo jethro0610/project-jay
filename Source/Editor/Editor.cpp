@@ -92,6 +92,8 @@ void Editor::StartEditing() {
 }
 
 void Editor::StopEditing() {
+    mode_->OnCancel();
+    mode_->OnEnd();
     active_ = false;
     target_.Set(NULL_ENTITY);
     camera_.target_ = PLAYER_ENTITY;

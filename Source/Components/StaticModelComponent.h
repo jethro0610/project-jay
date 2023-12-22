@@ -30,6 +30,11 @@ public:
         materials[entity].clear();
         materials[entity].shrink_to_fit();
 
+        #ifdef _DEBUG
+        selectedMaterials[entity].clear();
+        selectedMaterials[entity].shrink_to_fit();
+        #endif
+
         ASSERT((resourceManager != nullptr), "Static Model Component has no access to renderer");
         std::string name = GetString(data, "model", "null_model");
         model[entity] = resourceManager->GetModel(name);

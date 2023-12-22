@@ -313,14 +313,15 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
 
     material.properties[3] = GetVec4(data, "color");
+    DEBUGLOG("Loaded material " << name);
 
     #ifdef _DEBUG
     Material& selectedMaterial = materials_.Add(name + "_selected");
     selectedMaterial = material;
     ASSIGN_DEBUG_NAME(selectedMaterial, name + "_selected");
     selectedMaterial.shaderHandle = bgfx::createProgram(vertexShader->handle, GetFragmentShader("fs_selected")->handle); 
+    DEBUGLOG("Loaded material " << name + "_selected");
     #endif
-    DEBUGLOG("Loaded material " << name);
 }
 void ResourceManager::UnloadMaterial(const std::string& name) {
     DEBUGLOG("Unloaded material " << name);

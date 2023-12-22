@@ -4,6 +4,8 @@
 
 - Timed entities
 
+- Use fixed vector on StaticModel materials
+
 - Level editor
     - Modes init boolean defaults
     - Save level

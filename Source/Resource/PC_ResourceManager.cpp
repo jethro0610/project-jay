@@ -83,6 +83,11 @@ void ResourceManager::LoadGlobalFile() {
         globals_.insert(material.get<std::string>() + "_selected");
         #endif
     }
+
+    for (auto& model : globals["models"]) {
+        LoadModel(model);
+        globals_.insert(model);
+    }
 }
 
 void ResourceManager::LoadRenderTextures() {

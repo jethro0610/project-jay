@@ -41,7 +41,7 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
-    RenderEntities(entities, components);
+    RenderEntities(entities, components, true);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

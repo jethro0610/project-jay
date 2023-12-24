@@ -83,6 +83,12 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     blitMaterial_ = resourceManager.GetMaterial("m_preuiblit");
     postProcessMaterial_ = resourceManager.GetMaterial("m_postprocess");
     textMaterial_ = resourceManager.GetMaterial("m_text");
+
+    #ifdef _DEBUG
+    defaultMesh_ = &resourceManager.GetModel("st_default")->meshes[0];
+    defaultMaterial_ = resourceManager.GetMaterial("m_default");
+    defaultSelectedMaterial_ = resourceManager.GetMaterial("m_default_selected");
+    #endif
 }
 
 // TODO: InitBuffer functions into one generic function
@@ -251,11 +257,23 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     };
 }
 
-EntityKey constexpr key = GetEntityKey<StaticModelComponent, TransformComponent>();
+#ifdef _DEBUG
+EntityKey constexpr modelKey = GetEntityKey<StaticModelComponent>();
+#else
+EntityKey constexpr modelKey = GetEntityKey<StaticModelComponent, TransformComponent>();
+#endif
+EntityKey constexpr transformKey = GetEntityKey<TransformComponent>();
 EntityKey constexpr skeletonKey = GetEntityKey<SkeletonComponent>();
+
 void Renderer::RenderEntities(
+    #ifdef _DEBUG
+    EntityList& entities, 
+    ComponentList& components,
+    bool renderNonModeled
+    #else 
     EntityList& entities, 
     ComponentList& components
+    #endif
 ) {
     auto& meterComponent = components.Get<MeterComponent>();
     auto& skeletonComponent = components.Get<SkeletonComponent>();
@@ -267,14 +285,28 @@ void Renderer::RenderEntities(
         const Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (!entity.MatchesKey(key))
+        #ifdef _DEBUG
+        bool hasModel = entity.MatchesKey(modelKey);
+        if (!hasModel && !renderNonModeled)
             continue;
+        if (!entity.MatchesKey(transformKey))
+            continue;
+        #else
+        if (!entity.MatchesKey(modelkey))
+            continue;
+        #endif
 
+        mat4 modelMatrix = transformComponent.renderTransform[i].ToMatrix();
+        #ifdef _DEBUG
+        if (!hasModel) {
+            Material* material = entity.DBG_selected ? defaultSelectedMaterial_ : defaultMaterial_;
+            RenderMesh(defaultMesh_, material, nullptr, &modelMatrix);
+            continue;
+        }
+        #endif
         vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
         bgfx::setUniform(u_meter_, &meter);
-        mat4 modelMatrix = transformComponent.renderTransform[i].ToMatrix();
 
-        Model& model = *staticModelComponent.model[i];
         bool skeletal = false;
         if (entity.MatchesKey(skeletonKey)) {
             skeletal = true; 
@@ -283,6 +315,8 @@ void Renderer::RenderEntities(
                 skeletonComponent.renderPose[i]
             );
         }
+
+        Model& model = *staticModelComponent.model[i];
         for (int m = 0; m < model.meshes.size(); m++) {
             #ifdef _DEBUG
             Material* material = entity.DBG_selected ?

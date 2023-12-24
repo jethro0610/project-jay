@@ -73,6 +73,12 @@ private:
     Material* postProcessMaterial_;
     Material* textMaterial_;
 
+    #ifdef _DEBUG
+    Mesh* defaultMesh_;
+    Material* defaultMaterial_;
+    Material* defaultSelectedMaterial_;
+    #endif
+
     glm::vec3 lightDirection_;
     glm::mat4 viewMatrix_;
     glm::mat4 projectionMatrix_;
@@ -131,8 +137,14 @@ private:
         float maxRadius
     );
     void RenderEntities(
+        #ifdef _DEBUG
+        EntityList& entities, 
+        ComponentList& components,
+        bool renderNonModeled = false
+        #else 
         EntityList& entities, 
         ComponentList& components
+        #endif
     );
     void RenderSpread(
         SpreadManager& spreadManager, 

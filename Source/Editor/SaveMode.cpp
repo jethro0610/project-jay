@@ -13,7 +13,7 @@ EditorMode(args) {
 
 void SaveMode::OnStart() {
     textInput_.SetLabel("lv_");
-    textInput_.SetInput(level_.name_.erase(0, 3)); 
+    textInput_.SetInput(level_.name_.substr(3, level_.name_.length())); 
     EditorMode::OnStart();
 }
 

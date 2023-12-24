@@ -103,6 +103,7 @@ void Editor::StartEditing() {
     postConfirmMode_ = nullptr;
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
+    notification_.Clear();
 
     if (level_.hasLevel_)
         level_.Reset("_autosave");
@@ -138,7 +139,7 @@ void Editor::Update() {
     notification_.Update();
 
     bool holdingCtrl = platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL];
-    if (holdingCtrl && platform_.pressedKeys_['E']) {
+    if (holdingCtrl && platform_.pressedKeys_['E'] && level_.hasLevel_) {
         StopEditing();
         FlushInputs();
         return;

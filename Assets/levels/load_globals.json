@@ -38,6 +38,10 @@
         "m_postprocess",
         "m_preuiblit",
         "m_text",
-        "m_uibar"
+        "m_uibar",
+        "m_default"
+    ],
+    "models": [
+        "st_default" 
     ]
 }

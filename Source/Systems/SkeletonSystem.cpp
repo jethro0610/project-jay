@@ -2,6 +2,7 @@
 #include "Components/SkeletonComponent.h"
 #include "Components/TransformComponent.h"
 #include "Time/Time.h"
+#include "Logging/Logger.h"
 
 constexpr EntityKey key = GetEntityKey<SkeletonComponent, TransformComponent>();
 
@@ -105,6 +106,21 @@ void SkeletonSystem::InterpPoses(
                 skeletonComponent.pose[i][p], 
                 interpAmount
             );
+    }
+}
+
+void SkeletonSystem::CalculateBasePoses(
+    EntityList& entities,
+    ComponentList& components
+) {
+    auto& skeletonComponent = components.Get<SkeletonComponent>();
+
+    for (int i = 0; i < MAX_ENTITIES; i++) {
+        if (!entities[i].alive_ || !entities[i].MatchesKey(key)) continue;
+
+        skeletonComponent.skeleton[i]->GetBasePose(skeletonComponent.pose[i]);
+        skeletonComponent.renderPose[i] = skeletonComponent.pose[i];
+        skeletonComponent.prevPose[i] = skeletonComponent.pose[i];
     }
 }
 

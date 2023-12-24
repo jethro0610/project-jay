@@ -7,6 +7,11 @@ namespace SkeletonSystem {
         ComponentList& components
     );
 
+    void CalculateBasePoses(
+        EntityList& entities,
+        ComponentList& components
+    );
+
     void InterpPoses(
         EntityList& entities,
         ComponentList& components,

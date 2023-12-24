@@ -181,6 +181,10 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.hasLevel_) {
+        SkeletonSystem::CalculateBasePoses(
+            entityManager_.entities_,
+            entityManager_.components_
+        );
         TransformSystem::ForceRenderTransforms(
             entityManager_.entities_,
             entityManager_.components_

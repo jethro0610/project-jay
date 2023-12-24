@@ -10,6 +10,10 @@ Skeleton::Skeleton() {
     animations_ = {};
 }
 
+void Skeleton::GetBasePose(Pose& pose) {
+    GetPose(pose, 0, 0.0f);
+}
+
 Transform Skeleton::GetLocalBoneTransform(
     const Animation& animation, 
     float time, 

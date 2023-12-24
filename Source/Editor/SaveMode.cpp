@@ -18,12 +18,13 @@ void SaveMode::OnStart() {
 }
 
 ConfirmBehavior SaveMode::OnConfirm() {
-    notificaiton_.Set("Saving lv_" + textInput_.Get());
+    notificaiton_.Set("Saving lv_" + textInput_.Get() + "...");
     return CB_PostConfirm;
 }
 
 ConfirmBehavior SaveMode::PostConfirm() {
     level_.Save("lv_" + textInput_.Get());
+    notificaiton_.Set("Saved lv_" + textInput_.Get());
     return CB_Default;
 }
 

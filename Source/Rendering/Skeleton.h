@@ -23,6 +23,8 @@ public:
     void GetPose(Pose& pose, const Animation& animation, float time) const;
     void GetPose(Pose& pose, int animationIndex, float time) const;
 
+    void GetBasePose(Pose& pose);
+
     void GetPose(
         Pose& pose, 
         int animationIndex, 

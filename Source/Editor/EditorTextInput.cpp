@@ -7,6 +7,11 @@ platform_(platform)
 
 }
 
+void EditorTextInput::SetInput(const std::string& input) { 
+    input_ = input; 
+    text_ = label_ + input_;
+}
+
 void EditorTextInput::SetLabel(const std::string& label) { 
     label_ = label; 
     text_ = label_ + input_;

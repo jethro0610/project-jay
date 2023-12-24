@@ -96,7 +96,7 @@ void Editor::StartEditing() {
     ScreenText::SetEnabled(false);
 
     if (level_.hasLevel_)
-        level_.Reset();
+        level_.Reset("_autosave");
 }
 
 void Editor::StopEditing() {
@@ -106,7 +106,7 @@ void Editor::StopEditing() {
     target_.Set(NULL_ENTITY);
     camera_.target_ = PLAYER_ENTITY;
     platform_.SetMouseVisible(false);
-    level_.Save();
+    level_.Save(level_.name_ + "_autosave", false);
 }
 
 void Editor::SetMode(EditorMode* mode) {

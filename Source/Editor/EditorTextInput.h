@@ -8,6 +8,7 @@ public:
     EditorTextInput(Platform& platform);
     void ReadInput();
     void SetLabel(const std::string& label);
+    void SetInput(const std::string& input);
     void Clear();
     void ClearInput();
     const std::string& Get() { return input_; }

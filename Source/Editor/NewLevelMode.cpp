@@ -12,6 +12,7 @@ EditorMode(args) {
 
 void NewLevelMode::OnStart() {
     textInput_.SetLabel("lv_");
+    EditorMode::OnStart();
 }
 
 bool NewLevelMode::OnConfirm() {
@@ -22,6 +23,7 @@ bool NewLevelMode::OnConfirm() {
 
 void NewLevelMode::OnEnd() {
     textInput_.Clear();
+    EditorMode::OnEnd();
 }
 
 void NewLevelMode::Update() {

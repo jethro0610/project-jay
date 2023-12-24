@@ -21,10 +21,11 @@ public:
     bool hasLevel_;
     LevelProperties& properties_;
 
-    void Save();
+    void Save() { Save(name_); };
+    void Save(const std::string& name, bool setAsNewLevel = true);
     void New(const std::string& name);
     bool Load(const std::string& name);
-    void Reset();
+    void Reset(const std::string& resetSuffix = "");
 
 private:
     EntityManager& entityManager_;

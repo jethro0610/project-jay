@@ -7,5 +7,6 @@
 #include "RotateMode.h"
 #include "TerrainEditMode.h"
 #include "TranslateMode.h"
+#include "SaveMode.h"
 #include "ScaleMode.h"
 #include "SpawnMode.h"

@@ -88,6 +88,7 @@ file(GLOB SOURCES
     Source/Editor/NewLevelMode.cpp
     Source/Editor/OpenLevelMode.cpp
     Source/Editor/RotateMode.cpp
+    Source/Editor/SaveMode.cpp
     Source/Editor/ScaleMode.cpp
     Source/Editor/SpawnMode.cpp
     Source/Editor/TerrainEditMode.cpp

@@ -22,7 +22,7 @@ terrain_(terrain)
     hasLevel_ = false;
 }
 
-void EditorLevel::Save() {
+void EditorLevel::Save(const std::string& name, bool setAsNewLevel) {
     assert(hasLevel_);
     nlohmann::json level;
 
@@ -73,14 +73,18 @@ void EditorLevel::Save() {
 
         level["entities"].push_back(entityData);
     }
-    std::ofstream assetLevelFile("../Assets/levels/" + name_ + ".json");
+    std::ofstream assetLevelFile("../Assets/levels/" + name + ".json");
     assetLevelFile << std::setw(4) << level << std::endl;
     assetLevelFile.close();
 
-    std::ofstream workingLevelFile("levels/" + name_ + ".json");
+    std::ofstream workingLevelFile("levels/" + name + ".json");
     workingLevelFile<< std::setw(4) << level << std::endl;
     workingLevelFile.close();
-    DEBUGLOG("Saved level: " << name_);
+
+    if (setAsNewLevel)
+        name_ = name;
+
+    DEBUGLOG("Saved level: " << name);
 }
 
 void EditorLevel::New(const std::string& name) {
@@ -121,7 +125,7 @@ bool EditorLevel::Load(const std::string& name) {
     return false;
 }
 
-void EditorLevel::Reset() {
+void EditorLevel::Reset(const std::string& resetSuffix) {
     assert(hasLevel_);
-    levelLoader_.LoadLevel(name_, false);
+    levelLoader_.LoadLevel(name_ + resetSuffix, false);
 }

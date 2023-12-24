@@ -14,6 +14,7 @@ resourceManager_(args.resourceManager),
 terrain_(args.terrain),
 modeText_(args.modeText),
 level_(args.level),
+notificaiton_(args.notificaiton),
 target_(args.target),
 textInput_(args.textInput)
 {

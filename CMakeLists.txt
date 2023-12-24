@@ -79,6 +79,7 @@ file(GLOB SOURCES
     Source/Editor/Editor.cpp
     Source/Editor/EditorLevel.cpp
     Source/Editor/EditorMode.cpp
+    Source/Editor/EditorNotification.cpp
     Source/Editor/EditorTarget.cpp
     Source/Editor/EditorTextInput.cpp
 

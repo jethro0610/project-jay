@@ -18,7 +18,7 @@ public:
     int GetBinding() override { return 'O'; }
     void OnStart() override;
     void OnEnd() override;
-    bool OnConfirm() override;
+    ConfirmBehavior OnConfirm() override;
     void Update() override;
 
 private:

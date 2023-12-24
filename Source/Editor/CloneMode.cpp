@@ -93,10 +93,10 @@ void CloneMode::Update() {
     }
 }
 
-bool CloneMode::OnConfirm() {
+ConfirmBehavior CloneMode::OnConfirm() {
     TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     Transform& transform = transformComponent.transform[target_.Get()];
     entityManager_.spawner_.Spawn(originalDescription_, transform);
 
-    return false;
+    return CB_Stay;
 }

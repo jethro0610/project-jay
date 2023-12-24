@@ -430,6 +430,7 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.modeText_);
     RenderText(editor.target_.text_);
     RenderText(editor.textInput_.text_);
+    RenderText(editor.notification_.text_);
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

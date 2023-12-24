@@ -1,5 +1,6 @@
 #include "NewLevelMode.h"
 #include "EditorLevel.h"
+#include "EditorNotification.h"
 #include "EditorTextInput.h"
 
 NewLevelMode::NewLevelMode(EditorModeArgs args):
@@ -15,10 +16,15 @@ void NewLevelMode::OnStart() {
     EditorMode::OnStart();
 }
 
-bool NewLevelMode::OnConfirm() {
+ConfirmBehavior NewLevelMode::OnConfirm() {
+    notificaiton_.Set("Creating lv_" + textInput_.Get() + "...");
+    return CB_PostConfirm;
+}
+
+ConfirmBehavior NewLevelMode::PostConfirm() {
     level_.New("lv_" + textInput_.Get());
-    textInput_.ClearInput();
-    return true;
+    notificaiton_.Set("Created lv_" + textInput_.Get());
+    return CB_Default;
 }
 
 void NewLevelMode::OnEnd() {

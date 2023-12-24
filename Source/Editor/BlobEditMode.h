@@ -17,7 +17,8 @@ public:
     std::string GetName() override { return "Terrain Edit"; };
     void OnStart() override;
     void OnEnd() override;
-    bool OnConfirm() override;
+    ConfirmBehavior OnConfirm() override;
+    ConfirmBehavior PostConfirm() override;
     void Update() override;
 
 private:

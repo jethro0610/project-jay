@@ -49,6 +49,7 @@ args_({
     terrain, 
     modeText_,
     level_,
+    notification_,
     target_, 
     textInput_
 }),
@@ -85,6 +86,13 @@ EXPANDMODES
     textInput_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
     textInput_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
     textInput_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+
+    notification_.text_.properties_.scale = 40.0f;
+    notification_.text_.properties_.position.y -= 40.0f;
+    notification_.text_.properties_.hAlignment = Text::LEFT_ALIGN;
+    notification_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
+    notification_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
+    notification_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 }
 
 void Editor::StartEditing() {
@@ -92,6 +100,7 @@ void Editor::StartEditing() {
     target_.Set(NULL_ENTITY);
     SetMode(defaultMode_);
     defaultMode_.SetSubmode(DS_Camera);
+    postConfirmMode_ = nullptr;
     camera_.target_ = NULL_ENTITY;
     ScreenText::SetEnabled(false);
 
@@ -126,8 +135,8 @@ void Editor::SetMode(EditorMode& mode) {
 }
 
 void Editor::Update() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    
+    notification_.Update();
+
     bool holdingCtrl = platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL];
     if (holdingCtrl && platform_.pressedKeys_['E']) {
         StopEditing();
@@ -135,7 +144,12 @@ void Editor::Update() {
         return;
     }
 
-    if (mode_ == &defaultMode_) {
+    if (postConfirmMode_ != nullptr) {
+        if (postConfirmMode_->PostConfirm() == CB_Default)
+            SetMode(defaultMode_);
+        postConfirmMode_ = nullptr; 
+    }
+    else if (mode_ == &defaultMode_) {
         for (EditorMode* mode : modes_) {
             if (platform_.pressedKeys_[mode->GetBinding()] && mode->CanSwitch(holdingCtrl)) {
                 SetMode(mode);
@@ -148,11 +162,22 @@ void Editor::Update() {
         SetMode(defaultMode_);
     }
     else if (platform_.pressedKeys_[GLFW_KEY_ENTER]) {
-        if (mode_->OnConfirm())
-            SetMode(defaultMode_);
+        switch(mode_->OnConfirm()) {
+            case CB_Default:
+                SetMode(defaultMode_);
+                break;
+
+            case CB_Stay:
+                break;
+
+            case CB_PostConfirm:
+                postConfirmMode_ = mode_;
+                break;
+        }
     }
 
-    mode_->Update();
+    if (postConfirmMode_ == nullptr)
+        mode_->Update();
     
     if (level_.hasLevel_) {
         TransformSystem::ForceRenderTransforms(

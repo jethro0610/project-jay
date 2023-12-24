@@ -4,6 +4,7 @@
 #include "Level/LevelLoader.h"
 #include "Resource/DependencyList.h"
 #include "EditorTextInput.h"
+#include "EditorNotification.h"
 
 SpawnMode::SpawnMode(EditorModeArgs args):
 EditorMode(args)
@@ -21,13 +22,16 @@ void SpawnMode::OnEnd() {
     textInput_.Clear();
 }
 
-bool SpawnMode::OnConfirm() {
+ConfirmBehavior SpawnMode::OnConfirm() {
     const std::string entityName = "e_" + textInput_.Get();
 
     if (!resourceManager_.HasEntityDescription(entityName)) {
-        if (!std::filesystem::exists("entities/" + entityName + ".json"))
-            return false;
+        if (!std::filesystem::exists("entities/" + entityName + ".json")) {
+            notificaiton_.Set(entityName + " does not exist");
+            return CB_Stay;
+        }
 
+        notificaiton_.Set("Loaded resources for " + entityName);
         DependencyList deps = DependencyList::GenerateFromEntity(entityName);
         resourceManager_.LoadDependencies(deps);
     }
@@ -36,7 +40,7 @@ bool SpawnMode::OnConfirm() {
     spawnTransform.position = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
     entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityName), spawnTransform);
 
-    return true;
+    return CB_Default;
 }
 
 void SpawnMode::Update() {

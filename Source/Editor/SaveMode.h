@@ -7,7 +7,8 @@ public:
     int GetBinding() override { return 'S'; }
     std::string GetName() override { return "Save Level"; };
     void OnStart() override;
-    bool OnConfirm() override;
+    ConfirmBehavior OnConfirm() override;
+    ConfirmBehavior PostConfirm() override;
     void OnEnd() override;
     void Update() override;
 };

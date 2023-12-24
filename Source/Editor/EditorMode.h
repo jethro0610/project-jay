@@ -14,6 +14,7 @@ class LevelLoader;
 class ResourceManager;
 
 class EditorLevel;
+class EditorNotification;
 class EditorTarget;
 class EditorTextInput;
 
@@ -27,8 +28,15 @@ struct EditorModeArgs {
     Terrain& terrain;
     Text& modeText;
     EditorLevel& level;
+    EditorNotification& notificaiton;
     EditorTarget& target;
     EditorTextInput& textInput;
+};
+
+enum ConfirmBehavior {
+    CB_Default,
+    CB_Stay,
+    CB_PostConfirm
 };
 
 class EditorMode {
@@ -36,7 +44,8 @@ public:
     EditorMode(EditorModeArgs args);
     virtual void OnStart();
     virtual void OnEnd() { };
-    virtual bool OnConfirm() { return true; };
+    virtual ConfirmBehavior OnConfirm() { return CB_Default; };
+    virtual ConfirmBehavior PostConfirm() { return CB_Default; };
     virtual void OnCancel() { };
     virtual void Update() { };
     virtual std::string GetName() { return "Error"; }
@@ -59,6 +68,7 @@ protected:
 
     Text& modeText_;
     EditorLevel& level_;
+    EditorNotification& notificaiton_;
     EditorTarget& target_;
     EditorTextInput& textInput_;
 };

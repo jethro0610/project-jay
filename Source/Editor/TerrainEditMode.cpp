@@ -2,6 +2,7 @@
 #include "Entity/EntityManager.h"
 #include "Terrain/Terrain.h"
 #include "EditorLevel.h"
+#include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "Level/LevelProperties.h"
 #include "Helpers/StringConversion.h"
@@ -77,7 +78,7 @@ void TerrainEditMode::Update() {
     textInput_.ReadInput();
 }
 
-bool TerrainEditMode::OnConfirm() {
+ConfirmBehavior TerrainEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
     bool modified = false;
     bool exit = false;
@@ -94,6 +95,8 @@ bool TerrainEditMode::OnConfirm() {
             else if (input == "b") {
                 exit = true;
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -110,6 +113,8 @@ bool TerrainEditMode::OnConfirm() {
                 SetPhase(TE_Exponent);
             else if (input == "b")
                 SetPhase(TE_SelectNoiseLayer);
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -117,11 +122,12 @@ bool TerrainEditMode::OnConfirm() {
             if (input == "y") {
                 level_.properties_.noiseLayers[targetLayer_].active = true;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (input == "n" || input == "b") {
                 SetPhase(TE_SelectNoiseLayer);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -129,11 +135,12 @@ bool TerrainEditMode::OnConfirm() {
             if (input == "y") {
                 level_.properties_.noiseLayers[targetLayer_].active = false;
                 modified = true;
-                SetPhase(TE_SelectNoiseLayer);
             }
             else if (input == "n" || input == "b") {
                 SetPhase(TE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -142,16 +149,16 @@ bool TerrainEditMode::OnConfirm() {
             if (input == "r") {
                 level_.properties_.noiseLayers[targetLayer_].seed = rand() % 10000;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (seed.valid) {
                 level_.properties_.noiseLayers[targetLayer_].seed = seed.value;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -161,17 +168,17 @@ bool TerrainEditMode::OnConfirm() {
             if (frequency.valid) {
                 level_.properties_.noiseLayers[targetLayer_].frequency = frequency.value;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (uniformFrequency.valid) {
                 level_.properties_.noiseLayers[targetLayer_].frequency.x = uniformFrequency.value;
                 level_.properties_.noiseLayers[targetLayer_].frequency.y = uniformFrequency.value;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -180,11 +187,12 @@ bool TerrainEditMode::OnConfirm() {
             if (multiplier.valid) {
                 level_.properties_.noiseLayers[targetLayer_].multiplier = multiplier.value;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -193,24 +201,39 @@ bool TerrainEditMode::OnConfirm() {
             if (exponent.valid) {
                 level_.properties_.noiseLayers[targetLayer_].exponent = exponent.value;
                 modified = true;
-                SetPhase(TE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(TE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
             break;
         }
     }
-    textInput_.ClearInput();
 
-    if (modified) {
-        terrain_.GenerateTerrainMap(
-            level_.properties_.noiseLayers, 
-            level_.properties_.blob,
-            entityManager_.entities_,
-            entityManager_.components_
-        );
+    if (exit) {
+        textInput_.ClearInput();
+        return CB_Default;
     }
+    else if (modified) {
+        notificaiton_.Set("Generating new terrain...");
+        return CB_PostConfirm;
+    }
+    else {
+        textInput_.ClearInput();
+        return CB_Stay;
+    }
+}
 
-    return exit;
+ConfirmBehavior TerrainEditMode::PostConfirm() {
+    textInput_.ClearInput();
+    terrain_.GenerateTerrainMap(
+        level_.properties_.noiseLayers, 
+        level_.properties_.blob,
+        entityManager_.entities_,
+        entityManager_.components_
+    );
+    SetPhase(TE_SelectProperty);
+    notificaiton_.Set("Generated new terrain");
+    return CB_Stay;
 }

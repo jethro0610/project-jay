@@ -1,5 +1,6 @@
 #include "SaveMode.h"
 #include "EditorLevel.h"
+#include "EditorNotification.h"
 #include "EditorTextInput.h"
 
 SaveMode::SaveMode(EditorModeArgs args):
@@ -16,9 +17,14 @@ void SaveMode::OnStart() {
     EditorMode::OnStart();
 }
 
-bool SaveMode::OnConfirm() {
+ConfirmBehavior SaveMode::OnConfirm() {
+    notificaiton_.Set("Saving lv_" + textInput_.Get());
+    return CB_PostConfirm;
+}
+
+ConfirmBehavior SaveMode::PostConfirm() {
     level_.Save("lv_" + textInput_.Get());
-    return true;
+    return CB_Default;
 }
 
 void SaveMode::OnEnd() {

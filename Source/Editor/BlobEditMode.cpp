@@ -3,6 +3,7 @@
 #include "Level/LevelProperties.h"
 #include "Terrain/Terrain.h"
 #include "EditorLevel.h"
+#include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"
 #include <format>
@@ -59,10 +60,11 @@ void BlobEditMode::Update() {
     textInput_.ReadInput();
 }
 
-bool BlobEditMode::OnConfirm() {
+ConfirmBehavior BlobEditMode::OnConfirm() {
     const std::string& input = textInput_.Get();
     bool modified = false;
     bool exit = false;
+
     switch(phase_) {
         case BE_SelectProperty: {
             if (input == "s")
@@ -75,6 +77,9 @@ bool BlobEditMode::OnConfirm() {
                 SetPhase(BE_MaxRadius);
             else if (input == "b")
                 exit = true;
+            else
+                notificaiton_.Set("Invalid input");
+
             break;
         }
 
@@ -83,16 +88,17 @@ bool BlobEditMode::OnConfirm() {
             if (input == "r") {
                 level_.properties_.blob.seed = rand() % 10000;
                 modified = true;
-                SetPhase(BE_SelectProperty);
             }
             else if (seed.valid) {
                 level_.properties_.blob.seed  = seed.value;
                 modified = true;
-                SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
+            else
+                notificaiton_.Set("Invalid input");
+
             break;
         }
 
@@ -101,11 +107,12 @@ bool BlobEditMode::OnConfirm() {
             if (frequency.valid) {
                 level_.properties_.blob.frequency  = frequency.value;
                 modified = true;
-                SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
+            else 
+                notificaiton_.Set("Invalid input");
             break;
         }
 
@@ -114,11 +121,13 @@ bool BlobEditMode::OnConfirm() {
             if (multiplier.valid) {
                 level_.properties_.blob.minRadius  = multiplier.value;
                 modified = true;
-                SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
+            else 
+                notificaiton_.Set("Invalid input");
+
             break;
         }
 
@@ -127,24 +136,40 @@ bool BlobEditMode::OnConfirm() {
             if (exponent.valid) {
                 level_.properties_.blob.maxRadius  = exponent.value;
                 modified = true;
-                SetPhase(BE_SelectProperty);
             }
             else if (input == "b") {
                 SetPhase(BE_SelectProperty);
             }
+            else 
+                notificaiton_.Set("Invalid input");
+
             break;
         }
     }
-    textInput_.ClearInput();
 
-    if (modified) {
-        terrain_.GenerateTerrainMap(
-            level_.properties_.noiseLayers,
-            level_.properties_.blob,
-            entityManager_.entities_,
-            entityManager_.components_
-        );
+    if (exit) {
+        textInput_.ClearInput();
+        return CB_Default;
     }
+    else if (modified) {
+        notificaiton_.Set("Generating new terrain...");
+        return CB_PostConfirm;
+    }
+    else {
+        textInput_.ClearInput();
+        return CB_Stay;
+    }
+}
 
-    return exit;
+ConfirmBehavior BlobEditMode::PostConfirm() {
+    textInput_.ClearInput();
+    terrain_.GenerateTerrainMap(
+        level_.properties_.noiseLayers,
+        level_.properties_.blob,
+        entityManager_.entities_,
+        entityManager_.components_
+    );
+    SetPhase(BE_SelectProperty);
+    notificaiton_.Set("Done generating new terrain");
+    return CB_Stay;
 }

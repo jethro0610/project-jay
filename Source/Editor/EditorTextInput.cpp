@@ -30,6 +30,12 @@ void EditorTextInput::ClearInput() {
 
 void EditorTextInput::ReadInput() {
     bool modified = false;
+    if (platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL] && platform_.pressedKeys_[GLFW_KEY_C]) {
+        input_.clear();
+        text_ = label_ + input_;
+        return;
+    }
+
     if (platform_.pressedKeys_[GLFW_KEY_BACKSPACE] && input_.length() > 0) {
         input_.pop_back();
         modified = true;

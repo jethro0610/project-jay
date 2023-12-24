@@ -7,10 +7,9 @@
 - Use fixed vector on StaticModel materials
 
 - Level editor
-    - Skeleton fix
+    - Go to
     - Modes init boolean defaults
     - Level properties editor
-    - Go to
     - Property override
     - Multidelete
     - Multispawn

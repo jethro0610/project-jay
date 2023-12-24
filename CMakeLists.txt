@@ -86,6 +86,7 @@ file(GLOB SOURCES
     Source/Editor/BlobEditMode.cpp
     Source/Editor/CloneMode.cpp
     Source/Editor/DefaultMode.cpp
+    Source/Editor/FindMode.cpp
     Source/Editor/NewLevelMode.cpp
     Source/Editor/OpenLevelMode.cpp
     Source/Editor/RotateMode.cpp

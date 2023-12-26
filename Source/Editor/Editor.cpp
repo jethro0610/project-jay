@@ -117,7 +117,6 @@ void Editor::StopEditing() {
     camera_.target_ = PLAYER_ENTITY;
     platform_.SetMouseVisible(false);
     level_.Save(level_.name_ + "_autosave", false);
-    DEBUGLOG("stop edit");
 }
 
 void Editor::SetMode(EditorMode* mode) {

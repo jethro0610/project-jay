@@ -24,6 +24,7 @@ public:
         }
         promises_.push_back(promise);
     }
+    void Clear() { spawns_.clear(); promises_.clear(); };
 
 private:
     friend EntityManager;

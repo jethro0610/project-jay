@@ -141,4 +141,6 @@ void EntityManager::Reset() {
     DestroyEntities();
     usableEntities_.clear();
     usableEntities_.push_back(0);
+    spawner_.Clear();
+    destroyList_.clear();
 }

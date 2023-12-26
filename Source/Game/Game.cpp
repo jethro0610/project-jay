@@ -16,13 +16,22 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
 
     camera_.target_ = PLAYER_ENTITY;
+
+    #ifdef _DEBUG
     editor_.StartEditing();
+    #endif
 }
 
 void Game::Update() {
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
         FlushInputs_P();
+        #ifdef _DEBUG
+        if (editor_.IsActive()) {
+            timeAccumlulator_ = 0.0f;
+            return;
+        }
+        #endif
         entityManager_.DestroyEntities();
         entityManager_.SpawnEntities();
         FreezeSytem::Execute(entityManager_.entities_);

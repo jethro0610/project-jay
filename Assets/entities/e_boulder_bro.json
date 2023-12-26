@@ -1,0 +1,21 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": false 
+        },
+        "static_model": {
+            "model": "st_boulder_bro",
+            "materials": 
+            [
+                "m_boulder_bro"
+            ]
+        },
+        "pushbox": {
+            "radius": 1.0,
+            "top": 1.0,
+            "bottom": 1.0,
+            "send": true,
+            "recieve": false
+        }
+    }
+}

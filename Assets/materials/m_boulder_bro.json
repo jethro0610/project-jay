@@ -5,7 +5,7 @@
     "vertex_shadow": "vs_static_s",
     "fragment_shadow": "fs_depth_s",
     "textures": [],
-    "color": {"x": 0.85, "y": 0.85, "z": 0.85 },
+    "color": {"x": 0.8, "y": 0.80, "z": 0.8 },
     "fresnel_brightness": 0.15,
     "specular_brightness": 0.25
 }

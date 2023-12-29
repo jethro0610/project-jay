@@ -1,0 +1,21 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": false 
+        },
+        "static_model": {
+            "model": "st_rabbit_pole",
+            "materials": 
+            [
+                "m_rabbit_pole"
+            ]
+        },
+        "pushbox": {
+            "radius": 1.0,
+            "top": 1.0,
+            "bottom": 1.0,
+            "send": true,
+            "recieve": false
+        }
+    }
+}

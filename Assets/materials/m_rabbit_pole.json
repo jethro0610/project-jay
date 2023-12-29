@@ -1,0 +1,13 @@
+{
+    "vertex": "vs_static",
+    "fragment": "fs_dfsa_variation",
+    "cast_shadows": true,
+    "vertex_shadow": "vs_static_s",
+    "fragment_shadow": "fs_depth_s",
+    "textures": [ 
+        "t_granite_c", 
+        "t_granite_n"
+    ],
+    "fresnel_brightness": 0.25,
+    "specular_brightness": 0.15
+}

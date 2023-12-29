@@ -9,5 +9,9 @@
         "t_granite_n"
     ],
     "fresnel_brightness": 0.25,
-    "specular_brightness": 0.15
+    "specular_brightness": 0.15,
+    "variation_frequency": 4.0,
+    "variation_min": 0.25,
+    "variation_max": 1.25,
+    "variation_power": 0.5
 }

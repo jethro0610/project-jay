@@ -317,7 +317,16 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     material.properties[1][1] = GetFloat(data, "fresnel_scale", 1.0f);
     material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
 
-    material.properties[3] = GetVec4(data, "color");
+    if (data.contains("color")) {
+        material.properties[3] = GetVec4(data, "color");
+    }
+    else if (data.contains("variation_frequency")) {
+        material.properties[3][0] = GetFloat(data, "variation_frequency", 1.0f);
+        material.properties[3][1] = GetFloat(data, "variation_min", 0.0f);
+        material.properties[3][2] = GetFloat(data, "variation_max", 1.0f);
+        material.properties[3][3] = GetFloat(data, "variation_power", 1.0f);
+    }
+
     DEBUGLOG("Loaded material " << name);
 
     #ifdef _DEBUG

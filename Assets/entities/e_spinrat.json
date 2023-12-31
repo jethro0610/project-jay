@@ -1,8 +1,20 @@
 {
+    "emitters": [
+        "p_cloud"
+    ],
     "components": {
         "transform": {
-            "interpolate": false,
+            "interpolate": true,
             "use_tilt": true
+        },
+        "ai": {
+            "controller": "spinrat"
+        },
+        "movement": {
+            "max_speed": 60.0,
+            "min_speed": 60.0,
+            "min_friction": 0.15,
+            "max_friction": 0.15
         },
         "velocity": {
             "use_gravity": true
@@ -11,7 +23,7 @@
             "distance": 1.0,
             "stick_offset": -0.05,
             "stick": true,
-            "align_strength": 0.5
+            "align_strength": 1.0
         },
         "static_model": {
             "model": "sk_spinrat",
@@ -34,7 +46,15 @@
             "top": 1.0,
             "bottom": 1.0,
             "send": true,
-            "recieve": false
+            "recieve": true
+        },
+        "interval_spawner": {
+            "interval": 0.035,
+            "radius": 5.0,
+            "seed": true,
+            "offsets": [
+                {"x": 0.0, "y": 5.0, "z": 0.0}
+            ]
         }
     }
 }

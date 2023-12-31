@@ -1,4 +1,5 @@
 #pragma once
+#include "AIComponent.h"
 #include "GroundTraceComponent.h"
 #include "HitboxComponent.h"
 #include "HurtboxComponent.h"

@@ -64,6 +64,16 @@ void Game::Update() {
             camera_,
             inputs_
         );
+        AISystem::InitAIs(
+            entityManager_.entities_,
+            entityManager_.components_,
+            terrain_
+        );
+        AISystem::Execute(
+            entityManager_.entities_,
+            entityManager_.components_,
+            terrain_
+        );
         VelocitySystem::CalculateGravity(
             entityManager_.entities_,
             entityManager_.components_

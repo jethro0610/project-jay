@@ -12,6 +12,7 @@ file(GLOB SOURCES
     Source/Entity/Entity.cpp
     Source/Entity/EntityManager.cpp
 
+    Source/Systems/AISystem.cpp
     Source/Systems/PushSystem.cpp
     Source/Systems/HitSystem.cpp
     Source/Systems/DestroyMeterSystem.cpp
@@ -40,6 +41,7 @@ file(GLOB SOURCES
     Source/Collision/Ray.cpp
 
     Source/AI/WalkerController.cpp
+    Source/AI/SpinRatController.cpp
 
     Source/Camera/Camera.cpp
 

@@ -1,5 +1,6 @@
 #pragma once
 #define EXPANDCOMPONENTS \
+    COMPONENTEXPANSION(AIComponent, aiComponent) \
     COMPONENTEXPANSION(GroundTraceComponent, groundTraceComponent) \
     COMPONENTEXPANSION(HitboxComponent, hitboxComponent) \
     COMPONENTEXPANSION(HurtboxComponent, hurtboxComponent) \

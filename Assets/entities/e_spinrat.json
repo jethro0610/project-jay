@@ -11,8 +11,8 @@
             "controller": "spinrat"
         },
         "movement": {
-            "max_speed": 60.0,
-            "min_speed": 60.0,
+            "max_speed": 30.0,
+            "min_speed": 30.0,
             "min_friction": 0.15,
             "max_friction": 0.15
         },
@@ -47,14 +47,6 @@
             "bottom": 1.0,
             "send": true,
             "recieve": true
-        },
-        "interval_spawner": {
-            "interval": 0.035,
-            "radius": 5.0,
-            "seed": true,
-            "offsets": [
-                {"x": 0.0, "y": 5.0, "z": 0.0}
-            ]
         }
     }
 }

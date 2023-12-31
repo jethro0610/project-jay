@@ -1,10 +1,11 @@
 {
     "vertex": "vs_skeletal",
-    "fragment": "fs_dfsa_color",
+    "fragment": "fs_aura",
     "cast_shadows": true,
     "vertex_shadow": "vs_skeletal_s",
     "fragment_shadow": "fs_depth_s",
     "textures": [ 
     ],
-    "color": { "x": 1.0, "y": 1.0, "z": 1.0 }
+    "color": { "x": 0.55, "y": 0.65, "z": 1.0 },
+    "fresnel_power": 0.15
 }

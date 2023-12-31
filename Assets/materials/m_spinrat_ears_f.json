@@ -1,9 +1,9 @@
 {
     "vertex": "vs_skeletal",
-    "fragment": "fs_dfsa_color_masked",
+    "fragment": "fs_color_masked",
     "cast_shadows": false,
     "textures": [ 
         "t_spinrat_ears_f_m"
     ],
-    "color": { "x": 0.0, "y": 0.0, "z": 0.0 }
+    "color": { "x": 0.75, "y": 0.85, "z": 1.0 }
 }

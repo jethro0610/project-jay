@@ -1,0 +1,27 @@
+{
+    "components": {
+        "transform": {
+            "interpolate": false 
+        },
+        "static_model": {
+            "model": "sk_spinrat",
+            "materials": 
+            [
+                "m_spinrat_back",
+                "m_spinrat_body",
+                "m_spinrat_ears_b",
+                "m_spinrat_ears_f",
+                "m_spinrat_eyes",
+                "m_spinrat_nose",
+                "m_spinrat_swirl"
+            ]
+        },
+        "pushbox": {
+            "radius": 1.0,
+            "top": 1.0,
+            "bottom": 1.0,
+            "send": true,
+            "recieve": false
+        }
+    }
+}

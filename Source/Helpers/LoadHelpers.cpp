@@ -77,6 +77,21 @@ glm::vec3 GetVec3(nlohmann::json& data, const std::string& property, const glm::
     return GetVec3(vector, defaultReturn);
 }
 
+glm::vec2 GetVec2(nlohmann::json& data, const glm::vec2& defaultReturn) {
+    float x = GetFloat(data, "x", defaultReturn.x);
+    float y = GetFloat(data, "y", defaultReturn.y);
+
+    return glm::vec2(x, y);
+}
+
+glm::vec2 GetVec2(nlohmann::json& data, const std::string& property, const glm::vec2& defaultReturn) {
+    if (!data.contains(property))
+        return defaultReturn;
+
+    auto& vector = data[property];
+    return GetVec2(vector, defaultReturn);
+}
+
 Transform GetTransform(nlohmann::json& data, const std::string& property, const Transform& defaultReturn) {
     if (!data.contains(property))
         return defaultReturn;

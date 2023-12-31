@@ -4,6 +4,7 @@
 #include <string>
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 #include <glm/gtx/quaternion.hpp>
 
 bool GetBoolean(nlohmann::json& data, const std::string& property, bool defaultReturn = false);
@@ -18,6 +19,9 @@ glm::vec4 GetVec4(nlohmann::json& data, const std::string& propertry, const glm:
 
 glm::vec3 GetVec3(nlohmann::json& data, const glm::vec3& defaultReturn = glm::vec3(0.0f));
 glm::vec3 GetVec3(nlohmann::json& data, const std::string& property, const glm::vec3& defaultReturn = glm::vec3(0.0f));
+
+glm::vec2 GetVec2(nlohmann::json& data, const glm::vec2& defaultReturn = glm::vec2(0.0f));
+glm::vec2 GetVec2(nlohmann::json& data, const std::string& property, const glm::vec2& defaultReturn = glm::vec2(0.0f));
 
 Transform GetTransform(nlohmann::json& data, const std::string& property, const Transform& defaultReturn = Transform());
 

@@ -1,0 +1,9 @@
+{
+    "vertex": "vs_static",
+    "fragment": "fs_dfsa_color_masked",
+    "cast_shadows": false,
+    "textures": [ 
+        "t_spinrat_nose_m"
+    ],
+    "color": { "x": 0.0, "y": 0.0, "z": 0.0 }
+}

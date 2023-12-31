@@ -317,6 +317,10 @@ void ResourceManager::LoadMaterial(const std::string& name) {
     material.properties[1][1] = GetFloat(data, "fresnel_scale", 1.0f);
     material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
 
+    vec2 textureScale = GetVec2(data, "texture_scale", vec2(1.0f, 1.0f));
+    material.properties[0][3] = textureScale.x;
+    material.properties[1][3] = textureScale.y;
+
     if (data.contains("color")) {
         material.properties[3] = GetVec4(data, "color");
     }

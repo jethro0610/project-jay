@@ -1,7 +1,17 @@
 {
     "components": {
         "transform": {
-            "interpolate": false 
+            "interpolate": false,
+            "use_tilt": true
+        },
+        "velocity": {
+            "use_gravity": true
+        },
+        "ground_trace": {
+            "distance": 1.0,
+            "stick_offset": -0.05,
+            "stick": true,
+            "align_strength": 0.5
         },
         "static_model": {
             "model": "sk_spinrat",
@@ -15,6 +25,9 @@
                 "m_spinrat_nose",
                 "m_spinrat_swirl"
             ]
+        },
+        "skeleton": {
+            "skeleton": "sk_spinrat"
         },
         "pushbox": {
             "radius": 1.0,

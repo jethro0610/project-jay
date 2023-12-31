@@ -1,5 +1,5 @@
 {
-    "vertex": "vs_static",
+    "vertex": "vs_skeletal",
     "fragment": "fs_dfsa_color_masked",
     "cast_shadows": false,
     "textures": [ 

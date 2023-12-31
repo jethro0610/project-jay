@@ -1,7 +1,8 @@
 #pragma once
 #include "Entity/EntityID.h"
-#include "Entity/EntityManager.h"
 #include "Text/Text.h"
+
+class EntityManager;
 
 class EditorTarget {
 public:

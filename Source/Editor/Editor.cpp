@@ -5,6 +5,7 @@
 #include "Systems/Systems.h"
 #include "Terrain/Terrain.h"
 #include "Collision/Ray.h"
+#include "Entity/EntityManager.h"
 #include <GLFW/glfw3.h>
 using namespace glm;
 

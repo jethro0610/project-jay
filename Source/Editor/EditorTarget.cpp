@@ -1,4 +1,5 @@
 #include "EditorTarget.h"
+#include "Entity/EntityManager.h"
 
 EditorTarget::EditorTarget(EntityManager& entityManager):
 entityManager_(entityManager)

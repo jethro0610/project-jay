@@ -2,6 +2,7 @@
 #include "Camera/Camera.h"
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
+#include "Entity/EntityManager.h"
 #include "EditorTarget.h"
 using namespace glm;
 

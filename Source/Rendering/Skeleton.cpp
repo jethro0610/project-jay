@@ -163,7 +163,7 @@ void Skeleton::ComputeRibbonChain(
         worldPose[boneIndex] = lastModelMatrix * worldPose[boneIndex].ToMatrix();
         worldPose[boneIndex].position += additive;
         desiredWorldPose[boneIndex] = modelMatrix * desiredWorldPose[boneIndex].ToMatrix();
-        desiredDistances[boneIndex] = distance(desiredPose[boneIndex].position, desiredPose[boneIndex - 1].position);
+        desiredDistances[boneIndex] = distance(desiredWorldPose[boneIndex].position, desiredWorldPose[boneIndex - 1].position);
     }
 
     // Calculate bone positions

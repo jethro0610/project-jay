@@ -216,7 +216,7 @@ void MovementSystem::CalculateLineMovement(
     quat desiredRotation = rotationToUse;
 
     if (length(desiredMovement) > 0.001f) 
-        desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+       desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
     rotation = slerp(rotation, desiredRotation, LINE_ROTATION_SPEED);
     rotationToUse = slerp(rotationToUse, desiredRotation, LINE_ROTATION_SPEED);

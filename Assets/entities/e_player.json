@@ -45,11 +45,11 @@
         "spread_activator": {
         },
         "meter": {
-            "initial_meter": 512,
+            "initial_meter": 0,
             "max_meter": 1024
         },
         "pushbox": {
-            "radius": 2.0,
+            "radius": 1.0,
             "top": 4.0,
             "send": true,
             "recieve": true
@@ -60,6 +60,7 @@
                     "use_velocity": true,
                     "radius": 2.0,
                     "top": 2.0,
+                    "bottom": 2.0,
                     "horizontal_vel_mult": 0.95,
                     "min_horizontal_kb": 15.0,
                     "vertical_kb": 35.0,
@@ -71,6 +72,7 @@
                     "use_velocity": true,
                     "radius": 2.0,
                     "top": 2.0,
+                    "bottom": 2.0,
                     "horizontal_vel_mult": 1.25,
                     "min_horizontal_kb": 25.0,
                     "vertical_kb": 30.0,
@@ -82,7 +84,9 @@
         },
         "hurtbox": {
             "radius": 2.0,
-            "top": 1.0
+            "top": 1.0,
+            "end_stun_on_ground": true,
+            "face_direction": "forward"
         },
         "velocity": {
             "use_gravity": true

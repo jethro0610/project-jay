@@ -39,10 +39,8 @@ void SkeletonSystem::CalculatePoses(
             prevTime = time;
             time = 0.0f;
 
-            transitionLength = 0.35f;
+            transitionLength = skeletonComponent.transitions[i][nextAnimationIndex];
             transitionTime = 0.0f;
-            if (nextAnimationIndex == 4)
-                transitionTime = transitionLength;
         }
 
         skeletonComponent.prevPose[i] = skeletonComponent.pose[i];

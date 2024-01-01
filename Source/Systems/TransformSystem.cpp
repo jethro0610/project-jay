@@ -33,9 +33,7 @@ void TransformSystem::UpdateRenderTransforms(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
+        if (!entity.ShouldUpdate(key))
             continue;
 
         if (transformComponent.interpolate[i]) {
@@ -69,9 +67,7 @@ void TransformSystem::ForceRenderTransforms(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate())
-            continue;
-        if (!entity.MatchesKey(key))
+        if (!entity.ShouldUpdate(key))
             continue;
 
         transformComponent.renderTransform[i] = transformComponent.transform[i];

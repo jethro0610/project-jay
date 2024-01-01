@@ -27,17 +27,26 @@ void HitSystem::Execute(
         if (!entities[i].ShouldUpdate(hurtKey)) continue;
         hurtboxComponent.hurt[i] = false;
         int& cooldown = hurtboxComponent.cooldown[i];
-        if (cooldown > 0) {
+        if (cooldown > 0)
             cooldown--;
-            continue;
-        }
 
-        if (groundTraceComponent.onGround[i])
+        if (hurtboxComponent.endStunOnGround[i] && groundTraceComponent.enteredGround[i])
+            hurtboxComponent.stun[i] = false;
+
+        if (hurtboxComponent.stunTime[i] <= 0)
+            continue;
+
+        if (hurtboxComponent.stunTimer[i] < hurtboxComponent.stunTime[i])
+            hurtboxComponent.stunTimer[i]++;
+        else
             hurtboxComponent.stun[i] = false;
     }
 
     for (int h = 0; h < MAX_ENTITIES; h++) {
         if (!entities[h].ShouldUpdate(hitKey)) continue;
+        if (hurtboxComponent.stun[h]) 
+            continue;
+
         for (int b = 0; b < hitboxComponent.hitboxes[h].size(); b++) {
             if (!hitboxComponent.hitboxes[h][b].active) continue;
             const Transform& hitterTransform = transformComponent.transform[h];
@@ -67,12 +76,18 @@ void HitSystem::Execute(
     for (const Hit& hit : hitList) {
         Hitbox& hitbox = hitboxComponent.hitboxes[hit.hitter][hit.hitboxId];
         Hurtbox& hurtbox = hurtboxComponent.hurtbox[hit.target];
-        
-        if (!hurtbox.recieveKnockback)
-            continue;
 
         groundTraceComponent.disableStick[hit.target] = true;
         hurtboxComponent.stun[hit.target] = true;
+        hurtboxComponent.stunTimer[hit.target] = 0;
+        entities[hit.hitter].stunTimer_ = hitbox.hitlag;
+        entities[hit.target].stunTimer_ = hitbox.hitlag;
+        hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
+        hurtboxComponent.hurt[hit.target] = true;
+        hitboxComponent.hit[hit.hitter] = true;
+
+        if (!hurtbox.recieveKnockback)
+            continue;
 
         const vec3 normalizeRes = normalize(hit.collision.resolution);
         if (hitbox.useVelocity) {
@@ -102,16 +117,24 @@ void HitSystem::Execute(
                 Transform::worldUp * hitbox.verticalKb;
         }
 
+        switch (hurtboxComponent.faceDirection[hit.target]) {
+            case HurtboxComponent::FD_Forward:
+                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(normalizeRes), Transform::worldUp); 
+                break;
+
+            case HurtboxComponent::FD_Backward:
+                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(-normalizeRes), Transform::worldUp); 
+                break;
+
+            case HurtboxComponent::FD_None:
+                break;
+        }
+
+
         if (hurtbox.rotate)
             velocityComponent.angularVelocity[hit.target] = quat(
                 cross(Transform::worldUp, normalizeRes * length(velocityComponent.velocity[hit.target]) * 0.001f)
             );
-
-        entities[hit.hitter].stunTimer_ = hitbox.hitlag;
-        entities[hit.target].stunTimer_ = hitbox.hitlag;
-        hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
-        hurtboxComponent.hurt[hit.target] = true;
-        hitboxComponent.hit[hit.hitter] = true;
     }
 }
 

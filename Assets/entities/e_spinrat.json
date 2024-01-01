@@ -5,7 +5,8 @@
     "components": {
         "transform": {
             "interpolate": true,
-            "use_tilt": true
+            "use_tilt": true,
+            "destroy_on_bound": true
         },
         "ai": {
             "controller": "spinrat"
@@ -46,16 +47,16 @@
             ]
         },
         "pushbox": {
-            "radius": 2.0,
+            "radius": 3.0,
             "top": 12.0,
             "bottom": 0.0,
             "send": true,
             "recieve": true
         },
         "hurtbox": {
-            "radius": 8.0,
+            "radius": 6.0,
             "top": 16.0,
-            "bottom": 4.0,
+            "bottom": 1.0,
             "recieve_knockback": true,
             "end_stun_on_ground": true,
             "face_direction": "backward"
@@ -64,13 +65,13 @@
             "hitboxes": [
                 {
                     "radius": 4.0,
-                    "top": 12.0,
-                    "bottom": 4.0,
+                    "top": 2.0,
+                    "bottom": 0.0,
                     "horizontal_kb": 45.0,
                     "vertical_kb": 35.0,
                     "active": true,
                     "hitlag": 8,
-                    "forward_range": 0.5
+                    "forward_range": 0.25
                 }
             ]
         }

@@ -67,7 +67,7 @@ void SpinRatController::Control(
         hitboxComponent.hitboxes[entityId][0].active = true;
 
     if (hurtboxComponent.stun[entityId]) {
-        timer = 20;
+        timer = 30;
         desiredMovement = -normalize(vec3(velocity.x, 0.0f, velocity.z));
         skeletonComponent.nextAnimationIndex[entityId] = 4;
         hitboxComponent.hitboxes[entityId][0].active = false;

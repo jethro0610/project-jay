@@ -6,6 +6,7 @@
 class GroundTraceComponent : public Component {
 public:
     static constexpr float STEP_UP_HEIGHT = 0.25f;
+
     std::array<float, MAX_ENTITIES> distance;
     std::array<bool, MAX_ENTITIES> stick;
     std::array<float, MAX_ENTITIES> stickOffset;
@@ -21,6 +22,8 @@ public:
 
     std::array<bool, MAX_ENTITIES> destroyOnGround;
 
+    std::array<bool, MAX_ENTITIES> disableStick;
+
     GroundTraceComponent() {
         onGround.fill(false);
         enteredGround.fill(false);
@@ -29,6 +32,7 @@ public:
         groundPosition.fill(0.0f);
         groundNormal.fill(glm::vec3(0.0f, 0.0f, 0.0f));
         destroyOnGround.fill(false);
+        disableStick.fill(false);
     };
     GroundTraceComponent(const GroundTraceComponent&) = delete;
     GroundTraceComponent& operator=(const GroundTraceComponent&) = delete;
@@ -43,5 +47,6 @@ public:
         zeroVelocity[entity] = GetBoolean(data, "zero_velocity", false);
         alignStrength[entity] = GetFloat(data, "align_strength", 0.0f);
         destroyOnGround[entity] = GetBoolean(data, "destroy_on_ground", false);
+        disableStick[entity] = false;
     }
 };

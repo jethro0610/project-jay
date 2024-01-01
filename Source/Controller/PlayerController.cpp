@@ -157,6 +157,7 @@ void PlayerController::Execute(
         actionMeter_ = max(actionMeter_ - 6, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
+        groundTraceComponent.disableStick[PLAYER_ENTITY] = true;
         if (length(desiredMovement) > 0.0001f) {
             transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
             velocityComponent.velocity[PLAYER_ENTITY] = normalize(desiredMovement) * movementComponent.speed[PLAYER_ENTITY];

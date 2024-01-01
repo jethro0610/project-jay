@@ -1,4 +1,5 @@
 #include "HitSystem.h"
+#include "Components/GroundTraceComponent.h"
 #include "Components/HitboxComponent.h"
 #include "Components/HurtboxComponent.h"
 #include "Components/TransformComponent.h"
@@ -15,9 +16,10 @@ void HitSystem::Execute(
     EntityList& entities,
     ComponentList& components
 ) {
+    auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& hitboxComponent = components.Get<HitboxComponent>();
-    auto& transformComponent = components.Get<TransformComponent>();
     auto& hurtboxComponent = components.Get<HurtboxComponent>();
+    auto& transformComponent = components.Get<TransformComponent>();
     auto& velocityComponent = components.Get<VelocityComponent>();
     HitList hitList;
 
@@ -63,6 +65,8 @@ void HitSystem::Execute(
         
         if (!hurtbox.recieveKnockback)
             continue;
+
+        groundTraceComponent.disableStick[hit.target] = true;
 
         const vec3 normalizeRes = normalize(hit.collision.resolution);
         if (hitbox.useVelocity) {

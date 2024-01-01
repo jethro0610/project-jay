@@ -17,13 +17,13 @@ namespace MovementDefaults {
     static constexpr float DEFAULT_MAX_SPEED = 120.0f;
     static constexpr float DEFAULT_MIN_FRICTION = 0.015f;
     static constexpr float DEFAULT_MAX_FRICTION = 0.1f;
-    static constexpr float DEFAULT_MOMENTUM_DECAY = 0.1f;
+    static constexpr float DEFAULT_MOMENTUM_DECAY = 0.025f;
     static constexpr float FRICTION_SPEED_CAP_PERCENT = 0.35f;
     static constexpr float DEFAULT_ROTATION_SPEED = 0.25f;
     static constexpr float FLOW_ROTATION_SPEED = 0.06f;
     static constexpr float LINE_ROTATION_SPEED = 0.025f;
 
-    static constexpr float SKI_ACCELERATION = 4.0f;
+    static constexpr float SKI_ACCELERATION = 3.0f;
     static constexpr float SKI_ROTATION_SPEED = 0.02f;
     static constexpr float SKI_DOWNSLOPE_SCALING = 3.0f;
     static constexpr float SKI_UPSLOPE_SCALING = 1.5f;

@@ -15,7 +15,7 @@ void main() {
 
     fnl_state noise = fnlCreateState(1337);
     noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-    vec3 variationPos = v_wposition * 4.0f;
+    vec3 variationPos = v_wposition * 6.0f;
     float noiseVal = fnlGetNoise3D(noise, variationPos.x, variationPos.y, variationPos.z);
     noiseVal = (noiseVal + 1.0f) * 0.5f;
     noiseVal = lerp(0.65f, 1.0f, pow(noiseVal, 4.0f));

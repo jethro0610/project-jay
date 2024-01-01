@@ -138,7 +138,7 @@ void PlayerController::Execute(
         isDoingAction = true;
         actionMeter_ += 1;
     } 
-    else if (inputs.flow && meterComponent.meter[PLAYER_ENTITY] > 0) {
+    else if (inputs.flow) {
         entity.emitters_[SPARK_EMITTER]->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Flow;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 3;
@@ -146,7 +146,7 @@ void PlayerController::Execute(
         isDoingAction = true;
         actionMeter_ += 2;
     }
-    else if (inputs.ski && meterComponent.meter[PLAYER_ENTITY] > 0)  {
+    else if (inputs.ski)  {
         entity.emitters_[CLOUD_EMITTER]->active_ = true;
         movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Ski;
         skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 2;

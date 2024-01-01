@@ -48,16 +48,16 @@ void SpinRatController::Control(
     float curDistance = terrain.GetDistance(transform.position).x;
     float forwardDistance = terrain.GetDistance(transform.position + movementComponent.desiredMovement[entityId] * 10.0f).x;
 
-    desiredMovement = rotate(desiredMovement, RandomFloatRange(-0.15f, 0.15f), Transform::worldUp);
+    desiredMovement = rotate(desiredMovement, RandomFloatRange(-0.1f, 0.1f), Transform::worldUp);
 
     if (timer < 45) {
         entity.emitters_[0]->active_ = false;
-        skeletonComponent.nextAnimationIndex[entityId] = 1;
+        skeletonComponent.nextAnimationIndex[entityId] = 2;
         timer++;
     }
     else {
         entity.emitters_[0]->active_ = true;
-        skeletonComponent.nextAnimationIndex[entityId] = 1;
+        skeletonComponent.nextAnimationIndex[entityId] = 2;
     }
 
     if (curDistance > -50.0f && forwardDistance - curDistance > 0.0f) {

@@ -11,10 +11,11 @@
             "controller": "spinrat"
         },
         "movement": {
-            "max_speed": 30.0,
-            "min_speed": 30.0,
-            "min_friction": 0.15,
-            "max_friction": 0.15
+            "max_speed": 60.0,
+            "min_speed": 60.0,
+            "min_friction": 0.1,
+            "max_friction": 0.1,
+            "tilt_strength": 0.35
         },
         "velocity": {
             "use_gravity": true
@@ -42,7 +43,7 @@
             "skeleton": "sk_spinrat"
         },
         "pushbox": {
-            "radius": 1.0,
+            "radius": 0.5,
             "top": 1.0,
             "bottom": 1.0,
             "send": true,

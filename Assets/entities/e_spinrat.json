@@ -69,7 +69,8 @@
                     "horizontal_kb": 45.0,
                     "vertical_kb": 35.0,
                     "active": true,
-                    "hitlag": 8
+                    "hitlag": 8,
+                    "forward_range": 0.5
                 }
             ]
         }

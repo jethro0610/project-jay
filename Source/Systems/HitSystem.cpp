@@ -4,6 +4,7 @@
 #include "Components/HurtboxComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/VelocityComponent.h"
+#include "Logging/Logger.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -60,14 +61,25 @@ void HitSystem::Execute(
 
                 const Transform& targetTransform = transformComponent.transform[t];
                 const Hurtbox& hurtbox = hurtboxComponent.hurtbox[t];
-                
+
                 Collision collision = Collision::GetCollision(
                     hitterTransform, 
                     hitbox, 
                     targetTransform, 
                     hurtbox 
                 );
-                if (collision.isColliding)
+                if (!collision.isColliding)
+                    continue;
+
+                vec3 planarForward = hitterTransform.GetForwardVector();
+                planarForward.y = 0.0f;
+                planarForward = normalize(planarForward);
+
+                vec3 vectorToTarget = targetTransform.position - hitterTransform.position;
+                vectorToTarget.y = 0.0f;
+                vectorToTarget = normalize(vectorToTarget);
+
+                if (dot(planarForward, vectorToTarget) > hitbox.forwardRange)
                     hitList.push_back({h, t, b, collision});
             }
         }

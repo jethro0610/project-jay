@@ -1,6 +1,5 @@
 #pragma once
 #include "Component.h"
-#include "Logging/Logger.h"
 #include <glm/vec3.hpp>
 
 class AIComponent : public Component {
@@ -27,7 +26,6 @@ public:
 
     void Load(nlohmann::json& data, EntityID entity) {
         timer[entity] = -1;
-        DEBUGLOG("AI on entity: " << entity);
 
         std::string controllerName = GetString(data, "controller");
         if (controllerName == "spinrat") {

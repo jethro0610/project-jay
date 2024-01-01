@@ -30,8 +30,7 @@ void HitSystem::Execute(
         int& cooldown = hurtboxComponent.cooldown[i];
         if (cooldown > 0)
             cooldown--;
-
-        if (hurtboxComponent.endStunOnGround[i] && groundTraceComponent.enteredGround[i])
+        else if (hurtboxComponent.endStunOnGround[i] && groundTraceComponent.onGround[i])
             hurtboxComponent.stun[i] = false;
 
         if (hurtboxComponent.stunTime[i] <= 0)
@@ -129,13 +128,15 @@ void HitSystem::Execute(
                 Transform::worldUp * hitbox.verticalKb;
         }
 
+        vec3 planarVelocity = velocityComponent.velocity[hit.target];
+        planarVelocity.y = 0.0f;
         switch (hurtboxComponent.faceDirection[hit.target]) {
             case HurtboxComponent::FD_Forward:
-                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(normalizeRes), Transform::worldUp); 
+                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
                 break;
 
             case HurtboxComponent::FD_Backward:
-                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(-normalizeRes), Transform::worldUp); 
+                transformComponent.transform[hit.target].rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
                 break;
 
             case HurtboxComponent::FD_None:

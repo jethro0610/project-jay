@@ -12,6 +12,7 @@ public:
     std::array<Hurtbox, MAX_ENTITIES> hurtbox;
     std::array<int, MAX_ENTITIES> cooldown;
     std::array<bool, MAX_ENTITIES> hurt;
+    std::array<bool, MAX_ENTITIES> stun;
 
     HurtboxComponent() {
 
@@ -30,5 +31,6 @@ public:
         hurtbox[entity].rotate = GetBoolean(data, "rotate");
         cooldown[entity] = 0;
         hurt[entity] = false;
+        stun[entity] = false;
     }
 };

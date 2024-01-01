@@ -1,5 +1,6 @@
 #include "MovementSystem.h"
 #include "Components/GroundTraceComponent.h"
+#include "Components/HurtboxComponent.h"
 #include "Components/MovementComponent.h"
 #include "Components/SpreadDetectComponent.h"
 #include "Components/TransformComponent.h"
@@ -16,19 +17,23 @@ constexpr EntityKey key = GetEntityKey<
     VelocityComponent
 >();
 constexpr EntityKey spreadKey = GetEntityKey<SpreadDetectComponent>();
+constexpr EntityKey hurtKey = GetEntityKey<HurtboxComponent>();
 
 void MovementSystem::Execute (
     EntityList& entities,
     ComponentList& components 
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
+    auto& hurtboxComponent = components.Get<HurtboxComponent>();
     auto& movementComponent = components.Get<MovementComponent>();
     auto& spreadDetectComponent = components.Get<SpreadDetectComponent>();
     auto& transformComponent= components.Get<TransformComponent>();
     auto& velocityComponent = components.Get<VelocityComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(key)) continue;
+        const Entity& entity = entities[i];
+        if (!entity.ShouldUpdate(key)) continue;
+        if (entity.MatchesKey(hurtKey) && hurtboxComponent.stun[i]) continue;
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];

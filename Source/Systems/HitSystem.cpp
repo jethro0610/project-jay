@@ -27,8 +27,13 @@ void HitSystem::Execute(
         if (!entities[i].ShouldUpdate(hurtKey)) continue;
         hurtboxComponent.hurt[i] = false;
         int& cooldown = hurtboxComponent.cooldown[i];
-        if (cooldown > 0)
+        if (cooldown > 0) {
             cooldown--;
+            continue;
+        }
+
+        if (groundTraceComponent.onGround[i])
+            hurtboxComponent.stun[i] = false;
     }
 
     for (int h = 0; h < MAX_ENTITIES; h++) {
@@ -67,6 +72,7 @@ void HitSystem::Execute(
             continue;
 
         groundTraceComponent.disableStick[hit.target] = true;
+        hurtboxComponent.stun[hit.target] = true;
 
         const vec3 normalizeRes = normalize(hit.collision.resolution);
         if (hitbox.useVelocity) {

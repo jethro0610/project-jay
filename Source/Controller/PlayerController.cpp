@@ -1,6 +1,7 @@
 #include "PlayerController.h"
 #include "Components/GroundTraceComponent.h"
 #include "Components/HitboxComponent.h"
+#include "Components/HurtboxComponent.h"
 #include "Components/MeterComponent.h"
 #include "Components/MovementComponent.h"
 #include "Components/SkeletonComponent.h"
@@ -40,6 +41,7 @@ void PlayerController::Execute(
 
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& hitboxComponent = components.Get<HitboxComponent>();
+    auto& hurtboxComponent = components.Get<HurtboxComponent>();
     auto& meterComponent = components.Get<MeterComponent>();
     auto& movementComponent = components.Get<MovementComponent>();
     auto& skeletonComponent = components.Get<SkeletonComponent>();
@@ -47,7 +49,8 @@ void PlayerController::Execute(
     auto& transformComponent = components.Get<TransformComponent>();
     auto& velocityComponent = components.Get<VelocityComponent>();
 
-    entity.emitters_[DUST_EMITTER]->active_ = movementComponent.speed[PLAYER_ENTITY] > 35;
+
+    entity.emitters_[DUST_EMITTER]->active_ = movementComponent.speed[PLAYER_ENTITY] > 35 && groundTraceComponent.onGround[PLAYER_ENTITY];
     entity.emitters_[CLOUD_EMITTER]->active_ = false;
     entity.emitters_[SPARK_EMITTER]->active_ = false;
 
@@ -75,6 +78,19 @@ void PlayerController::Execute(
     movementComponent.moveMode[PLAYER_ENTITY] = MoveMode::Default;
     spreadActivatorComponent.radius[PLAYER_ENTITY] = 0;
     spreadActivatorComponent.amount[PLAYER_ENTITY] = INT_MAX;
+
+    if (hurtboxComponent.hurt[PLAYER_ENTITY]) {
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 6;
+        attackTimer_ = 0;
+        charge_ = 0;
+        return;
+    }
+    else if (hurtboxComponent.stun[PLAYER_ENTITY]) {
+        skeletonComponent.nextAnimationIndex[PLAYER_ENTITY] = 7;
+        attackTimer_ = 0;
+        charge_ = 0;
+        return;
+    }
 
     if (!inputs.attack)
         releasedCharge_ = true;

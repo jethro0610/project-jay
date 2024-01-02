@@ -33,7 +33,10 @@ void MovementSystem::Execute (
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.ShouldUpdate(key)) continue;
-        if (entity.MatchesKey(hurtKey) && hurtboxComponent.stun[i]) continue;
+        if (entity.MatchesKey(hurtKey) && hurtboxComponent.stun[i]) { 
+            transformComponent.tilt[i] = 0.0f;
+            continue;
+        }
 
         vec3& velocity = velocityComponent.velocity[i];
         float& speed = movementComponent.speed[i];

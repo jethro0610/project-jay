@@ -25,7 +25,9 @@
         "skeleton": {
             "skeleton": "sk_char",
             "transitions": [
-                { "index": 4, "length": 0.0 }
+                { "index": 4, "length": 0.0 },
+                { "index": 7, "length": 0.15 },
+                { "index": 6, "length": 0.0 }
             ]
         },
         "ground_trace": {

@@ -23,6 +23,9 @@ public:
     std::array<int, MAX_ENTITIES> stunTime;
     std::array<bool, MAX_ENTITIES> endStunOnGround;
 
+    std::array<int, MAX_ENTITIES> seedAmount;
+    std::array<float, MAX_ENTITIES> seedRadius;
+
     std::array<FaceDirection, MAX_ENTITIES> faceDirection;
 
     HurtboxComponent() {
@@ -42,6 +45,8 @@ public:
         hurtbox[entity].rotate = GetBoolean(data, "rotate");
         stunTime[entity] = GetBoolean(data, "stun_time", 0);
         endStunOnGround[entity] = GetBoolean(data, "end_stun_on_ground", false);
+        seedAmount[entity] = GetInt(data, "seed", 0);
+        seedRadius[entity] = GetFloat(data, "seed_radius", 0);
 
         std::string directionString = GetString(data, "face_direction", "none");
         if (directionString == "none")

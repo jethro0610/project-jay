@@ -1,3 +1,9 @@
+- Pickups taht activate by hitting attack
+    - Hole (kill stingrays)
+    - Bomb/rope trail (ie. trip something, get object to fall on bomb)
+    - Magnet (button returns target back to terrain)
+    - Stick (attach)
+
 - Buried objects need up hit to take them out of ground
     - Strong hit would just reflect
 

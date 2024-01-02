@@ -4,6 +4,7 @@
 #include <vector_const.h>
 
 class Entity;
+class SeedManager;
 
 struct Hit {
     EntityID hitter;
@@ -18,6 +19,7 @@ typedef vector_const<Hit, MAX_HITS> HitList;
 namespace HitSystem {           
     void Execute(
         EntityList& entities,
-        ComponentList& components
+        ComponentList& components,
+        SeedManager& seedManager
     );
 }

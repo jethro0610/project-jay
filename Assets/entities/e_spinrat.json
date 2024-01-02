@@ -61,7 +61,9 @@
             "bottom": 0.0,
             "recieve_knockback": true,
             "end_stun_on_ground": true,
-            "face_direction": "backward"
+            "face_direction": "backward",
+            "seed": 300,
+            "seed_radius": 20.0 
         },
         "hitbox": {
             "hitboxes": [

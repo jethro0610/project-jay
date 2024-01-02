@@ -45,7 +45,8 @@ void Game::Update() {
         );
         HitSystem::Execute(
             entityManager_.entities_,
-            entityManager_.components_
+            entityManager_.components_,
+            seedManager_
         );
         SpreadDetectSystem::Execute(
             entityManager_.entities_,

@@ -1,4 +1,5 @@
 #include "HitSystem.h"
+#include "Seed/SeedManager.h"
 #include "Components/GroundTraceComponent.h"
 #include "Components/HitboxComponent.h"
 #include "Components/HurtboxComponent.h"
@@ -15,7 +16,8 @@ constexpr EntityKey hurtKey = GetEntityKey<HurtboxComponent, TransformComponent>
 
 void HitSystem::Execute(
     EntityList& entities,
-    ComponentList& components
+    ComponentList& components,
+    SeedManager& seedManager
 ) {
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& hitboxComponent = components.Get<HitboxComponent>();
@@ -96,6 +98,14 @@ void HitSystem::Execute(
         hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
         hurtboxComponent.hurt[hit.target] = true;
         hitboxComponent.hit[hit.hitter] = true;
+
+        if (hurtboxComponent.seedAmount[hit.target] > 0) {
+            seedManager.CreateMultipleSeed(
+                transformComponent.transform[hit.target].position, 
+                hurtboxComponent.seedAmount[hit.target],
+                hurtboxComponent.seedRadius[hit.target]
+            );
+        }
 
         if (!hurtbox.recieveKnockback)
             continue;

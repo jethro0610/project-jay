@@ -32,7 +32,7 @@ public:
 
     void RemoveOldest();
     void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::ivec3 position, int amount, int radius = 2, EntityID capturer = NULL_ENTITY);
+    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityID capturer = NULL_ENTITY);
 
     void CalculatePositions(
         ComponentList& components,

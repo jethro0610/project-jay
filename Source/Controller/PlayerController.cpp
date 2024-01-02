@@ -35,8 +35,8 @@ void PlayerController::Execute(
     Inputs inputs
 ) {
     const Entity& entity = entities[PLAYER_ENTITY];
-    if (entities[PLAYER_ENTITY].stunTimer_ > 0)
-        return;
+    // if (entities[PLAYER_ENTITY].hitlagTimer_ > 0)
+    //     return;
 
     auto& groundTraceComponent = components.Get<GroundTraceComponent>();
     auto& hitboxComponent = components.Get<HitboxComponent>();
@@ -157,13 +157,13 @@ void PlayerController::Execute(
         actionMeter_ = max(actionMeter_ - 6, 0);
 
     if (actionMeter_ >= MAX_ACTION_METER) {
-        groundTraceComponent.disableStick[PLAYER_ENTITY] = true;
-        if (length(desiredMovement) > 0.0001f) {
-            transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-            velocityComponent.velocity[PLAYER_ENTITY] = normalize(desiredMovement) * movementComponent.speed[PLAYER_ENTITY];
-        }
-
-        velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
+        // groundTraceComponent.disableStick[PLAYER_ENTITY] = true;
+        // if (length(desiredMovement) > 0.0001f) {
+        //     transformComponent.transform[PLAYER_ENTITY].rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+        //     velocityComponent.velocity[PLAYER_ENTITY] = normalize(desiredMovement) * movementComponent.speed[PLAYER_ENTITY];
+        // }
+        //
+        // velocityComponent.velocity[PLAYER_ENTITY].y = 50.0f;
         actionMeter_ = 0;
     } 
 

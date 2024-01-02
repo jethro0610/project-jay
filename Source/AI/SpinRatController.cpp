@@ -59,19 +59,20 @@ void SpinRatController::Control(
     if (groundTraceComponent.onGround[entityId])
         entity.emitters_[0]->active_ = true;
 
-    if (timer > 0) {
-        timer--;
+    hitboxComponent.hitboxes[entityId][0].active = true;
+
+    if (hurtboxComponent.hurt[entityId]) {
+        desiredMovement = -normalize(vec3(velocity.x, 0.0f, velocity.z));
+        skeletonComponent.nextAnimationIndex[entityId] = 5;
         hitboxComponent.hitboxes[entityId][0].active = false;
     }
-    else
-        hitboxComponent.hitboxes[entityId][0].active = true;
-
-    if (hurtboxComponent.stun[entityId]) {
-        timer = 30;
-        desiredMovement = -normalize(vec3(velocity.x, 0.0f, velocity.z));
+    else if (hurtboxComponent.stun[entityId]) {
         skeletonComponent.nextAnimationIndex[entityId] = 4;
         hitboxComponent.hitboxes[entityId][0].active = false;
         return;
+    }
+    else if (hitboxComponent.hit[entityId]){
+        skeletonComponent.nextAnimationIndex[entityId] = 6;
     }
     else
         skeletonComponent.nextAnimationIndex[entityId] = 2;

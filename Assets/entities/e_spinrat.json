@@ -43,7 +43,9 @@
         "skeleton": {
             "skeleton": "sk_spinrat",
             "transitions": [
-                { "index": 4, "length": 0.0 }
+                { "index": 4, "length": 0.15 },
+                { "index": 5, "length": 0.0 },
+                { "index": 6, "length": 0.0 }
             ]
         },
         "pushbox": {
@@ -56,7 +58,7 @@
         "hurtbox": {
             "radius": 6.0,
             "top": 16.0,
-            "bottom": 1.0,
+            "bottom": 0.0,
             "recieve_knockback": true,
             "end_stun_on_ground": true,
             "face_direction": "backward"
@@ -67,10 +69,10 @@
                     "radius": 4.0,
                     "top": 2.0,
                     "bottom": 0.0,
-                    "horizontal_kb": 45.0,
+                    "horizontal_kb": 65.0,
                     "vertical_kb": 35.0,
                     "active": true,
-                    "hitlag": 8,
+                    "hitlag": 4,
                     "forward_range": 0.25
                 }
             ]

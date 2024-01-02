@@ -15,7 +15,9 @@ public:
     bool alive_;
     bool spawnedThisTick_;
     EntityKey key_;
-    int stunTimer_;
+    int hitlagTimer_;
+    bool initHitlag_;
+    bool shake_;
     int seedsOnDestroy_;
     int seedsRadius_;
     vector_const<ParticleEmitter*, MAX_ENTITY_EMITTERS> emitters_;
@@ -27,18 +29,20 @@ public:
     Entity() {
         alive_ = false;
         key_ = 0;
-        stunTimer_ = 0;
+        hitlagTimer_ = 0;
         spawnedThisTick_ = false;
         seedsOnDestroy_ = 0;
         seedsRadius_ = 0;
+        initHitlag_ = false;
+        shake_ = false;
     }
 
     bool ShouldUpdate() const {
-        return (alive_ && stunTimer_ == 0);
+        return (alive_ && hitlagTimer_ == 0);
     }
 
     bool ShouldUpdate(EntityKey key) const {
-        return (alive_ && stunTimer_ == 0 && MatchesKey(key));
+        return (alive_ && hitlagTimer_ == 0 && MatchesKey(key));
     }
 
     bool MatchesKey(EntityKey key) const {
@@ -48,6 +52,12 @@ public:
     void AddComponentById(int componentId) {
         uint32_t componentBit = 1UL << componentId; 
         key_ |= componentBit;
+    }
+
+    void StartHitlag(int length, bool shake = false) {
+        hitlagTimer_ = length;
+        initHitlag_ = true;
+        shake_ = shake;
     }
 
     template <class T>

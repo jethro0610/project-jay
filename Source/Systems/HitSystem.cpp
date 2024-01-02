@@ -91,8 +91,8 @@ void HitSystem::Execute(
         groundTraceComponent.disableStick[hit.target] = true;
         hurtboxComponent.stun[hit.target] = true;
         hurtboxComponent.stunTimer[hit.target] = 0;
-        entities[hit.hitter].stunTimer_ = hitbox.hitlag;
-        entities[hit.target].stunTimer_ = hitbox.hitlag;
+        entities[hit.hitter].StartHitlag(hitbox.hitlag, false);
+        entities[hit.target].StartHitlag(hitbox.hitlag, true);
         hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
         hurtboxComponent.hurt[hit.target] = true;
         hitboxComponent.hit[hit.hitter] = true;
@@ -142,6 +142,8 @@ void HitSystem::Execute(
             case HurtboxComponent::FD_None:
                 break;
         }
+        // transformComponent.transformLastUpdate[hit.target].rotation = transformComponent.transform[hit.target].rotation;
+        // transformComponent.renderTransform[hit.target].rotation = transformComponent.transform[hit.target].rotation;
 
 
         if (hurtbox.rotate)

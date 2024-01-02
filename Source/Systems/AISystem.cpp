@@ -13,7 +13,8 @@ void AISystem::InitAIs(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate(key)) continue;
+        if (!entity.alive_) continue;
+        if (!entity.MatchesKey(key)) continue;
         if (aiComponent.timer[i] >= 0) continue;
 
         switch(aiComponent.controller[i]) {
@@ -37,7 +38,8 @@ void AISystem::Execute(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate(key)) continue;
+        if (!entity.alive_) continue;
+        if (!entity.MatchesKey(key)) continue;
 
         switch(aiComponent.controller[i]) {
             case AIComponent::AI_SpinRat:

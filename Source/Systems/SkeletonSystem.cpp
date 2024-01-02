@@ -14,10 +14,13 @@ void SkeletonSystem::CalculatePoses(
     auto& transformComponent = components.Get<TransformComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(key)) continue;
+        if (!entities[i].alive_) continue;
+        if (!entities[i].MatchesKey(key)) continue;
 
-        skeletonComponent.time[i] += GlobalTime::TIMESTEP;
-        skeletonComponent.prevTime[i] += GlobalTime::TIMESTEP;
+        if (entities[i].hitlagTimer_ == 0) {
+            skeletonComponent.time[i] += GlobalTime::TIMESTEP;
+            skeletonComponent.prevTime[i] += GlobalTime::TIMESTEP;
+        }
 
         int& prevAnimationIndex = skeletonComponent.prevAnimationIndex[i];
         int& nextAnimationIndex = skeletonComponent.nextAnimationIndex[i];
@@ -75,7 +78,7 @@ void SkeletonSystem::CalculatePoses(
         int frame = floor(skeletonComponent.time[i] * 60.0f);
         int framesTillUpate = 60 / framerate;
 
-        if (frame % framesTillUpate == 0)
+        if ((entities[i].hitlagTimer_ == 0 && frame % framesTillUpate == 0) || (entities[i].hitlagTimer_ > 0 && entities[i].initHitlag_))
             skeletonComponent.renderPose[i] = skeletonComponent.pose[i];
 
         skeletonComponent.transitionThisTick[i] = false;

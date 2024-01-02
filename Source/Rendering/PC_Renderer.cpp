@@ -281,6 +281,7 @@ void Renderer::RenderEntities(
     auto& transformComponent = components.Get<TransformComponent>();
 
     GPUPose pose;
+    mat4 modelMatrix;
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
         if (!entity.alive_)
@@ -296,7 +297,13 @@ void Renderer::RenderEntities(
             continue;
         #endif
 
-        mat4 modelMatrix = transformComponent.renderTransform[i].ToMatrix();
+        modelMatrix = transformComponent.renderTransform[i].ToMatrix();
+        if (entity.hitlagTimer_ > 0 && entity.shake_) {
+            modelMatrix[3][0] += pow(sin(GlobalTime::GetTime() * 100.0f + 8.0f), 2.0f) * 0.5f;
+            modelMatrix[3][1] += pow(sin(GlobalTime::GetTime() * 100.0f + 16.0f), 2.0f) * 0.5f;
+            modelMatrix[3][2] += pow(sin(GlobalTime::GetTime() * 100.0f + 32.0f), 2.0f) * 0.5f;
+        }
+
         #ifdef _DEBUG
         if (!hasModel) {
             Material* material = entity.DBG_selected ? defaultSelectedMaterial_ : defaultMaterial_;

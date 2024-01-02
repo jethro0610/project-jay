@@ -42,7 +42,7 @@ void GroundStickSystem::Stick(
             float stickVelocity = distanceToGround / GlobalTime::TIMESTEP;
 
             velocity.y = stickVelocity;
-            if (groundTraceComponent.zeroVelocity[i]) {
+            if (groundTraceComponent.enteredGround[i] && groundTraceComponent.zeroVelocity[i]) {
                 velocity.x = 0.0f;
                 velocity.z = 0.0f;
                 velocityComponent.angularVelocity[i] = quat(1.0f, 0.0f, 0.0f, 0.0f);

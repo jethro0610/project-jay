@@ -5,9 +5,10 @@ void FreezeSytem::Execute(EntityList& entities) {
         Entity& entity = entities[i];
         if (!entity.alive_)
             continue;
-        if (entity.stunTimer_ == 0)
+        if (entity.hitlagTimer_ == 0)
             continue;
 
-        entity.stunTimer_--; 
+        entity.initHitlag_ = false;
+        entity.hitlagTimer_--; 
     }
 }

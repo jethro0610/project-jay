@@ -64,9 +64,9 @@
                     "horizontal_vel_mult": 0.95,
                     "min_horizontal_kb": 15.0,
                     "vertical_kb": 35.0,
-                    "direction_influence": 0.5,
+                    "direction_influence": 0.75,
                     "active": false,
-                    "hitlag": 6
+                    "hitlag": 3
                 },
                 {
                     "use_velocity": true,
@@ -75,10 +75,10 @@
                     "bottom": 2.0,
                     "horizontal_vel_mult": 1.25,
                     "min_horizontal_kb": 25.0,
-                    "vertical_kb": 30.0,
+                    "vertical_kb": 35.0,
                     "direction_influence": 0.05,
                     "active": false,
-                    "hitlag": 8
+                    "hitlag": 4
                 }
             ]
         },

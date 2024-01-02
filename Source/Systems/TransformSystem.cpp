@@ -12,7 +12,9 @@ void TransformSystem::UpdateLastTransforms(
     auto& transformComponent = components.Get<TransformComponent>();
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(key)) continue;
+        const Entity& entity = entities[i];
+        if (!entity.alive_) continue;
+        if (!entity.MatchesKey(key)) continue;
 
         transformComponent.transformLastUpdate[i] = transformComponent.transform[i];
         if (!transformComponent.useTilt[i])
@@ -33,8 +35,8 @@ void TransformSystem::UpdateRenderTransforms(
 
     for (int i = 0; i < MAX_ENTITIES; i++) {
         const Entity& entity = entities[i];
-        if (!entity.ShouldUpdate(key))
-            continue;
+        if (!entity.alive_) continue;
+        if (!entity.MatchesKey(key)) continue;
 
         if (transformComponent.interpolate[i]) {
             transformComponent.renderTransform[i] = Transform::Lerp(

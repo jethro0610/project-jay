@@ -73,7 +73,8 @@ void Game::UpdateInputs_P() {
     inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::RTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::RSHOULDER];
     inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::LTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::LSHOULDER]; 
 
-    inputs_.attack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[Gamepad::Y];
+    inputs_.chargeAttack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[Gamepad::Y];
+    inputs_.releaseAttack = platform_.releasedKeys_['Q'] || platform_.gamepad_.releasedButtons_[Gamepad::Y];
 
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])

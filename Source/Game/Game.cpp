@@ -17,7 +17,12 @@ void Game::Init() {
 
     camera_.target_ = PLAYER_ENTITY;
 
-    testPlayer_.InitResources(particleManager_, resourceManager_);
+    testPlayer_ = {};
+    testPlayer_.camera_ = &camera_;
+    testPlayer_.inputs_ = &inputs_;
+    testPlayer_.terrain_ = &terrain_;
+
+    testPlayer_.Init(particleManager_, resourceManager_);
     testPlayer_.transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
     #ifdef _DEBUG
@@ -35,7 +40,7 @@ void Game::Update() {
             return;
         }
         #endif
-        testPlayer_.Update(inputs_);
+        testPlayer_.BaseUpdate();
         entityManager_.DestroyEntities();
         entityManager_.SpawnEntities();
         FreezeSytem::Execute(entityManager_.entities_);
@@ -166,7 +171,7 @@ void Game::Update() {
         entityManager_.components_
     );
     camera_.Update(inputs_);
-    testPlayer_.RenderUpdate();
+    testPlayer_.BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
     ParticleAttachSystem::Execute(
         entityManager_.entities_,
         entityManager_.components_

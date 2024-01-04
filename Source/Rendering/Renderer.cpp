@@ -22,7 +22,7 @@ void Renderer::Render(
 
     RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
     RenderEntities(entities, components);
-    glm::mat4 matrix = player.transform_.ToMatrix();
+    glm::mat4 matrix = player.renderTransform_.ToMatrix();
     GPUPose gpuPose;
     player.skeleton_->PoseToGPUPose(
         gpuPose,

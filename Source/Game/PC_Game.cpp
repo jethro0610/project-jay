@@ -39,7 +39,7 @@ Game::Game():
         terrain_,
         running_
     ),
-    testPlayer_(camera_, terrain_),
+    testPlayer_(),
     running_(true)
 {
     Init();

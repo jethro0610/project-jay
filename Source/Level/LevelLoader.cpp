@@ -84,7 +84,7 @@ bool LevelLoader::LoadLevel(const std::string& name, bool loadTerrain) {
 
 void LevelLoader::ClearLevel() {
     entityManager_.Reset();
-    particleManager_.Reset();
+    // particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
 }

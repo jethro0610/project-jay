@@ -17,7 +17,7 @@ void Game::Init() {
 
     camera_.target_ = PLAYER_ENTITY;
 
-    testPlayer_.InitResources(resourceManager_);
+    testPlayer_.InitResources(particleManager_, resourceManager_);
     testPlayer_.transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
     #ifdef _DEBUG
@@ -165,10 +165,8 @@ void Game::Update() {
         entityManager_.entities_,
         entityManager_.components_
     );
-    // entityManager_.components_.Get<TransformComponent>().renderTransform[PLAYER_ENTITY] = testPlayer_.transform_;
-    vec3& velocity = entityManager_.components_.Get<VelocityComponent>().velocity[PLAYER_ENTITY];
-    // DEBUGLOG("Player: " << length(vec3(velocity.x, 0.0f, velocity.z)));
     camera_.Update(inputs_);
+    testPlayer_.RenderUpdate();
     ParticleAttachSystem::Execute(
         entityManager_.entities_,
         entityManager_.components_

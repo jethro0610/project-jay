@@ -29,7 +29,8 @@
         "fs_postprocess",
         "fs_uibar",
         "fs_terrain",
-        "fs_selected"
+        "fs_selected",
+        "fs_particle"
     ],
     "textures": [
         "t_font"
@@ -39,9 +40,17 @@
         "m_preuiblit",
         "m_text",
         "m_uibar",
-        "m_default"
+        "m_default",
+        "m_dust",
+        "m_spark",
+        "m_cloud"
     ],
     "models": [
         "st_default" 
+    ],
+    "emitter_properties": [
+        "p_dust",
+        "p_spark",
+        "p_cloud"
     ]
 }

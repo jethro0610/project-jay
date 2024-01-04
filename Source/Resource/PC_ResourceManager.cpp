@@ -84,6 +84,11 @@ void ResourceManager::LoadGlobalFile() {
         #endif
     }
 
+    for (auto& emitterProperty : globals["emitter_properties"]) {
+        LoadEmitterProperties(emitterProperty);
+        globals_.insert(emitterProperty);
+    }
+
     for (auto& model : globals["models"]) {
         LoadModel(model);
         globals_.insert(model);

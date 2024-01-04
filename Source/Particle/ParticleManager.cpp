@@ -17,6 +17,8 @@ ParticleEmitter* ParticleManager::RequestEmitter(EmitterProperties* properties) 
     emitter.alive_ = true;
     emitters_[emitterIndex].properties_ = properties;
 
+    DEBUGLOG("Assign emitter: " << emitterIndex);
+
     // TODO: Set particles array to 0 on emitter
     return &emitters_[emitterIndex]; 
 }

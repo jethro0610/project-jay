@@ -11,6 +11,7 @@
 #include "Level/LevelProperties.h"
 #include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
+#include "Entity/Player.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
@@ -45,6 +46,8 @@ private:
     #ifdef _DEBUG
     Editor editor_;
     #endif
+
+    Player testPlayer_;
 
     Inputs inputs_;
 

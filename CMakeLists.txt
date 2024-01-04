@@ -12,6 +12,8 @@ file(GLOB SOURCES
     Source/Entity/Entity.cpp
     Source/Entity/EntityManager.cpp
 
+    Source/Entity/Player.cpp
+
     Source/Systems/AISystem.cpp
     Source/Systems/PushSystem.cpp
     Source/Systems/HitSystem.cpp

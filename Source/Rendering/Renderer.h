@@ -21,6 +21,7 @@ class SeedManager;
 class SpreadManager;
 class Terrain;
 class ParticleManager;
+class Player;
 class ResourceManager;
 
 class Renderer {
@@ -37,7 +38,8 @@ public:
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        Terrain& terrain
+        Terrain& terrain,
+        Player& player
     );
 
     void RenderEdit(

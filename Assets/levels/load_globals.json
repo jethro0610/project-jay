@@ -33,7 +33,10 @@
         "fs_particle"
     ],
     "textures": [
-        "t_font"
+        "t_font",
+        "t_bricks_c",
+        "t_bricks_n",
+        "t_hair_m"
     ],
     "materials": [
         "m_postprocess",
@@ -43,10 +46,16 @@
         "m_default",
         "m_dust",
         "m_spark",
-        "m_cloud"
+        "m_cloud",
+
+        "m_player",
+        "m_playerskin",
+        "m_hair",
+        "m_playershirt"
     ],
     "models": [
-        "st_default" 
+        "st_default",
+        "sk_char"
     ],
     "emitter_properties": [
         "p_dust",

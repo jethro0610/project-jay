@@ -21,6 +21,9 @@ void Player::Init(EntityS::InitArgs args)
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);
+    SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_RecieveKnockback, true);
+    SetFlag(EF_HurtFaceForward, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_char");
@@ -41,6 +44,9 @@ void Player::Init(EntityS::InitArgs args)
     speedEmtter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_dust"));
     spinEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_spark"));
     slopeEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_cloud"));
+
+    hurtbox_.radius = 2.0f;
+    hurtbox_.top = 1.0f;
 }
 
 void Player::Update() {

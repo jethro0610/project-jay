@@ -33,7 +33,11 @@ public:
         EF_UseSkeleton,
         EF_SendPush,
         EF_RecievePush,
-        EF_HurtRecieveKnockback,
+        EF_SendHits,
+        EF_RecieveHits,
+        EF_RecieveKnockback,
+        EF_HurtFaceForward,
+        EF_HurtFaceBack,
         EF_Count
     };
 
@@ -60,6 +64,7 @@ public:
     bool onGround_;
     float groundHeight_;
     glm::vec3 groundNormal_;
+    bool noStickThisUpdate_;
 
     Model* model_;
     Material* materials_[Model::MAX_MESHES_PER_MODEL];
@@ -77,6 +82,9 @@ public:
     Collider pushbox_;
     HitboxS hitbox_;
     Collider hurtbox_;
+    bool hurt_;
+    bool hit_;
+    bool stun_;
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);

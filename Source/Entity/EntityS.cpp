@@ -69,15 +69,18 @@ void EntityS::BaseUpdate() {
         float distanceToSurface = transform_.position.y - groundHeight_;
         if (distanceToSurface < traceDistance_)
             onGround_ = true;
-        else
+        else 
             onGround_ = false;
 
-        if (GetFlag(EF_StickToGround)) {
+        if (onGround_ && GetFlag(EF_StickToGround) && !noStickThisUpdate_) {
             if (useVelocity) 
                 velocity_.y = -distanceToSurface / GlobalTime::TIMESTEP;
             else
                 transform_.position.y = groundHeight_;
         }
+
+        if (velocity_.y < 0.0f)
+            noStickThisUpdate_ = false;
     }
 
     if (useVelocity)

@@ -20,6 +20,9 @@ void Game::Init() {
     entityListS_.CreateEntity(Player::GetTypeID());
     entityListS_[0].transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
+    entityListS_.CreateEntity(BumpRat::GetTypeID());
+    entityListS_[1].transform_.position = vec3(10.0f, 10.0f, 10.0f);
+
     #ifdef _DEBUG
     editor_.StartEditing();
     #endif

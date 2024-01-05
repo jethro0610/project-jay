@@ -30,13 +30,23 @@
         "fs_uibar",
         "fs_terrain",
         "fs_selected",
-        "fs_particle"
+        "fs_particle",
+
+        "fs_color_masked",
+        "fs_aura"
     ],
     "textures": [
         "t_font",
         "t_bricks_c",
         "t_bricks_n",
-        "t_hair_m"
+        "t_hair_m",
+
+        "t_spinrat_back_m",
+        "t_spinrat_ears_b_m",
+        "t_spinrat_ears_f_m",
+        "t_spinrat_eyes_m",
+        "t_spinrat_nose_m",
+        "t_spinrat_swirl_m"
     ],
     "materials": [
         "m_postprocess",
@@ -51,11 +61,21 @@
         "m_player",
         "m_playerskin",
         "m_hair",
-        "m_playershirt"
+        "m_playershirt",
+
+        "m_spinrat_back",
+        "m_spinrat_body",
+        "m_spinrat_ears_b",
+        "m_spinrat_ears_f",
+        "m_spinrat_eyes",
+        "m_spinrat_nose",
+        "m_spinrat_swirl"
     ],
     "models": [
         "st_default",
-        "sk_char"
+
+        "sk_char",
+        "sk_spinrat"
     ],
     "emitter_properties": [
         "p_dust",

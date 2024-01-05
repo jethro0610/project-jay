@@ -45,8 +45,10 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
+
     EntityUnion entities_[128];
     EntityListS entityListS_;
+
     #ifdef _DEBUG
     Editor editor_;
     #endif

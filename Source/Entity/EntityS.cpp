@@ -23,7 +23,7 @@ void EntityS::Init(
     renderTransform_ = {};
     velocity_ = {};
 
-    traceDistance_ = 0.0f;
+    traceDistance_ = 1.0f;
     onGround_ = false;
     groundHeight_ = 0.0f;
     groundNormal_ = {};
@@ -134,4 +134,14 @@ void EntityS::BaseRenderUpdate(float interpTime) {
     }
     else
         renderTransform_ = transform_;
+}
+
+void EntityS::ChangeAnimation(int index, float transitionLength) {
+    prevAnimIndex_ = index;
+    animIndex_ = index; 
+    prevAnimTime_ = animTime_;
+    animTime_ = 0.0f;
+
+    transitionLength_ = transitionLength;
+    transitionTime_ = 0.0f;
 }

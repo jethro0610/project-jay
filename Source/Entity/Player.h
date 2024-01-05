@@ -1,9 +1,5 @@
 #pragma once
 #include "EntityS.h"
-#include "Types/Transform.h"
-#include "Rendering/Model.h"
-#include "Rendering/Material.h"
-#include "Rendering/Skeleton.h"
 
 class Player : public EntityS {
 public:
@@ -44,6 +40,4 @@ public:
      
     void Update(); 
     void RenderUpdate();
-    void DetermineAnimation();
-    void SetAnimation(int index, float transitionLength);
 };

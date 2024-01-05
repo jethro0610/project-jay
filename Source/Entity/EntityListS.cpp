@@ -28,6 +28,7 @@ EntityS& EntityListS::operator[](int index) {
 void EntityListS::CreateEntity(EntityS::TypeID typeId) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
+    availablePos_++;
 
     switch(typeId) {
         #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;

@@ -12,10 +12,10 @@ using namespace glm;
 
 void Player::Init(EntityS::InitArgs args)
 {
+    EntityS::Init(args);
     PlayerMoveMode moveMode_ = MM_Default;
     float speed_ = MIN_SPEED;
 
-    EntityS::Init(args);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_UseVelocity, true);
@@ -168,21 +168,11 @@ void Player::Update() {
         animation = 2;
 
     if (animation != animIndex_)
-        SetAnimation(animation, transitionLength_);
+        ChangeAnimation(animation, transitionLength_);
 }
 
 void Player::RenderUpdate() {
     speedEmtter_->transform_ = transform_;
     spinEmitter_->transform_ = transform_;
     slopeEmitter_->transform_ = transform_;
-}
-
-void Player::SetAnimation(int index, float transitionLength) {
-    prevAnimIndex_ = index;
-    animIndex_ = index; 
-    prevAnimTime_ = animTime_;
-    animTime_ = 0.0f;
-
-    transitionLength_ = transitionLength;
-    transitionTime_ = 0.0f;
 }

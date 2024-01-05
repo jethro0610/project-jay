@@ -86,6 +86,7 @@ public:
 
     void BaseRenderUpdate(float interpTime);
     void RenderUpdate() {};
+    void ChangeAnimation(int index, float transitionLength);
 
     Camera* camera_;
     Inputs* inputs_;

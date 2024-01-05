@@ -11,7 +11,9 @@
 #include "Level/LevelProperties.h"
 #include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
-#include "Entity/Player.h"
+
+#include "Entity/EntityListS.h"
+#include "Entity/EntityUnion.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
@@ -43,11 +45,11 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     PlayerController playerController_;
+    EntityUnion entities_[128];
+    EntityListS entityListS_;
     #ifdef _DEBUG
     Editor editor_;
     #endif
-
-    Player testPlayer_;
 
     Inputs inputs_;
 

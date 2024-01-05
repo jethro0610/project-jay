@@ -1,10 +1,12 @@
 #pragma once
-#include <inttypes.h>
 #include "Types/Transform.h"
+#include "Collision/Collider.h"
+#include "Collision/HitboxS.h"
 #include "Rendering/Bone.h"
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
+#include <inttypes.h>
 
 class Camera;
 class Inputs;
@@ -14,21 +16,40 @@ class Terrain;
 
 class ParticleEmitter;
 
+
 class EntityS {
 public:
+    typedef int TypeID;
+    struct InitArgs {
+        ParticleManager& particleManager;
+        ResourceManager& resourceManager;
+    };
+
     enum Flag {
         EF_Interpolate,
         EF_GroundCheck,
         EF_StickToGround,
         EF_UseVelocity,
         EF_UseSkeleton,
+        EF_SendPush,
+        EF_RecievePush,
+        EF_HurtRecieveKnockback,
         EF_Count
     };
 
-    virtual void Init(
-        ParticleManager& particleManager,
-        ResourceManager& resourceManager 
-    ) = 0;
+    void Construct(
+        Camera& camera,
+        Inputs& inputs,
+        Terrain& terrain
+    );
+    void Init(
+        InitArgs args
+    );
+
+    static constexpr TypeID GetTypeID() { return 0; };
+    static constexpr const char* GetName() { return "e_base"; }
+
+    uint32_t flags_; 
 
     Transform transform_;
     Transform lastTransform_;
@@ -53,14 +74,18 @@ public:
     float transitionTime_;
     float transitionLength_;
 
-    uint32_t flags_; 
+    Collider pushbox_;
+    HitboxS hitbox_;
+    Collider hurtbox_;
+
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
 
+    void Update() {};
     void BaseUpdate();
-    virtual void Update() = 0;
+
     void BaseRenderUpdate(float interpTime);
-    virtual void RenderUpdate() = 0;
+    void RenderUpdate() {};
 
     Camera* camera_;
     Inputs* inputs_;

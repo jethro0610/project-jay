@@ -4,6 +4,49 @@
 #include "Logging/Logger.h"
 using namespace glm;
 
+void EntityS::Construct(
+    Camera& camera,
+    Inputs& inputs,
+    Terrain& terrain
+) {
+    camera_ = &camera;
+    inputs_ = &inputs;
+    terrain_ = &terrain;
+}
+
+void EntityS::Init(
+    EntityS::InitArgs args
+) {
+    flags_ = 0; 
+    transform_ = {};
+    lastTransform_ = {};
+    renderTransform_ = {};
+    velocity_ = {};
+
+    traceDistance_ = 0.0f;
+    onGround_ = false;
+    groundHeight_ = 0.0f;
+    groundNormal_ = {};
+
+    model_ = nullptr;
+    for (int i = 0; i < Model::MAX_MESHES_PER_MODEL; i++)
+        materials_[i] = nullptr;
+
+    skeleton_ = nullptr;
+    pose_ = {};
+    renderPose_ = {};
+    animIndex_ = 0;
+    prevAnimIndex_ = 0;
+    prevAnimTime_ = 0; 
+    animTime_ = 0;
+    transitionTime_ = 0.0f;
+    transitionLength_ = 0.0f;
+
+    pushbox_ = {};
+    hitbox_ = {};
+    hurtbox_ = {};
+}
+
 void EntityS::SetFlag(EntityS::Flag flag, bool enable) {
     uint32_t bit = 1UL << flag; 
 
@@ -18,9 +61,6 @@ bool EntityS::GetFlag(EntityS::Flag flag) {
 }
 
 void EntityS::BaseUpdate() {
-    lastTransform_ = transform_;
-    Update();
-
     bool useVelocity = GetFlag(EF_UseVelocity);
 
     if (GetFlag(EF_GroundCheck)) {
@@ -94,6 +134,4 @@ void EntityS::BaseRenderUpdate(float interpTime) {
     }
     else
         renderTransform_ = transform_;
-
-    RenderUpdate();
 }

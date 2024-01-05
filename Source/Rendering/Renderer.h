@@ -10,6 +10,8 @@
 #include <array>
 #include <glm/mat4x4.hpp>
 
+#include "Entity/EntityListS.h"
+
 #ifdef _DEBUG
 #include "Logging/ScreenText.h"
 #endif
@@ -39,7 +41,7 @@ public:
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain,
-        Player& player
+        EntityListS& entitiesS
     );
 
     void RenderEdit(
@@ -147,6 +149,9 @@ private:
         EntityList& entities, 
         ComponentList& components
         #endif
+    );
+    void RenderEntitiesS(
+        EntityListS& entities
     );
     void RenderSpread(
         SpreadManager& spreadManager, 

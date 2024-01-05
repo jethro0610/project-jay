@@ -10,13 +10,19 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-void Player::Init(ParticleManager& particleManager, ResourceManager& resourceManager) {
+void Player::Init(EntityS::InitArgs args)
+{
+    PlayerMoveMode moveMode_ = MM_Default;
+    float speed_ = MIN_SPEED;
+
+    EntityS::Init(args);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);
 
+    ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_char");
     skeleton_ = resourceManager.GetSkeleton("sk_char");
     materials_[0] = resourceManager.GetMaterial("m_player");
@@ -31,6 +37,7 @@ void Player::Init(ParticleManager& particleManager, ResourceManager& resourceMan
     pose_.resize(skeleton_->bones_.size());
     renderPose_.resize(skeleton_->bones_.size());
 
+    ParticleManager& particleManager = args.particleManager;
     speedEmtter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_dust"));
     spinEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_spark"));
     slopeEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_cloud"));
@@ -59,6 +66,10 @@ void Player::Update() {
     if (moveLength < 0.1f) {
         moveLength = 0.0f;
         desiredMovement = vec3(0.0f);
+    }
+    else if (moveLength > 1.0f) {
+        moveLength = 1.0f;
+        desiredMovement = normalize(desiredMovement);
     }
 
     float frictionLerp = 1.0f - (min(speed_, FRICTION_CAP) - MIN_SPEED) / (FRICTION_CAP - MIN_SPEED);

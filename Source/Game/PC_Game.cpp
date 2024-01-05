@@ -28,6 +28,7 @@ Game::Game():
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     playerController_(),
+    entityListS_(entities_, particleManager_, resourceManager_, camera_, inputs_, terrain_),
     editor_(
         camera_, 
         entityManager_, 
@@ -39,7 +40,6 @@ Game::Game():
         terrain_,
         running_
     ),
-    testPlayer_(),
     running_(true)
 {
     Init();

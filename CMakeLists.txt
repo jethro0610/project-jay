@@ -14,6 +14,7 @@ file(GLOB SOURCES
 
     Source/Entity/EntityS.cpp
     Source/Entity/Player.cpp
+    Source/Entity/EntityListS.cpp
 
     Source/Systems/AISystem.cpp
     Source/Systems/PushSystem.cpp

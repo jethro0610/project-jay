@@ -17,13 +17,8 @@ void Game::Init() {
 
     camera_.target_ = PLAYER_ENTITY;
 
-    testPlayer_ = {};
-    testPlayer_.camera_ = &camera_;
-    testPlayer_.inputs_ = &inputs_;
-    testPlayer_.terrain_ = &terrain_;
-
-    testPlayer_.Init(particleManager_, resourceManager_);
-    testPlayer_.transform_.position = vec3(0.0f, 10.0f, 0.0f);
+    entityListS_.CreateEntity(Player::GetTypeID());
+    entityListS_[0].transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
     #ifdef _DEBUG
     editor_.StartEditing();
@@ -40,7 +35,18 @@ void Game::Update() {
             return;
         }
         #endif
-        testPlayer_.BaseUpdate();
+
+        for (int i = 0; i < 128; i++) {
+            if (!entityListS_.Valid(i)) continue;
+            entities_[i].entity.lastTransform_ = entities_[i].entity.transform_;
+            switch(entities_[i].typeId) {
+                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.Update(); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
+            entities_[i].entity.BaseUpdate();
+        }
+
         entityManager_.DestroyEntities();
         entityManager_.SpawnEntities();
         FreezeSytem::Execute(entityManager_.entities_);
@@ -171,7 +177,17 @@ void Game::Update() {
         entityManager_.components_
     );
     camera_.Update(inputs_);
-    testPlayer_.BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
+
+    for (int i = 0; i < 128; i++) {
+        if (!entityListS_.Valid(i)) continue;
+        entities_[i].entity.BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
+        switch(entities_[i].typeId) {
+            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.RenderUpdate(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
+    }
+
     ParticleAttachSystem::Execute(
         entityManager_.entities_,
         entityManager_.components_
@@ -185,6 +201,6 @@ void Game::Update() {
         seedManager_,
         spreadManager_, 
         terrain_,
-        testPlayer_
+        entityListS_
     );
 }

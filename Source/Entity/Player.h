@@ -14,10 +14,10 @@ public:
         MM_Attack
     };
 
-    void Init(
-        ParticleManager& particleManager,
-        ResourceManager& resourceManager 
-    ) override;
+    void Init(InitArgs args);
+
+    static constexpr TypeID GetTypeID() { return 1; };
+    static constexpr const char* GetName() { return "e_player"; }
 
     static constexpr float MIN_SPEED = 12.0f;
     static constexpr float MAX_SPEED = 120.0f;
@@ -42,8 +42,8 @@ public:
     ParticleEmitter* spinEmitter_;
     ParticleEmitter* slopeEmitter_;
      
-    void Update() override; 
-    void RenderUpdate() override;
+    void Update(); 
+    void RenderUpdate();
     void DetermineAnimation();
     void SetAnimation(int index, float transitionLength);
 };

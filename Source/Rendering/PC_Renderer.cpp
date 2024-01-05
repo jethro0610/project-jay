@@ -338,6 +338,34 @@ void Renderer::RenderEntities(
     }
 }
 
+void Renderer::RenderEntitiesS(
+    EntityListS& entities
+) {
+    GPUPose pose;
+    mat4 matrix;
+
+    for (int i = 0; i < 128; i++) {
+        if (!entities.Valid(i)) continue;
+        EntityS& entity = entities[i];
+        matrix = entity.renderTransform_.ToMatrix();
+
+        bool skeletal = entity.GetFlag(EntityS::EF_UseSkeleton);
+        if (skeletal) {
+            entity.skeleton_->PoseToGPUPose(
+                pose,
+                entity.renderPose_
+            );
+        }
+
+        Model* model = entity.model_;
+        for (int m = 0; m < model->meshes.size(); m++) {
+            Material* material = entity.materials_[m];
+            Mesh* mesh = &model->meshes[m];
+            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose: nullptr);
+        }
+    }
+}
+
 void Renderer::RenderSpread(
     SpreadManager& spreadManager, 
     Model* model,

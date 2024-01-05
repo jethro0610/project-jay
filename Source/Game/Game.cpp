@@ -264,7 +264,7 @@ void Game::Update() {
         entityManager_.entities_,
         entityManager_.components_
     );
-    camera_.Update(inputs_);
+    camera_.Update(entityListS_, inputs_);
 
     for (int i = 0; i < 128; i++) {
         if (!entityListS_.Valid(i)) continue;

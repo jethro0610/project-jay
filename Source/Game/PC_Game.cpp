@@ -24,7 +24,7 @@ Game::Game():
         terrain_
     ),
     renderer_(resourceManager_),
-    camera_(entityManager_.components_.Get<TransformComponent>(), 14.0f),
+    camera_(14.0f),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     playerController_(),

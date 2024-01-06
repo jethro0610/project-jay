@@ -104,6 +104,7 @@ public:
     void Update() {};
     void BaseUpdate();
 
+    void CalculateBasePose();
     void BaseRenderUpdate(float interpTime);
     void RenderUpdate() {};
     void ChangeAnimation(int index, float transitionLength);

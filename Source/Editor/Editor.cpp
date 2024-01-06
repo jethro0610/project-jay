@@ -180,16 +180,11 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.hasLevel_) {
-        // SkeletonSystem::CalculateBasePoses(
-        //     entityManager_.entities_,
-        //     entityManager_.components_
-        // );
-        // TransformSystem::ForceRenderTransforms(
-        //     entityManager_.entities_,
-        //     entityManager_.components_
-        // );
-        // entityManager_.DestroyEntities();
-        // entityManager_.SpawnEntities();
+        for (int i = 0; i < 128; i++) {
+            entities_[i].CalculateBasePose();
+            entities_[i].renderTransform_ = entities_[i].transform_;
+        }
+
         renderer_.RenderEdit(
             entities_, 
             *this,

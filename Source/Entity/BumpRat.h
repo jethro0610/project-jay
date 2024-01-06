@@ -6,7 +6,7 @@ public:
     void Init(InitArgs args);
 
     static constexpr TypeID GetTypeID() { return 2; };
-    static constexpr const char* GetName() { return "e_bumprat"; }
+    static constexpr const char* GetName() { return "e_spinrat"; }
     static constexpr float SPEED = 60.0f;
     static constexpr float FRICTION = 0.05f;
     static constexpr float SPEED_DECAY = 1.0f - FRICTION;

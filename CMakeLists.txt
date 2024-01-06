@@ -13,6 +13,8 @@ file(GLOB SOURCES
     Source/Entity/Entity.cpp
     Source/Entity/Player.cpp
     Source/Entity/BumpRat.cpp
+    Source/Entity/TPillar.cpp
+    Source/Entity/RabbitPole.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp

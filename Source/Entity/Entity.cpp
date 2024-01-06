@@ -147,6 +147,12 @@ void Entity::BaseUpdate() {
     initHitlag_ = false;
 }
 
+void Entity::CalculateBasePose() {
+    if (!GetFlag(EF_UseSkeleton)) return;
+    skeleton_->GetBasePose(pose_);
+    renderPose_ = pose_;
+}
+
 void Entity::BaseRenderUpdate(float interpTime) {
     if (GetFlag(EF_Interpolate)) {
         renderTransform_ = Transform::Lerp(

@@ -96,11 +96,11 @@ EXPANDMODES
 
 void Editor::StartEditing() {
     active_ = true;
-    target_.Set(NULL_ENTITY);
+    target_.Set(nullptr);
     SetMode(defaultMode_);
     defaultMode_.SetSubmode(DS_Camera);
     postConfirmMode_ = nullptr;
-    camera_.target_ = NULL_ENTITY;
+    camera_.target_ = nullptr;
     ScreenText::SetEnabled(false);
     notification_.Clear();
 
@@ -112,15 +112,15 @@ void Editor::StopEditing() {
     mode_->OnCancel();
     mode_->OnEnd();
     active_ = false;
-    target_.Set(NULL_ENTITY);
-    camera_.target_ = PLAYER_ENTITY;
+    target_.Set(nullptr);
+    camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
     level_.Save(level_.name_ + "_autosave", false);
 }
 
 void Editor::SetMode(EditorMode* mode) {
     if (mode_ == mode) return;
-    if (mode->requiresTarget_ && target_.Get() == NULL_ENTITY) return;
+    if (mode->requiresTarget_ && target_.Get() == nullptr) return;
 
     if (mode_ != nullptr)
         mode_->OnEnd();

@@ -1,9 +1,10 @@
 #pragma once
 #include "EditorMode.h"
-#include "Entity/EntityIDS.h"
 #include "Types/Transform.h"
 #include <glm/vec3.hpp>
 #include <GLFW/glfw3.h>
+
+class EntityS;
 
 class CloneMode : public EditorMode {
     enum CloneSubmode {
@@ -26,6 +27,6 @@ private:
     float deltaX_;
     float deltaY_;
 
-    EntityIDS original_;    
+    EntityS* original_;    
     Transform originalTransform_;
 };

@@ -1,16 +1,17 @@
 #pragma once
 #include "Terrain/Terrain.h"
-#include "Entity/EntityIDS.h"
 #include <array>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <vector_contig.h>
 
+class EntityS;
+
 struct Seed {
     glm::vec3 position;
     glm::vec3 offset;
     float gravityOffset;
-    EntityIDS targetEntity;
+    EntityS* targetEntity;
     float startTime;
     float captureTime;
     glm::vec3 jitterOffset;
@@ -31,8 +32,8 @@ public:
     std::array<glm::vec4, MAX_SEED> positions_;
 
     void RemoveOldest();
-    void CreateSeed(glm::vec3 position, EntityIDS capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityIDS capturer = NULL_ENTITY);
+    void CreateSeed(glm::vec3 position, EntityS* capturer = nullptr, glm::vec3 offset = glm::vec3(0.0f));
+    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityS* capturer = nullptr);
 
     void CalculatePositions(
         Terrain& terrain,

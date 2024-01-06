@@ -4,21 +4,12 @@
 using namespace glm;
 
 Camera::Camera(float trackDistance, vec3 startPosition):
-    target_(NULL_ENTITY),
+    target_(nullptr),
     lookX_(0.0f),
     lookY_(0.0f),
     trackDistance_(trackDistance)
 {
     transform_.position = startPosition;
-}
-
-Camera::Camera(float trackDistance, EntityIDS target):
-    target_(target),
-    lookX_(0.0f),
-    lookY_(0.0f),
-    trackDistance_(trackDistance)
-{
-
 }
 
 mat4 Camera::GetViewMatrix() const {
@@ -43,7 +34,7 @@ void Camera::Update(EntityListS& entities, Inputs& inputs) {
     lookY_ += inputs.deltaLookY;
 
     lookY_ = clamp(lookY_, radians(-50.0f), radians(5.0f));
-    vec3 trackPosition = entities[target_].renderTransform_.position;
+    vec3 trackPosition = target_->renderTransform_.position;
     smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
     if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {
         vec3 delta = normalize(smoothTrackPosition_ - trackPosition) * 3.0f;

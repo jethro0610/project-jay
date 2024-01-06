@@ -17,7 +17,10 @@ void EntityS::Construct(
 void EntityS::Init(
     EntityS::InitArgs args
 ) {
+    alive_ = true;
+    destroy_ = false; 
     flags_ = 0; 
+    
     transform_ = {};
     lastTransform_ = {};
     renderTransform_ = {};

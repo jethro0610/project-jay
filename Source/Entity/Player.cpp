@@ -13,6 +13,7 @@ using namespace glm;
 void Player::Init(EntityS::InitArgs args)
 {
     EntityS::Init(args);
+
     PlayerMoveMode moveMode_ = MM_Default;
     float speed_ = MIN_SPEED;
 

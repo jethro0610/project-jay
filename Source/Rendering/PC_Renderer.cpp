@@ -261,7 +261,7 @@ void Renderer::RenderEntitiesS(
     mat4 matrix;
 
     for (int i = 0; i < 128; i++) {
-        if (!entities.Valid(i)) continue;
+        if (!entities[i].alive_) continue;
         EntityS& entity = entities[i];
         matrix = entity.renderTransform_.ToMatrix();
 

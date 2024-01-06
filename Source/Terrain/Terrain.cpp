@@ -64,7 +64,7 @@ void Terrain::GenerateTerrainMap(
 ) {
     vector_const<EntityS*, 128> entitiesToRespoition;
     for (int i = 0; i < 128; i++) {
-        if (!entities.Valid(i)) continue;
+        if (!entities[i].alive_) continue;
             
         if (abs(entities[i].transform_.position.y - GetHeight(entities[i].transform_.position)) < 0.5f)
             entitiesToRespoition.push_back(&entities[i]);

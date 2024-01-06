@@ -93,9 +93,9 @@ void DefaultMode::Update() {
             break;
     }
 
-    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.Get() != NULL_ENTITY) {
-        entities_.DestroyEntity(target_.Get());
-        target_.Set(NULL_ENTITY);
+    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.Get() != nullptr) {
+        target_.Get()->destroy_ = true;
+        target_.Set(nullptr);
     }
 }
 
@@ -105,11 +105,11 @@ void DefaultMode::CameraUpdate() {
 
 void DefaultMode::CursorUpdate() {
     if (platform_.pressedKeys_[LEFT_MOUSE_KEY]) {
-        target_.Set(NULL_ENTITY);
+        target_.Set(nullptr);
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
         for (int i = 0; i < 128; i++) {
-            if (!entities_.Valid(i)) continue;
+            if (!entities_[i].alive_) continue;
             EntityS& entity = entities_[i];
 
             float dist = distance(camera_.transform_.position, entity.transform_.position);
@@ -118,7 +118,7 @@ void DefaultMode::CursorUpdate() {
                 dist < maxDist
             ) {
                 maxDist = dist;
-                target_.Set(i);
+                target_.Set(&entity);
             }
         }
     }

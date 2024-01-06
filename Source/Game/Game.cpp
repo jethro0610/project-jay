@@ -12,7 +12,7 @@ void Game::Init() {
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
-    camera_.target_ = PLAYER_ENTITY;
+    camera_.target_ = &entities_[0].entity;
 
     entityListS_.CreateEntity(Player::GetTypeID());
     entityListS_[0].transform_.position = vec3(0.0f, 10.0f, 0.0f);
@@ -43,7 +43,7 @@ void Game::Update() {
         #endif
 
         for (int i = 0; i < 128; i++) {
-            if (!entityListS_.Valid(i)) continue;
+            if (!entityListS_[i].alive_) continue;
             if (!entityListS_[i].GetFlag(EntityS::EF_SendHits) && !entities_[i].entity.GetFlag(EntityS::EF_RecieveHits))
                 continue;
         
@@ -53,14 +53,14 @@ void Game::Update() {
 
         vector_const<HitS, 128> hitList;
         for (int h = 0; h < 128; h++) {
-            if (!entityListS_.Valid(h)) continue;
+            if (!entityListS_[h].alive_) continue;
             if (!entityListS_[h].GetFlag(EntityS::EF_SendHits))
                 continue;
             EntityS& hitter = entityListS_[h];
 
             for (int t = 0; t < 128; t++) {
                 if (h == t) continue;
-                if (!entityListS_.Valid(t)) continue;
+                if (!entityListS_[t].alive_) continue;
                 if (!entityListS_[t].GetFlag(EntityS::EF_RecieveHits)) continue;
                 EntityS& target = entityListS_[t];
 
@@ -73,7 +73,7 @@ void Game::Update() {
                 if (!collision.isColliding)
                     continue;
 
-                vec3 planarForward = entityListS_[h].transform_.GetForwardVector();
+                vec3 planarForward = hitter.transform_.GetForwardVector();
                 planarForward.y = 0.0f;
                 planarForward = normalize(planarForward);
 
@@ -122,9 +122,9 @@ void Game::Update() {
         }
 
         for (int i = 0; i < 128; i++) {
-            if (!entityListS_.Valid(i)) continue;
-            entityListS_[i].lastTransform_ = entities_[i].entity.transform_;
-            switch(entities_[i].typeId) {
+            if (!entityListS_[i].alive_) continue;
+            entityListS_[i].lastTransform_ = entityListS_[i].transform_;
+            switch(entities_[i].entity.typeId_) {
                 #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.Update(); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
@@ -137,9 +137,9 @@ void Game::Update() {
     camera_.Update(entityListS_, inputs_);
 
     for (int i = 0; i < 128; i++) {
-        if (!entityListS_.Valid(i)) continue;
+        if (!entityListS_[i].alive_) continue;
         entityListS_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
-        switch(entities_[i].typeId) {
+        switch(entities_[i].entity.typeId_) {
             #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.RenderUpdate(); break;
             EXPANDENTITIES
             #undef ENTITYEXP

@@ -38,17 +38,17 @@ void RotateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     fromZero_ = false;
-    startRotation_ = entities_[target_.Get()].transform_.rotation;
+    startRotation_ = target_.Get()->transform_.rotation;
     EditorMode::OnStart();
 }
 
 void RotateMode::OnCancel() {
-    entities_[target_.Get()].transform_.rotation = startRotation_;
+    target_.Get()->transform_.rotation = startRotation_;
     EditorMode::OnCancel();
 }
 
 void RotateMode::Update() {
-    EntityS& entity = entities_[target_.Get()];
+    EntityS* entity = target_.Get();
     if (platform_.pressedKeys_['0']) {
         deltaX_ = 0.0f;
         deltaY_ = 0.0f;
@@ -81,23 +81,23 @@ void RotateMode::Update() {
 
     switch(submode_) {
         case RS_Free:
-            entity.transform_.rotation = angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            entity->transform_.rotation = angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation;
             break;
 
         case RS_X:
-            entity.transform_.rotation = angleAxis(deltaX_, planarCameraForward) * referenceRotation;
+            entity->transform_.rotation = angleAxis(deltaX_, planarCameraForward) * referenceRotation;
             break;
 
         case RS_Y:
-            entity.transform_.rotation = angleAxis(deltaX_, Transform::worldUp) * referenceRotation;
+            entity->transform_.rotation = angleAxis(deltaX_, Transform::worldUp) * referenceRotation;
             break;
 
         case RS_Z:
-            entity.transform_.rotation = angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            entity->transform_.rotation = angleAxis(deltaY_, planarCameraRight) * referenceRotation;
             break;
 
         case RS_Roll:
-            entity.transform_.rotation = angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation;
+            entity->transform_.rotation = angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation;
             break;
     }
 }

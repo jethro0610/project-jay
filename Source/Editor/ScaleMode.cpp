@@ -32,13 +32,13 @@ void ScaleMode::OnStart() {
     deltaY_ = 0.0f;
     submode_ = SS_Uniform;
     fromZero_ = false;
-    startScale_ = entities_[target_.Get()].transform_.scale;
+    startScale_ = target_.Get()->transform_.scale;
 
     EditorMode::OnStart();
 }
 
 void ScaleMode::OnCancel() {
-    entities_[target_.Get()].transform_.scale = startScale_;
+    target_.Get()->transform_.scale = startScale_;
 }
 
 void ScaleMode::SetSubmode(ScaleSubmode submode) {
@@ -50,7 +50,7 @@ void ScaleMode::SetSubmode(ScaleSubmode submode) {
 }
 
 void ScaleMode::Update() {
-    EntityS& entity = entities_[target_.Get()];
+    EntityS* entity = target_.Get();
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
     float delta = deltaX_ + deltaY_;
@@ -72,21 +72,21 @@ void ScaleMode::Update() {
 
     switch (submode_) {
         case SS_Uniform:
-            entity.transform_.scale.x = referenceScale.x + delta;
-            entity.transform_.scale.y = referenceScale.y + delta;
-            entity.transform_.scale.z = referenceScale.z + delta;
+            entity->transform_.scale.x = referenceScale.x + delta;
+            entity->transform_.scale.y = referenceScale.y + delta;
+            entity->transform_.scale.z = referenceScale.z + delta;
             break;
 
         case SS_Planar:
-            entity.transform_.scale.x = referenceScale.x + delta;
-            entity.transform_.scale.y = referenceScale.y;
-            entity.transform_.scale.z = referenceScale.x + delta;
+            entity->transform_.scale.x = referenceScale.x + delta;
+            entity->transform_.scale.y = referenceScale.y;
+            entity->transform_.scale.z = referenceScale.x + delta;
             break;
 
         case SS_Vertical:
-            entity.transform_.scale.x = referenceScale.x;
-            entity.transform_.scale.y = referenceScale.y + delta;
-            entity.transform_.scale.z = referenceScale.z;
+            entity->transform_.scale.x = referenceScale.x;
+            entity->transform_.scale.y = referenceScale.y + delta;
+            entity->transform_.scale.z = referenceScale.z;
             break;
     }
 }

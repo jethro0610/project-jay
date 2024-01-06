@@ -35,20 +35,21 @@ void CloneMode::SetSubmode(CloneMode::CloneSubmode submode) {
 void CloneMode::OnStart() {
     EditorMode::OnStart();
     original_ = target_.Get();
-    originalTransform_ = entities_[original_].transform_;
+    originalTransform_ = original_->transform_;
 
-    EntityIDS createdEntity = entities_.CreateEntity(entities_.GetTypeID(original_));
-    entities_[createdEntity].transform_ = originalTransform_;
-    target_.Set(createdEntity);
+    EntityS& createdEntity = entities_.CreateEntity(original_->typeId_);
+    createdEntity.transform_ = originalTransform_;
+    target_.Set(&createdEntity);
 }
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    entities_.DestroyEntity(target_.Get());
+    target_.Get()->destroy_ = true;
     target_.Set(original_);
 }
 
 void CloneMode::Update() {
+    EntityS* entity = target_.Get(); 
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -65,28 +66,27 @@ void CloneMode::Update() {
     planarCameraRight.y = 0.0f;
     planarCameraRight = normalize(planarCameraRight);
 
-    EntityS& entity = entities_[target_.Get()]; 
     switch (submode_) {
         case CS_Planar:
-            entity.transform_.position =
+            entity->transform_.position =
                 originalTransform_.position +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
             break;
 
         case CS_Terrain:
-            entity.transform_.position =
+            entity->transform_.position =
                 originalTransform_.position +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            entity.transform_.position.y = terrain_.GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
+            entity->transform_.position.y = terrain_.GetHeight(vec2(entity->transform_.position.x, entity->transform_.position.z));
             break;
     }
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    EntityIDS createdEntity = entities_.CreateEntity(entities_.GetTypeID(target_.Get()));
-    entities_[createdEntity].transform_ = entities_[target_.Get()].transform_;
+    EntityS& createdEntity = entities_.CreateEntity(target_.Get()->typeId_);
+    createdEntity.transform_ = target_.Get()->transform_;
 
     return CB_Stay;
 }

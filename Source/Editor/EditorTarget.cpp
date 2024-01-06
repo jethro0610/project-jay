@@ -5,21 +5,18 @@
 EditorTarget::EditorTarget(EntityListS& entities):
 entities_(entities)
 {
-    target_ = NULL_ENTITY;
+    target_ = nullptr;
 }
 
-void EditorTarget::Set(EntityIDS target) {
+void EditorTarget::Set(EntityS* target) {
     // Deselect the current target
-    if (target_ != NULL_ENTITY)
-        entities_[target_].DBG_selected_ = false;
+    if (target_ != nullptr)
+        target_->DBG_selected_ = false;
 
     // Select the new target
-    if (target != NULL_ENTITY) {
-        entities_[target].DBG_selected_ = true;
-        #define ENTITYEXP(TYPE, VAR) TYPE VAR;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-        text_ = std::string(entities_.GetName(target)) + '(' + std::to_string(target) + ')';
+    if (target != nullptr) {
+        target->DBG_selected_ = true;
+        text_ = std::string(target_->DBG_name_) + '(' + std::to_string(target_->DBG_index_) + ')';
     }
     else
         text_ = "";

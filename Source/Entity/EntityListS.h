@@ -18,12 +18,7 @@ public:
     );
 
     EntityS& operator[](int index);
-
-    EntityIDS CreateEntity(EntityS::TypeID type);
-    void DestroyEntity(EntityIDS entityId);
-    bool Valid(int entityId) { return available_[entityId] == -1; }
-    EntityS::TypeID GetTypeID(EntityIDS entityId);
-    const char* GetName(EntityIDS entityId);
+    EntityS& CreateEntity(EntityS::TypeID type);
 
 private:
     int available_[128];

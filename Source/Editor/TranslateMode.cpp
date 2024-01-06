@@ -33,13 +33,13 @@ void TranslateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = TS_Planar;
-    startPosition_ = entities_[target_.Get()].transform_.position;
+    startPosition_ = target_.Get()->transform_.position;
 
     EditorMode::OnStart();
 }
 
 void TranslateMode::OnCancel() {
-    entities_[target_.Get()].transform_.position = startPosition_;
+    target_.Get()->transform_.position = startPosition_;
 }
 
 void TranslateMode::SetSubmode(TranslateSubmode submode) {
@@ -55,7 +55,7 @@ void TranslateMode::SetSubmode(TranslateSubmode submode) {
 }
 
 void TranslateMode::Update() {
-    EntityS& entity = entities_[target_.Get()];
+    EntityS* entity = target_.Get();
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -76,22 +76,22 @@ void TranslateMode::Update() {
 
     switch (submode_) {
         case TS_Planar:
-            entity.transform_.position =
+            entity->transform_.position =
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
             break;
 
         case TS_Vertical:
-            entity.transform_.position = startPosition_ + Transform::worldUp * deltaY_;
+            entity->transform_.position = startPosition_ + Transform::worldUp * deltaY_;
             break;
 
         case TS_Terrain:
-            entity.transform_.position =
+            entity->transform_.position =
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            entity.transform_.position.y = terrain_.GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
+            entity->transform_.position.y = terrain_.GetHeight(vec2(entity->transform_.position.x, entity->transform_.position.z));
             break;
     }
 }

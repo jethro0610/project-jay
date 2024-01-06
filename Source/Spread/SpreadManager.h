@@ -1,11 +1,12 @@
 #pragma once
-#include "Entity/EntityIDS.h"
 #include "SpreadKey.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 #include <unordered_set>
 #include <vector_contig.h>
+
+class EntityS;
 class Terrain;
 class SeedManager;
 class TransformComponent;
@@ -39,13 +40,13 @@ public:
 
     bool RemoveSpread(
         const glm::vec3& position, 
-        EntityIDS remover = NULL_ENTITY, 
+        EntityS* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
-        EntityIDS remover = NULL_ENTITY, 
+        EntityS* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     ); 
     void UpdateRenderData_P();
@@ -65,7 +66,7 @@ private:
     bool AddSpread(const SpreadKey& key); 
     bool RemoveSpread(
         const SpreadKey& key,
-        EntityIDS remover = NULL_ENTITY,
+        EntityS* remover = nullptr,
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
 

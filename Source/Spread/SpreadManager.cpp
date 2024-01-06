@@ -108,7 +108,7 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
 
 bool SpreadManager::RemoveSpread(
     const SpreadKey& key, 
-    EntityIDS remover,
+    EntityS* remover,
     const vec3& seedOffset
 ) {
     auto foundKey = keyIndices_.find(key);
@@ -134,7 +134,7 @@ bool SpreadManager::RemoveSpread(
 
 bool SpreadManager::RemoveSpread(
     const vec3& position, 
-    EntityIDS remover,
+    EntityS* remover,
     const vec3& seedOffset
 ) {
     SpreadKey key = GetKey(position);
@@ -144,7 +144,7 @@ bool SpreadManager::RemoveSpread(
 int SpreadManager::RemoveSpread(
     const vec3& position, 
     int radius, 
-    EntityIDS remover,
+    EntityS* remover,
     const vec3& seedOffset
 ) {
     int count = 0;

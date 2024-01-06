@@ -6,7 +6,6 @@
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
-#include "EntityIDS.h"
 #include <inttypes.h>
 
 class Camera;
@@ -19,6 +18,7 @@ class ParticleEmitter;
 
 class EntityS {
 public:
+    static constexpr int MAX_NAME = 32;
     typedef int TypeID;
 
     struct InitArgs {
@@ -54,6 +54,9 @@ public:
     static constexpr TypeID GetTypeID() { return 0; };
     static constexpr const char* GetName() { return "e_base"; }
 
+    TypeID typeId_;
+    bool alive_;
+    bool destroy_;
     uint32_t flags_; 
 
     Transform transform_;
@@ -90,6 +93,8 @@ public:
     #ifdef _DEBUG
     Collider DBG_collider_;
     bool DBG_selected_;
+    char DBG_name_[MAX_NAME];
+    int DBG_index_;
     #endif
 
     void SetFlag(Flag flag, bool enable);

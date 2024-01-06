@@ -14,7 +14,7 @@ EditorMode(args) {
 }
 
 void FindMode::OnStart() {
-    lastFind_ = 0;
+    lastFindIndex_ = 0;
     textInput_.SetLabel("e_"); 
     EditorMode::OnStart();
 }
@@ -32,12 +32,12 @@ ConfirmBehavior FindMode::OnConfirm() {
 
     bool found = false;
     for (int i = 0; i < 128; i++) {
-        int e = (i + lastFind_ + 1) % 128;
-        if (!entities_.Valid(e)) continue;
+        int e = (i + lastFindIndex_ + 1) % 128;
+        if (!entities_[e].alive_) continue;
         
-        if (entities_.GetName(e) == entityName) {
-            lastFind_ = e;
-            target_.Set(e);
+        if (entities_[e].DBG_name_ == entityName) {
+            lastFindIndex_ = e;
+            target_.Set(&entities_[e]);
             camera_.transform_.position = 
                 entities_[e].transform_.position - 
                 camera_.transform_.GetForwardVector() * 35.0f;

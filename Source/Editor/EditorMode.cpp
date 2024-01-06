@@ -28,7 +28,7 @@ void EditorMode::OnStart() {
 }
 
 bool EditorMode::CanSwitch(bool holdingCtrl) const {
-    if (requiresTarget_ && target_.Get() == NULL_ENTITY)
+    if (requiresTarget_ && target_.Get() == nullptr)
         return false;
 
     if (requiresLevel_ && !level_.hasLevel_)

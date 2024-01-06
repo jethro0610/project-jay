@@ -1,7 +1,7 @@
 #pragma once
 #include "Types/Transform.h"
 #include "Collision/Collider.h"
-#include "Collision/HitboxS.h"
+#include "Collision/Hitbox.h"
 #include "Rendering/Bone.h"
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
@@ -84,7 +84,7 @@ public:
     float transitionLength_;
 
     Collider pushbox_;
-    HitboxS hitbox_;
+    Hitbox hitbox_;
     Collider hurtbox_;
     bool stun_;
     bool initHitlag_;

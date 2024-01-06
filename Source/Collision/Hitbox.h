@@ -2,7 +2,7 @@
 #include "Collider.h"
 #include <glm/vec3.hpp>
 
-struct HitboxS : public Collider {
+struct Hitbox : public Collider {
     bool active;
     glm::vec3 knocback;
     float forwardRange;

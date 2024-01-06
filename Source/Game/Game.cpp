@@ -122,10 +122,6 @@ void Game::Update() {
             hit.target->velocity_ = finalKBQuat * Transform::worldForward * kbLength;
             hit.target->velocity_.y = hit.hitter->hitbox_.knocback.y;
 
-            // hit.target->velocity_ = 
-            //     normalizeRes * hit.hitter->hitbox_.horizontalKb + 
-            //     Transform::worldUp * hit.hitter->hitbox_.verticalKb;
-
             vec3 planarVelocity = hit.target->velocity_;
             planarVelocity.y = 0.0f;
             if (hit.target->GetFlag(Entity::EF_HurtFaceForward))

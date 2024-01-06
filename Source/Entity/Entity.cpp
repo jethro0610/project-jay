@@ -48,6 +48,9 @@ void Entity::Init(
     pushbox_ = {};
     hitbox_ = {};
     hurtbox_ = {};
+    stun_ = false;
+    hitlag_ = 0;
+    hurtCooldown_ = 0;
 }
 
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
@@ -66,7 +69,7 @@ bool Entity::GetFlag(Entity::Flag flag) {
 void Entity::BaseUpdate() {
     bool useVelocity = GetFlag(EF_UseVelocity);
 
-    if (!skipGroundCheck_ && GetFlag(EF_GroundCheck)) {
+    if (hitlag_ == 0 && !skipGroundCheck_ && GetFlag(EF_GroundCheck)) {
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
@@ -83,16 +86,13 @@ void Entity::BaseUpdate() {
         }
     }
 
-    if (velocity_.y < 0.0f)
+    if (hitlag_ == 0 && velocity_.y < 0.0f)
         skipGroundCheck_ = false;
 
-    if (useVelocity)
+    if (hitlag_ == 0 && useVelocity)
         transform_.position += velocity_ * GlobalTime::TIMESTEP;
 
-    if (GetFlag(EF_UseSkeleton)) {
-        animTime_ += GlobalTime::TIMESTEP;
-        prevAnimTime_ += GlobalTime::TIMESTEP;
-
+    if ((hitlag_ == 0 || initHitlag_) && GetFlag(EF_UseSkeleton)) {
         int prevAnimFramerate = skeleton_->GetFramerate(prevAnimIndex_);
         int curAnimFramerate = skeleton_->GetFramerate(animIndex_);
         int framerate = transitionTime_ < transitionLength_ ? 
@@ -119,15 +119,26 @@ void Entity::BaseUpdate() {
                 transform_,
                 lastTransform_
             );
-            transitionTime_ += GlobalTime::TIMESTEP;
         }
 
         int frame = floor(animTime_ * 60.0f);
-        int framesTillUpate = 60 / framerate;
+        int framesTillUpate = 60 / max(framerate, 1);
 
         if (frame % framesTillUpate == 0)
             renderPose_ = pose_;
+
+        animTime_ += GlobalTime::TIMESTEP;
+        prevAnimTime_ += GlobalTime::TIMESTEP;
+        transitionTime_ += GlobalTime::TIMESTEP;
     }
+
+    if (hitlag_ != 0)
+        hitlag_--;
+
+    if (hitlag_ == 0 && hurtCooldown_ > 0)
+        hurtCooldown_--;
+
+    initHitlag_ = false;
 }
 
 void Entity::BaseRenderUpdate(float interpTime) {
@@ -140,6 +151,12 @@ void Entity::BaseRenderUpdate(float interpTime) {
     }
     else
         renderTransform_ = transform_;
+    
+    if (hitlag_ > 0 && stun_) {
+        renderTransform_.position.x += pow(sin(GlobalTime::GetTime() * 100.0f + 8.0f), 2.0f) * 0.5f;
+        renderTransform_.position.y += pow(sin(GlobalTime::GetTime() * 100.0f + 16.0f), 2.0f) * 0.5f;
+        renderTransform_.position.z += pow(sin(GlobalTime::GetTime() * 100.0f + 32.0f), 2.0f) * 0.5f;
+    }
 }
 
 void Entity::ChangeAnimation(int index, float transitionLength) {

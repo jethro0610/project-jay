@@ -16,12 +16,15 @@ void Player::Init(Entity::InitArgs args)
 
     PlayerMoveMode moveMode_ = MM_Default;
     float speed_ = MIN_SPEED;
+    attackActiveTimer_ = ATTACK_TIME;
+    attackCharge_ = 0;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);
+    SetFlag(EF_SendHits, true);
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_RecieveKnockback, true);
     SetFlag(EF_HurtFaceForward, true);
@@ -46,8 +49,14 @@ void Player::Init(Entity::InitArgs args)
     spinEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_spark"));
     slopeEmitter_ = particleManager.RequestEmitter(resourceManager.GetEmitterProperties("p_cloud"));
 
+    hitbox_.radius = 2.0f;
+    hitbox_.top = 2.0f;
+    hitbox_.bottom = 2.0f;
+    hitbox_.active = false;
+
     hurtbox_.radius = 2.0f;
     hurtbox_.top = 1.0f;
+    ChangeAnimation(0, 0.35f);
 }
 
 void Player::Update() {
@@ -55,9 +64,32 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
+    if (inputs_->attack && attackCharge_ < MAX_CHARGE)
+        attackCharge_++;
+    else if (attackCharge_ != 0) {
+        attackCharge_ = 0;
+        attackActiveTimer_ = 0;
+    }
+
+    if (attackActiveTimer_ < ATTACK_TIME) {
+        if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE)
+            hitbox_.active = true;
+        else 
+            hitbox_.active = false;
+        attackActiveTimer_++;
+    }
+    else
+        hitbox_.active = false;
+
     moveMode_ = MM_Default;
     if (stun_) {
         moveMode_ = MM_Stun;
+    }
+    else if (attackActiveTimer_ < ATTACK_TIME) {
+        moveMode_ = MM_Attack;
+    }
+    else if (attackCharge_ != 0) {
+        moveMode_ = MM_Attack;
     }
     else if (inputs_->flow) {
         spinEmitter_->active_ = true;
@@ -172,17 +204,43 @@ void Player::Update() {
             break;
     }
 
-    if (onGround_)
+    planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+    if (attackCharge_ < STRONG_CHARGE_THRESH) {
+        hitbox_.knocback = planarVelocity * 0.95f;
+        hitbox_.knocback.y = 35.0f;
+        hitbox_.hitlag = 3;
+        hitbox_.diStrength = 0.75f;
+    }
+    else {
+        hitbox_.knocback = planarVelocity * 1.5f;
+        hitbox_.knocback.y = 35.0f;
+        hitbox_.hitlag = 4;
+        hitbox_.diStrength = 0.25f;
+    }
+
+    if (onGround_ && stun_) {
         stun_ = false;
+        // velocity_ *= 0.5f;
+    }
 
     int animation = 0;
     float transitionLength = 0.35f;
-    if (moveLength > 0.0f)
-        animation = 1;
-    if (moveMode_ == MM_Spin)
+    if (stun_) {
+        animation = 7;
+        transitionLength = 0.15f;
+    }
+    else if (attackActiveTimer_ < ATTACK_TIME) {
+        animation = 4;
+        transitionLength = 0.0f;
+    }
+    else if (attackCharge_ > 0) 
+        animation = 5;
+    else if (moveMode_ == MM_Spin)
         animation = 3;
     else if (moveMode_ == MM_Slope)
         animation = 2;
+    else if (moveLength > 0.0f)
+        animation = 1;
 
     if (animation != animIndex_)
         ChangeAnimation(animation, transitionLength);
@@ -192,4 +250,10 @@ void Player::RenderUpdate() {
     speedEmtter_->transform_ = renderTransform_;
     spinEmitter_->transform_ = renderTransform_;
     slopeEmitter_->transform_ = renderTransform_;
+}
+
+void Player::OnHit() {}
+
+void Player::OnHurt() {
+    ChangeAnimation(6, 0.0f);
 }

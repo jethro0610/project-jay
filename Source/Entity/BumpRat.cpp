@@ -14,7 +14,10 @@ void BumpRat::Init(Entity::InitArgs args) {
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_SendHits, true);
-
+    SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_RecieveKnockback, true);
+    SetFlag(EF_HurtFaceBack, true);
+    
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_spinrat");
     skeleton_ = resourceManager.GetSkeleton("sk_spinrat");
@@ -32,43 +35,22 @@ void BumpRat::Init(Entity::InitArgs args) {
     hitbox_.radius = 4.0f;
     hitbox_.top = 2.0f;
     hitbox_.bottom = 0.0f;
-    hitbox_.horizontalKb = 65.0f;
-    hitbox_.verticalKb = 35.0f;
     hitbox_.active = true;
     hitbox_.hitlag = 6;
     hitbox_.forwardRange = 0.25f;
 
+    hurtbox_.radius = 6.0f;
+    hurtbox_.top = 16.0f;
+    hurtbox_.bottom = 0.0f;
+
     vec3 centerOffset = RandomVectorPlanar(100.0f);
     desiredMovement_ = normalize(centerOffset - vec3(transform_.position.x, 0.0f, transform_.position.z));
+    attackStartup_ = STARTUP_TIME;
 
-    ChangeAnimation(2, 0.0f);
+    ChangeAnimation(2, 0.35f);
 }
 
 void BumpRat::Update() {
-
-    // entity.emitters_[0]->active_ = false;
-    // if (groundTraceComponent.onGround[entityId])
-    //     entity.emitters_[0]->active_ = true;
-
-    // hitboxComponent.hitboxes[entityId][0].active = true;
-
-    // if (hurtboxComponent.hurt[entityId]) {
-    //     desiredMovement = -normalize(vec3(velocity.x, 0.0f, velocity.z));
-    //     skeletonComponent.nextAnimationIndex[entityId] = 5;
-    //     hitboxComponent.hitboxes[entityId][0].active = false;
-    // }
-    // else if (hurtboxComponent.stun[entityId]) {
-    //     skeletonComponent.nextAnimationIndex[entityId] = 4;
-    //     hitboxComponent.hitboxes[entityId][0].active = false;
-    //     return;
-    // }
-    // else if (hitboxComponent.hit[entityId]){
-    //     skeletonComponent.nextAnimationIndex[entityId] = 6;
-    // }
-    // else
-    //     skeletonComponent.nextAnimationIndex[entityId] = 2;
-
-
     float curDistance = terrain_->GetDistance(transform_.position).x;
     float forwardDistance = terrain_->GetDistance(transform_.position + desiredMovement_ * 10.0f).x;
 
@@ -79,14 +61,51 @@ void BumpRat::Update() {
         desiredMovement_ = normalize(centerOffset - vec3(transform_.position.x, 0.0f, transform_.position.z));
     }
 
-    velocity_.y -= 1.0f;
-    velocity_.x += desiredMovement_.x * ACCELERATION;
-    velocity_.z += desiredMovement_.z * ACCELERATION;
-    velocity_.x *= SPEED_DECAY;
-    velocity_.z *= SPEED_DECAY;
-    if (length(desiredMovement_) > 0.001f) {
-        quat rotation = quatLookAtRH(normalize(desiredMovement_), Transform::worldUp);
-        transform_.rotation = slerp(transform_.rotation, rotation, ROTATION_SPEED);
+    if (onGround_) {
+        if (stun_) {
+            stun_ = false;
+            desiredMovement_ = transform_.GetForwardVector();
+        }
+        if (attackStartup_ < STARTUP_TIME)
+            attackStartup_++;
     }
-    desiredMovement_ = vec3(0.0f);
+    else {
+        hitbox_.active = false;
+        attackStartup_ = 0;
+    }
+
+    if (attackStartup_ == STARTUP_TIME)
+        hitbox_.active = true;
+
+    velocity_.y -= 1.0f;
+    if (!stun_) {
+        velocity_.x += desiredMovement_.x * ACCELERATION;
+        velocity_.z += desiredMovement_.z * ACCELERATION;
+        velocity_.x *= SPEED_DECAY;
+        velocity_.z *= SPEED_DECAY;
+        if (length(desiredMovement_) > 0.001f) {
+            quat rotation = quatLookAtRH(normalize(desiredMovement_), Transform::worldUp);
+            transform_.rotation = slerp(transform_.rotation, rotation, ROTATION_SPEED);
+        }
+    }
+
+    hitbox_.knocback = transform_.GetForwardVector() * 65.0f;
+    hitbox_.knocback.y = 35.0f;
+
+    int animation = 2;
+    float transitionLength = 0.35f;
+    if (stun_) {
+        animation = 4;
+        transitionLength = 0.15f;
+    }
+    if (animation != animIndex_)
+        ChangeAnimation(animation, transitionLength);
+}
+
+void BumpRat::OnHit() {
+    ChangeAnimation(6, 0.0f);
+}
+
+void BumpRat::OnHurt() {
+    ChangeAnimation(5, 0.0f);
 }

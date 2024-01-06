@@ -12,9 +12,13 @@ public:
     static constexpr float SPEED_DECAY = 1.0f - FRICTION;
     static constexpr float ACCELERATION = ((SPEED / SPEED_DECAY) - SPEED);
     static constexpr float ROTATION_SPEED = 0.25f;
+    static constexpr int STARTUP_TIME = 10;
 
     glm::vec3 desiredMovement_;
+    int attackStartup_;
      
     void Update(); 
     void RenderUpdate() {};
+    void OnHit();
+    void OnHurt();
 };

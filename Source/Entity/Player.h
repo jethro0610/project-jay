@@ -30,10 +30,20 @@ public:
     static constexpr float SLOPE_DOWN_SCALING = 3.0f;
     static constexpr float SLOPE_UP_SCALING = 1.5f;
     static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.15f;
-    static constexpr float TRACE_DISTANCE = 1.0f;
+
+    static constexpr int MAX_CHARGE = 75;
+    static constexpr int STRONG_CHARGE_THRESH = 15;
+
+    static constexpr int ATTACK_STARTUP = 2;
+    static constexpr int ATTACK_ACTIVE = 13;
+    static constexpr int ATTACK_COOLDOWN = 10;
+    static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
 
     PlayerMoveMode moveMode_;
     float speed_;
+
+    int attackActiveTimer_;
+    int attackCharge_;
 
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;
@@ -41,4 +51,6 @@ public:
      
     void Update(); 
     void RenderUpdate();
+    void OnHit();
+    void OnHurt();
 };

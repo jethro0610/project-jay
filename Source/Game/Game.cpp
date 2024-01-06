@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "Time/Time.h"
 #include "Collision/Collision.h"
+#include "Logging/Logger.h"
 #include <glm/vec3.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <ctime>
 using namespace glm;
 
@@ -40,26 +42,22 @@ void Game::Update() {
         }
         #endif
 
-        for (int i = 0; i < 128; i++) {
-            if (!entities_[i].alive_) continue;
-            if (!entities_[i].GetFlag(Entity::EF_SendHits) && !entities_[i].GetFlag(Entity::EF_RecieveHits))
-                continue;
-        
-            entities_[i].hit_ = false;
-            entities_[i].hurt_ = false;
-        }
-
         vector_const<HitS, 128> hitList;
         for (int h = 0; h < 128; h++) {
             if (!entities_[h].alive_) continue;
-            if (!entities_[h].GetFlag(Entity::EF_SendHits))
-                continue;
+            if (!entities_[h].GetFlag(Entity::EF_SendHits)) continue;
+            if (!entities_[h].hitbox_.active) continue;
+            if (entities_[h].hitlag_ > 0) continue;
+            if (entities_[h].stun_) continue;
             Entity& hitter = entities_[h];
 
             for (int t = 0; t < 128; t++) {
                 if (h == t) continue;
                 if (!entities_[t].alive_) continue;
                 if (!entities_[t].GetFlag(Entity::EF_RecieveHits)) continue;
+                if (entities_[t].hitlag_ > 0) continue;
+                if (entities_[t].stun_) continue;
+                if (entities_[t].hurtCooldown_ > 0) continue;
                 Entity& target = entities_[t];
 
                 Collision collision = Collision::GetCollision(
@@ -90,18 +88,43 @@ void Game::Update() {
             // entities[hit.target].StartHitlag(hitbox.hitlag, true);
             // hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
             hit.target->stun_ = true;
-            hit.target->hurt_ = true;
-            hit.hitter->hit_ = true;
+            hit.target->hurtCooldown_ = 30;
             hit.target->skipGroundCheck_ = true;
             hit.target->onGround_ = false;
+            hit.target->initHitlag_ = true;
+            hit.target->hitlag_ = hit.hitter->hitbox_.hitlag;
+            hit.hitter->hitlag_ = hit.hitter->hitbox_.hitlag;
+            hit.hitter->initHitlag_ = true;
+
+            switch(hit.target->typeId_) {
+                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)hit.target)->OnHurt(); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
+
+            switch(hit.hitter->typeId_) {
+                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)hit.hitter)->OnHit(); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
 
             if (!hit.target->GetFlag(Entity::EF_RecieveKnockback))
                 continue;
 
             vec3 normalizeRes = normalize(hit.collision.resolution);
-            hit.target->velocity_ = 
-                normalizeRes * hit.hitter->hitbox_.horizontalKb + 
-                Transform::worldUp * hit.hitter->hitbox_.verticalKb;
+            vec3 planarKB = vec3(hit.hitter->hitbox_.knocback.x, 0.0f, hit.hitter->hitbox_.knocback.z);
+            float kbLength = length(planarKB);
+
+            quat kbQuat = quatLookAtRH(planarKB / kbLength, Transform::worldUp);
+            quat resQuat = quatLookAtRH(normalizeRes, Transform::worldUp);
+            quat finalKBQuat = slerp(kbQuat, resQuat, hit.hitter->hitbox_.diStrength);
+            
+            hit.target->velocity_ = finalKBQuat * Transform::worldForward * kbLength;
+            hit.target->velocity_.y = hit.hitter->hitbox_.knocback.y;
+
+            // hit.target->velocity_ = 
+            //     normalizeRes * hit.hitter->hitbox_.horizontalKb + 
+            //     Transform::worldUp * hit.hitter->hitbox_.verticalKb;
 
             vec3 planarVelocity = hit.target->velocity_;
             planarVelocity.y = 0.0f;
@@ -114,10 +137,12 @@ void Game::Update() {
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
             entities_[i].lastTransform_ = entities_[i].transform_;
-            switch(rawEntities_[i].entity.typeId_) {
-                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.Update(); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
+            if (entities_[i].hitlag_ == 0) {
+                switch(rawEntities_[i].entity.typeId_) {
+                    #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.Update(); break;
+                    EXPANDENTITIES
+                    #undef ENTITYEXP
+                }
             }
             entities_[i].BaseUpdate();
         }

@@ -86,9 +86,10 @@ public:
     Collider pushbox_;
     HitboxS hitbox_;
     Collider hurtbox_;
-    bool hurt_;
-    bool hit_;
     bool stun_;
+    bool initHitlag_;
+    int hitlag_;
+    int hurtCooldown_;
 
     #ifdef _DEBUG
     Collider DBG_collider_;
@@ -106,6 +107,9 @@ public:
     void BaseRenderUpdate(float interpTime);
     void RenderUpdate() {};
     void ChangeAnimation(int index, float transitionLength);
+
+    void OnHit() {};
+    void OnHurt() {};
 
     Camera* camera_;
     Inputs* inputs_;

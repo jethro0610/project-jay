@@ -1,6 +1,6 @@
 #include "FindMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "EditorTarget.h"

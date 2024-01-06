@@ -8,7 +8,7 @@
 #include <glm/gtx/hash.hpp>
 #include <FastNoiseLite.h>
 
-class EntityListS;
+class EntityList;
 class LevelProperties;
 class ResourceManager;
 
@@ -44,7 +44,7 @@ public:
     void GenerateTerrainMap(
         const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
         const BlobProperties& blob,
-        EntityListS& entities
+        EntityList& entities
     );
     void GenerateTerrainMapSection(
         const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,

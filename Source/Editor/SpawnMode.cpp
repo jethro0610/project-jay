@@ -1,6 +1,6 @@
 #include "SpawnMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Level/LevelLoader.h"
 #include "Resource/DependencyList.h"
 #include "EditorTextInput.h"

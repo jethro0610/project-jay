@@ -5,7 +5,7 @@
 #include <nlohmann/json.hpp>
 
 EditorLevel::EditorLevel(
-    EntityListS& entities,
+    EntityList& entities,
     LevelLoader& levelLoader,
     LevelProperties& properties,
     ResourceManager& resourceManager,

@@ -9,7 +9,7 @@
 #include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
 
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Entity/EntityUnion.h"
 
 #ifdef _PC
@@ -41,8 +41,8 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
 
-    EntityUnion entities_[128];
-    EntityListS entityListS_;
+    EntityUnion rawEntities_[128];
+    EntityList entities_;
 
     #ifdef _DEBUG
     Editor editor_;

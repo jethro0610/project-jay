@@ -25,10 +25,10 @@ Game::Game():
     camera_(14.0f),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
-    entityListS_(entities_, particleManager_, resourceManager_, camera_, inputs_, terrain_),
+    entities_(rawEntities_, particleManager_, resourceManager_, camera_, inputs_, terrain_),
     editor_(
         camera_, 
-        entityListS_, 
+        entities_, 
         inputs_, levelLoader_, 
         levelProperties_, 
         platform_, 

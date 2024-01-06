@@ -1,8 +1,8 @@
 #include "EditorTarget.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Entity/EntityUnion.h"
 
-EditorTarget::EditorTarget(EntityListS& entities):
+EditorTarget::EditorTarget(EntityList& entities):
 entities_(entities)
 {
     target_ = nullptr;

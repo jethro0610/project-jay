@@ -9,7 +9,7 @@ using namespace glm;
 
 Editor::Editor(
     Camera& camera, 
-    EntityListS& entities, 
+    EntityList& entities, 
     Inputs& inputs,
     LevelLoader& levelLoader,
     LevelProperties& levelProperties,

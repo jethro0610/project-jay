@@ -1,6 +1,6 @@
 #include "TranslateMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
 #include "EditorTarget.h"

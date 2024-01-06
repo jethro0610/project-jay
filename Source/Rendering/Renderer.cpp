@@ -9,7 +9,7 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 }
 
 void Renderer::Render(
-    EntityListS& entities,
+    EntityList& entities,
     LevelProperties& levelProperties,
     ParticleManager& particleManager, 
     SeedManager& seedManager,
@@ -32,7 +32,7 @@ void Renderer::Render(
 }
 
 void Renderer::RenderEdit(
-    EntityListS& entities,
+    EntityList& entities,
     Editor& editor,
     LevelProperties& levelProperties,
     Terrain& terrain 

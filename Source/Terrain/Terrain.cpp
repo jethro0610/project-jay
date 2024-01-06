@@ -3,7 +3,7 @@
 #include "Logging/Logger.h"
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
 #include <thread>
@@ -60,7 +60,7 @@ void Terrain::GenerateTerrainMap(
 void Terrain::GenerateTerrainMap(
     const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
     const BlobProperties& blob,
-    EntityListS& entities
+    EntityList& entities
 ) {
     vector_const<EntityS*, 128> entitiesToRespoition;
     for (int i = 0; i < 128; i++) {

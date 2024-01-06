@@ -3,13 +3,12 @@
 #include <glm/mat4x4.hpp>
 #include "Types/Transform.h"
 #include "Types/Inputs.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 class TransformComponent;
 
 class Camera {
 public:
     Camera(float trackDistance, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
-    Camera(float trackDistance, EntityS* target);
     Transform transform_;
     glm::vec3 smoothTrackPosition_;
     
@@ -19,7 +18,7 @@ public:
     EntityS* target_;
     float trackDistance_;
 
-    void Update(EntityListS& entities, Inputs& inputs);
+    void Update(EntityList& entities, Inputs& inputs);
     void Update(Inputs& inputs);
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetViewOnlyMatrix() const;

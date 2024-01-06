@@ -23,7 +23,7 @@ class Editor {
 public:
     Editor(
         Camera& camera, 
-        EntityListS& entities,
+        EntityList& entities,
         Inputs& inputs,
         LevelLoader& levelLoader,
         LevelProperties& levelProperties,
@@ -54,7 +54,7 @@ private:
 
 
     Camera& camera_;
-    EntityListS& entities_;
+    EntityList& entities_;
     Inputs& inputs_;
     LevelLoader& levelLoader_;
     LevelProperties& levelProperties_;

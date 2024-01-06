@@ -255,7 +255,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
 
 
 void Renderer::RenderEntitiesS(
-    EntityListS& entities
+    EntityList& entities
 ) {
     GPUPose pose;
     mat4 matrix;
@@ -357,7 +357,7 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
 }
 
-void Renderer::RenderUI(EntityListS& entities) {
+void Renderer::RenderUI(EntityList& entities) {
     // bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
     //
     // vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 

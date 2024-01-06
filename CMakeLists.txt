@@ -9,10 +9,10 @@ set(CMAKE_BUILD_TYPE Debug)
 project(ProjectJay)
 
 file(GLOB SOURCES
+    Source/Entity/EntityList.cpp
     Source/Entity/EntityS.cpp
     Source/Entity/Player.cpp
     Source/Entity/BumpRat.cpp
-    Source/Entity/EntityListS.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp

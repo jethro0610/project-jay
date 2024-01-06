@@ -12,13 +12,13 @@ void Game::Init() {
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
-    camera_.target_ = &entities_[0].entity;
+    camera_.target_ = &entities_[0];
 
-    entityListS_.CreateEntity(Player::GetTypeID());
-    entityListS_[0].transform_.position = vec3(0.0f, 10.0f, 0.0f);
+    EntityS& player = entities_.CreateEntity(Player::GetTypeID());
+    player.transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
-    entityListS_.CreateEntity(BumpRat::GetTypeID());
-    entityListS_[1].transform_.position = vec3(10.0f, 10.0f, 10.0f);
+    EntityS& rat = entities_.CreateEntity(BumpRat::GetTypeID());
+    rat.transform_.position = vec3(10.0f, 10.0f, 10.0f);
 
     #ifdef _DEBUG
     editor_.StartEditing();
@@ -43,26 +43,26 @@ void Game::Update() {
         #endif
 
         for (int i = 0; i < 128; i++) {
-            if (!entityListS_[i].alive_) continue;
-            if (!entityListS_[i].GetFlag(EntityS::EF_SendHits) && !entities_[i].entity.GetFlag(EntityS::EF_RecieveHits))
+            if (!entities_[i].alive_) continue;
+            if (!entities_[i].GetFlag(EntityS::EF_SendHits) && !entities_[i].GetFlag(EntityS::EF_RecieveHits))
                 continue;
         
-            entityListS_[i].hit_ = false;
-            entityListS_[i].hurt_ = false;
+            entities_[i].hit_ = false;
+            entities_[i].hurt_ = false;
         }
 
         vector_const<HitS, 128> hitList;
         for (int h = 0; h < 128; h++) {
-            if (!entityListS_[h].alive_) continue;
-            if (!entityListS_[h].GetFlag(EntityS::EF_SendHits))
+            if (!entities_[h].alive_) continue;
+            if (!entities_[h].GetFlag(EntityS::EF_SendHits))
                 continue;
-            EntityS& hitter = entityListS_[h];
+            EntityS& hitter = entities_[h];
 
             for (int t = 0; t < 128; t++) {
                 if (h == t) continue;
-                if (!entityListS_[t].alive_) continue;
-                if (!entityListS_[t].GetFlag(EntityS::EF_RecieveHits)) continue;
-                EntityS& target = entityListS_[t];
+                if (!entities_[t].alive_) continue;
+                if (!entities_[t].GetFlag(EntityS::EF_RecieveHits)) continue;
+                EntityS& target = entities_[t];
 
                 Collision collision = Collision::GetCollision(
                     hitter.transform_, 
@@ -122,25 +122,25 @@ void Game::Update() {
         }
 
         for (int i = 0; i < 128; i++) {
-            if (!entityListS_[i].alive_) continue;
-            entityListS_[i].lastTransform_ = entityListS_[i].transform_;
-            switch(entities_[i].entity.typeId_) {
-                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.Update(); break;
+            if (!entities_[i].alive_) continue;
+            entities_[i].lastTransform_ = entities_[i].transform_;
+            switch(rawEntities_[i].entity.typeId_) {
+                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.Update(); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }
-            entityListS_[i].BaseUpdate();
+            entities_[i].BaseUpdate();
         }
 
         timeAccumlulator_ -= GlobalTime::TIMESTEP;
     }
-    camera_.Update(entityListS_, inputs_);
+    camera_.Update(entities_, inputs_);
 
     for (int i = 0; i < 128; i++) {
-        if (!entityListS_[i].alive_) continue;
-        entityListS_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
-        switch(entities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): entities_[i].VAR.RenderUpdate(); break;
+        if (!entities_[i].alive_) continue;
+        entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
+        switch(rawEntities_[i].entity.typeId_) {
+            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.RenderUpdate(); break;
             EXPANDENTITIES
             #undef ENTITYEXP
         }
@@ -148,7 +148,7 @@ void Game::Update() {
     particleManager_.Update(GlobalTime::GetDeltaTime());
 
     renderer_.Render(
-        entityListS_, 
+        entities_, 
         levelProperties_,
         particleManager_,
         seedManager_,

@@ -2,16 +2,16 @@
 #include "Text/Text.h"
 
 class EntityS;
-class EntityListS;
+class EntityList;
 
 class EditorTarget {
 public:
-    EditorTarget(EntityListS& entities);
+    EditorTarget(EntityList& entities);
     void Set(EntityS* target);
     EntityS* Get() const { return target_; };
     Text text_;
 
 private:
-    EntityListS& entities_;
+    EntityList& entities_;
     EntityS* target_; 
 };

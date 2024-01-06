@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-class EntityListS;
+class EntityList;
 class LevelLoader;
 class LevelProperties;
 class ResourceManager;
@@ -10,7 +10,7 @@ class Terrain;
 class EditorLevel {
 public:
     EditorLevel(
-        EntityListS& entities,
+        EntityList& entities,
         LevelLoader& levelLoader,
         LevelProperties& levelProperties,
         ResourceManager& resourceManager,
@@ -28,7 +28,7 @@ public:
     void Reset(const std::string& resetSuffix = "");
 
 private:
-    EntityListS& entities_;
+    EntityList& entities_;
     LevelLoader& levelLoader_;
     ResourceManager& resourceManager_;
     Terrain& terrain_;

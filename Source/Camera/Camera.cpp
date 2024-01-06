@@ -28,7 +28,7 @@ mat4 Camera::GetViewOnlyMatrix() const {
     );
 }
 
-void Camera::Update(EntityListS& entities, Inputs& inputs) {
+void Camera::Update(EntityList& entities, Inputs& inputs) {
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ += inputs.deltaLookY;

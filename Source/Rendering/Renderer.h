@@ -4,7 +4,7 @@
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Text/Text.h"
 #include <array>
 #include <glm/mat4x4.hpp>
@@ -31,7 +31,7 @@ public:
     Camera* camera_;
 
     void Render(
-        EntityListS& entities,
+        EntityList& entities,
         LevelProperties& levelProperties,
         ParticleManager& particleManager,
         SeedManager& seedManager,
@@ -40,7 +40,7 @@ public:
     );
 
     void RenderEdit(
-        EntityListS& entities,
+        EntityList& entities,
         Editor& editor,
         LevelProperties& levelProperties,
         Terrain& terrain
@@ -135,7 +135,7 @@ private:
         float maxRadius
     );
     void RenderEntitiesS(
-        EntityListS& entities
+        EntityList& entities
     );
     void RenderSpread(
         SpreadManager& spreadManager, 
@@ -146,7 +146,7 @@ private:
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();
-    void RenderUI(EntityListS& entities);
+    void RenderUI(EntityList& entities);
     void RenderText(Text& text);
     void RenderEditor(Editor& editor);
     #ifdef _DEBUG

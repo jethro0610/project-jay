@@ -1,5 +1,5 @@
 #include "ScaleMode.h"
-#include "Entity/EntityListS.h"
+#include "Entity/EntityList.h"
 #include "Platform/PC_Platform.h"
 #include "EditorTarget.h"
 using namespace glm;

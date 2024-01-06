@@ -1,10 +1,10 @@
-#include "EntityS.h"
+#include "Entity.h"
 #include "Time/Time.h"
 #include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
 using namespace glm;
 
-void EntityS::Construct(
+void Entity::Construct(
     Camera& camera,
     Inputs& inputs,
     Terrain& terrain
@@ -14,8 +14,8 @@ void EntityS::Construct(
     terrain_ = &terrain;
 }
 
-void EntityS::Init(
-    EntityS::InitArgs args
+void Entity::Init(
+    Entity::InitArgs args
 ) {
     alive_ = true;
     destroy_ = false; 
@@ -50,7 +50,7 @@ void EntityS::Init(
     hurtbox_ = {};
 }
 
-void EntityS::SetFlag(EntityS::Flag flag, bool enable) {
+void Entity::SetFlag(Entity::Flag flag, bool enable) {
     uint32_t bit = 1UL << flag; 
 
     if (enable)
@@ -59,11 +59,11 @@ void EntityS::SetFlag(EntityS::Flag flag, bool enable) {
         flags_ &= ~bit;
 }
 
-bool EntityS::GetFlag(EntityS::Flag flag) {
+bool Entity::GetFlag(Entity::Flag flag) {
     return (flags_ & 1UL << flag); 
 }
 
-void EntityS::BaseUpdate() {
+void Entity::BaseUpdate() {
     bool useVelocity = GetFlag(EF_UseVelocity);
 
     if (GetFlag(EF_GroundCheck)) {
@@ -130,7 +130,7 @@ void EntityS::BaseUpdate() {
     }
 }
 
-void EntityS::BaseRenderUpdate(float interpTime) {
+void Entity::BaseRenderUpdate(float interpTime) {
     if (GetFlag(EF_Interpolate)) {
         renderTransform_ = Transform::Lerp(
             lastTransform_,
@@ -142,7 +142,7 @@ void EntityS::BaseRenderUpdate(float interpTime) {
         renderTransform_ = transform_;
 }
 
-void EntityS::ChangeAnimation(int index, float transitionLength) {
+void Entity::ChangeAnimation(int index, float transitionLength) {
     prevAnimIndex_ = index;
     animIndex_ = index; 
     prevAnimTime_ = animTime_;

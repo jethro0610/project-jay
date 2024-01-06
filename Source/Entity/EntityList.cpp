@@ -25,11 +25,11 @@ resourceManager_(resourceManager)
     availablePos_ = 0;
 }
 
-EntityS& EntityList::operator[](int index) {
+Entity& EntityList::operator[](int index) {
     return rawEntities_[index].entity;
 }
 
-EntityS& EntityList::CreateEntity(EntityS::TypeID typeId) {
+Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
     availablePos_++;
@@ -42,7 +42,7 @@ EntityS& EntityList::CreateEntity(EntityS::TypeID typeId) {
 
     #ifdef _DEBUG
     switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), EntityS::MAX_NAME); break;
+        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

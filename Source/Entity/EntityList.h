@@ -1,5 +1,5 @@
 #pragma once
-#include "EntityS.h"
+#include "Entity.h"
 #include <vector_holed.h>
 
 class EntityUnion;
@@ -17,8 +17,8 @@ public:
         Terrain& terrain
     );
 
-    EntityS& operator[](int index);
-    EntityS& CreateEntity(EntityS::TypeID type);
+    Entity& operator[](int index);
+    Entity& CreateEntity(Entity::TypeID type);
 
 private:
     int available_[128];

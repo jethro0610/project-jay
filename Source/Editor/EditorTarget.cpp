@@ -8,7 +8,7 @@ entities_(entities)
     target_ = nullptr;
 }
 
-void EditorTarget::Set(EntityS* target) {
+void EditorTarget::Set(Entity* target) {
     // Deselect the current target
     if (target_ != nullptr)
         target_->DBG_selected_ = false;

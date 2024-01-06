@@ -16,7 +16,7 @@ class Terrain;
 
 class ParticleEmitter;
 
-class EntityS {
+class Entity {
 public:
     static constexpr int MAX_NAME = 32;
     typedef int TypeID;

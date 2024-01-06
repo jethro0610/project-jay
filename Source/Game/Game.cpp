@@ -14,10 +14,10 @@ void Game::Init() {
 
     camera_.target_ = &entities_[0];
 
-    EntityS& player = entities_.CreateEntity(Player::GetTypeID());
+    Entity& player = entities_.CreateEntity(Player::GetTypeID());
     player.transform_.position = vec3(0.0f, 10.0f, 0.0f);
 
-    EntityS& rat = entities_.CreateEntity(BumpRat::GetTypeID());
+    Entity& rat = entities_.CreateEntity(BumpRat::GetTypeID());
     rat.transform_.position = vec3(10.0f, 10.0f, 10.0f);
 
     #ifdef _DEBUG
@@ -26,8 +26,8 @@ void Game::Init() {
 }
 
 struct HitS {
-    EntityS* hitter;
-    EntityS* target;
+    Entity* hitter;
+    Entity* target;
     Collision collision;
 };
 
@@ -44,7 +44,7 @@ void Game::Update() {
 
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
-            if (!entities_[i].GetFlag(EntityS::EF_SendHits) && !entities_[i].GetFlag(EntityS::EF_RecieveHits))
+            if (!entities_[i].GetFlag(Entity::EF_SendHits) && !entities_[i].GetFlag(Entity::EF_RecieveHits))
                 continue;
         
             entities_[i].hit_ = false;
@@ -54,15 +54,15 @@ void Game::Update() {
         vector_const<HitS, 128> hitList;
         for (int h = 0; h < 128; h++) {
             if (!entities_[h].alive_) continue;
-            if (!entities_[h].GetFlag(EntityS::EF_SendHits))
+            if (!entities_[h].GetFlag(Entity::EF_SendHits))
                 continue;
-            EntityS& hitter = entities_[h];
+            Entity& hitter = entities_[h];
 
             for (int t = 0; t < 128; t++) {
                 if (h == t) continue;
                 if (!entities_[t].alive_) continue;
-                if (!entities_[t].GetFlag(EntityS::EF_RecieveHits)) continue;
-                EntityS& target = entities_[t];
+                if (!entities_[t].GetFlag(Entity::EF_RecieveHits)) continue;
+                Entity& target = entities_[t];
 
                 Collision collision = Collision::GetCollision(
                     hitter.transform_, 
@@ -105,7 +105,7 @@ void Game::Update() {
             //     );
             // }
 
-            if (!hit.target->GetFlag(EntityS::EF_RecieveKnockback))
+            if (!hit.target->GetFlag(Entity::EF_RecieveKnockback))
                 continue;
 
             vec3 normalizeRes = normalize(hit.collision.resolution);
@@ -115,9 +115,9 @@ void Game::Update() {
 
             vec3 planarVelocity = hit.target->velocity_;
             planarVelocity.y = 0.0f;
-            if (hit.target->GetFlag(EntityS::EF_HurtFaceForward))
+            if (hit.target->GetFlag(Entity::EF_HurtFaceForward))
                 hit.target->transform_.rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
-            else if (hit.target->GetFlag(EntityS::EF_HurtFaceBack))
+            else if (hit.target->GetFlag(Entity::EF_HurtFaceBack))
                 hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
         }
 

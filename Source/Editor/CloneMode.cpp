@@ -37,7 +37,7 @@ void CloneMode::OnStart() {
     original_ = target_.Get();
     originalTransform_ = original_->transform_;
 
-    EntityS& createdEntity = entities_.CreateEntity(original_->typeId_);
+    Entity& createdEntity = entities_.CreateEntity(original_->typeId_);
     createdEntity.transform_ = originalTransform_;
     target_.Set(&createdEntity);
 }
@@ -49,7 +49,7 @@ void CloneMode::OnEnd() {
 }
 
 void CloneMode::Update() {
-    EntityS* entity = target_.Get(); 
+    Entity* entity = target_.Get(); 
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -85,7 +85,7 @@ void CloneMode::Update() {
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    EntityS& createdEntity = entities_.CreateEntity(target_.Get()->typeId_);
+    Entity& createdEntity = entities_.CreateEntity(target_.Get()->typeId_);
     createdEntity.transform_ = target_.Get()->transform_;
 
     return CB_Stay;

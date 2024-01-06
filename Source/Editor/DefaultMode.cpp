@@ -110,7 +110,7 @@ void DefaultMode::CursorUpdate() {
         vec3 mouseRay = GetMouseRay();
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
-            EntityS& entity = entities_[i];
+            Entity& entity = entities_[i];
 
             float dist = distance(camera_.transform_.position, entity.transform_.position);
             if (

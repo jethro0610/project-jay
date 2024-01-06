@@ -62,7 +62,7 @@ void Terrain::GenerateTerrainMap(
     const BlobProperties& blob,
     EntityList& entities
 ) {
-    vector_const<EntityS*, 128> entitiesToRespoition;
+    vector_const<Entity*, 128> entitiesToRespoition;
     for (int i = 0; i < 128; i++) {
         if (!entities[i].alive_) continue;
             
@@ -72,7 +72,7 @@ void Terrain::GenerateTerrainMap(
 
     GenerateTerrainMap(noiseLayers, blob);
 
-    for (EntityS* entity : entitiesToRespoition)
+    for (Entity* entity : entitiesToRespoition)
         entity->transform_.position.y = GetHeight(entity->transform_.position);
 }
 

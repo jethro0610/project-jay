@@ -15,7 +15,7 @@ public:
     float lookX_;
     float lookY_;
 
-    EntityS* target_;
+    Entity* target_;
     float trackDistance_;
 
     void Update(EntityList& entities, Inputs& inputs);

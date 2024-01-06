@@ -10,9 +10,9 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-void Player::Init(EntityS::InitArgs args)
+void Player::Init(Entity::InitArgs args)
 {
-    EntityS::Init(args);
+    Entity::Init(args);
 
     PlayerMoveMode moveMode_ = MM_Default;
     float speed_ = MIN_SPEED;

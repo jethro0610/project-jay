@@ -19,7 +19,7 @@ void SeedManager::RemoveOldest() {
 }
 
 // TODO: Track any entity that bubbles onto it
-void SeedManager::CreateSeed(glm::vec3 position, EntityS* capturer, glm::vec3 offset) {
+void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 offset) {
     if (seeds_.size() >= MAX_SEED)
         RemoveOldest();
 
@@ -40,7 +40,7 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityS* capturer, glm::vec3 of
     seeds_.push_back(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, EntityS* capturer) {
+void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, Entity* capturer) {
     for (int i = 0; i < amount; i++) {
         CreateSeed(position, capturer, RandomVector(radius));
     }

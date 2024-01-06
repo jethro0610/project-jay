@@ -1,6 +1,6 @@
 #include "EditorMode.h"
 
-class EntityS;
+class Entity;
 
 class FindMode : public EditorMode {
 public:

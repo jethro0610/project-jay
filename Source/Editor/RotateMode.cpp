@@ -48,7 +48,7 @@ void RotateMode::OnCancel() {
 }
 
 void RotateMode::Update() {
-    EntityS* entity = target_.Get();
+    Entity* entity = target_.Get();
     if (platform_.pressedKeys_['0']) {
         deltaX_ = 0.0f;
         deltaY_ = 0.0f;

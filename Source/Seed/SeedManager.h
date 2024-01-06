@@ -5,13 +5,13 @@
 #include <glm/vec4.hpp>
 #include <vector_contig.h>
 
-class EntityS;
+class Entity;
 
 struct Seed {
     glm::vec3 position;
     glm::vec3 offset;
     float gravityOffset;
-    EntityS* targetEntity;
+    Entity* targetEntity;
     float startTime;
     float captureTime;
     glm::vec3 jitterOffset;
@@ -32,8 +32,8 @@ public:
     std::array<glm::vec4, MAX_SEED> positions_;
 
     void RemoveOldest();
-    void CreateSeed(glm::vec3 position, EntityS* capturer = nullptr, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityS* capturer = nullptr);
+    void CreateSeed(glm::vec3 position, Entity* capturer = nullptr, glm::vec3 offset = glm::vec3(0.0f));
+    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, Entity* capturer = nullptr);
 
     void CalculatePositions(
         Terrain& terrain,

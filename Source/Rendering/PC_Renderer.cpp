@@ -262,10 +262,10 @@ void Renderer::RenderEntitiesS(
 
     for (int i = 0; i < 128; i++) {
         if (!entities[i].alive_) continue;
-        EntityS& entity = entities[i];
+        Entity& entity = entities[i];
         matrix = entity.renderTransform_.ToMatrix();
 
-        bool skeletal = entity.GetFlag(EntityS::EF_UseSkeleton);
+        bool skeletal = entity.GetFlag(Entity::EF_UseSkeleton);
         if (skeletal) {
             entity.skeleton_->PoseToGPUPose(
                 pose,

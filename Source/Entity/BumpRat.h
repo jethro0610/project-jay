@@ -1,7 +1,7 @@
 #pragma once
-#include "EntityS.h"
+#include "Entity.h"
 
-class BumpRat : public EntityS {
+class BumpRat : public Entity {
 public:
     void Init(InitArgs args);
 

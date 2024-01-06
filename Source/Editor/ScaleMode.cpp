@@ -50,7 +50,7 @@ void ScaleMode::SetSubmode(ScaleSubmode submode) {
 }
 
 void ScaleMode::Update() {
-    EntityS* entity = target_.Get();
+    Entity* entity = target_.Get();
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
     float delta = deltaX_ + deltaY_;

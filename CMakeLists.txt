@@ -10,7 +10,7 @@ project(ProjectJay)
 
 file(GLOB SOURCES
     Source/Entity/EntityList.cpp
-    Source/Entity/EntityS.cpp
+    Source/Entity/Entity.cpp
     Source/Entity/Player.cpp
     Source/Entity/BumpRat.cpp
 

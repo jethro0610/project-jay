@@ -1,7 +1,7 @@
 #pragma once
-#include "EntityS.h"
+#include "Entity.h"
 
-class Player : public EntityS {
+class Player : public Entity {
 public:
     enum PlayerMoveMode {
         MM_Default,

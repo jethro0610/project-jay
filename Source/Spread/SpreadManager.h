@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector_contig.h>
 
-class EntityS;
+class Entity;
 class Terrain;
 class SeedManager;
 class TransformComponent;
@@ -40,13 +40,13 @@ public:
 
     bool RemoveSpread(
         const glm::vec3& position, 
-        EntityS* remover = nullptr, 
+        Entity* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
-        EntityS* remover = nullptr, 
+        Entity* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     ); 
     void UpdateRenderData_P();
@@ -66,7 +66,7 @@ private:
     bool AddSpread(const SpreadKey& key); 
     bool RemoveSpread(
         const SpreadKey& key,
-        EntityS* remover = nullptr,
+        Entity* remover = nullptr,
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
 

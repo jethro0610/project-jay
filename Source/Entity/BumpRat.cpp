@@ -6,8 +6,8 @@
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
-void BumpRat::Init(EntityS::InitArgs args) {
-    EntityS::Init(args);
+void BumpRat::Init(Entity::InitArgs args) {
+    Entity::Init(args);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_UseVelocity, true);

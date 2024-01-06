@@ -1,17 +1,17 @@
 #pragma once
 #include "Text/Text.h"
 
-class EntityS;
+class Entity;
 class EntityList;
 
 class EditorTarget {
 public:
     EditorTarget(EntityList& entities);
-    void Set(EntityS* target);
-    EntityS* Get() const { return target_; };
+    void Set(Entity* target);
+    Entity* Get() const { return target_; };
     Text text_;
 
 private:
     EntityList& entities_;
-    EntityS* target_; 
+    Entity* target_; 
 };

@@ -1,9 +1,9 @@
 #pragma once
-#include "EntityS.h"
+#include "Entity.h"
 #include "Player.h"
 #include "BumpRat.h"
 
 #define EXPANDENTITIES \
-    ENTITYEXP(EntityS, entity) \
+    ENTITYEXP(Entity, entity) \
     ENTITYEXP(Player, player) \
     ENTITYEXP(BumpRat, bumpRat)

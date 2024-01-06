@@ -50,7 +50,7 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
 
     #ifdef _DEBUG
     switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy_s(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
+        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

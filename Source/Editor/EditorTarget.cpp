@@ -16,7 +16,7 @@ void EditorTarget::Set(Entity* target) {
     // Select the new target
     if (target != nullptr) {
         target->DBG_selected_ = true;
-        text_ = std::string(target_->DBG_name_) + '(' + std::to_string(target_->DBG_index_) + ')';
+        text_ = std::string(target->DBG_name_) + '(' + std::to_string(target->DBG_index_) + ')';
     }
     else
         text_ = "";

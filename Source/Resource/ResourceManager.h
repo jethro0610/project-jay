@@ -9,7 +9,6 @@
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
 #include "Rendering/Texture.h"
-#include "Entity/EntityDescription.h"
 #include "Particle/ParticleEmitter.h"
 #include "Resource/DependencyList.h"
 
@@ -21,7 +20,6 @@ public:
     static constexpr int MAX_MATERIALS = 64;
     static constexpr int MAX_MODELS = 32;
     static constexpr int MAX_SKELETONS = 32;
-    static constexpr int MAX_ENTIY_DESCRIPTIONS = 32;
     static constexpr int MAX_EMITTER_PROPERTIES = 32;
 
     ResourceManager();
@@ -32,7 +30,6 @@ public:
     void LoadMaterial(const std::string& name);
     void LoadModel(const std::string& name);
     void LoadSkeleton(const std::string& name);
-    void LoadEntityDescription(const std::string& name);
     void LoadEmitterProperties(const std::string& name);
 
     void UnloadVertexShader(const std::string& name);
@@ -41,7 +38,6 @@ public:
     void UnloadMaterial(const std::string& name);
     void UnloadModel(const std::string& name);
     void UnloadSkeleton(const std::string& name);
-    void UnloadEntityDescription(const std::string& name);
     void UnloadEmitterProperties(const std::string& name);
 
     VertexShader* GetVertexShader(const std::string& name);
@@ -49,7 +45,6 @@ public:
     Material* GetMaterial(const std::string& name);
     Model* GetModel(const std::string& name);
     Skeleton* GetSkeleton(const std::string& name);
-    EntityDescription* GetEntityDescription(const std::string& name);
     EmitterProperties* GetEmitterProperties(const std::string& name);
     Texture* GetTexture(const std::string& name);
 
@@ -58,7 +53,6 @@ public:
     bool HasMaterial(const std::string& name);
     bool HasModel(const std::string& name);
     bool HasSkeleton(const std::string& name);
-    bool HasEntityDescription(const std::string& name);
     bool HasEmitterProperties(const std::string& name);
     bool HasTexture(const std::string& name);
 
@@ -84,6 +78,5 @@ private:
     ResourceStore<Material, MAX_MATERIALS> materials_;
     ResourceStore<Model, MAX_MODELS> models_;
     ResourceStore<Skeleton, MAX_SKELETONS> skeletons_;
-    ResourceStore<EntityDescription, MAX_ENTIY_DESCRIPTIONS> entityDescs_;
     ResourceStore<EmitterProperties, MAX_EMITTER_PROPERTIES> emitterProps_;
 };

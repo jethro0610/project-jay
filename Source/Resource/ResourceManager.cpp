@@ -26,11 +26,6 @@ void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
             LoadModel(name);
     }
 
-    for(const std::string& name : dependencyList.entityDescriptions) {
-        if (!entityDescs_.GetMap().contains(name))
-            LoadEntityDescription(name);
-    }
-
     for(const std::string& name : dependencyList.emitterProperties) {
         if (!emitterProps_.GetMap().contains(name))
             LoadEmitterProperties(name);
@@ -80,14 +75,6 @@ void ResourceManager::UnloadUnusedDependencies(DependencyList& dependencyList) {
         UnloadModel(unload);
     unloads.clear();
 
-    for(const auto& element : entityDescs_.GetMap()) {
-        if (!dependencyList.entityDescriptions.contains(element.first) && !globals_.contains(element.first))
-            unloads.push_back(element.first);
-    }
-    for (const std::string& unload : unloads)
-        UnloadEntityDescription(unload);
-    unloads.clear();
-
     for(const auto& element : emitterProps_.GetMap()) {
         if (!dependencyList.emitterProperties.contains(element.first) && !globals_.contains(element.first))
             unloads.push_back(element.first);
@@ -121,10 +108,6 @@ Skeleton* ResourceManager::GetSkeleton(const std::string& name) {
     return &skeletons_.Get(name);
 }
 
-EntityDescription* ResourceManager::GetEntityDescription(const std::string& name) {
-    return &entityDescs_.Get(name);
-}
-
 EmitterProperties* ResourceManager::GetEmitterProperties(const std::string& name) {
     return &emitterProps_.Get(name);
 }
@@ -151,10 +134,6 @@ bool ResourceManager::HasModel(const std::string& name) {
 
 bool ResourceManager::HasSkeleton(const std::string& name) {
     return skeletons_.Has(name);
-}
-
-bool ResourceManager::HasEntityDescription(const std::string& name) {
-    return entityDescs_.Has(name);
 }
 
 bool ResourceManager::HasEmitterProperties(const std::string& name) {

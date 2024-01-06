@@ -3,7 +3,7 @@
 #include "Logging/Logger.h"
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
-#include "Components/TransformComponent.h"
+#include "Entity/EntityListS.h"
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
 #include <thread>
@@ -60,26 +60,20 @@ void Terrain::GenerateTerrainMap(
 void Terrain::GenerateTerrainMap(
     const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
     const BlobProperties& blob,
-    EntityList& entities,
-    ComponentList& components
+    EntityListS& entities
 ) {
-    TransformComponent& transformComponent = components.Get<TransformComponent>();
-    vector_const<EntityID , MAX_ENTITIES> entitiesToRespoition;
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.alive_) continue;
+    vector_const<EntityS*, 128> entitiesToRespoition;
+    for (int i = 0; i < 128; i++) {
+        if (!entities.Valid(i)) continue;
             
-        Transform& transform = transformComponent.transform[i];
-        if (abs(transform.position.y - GetHeight(transform.position)) < 0.5f)
-            entitiesToRespoition.push_back(i);
+        if (abs(entities[i].transform_.position.y - GetHeight(entities[i].transform_.position)) < 0.5f)
+            entitiesToRespoition.push_back(&entities[i]);
     }
 
     GenerateTerrainMap(noiseLayers, blob);
 
-    for (EntityID e : entitiesToRespoition) {
-        Transform& transform = transformComponent.transform[e];
-        transform.position.y = GetHeight(transform.position);
-    }
+    for (EntityS* entity : entitiesToRespoition)
+        entity->transform_.position.y = GetHeight(entity->transform_.position);
 }
 
 void Terrain::GenerateTerrainMapSection(

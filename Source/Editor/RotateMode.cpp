@@ -1,8 +1,7 @@
 #include "RotateMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityManager.h"
+#include "Entity/EntityListS.h"
 #include "Platform/PC_Platform.h"
-#include "Components/TransformComponent.h"
 #include "EditorTarget.h"
 using namespace glm;
 
@@ -35,26 +34,21 @@ std::string RotateMode::GetName() {
 };
 
 void RotateMode::OnStart() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     submode_ = RS_Free;
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     fromZero_ = false;
-    startRotation_ = transformComponent.transform[target_.Get()].rotation;
+    startRotation_ = entities_[target_.Get()].transform_.rotation;
     EditorMode::OnStart();
 }
 
 void RotateMode::OnCancel() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-    transform.rotation = startRotation_;
+    entities_[target_.Get()].transform_.rotation = startRotation_;
     EditorMode::OnCancel();
 }
 
 void RotateMode::Update() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-
+    EntityS& entity = entities_[target_.Get()];
     if (platform_.pressedKeys_['0']) {
         deltaX_ = 0.0f;
         deltaY_ = 0.0f;
@@ -87,23 +81,23 @@ void RotateMode::Update() {
 
     switch(submode_) {
         case RS_Free:
-            transform.rotation = angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            entity.transform_.rotation = angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation;
             break;
 
         case RS_X:
-            transform.rotation = angleAxis(deltaX_, planarCameraForward) * referenceRotation;
+            entity.transform_.rotation = angleAxis(deltaX_, planarCameraForward) * referenceRotation;
             break;
 
         case RS_Y:
-            transform.rotation = angleAxis(deltaX_, Transform::worldUp) * referenceRotation;
+            entity.transform_.rotation = angleAxis(deltaX_, Transform::worldUp) * referenceRotation;
             break;
 
         case RS_Z:
-            transform.rotation = angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            entity.transform_.rotation = angleAxis(deltaY_, planarCameraRight) * referenceRotation;
             break;
 
         case RS_Roll:
-            transform.rotation = angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation;
+            entity.transform_.rotation = angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation;
             break;
     }
 }

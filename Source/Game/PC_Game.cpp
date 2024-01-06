@@ -13,9 +13,7 @@ Game::Game():
     resourceManager_(),
     particleManager_(),
     terrain_(levelProperties_, resourceManager_),
-    entityManager_(resourceManager_, particleManager_),
     levelLoader_(
-        entityManager_,
         levelProperties_,
         particleManager_, 
         resourceManager_, 
@@ -27,11 +25,10 @@ Game::Game():
     camera_(14.0f),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
-    playerController_(),
     entityListS_(entities_, particleManager_, resourceManager_, camera_, inputs_, terrain_),
     editor_(
         camera_, 
-        entityManager_, 
+        entityListS_, 
         inputs_, levelLoader_, 
         levelProperties_, 
         platform_, 

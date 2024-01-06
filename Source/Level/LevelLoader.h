@@ -5,7 +5,6 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-class EntityManager;
 class ParticleManager;
 class SpreadManager;
 class SeedManager;
@@ -14,7 +13,6 @@ class Terrain;
 class LevelLoader {
 public:
     LevelLoader(
-        EntityManager& entityManager, 
         LevelProperties& levelProperties_,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
@@ -26,7 +24,6 @@ public:
     void ClearLevel();
 
 private:
-    EntityManager& entityManager_;
     LevelProperties& levelProperties_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;

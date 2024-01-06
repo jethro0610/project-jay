@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Time/Time.h"
+#include "Collision/Collision.h"
 #include <glm/vec3.hpp>
 #include <ctime>
 using namespace glm;
@@ -8,10 +9,6 @@ using namespace std::chrono;
 
 void Game::Init() {
     srand(time(0));
-    entityManager_.components_.Get<SkeletonComponent>().resourceManager = &resourceManager_;
-    entityManager_.components_.Get<StaticModelComponent>().resourceManager = &resourceManager_;
-    entityManager_.components_.Get<IntervalSpawnComponent>().resourceManager = &resourceManager_;
-
     // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
 
@@ -55,13 +52,13 @@ void Game::Update() {
         }
 
         vector_const<HitS, 128> hitList;
-        for (int h = 0; h < MAX_ENTITIES; h++) {
+        for (int h = 0; h < 128; h++) {
             if (!entityListS_.Valid(h)) continue;
             if (!entityListS_[h].GetFlag(EntityS::EF_SendHits))
                 continue;
             EntityS& hitter = entityListS_[h];
 
-            for (int t = 0; t < MAX_ENTITIES; t++) {
+            for (int t = 0; t < 128; t++) {
                 if (h == t) continue;
                 if (!entityListS_.Valid(t)) continue;
                 if (!entityListS_[t].GetFlag(EntityS::EF_RecieveHits)) continue;
@@ -135,135 +132,8 @@ void Game::Update() {
             entityListS_[i].BaseUpdate();
         }
 
-        entityManager_.DestroyEntities();
-        entityManager_.SpawnEntities();
-        FreezeSytem::Execute(entityManager_.entities_);
-        TransformSystem::UpdateLastTransforms(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        PushSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        HitSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            seedManager_
-        );
-        SpreadDetectSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            spreadManager_
-        );
-        // testWalker.Update(
-        //     entityManager_.components_,
-        //     world_
-        // );
-        playerController_.Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            terrain_,
-            spreadManager_,
-            camera_,
-            inputs_
-        );
-        AISystem::InitAIs(
-            entityManager_.entities_,
-            entityManager_.components_,
-            terrain_
-        );
-        AISystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            terrain_
-        );
-        VelocitySystem::CalculateGravity(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        MovementSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        ProjectileSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        GroundTraceSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_.destroyList_,
-            terrain_
-        );
-        GroundStickSystem::Stick(
-            entityManager_.entities_,
-            entityManager_.components_,
-            terrain_ 
-        );
-        VelocitySystem::Apply(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        TrampleSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            spreadManager_
-        );
-        SpreadActivatorSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            spreadManager_,
-            terrain_
-        );
-        SkeletonSystem::CalculatePoses(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        DestroyMeterSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_.destroyList_
-        );
-        DestroyOnBoundSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_.destroyList_
-        );
-        IntervalSpawnSystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_.spawner_,
-            seedManager_
-        );
-        SeedOnDestroySystem::Execute(
-            entityManager_.entities_,
-            entityManager_.components_,
-            entityManager_.destroyList_,
-            seedManager_
-        );
-        entityManager_.ClearEntitySpawnFlags();
         timeAccumlulator_ -= GlobalTime::TIMESTEP;
     }
-    SkeletonSystem::InterpPoses(
-        entityManager_.entities_,
-        entityManager_.components_,
-        timeAccumlulator_
-    );
-    TransformSystem::UpdateRenderTransforms(
-        entityManager_.entities_,
-        entityManager_.components_,
-        timeAccumlulator_
-    );
-    seedManager_.CalculatePositions(
-        entityManager_.components_,
-        terrain_,
-        timeAccumlulator_
-    );
-    seedManager_.GetCaptures(
-        entityManager_.entities_,
-        entityManager_.components_
-    );
     camera_.Update(entityListS_, inputs_);
 
     for (int i = 0; i < 128; i++) {
@@ -275,20 +145,14 @@ void Game::Update() {
             #undef ENTITYEXP
         }
     }
-
-    ParticleAttachSystem::Execute(
-        entityManager_.entities_,
-        entityManager_.components_
-    );
     particleManager_.Update(GlobalTime::GetDeltaTime());
+
     renderer_.Render(
-        entityManager_.entities_, 
-        entityManager_.components_,
+        entityListS_, 
         levelProperties_,
         particleManager_,
         seedManager_,
         spreadManager_, 
-        terrain_,
-        entityListS_
+        terrain_
     );
 }

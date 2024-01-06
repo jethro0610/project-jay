@@ -1,6 +1,6 @@
 #include "TranslateMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityManager.h"
+#include "Entity/EntityListS.h"
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
 #include "EditorTarget.h"
@@ -30,21 +30,16 @@ std::string TranslateMode::GetName() {
 }
 
 void TranslateMode::OnStart() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = TS_Planar;
-    startPosition_ = transform.position;
+    startPosition_ = entities_[target_.Get()].transform_.position;
 
     EditorMode::OnStart();
 }
 
 void TranslateMode::OnCancel() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-    transform.position = startPosition_;
+    entities_[target_.Get()].transform_.position = startPosition_;
 }
 
 void TranslateMode::SetSubmode(TranslateSubmode submode) {
@@ -60,11 +55,9 @@ void TranslateMode::SetSubmode(TranslateSubmode submode) {
 }
 
 void TranslateMode::Update() {
+    EntityS& entity = entities_[target_.Get()];
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
-
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
 
     if (platform_.pressedKeys_['P'])
         SetSubmode(TS_Planar);
@@ -83,22 +76,22 @@ void TranslateMode::Update() {
 
     switch (submode_) {
         case TS_Planar:
-            transform.position =
+            entity.transform_.position =
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
             break;
 
         case TS_Vertical:
-            transform.position = startPosition_ + Transform::worldUp * deltaY_;
+            entity.transform_.position = startPosition_ + Transform::worldUp * deltaY_;
             break;
 
         case TS_Terrain:
-            transform.position =
+            entity.transform_.position =
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            transform.position.y = terrain_.GetHeight(vec2(transform.position.x, transform.position.z));
+            entity.transform_.position.y = terrain_.GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
             break;
     }
 }

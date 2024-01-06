@@ -1,16 +1,13 @@
 #pragma once
-#include "Systems/SystemInc.h"
 #include "RenderDefs.h"
 #include "Animation.h"
 #include "Skeleton.h"
 #include "Model.h"
 #include "Material.h"
-#include "Entity/EntityList.h"
+#include "Entity/EntityListS.h"
 #include "Text/Text.h"
 #include <array>
 #include <glm/mat4x4.hpp>
-
-#include "Entity/EntityListS.h"
 
 #ifdef _DEBUG
 #include "Logging/ScreenText.h"
@@ -34,19 +31,16 @@ public:
     Camera* camera_;
 
     void Render(
-        EntityList& entities,
-        ComponentList& components,
+        EntityListS& entities,
         LevelProperties& levelProperties,
         ParticleManager& particleManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        Terrain& terrain,
-        EntityListS& entitiesS
+        Terrain& terrain
     );
 
     void RenderEdit(
-        EntityList& entities,
-        ComponentList& components,
+        EntityListS& entities,
         Editor& editor,
         LevelProperties& levelProperties,
         Terrain& terrain
@@ -140,16 +134,6 @@ private:
         Material* material,
         float maxRadius
     );
-    void RenderEntities(
-        #ifdef _DEBUG
-        EntityList& entities, 
-        ComponentList& components,
-        bool renderNonModeled = false
-        #else 
-        EntityList& entities, 
-        ComponentList& components
-        #endif
-    );
     void RenderEntitiesS(
         EntityListS& entities
     );
@@ -162,7 +146,7 @@ private:
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();
-    void RenderUI(ComponentList& components);
+    void RenderUI(EntityListS& entities);
     void RenderText(Text& text);
     void RenderEditor(Editor& editor);
     #ifdef _DEBUG

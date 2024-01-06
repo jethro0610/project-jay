@@ -1,5 +1,4 @@
 #include "BlobEditMode.h"
-#include "Entity/EntityManager.h"
 #include "Level/LevelProperties.h"
 #include "Terrain/Terrain.h"
 #include "EditorLevel.h"
@@ -166,8 +165,7 @@ ConfirmBehavior BlobEditMode::PostConfirm() {
     terrain_.GenerateTerrainMap(
         level_.properties_.noiseLayers,
         level_.properties_.blob,
-        entityManager_.entities_,
-        entityManager_.components_
+        entities_
     );
     SetPhase(BE_SelectProperty);
     notificaiton_.Set("Done generating new terrain");

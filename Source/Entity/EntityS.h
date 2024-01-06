@@ -6,6 +6,7 @@
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
+#include "EntityIDS.h"
 #include <inttypes.h>
 
 class Camera;
@@ -16,10 +17,10 @@ class Terrain;
 
 class ParticleEmitter;
 
-
 class EntityS {
 public:
     typedef int TypeID;
+
     struct InitArgs {
         ParticleManager& particleManager;
         ResourceManager& resourceManager;
@@ -85,6 +86,11 @@ public:
     bool hurt_;
     bool hit_;
     bool stun_;
+
+    #ifdef _DEBUG
+    Collider DBG_collider_;
+    bool DBG_selected_;
+    #endif
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);

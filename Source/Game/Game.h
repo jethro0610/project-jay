@@ -1,12 +1,9 @@
 #pragma once
 #include "Camera/Camera.h"
-#include "Entity/EntityManager.h"
 #include "Types/Inputs.h"
-#include "Controller/PlayerController.h"
 #include "Particle/ParticleManager.h"
 #include "Seed/SeedManager.h"
 #include "Spread/SpreadManager.h"
-#include "Systems/Systems.h"
 #include "Rendering/Renderer.h"
 #include "Level/LevelProperties.h"
 #include "Level/LevelLoader.h"
@@ -38,13 +35,11 @@ private:
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
     Terrain terrain_;
-    EntityManager entityManager_;
     LevelLoader levelLoader_;
     Renderer renderer_;
     Camera camera_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
-    PlayerController playerController_;
 
     EntityUnion entities_[128];
     EntityListS entityListS_;

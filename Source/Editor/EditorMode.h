@@ -2,7 +2,7 @@
 #include <string>
 
 class Camera;
-class EntityManager;
+class EntityListS;
 class Inputs;
 class LevelLoader;
 class LevelProperties;
@@ -20,7 +20,7 @@ class EditorTextInput;
 
 struct EditorModeArgs {
     Camera& camera;
-    EntityManager& entityManager;
+    EntityListS& entities;
     Inputs& inputs;
     Platform& platform;
     Renderer& renderer;
@@ -59,7 +59,7 @@ public:
 
 protected:
     Camera& camera_;
-    EntityManager& entityManager_;
+    EntityListS& entities_;
     Inputs& inputs_;
     Platform& platform_;
     Renderer& renderer_;

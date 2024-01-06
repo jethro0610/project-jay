@@ -1,7 +1,4 @@
 #include "SeedManager.h"
-#include "Components/MeterComponent.h"
-#include "Components/SeedGatherComponent.h"
-#include "Components/TransformComponent.h"
 #include "Time/Time.h"
 #include "Helpers/Random.h"
 #include <glm/gtx/compatibility.hpp>
@@ -22,7 +19,7 @@ void SeedManager::RemoveOldest() {
 }
 
 // TODO: Track any entity that bubbles onto it
-void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 offset) {
+void SeedManager::CreateSeed(glm::vec3 position, EntityIDS capturer, glm::vec3 offset) {
     if (seeds_.size() >= MAX_SEED)
         RemoveOldest();
 
@@ -43,20 +40,16 @@ void SeedManager::CreateSeed(glm::vec3 position, EntityID capturer, glm::vec3 of
     seeds_.push_back(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, EntityID capturer) {
+void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, EntityIDS capturer) {
     for (int i = 0; i < amount; i++) {
         CreateSeed(position, capturer, RandomVector(radius));
     }
 }
 
 void SeedManager::CalculatePositions(
-    ComponentList& components,
     Terrain& terrain,
     float interpTime
 ) {
-    auto& meterComponent = components.Get<MeterComponent>();
-    auto& transformComponent = components.Get<TransformComponent>();
-
     for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];
 
@@ -83,45 +76,42 @@ void SeedManager::CalculatePositions(
         if (seed.targetEntity == NULL_ENTITY || timeSinceCapture < 0.0f)
             continue;
 
-        timeSinceCapture *= 3.0f;
-        if (timeSinceCapture >= 1.0f) {
-            meterComponent.meter[seed.targetEntity] += 1;
-            meterComponent.meter[seed.targetEntity] = min(meterComponent.meter[seed.targetEntity], meterComponent.maxMeter[seed.targetEntity]);
-            seeds_.remove(i--);
-            continue;
-        }
-        vec3 initialPosition = seed.position;
-        vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position, 0.0f);
-        timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
-        positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
+        // timeSinceCapture *= 3.0f;
+        // if (timeSinceCapture >= 1.0f) {
+        //     meterComponent.meter[seed.targetEntity] += 1;
+        //     meterComponent.meter[seed.targetEntity] = min(meterComponent.meter[seed.targetEntity], meterComponent.maxMeter[seed.targetEntity]);
+        //     seeds_.remove(i--);
+        //     continue;
+        // }
+        // vec3 initialPosition = seed.position;
+        // vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position, 0.0f);
+        // timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
+        // positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
     }
 }
 
-constexpr EntityKey key = GetEntityKey<SeedGatherComponent, TransformComponent>();
 void SeedManager::GetCaptures(
-    EntityList& entities,
-    ComponentList& components
 ) {
-    auto& seedGatherComponent = components.Get<SeedGatherComponent>();
-    auto& transformComponent = components.Get<TransformComponent>();
-
-    float time = GlobalTime::GetTime();
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        if (!entities[i].ShouldUpdate(key)) continue;
-        if (!seedGatherComponent.active[i]) continue;
-
-        for (int j = 0; j < seeds_.size(); j++) {
-            if (seeds_[j].targetEntity != NULL_ENTITY)
-                continue;
-            if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
-                continue;
-
-            if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < seedGatherComponent.radius[i]) {
-                seeds_[j].targetEntity = i;
-                seeds_[j].captureTime = time;
-            }
-        }
-    }
+    // auto& seedGatherComponent = components.Get<SeedGatherComponent>();
+    // auto& transformComponent = components.Get<TransformComponent>();
+    //
+    // float time = GlobalTime::GetTime();
+    // for (int i = 0; i < MAX_ENTITIES; i++) {
+    //     if (!entities[i].ShouldUpdate(key)) continue;
+    //     if (!seedGatherComponent.active[i]) continue;
+    //
+    //     for (int j = 0; j < seeds_.size(); j++) {
+    //         if (seeds_[j].targetEntity != NULL_ENTITY)
+    //             continue;
+    //         if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
+    //             continue;
+    //
+    //         if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < seedGatherComponent.radius[i]) {
+    //             seeds_[j].targetEntity = i;
+    //             seeds_[j].captureTime = time;
+    //         }
+    //     }
+    // }
 }
 
 void SeedManager::Reset() {

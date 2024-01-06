@@ -6,7 +6,7 @@
 
 EditorMode::EditorMode(EditorModeArgs args):
 camera_(args.camera),
-entityManager_(args.entityManager),
+entities_(args.entities),
 inputs_(args.inputs),
 platform_(args.platform),
 renderer_(args.renderer),

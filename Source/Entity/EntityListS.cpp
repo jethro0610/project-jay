@@ -25,7 +25,11 @@ EntityS& EntityListS::operator[](int index) {
     return rawEntities_[index].entity;
 }
 
-void EntityListS::CreateEntity(EntityS::TypeID typeId) {
+EntityS::TypeID EntityListS::GetTypeID(EntityIDS entityId) {
+    return rawEntities_[entityId].typeId;
+}
+
+EntityIDS EntityListS::CreateEntity(EntityS::TypeID typeId) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
     availablePos_++;
@@ -36,10 +40,22 @@ void EntityListS::CreateEntity(EntityS::TypeID typeId) {
         #undef ENTITYEXP
     }
     rawEntities_[entityId].typeId = typeId;
+
+    return entityId;
 }   
 
-void EntityListS::DestroyEntity(int entityId) {
+void EntityListS::DestroyEntity(EntityIDS entityId) {
     assert(Valid(entityId));
     availablePos_--;
     available_[availablePos_] = entityId;
+}
+
+const char* EntityListS::GetName(EntityIDS entityId) {
+    assert(Valid(entityId));
+    switch(rawEntities_[entityId].typeId) {
+        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): return TYPE::GetName();
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return "e_invalid";
 }

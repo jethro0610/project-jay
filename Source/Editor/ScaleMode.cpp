@@ -1,5 +1,5 @@
 #include "ScaleMode.h"
-#include "Entity/EntityManager.h"
+#include "Entity/EntityListS.h"
 #include "Platform/PC_Platform.h"
 #include "EditorTarget.h"
 using namespace glm;
@@ -28,22 +28,17 @@ std::string ScaleMode::GetName() {
 }
 
 void ScaleMode::OnStart() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = SS_Uniform;
     fromZero_ = false;
-    startScale_ = transform.scale;
+    startScale_ = entities_[target_.Get()].transform_.scale;
 
     EditorMode::OnStart();
 }
 
 void ScaleMode::OnCancel() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-    transform.scale = startScale_;
+    entities_[target_.Get()].transform_.scale = startScale_;
 }
 
 void ScaleMode::SetSubmode(ScaleSubmode submode) {
@@ -55,12 +50,10 @@ void ScaleMode::SetSubmode(ScaleSubmode submode) {
 }
 
 void ScaleMode::Update() {
+    EntityS& entity = entities_[target_.Get()];
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
     float delta = deltaX_ + deltaY_;
-
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
 
     if (platform_.pressedKeys_['0']) {
         deltaX_ = 0.0f;
@@ -79,21 +72,21 @@ void ScaleMode::Update() {
 
     switch (submode_) {
         case SS_Uniform:
-            transform.scale.x = referenceScale.x + delta;
-            transform.scale.y = referenceScale.y + delta;
-            transform.scale.z = referenceScale.z + delta;
+            entity.transform_.scale.x = referenceScale.x + delta;
+            entity.transform_.scale.y = referenceScale.y + delta;
+            entity.transform_.scale.z = referenceScale.z + delta;
             break;
 
         case SS_Planar:
-            transform.scale.x = referenceScale.x + delta;
-            transform.scale.y = referenceScale.y;
-            transform.scale.z = referenceScale.x + delta;
+            entity.transform_.scale.x = referenceScale.x + delta;
+            entity.transform_.scale.y = referenceScale.y;
+            entity.transform_.scale.z = referenceScale.x + delta;
             break;
 
         case SS_Vertical:
-            transform.scale.x = referenceScale.x;
-            transform.scale.y = referenceScale.y + delta;
-            transform.scale.z = referenceScale.z;
+            entity.transform_.scale.x = referenceScale.x;
+            entity.transform_.scale.y = referenceScale.y + delta;
+            entity.transform_.scale.z = referenceScale.z;
             break;
     }
 }

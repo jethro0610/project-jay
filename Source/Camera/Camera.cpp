@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "Components/TransformComponent.h"
 #include "Time/Time.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
@@ -13,7 +12,7 @@ Camera::Camera(float trackDistance, vec3 startPosition):
     transform_.position = startPosition;
 }
 
-Camera::Camera(float trackDistance, EntityID target):
+Camera::Camera(float trackDistance, EntityIDS target):
     target_(target),
     lookX_(0.0f),
     lookY_(0.0f),
@@ -66,7 +65,6 @@ void Camera::Update(Inputs& inputs) {
     lookY_ += inputs.deltaLookY;
 
     lookY_ = clamp(lookY_, radians(-89.0f), radians(89.0f));
-    // Move and use first person look when there is no entity to track
     transform_.rotation = quat(vec3(lookY_, lookX_, 0.0f));
     vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime;
     vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 32.0f * deltaTime;

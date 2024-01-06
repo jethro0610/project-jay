@@ -1,7 +1,6 @@
 #include "FindMode.h"
 #include "Camera/Camera.h"
-#include "Entity/EntityManager.h"
-#include "Components/TransformComponent.h"
+#include "Entity/EntityListS.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
@@ -29,21 +28,18 @@ void FindMode::Update() {
 }
 
 ConfirmBehavior FindMode::OnConfirm() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     std::string entityName = "e_" + textInput_.Get();
 
     bool found = false;
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        int e = (i + lastFind_ + 1) % MAX_ENTITIES;
-        const Entity& entity = entityManager_.entities_[e];
-
-        if (!entity.alive_) continue;
+    for (int i = 0; i < 128; i++) {
+        int e = (i + lastFind_ + 1) % 128;
+        if (!entities_.Valid(e)) continue;
         
-        if (entity.DBG_name == entityName) {
+        if (entities_.GetName(e) == entityName) {
             lastFind_ = e;
             target_.Set(e);
             camera_.transform_.position = 
-                transformComponent.transform[e].position - 
+                entities_[e].transform_.position - 
                 camera_.transform_.GetForwardVector() * 35.0f;
             found = true;
             break;

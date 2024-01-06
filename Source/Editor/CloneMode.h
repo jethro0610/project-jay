@@ -1,8 +1,6 @@
 #pragma once
 #include "EditorMode.h"
-#include "Entity/EntityID.h"
-#include "Entity/SpawnPromise.h"
-#include "Entity/EntityDescription.h"
+#include "Entity/EntityIDS.h"
 #include "Types/Transform.h"
 #include <glm/vec3.hpp>
 #include <GLFW/glfw3.h>
@@ -28,9 +26,6 @@ private:
     float deltaX_;
     float deltaY_;
 
-    EntityID original_;    
-    EntityDescription* originalDescription_;
+    EntityIDS original_;    
     Transform originalTransform_;
-
-    SpawnPromise spawnPromise_;
 };

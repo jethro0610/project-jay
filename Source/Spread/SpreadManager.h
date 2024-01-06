@@ -1,5 +1,5 @@
 #pragma once
-#include "Entity/EntityID.h"
+#include "Entity/EntityIDS.h"
 #include "SpreadKey.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -39,13 +39,13 @@ public:
 
     bool RemoveSpread(
         const glm::vec3& position, 
-        EntityID remover = NULL_ENTITY, 
+        EntityIDS remover = NULL_ENTITY, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
-        EntityID remover = NULL_ENTITY, 
+        EntityIDS remover = NULL_ENTITY, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     ); 
     void UpdateRenderData_P();
@@ -65,7 +65,7 @@ private:
     bool AddSpread(const SpreadKey& key); 
     bool RemoveSpread(
         const SpreadKey& key,
-        EntityID remover = NULL_ENTITY,
+        EntityIDS remover = NULL_ENTITY,
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
 

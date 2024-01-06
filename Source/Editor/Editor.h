@@ -5,9 +5,9 @@
 #include "EditorTextInput.h"
 #include "Modes.h"
 #include "ExpandModes.h"
+#include <vector>
 
 class Camera;
-class EntityManager;
 class Inputs;
 class Terrain;
 class LevelLoader;
@@ -23,7 +23,7 @@ class Editor {
 public:
     Editor(
         Camera& camera, 
-        EntityManager& entityManager, 
+        EntityListS& entities,
         Inputs& inputs,
         LevelLoader& levelLoader,
         LevelProperties& levelProperties,
@@ -52,8 +52,9 @@ private:
 
     std::vector<EditorMode*> modes_;
 
+
     Camera& camera_;
-    EntityManager& entityManager_;
+    EntityListS& entities_;
     Inputs& inputs_;
     LevelLoader& levelLoader_;
     LevelProperties& levelProperties_;

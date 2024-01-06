@@ -1,5 +1,4 @@
 #include "TerrainEditMode.h"
-#include "Entity/EntityManager.h"
 #include "Terrain/Terrain.h"
 #include "EditorLevel.h"
 #include "EditorNotification.h"
@@ -230,8 +229,7 @@ ConfirmBehavior TerrainEditMode::PostConfirm() {
     terrain_.GenerateTerrainMap(
         level_.properties_.noiseLayers, 
         level_.properties_.blob,
-        entityManager_.entities_,
-        entityManager_.components_
+        entities_
     );
     SetPhase(TE_SelectProperty);
     notificaiton_.Set("Generated new terrain");

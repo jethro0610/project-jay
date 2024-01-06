@@ -1,10 +1,6 @@
 #include "Renderer.h"
 #include "PC_VertexTypes.h"
 #include "ShadowConstants.h"
-#include "Components/MeterComponent.h"
-#include "Components/SkeletonComponent.h"
-#include "Components/StaticModelComponent.h"
-#include "Components/TransformComponent.h"
 #include "Particle/ParticleManager.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
@@ -257,86 +253,6 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     };
 }
 
-#ifdef _DEBUG
-EntityKey constexpr modelKey = GetEntityKey<StaticModelComponent>();
-#else
-EntityKey constexpr modelKey = GetEntityKey<StaticModelComponent, TransformComponent>();
-#endif
-EntityKey constexpr transformKey = GetEntityKey<TransformComponent>();
-EntityKey constexpr skeletonKey = GetEntityKey<SkeletonComponent>();
-
-void Renderer::RenderEntities(
-    #ifdef _DEBUG
-    EntityList& entities, 
-    ComponentList& components,
-    bool renderNonModeled
-    #else 
-    EntityList& entities, 
-    ComponentList& components
-    #endif
-) {
-    auto& meterComponent = components.Get<MeterComponent>();
-    auto& skeletonComponent = components.Get<SkeletonComponent>();
-    auto& staticModelComponent = components.Get<StaticModelComponent>();
-    auto& transformComponent = components.Get<TransformComponent>();
-
-    GPUPose pose;
-    mat4 modelMatrix;
-    for (int i = 0; i < MAX_ENTITIES; i++) {
-        const Entity& entity = entities[i];
-        if (!entity.alive_)
-            continue;
-        #ifdef _DEBUG
-        bool hasModel = entity.MatchesKey(modelKey);
-        if (!hasModel && !renderNonModeled)
-            continue;
-        if (!entity.MatchesKey(transformKey))
-            continue;
-        #else
-        if (!entity.MatchesKey(modelkey))
-            continue;
-        #endif
-
-        modelMatrix = transformComponent.renderTransform[i].ToMatrix();
-        if (entity.hitlagTimer_ > 0 && entity.shake_) {
-            modelMatrix[3][0] += pow(sin(GlobalTime::GetTime() * 100.0f + 8.0f), 2.0f) * 0.5f;
-            modelMatrix[3][1] += pow(sin(GlobalTime::GetTime() * 100.0f + 16.0f), 2.0f) * 0.5f;
-            modelMatrix[3][2] += pow(sin(GlobalTime::GetTime() * 100.0f + 32.0f), 2.0f) * 0.5f;
-        }
-
-        #ifdef _DEBUG
-        if (!hasModel) {
-            Material* material = entity.DBG_selected ? defaultSelectedMaterial_ : defaultMaterial_;
-            RenderMesh(defaultMesh_, material, nullptr, &modelMatrix);
-            continue;
-        }
-        #endif
-        vec4 meter = vec4(meterComponent.meter[i], meterComponent.maxMeter[i], 0.0f, 0.0f); 
-        bgfx::setUniform(u_meter_, &meter);
-
-        bool skeletal = false;
-        if (entity.MatchesKey(skeletonKey)) {
-            skeletal = true; 
-            skeletonComponent.skeleton[i]->PoseToGPUPose(
-                pose,
-                skeletonComponent.renderPose[i]
-            );
-        }
-
-        Model& model = *staticModelComponent.model[i];
-        for (int m = 0; m < model.meshes.size(); m++) {
-            #ifdef _DEBUG
-            Material* material = entity.DBG_selected ?
-                staticModelComponent.selectedMaterials[i][m] :
-                staticModelComponent.materials[i][m];
-            #else
-            Material* material = staticModelComponent.materials[i][m];
-            #endif
-            Mesh* mesh = &model.meshes[m];
-            RenderMesh(mesh, material, nullptr, &modelMatrix, skeletal ? &pose: nullptr);
-        }
-    }
-}
 
 void Renderer::RenderEntitiesS(
     EntityListS& entities
@@ -441,16 +357,15 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
 }
 
-void Renderer::RenderUI(ComponentList& components) {
-    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
-    auto& meterComponent = components.Get<MeterComponent>();
-
-    vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
-    bgfx::setUniform(u_meter_, &meter);
-
-    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
-    bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
+void Renderer::RenderUI(EntityListS& entities) {
+    // bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
+    //
+    // vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
+    // bgfx::setUniform(u_meter_, &meter);
+    //
+    // bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    // bgfx::setIndexBuffer(quad_->indexBuffer);
+    // bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
 }
 
 void Renderer::RenderText(Text& text) {

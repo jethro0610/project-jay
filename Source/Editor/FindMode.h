@@ -1,5 +1,5 @@
 #include "EditorMode.h"
-#include "Entity/EntityID.h"
+#include "Entity/EntityIDS.h"
 
 class FindMode : public EditorMode {
 public:
@@ -12,5 +12,5 @@ public:
     void Update() override;
 
 private:
-    EntityID lastFind_;
+    EntityIDS lastFind_;
 };

@@ -2,16 +2,14 @@
 #include "Camera/Camera.h"
 #include "Level/LevelLoader.h"
 #include "Rendering/Renderer.h"
-#include "Systems/Systems.h"
 #include "Terrain/Terrain.h"
 #include "Collision/Ray.h"
-#include "Entity/EntityManager.h"
 #include <GLFW/glfw3.h>
 using namespace glm;
 
 Editor::Editor(
     Camera& camera, 
-    EntityManager& entityManager, 
+    EntityListS& entities, 
     Inputs& inputs,
     LevelLoader& levelLoader,
     LevelProperties& levelProperties,
@@ -22,7 +20,7 @@ Editor::Editor(
     bool& running
 ):
 camera_(camera),
-entityManager_(entityManager),
+entities_(entities),
 inputs_(inputs),
 levelLoader_(levelLoader),
 levelProperties_(levelProperties),
@@ -32,17 +30,17 @@ renderer_(renderer),
 terrain_(terrain),
 running_(running),
 level_(
-    entityManager_,
+    entities,
     levelLoader_,
     levelProperties_,
     resourceManager_,
     terrain_
 ),
-target_(entityManager),
+target_(entities),
 textInput_(platform),
 args_({
     camera, 
-    entityManager, 
+    entities, 
     inputs, 
     platform, 
     renderer, 
@@ -182,19 +180,18 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.hasLevel_) {
-        SkeletonSystem::CalculateBasePoses(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        TransformSystem::ForceRenderTransforms(
-            entityManager_.entities_,
-            entityManager_.components_
-        );
-        entityManager_.DestroyEntities();
-        entityManager_.SpawnEntities();
+        // SkeletonSystem::CalculateBasePoses(
+        //     entityManager_.entities_,
+        //     entityManager_.components_
+        // );
+        // TransformSystem::ForceRenderTransforms(
+        //     entityManager_.entities_,
+        //     entityManager_.components_
+        // );
+        // entityManager_.DestroyEntities();
+        // entityManager_.SpawnEntities();
         renderer_.RenderEdit(
-            entityManager_.entities_, 
-            entityManager_.components_,
+            entities_, 
             *this,
             levelProperties_,
             terrain_ 

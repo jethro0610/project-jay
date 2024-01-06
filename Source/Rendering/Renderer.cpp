@@ -9,34 +9,30 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 }
 
 void Renderer::Render(
-    EntityList& entities,
-    ComponentList& components,
+    EntityListS& entities,
     LevelProperties& levelProperties,
     ParticleManager& particleManager, 
     SeedManager& seedManager,
     SpreadManager& spreadManager,
-    Terrain& terrain,
-    EntityListS& entitiesS
+    Terrain& terrain
 ) {
     StartFrame();
 
     RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
-    RenderEntities(entities, components);
-    RenderEntitiesS(entitiesS);
+    RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderSeed(seedManager, levelProperties.seedMaterial);
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(components);
+    RenderUI(entities);
     RenderScreenText();
 
     PresentFrame();
 }
 
 void Renderer::RenderEdit(
-    EntityList& entities,
-    ComponentList& components,
+    EntityListS& entities,
     Editor& editor,
     LevelProperties& levelProperties,
     Terrain& terrain 
@@ -44,7 +40,7 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
-    RenderEntities(entities, components, true);
+    RenderEntitiesS(entities);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

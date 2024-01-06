@@ -1,6 +1,6 @@
 #pragma once
-#include "Systems/SystemInc.h"
 #include "Terrain/Terrain.h"
+#include "Entity/EntityIDS.h"
 #include <array>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -10,7 +10,7 @@ struct Seed {
     glm::vec3 position;
     glm::vec3 offset;
     float gravityOffset;
-    EntityID targetEntity;
+    EntityIDS targetEntity;
     float startTime;
     float captureTime;
     glm::vec3 jitterOffset;
@@ -31,18 +31,15 @@ public:
     std::array<glm::vec4, MAX_SEED> positions_;
 
     void RemoveOldest();
-    void CreateSeed(glm::vec3 position, EntityID capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityID capturer = NULL_ENTITY);
+    void CreateSeed(glm::vec3 position, EntityIDS capturer = NULL_ENTITY, glm::vec3 offset = glm::vec3(0.0f));
+    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, EntityIDS capturer = NULL_ENTITY);
 
     void CalculatePositions(
-        ComponentList& components,
         Terrain& terrain,
         float interpTime
     );
 
     void GetCaptures(
-        EntityList& entities,
-        ComponentList& components
     );
 
     void Reset();

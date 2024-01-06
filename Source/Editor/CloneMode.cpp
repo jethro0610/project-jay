@@ -2,7 +2,7 @@
 #include "Camera/Camera.h"
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
-#include "Entity/EntityManager.h"
+#include "Entity/EntityListS.h"
 #include "EditorTarget.h"
 using namespace glm;
 
@@ -33,20 +33,18 @@ void CloneMode::SetSubmode(CloneMode::CloneSubmode submode) {
 }
 
 void CloneMode::OnStart() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-
     EditorMode::OnStart();
-    spawnPromise_.spawned = false;
     original_ = target_.Get();
-    originalDescription_ = resourceManager_.GetEntityDescription(entityManager_.entities_[original_].DBG_name);
-    originalTransform_ = transformComponent.transform[original_];
+    originalTransform_ = entities_[original_].transform_;
 
-    entityManager_.spawner_.Spawn(originalDescription_, originalTransform_, &spawnPromise_);
+    EntityIDS createdEntity = entities_.CreateEntity(entities_.GetTypeID(original_));
+    entities_[createdEntity].transform_ = originalTransform_;
+    target_.Set(createdEntity);
 }
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    entityManager_.destroyList_.push_back({target_.Get(), false});
+    entities_.DestroyEntity(target_.Get());
     target_.Set(original_);
 }
 
@@ -59,15 +57,6 @@ void CloneMode::Update() {
     if (platform_.pressedKeys_['T'])
         SetSubmode(CS_Terrain);
 
-    if (spawnPromise_.waiting) {
-        if (!spawnPromise_.spawned) return;
-        target_.Set(spawnPromise_.id);
-        spawnPromise_.waiting = false;
-        spawnPromise_.spawned = false;
-    }
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-    
     vec3 planarCameraForward = camera_.transform_.GetForwardVector();
     planarCameraForward.y = 0.0f;
     planarCameraForward = normalize(planarCameraForward);
@@ -76,28 +65,28 @@ void CloneMode::Update() {
     planarCameraRight.y = 0.0f;
     planarCameraRight = normalize(planarCameraRight);
 
+    EntityS& entity = entities_[target_.Get()]; 
     switch (submode_) {
         case CS_Planar:
-            transform.position =
+            entity.transform_.position =
                 originalTransform_.position +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
             break;
 
         case CS_Terrain:
-            transform.position =
+            entity.transform_.position =
                 originalTransform_.position +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            transform.position.y = terrain_.GetHeight(vec2(transform.position.x, transform.position.z));
+            entity.transform_.position.y = terrain_.GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
             break;
     }
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
-    Transform& transform = transformComponent.transform[target_.Get()];
-    entityManager_.spawner_.Spawn(originalDescription_, transform);
+    EntityIDS createdEntity = entities_.CreateEntity(entities_.GetTypeID(target_.Get()));
+    entities_[createdEntity].transform_ = entities_[target_.Get()].transform_;
 
     return CB_Stay;
 }

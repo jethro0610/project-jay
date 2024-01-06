@@ -1,6 +1,5 @@
 #include "LevelLoader.h"
 #include "Helpers/LoadHelpers.h"
-#include "Entity/EntityManager.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
 #include "Terrain/Terrain.h"
@@ -10,7 +9,6 @@
 #endif
 
 LevelLoader::LevelLoader(
-    EntityManager& entityManager, 
     LevelProperties& levelProperties,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
@@ -18,7 +16,6 @@ LevelLoader::LevelLoader(
     SpreadManager& spreadManager,
     Terrain& terrain
 ) :
-entityManager_(entityManager),
 levelProperties_(levelProperties),
 particleManager_(particleManager),
 resourceManager_(resourceManager),
@@ -71,20 +68,20 @@ bool LevelLoader::LoadLevel(const std::string& name, bool loadTerrain) {
     if (loadTerrain)
         terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
 
-    auto& entitiesData = levelData["entities"];
-    Transform entityTransform;
-    for (auto& entityData : entitiesData) {
-        entityTransform = GetTransform(entityData, "transform");
-        entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
-    }
-    entityManager_.SpawnEntities();
+    // auto& entitiesData = levelData["entities"];
+    // Transform entityTransform;
+    // for (auto& entityData : entitiesData) {
+    //     entityTransform = GetTransform(entityData, "transform");
+    //     entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
+    // }
+    // entityManager_.SpawnEntities();
 
     return true;
 }
 
 void LevelLoader::ClearLevel() {
-    entityManager_.Reset();
+    // entityManager_.Reset();
     // particleManager_.Reset();
-    spreadManager_.Reset();
-    seedManager_.Reset();
+    // spreadManager_.Reset();
+    // seedManager_.Reset();
 }

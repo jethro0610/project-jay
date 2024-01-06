@@ -9,34 +9,10 @@ set(CMAKE_BUILD_TYPE Debug)
 project(ProjectJay)
 
 file(GLOB SOURCES
-    Source/Entity/Entity.cpp
-    Source/Entity/EntityManager.cpp
-
     Source/Entity/EntityS.cpp
     Source/Entity/Player.cpp
     Source/Entity/BumpRat.cpp
     Source/Entity/EntityListS.cpp
-
-    Source/Systems/AISystem.cpp
-    Source/Systems/PushSystem.cpp
-    Source/Systems/HitSystem.cpp
-    Source/Systems/DestroyMeterSystem.cpp
-    Source/Systems/FreezeSystem.cpp
-    Source/Systems/GroundTraceSystem.cpp
-    Source/Systems/MovementSystem.cpp
-    Source/Systems/TransformSystem.cpp
-    Source/Systems/SpreadActivatorSystem.cpp
-    Source/Systems/SpreadDetectSystem.cpp
-    Source/Systems/TrampleSystem.cpp
-    Source/Systems/GroundStickSystem.cpp
-    Source/Systems/VelocitySystem.cpp
-    Source/Systems/ProjectileSystem.cpp
-    Source/Systems/IntervalSpawnSystem.cpp
-    Source/Systems/SkeletonSystem.cpp
-    Source/Systems/SpawnSystem.cpp
-    Source/Systems/SeedOnDestroySystem.cpp
-    Source/Systems/DestroyOnBoundSystem.cpp
-    Source/Systems/ParticleAttachSystem.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp
@@ -44,9 +20,6 @@ file(GLOB SOURCES
 
     Source/Collision/Collision.cpp
     Source/Collision/Ray.cpp
-
-    Source/AI/WalkerController.cpp
-    Source/AI/SpinRatController.cpp
 
     Source/Camera/Camera.cpp
 

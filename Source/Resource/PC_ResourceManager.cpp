@@ -427,26 +427,6 @@ void ResourceManager::UnloadModel(const std::string& name) {
         skeletons_.Remove(name);
 }
 
-void ResourceManager::LoadEntityDescription(const std::string& name) {
-    EntityDescription& description = entityDescs_.Add(name);
-    ASSIGN_DEBUG_NAME(description, name);
-
-    std::ifstream inFile("entities/" + name + ".json");
-    ASSERT(inFile.is_open(), "Failed to load entity " + name);
-
-    description.data = nlohmann::json::parse(inFile);
-
-    #ifdef _DEBUG
-    description.DBG_name = name;
-    #endif
-
-    DEBUGLOG("Loaded entity " << name);
-}
-void ResourceManager::UnloadEntityDescription(const std::string& name) {
-    DEBUGLOG("Unloaded entity " << name);
-    entityDescs_.Remove(name);
-}
-
 void ResourceManager::LoadEmitterProperties(const std::string& name) {
     EmitterProperties& properties = emitterProps_.Add(name);
     ASSIGN_DEBUG_NAME(properties, name);

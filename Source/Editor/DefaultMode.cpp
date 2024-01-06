@@ -3,7 +3,6 @@
 #include "Platform/PC_Platform.h"
 #include "Collision/Ray.h"
 #include "Rendering/Renderer.h"
-#include "Entity/EntityManager.h"
 #include "EditorTarget.h"
 using namespace glm;
 
@@ -95,7 +94,7 @@ void DefaultMode::Update() {
     }
 
     if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.Get() != NULL_ENTITY) {
-        entityManager_.destroyList_.push_back({target_.Get(), false});
+        entities_.DestroyEntity(target_.Get());
         target_.Set(NULL_ENTITY);
     }
 }
@@ -105,19 +104,17 @@ void DefaultMode::CameraUpdate() {
 }
 
 void DefaultMode::CursorUpdate() {
-    TransformComponent& transformComponent = entityManager_.components_.Get<TransformComponent>();
     if (platform_.pressedKeys_[LEFT_MOUSE_KEY]) {
         target_.Set(NULL_ENTITY);
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
-        for (int i = 0; i < MAX_ENTITIES; i++) {
-            const Entity& entity = entityManager_.entities_[i];
-            if (!entity.alive_) continue;
+        for (int i = 0; i < 128; i++) {
+            if (!entities_.Valid(i)) continue;
+            EntityS& entity = entities_[i];
 
-            Transform& transform = transformComponent.transform[i];
-            float dist = distance(camera_.transform_.position, transform.position);
+            float dist = distance(camera_.transform_.position, entity.transform_.position);
             if (
-                Ray::RayHitCollider(camera_.transform_.position, mouseRay, transform, entity.DBG_collider) &&
+                Ray::RayHitCollider(camera_.transform_.position, mouseRay, entity.transform_, entity.DBG_collider_) &&
                 dist < maxDist
             ) {
                 maxDist = dist;

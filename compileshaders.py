@@ -3,7 +3,6 @@ import platform
 import json
 import sys
 import subprocess
-import re
 import glob
 from termcolor import colored
 
@@ -18,6 +17,7 @@ executable_extension = ''
 use_shell = False
 recompile = False
 optimization = ''
+define_plat = ''
 if '-r' in sys.argv:
     recompile = True
 
@@ -26,10 +26,12 @@ if platform.system() == 'Windows':
     shader_profile = 's_5_0'
     executable_extension = '.exe'
     optimization = '-O 3'
+    define_plat = 'DX'
 elif platform.system() == 'Linux':
     shader_platform = 'linux'
     shader_profile = 'spirv'
     use_shell = True
+    define_plat = 'GL'
 
 shader_descriptions = dict()
 shared_file_paths = dict()
@@ -151,6 +153,7 @@ for desc in shader_descriptions.values():
 
     command = (
         './Tools/shaderc' + executable_extension + ' '
+        '--define ' + define_plat + ' '
         '-i ./Libraries/bgfx.cmake/bgfx/src '
         '-i ./Source/Shaders/Include/ ' +
         include_string +

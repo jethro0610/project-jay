@@ -66,7 +66,7 @@ bool Entity::GetFlag(Entity::Flag flag) {
 void Entity::BaseUpdate() {
     bool useVelocity = GetFlag(EF_UseVelocity);
 
-    if (GetFlag(EF_GroundCheck)) {
+    if (!skipGroundCheck_ && GetFlag(EF_GroundCheck)) {
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
@@ -75,16 +75,16 @@ void Entity::BaseUpdate() {
         else 
             onGround_ = false;
 
-        if (onGround_ && GetFlag(EF_StickToGround) && !noStickThisUpdate_) {
+        if (onGround_ && GetFlag(EF_StickToGround)) {
             if (useVelocity) 
                 velocity_.y = -distanceToSurface / GlobalTime::TIMESTEP;
             else
                 transform_.position.y = groundHeight_;
         }
-
-        if (velocity_.y < 0.0f)
-            noStickThisUpdate_ = false;
     }
+
+    if (velocity_.y < 0.0f)
+        skipGroundCheck_ = false;
 
     if (useVelocity)
         transform_.position += velocity_ * GlobalTime::TIMESTEP;
@@ -143,7 +143,7 @@ void Entity::BaseRenderUpdate(float interpTime) {
 }
 
 void Entity::ChangeAnimation(int index, float transitionLength) {
-    prevAnimIndex_ = index;
+    prevAnimIndex_ = animIndex_;
     animIndex_ = index; 
     prevAnimTime_ = animTime_;
     animTime_ = 0.0f;

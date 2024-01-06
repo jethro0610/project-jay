@@ -56,7 +56,10 @@ void Player::Update() {
     slopeEmitter_->active_ = false;
 
     moveMode_ = MM_Default;
-    if (inputs_->flow) {
+    if (stun_) {
+        moveMode_ = MM_Stun;
+    }
+    else if (inputs_->flow) {
         spinEmitter_->active_ = true;
         moveMode_ = MM_Spin;
     }
@@ -85,6 +88,7 @@ void Player::Update() {
     float acceleration = ((speed_ / speedDecay) - speed_);
 
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+    speed_ = min(MAX_SPEED, length(planarVelocity));
 
     velocity_.y -= 1.0f;
     switch (moveMode_) {
@@ -163,7 +167,13 @@ void Player::Update() {
             velocity_.z = travelDirection.z * speed_;
             break;
         }
+
+        case MM_Stun:
+            break;
     }
+
+    if (onGround_)
+        stun_ = false;
 
     int animation = 0;
     float transitionLength = 0.35f;
@@ -175,11 +185,11 @@ void Player::Update() {
         animation = 2;
 
     if (animation != animIndex_)
-        ChangeAnimation(animation, transitionLength_);
+        ChangeAnimation(animation, transitionLength);
 }
 
 void Player::RenderUpdate() {
-    speedEmtter_->transform_ = transform_;
-    spinEmitter_->transform_ = transform_;
-    slopeEmitter_->transform_ = transform_;
+    speedEmtter_->transform_ = renderTransform_;
+    spinEmitter_->transform_ = renderTransform_;
+    slopeEmitter_->transform_ = renderTransform_;
 }

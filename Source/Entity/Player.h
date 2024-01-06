@@ -7,7 +7,8 @@ public:
         MM_Default,
         MM_Spin,
         MM_Slope,
-        MM_Attack
+        MM_Attack,
+        MM_Stun
     };
 
     void Init(InitArgs args);

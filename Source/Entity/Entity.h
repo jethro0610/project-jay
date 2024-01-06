@@ -68,7 +68,7 @@ public:
     bool onGround_;
     float groundHeight_;
     glm::vec3 groundNormal_;
-    bool noStickThisUpdate_;
+    bool skipGroundCheck_;
 
     Model* model_;
     Material* materials_[Model::MAX_MESHES_PER_MODEL];

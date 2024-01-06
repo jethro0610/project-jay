@@ -9,9 +9,7 @@ using namespace std::chrono;
 
 void Game::Init() {
     srand(time(0));
-    // Create the camera and assign it to the renderer
     renderer_.camera_ = &camera_;
-
     camera_.target_ = &entities_[0];
 
     Entity& player = entities_.CreateEntity(Player::GetTypeID());
@@ -87,7 +85,6 @@ void Game::Update() {
         }
 
         for (const HitS& hit : hitList) {
-            // groundTraceComponent.disableStick[hit.target] = true;
             // hurtboxComponent.stunTimer[hit.target] = 0;
             // entities[hit.hitter].StartHitlag(hitbox.hitlag, false);
             // entities[hit.target].StartHitlag(hitbox.hitlag, true);
@@ -95,15 +92,8 @@ void Game::Update() {
             hit.target->stun_ = true;
             hit.target->hurt_ = true;
             hit.hitter->hit_ = true;
-            hit.target->noStickThisUpdate_ = true;
-
-            // if (hurtboxComponent.seedAmount[hit.target-> > 0) {
-            //     seedManager.CreateMultipleSeed(
-            //         transformComponent.transform[hit.target->.position, 
-            //         hurtboxComponent.seedAmount[hit.target->,
-            //         hurtboxComponent.seedRadius[hit.target->
-            //     );
-            // }
+            hit.target->skipGroundCheck_ = true;
+            hit.target->onGround_ = false;
 
             if (!hit.target->GetFlag(Entity::EF_RecieveKnockback))
                 continue;

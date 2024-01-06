@@ -8,9 +8,8 @@
 #include "Level/LevelProperties.h"
 #include "Level/LevelLoader.h"
 #include "Terrain/Terrain.h"
-
-#include "Entity/EntityList.h"
 #include "Entity/EntityUnion.h"
+#include "Entity/EntityList.h"
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"

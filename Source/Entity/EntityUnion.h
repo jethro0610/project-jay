@@ -3,8 +3,7 @@
 #include "Logging/Logger.h"
 
 struct EntityUnion {
-    EntityUnion() {
-    }
+    EntityUnion() {}
     union {
         #define ENTITYEXP(TYPE, VAR) TYPE VAR;
         EXPANDENTITIES

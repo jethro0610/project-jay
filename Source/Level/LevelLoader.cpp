@@ -1,14 +1,19 @@
 #include "LevelLoader.h"
 #include "Helpers/LoadHelpers.h"
+#include "Helpers/MapCheck.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
 #include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
+#include "Entity/EntityList.h"
+#include "Particle/ParticleManager.h"
+#include "Entity/EntityTypes.h"
 #ifdef _DEBUG
 #include <fstream>
 #endif
 
 LevelLoader::LevelLoader(
+    EntityList& entities,
     LevelProperties& levelProperties,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
@@ -16,6 +21,7 @@ LevelLoader::LevelLoader(
     SpreadManager& spreadManager,
     Terrain& terrain
 ) :
+entities_(entities),
 levelProperties_(levelProperties),
 particleManager_(particleManager),
 resourceManager_(resourceManager),
@@ -23,7 +29,9 @@ seedManager_(seedManager),
 spreadManager_(spreadManager),
 terrain_(terrain)
 {
-    
+    #define ENTITYEXP(TYPE, VAR) entityIds_[TYPE::GetName()] = TYPE::GetTypeID();
+    EXPANDENTITIES
+    #undef ENTITYEXP
 }
 
 bool LevelLoader::LoadLevel(const std::string& name, bool loadTerrain) {
@@ -68,20 +76,24 @@ bool LevelLoader::LoadLevel(const std::string& name, bool loadTerrain) {
     if (loadTerrain)
         terrain_.GenerateTerrainMap(levelProperties_.noiseLayers, levelProperties_.blob);
 
-    // auto& entitiesData = levelData["entities"];
-    // Transform entityTransform;
-    // for (auto& entityData : entitiesData) {
-    //     entityTransform = GetTransform(entityData, "transform");
-    //     entityManager_.spawner_.Spawn(resourceManager_.GetEntityDescription(entityData["name"]), entityTransform);
-    // }
-    // entityManager_.SpawnEntities();
+    auto& entitiesData = levelData["entities"];
+    Transform entityTransform;
+    for (auto& entityData : entitiesData) {
+        Entity::TypeID type = GetFromMap<Entity::TypeID>(
+            entityIds_, 
+            entityData["name"], 
+            "entity " + entityData["name"].get<std::string>() + " not found"
+        ); 
+        Entity& entity = entities_.CreateEntity(type);
+        entity.transform_ = GetTransform(entityData, "transform");
+    }
 
     return true;
 }
 
 void LevelLoader::ClearLevel() {
-    // entityManager_.Reset();
-    // particleManager_.Reset();
-    // spreadManager_.Reset();
-    // seedManager_.Reset();
+    entities_.Reset();
+    particleManager_.Reset();
+    spreadManager_.Reset();
+    seedManager_.Reset();
 }

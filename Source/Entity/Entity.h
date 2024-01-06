@@ -9,7 +9,7 @@
 #include <inttypes.h>
 
 class Camera;
-class Inputs;
+struct Inputs;
 class ParticleManager;
 class ResourceManager;
 class Terrain;

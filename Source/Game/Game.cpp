@@ -14,11 +14,11 @@ void Game::Init() {
     renderer_.camera_ = &camera_;
     camera_.target_ = &entities_[0];
 
-    Entity& player = entities_.CreateEntity(Player::GetTypeID());
-    player.transform_.position = vec3(0.0f, 10.0f, 0.0f);
-
-    Entity& rat = entities_.CreateEntity(BumpRat::GetTypeID());
-    rat.transform_.position = vec3(10.0f, 10.0f, 10.0f);
+    // Entity& player = entities_.CreateEntity(Player::GetTypeID());
+    // player.transform_.position = vec3(0.0f, 10.0f, 0.0f);
+    //
+    // Entity& rat = entities_.CreateEntity(BumpRat::GetTypeID());
+    // rat.transform_.position = vec3(10.0f, 10.0f, 10.0f);
 
     #ifdef _DEBUG
     editor_.StartEditing();

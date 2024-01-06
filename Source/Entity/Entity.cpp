@@ -51,6 +51,12 @@ void Entity::Init(
     stun_ = false;
     hitlag_ = 0;
     hurtCooldown_ = 0;
+
+    #ifdef _DEBUG
+    DBG_collider_.radius = 1.0f;
+    DBG_collider_.top = 1.0f;
+    DBG_collider_.bottom = 1.0f;
+    #endif
 }
 
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
@@ -96,7 +102,7 @@ void Entity::BaseUpdate() {
         int prevAnimFramerate = skeleton_->GetFramerate(prevAnimIndex_);
         int curAnimFramerate = skeleton_->GetFramerate(animIndex_);
         int framerate = transitionTime_ < transitionLength_ ? 
-            std::lerp(prevAnimFramerate, curAnimFramerate, std::clamp(transitionTime_ / transitionLength_, 0.0f, 1.0f)) :
+            std::lerp(prevAnimFramerate, curAnimFramerate, clamp(transitionTime_ / transitionLength_, 0.0f, 1.0f)) :
             curAnimFramerate;
 
         if (transitionTime_ >= transitionLength_ || transitionLength_ == 0.0f) {

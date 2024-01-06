@@ -2,13 +2,13 @@
 #include "Entity.h"
 #include <vector_holed.h>
 
-class EntityUnion;
+struct EntityUnion;
 class ParticleManager;
 class ResourceManager;
 
 class EntityList {
 public:
-    EntityList (
+    EntityList(
         EntityUnion* rawEntities,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
@@ -19,6 +19,7 @@ public:
 
     Entity& operator[](int index);
     Entity& CreateEntity(Entity::TypeID type);
+    void Reset();
 
 private:
     int available_[128];

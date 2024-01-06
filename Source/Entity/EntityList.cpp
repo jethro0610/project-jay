@@ -29,6 +29,14 @@ Entity& EntityList::operator[](int index) {
     return rawEntities_[index].entity;
 }
 
+void EntityList::Reset() {
+    for (int i = 0; i < 128; i++) {
+        available_[i] = i;
+        rawEntities_[i].entity.alive_ = false;
+    }
+    availablePos_ = 0;
+}
+
 Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
@@ -42,7 +50,7 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
 
     #ifdef _DEBUG
     switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
+        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy_s(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

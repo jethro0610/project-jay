@@ -10,6 +10,7 @@ void BumpRat::Init(Entity::InitArgs args) {
     Entity::Init(args);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
+    SetFlag(EF_AlignToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);

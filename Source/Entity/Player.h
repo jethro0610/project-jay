@@ -41,6 +41,7 @@ public:
 
     PlayerMoveMode moveMode_;
     float speed_;
+    float tilt_;
 
     int attackActiveTimer_;
     int attackCharge_;

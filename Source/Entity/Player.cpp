@@ -21,6 +21,7 @@ void Player::Init(Entity::InitArgs args)
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
+    SetFlag(EF_AlignToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
     SetFlag(EF_Interpolate, true);
@@ -60,7 +61,7 @@ void Player::Init(Entity::InitArgs args)
 }
 
 void Player::Update() {
-    speedEmtter_->active_ = false;
+    speedEmtter_->active_ = speed_ > 35.0f;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
@@ -244,12 +245,23 @@ void Player::Update() {
 
     if (animation != animIndex_)
         ChangeAnimation(animation, transitionLength);
+
+    float desiredTilt = 0.0f;
+    if (moveLength > 0.001f)
+        desiredTilt = dot(desiredMovement / moveLength, transform_.GetRightVector()) * 0.35f;
+
+    tilt_ = lerp(tilt_, desiredTilt, 0.05f);
 }
 
 void Player::RenderUpdate() {
     speedEmtter_->transform_ = renderTransform_;
     spinEmitter_->transform_ = renderTransform_;
     slopeEmitter_->transform_ = renderTransform_;
+
+    vec3 tiltUp = mix(Transform::worldUp, transform_.GetRightVector(), tilt_);
+    tiltUp = normalize(tiltUp);
+    quat tiltDelta = rotation(Transform::worldUp, tiltUp);
+    renderTransform_.rotation = tiltDelta * renderTransform_.rotation;
 }
 
 void Player::OnHit() {}

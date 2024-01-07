@@ -30,6 +30,7 @@ public:
         EF_Interpolate,
         EF_GroundCheck,
         EF_StickToGround,
+        EF_AlignToGround,
         EF_UseVelocity,
         EF_UseSkeleton,
         EF_SendPush,
@@ -67,6 +68,7 @@ public:
     float traceDistance_;
     bool onGround_;
     float groundHeight_;
+    glm::vec3 lastGroundNormal_;
     glm::vec3 groundNormal_;
     bool skipGroundCheck_;
 

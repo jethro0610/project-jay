@@ -2,6 +2,7 @@
 #include "Time/Time.h"
 #include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
+#include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
 void Entity::Construct(
@@ -76,6 +77,7 @@ void Entity::BaseUpdate() {
     bool useVelocity = GetFlag(EF_UseVelocity);
 
     if (hitlag_ == 0 && !skipGroundCheck_ && GetFlag(EF_GroundCheck)) {
+        lastGroundNormal_ = groundNormal_;
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
@@ -160,9 +162,19 @@ void Entity::BaseRenderUpdate(float interpTime) {
             transform_,
             interpTime
         );
+
+        if (GetFlag(EF_AlignToGround)) {
+            vec3 up = lerp(lastGroundNormal_, groundNormal_, interpTime);
+            quat delta = rotation(Transform::worldUp, up);
+            renderTransform_.rotation = delta * renderTransform_.rotation;
+        }
     }
-    else
+    else {
         renderTransform_ = transform_;
+        quat delta = rotation(Transform::worldUp, groundNormal_);
+        renderTransform_.rotation = delta * renderTransform_.rotation;
+    }
+
     
     if (hitlag_ > 0 && stun_) {
         renderTransform_.position.x += pow(sin(GlobalTime::GetTime() * 100.0f + 8.0f), 2.0f) * 0.5f;

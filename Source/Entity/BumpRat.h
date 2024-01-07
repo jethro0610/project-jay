@@ -7,6 +7,17 @@ public:
 
     static constexpr TypeID GetTypeID() { return 2; };
     static constexpr const char* GetName() { return "e_spinrat"; }
+
+    static constexpr int BACK = 0;
+    static constexpr int BODY = 1;
+    static constexpr int BACKEARS = 2;
+    static constexpr int FRONTEARS = 3;
+    static constexpr int EYES = 4;
+    static constexpr int NOSE = 5;
+    static constexpr int BELLY = 6;
+    static constexpr glm::vec4 BODYCOLOR = glm::vec4(0.55f, 0.65f, 1.0f, 1.0f);
+    static constexpr glm::vec4 LINECOLOR = glm::vec4(0.75f, 0.85f, 1.0f, 1.0f);
+
     static constexpr float SPEED = 60.0f;
     static constexpr float FRICTION = 0.05f;
     static constexpr float SPEED_DECAY = 1.0f - FRICTION;

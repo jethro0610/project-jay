@@ -20,5 +20,5 @@ void RabbitPole::Init(Entity::InitArgs args) {
     materials_[0].properties.variationMin = 0.65f;
     materials_[0].properties.variationMax = 1.25f;
     materials_[0].properties.variationPower = 0.5f;
-    materials_[0].properties.texScale = glm::vec2(1.0f);
+    materials_[0].properties.texScale = glm::vec2(2.0f);
 }

@@ -19,10 +19,32 @@ void Game::Init() {
     //
     // Entity& rat = entities_.CreateEntity(BumpRat::GetTypeID());
     // rat.transform_.position = vec3(10.0f, 10.0f, 10.0f);
+    DEBUGLOG("init");
 
     #ifdef _DEBUG
     editor_.StartEditing();
     #endif
+
+    float lastDeltaTime = 0.0f;
+    while (running_) {
+        GlobalTime::UpdateTime();
+        SCREENLINE(0, "Frame Time(ms): " + std::to_string(GlobalTime::GetDeltaTime() * 1000.0f));
+
+        platform_.FlushMouse();
+        glfwPollEvents();
+        platform_.UpdateMouseMovement();
+        platform_.PollGamepad();
+        UpdateInputs_P();
+
+        #ifdef _DEBUG
+        if (!editor_.IsActive())
+            Update();
+        else
+            editor_.Update();
+        #else
+            Update(); 
+        #endif
+    }
 }
 
 struct HitS {

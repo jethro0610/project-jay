@@ -16,6 +16,15 @@ public:
     static constexpr TypeID GetTypeID() { return 1; };
     static constexpr const char* GetName() { return "e_player"; }
 
+    static constexpr int BAND = 0;
+    static constexpr int BODY = 1;
+    static constexpr int HAIR = 2;
+    static constexpr int MASK = 3;
+    static constexpr int PANTS = 4;
+    static constexpr int RIBBON = 5;
+    static constexpr int SHIRT = 6;
+    static constexpr int SLIPPERS = 7;
+
     static constexpr float MIN_SPEED = 12.0f;
     static constexpr float MAX_SPEED = 120.0f;
     static constexpr float MIN_FRICTION = 0.015f;

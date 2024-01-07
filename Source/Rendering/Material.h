@@ -27,6 +27,23 @@ struct MaterialProperties {
     float variationMin;
     float variationMax;
     float variationPower;
+        
+    static MaterialProperties Default() {
+        return {
+            glm::vec4(1.0f),
+            glm::vec2(1.0f),
+            32.0f,
+            0.3f,
+            1.5f,
+            4.0f,
+            1.0f,
+            1.0f,
+            1.0f,
+            0.0f,
+            1.0f,
+            1.0f
+        };
+    }
 };
 
 struct Material {

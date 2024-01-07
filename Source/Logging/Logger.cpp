@@ -5,6 +5,7 @@
 Logger* Logger::logger_ = nullptr;
 
 Logger::Logger() {
+    logger_ = this;
     bool logsToMove[4] = { false, false, false };
     const std::filesystem::path rootPath("./");
 
@@ -33,11 +34,6 @@ Logger::Logger() {
     }
 
     outfile_.open("log0.txt", std::ios::out);
-}
-
-void Logger::Init() {
-    assert(logger_ == nullptr);
-    logger_ = new Logger();
 }
 
 void Logger::Close() {

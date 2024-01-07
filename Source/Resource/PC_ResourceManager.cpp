@@ -152,7 +152,7 @@ void ResourceManager::LoadGlobalTerrain() {
     int size = ceil(Terrain::MESH_SIZE * Terrain::MESH_DENSITY) + 1;
 
     int numVertices = size * size;
-    WorldVertex* vertices =  new WorldVertex[numVertices];
+    WorldVertex vertices[numVertices];
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++) {
         uint16_t index = y * size + x;
@@ -167,10 +167,9 @@ void ResourceManager::LoadGlobalTerrain() {
         WorldVertex::layout
     );
     DEBUGLOG("Created terrain mesh with " << numVertices << " vertices");
-    delete[] vertices;
     
     int numIndices = (size - 1) * (size - 1) * 6;
-    uint16_t* terrainIndices = new uint16_t[numIndices];
+    uint16_t terrainIndices[numIndices];
     int count = 0;
     for (int x = 0; x < size - 1; x++)
     for (int y = 0; y < size - 1; y++) {
@@ -193,7 +192,6 @@ void ResourceManager::LoadGlobalTerrain() {
             sizeof(uint16_t) * numIndices
         )
     );
-    delete[] terrainIndices;
     globals_.insert("st_terrainsheet");
 }
 

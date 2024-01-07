@@ -7,14 +7,16 @@
 #include "../Logging/ScreenText.h"
 #endif
 
-int main() {
+GlobalTime globalTime;
 #ifdef _DEBUG
-    Logger::Init();
-    ScreenText::Init();
+Logger logger;
+ScreenText screenText;
 #endif
-    GlobalTime::Init();
+Game game;
+
+int main() {
     DEBUGLOG("Starting Project Jay...");
-    Game* game = new Game();
+    game.Init();
     DEBUGLOG("Closing Project Jay");
     Logger::Close();
 }

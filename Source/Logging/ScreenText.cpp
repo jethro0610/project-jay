@@ -4,6 +4,9 @@
 ScreenText* ScreenText::screenText_ = nullptr;
 
 ScreenText::ScreenText() {
+    assert(screenText_== nullptr);
+    screenText_ = this;
+
     enabled_ = false;
     for (int i = 0; i < MAX_LINES; i++) {
         text_[i].properties_.position.y = i * SCALE;
@@ -35,9 +38,4 @@ void ScreenText::Toggle() {
 
 void ScreenText::SetEnabled(bool enabled) {
     screenText_->enabled_ = enabled;
-}
-
-void ScreenText::Init() {
-    assert(screenText_== nullptr);
-    screenText_ = new ScreenText();
 }

@@ -3,12 +3,12 @@
 
 GlobalTime* GlobalTime::time_ = nullptr;
 
-void GlobalTime::Init() {
-    time_ = new GlobalTime();
-    time_->deltaTime_ = 0.0f;
-    time_->elapsedTime_ = 0.0f;
-    time_->currentTimeUSec_ = duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    time_->lastTimeUSec_ = time_->currentTimeUSec_;
+GlobalTime::GlobalTime() {
+    time_ = this;
+    deltaTime_ = 0.0f;
+    elapsedTime_ = 0.0f;
+    currentTimeUSec_ = duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    lastTimeUSec_ = currentTimeUSec_;
 }   
 
 void GlobalTime::UpdateTime() {

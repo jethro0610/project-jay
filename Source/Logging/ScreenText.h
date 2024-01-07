@@ -10,13 +10,12 @@
 
 class ScreenText {
 public:
+    ScreenText();
     static constexpr int MAX_LINES = 12;
     static constexpr float SCALE = 48.0f;
     static constexpr float KERNING = 0.5f;
 
 private:
-    ScreenText();
-    ~ScreenText();
     static ScreenText* screenText_;
     std::array<Text, MAX_LINES> text_;
     bool enabled_;
@@ -28,6 +27,5 @@ public:
     static void Clear();
     static std::array<Text, MAX_LINES>& GetText() { return screenText_->text_; }
     static void Toggle();
-    static void Init();
     static void SetEnabled(bool enabled);
 };

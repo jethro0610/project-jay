@@ -12,13 +12,10 @@
 
 #ifdef _DEBUG
 class Logger {
-private:
+public:
     Logger();
     static Logger* logger_;
-
-public:
     std::ofstream outfile_;
-    static void Init();
     static Logger* Get();
     static void Close();
 };

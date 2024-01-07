@@ -24,29 +24,44 @@ void BumpRat::Init(Entity::InitArgs args) {
     model_ = resourceManager.GetModel("sk_spinrat");
     skeleton_ = resourceManager.GetSkeleton("sk_spinrat");
     for (int i = 0; i < 7; i++) {
-        materials_[i].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
-
-        materials_[i].properties.specularPower = 32.0f;
-        materials_[i].properties.specularThreshold = 0.3f;
-        materials_[i].properties.specularBrightness = 1.5f;
-
-        materials_[i].properties.fresnelPower = 4.0f;
-        materials_[i].properties.fresnelScale = 1.0f;
-        materials_[i].properties.fresnelBrightness = 1.0f;
-
-        materials_[i].properties.texScale = vec2(1.0f);
-
-        materials_[i].properties.color = vec4(0.75f);
+        materials_[i].properties = MaterialProperties::Default();
     }
-    // materials_[0] = resourceManager.GetMaterial("m_spinrat_back");
-    // materials_[1] = resourceManager.GetMaterial("m_spinrat_body");
-    // materials_[2] = resourceManager.GetMaterial("m_spinrat_ears_b");
-    // materials_[3] = resourceManager.GetMaterial("m_spinrat_ears_f");
-    // materials_[4] = resourceManager.GetMaterial("m_spinrat_eyes");
-    // materials_[5] = resourceManager.GetMaterial("m_spinrat_nose");
-    // materials_[6] = resourceManager.GetMaterial("m_spinrat_swirl");
+
+    materials_[BACK].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BACK].properties.color = LINECOLOR;
+    materials_[BACK].numTextures = 1;
+    materials_[BACK].textures[0] = resourceManager.GetTexture("t_spinrat_back_m");
+
+    materials_[BODY].shader = resourceManager.GetShader("vs_skeletal", "fs_aura");
+    materials_[BODY].properties.color = BODYCOLOR;
+    materials_[BODY].properties.fresnelPower = 0.15f;
+
+    materials_[FRONTEARS].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[FRONTEARS].properties.color = LINECOLOR;
+    materials_[FRONTEARS].numTextures = 1;
+    materials_[FRONTEARS].textures[0] = resourceManager.GetTexture("t_spinrat_ears_f_m");
+
+    materials_[BACKEARS].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BACKEARS].properties.color = LINECOLOR;
+    materials_[BACKEARS].numTextures = 1;
+    materials_[BACKEARS].textures[0] = resourceManager.GetTexture("t_spinrat_ears_b_m");
+
+    materials_[EYES].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[EYES].properties.color = LINECOLOR;
+    materials_[EYES].numTextures = 1;
+    materials_[EYES].textures[0] = resourceManager.GetTexture("t_spinrat_eyes_m");
+
+    materials_[NOSE].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[NOSE].properties.color = LINECOLOR;
+    materials_[NOSE].numTextures = 1;
+    materials_[NOSE].textures[0] = resourceManager.GetTexture("t_spinrat_nose_m");
+
+    materials_[BELLY].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BELLY].properties.color = LINECOLOR;
+    materials_[BELLY].numTextures = 1;
+    materials_[BELLY].textures[0] = resourceManager.GetTexture("t_spinrat_swirl_m");
 
     pose_.resize(skeleton_->bones_.size());
     renderPose_.resize(skeleton_->bones_.size());

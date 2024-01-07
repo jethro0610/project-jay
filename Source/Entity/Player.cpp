@@ -35,22 +35,38 @@ void Player::Init(Entity::InitArgs args)
     skeleton_ = resourceManager.GetSkeleton("sk_char");
 
     for (int i = 0; i < 8; i++) {
-        materials_[i].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
-
-        materials_[i].properties.specularPower = 32.0f;
-        materials_[i].properties.specularThreshold = 0.3f;
-        materials_[i].properties.specularBrightness = 1.5f;
-
-        materials_[i].properties.fresnelPower = 4.0f;
-        materials_[i].properties.fresnelScale = 1.0f;
-        materials_[i].properties.fresnelBrightness = 1.0f;
-
-        materials_[i].properties.texScale = vec2(1.0f, 1.0f);
-
-        materials_[i].properties.color = vec4(0.15f);
+        materials_[i].properties = MaterialProperties::Default();
     }
+    materials_[BAND].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[BAND].properties.color = vec4(0.85f);
+
+    materials_[BODY].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[BODY].properties.color = vec4(0.85f);
+
+    materials_[HAIR].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color_masked");
+    materials_[HAIR].properties.color = vec4(0.85f);
+    materials_[HAIR].numTextures = 1;
+    materials_[HAIR].textures[0] = resourceManager.GetTexture("t_hair_m");
+
+    materials_[MASK].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[MASK].properties.color = vec4(0.55f);
+
+    materials_[PANTS].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[PANTS].properties.color = vec4(0.55f);
+
+    materials_[RIBBON].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[RIBBON].properties.color = vec4(0.85f);
+
+    materials_[SHIRT].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[SHIRT].properties.color = vec4(0.85f);
+    materials_[SHIRT].triangleType = TriangleType::TWO_SIDED;
+    materials_[SHIRT].properties.specularBrightness = 0.0f;
+
+    materials_[SLIPPERS].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+    materials_[SLIPPERS].properties.color = vec4(0.85f);
+
     pose_.resize(skeleton_->bones_.size());
     renderPose_.resize(skeleton_->bones_.size());
 

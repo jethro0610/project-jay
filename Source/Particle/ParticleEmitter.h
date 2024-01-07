@@ -22,7 +22,7 @@ struct Particle {
 struct EmitterProperties {
     USE_DEBUG_NAME;
     EmitterProperties() {
-        material = nullptr;
+        material = {};
         localSpace = false;
         spawnInterval = 0.0f;
         spawnCount = 0.0f;
@@ -37,7 +37,7 @@ struct EmitterProperties {
         startColor = {};
         endColor = {};
     }
-    Material* material;
+    Material material;
     bool localSpace;
     float spawnInterval;
     int spawnCount;
@@ -59,13 +59,13 @@ struct EmitterProperties {
 };
 
 struct ParticleEmitter {
+    EmitterProperties properties_;
     bool alive_;
     bool active_;
     bool release_;
     vector_contig<Particle, MAX_PARTICLES> particles_;
     Transform transform_;
     Transform lastTransform_;
-    EmitterProperties* properties_;
     float timer_;
     glm::vec3 velocityOffset_;
 
@@ -74,7 +74,7 @@ struct ParticleEmitter {
         active_ = false;
         release_ = false;
         transform_ = Transform();
-        properties_ = nullptr;
+        properties_ = {};
         timer_ = 0.0f;
         velocityOffset_ = glm::vec3(0.0f);
     }

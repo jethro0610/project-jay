@@ -2,13 +2,13 @@
 #include "RenderDefs.h"
 #include "Debug/DebugName.h"
 
-struct FragmentShader {
+struct Shader {
     USE_DEBUG_NAME;
     ShaderHandle handle;
-    FragmentShader() {
+    Shader() {
         handle = DEFAULT_HANDLE;
     }
-    FragmentShader(ShaderHandle h) {
+    Shader(ShaderHandle h) {
         handle = h;
     }
 };

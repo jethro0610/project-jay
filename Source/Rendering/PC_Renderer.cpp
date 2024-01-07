@@ -38,7 +38,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
         ShadowConstants::SHADOW_DISTANCE
     );
 
-    for (int i = 0; i < Material::MAX_TEXTURES_PER_MATERIAL; i++) {
+    for (int i = 0; i < Material::MAX_TEXTURES; i++) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
@@ -184,10 +184,8 @@ void Renderer::RenderMesh(
     int curPass = 0;
     int curFace = 0;
 
-    mat4 transposeProps = transpose(material->properties);
-
     for (int n = 0; n < numOfRenders; n++) {
-        bgfx::setUniform(u_materialProps_, &transposeProps);
+        bgfx::setUniform(u_materialProps_, &material->properties);
         if (pose != nullptr)
             bgfx::setUniform(u_pose_, pose->data(), Bone::MAX_BONES);
         if (modelMatrix != nullptr)
@@ -274,7 +272,7 @@ void Renderer::RenderEntitiesS(
 
         Model* model = entity.model_;
         for (int m = 0; m < model->meshes.size(); m++) {
-            Material* material = entity.materials_[m];
+            Material* material = &entity.materials_[m];
             Mesh* mesh = &model->meshes[m];
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose: nullptr);
         }
@@ -342,18 +340,18 @@ void Renderer::RenderParticles(ParticleManager& particleManager) {
 }
 
 void Renderer::RenderPostProcess() {
-    SetTexturesFromMaterial(postProcessMaterial_, false);
+    SetTexturesFromMaterial(&postProcessMaterial_, false);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(POSTROCESS_VIEW, postProcessMaterial_->shaderHandle);
+    bgfx::submit(POSTROCESS_VIEW, postProcessMaterial_.shader->handle);
 }
 
 void Renderer::RenderBlit() {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
-    bgfx::setTexture(0, samplers_[0], blitMaterial_->textures[0]->handle);
+    bgfx::setTexture(0, samplers_[0], blitMaterial_.textures[0]->handle);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, blitMaterial_->shaderHandle);
+    bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
 }
 
 void Renderer::RenderUI(EntityList& entities) {
@@ -393,7 +391,7 @@ void Renderer::RenderText(Text& text) {
     bgfx::setInstanceDataBuffer(&instanceBuffer);
 
     // TODO: Move text material to Text class?
-    bgfx::setTexture(0, samplers_[0], textMaterial_->textures[0]->handle);
+    bgfx::setTexture(0, samplers_[0], textMaterial_.textures[0]->handle);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
@@ -417,7 +415,7 @@ void Renderer::RenderEditor(Editor& editor) {
 }
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
-    for (int i = 0; i < material->textures.size(); i++)
+    for (int i = 0; i < material->numTextures; i++)
         bgfx::setTexture(i, samplers_[i], material->textures[i]->handle);
 
     if (shadowMap)

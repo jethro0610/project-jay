@@ -3,16 +3,15 @@
 #include "Rendering/Model.h"
 #include "Terrain/BlobProperties.h"
 #include "Terrain/NoiseLayer.h"
-#include <array>
 #include <vector_const.h>
 
 struct LevelProperties {
     Model* spreadModel;
-    vector_const<Material*, Model::MAX_MESHES_PER_MODEL> spreadMaterials;
+    Material spreadMaterials[Model::MAX_MESHES_PER_MODEL];
 
-    Material* terrainMaterial; 
-    Material* seedMaterial;
+    Material terrainMaterial; 
+    Material seedMaterial;
 
-    std::array<NoiseLayer, NoiseLayer::MAX> noiseLayers;
+    NoiseLayer noiseLayers[NoiseLayer::MAX];
     BlobProperties blob;
 };

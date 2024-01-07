@@ -1,9 +1,6 @@
 #pragma once
-#include "RenderDefs.h"
 #include "Texture.h"
-#include "Debug/DebugName.h"
-#include <vector_const.h>
-#include <glm/mat4x4.hpp>
+#include "Shader.h"
 
 enum TriangleType {
     ONE_SIDED,
@@ -12,26 +9,31 @@ enum TriangleType {
 };
 
 struct Material {
-    USE_DEBUG_NAME;
-    static constexpr int MAX_TEXTURES_PER_MATERIAL = 8;
+    static constexpr int MAX_TEXTURES = 8;
+    static constexpr int MAX_PROPERTIES = 16;
     static constexpr int SHADOW_TEXINDEX = 14;
     static constexpr int TERRAIN_MAP_TEXINDEX = 15;
 
     Material() {
-        shaderHandle = BGFX_INVALID_HANDLE;
-        shadowShaderHandle = BGFX_INVALID_HANDLE;
-        textures = {};
+        shader = nullptr;
+        shader = shadowShader;
         castShadows = false;
         triangleType = TriangleType::ONE_SIDED;
-        properties = {};
+
+        numTextures = 0;
+        for(int i = 0; i < MAX_TEXTURES; i++)
+            textures[i] = nullptr;
+
+        for (int i = 0; i < MAX_PROPERTIES; i++)
+            properties[i] = 0.0f;
     }
 
-    // If necessary, can typedef this so there's separate
-    // VS and FS instead of one shader program
-    MaterialShaderHandle shaderHandle;
-    MaterialShaderHandle shadowShaderHandle;
-    vector_const<Texture*, MAX_TEXTURES_PER_MATERIAL> textures;
+    Shader* shader;
+    Shader* shadowShader;
+
+    int numTextures;
+    Texture* textures[MAX_TEXTURES];
     bool castShadows;
     TriangleType triangleType;
-    glm::mat4 properties;
+    float properties[MAX_PROPERTIES];
 };

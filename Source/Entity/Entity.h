@@ -73,7 +73,7 @@ public:
     bool skipGroundCheck_;
 
     Model* model_;
-    Material* materials_[Model::MAX_MESHES_PER_MODEL];
+    Material materials_[Model::MAX_MESHES_PER_MODEL];
 
     Skeleton* skeleton_;
     Pose pose_;

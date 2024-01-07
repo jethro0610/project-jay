@@ -2,11 +2,12 @@
 #include <bgfx/bgfx.h>
 
 typedef bgfx::UniformHandle UniformHandle;
-typedef bgfx::ShaderHandle ShaderHandle;
+typedef bgfx::ShaderHandle VertexShaderHandle;
+typedef bgfx::ShaderHandle FragmentShaderHandle;
 typedef bgfx::VertexBufferHandle VertexBufferHandle;
 typedef bgfx::IndexBufferHandle IndexBufferHandle;
 typedef bgfx::InstanceDataBuffer InstanceBufferHandle;
-typedef bgfx::ProgramHandle MaterialShaderHandle;
+typedef bgfx::ProgramHandle ShaderHandle;
 
 typedef bgfx::TextureHandle TextureHandle;
 typedef bgfx::UniformHandle TextureSamplerHandle;

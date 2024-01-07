@@ -13,7 +13,7 @@ public:
     std::array<ParticleEmitter, MAX_EMITTERS> emitters_; 
     std::deque<int> usableEmitters_;
     
-    ParticleEmitter* RequestEmitter(EmitterProperties* properties);
+    ParticleEmitter* RequestEmitter();
 
     void Update(float deltaTime);
 

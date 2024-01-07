@@ -138,6 +138,7 @@ def make_shaderdescs_in_folder(path, shader_type):
     for filename in filenames:
         make_shaderdesc(path + filename, shader_type)
 
+
 make_shaderdescs_in_folder(input_path + 'Vertex/', 'vertex')
 make_shaderdescs_in_folder(input_path + 'Fragment/', 'fragment')
 

@@ -34,7 +34,7 @@ void Entity::Init(
 
     model_ = nullptr;
     for (int i = 0; i < Model::MAX_MESHES_PER_MODEL; i++)
-        materials_[i] = nullptr;
+        materials_[i] = {};
 
     skeleton_ = nullptr;
     pose_ = {};

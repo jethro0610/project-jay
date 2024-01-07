@@ -4,6 +4,8 @@
 #include "Terrain/Terrain.h"
 #include "Helpers/Assert.h"
 #include "Helpers/LoadHelpers.h"
+#include "VertexShaders.h"
+#include "FragmentShaders.h"
 
 using namespace glm;
 
@@ -63,30 +65,9 @@ void ResourceManager::LoadGlobalFile() {
     ASSERT(inFile.is_open(), "Failed to load global file");
 
     auto globals = nlohmann::json::parse(inFile);
-    for (auto& vertexShader : globals["vertex_shaders"]) {
-        LoadVertexShader(vertexShader);
-        globals_.insert(vertexShader);
-    }
-    for (auto& fragmentShader : globals["fragment_shaders"]) {
-        LoadFragmentShader(fragmentShader);
-        globals_.insert(fragmentShader);
-    }
     for (auto& texture: globals["textures"]) {
         LoadTexture(texture);
         globals_.insert(texture);
-    }
-    for (auto& material : globals["materials"]) {
-        LoadMaterial(material);
-        globals_.insert(material);
-
-        #ifdef _DEBUG
-        globals_.insert(material.get<std::string>() + "_selected");
-        #endif
-    }
-
-    for (auto& emitterProperty : globals["emitter_properties"]) {
-        LoadEmitterProperties(emitterProperty);
-        globals_.insert(emitterProperty);
     }
 
     for (auto& model : globals["models"]) {
@@ -232,38 +213,38 @@ void ResourceManager::LoadGlobalTerrain() {
     file.read((char*)memory->data, fileSize);                   \
     file.close()
 
-void ResourceManager::LoadVertexShader(const std::string& name) {
-    VertexShader& shader = vertexShaders_.Add(name);
-    ASSIGN_DEBUG_NAME(shader, name);
-    std::string path = "./shaders/" + name + ".bin";
-    MEMORYFROMFILE(path);
-    if (memory == nullptr)
-        abort();
+void ResourceManager::LoadAllShaders() {
+    bgfx::ShaderHandle vertexShaders[NUM_VERTEX_SHADERS];
+    for (int i = 0; i < NUM_VERTEX_SHADERS; i++) {
+        std::string path = "./shaders/" + std::string(VERTEX_SHADERS[i]) + ".bin";
 
-    shader.handle = bgfx::createShader(memory);
-    DEBUGLOG("Loaded vertex shader " << name);
-}
-void ResourceManager::UnloadVertexShader(const std::string& name) {
-    bgfx::destroy(vertexShaders_.Get(name).handle);
-    DEBUGLOG("Unloaded vertex shader " << name);
-    vertexShaders_.Remove(name);
-}
+        MEMORYFROMFILE(path);
+        if (memory == nullptr)
+            abort(); 
+        vertexShaders[i] = bgfx::createShader(memory);
+    }
 
-void ResourceManager::LoadFragmentShader(const std::string& name) {
-    FragmentShader& shader = fragmentShaders_.Add(name);
-    ASSIGN_DEBUG_NAME(shader, name);
-    std::string path = "./shaders/" + name + ".bin";
-    MEMORYFROMFILE(path);
-    if (memory == nullptr)
-        abort();
+    bgfx::ShaderHandle fragmentShaders[NUM_FRAGMENT_SHADERS];
+    for (int i = 0; i < NUM_FRAGMENT_SHADERS; i++) {
+        std::string path = "./shaders/" + std::string(FRAGMENT_SHADERS[i]) + ".bin";
 
-    shader.handle = bgfx::createShader(memory);
-    DEBUGLOG("Loaded fragment shader " << name);
-}
-void ResourceManager::UnloadFragmentShader(const std::string& name) {
-    bgfx::destroy(fragmentShaders_.Get(name).handle);
-    DEBUGLOG("Unloaded fragment shader " << name);
-    fragmentShaders_.Remove(name);
+        MEMORYFROMFILE(path);
+        if (memory == nullptr)
+            abort(); 
+        fragmentShaders[i] = bgfx::createShader(memory);
+    }
+
+    for (int v = 0; v < NUM_VERTEX_SHADERS; v++) { 
+    for (int f = 0; f < NUM_FRAGMENT_SHADERS; f++) { 
+        bgfx::ProgramHandle handle = bgfx::createProgram(vertexShaders[v], fragmentShaders[f]);
+        if (!bgfx::isValid(handle))
+            continue;
+
+        std::string name = std::string(VERTEX_SHADERS[v]) + "." + std::string(FRAGMENT_SHADERS[f]);
+        Shader& shader = shaders_.Add(name);
+        shader.DBG_name = name;
+        shader.handle = handle;
+    } }
 }
 
 void ResourceManager::LoadTexture(const std::string& name) {
@@ -281,74 +262,6 @@ void ResourceManager::UnloadTexture(const std::string& name) {
     bgfx::destroy(textures_.Get(name).handle);
     DEBUGLOG("Unloaded texture " << name);
     textures_.Remove(name);
-}
-
-void ResourceManager::LoadMaterial(const std::string& name) {
-    Material& material = materials_.Add(name);
-    ASSIGN_DEBUG_NAME(material, name);
-    std::ifstream inFile("materials/" + name + ".json");
-    ASSERT(inFile.is_open(), "Failed to load material " + name);
-    nlohmann::json data = nlohmann::json::parse(inFile);
-
-    material.triangleType = ONE_SIDED;
-    if (GetBoolean(data, "two_sided"))
-        material.triangleType = TWO_SIDED;
-    if (GetBoolean(data, "negative_back") && material.triangleType == TWO_SIDED)
-        material.triangleType = TWO_SIDED_NEGATIVE_BACK;
-
-    VertexShader* vertexShader = GetVertexShader(GetString(data, "vertex"));
-    FragmentShader* fragmentShader = GetFragmentShader(GetString(data, "fragment"));
-    material.shaderHandle = bgfx::createProgram(vertexShader->handle, fragmentShader->handle);
-
-    material.castShadows = GetBoolean(data, "cast_shadows");
-    if (material.castShadows) {
-        VertexShader* vertexShadowShader = GetVertexShader(GetString(data, "vertex_shadow"));
-        FragmentShader* fragmentShadowShader = GetFragmentShader(GetString(data, "fragment_shadow"));
-        material.shadowShaderHandle = bgfx::createProgram(vertexShadowShader->handle, fragmentShadowShader->handle);
-    }
-
-    if (data.contains("textures")) {
-        auto& textureNames = data["textures"];
-        ASSERT((textureNames.size() <= Material::MAX_TEXTURES_PER_MATERIAL), "Too many textures on material " + name);
-        for (const std::string& textureName : textureNames)
-            material.textures.push_back(GetTexture(textureName));
-    }
-
-    material.properties[0][0] = GetFloat(data, "specular_power", 32.0f);
-    material.properties[0][1] = GetFloat(data, "specular_threshhold", 0.3f);
-    material.properties[0][2] = GetFloat(data, "specular_brightness", 1.5f);
-
-    material.properties[1][0] = GetFloat(data, "fresnel_power", 4.0f);
-    material.properties[1][1] = GetFloat(data, "fresnel_scale", 1.0f);
-    material.properties[1][2] = GetFloat(data, "fresnel_brightness", 1.0f);
-
-    vec2 textureScale = GetVec2(data, "texture_scale", vec2(1.0f, 1.0f));
-    material.properties[0][3] = textureScale.x;
-    material.properties[1][3] = textureScale.y;
-
-    if (data.contains("color")) {
-        material.properties[3] = GetVec4(data, "color");
-    }
-    else if (data.contains("variation_frequency")) {
-        material.properties[3][0] = GetFloat(data, "variation_frequency", 1.0f);
-        material.properties[3][1] = GetFloat(data, "variation_min", 0.0f);
-        material.properties[3][2] = GetFloat(data, "variation_max", 1.0f);
-        material.properties[3][3] = GetFloat(data, "variation_power", 1.0f);
-    }
-
-    DEBUGLOG("Loaded material " << name);
-
-    #ifdef _DEBUG
-    Material& selectedMaterial = materials_.Add(name + "_selected");
-    selectedMaterial = material;
-    ASSIGN_DEBUG_NAME(selectedMaterial, name + "_selected");
-    selectedMaterial.shaderHandle = bgfx::createProgram(vertexShader->handle, GetFragmentShader("fs_selected")->handle); 
-    DEBUGLOG("Loaded material " << name + "_selected");
-    #endif
-}
-void ResourceManager::UnloadMaterial(const std::string& name) {
-    DEBUGLOG("Unloaded material " << name);
-    materials_.Remove(name);
 }
 
 void ResourceManager::LoadModel(const std::string& name) {
@@ -425,41 +338,4 @@ void ResourceManager::UnloadModel(const std::string& name) {
 
     if (skeletons_.Has(name))
         skeletons_.Remove(name);
-}
-
-void ResourceManager::LoadEmitterProperties(const std::string& name) {
-    EmitterProperties& properties = emitterProps_.Add(name);
-    ASSIGN_DEBUG_NAME(properties, name);
-
-    std::ifstream inFile("emitters/" + name + ".json");
-    ASSERT(inFile.is_open(), "Failed to load emitter" + name);
-
-    nlohmann::json data = nlohmann::json::parse(inFile);
-
-    properties.material = GetMaterial(GetString(data, "material", "null_material"));
-    properties.localSpace = GetBoolean(data, "local_space");
-
-    properties.spawnInterval = GetFloat(data, "spawn_interval", 1.0f);
-    properties.spawnCount = GetInt(data, "spawn_count", 1);
-    properties.lifetime = GetFloat(data, "lifetime", 1.0f);
-
-    auto& scaleRange = data["scale_range"];
-    properties.minScale = scaleRange[0];
-    properties.maxScale = scaleRange[1];
-    properties.endScale = GetFloat(data, "end_scale");
-
-    properties.spawnRadius = GetFloat(data, "spawn_radius", 0.0f);
-    auto& velocityRange = data["velocity_range"];
-    properties.minVelocity = GetVec4(velocityRange[0]);
-    properties.maxVelocity = GetVec4(velocityRange[1]);
-    properties.acceleration = GetVec4(data, "acceleration");
-
-    properties.startColor = GetVec4(data, "start_color");
-    properties.endColor = GetVec4(data, "end_color");
-
-    DEBUGLOG("Loaded emitter " << name);
-}
-void ResourceManager::UnloadEmitterProperties(const std::string& name) {
-    DEBUGLOG("Unloaded emitter " << name);
-    emitterProps_.Remove(name);
 }

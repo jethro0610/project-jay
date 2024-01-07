@@ -58,7 +58,7 @@ private:
     int renderWidth_;
     int renderHeight_;
 
-    std::array<Texture*, 2> renderBufferTextures_;
+    Texture* renderBufferTextures_[2];
     Texture* terrainMapTexture_;
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
@@ -66,15 +66,15 @@ private:
     Mesh* quad_;
     Mesh* terrain_;
 
-    Material* barMaterial_;
-    Material* blitMaterial_;
-    Material* postProcessMaterial_;
-    Material* textMaterial_;
+    Material barMaterial_;
+    Material blitMaterial_;
+    Material postProcessMaterial_;
+    Material textMaterial_;
 
     #ifdef _DEBUG
     Mesh* defaultMesh_;
-    Material* defaultMaterial_;
-    Material* defaultSelectedMaterial_;
+    Material defaultMaterial_;
+    Material defaultSelectedMaterial_;
     #endif
 
     glm::vec3 lightDirection_;
@@ -94,7 +94,7 @@ private:
     FrameBufferHandle renderBuffer_;
     FrameBufferHandle postProcessBuffer_;
 
-    std::array<TextureSamplerHandle, Material::MAX_TEXTURES_PER_MATERIAL> samplers_;
+    TextureSamplerHandle samplers_[Material::MAX_TEXTURES];
     TextureSamplerHandle shadowSampler_;
     TextureSamplerHandle terrainMapSampler_;
 

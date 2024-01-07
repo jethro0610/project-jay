@@ -1,7 +1,7 @@
 #include "SpawnMode.h"
 #include "Camera/Camera.h"
 #include "Entity/EntityList.h"
-#include "Level/LevelLoader.h"
+#include "Level/Level.h"
 #include "Resource/DependencyList.h"
 #include "EditorTextInput.h"
 #include "EditorNotification.h"
@@ -23,23 +23,23 @@ void SpawnMode::OnEnd() {
 }
 
 ConfirmBehavior SpawnMode::OnConfirm() {
-    // const std::string entityName = "e_" + textInput_.Get();
+    const std::string entityName = "e_" + textInput_.Get();
+
+    // if (!resourceManager_.HasEntityDescription(entityName)) {
+    //     if (!std::filesystem::exists("entities/" + entityName + ".json")) {
+    //         notificaiton_.Set(entityName + " does not exist");
+    //         return CB_Stay;
+    //     }
     //
-    // // if (!resourceManager_.HasEntityDescription(entityName)) {
-    // //     if (!std::filesystem::exists("entities/" + entityName + ".json")) {
-    // //         notificaiton_.Set(entityName + " does not exist");
-    // //         return CB_Stay;
-    // //     }
-    // //
-    // //     notificaiton_.Set("Loaded resources for " + entityName);
-    // //     DependencyList deps = DependencyList::GenerateFromEntity(entityName);
-    // //     resourceManager_.LoadDependencies(deps);
-    // // }
-    //
+    //     notificaiton_.Set("Loaded resources for " + entityName);
+    //     DependencyList deps = DependencyList::GenerateFromEntity(entityName);
+    //     resourceManager_.LoadDependencies(deps);
+    // }
+
     // Transform spawnTransform;
     // spawnTransform.position = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
     // entities_.CreateEntity(resourceManager_.GetEntityDescription(entityName), spawnTransform);
-    //
+
     return CB_Default;
 }
 

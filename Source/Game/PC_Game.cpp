@@ -12,10 +12,9 @@ Game::Game():
     timeAccumlulator_(0.0f),
     resourceManager_(),
     particleManager_(),
-    terrain_(levelProperties_, resourceManager_),
-    levelLoader_(
+    terrain_(level_.properties_, resourceManager_),
+    level_(
         entities_,
-        levelProperties_,
         particleManager_, 
         resourceManager_, 
         seedManager_,
@@ -30,8 +29,8 @@ Game::Game():
     editor_(
         camera_, 
         entities_, 
-        inputs_, levelLoader_, 
-        levelProperties_, 
+        inputs_, 
+        level_, 
         platform_, 
         resourceManager_,
         renderer_, 

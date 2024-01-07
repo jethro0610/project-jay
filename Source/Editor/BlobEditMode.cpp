@@ -1,7 +1,6 @@
 #include "BlobEditMode.h"
-#include "Level/LevelProperties.h"
+#include "Level/Level.h"
 #include "Terrain/Terrain.h"
-#include "EditorLevel.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "Helpers/StringConversion.h"

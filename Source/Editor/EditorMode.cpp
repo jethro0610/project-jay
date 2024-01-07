@@ -2,7 +2,7 @@
 #include "Platform/PC_Platform.h"
 #include "Text/Text.h"
 #include "EditorTarget.h"
-#include "EditorLevel.h"
+#include "Level/Level.h"
 
 EditorMode::EditorMode(EditorModeArgs args):
 camera_(args.camera),
@@ -31,7 +31,7 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
     if (requiresTarget_ && target_.Get() == nullptr)
         return false;
 
-    if (requiresLevel_ && !level_.hasLevel_)
+    if (requiresLevel_ && !level_.loaded_)
         return false;
 
     if (holdingCtrl != ctrl_)

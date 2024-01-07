@@ -5,8 +5,8 @@
 #include "Seed/SeedManager.h"
 #include "Spread/SpreadManager.h"
 #include "Rendering/Renderer.h"
-#include "Level/LevelProperties.h"
-#include "Level/LevelLoader.h"
+#include "Resource/ResourceManager.h"
+#include "Level/Level.h"
 #include "Terrain/Terrain.h"
 #include "Entity/EntityUnion.h"
 #include "Entity/EntityList.h"
@@ -30,11 +30,10 @@ public:
 
 private:
     Platform platform_;
-    LevelProperties levelProperties_;
     ResourceManager resourceManager_;
     ParticleManager particleManager_;
     Terrain terrain_;
-    LevelLoader levelLoader_;
+    Level level_;
     Renderer renderer_;
     Camera camera_;
     SeedManager seedManager_;

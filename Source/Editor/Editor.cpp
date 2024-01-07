@@ -1,6 +1,6 @@
 #include "Editor.h"
 #include "Camera/Camera.h"
-#include "Level/LevelLoader.h"
+#include "Level/Level.h"
 #include "Rendering/Renderer.h"
 #include "Terrain/Terrain.h"
 #include "Collision/Ray.h"
@@ -11,8 +11,7 @@ Editor::Editor(
     Camera& camera, 
     EntityList& entities, 
     Inputs& inputs,
-    LevelLoader& levelLoader,
-    LevelProperties& levelProperties,
+    Level& level,
     Platform& platform, 
     ResourceManager& resourceManager,
     Renderer& renderer,
@@ -22,32 +21,24 @@ Editor::Editor(
 camera_(camera),
 entities_(entities),
 inputs_(inputs),
-levelLoader_(levelLoader),
-levelProperties_(levelProperties),
+level_(level),
 platform_(platform),
 resourceManager_(resourceManager),
 renderer_(renderer),
 terrain_(terrain),
 running_(running),
-level_(
-    entities,
-    levelLoader_,
-    levelProperties_,
-    resourceManager_,
-    terrain_
-),
 target_(entities),
 textInput_(platform),
 args_({
     camera, 
     entities, 
     inputs, 
+    level,
     platform, 
     renderer, 
     resourceManager, 
     terrain, 
     modeText_,
-    level_,
     notification_,
     target_, 
     textInput_
@@ -104,8 +95,8 @@ void Editor::StartEditing() {
     ScreenText::SetEnabled(false);
     notification_.Clear();
 
-    if (level_.hasLevel_)
-        level_.Reset("_autosave");
+    if (level_.loaded_)
+        level_.Load(level_.DBG_name_, "_autosave", false);
 }
 
 void Editor::StopEditing() {
@@ -115,7 +106,7 @@ void Editor::StopEditing() {
     target_.Set(nullptr);
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
-    level_.Save(level_.name_ + "_autosave", false);
+    level_.Save(level_.DBG_name_, "_autosave");
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -138,7 +129,7 @@ void Editor::Update() {
     notification_.Update();
 
     bool holdingCtrl = platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL];
-    if (holdingCtrl && platform_.pressedKeys_['E'] && level_.hasLevel_) {
+    if (holdingCtrl && platform_.pressedKeys_['E'] && level_.loaded_) {
         StopEditing();
         FlushInputs();
         return;
@@ -179,7 +170,7 @@ void Editor::Update() {
     if (postConfirmMode_ == nullptr)
         mode_->Update();
     
-    if (level_.hasLevel_) {
+    if (level_.loaded_) {
         for (int i = 0; i < 128; i++) {
             entities_[i].CalculateBasePose();
             entities_[i].renderTransform_ = entities_[i].transform_;
@@ -188,7 +179,7 @@ void Editor::Update() {
         renderer_.RenderEdit(
             entities_, 
             *this,
-            levelProperties_,
+            level_.properties_,
             terrain_ 
         );
     }

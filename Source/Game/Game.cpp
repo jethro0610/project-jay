@@ -160,7 +160,7 @@ void Game::Update() {
 
     renderer_.Render(
         entities_, 
-        levelProperties_,
+        level_.properties_,
         particleManager_,
         seedManager_,
         spreadManager_, 

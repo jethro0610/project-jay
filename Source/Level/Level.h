@@ -1,36 +1,40 @@
 #pragma once
-#include "Resource/ResourceManager.h"
-#include "Resource/DependencyList.h"
-#include "LevelProperties.h"
 #include "Entity/Entity.h"
+#include "LevelProperties.h"
 #include <string>
 #include <nlohmann/json.hpp>
 #include <map>
 
 class EntityList;
 class ParticleManager;
+class ResourceManager;
 class SpreadManager;
 class SeedManager;
 class Terrain;
 
-class LevelLoader {
+class Level {
 public:
-    LevelLoader(
+    Level(
         EntityList& entities,
-        LevelProperties& levelProperties_,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain
     );
-    bool LoadLevel(const std::string& name, bool loadTerrain = true);
-    void ClearLevel();
-    std::map<std::string, Entity::TypeID> entityIds_;
+    bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true);
+    void Clear();
+    LevelProperties properties_;
+    bool loaded_;
+
+    #ifdef _DEBUG
+    std::string DBG_name_;
+    void Save(const std::string& name, const std::string& suffix = "");
+    #endif
 
 private:
+    std::map<std::string, Entity::TypeID> entityIds_;
     EntityList& entities_;
-    LevelProperties& levelProperties_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;
     SeedManager& seedManager_;

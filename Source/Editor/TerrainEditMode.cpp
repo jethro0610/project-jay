@@ -1,9 +1,8 @@
 #include "TerrainEditMode.h"
 #include "Terrain/Terrain.h"
-#include "EditorLevel.h"
+#include "Level/Level.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
-#include "Level/LevelProperties.h"
 #include "Helpers/StringConversion.h"
 #include <GLFW/glfw3.h>
 #include <format>

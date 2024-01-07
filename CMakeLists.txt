@@ -32,7 +32,7 @@ file(GLOB SOURCES
     Source/Particle/ParticleEmitter.cpp
     Source/Particle/ParticleManager.cpp
 
-    Source/Level/LevelLoader.cpp
+    Source/Level/Level.cpp
 
     Source/Resource/DependencyList.cpp
     Source/Resource/ResourceManager.cpp

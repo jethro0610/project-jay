@@ -1,5 +1,5 @@
 #include "SaveMode.h"
-#include "EditorLevel.h"
+#include "Level/Level.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 
@@ -13,7 +13,7 @@ EditorMode(args) {
 
 void SaveMode::OnStart() {
     textInput_.SetLabel("lv_");
-    textInput_.SetInput(level_.name_.substr(3, level_.name_.length())); 
+    textInput_.SetInput(level_.DBG_name_.substr(3, level_.DBG_name_.length())); 
     EditorMode::OnStart();
 }
 

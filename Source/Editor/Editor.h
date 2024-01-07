@@ -1,5 +1,4 @@
 #pragma once
-#include "EditorLevel.h"
 #include "EditorNotification.h"
 #include "EditorTarget.h"
 #include "EditorTextInput.h"
@@ -10,7 +9,7 @@
 class Camera;
 class Inputs;
 class Terrain;
-class LevelLoader;
+class Level;
 class LevelProperties;
 class Renderer;
 class ResourceManager;
@@ -25,8 +24,7 @@ public:
         Camera& camera, 
         EntityList& entities,
         Inputs& inputs,
-        LevelLoader& levelLoader,
-        LevelProperties& levelProperties,
+        Level& level,
         Platform& platform, 
         ResourceManager& resourceManager,
         Renderer& renderer,
@@ -56,13 +54,11 @@ private:
     Camera& camera_;
     EntityList& entities_;
     Inputs& inputs_;
-    LevelLoader& levelLoader_;
-    LevelProperties& levelProperties_;
+    Level& level_;
     Platform& platform_;
     Renderer& renderer_;
     ResourceManager& resourceManager_;
     Terrain& terrain_;
-    EditorLevel level_;
     EditorModeArgs args_;
 
     #define MODEEXPANSION(TYPE, VAR) TYPE VAR;

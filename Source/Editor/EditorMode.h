@@ -4,16 +4,13 @@
 class Camera;
 class EntityList;
 class Inputs;
-class LevelLoader;
-class LevelProperties;
+class Level;
 class Platform;
 class Renderer;
 class Terrain;
 class Text;
-class LevelLoader;
 class ResourceManager;
 
-class EditorLevel;
 class EditorNotification;
 class EditorTarget;
 class EditorTextInput;
@@ -22,12 +19,12 @@ struct EditorModeArgs {
     Camera& camera;
     EntityList& entities;
     Inputs& inputs;
+    Level& level;
     Platform& platform;
     Renderer& renderer;
     ResourceManager& resourceManager;
     Terrain& terrain;
     Text& modeText;
-    EditorLevel& level;
     EditorNotification& notificaiton;
     EditorTarget& target;
     EditorTextInput& textInput;
@@ -67,7 +64,7 @@ protected:
     Terrain& terrain_;
 
     Text& modeText_;
-    EditorLevel& level_;
+    Level& level_;
     EditorNotification& notificaiton_;
     EditorTarget& target_;
     EditorTextInput& textInput_;

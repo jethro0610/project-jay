@@ -163,7 +163,7 @@ void Entity::BaseRenderUpdate(float interpTime) {
             interpTime
         );
 
-        if (GetFlag(EF_AlignToGround)) {
+        if (onGround_ && GetFlag(EF_AlignToGround)) {
             vec3 up = lerp(lastGroundNormal_, groundNormal_, interpTime);
             quat delta = rotation(Transform::worldUp, up);
             renderTransform_.rotation = delta * renderTransform_.rotation;
@@ -171,7 +171,7 @@ void Entity::BaseRenderUpdate(float interpTime) {
     }
     else {
         renderTransform_ = transform_;
-        if (GetFlag(EF_AlignToGround)) {
+        if (onGround_ && GetFlag(EF_AlignToGround)) {
             quat delta = rotation(Transform::worldUp, groundNormal_);
             renderTransform_.rotation = delta * renderTransform_.rotation;
         }

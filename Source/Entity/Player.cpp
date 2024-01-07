@@ -57,7 +57,7 @@ void Player::Init(Entity::InitArgs args)
     ParticleManager& particleManager = args.particleManager;
     speedEmtter_ = particleManager.RequestEmitter();
     speedEmtter_->properties_.material.shader = resourceManager.GetShader("vs_particle_stretch", "fs_particle");
-    speedEmtter_->properties_.material.castShadows = true;
+    speedEmtter_->properties_.material.castShadows = false;
     speedEmtter_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     speedEmtter_->properties_.spawnInterval = 0.005f;
     speedEmtter_->properties_.spawnCount = 10;
@@ -67,7 +67,7 @@ void Player::Init(Entity::InitArgs args)
     speedEmtter_->properties_.maxScale = 0.5f;
     speedEmtter_->properties_.endScale = 0.0f;
     speedEmtter_->properties_.minVelocity = vec4(-15.0f, 0.0f, 15.0f, 0.0f);
-    speedEmtter_->properties_.maxVelocity = vec4(-15.0f, 0.0f, 15.0f, 0.0f);
+    speedEmtter_->properties_.maxVelocity = vec4(15.0f, 20.0f, 25.0f, 0.0f);
     speedEmtter_->properties_.startColor = vec4(1.0f, 1.0f, 1.0f, 0.75f);
     speedEmtter_->properties_.endColor = vec4(1.0f, 1.0f, 1.0f, 0.0f);
 
@@ -78,7 +78,7 @@ void Player::Init(Entity::InitArgs args)
     spinEmitter_->properties_.localSpace = true;
     spinEmitter_->properties_.spawnInterval = 0.1f;
     spinEmitter_->properties_.spawnCount = 6;
-    spinEmitter_->properties_.spawnRadius = 0.15f;
+    spinEmitter_->properties_.spawnRadius = 0.0f;
     spinEmitter_->properties_.lifetime = 0.5f;
     spinEmitter_->properties_.minScale = 0.1f;
     spinEmitter_->properties_.maxScale = 0.15f;
@@ -86,11 +86,12 @@ void Player::Init(Entity::InitArgs args)
     spinEmitter_->properties_.minVelocity = vec4(-20.0f, 5.0f, -20.0f, 0.0f);
     spinEmitter_->properties_.maxVelocity = vec4(20.0f, 10.0f, 20.0f, 0.0f);
     spinEmitter_->properties_.acceleration.y = -25.0f;
-    speedEmtter_->properties_.startColor = vec4(1.0f, 0.8f, 0.5f, 1.0f);
-    speedEmtter_->properties_.endColor = vec4(1.0f, 0.9f, 0.65f, 0.0f);
+    spinEmitter_->properties_.startColor = vec4(1.0f, 0.8f, 0.5f, 1.0f);
+    spinEmitter_->properties_.endColor = vec4(1.0f, 0.9f, 0.65f, 0.0f);
 
     slopeEmitter_ = particleManager.RequestEmitter();
     slopeEmitter_->properties_.material.shader = resourceManager.GetShader("vs_particle", "fs_particle");
+    slopeEmitter_->properties_.material.castShadows = false;
     slopeEmitter_->properties_.spawnInterval = 0.1f;
     slopeEmitter_->properties_.spawnCount = 25;
     slopeEmitter_->properties_.spawnRadius = 1.0f;
@@ -114,7 +115,7 @@ void Player::Init(Entity::InitArgs args)
 }
 
 void Player::Update() {
-    speedEmtter_->active_ = speed_ > 35.0f;
+    speedEmtter_->active_ = speed_ > 35.0f && onGround_;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 

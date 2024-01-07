@@ -9,6 +9,8 @@ using namespace glm;
 
 void BumpRat::Init(Entity::InitArgs args) {
     Entity::Init(args);
+    SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_AlignToGround, true);
@@ -76,6 +78,10 @@ void BumpRat::Init(Entity::InitArgs args) {
     hurtbox_.radius = 6.0f;
     hurtbox_.top = 16.0f;
     hurtbox_.bottom = 0.0f;
+
+    pushbox_.radius = 3.0f;
+    pushbox_.top = 12.0f;
+    pushbox_.bottom = 0.0f;
 
     vec3 centerOffset = RandomVectorPlanar(100.0f);
     desiredMovement_ = normalize(centerOffset - vec3(transform_.position.x, 0.0f, transform_.position.z));

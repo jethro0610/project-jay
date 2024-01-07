@@ -19,6 +19,8 @@ void Player::Init(Entity::InitArgs args)
     attackActiveTimer_ = ATTACK_TIME;
     attackCharge_ = 0;
 
+    SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_AlignToGround, true);
@@ -46,12 +48,12 @@ void Player::Init(Entity::InitArgs args)
     materials_[BODY].properties.color = vec4(0.85f);
 
     materials_[HAIR].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color_masked");
-    materials_[HAIR].properties.color = vec4(0.85f);
+    materials_[HAIR].properties.color = vec4(0.65f);
     materials_[HAIR].numTextures = 1;
     materials_[HAIR].textures[0] = resourceManager.GetTexture("t_hair_m");
 
     materials_[MASK].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
-    materials_[MASK].properties.color = vec4(0.55f);
+    materials_[MASK].properties.color = vec4(0.95f);
 
     materials_[PANTS].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[PANTS].properties.color = vec4(0.55f);
@@ -60,7 +62,7 @@ void Player::Init(Entity::InitArgs args)
     materials_[RIBBON].properties.color = vec4(0.85f);
 
     materials_[SHIRT].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
-    materials_[SHIRT].properties.color = vec4(0.85f);
+    materials_[SHIRT].properties.color = vec4(0.9f, 0.8f, 0.65f, 1.0f);
     materials_[SHIRT].triangleType = TriangleType::TWO_SIDED;
     materials_[SHIRT].properties.specularBrightness = 0.0f;
 
@@ -128,6 +130,9 @@ void Player::Init(Entity::InitArgs args)
 
     hurtbox_.radius = 2.0f;
     hurtbox_.top = 1.0f;
+
+    pushbox_.radius = 1.0f;
+    pushbox_.top = 4.0f;
 }
 
 void Player::Update() {

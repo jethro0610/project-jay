@@ -6,6 +6,8 @@ void RabbitPole::Init(Entity::InitArgs args) {
     Entity::Init(args);
     DEBUGLOG(flags_);
 
+    SetFlag(EF_SendPush, true);
+
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_rabbit_pole");
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_variation");
@@ -21,4 +23,8 @@ void RabbitPole::Init(Entity::InitArgs args) {
     materials_[0].properties.variationMax = 1.25f;
     materials_[0].properties.variationPower = 0.5f;
     materials_[0].properties.texScale = glm::vec2(2.0f);
+
+    pushbox_.top = 1.0f;
+    pushbox_.bottom = 1.0f;
+    pushbox_.radius = 1.0f;
 }

@@ -47,9 +47,20 @@ void Game::Init() {
     }
 }
 
-struct HitS {
+struct Hit {
     Entity* hitter;
     Entity* target;
+    Collision collision;
+};
+
+struct Push {
+    Entity* a;
+    bool sendA;
+    bool recieveA;
+
+    Entity* b;
+    bool sendB;
+    bool recieveB;
     Collision collision;
 };
 
@@ -64,7 +75,12 @@ void Game::Update() {
         }
         #endif
 
-        vector_const<HitS, 128> hitList;
+        for (int i = 0; i < 128; i++) {
+            if (!entities_[i].alive_) continue;
+            entities_[i].lastTransform_ = entities_[i].transform_;
+        }
+
+        vector_const<Hit, 128> hitList;
         for (int h = 0; h < 128; h++) {
             if (!entities_[h].alive_) continue;
             if (!entities_[h].GetFlag(Entity::EF_SendHits)) continue;
@@ -104,7 +120,7 @@ void Game::Update() {
             }
         }
 
-        for (const HitS& hit : hitList) {
+        for (Hit& hit : hitList) {
             // hurtboxComponent.stunTimer[hit.target] = 0;
             // entities[hit.hitter].StartHitlag(hitbox.hitlag, false);
             // entities[hit.target].StartHitlag(hitbox.hitlag, true);
@@ -152,9 +168,58 @@ void Game::Update() {
                 hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
         }
 
+        vector_const<Push, 128> pushList;
+        for (int a = 0; a < 128; a++) {
+            if (!entities_[a].alive_) continue;
+            bool sendA = entities_[a].GetFlag(Entity::EF_SendPush);
+            bool recieveA = entities_[a].GetFlag(Entity::EF_RecievePush);
+            if (!sendA && !recieveA) continue;
+            Entity& entityA = entities_[a];
+
+            for (int b = a + 1; b < 128; b++) {
+                if (a == b) continue;
+                if (!entities_[b].alive_) continue;
+                bool sendB = entities_[b].GetFlag(Entity::EF_SendPush);
+                bool recieveB = entities_[b].GetFlag(Entity::EF_RecievePush);
+                if (!sendB && !recieveB) continue;
+                Entity& entityB = entities_[b];
+
+                Collision collision = Collision::GetCollision(
+                    entityA.transform_, 
+                    entityA.pushbox_, 
+                    entityB.transform_, 
+                    entityB.pushbox_
+                );
+
+                if (collision.isColliding) {
+                    pushList.push_back({&entityA, sendA, recieveA, &entityB, sendB, recieveB, collision});
+                }
+            }
+        }
+
+        for (Push& push : pushList) {
+            if (push.sendA && push.recieveA && push.sendB && push.recieveB) {
+                push.a->transform_.position -= push.collision.resolution * 0.5f;
+                push.b->transform_.position += push.collision.resolution * 0.5f;
+                // pushboxComponent.sentPush[push.entityA] = true;
+                // pushboxComponent.sentPush[push.entityB] = true;
+                // pushboxComponent.recievedPush[push.entityA] = true;
+                // pushboxComponent.recievedPush[push.entityB] = true;
+            }
+            else if (push.sendA && push.recieveB) {
+                push.b->transform_.position += push.collision.resolution * 1.0f;
+                // pushboxComponent.sentPush[push.entityA] = true;
+                // pushboxComponent.recievedPush[push.entityB] = true;
+            }
+            else if (push.sendB && push.recieveA) {
+                push.a->transform_.position -= push.collision.resolution * 1.0f;
+                // pushboxComponent.sentPush[push.entityB] = true;
+                // pushboxComponent.recievedPush[push.entityA] = true;
+            }
+        }
+
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
-            entities_[i].lastTransform_ = entities_[i].transform_;
             if (entities_[i].hitlag_ == 0) {
                 switch(rawEntities_[i].entity.typeId_) {
                     #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.Update(); break;

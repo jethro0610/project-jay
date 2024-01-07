@@ -121,10 +121,6 @@ void Game::Update() {
         }
 
         for (Hit& hit : hitList) {
-            // hurtboxComponent.stunTimer[hit.target] = 0;
-            // entities[hit.hitter].StartHitlag(hitbox.hitlag, false);
-            // entities[hit.target].StartHitlag(hitbox.hitlag, true);
-            // hurtboxComponent.cooldown[hit.target] = HURTCOOLDOWN;
             hit.target->stun_ = true;
             hit.target->hurtCooldown_ = 30;
             hit.target->skipGroundCheck_ = true;

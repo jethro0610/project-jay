@@ -45,7 +45,7 @@ void Player::Init(Entity::InitArgs args)
     materials_[BAND].properties.color = vec4(0.85f);
 
     materials_[BODY].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
-    materials_[BODY].properties.color = vec4(0.85f);
+    materials_[BODY].properties.color = vec4(0.95f);
 
     materials_[HAIR].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color_masked");
     materials_[HAIR].properties.color = vec4(0.65f);
@@ -56,7 +56,7 @@ void Player::Init(Entity::InitArgs args)
     materials_[MASK].properties.color = vec4(0.95f);
 
     materials_[PANTS].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
-    materials_[PANTS].properties.color = vec4(0.55f);
+    materials_[PANTS].properties.color = vec4(0.75f);
 
     materials_[RIBBON].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[RIBBON].properties.color = vec4(0.85f);

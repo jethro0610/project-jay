@@ -67,26 +67,6 @@
             }
         },
         {
-            "name": "e_comet_spawner",
-            "transform": {
-                "position": {
-                    "x": 0.0,
-                    "y": 200.0,
-                    "z": 0.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 18.299999237060547,
-                    "y": 18.299999237060547,
-                    "z": 18.299999237060547
-                }
-            }
-        },
-        {
             "name": "e_tpillar",
             "transform": {
                 "position": {

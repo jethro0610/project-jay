@@ -1,6 +1,6 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
-#include <properties.sh>
+#include <Shared_MProps.sh>
 #include <dither.sh>
 #include <noise.sh>
 
@@ -9,7 +9,7 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 
 void main() {
     DITHERDISCARD(0.5f);
-    vec3 color = PROP_COLOR.rgb;
+    vec3 color = vec3(u_mProp[MPROP_R], u_mProp[MPROP_G], u_mProp[MPROP_B]);
     vec3 normal = v_normal;
     float brightness = getBrightness(normal, v_wposition, v_sposition);
 

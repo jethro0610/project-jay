@@ -1,6 +1,7 @@
 #pragma once
 #include "Texture.h"
 #include "Shader.h"
+#include "Shared_MProps.h"
 
 enum TriangleType {
     ONE_SIDED,

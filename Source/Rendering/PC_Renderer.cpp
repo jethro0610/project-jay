@@ -50,7 +50,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
     u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, Bone::MAX_BONES);
-    u_materialProps_ = bgfx::createUniform("u_materialProps", bgfx::UniformType::Mat4);
+    u_mProps = bgfx::createUniform("u_mProps", bgfx::UniformType::Mat4);
     u_particleProps_ = bgfx::createUniform("u_particleProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
@@ -185,7 +185,7 @@ void Renderer::RenderMesh(
     int curFace = 0;
 
     for (int n = 0; n < numOfRenders; n++) {
-        bgfx::setUniform(u_materialProps_, &material->properties);
+        bgfx::setUniform(u_mProps, &material->properties);
         if (pose != nullptr)
             bgfx::setUniform(u_pose_, pose->data(), Bone::MAX_BONES);
         if (modelMatrix != nullptr)
@@ -203,15 +203,15 @@ void Renderer::RenderMesh(
         bgfx::setUniform(u_normalMult_, &normalMult);
 
         int view;
-        MaterialShaderHandle shaderHandle;
+        bgfx::ProgramHandle shaderHandle;
         if (curPass == 0) {
             view = RENDER_VIEW;
-            shaderHandle = material->shaderHandle;
+            shaderHandle = material->shader->handle;
             SetTexturesFromMaterial(material, true);
         }
         else {
             view = SHADOW_VIEW;
-            shaderHandle = material->shadowShaderHandle;
+            shaderHandle = material->shadowShader->handle;
             SetTexturesFromMaterial(material, false);
         }
 
@@ -322,20 +322,20 @@ void Renderer::RenderParticles(ParticleManager& particleManager) {
         if (emitter.particles_.size() == 0)
             continue;
 
-        particleProps[0] = emitter.properties_->startColor;
-        particleProps[1] = emitter.properties_->endColor;
+        particleProps[0] = emitter.properties_.startColor;
+        particleProps[1] = emitter.properties_.endColor;
         particleProps = transpose(particleProps);
         bgfx::setUniform(u_particleProps_, &particleProps);
 
         modelMatrix = mat4(1.0f);
-        if (emitter.properties_->localSpace)
+        if (emitter.properties_.localSpace)
             modelMatrix = translate(modelMatrix, emitter.transform_.position);
         bgfx::setTransform(&modelMatrix);
 
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
         memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
-        RenderMesh(quad_, emitter.properties_->material, &instanceBuffer);
+        RenderMesh(quad_, &emitter.properties_.material, &instanceBuffer);
     }
 }
 
@@ -395,7 +395,7 @@ void Renderer::RenderText(Text& text) {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, textMaterial_->shaderHandle);
+    bgfx::submit(UI_VIEW, textMaterial_.shader->handle);
 }
 
 void Renderer::RenderScreenText() {

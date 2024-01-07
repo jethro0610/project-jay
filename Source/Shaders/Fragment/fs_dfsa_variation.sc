@@ -1,7 +1,7 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 #include <lighting.sh>
-#include <properties.sh>
+#include <Shared_Properties.sh>
 #include <noise.sh>
 
 SAMPLER2D(s_sampler0, 0);
@@ -19,10 +19,10 @@ void main() {
 
     fnl_state noise = fnlCreateState(1337);
     noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-    vec3 variationPos = v_wposition * PROP_VARIATION_FREQUENCY;
+    vec3 variationPos = v_wposition * u_mProps[MPROP_VARIATION_FREQUENCY];
     float noiseVal = fnlGetNoise3D(noise, variationPos.x, variationPos.y, variationPos.z);
     noiseVal = (noiseVal + 1.0f) * 0.5f;
-    noiseVal = lerp(PROP_VARIATION_MIN, PROP_VARIATION_MAX, pow(noiseVal, PROP_VARIATION_POWER));
+    noiseVal = lerp(u_mProps[MPROP_VARIATION_MIN], u_mProps[PROP_VARIATION_MAX], pow(noiseVal, u_MProps[PROP_VARIATION_POWER]));
 
     gl_FragColor = vec4(color * brightness * noiseVal, 1.0f);
 }

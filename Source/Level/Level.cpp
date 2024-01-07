@@ -32,6 +32,13 @@ terrain_(terrain)
     EXPANDENTITIES
     #undef ENTITYEXP
     loaded_ = false;
+
+    properties_.terrainMaterial.shader = resourceManager.GetShader("vs_terrain", "fs_terrain");
+    properties_.terrainMaterial.numTextures = 3;
+    properties_.terrainMaterial.textures[0] = resourceManager.GetTexture("t_grass_c");
+    properties_.terrainMaterial.textures[1] = resourceManager.GetTexture("t_grass_n");
+    properties_.terrainMaterial.textures[2] = resourceManager.GetTexture("t_marble_c");
+    properties_.terrainMaterial.properties[MPROP_FRES_POWER] = 16.0f;
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {
@@ -42,17 +49,17 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     Clear();
     nlohmann::json levelData = nlohmann::json::parse(inFile);
 
-    DependencyList deps = DependencyList::GenerateFromLevel(levelData);
-    resourceManager_.UnloadUnusedDependencies(deps);
-    resourceManager_.LoadDependencies(deps);
-    
-    properties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
-    properties_.spreadMaterials.clear();
-    for (auto& materialName : levelData["spread"]["materials"])
-        properties_.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
-
-    properties_.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
-    properties_.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
+    // DependencyList deps = DependencyList::GenerateFromLevel(levelData);
+    // resourceManager_.UnloadUnusedDependencies(deps);
+    // resourceManager_.LoadDependencies(deps);
+    // 
+    // properties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
+    // properties_.spreadMaterials.clear();
+    // for (auto& materialName : levelData["spread"]["materials"])
+    //     properties_.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
+    //
+    // properties_.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
+    // properties_.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
 
     if (levelData.contains("blob")) {
         properties_.blob.seed = levelData["blob"]["seed"];
@@ -96,12 +103,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 void Level::Save(const std::string& name, const std::string& suffix) {
     nlohmann::json level;
 
-    level["spread"]["model"] = properties_.spreadModel->DBG_name;
-    for (Material* material : properties_.spreadMaterials)
-        level["spread"]["materials"].push_back(material->DBG_name);
-
-    level["terrain"]["material"] = properties_.terrainMaterial->DBG_name;
-    level["seed"]["material"] = properties_.seedMaterial->DBG_name;
+    // level["spread"]["model"] = properties_.spreadModel->DBG_name;
+    // for (Material* material : properties_.spreadMaterials)
+    //     level["spread"]["materials"].push_back(material->DBG_name);
+    //
+    // level["terrain"]["material"] = properties_.terrainMaterial->DBG_name;
+    // level["seed"]["material"] = properties_.seedMaterial->DBG_name;
 
     level["blob"]["seed"] = properties_.blob.seed;
     level["blob"]["frequency"] = properties_.blob.frequency;

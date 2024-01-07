@@ -4,7 +4,8 @@
 #ifndef NOSHADOW
 #include <shadow.sh>
 #endif
-#include <Shared_MProps.sh>
+#define SHARED_SHADER
+#include <Shared_MProps.h>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;

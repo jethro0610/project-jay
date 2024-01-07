@@ -74,15 +74,25 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     terrainMapTexture_ = resourceManager.GetTexture("t_terrainmap");
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
-    barMaterial_ = resourceManager.GetMaterial("m_uibar");
-    blitMaterial_ = resourceManager.GetMaterial("m_preuiblit");
-    postProcessMaterial_ = resourceManager.GetMaterial("m_postprocess");
-    textMaterial_ = resourceManager.GetMaterial("m_text");
+
+    barMaterial_.shader = resourceManager.GetShader("vs_uibar", "fs_uibar");
+
+    blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
+    blitMaterial_.numTextures = 1;
+    blitMaterial_.textures[0] = resourceManager.GetTexture("t_post_c");
+
+    postProcessMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_postprocess");
+    postProcessMaterial_.numTextures = 1;
+    postProcessMaterial_.textures[0] = resourceManager.GetTexture("t_render_c");
+
+    textMaterial_.shader = resourceManager.GetShader("vs_glyph", "fs_text");
+    textMaterial_.numTextures = 1;
+    textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
 
     #ifdef _DEBUG
     defaultMesh_ = &resourceManager.GetModel("st_default")->meshes[0];
-    defaultMaterial_ = resourceManager.GetMaterial("m_default");
-    defaultSelectedMaterial_ = resourceManager.GetMaterial("m_default_selected");
+    // defaultMaterial_ = resourceManager.GetMaterial("m_default");
+    // defaultSelectedMaterial_ = resourceManager.GetMaterial("m_default_selected");
     #endif
 }
 
@@ -282,7 +292,7 @@ void Renderer::RenderEntitiesS(
 void Renderer::RenderSpread(
     SpreadManager& spreadManager, 
     Model* model,
-    vector_const<Material*, Model::MAX_MESHES_PER_MODEL>& materials
+    std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
 ) {
     uint32_t count = spreadManager.GetCount();
     if (count == 0)
@@ -294,7 +304,7 @@ void Renderer::RenderSpread(
 
     for (int m = 0; m < model->meshes.size(); m++) {
         Mesh* mesh = &model->meshes[m];
-        Material* material = materials[m];
+        Material* material = &materials[m];
         RenderMesh(mesh, material, &instanceBuffer);
     }
 }

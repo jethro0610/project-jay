@@ -18,10 +18,10 @@ void Renderer::Render(
 ) {
     StartFrame();
 
-    RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
-    RenderSeed(seedManager, levelProperties.seedMaterial);
+    RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
@@ -39,7 +39,7 @@ void Renderer::RenderEdit(
 ) {
     StartFrame();
 
-    RenderTerrain(terrain, levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
     RenderEntitiesS(entities);
     RenderPostProcess();
     RenderBlit();

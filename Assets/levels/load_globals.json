@@ -1,40 +1,4 @@
 {
-    "vertex_shaders": [
-        "vs_static",
-        "vs_static_s",
-        "vs_skeletal",
-        "vs_skeletal_s",
-        "vs_inst",
-        "vs_inst_s",
-        "vs_inst_billboard",
-        "vs_inst_billboard_s",
-        "vs_terrain",
-        "vs_terrain_s",
-        "vs_screenquad",
-        "vs_glyph",
-        "vs_uibar",
-        "vs_particle",
-        "vs_particle_stretch",
-        "vs_particle_trail",
-        "vs_spread"
-    ],
-    "fragment_shaders": [
-        "fs_dfsa",
-        "fs_dfsa_color",
-        "fs_dfsa_color_masked",
-        "fs_depth_s",
-        "fs_depth_masked_s",
-        "fs_blit",
-        "fs_text",
-        "fs_postprocess",
-        "fs_uibar",
-        "fs_terrain",
-        "fs_selected",
-        "fs_particle",
-
-        "fs_color_masked",
-        "fs_aura"
-    ],
     "textures": [
         "t_font",
         "t_bricks_c",
@@ -46,40 +10,21 @@
         "t_spinrat_ears_f_m",
         "t_spinrat_eyes_m",
         "t_spinrat_nose_m",
-        "t_spinrat_swirl_m"
-    ],
-    "materials": [
-        "m_postprocess",
-        "m_preuiblit",
-        "m_text",
-        "m_uibar",
-        "m_default",
-        "m_dust",
-        "m_spark",
-        "m_cloud",
+        "t_spinrat_swirl_m",
 
-        "m_player",
-        "m_playerskin",
-        "m_hair",
-        "m_playershirt",
+        "t_granite_c",
+        "t_granite_n",
 
-        "m_spinrat_back",
-        "m_spinrat_body",
-        "m_spinrat_ears_b",
-        "m_spinrat_ears_f",
-        "m_spinrat_eyes",
-        "m_spinrat_nose",
-        "m_spinrat_swirl"
+        "t_grass_c",
+        "t_grass_n",
+        "t_marble_c"
     ],
     "models": [
         "st_default",
 
         "sk_char",
-        "sk_spinrat"
-    ],
-    "emitter_properties": [
-        "p_dust",
-        "p_spark",
-        "p_cloud"
+        "sk_spinrat",
+        "st_tpillar",
+        "st_rabbit_pole"
     ]
 }

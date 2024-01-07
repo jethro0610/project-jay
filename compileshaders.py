@@ -127,6 +127,8 @@ def make_shaderdesc(path, shader_type):
             if include_name in shared_file_paths:
                 make_shaderdesc(shared_file_paths[include_name], 'header')
             else:
+                if (include_name == "Shared_MProps.sh"):
+                    print(shared_file_paths["Shared_MProps.sh"])
                 make_shaderdesc(include_path + include_name, 'header')
 
         desc.includes.append(shader_descriptions[include_name])

@@ -40,7 +40,7 @@ void main() {
     float brightness = ambient + diffuse;
     brightness = max(0.4f, brightness);
 
-    float fresnel = getFresnel(v_wposition, normal, PROP_FRES_POWER, PROP_FRES_SCALE);
+    float fresnel = getFresnel(v_wposition, normal, u_mProps[MPROP_FRES_POWER], u_mProps[MPROP_FRES_SCALE]);
     fresnel = min(fresnel, 1.0f);
     fresnel *= 0.15f;     
 

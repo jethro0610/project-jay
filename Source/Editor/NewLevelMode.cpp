@@ -29,26 +29,26 @@ ConfirmBehavior NewLevelMode::PostConfirm() {
     level_.loaded_ = true;
     level_.DBG_name_ = "lv_" + textInput_.Get();
 
-    DependencyList deps = DependencyList::GenerateFromLevelProperties(
-        "m_seed_test",
-        "st_flower_test",
-        { "m_flower_test", "m_stem_test" },
-        "m_terrain_grass"
-    );
-    resourceManager_.UnloadUnusedDependencies(deps);
-    resourceManager_.LoadDependencies(deps);
-    level_.properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
-    level_.properties_.spreadModel = resourceManager_.GetModel("st_flower_test");
-    level_.properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_flower_test"));
-    level_.properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_stem_test"));
-    level_.properties_.terrainMaterial = resourceManager_.GetMaterial("m_terrain_grass");
+    // DependencyList deps = DependencyList::GenerateFromLevelProperties(
+    //     "m_seed_test",
+    //     "st_flower_test",
+    //     { "m_flower_test", "m_stem_test" },
+    //     "m_terrain_grass"
+    // );
+    // resourceManager_.UnloadUnusedDependencies(deps);
+    // resourceManager_.LoadDependencies(deps);
+    // level_.properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
+    // level_.properties_.spreadModel = resourceManager_.GetModel("st_flower_test");
+    // level_.properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_flower_test"));
+    // level_.properties_.spreadMaterials.push_back(resourceManager_.GetMaterial("m_stem_test"));
+    // level_.properties_.terrainMaterial = resourceManager_.GetMaterial("m_terrain_grass");
 
     // TODO: Assign other level properties
     for (NoiseLayer& noiseLayer : level_.properties_.noiseLayers)
         noiseLayer = {};
     level_.properties_.blob = {};
 
-    level_.properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
+    // level_.properties_.seedMaterial = resourceManager_.GetMaterial("m_seed_test");
 
     terrain_.GenerateTerrainMap(level_.properties_.noiseLayers, level_.properties_.blob);
     notificaiton_.Set("Created lv_" + textInput_.Get());

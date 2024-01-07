@@ -6,7 +6,7 @@ ParticleManager::ParticleManager() {
     usableEmitters_.push_front(0);
 }
 
-ParticleEmitter* ParticleManager::RequestEmitter(EmitterProperties* properties) {
+ParticleEmitter* ParticleManager::RequestEmitter() {
     int emitterIndex = usableEmitters_.front();
     usableEmitters_.pop_front();
     if (usableEmitters_.size() <= 0)
@@ -15,7 +15,7 @@ ParticleEmitter* ParticleManager::RequestEmitter(EmitterProperties* properties) 
 
     ParticleEmitter& emitter = emitters_[emitterIndex];
     emitter.alive_ = true;
-    emitters_[emitterIndex].properties_ = properties;
+    emitters_[emitterIndex].properties_ = {};
 
     DEBUGLOG("Assign emitter: " << emitterIndex);
 

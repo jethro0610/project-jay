@@ -7,5 +7,11 @@ void TPillar::Init(Entity::InitArgs args) {
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
-    materials_[0] = resourceManager.GetMaterial("m_tpillar");
+    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
+    materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
+    materials_[0].castShadows = true;
+    materials_[0].properties[MPROP_R] = 1.0f;
+    materials_[0].properties[MPROP_G] = 1.0f;
+    materials_[0].properties[MPROP_B] = 1.0f;
+    materials_[0].properties[MPROP_FRES_BRIGHTNESS] = 0.15f;
 }

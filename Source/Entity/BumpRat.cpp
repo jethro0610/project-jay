@@ -2,6 +2,7 @@
 #include "Terrain/Terrain.h"
 #include "Helpers/Random.h"
 #include "Resource/ResourceManager.h"
+#include "Rendering/Material.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
@@ -22,13 +23,33 @@ void BumpRat::Init(Entity::InitArgs args) {
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_spinrat");
     skeleton_ = resourceManager.GetSkeleton("sk_spinrat");
-    materials_[0] = resourceManager.GetMaterial("m_spinrat_back");
-    materials_[1] = resourceManager.GetMaterial("m_spinrat_body");
-    materials_[2] = resourceManager.GetMaterial("m_spinrat_ears_b");
-    materials_[3] = resourceManager.GetMaterial("m_spinrat_ears_f");
-    materials_[4] = resourceManager.GetMaterial("m_spinrat_eyes");
-    materials_[5] = resourceManager.GetMaterial("m_spinrat_nose");
-    materials_[6] = resourceManager.GetMaterial("m_spinrat_swirl");
+    for (int i = 0; i < 7; i++) {
+        materials_[i].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
+        materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
+        materials_[i].castShadows = true;
+
+        materials_[i].properties[MPROP_SPEC_POWER] = 32.0f;
+        materials_[i].properties[MPROP_SPEC_THRESH] = 0.3f;
+        materials_[i].properties[MPROP_SPEC_BRIGHTNESS] = 1.5f;
+
+        materials_[i].properties[MPROP_FRES_POWER] = 4.0f;
+        materials_[i].properties[MPROP_FRES_SCALE] = 1.0f;
+        materials_[i].properties[MPROP_FRES_BRIGHTNESS] = 1.0f;
+
+        materials_[i].properties[MPROP_TEXSCALE_X] = 1.0f;
+        materials_[i].properties[MPROP_TEXSCALE_Y] = 1.0f;
+
+        materials_[i].properties[MPROP_R] = 0.75f;
+        materials_[i].properties[MPROP_G] = 0.75f;
+        materials_[i].properties[MPROP_B] = 0.75f;
+    }
+    // materials_[0] = resourceManager.GetMaterial("m_spinrat_back");
+    // materials_[1] = resourceManager.GetMaterial("m_spinrat_body");
+    // materials_[2] = resourceManager.GetMaterial("m_spinrat_ears_b");
+    // materials_[3] = resourceManager.GetMaterial("m_spinrat_ears_f");
+    // materials_[4] = resourceManager.GetMaterial("m_spinrat_eyes");
+    // materials_[5] = resourceManager.GetMaterial("m_spinrat_nose");
+    // materials_[6] = resourceManager.GetMaterial("m_spinrat_swirl");
 
     pose_.resize(skeleton_->bones_.size());
     renderPose_.resize(skeleton_->bones_.size());

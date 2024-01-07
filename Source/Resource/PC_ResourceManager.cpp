@@ -21,6 +21,7 @@ ResourceManager::ResourceManager() {
     TextureQuadVertex::Init();
     CreateTerrainMapTexture();
     LoadGlobals();
+    LoadAllShaders();
 }
 
 void ResourceManager::CreateTerrainMapTexture() {

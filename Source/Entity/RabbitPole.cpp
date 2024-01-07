@@ -4,6 +4,7 @@
 
 void RabbitPole::Init(Entity::InitArgs args) {
     Entity::Init(args);
+    DEBUGLOG(flags_);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_rabbit_pole");
@@ -13,12 +14,11 @@ void RabbitPole::Init(Entity::InitArgs args) {
     materials_[0].numTextures = 2;
     materials_[0].textures[0] = resourceManager.GetTexture("t_granite_c");
     materials_[0].textures[1] = resourceManager.GetTexture("t_granite_n");
-    materials_[0].properties[MPROP_FRES_BRIGHTNESS] = 0.25f;
-    materials_[0].properties[MPROP_SPEC_BRIGHTNESS] = 0.15f;
-    materials_[0].properties[MPROP_VARIATION_FREQUENCY] = 6.0f;
-    materials_[0].properties[MPROP_VARIATION_MIN] = 0.65f;
-    materials_[0].properties[MPROP_VARIATION_MAX] = 1.25f;
-    materials_[0].properties[MPROP_VARIATION_POWER] = 0.5f;
-    materials_[0].properties[MPROP_TEXSCALE_X] = 2.0f;
-    materials_[0].properties[MPROP_TEXSCALE_Y] = 2.0f;
+    materials_[0].properties.fresnelBrightness = 0.25f;
+    materials_[0].properties.specularBrightness = 0.15f;
+    materials_[0].properties.variationFrequency = 6.0f;
+    materials_[0].properties.variationMin = 0.65f;
+    materials_[0].properties.variationMax = 1.25f;
+    materials_[0].properties.variationPower = 0.5f;
+    materials_[0].properties.texScale = glm::vec2(1.0f);
 }

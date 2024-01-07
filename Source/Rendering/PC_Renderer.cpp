@@ -50,7 +50,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
     u_shadowRight_ = bgfx::createUniform("u_shadowRight", bgfx::UniformType::Vec4);
     u_pose_ = bgfx::createUniform("u_pose", bgfx::UniformType::Mat4, Bone::MAX_BONES);
-    u_mProps = bgfx::createUniform("u_mProps", bgfx::UniformType::Mat4);
+    u_mProps_ = bgfx::createUniform("u_mProps", bgfx::UniformType::Vec4, 4);
     u_particleProps_ = bgfx::createUniform("u_particleProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
@@ -193,9 +193,9 @@ void Renderer::RenderMesh(
 
     int curPass = 0;
     int curFace = 0;
-
+    
     for (int n = 0; n < numOfRenders; n++) {
-        bgfx::setUniform(u_mProps, &material->properties);
+        bgfx::setUniform(u_mProps_, &material->properties, 4);
         if (pose != nullptr)
             bgfx::setUniform(u_pose_, pose->data(), Bone::MAX_BONES);
         if (modelMatrix != nullptr)
@@ -284,7 +284,7 @@ void Renderer::RenderEntitiesS(
         for (int m = 0; m < model->meshes.size(); m++) {
             Material* material = &entity.materials_[m];
             Mesh* mesh = &model->meshes[m];
-            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose: nullptr);
+            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr);
         }
     }
 }

@@ -103,7 +103,7 @@ private:
     UniformHandle u_shadowMatrix_;
     UniformHandle u_shadowResolution_;
     UniformHandle u_pose_;
-    UniformHandle u_mProps;
+    UniformHandle u_mProps_;
     UniformHandle u_particleProps_;
     UniformHandle u_normalMult_;
     UniformHandle u_lightDirection_;

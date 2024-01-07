@@ -38,7 +38,9 @@ terrain_(terrain)
     properties_.terrainMaterial.textures[0] = resourceManager.GetTexture("t_grass_c");
     properties_.terrainMaterial.textures[1] = resourceManager.GetTexture("t_grass_n");
     properties_.terrainMaterial.textures[2] = resourceManager.GetTexture("t_marble_c");
-    properties_.terrainMaterial.properties[MPROP_FRES_POWER] = 16.0f;
+    properties_.terrainMaterial.properties.fresnelPower = 16.0f;
+    properties_.terrainMaterial.properties.fresnelScale = 1.0f;
+    properties_.terrainMaterial.properties.fresnelBrightness = 1.0f;
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {

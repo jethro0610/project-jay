@@ -1,15 +1,14 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 #include <lighting.sh>
-#define SHARED_SHADER
-#include <Shared_MProps.h>
+#include <properties.sh>
 #include <noise.sh>
 
 SAMPLER2D(s_sampler0, 0);
 SAMPLER2D(s_sampler1, 1);
 
 void main() {
-    vec2 coords = vec2(v_texcoord0.x * u_mProps[MPROP_TEXSCALE_X], v_texcoord0.y * u_mProps[MPROP_TEXSCALE_Y]);
+    vec2 coords = vec2(v_texcoord0.x * PROP_TEXSCALE.x, v_texcoord0.y * PROP_TEXSCALE.y);
     vec3 color = texture2D(s_sampler0, coords).rgb;
 
     vec3 normal = texture2D(s_sampler1, coords).rgb;
@@ -20,10 +19,10 @@ void main() {
 
     fnl_state noise = fnlCreateState(1337);
     noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-    vec3 variationPos = v_wposition * u_mProps[MPROP_VARIATION_FREQUENCY];
+    vec3 variationPos = v_wposition * PROP_VARIATION_FREQUENCY;
     float noiseVal = fnlGetNoise3D(noise, variationPos.x, variationPos.y, variationPos.z);
     noiseVal = (noiseVal + 1.0f) * 0.5f;
-    noiseVal = lerp(u_mProps[MPROP_VARIATION_MIN], u_mProps[MPROP_VARIATION_MAX], pow(noiseVal, u_mProps[MPROP_VARIATION_POWER]));
+    noiseVal = lerp(PROP_VARIATION_MIN, PROP_VARIATION_MAX, pow(noiseVal, PROP_VARIATION_POWER));
 
     gl_FragColor = vec4(color * brightness * noiseVal, 1.0f);
 }

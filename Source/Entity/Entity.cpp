@@ -171,8 +171,10 @@ void Entity::BaseRenderUpdate(float interpTime) {
     }
     else {
         renderTransform_ = transform_;
-        quat delta = rotation(Transform::worldUp, groundNormal_);
-        renderTransform_.rotation = delta * renderTransform_.rotation;
+        if (GetFlag(EF_AlignToGround)) {
+            quat delta = rotation(Transform::worldUp, groundNormal_);
+            renderTransform_.rotation = delta * renderTransform_.rotation;
+        }
     }
 
     

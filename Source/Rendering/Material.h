@@ -1,12 +1,32 @@
 #pragma once
 #include "Texture.h"
 #include "Shader.h"
-#include "Shared_MProps.h"
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 enum TriangleType {
     ONE_SIDED,
     TWO_SIDED,
     TWO_SIDED_NEGATIVE_BACK
+};
+
+struct MaterialProperties {
+    glm::vec4 color; 
+
+    glm::vec2 texScale;
+    float specularPower;
+    float specularThreshold;
+
+    float specularBrightness;
+    float fresnelPower;
+    float fresnelScale;
+    float fresnelBrightness;
+
+    float variationFrequency;
+    float variationMin;
+    float variationMax;
+    float variationPower;
 };
 
 struct Material {
@@ -17,7 +37,7 @@ struct Material {
 
     Material() {
         shader = nullptr;
-        shader = shadowShader;
+        shadowShader = nullptr;
         castShadows = false;
         triangleType = TriangleType::ONE_SIDED;
 
@@ -25,8 +45,7 @@ struct Material {
         for(int i = 0; i < MAX_TEXTURES; i++)
             textures[i] = nullptr;
 
-        for (int i = 0; i < MAX_PROPERTIES; i++)
-            properties[i] = 0.0f;
+        properties = {};
     }
 
     Shader* shader;
@@ -36,5 +55,5 @@ struct Material {
     Texture* textures[MAX_TEXTURES];
     bool castShadows;
     TriangleType triangleType;
-    float properties[MAX_PROPERTIES];
+    MaterialProperties properties;
 };

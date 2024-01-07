@@ -22,7 +22,7 @@ void Renderer::Render(
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
-    RenderParticles(particleManager);
+    // RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
     RenderUI(entities);

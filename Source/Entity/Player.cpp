@@ -39,20 +39,17 @@ void Player::Init(Entity::InitArgs args)
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
 
-        materials_[i].properties[MPROP_SPEC_POWER] = 32.0f;
-        materials_[i].properties[MPROP_SPEC_THRESH] = 0.3f;
-        materials_[i].properties[MPROP_SPEC_BRIGHTNESS] = 1.5f;
+        materials_[i].properties.specularPower = 32.0f;
+        materials_[i].properties.specularThreshold = 0.3f;
+        materials_[i].properties.specularBrightness = 1.5f;
 
-        materials_[i].properties[MPROP_FRES_POWER] = 4.0f;
-        materials_[i].properties[MPROP_FRES_SCALE] = 1.0f;
-        materials_[i].properties[MPROP_FRES_BRIGHTNESS] = 1.0f;
+        materials_[i].properties.fresnelPower = 4.0f;
+        materials_[i].properties.fresnelScale = 1.0f;
+        materials_[i].properties.fresnelBrightness = 1.0f;
 
-        materials_[i].properties[MPROP_TEXSCALE_X] = 1.0f;
-        materials_[i].properties[MPROP_TEXSCALE_Y] = 1.0f;
+        materials_[i].properties.texScale = vec2(1.0f, 1.0f);
 
-        materials_[i].properties[MPROP_R] = 0.75f;
-        materials_[i].properties[MPROP_G] = 0.75f;
-        materials_[i].properties[MPROP_B] = 0.75f;
+        materials_[i].properties.color = vec4(0.15f);
     }
     pose_.resize(skeleton_->bones_.size());
     renderPose_.resize(skeleton_->bones_.size());

@@ -4,8 +4,7 @@
 #ifndef NOSHADOW
 #include <shadow.sh>
 #endif
-#define SHARED_SHADER
-#include <Shared_MProps.h>
+#include <properties.sh>
 
 uniform vec4 u_cameraPosition;
 uniform vec4 u_lightDirection;
@@ -28,8 +27,8 @@ float getDSABrightness(vec3 normal, vec3 wPosition) {
     float brightness = diffuse + ambient;
 
     #ifndef NOSPECULAR
-    float specular = getSpecular(wPosition, normal * u_normalMult.y, u_mProps[MPROP_SPEC_POWER]);
-    brightness = max(brightness, step(u_mProps[MPROP_SPEC_THRESH], specular) * u_mProps[MPROP_SPEC_BRIGHTNESS]);
+    float specular = getSpecular(wPosition, normal * u_normalMult.y, PROP_SPEC_POWER);
+    brightness = max(brightness, step(PROP_SPEC_THRESH, specular) * PROP_SPEC_BRIGHTNESS);
     #endif
 
     #ifndef NOCEL
@@ -50,8 +49,8 @@ float getBrightness(vec3 normal, vec3 wPosition, vec4 sPosition) {
     #endif
 
     #ifndef NOFRESNEL
-    float fresnel = getFresnel(wPosition, normal * u_normalMult.y, u_mProps[MPROP_FRES_POWER], u_mProps[MPROP_FRES_SCALE]);
-    brightness += fresnel * u_mProps[MPROP_FRES_BRIGHTNESS];
+    float fresnel = getFresnel(wPosition, normal * u_normalMult.y, PROP_FRES_POWER, PROP_FRES_SCALE);
+    brightness += fresnel * PROP_FRES_BRIGHTNESS;
     #endif
 
     return brightness;

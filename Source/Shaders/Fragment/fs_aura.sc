@@ -1,7 +1,6 @@
 $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
-#define SHARED_SHADER
-#include <Shared_MProps.h>
+#include <properties.sh>
 #include <dither.sh>
 #include <noise.sh>
 
@@ -10,7 +9,6 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 
 void main() {
     DITHERDISCARD(0.5f);
-    vec3 color = vec3(u_mProps[MPROP_R], u_mProps[MPROP_G], u_mProps[MPROP_B]);
     vec3 normal = v_normal;
     float brightness = getBrightness(normal, v_wposition, v_sposition);
 
@@ -21,5 +19,5 @@ void main() {
     noiseVal = (noiseVal + 1.0f) * 0.5f;
     noiseVal = lerp(0.65f, 1.0f, pow(noiseVal, 4.0f));
 
-    gl_FragColor = vec4(brightness * noiseVal * color, 1.0f);
+    gl_FragColor = vec4(brightness * noiseVal * PROP_COLOR.xyz, 1.0f);
 }

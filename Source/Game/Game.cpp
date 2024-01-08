@@ -87,7 +87,6 @@ void Game::Update() {
                 if (!entities_[t].alive_) continue;
                 if (!entities_[t].GetFlag(Entity::EF_RecieveHits)) continue;
                 if (entities_[t].hitlag_ > 0) continue;
-                if (entities_[t].stun_) continue;
                 if (entities_[t].hurtCooldown_ > 0) continue;
                 Entity& target = entities_[t];
 
@@ -115,7 +114,7 @@ void Game::Update() {
 
         for (Hit& hit : hitList) {
             hit.target->stun_ = true;
-            hit.target->hurtCooldown_ = 5;
+            hit.target->hurtCooldown_ = 30;
             hit.target->skipGroundCheck_ = true;
             hit.target->onGround_ = false;
             hit.target->initHitlag_ = true;

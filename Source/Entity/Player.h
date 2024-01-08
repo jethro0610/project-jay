@@ -58,6 +58,8 @@ public:
 
     int attackActiveTimer_;
     int attackCharge_;
+    int lastAttackCharge_;
+    bool releasedSinceLastAttack_;
 
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;

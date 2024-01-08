@@ -144,14 +144,19 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->attack && attackCharge_ < MAX_CHARGE)
+    if (inputs_->attack && releasedSinceLastAttack_ && attackCharge_ < MAX_CHARGE)
         attackCharge_++;
     else if (attackCharge_ != 0) {
+        lastAttackCharge_ = attackCharge_;
         attackCharge_ = 0;
         attackActiveTimer_ = 0;
     }
 
+    if (!inputs_->attack)
+        releasedSinceLastAttack_ = true;
+
     if (attackActiveTimer_ < ATTACK_TIME) {
+        releasedSinceLastAttack_ = false;
         if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE)
             hitbox_.active = true;
         else 
@@ -295,7 +300,7 @@ void Player::Update() {
     meter_ = max(0, meter_);
 
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
-    if (attackCharge_ < STRONG_CHARGE_THRESH) {
+    if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.95f;
         hitbox_.knocback.y = 35.0f;
         hitbox_.hitlag = 3;

@@ -84,7 +84,7 @@ void BumpRat::Init(Entity::InitArgs args) {
 
     hurtbox_.radius = 6.0f;
     hurtbox_.top = 16.0f;
-    hurtbox_.bottom = 2.0f;
+    hurtbox_.bottom = 0.0f;
 
     pushbox_.radius = 3.0f;
     pushbox_.top = 12.0f;

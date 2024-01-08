@@ -202,7 +202,9 @@ void Renderer::RenderMesh(
             bgfx::setTransform(modelMatrix);
 
         if (curFace == 1) {
-            bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_FRONT_CCW);
+            bgfx::setState(
+                BGFX_STATE_DEFAULT & ~BGFX_STATE_CULL_CW | BGFX_STATE_CULL_CCW
+            );
             normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
             normalMult.y = -1.0f;
         }

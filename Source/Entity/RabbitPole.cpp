@@ -4,7 +4,6 @@
 
 void RabbitPole::Init(Entity::InitArgs args) {
     Entity::Init(args);
-    DEBUGLOG(flags_);
 
     SetFlag(EF_SendPush, true);
 

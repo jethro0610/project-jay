@@ -322,10 +322,13 @@ void Player::Update() {
         ChangeAnimation(animation, transitionLength);
 
     float desiredTilt = 0.0f;
-    if (moveLength > 0.001f)
-        desiredTilt = dot(desiredMovement / moveLength, transform_.GetRightVector()) * 0.35f;
-
-    tilt_ = lerp(tilt_, desiredTilt, 0.05f);
+    if (!stun_) {
+        if (moveLength > 0.001f)
+            desiredTilt = dot(desiredMovement / moveLength, transform_.GetRightVector()) * 0.35f;
+        tilt_ = lerp(tilt_, desiredTilt, 0.05f);
+    }
+    else
+        tilt_ = 0.0f;
 }
 
 void Player::RenderUpdate() {

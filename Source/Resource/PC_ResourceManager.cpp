@@ -149,34 +149,31 @@ void ResourceManager::LoadGlobalTerrain() {
     Model& terrainModel = models_.Add("st_terrainsheet");
     ASSIGN_DEBUG_NAME(terrainModel, "st_terrainsheet");
     Mesh& terrainMesh = terrainModel.meshes.push_back();
-    int size = ceil(Terrain::MESH_SIZE * Terrain::MESH_DENSITY) + 1;
 
-    int numVertices = size * size;
-    WorldVertex vertices[numVertices];
-    for (int x = 0; x < size; x++)
-    for (int y = 0; y < size; y++) {
-        uint16_t index = y * size + x;
+    WorldVertex vertices[Terrain::NUM_VERTICES];
+    for (int x = 0; x < Terrain::SIZE; x++)
+    for (int y = 0; y < Terrain::SIZE; y++) {
+        uint16_t index = y * Terrain::SIZE + x;
         vec3 position = vec3(x / Terrain::MESH_DENSITY, 0.0f, y / Terrain::MESH_DENSITY);
         vertices[index] = { position };
     };
     terrainMesh.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
             vertices, 
-            sizeof(WorldVertex) * numVertices
+            sizeof(WorldVertex) * Terrain::NUM_VERTICES 
         ), 
         WorldVertex::layout
     );
-    DEBUGLOG("Created terrain mesh with " << numVertices << " vertices");
+    DEBUGLOG("Created terrain mesh with " << Terrain::NUM_VERTICES << " vertices");
     
-    int numIndices = (size - 1) * (size - 1) * 6;
-    uint16_t terrainIndices[numIndices];
+    uint16_t terrainIndices[Terrain::NUM_INDICES];
     int count = 0;
-    for (int x = 0; x < size - 1; x++)
-    for (int y = 0; y < size - 1; y++) {
-        uint16_t i0 = (y + 0) * size + (x + 0);
-        uint16_t i1 = (y + 1) * size + (x + 0);
-        uint16_t i2 = (y + 1) * size + (x + 1);
-        uint16_t i3 = (y + 0) * size + (x + 1);
+    for (int x = 0; x < Terrain::SIZE - 1; x++)
+    for (int y = 0; y < Terrain::SIZE - 1; y++) {
+        uint16_t i0 = (y + 0) * Terrain::SIZE + (x + 0);
+        uint16_t i1 = (y + 1) * Terrain::SIZE + (x + 0);
+        uint16_t i2 = (y + 1) * Terrain::SIZE + (x + 1);
+        uint16_t i3 = (y + 0) * Terrain::SIZE + (x + 1);
         
         terrainIndices[count++] = i0;
         terrainIndices[count++] = i1;
@@ -189,7 +186,7 @@ void ResourceManager::LoadGlobalTerrain() {
     terrainMesh.indexBuffer = bgfx::createIndexBuffer(
         bgfx::copy(
             terrainIndices, 
-            sizeof(uint16_t) * numIndices
+            sizeof(uint16_t) * Terrain::NUM_INDICES
         )
     );
     globals_.insert("st_terrainsheet");

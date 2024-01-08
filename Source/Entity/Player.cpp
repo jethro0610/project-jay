@@ -301,7 +301,7 @@ void Player::Update() {
 
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
-        hitbox_.knocback = planarVelocity * 0.95f;
+        hitbox_.knocback = planarVelocity * 0.985f;
         hitbox_.knocback.y = 35.0f;
         hitbox_.hitlag = 3;
         hitbox_.diStrength = 0.75f;

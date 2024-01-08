@@ -32,4 +32,6 @@ public:
     void RenderUpdate() {};
     void OnHit();
     void OnHurt();
+
+    void OnCaptureSeed() {};
 };

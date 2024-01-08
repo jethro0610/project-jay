@@ -25,7 +25,16 @@ Game::Game():
     camera_(14.0f),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
-    entities_(rawEntities_, particleManager_, resourceManager_, camera_, inputs_, terrain_),
+    entities_(
+        rawEntities_, 
+        particleManager_, 
+        resourceManager_, 
+        camera_, 
+        inputs_, 
+        seedManager_, 
+        spreadManager_,
+        terrain_
+    ),
     editor_(
         camera_, 
         entities_, 
@@ -46,10 +55,10 @@ void Game::UpdateInputs_P() {
     inputs_.sideInput = 0.0f;
 
     inputs_.cut = platform_.heldKeys_[' '] || platform_.gamepad_.heldButtons_[Gamepad::Y];
-    inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::RTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::RSHOULDER];
-    inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::LTRIGGER] || platform_.gamepad_.heldButtons_[Gamepad::LSHOULDER]; 
+    inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::RTRIGGER];
+    inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::LTRIGGER]; 
 
-    inputs_.attack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[Gamepad::Y];
+    inputs_.attack = platform_.heldKeys_['Q'] || platform_.gamepad_.heldButtons_[Gamepad::Y] || platform_.gamepad_.heldButtons_[Gamepad::RSHOULDER];
 
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])

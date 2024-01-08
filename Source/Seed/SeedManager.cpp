@@ -1,6 +1,10 @@
 #include "SeedManager.h"
 #include "Time/Time.h"
 #include "Helpers/Random.h"
+#include "Logging/Logger.h"
+#include "Entity/Entity.h"
+#include "Entity/EntityList.h"
+#include "Entity//EntityTypes.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -47,8 +51,7 @@ void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radiu
 }
 
 void SeedManager::CalculatePositions(
-    Terrain& terrain,
-    float interpTime
+    Terrain& terrain
 ) {
     for (int i = 0; i < seeds_.size(); i++) {
         Seed& seed = seeds_[i];
@@ -76,42 +79,43 @@ void SeedManager::CalculatePositions(
         if (seed.targetEntity == nullptr || timeSinceCapture < 0.0f)
             continue;
 
-        // timeSinceCapture *= 3.0f;
-        // if (timeSinceCapture >= 1.0f) {
-        //     meterComponent.meter[seed.targetEntity] += 1;
-        //     meterComponent.meter[seed.targetEntity] = min(meterComponent.meter[seed.targetEntity], meterComponent.maxMeter[seed.targetEntity]);
-        //     seeds_.remove(i--);
-        //     continue;
-        // }
-        // vec3 initialPosition = seed.position;
-        // vec4 targetPosition = vec4(transformComponent.renderTransform[seed.targetEntity].position, 0.0f);
-        // timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
-        // positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
+        timeSinceCapture *= 2.0f;
+        if (timeSinceCapture >= 1.0f) {
+            switch(seed.targetEntity->typeId_) {
+                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)seed.targetEntity)->OnCaptureSeed(); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
+            seeds_.remove(i--);
+            continue;
+        }
+        vec3 initialPosition = seed.position;
+        vec4 targetPosition = vec4(seed.targetEntity->transform_.position, 0.0f);
+        timeSinceCapture = std::pow(timeSinceCapture, 3.0f);
+        positions_[i] = lerp(positions_[i], targetPosition, timeSinceCapture); 
     }
 }
 
 void SeedManager::GetCaptures(
+    EntityList& entities
 ) {
-    // auto& seedGatherComponent = components.Get<SeedGatherComponent>();
-    // auto& transformComponent = components.Get<TransformComponent>();
-    //
-    // float time = GlobalTime::GetTime();
-    // for (int i = 0; i < MAX_ENTITIES; i++) {
-    //     if (!entities[i].ShouldUpdate(key)) continue;
-    //     if (!seedGatherComponent.active[i]) continue;
-    //
-    //     for (int j = 0; j < seeds_.size(); j++) {
-    //         if (seeds_[j].targetEntity != NULL_ENTITY)
-    //             continue;
-    //         if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
-    //             continue;
-    //
-    //         if (distance(vec4(transformComponent.transform[i].position, 0.0f), positions_[j]) < seedGatherComponent.radius[i]) {
-    //             seeds_[j].targetEntity = i;
-    //             seeds_[j].captureTime = time;
-    //         }
-    //     }
-    // }
+    float time = GlobalTime::GetTime();
+    for (int i = 0; i < 128; i++) {
+        if (!entities[i].alive_) continue;
+        if (!entities[i].GetFlag(Entity::EF_CaptureSeed)) continue;
+
+        for (int j = 0; j < seeds_.size(); j++) {
+            if (seeds_[j].targetEntity != nullptr)
+                continue;
+            if (time - seeds_[j].startTime < MIN_CAPTURE_TIME)
+                continue;
+
+            if (distance(vec4(entities[i].transform_.position, 0.0f), positions_[j]) < 32.0f) {
+                seeds_[j].targetEntity = &entities[i];
+                seeds_[j].captureTime = time;
+            }
+        }
+    }
 }
 
 void SeedManager::Reset() {

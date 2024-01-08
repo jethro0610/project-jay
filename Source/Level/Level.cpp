@@ -41,6 +41,22 @@ terrain_(terrain)
     properties_.terrainMaterial.properties.fresnelPower = 16.0f;
     properties_.terrainMaterial.properties.fresnelScale = 1.0f;
     properties_.terrainMaterial.properties.fresnelBrightness = 1.0f;
+
+    properties_.seedMaterial.shader = resourceManager.GetShader("vs_inst_billboard", "fs_seed_test");
+    properties_.seedMaterial.castShadows = false;
+
+    properties_.spreadModel = resourceManager.GetModel("st_flower_test");
+
+    properties_.spreadMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
+    properties_.spreadMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[0].numTextures = 1;
+    properties_.spreadMaterials[0].textures[0] = resourceManager.GetTexture("t_flower_m");
+    properties_.spreadMaterials[0].triangleType = TriangleType::TWO_SIDED;
+
+    properties_.spreadMaterials[1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
+    properties_.spreadMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.spreadMaterials[1].numTextures = 0;
+    properties_.spreadMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {

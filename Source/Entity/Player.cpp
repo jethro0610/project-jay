@@ -5,6 +5,7 @@
 #include "Terrain/Terrain.h"
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
+#include "Spread/SpreadManager.h"
 #include "Logging/Logger.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -31,6 +32,7 @@ void Player::Init(Entity::InitArgs args)
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_RecieveKnockback, true);
     SetFlag(EF_HurtFaceForward, true);
+    SetFlag(EF_CaptureSeed, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_char");
@@ -133,6 +135,8 @@ void Player::Init(Entity::InitArgs args)
 
     pushbox_.radius = 1.0f;
     pushbox_.top = 4.0f;
+
+    meter_ = 0;
 }
 
 void Player::Update() {
@@ -279,10 +283,20 @@ void Player::Update() {
         case MM_Stun:
             break;
     }
+    // if (meter_ > 0 && (moveMode_ == MM_Spin || moveMode_ == MM_Slope)) {
+    //     spreadManager_->AddSpread(transform_.position, 2, meter_);
+    //     meter_--;
+    // }
+    // if (moveMode_ == MM_Spin || moveMode_ == MM_Slope)
+    //     spreadManager_->AddSpread(transform_.position, 2);
+    int spreadAmount = 1 + ((float)meter_ / MAX_METER) * 7;
+    spreadManager_->AddSpread(transform_.position, spreadAmount);
+    meter_ -= 2;
+    meter_ = max(0, meter_);
 
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (attackCharge_ < STRONG_CHARGE_THRESH) {
-        hitbox_.knocback = planarVelocity * 0.975f;
+        hitbox_.knocback = planarVelocity * 0.95f;
         hitbox_.knocback.y = 35.0f;
         hitbox_.hitlag = 3;
         hitbox_.diStrength = 0.75f;
@@ -296,7 +310,6 @@ void Player::Update() {
 
     if (onGround_ && stun_) {
         stun_ = false;
-        // velocity_ *= 0.5f;
     }
 
     int animation = 0;
@@ -346,4 +359,9 @@ void Player::OnHit() {}
 
 void Player::OnHurt() {
     ChangeAnimation(6, 0.0f);
+}
+
+void Player::OnCaptureSeed() {
+    meter_ += 1;
+    meter_ = min(Player::MAX_METER, meter_);
 }

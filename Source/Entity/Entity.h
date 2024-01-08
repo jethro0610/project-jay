@@ -12,6 +12,8 @@ class Camera;
 struct Inputs;
 class ParticleManager;
 class ResourceManager;
+class SeedManager;
+class SpreadManager;
 class Terrain;
 
 class ParticleEmitter;
@@ -40,12 +42,15 @@ public:
         EF_RecieveKnockback,
         EF_HurtFaceForward,
         EF_HurtFaceBack,
+        EF_CaptureSeed,
         EF_Count
     };
 
     void Construct(
         Camera& camera,
         Inputs& inputs,
+        SeedManager& seedManager,
+        SpreadManager& spreadManager,
         Terrain& terrain
     );
     void Init(
@@ -114,7 +119,11 @@ public:
     void OnHit() {};
     void OnHurt() {};
 
+    void OnCaptureSeed() {};
+
     Camera* camera_;
     Inputs* inputs_;
+    SeedManager* seedManager_;
+    SpreadManager* spreadManager_;
     Terrain* terrain_;
 };

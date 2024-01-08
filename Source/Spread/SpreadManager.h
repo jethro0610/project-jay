@@ -40,12 +40,14 @@ public:
 
     bool RemoveSpread(
         const glm::vec3& position, 
+        bool createSeed = false,
         Entity* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
+        bool createSeed = false,
         Entity* remover = nullptr, 
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     ); 
@@ -66,6 +68,7 @@ private:
     bool AddSpread(const SpreadKey& key); 
     bool RemoveSpread(
         const SpreadKey& key,
+        bool createSeed = false,
         Entity* remover = nullptr,
         const glm::vec3& seedOffset = glm::vec3(0.0f)
     );

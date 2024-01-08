@@ -8,10 +8,14 @@ using namespace glm;
 void Entity::Construct(
     Camera& camera,
     Inputs& inputs,
+    SeedManager& seedManager,
+    SpreadManager& spreadManager,
     Terrain& terrain
 ) {
     camera_ = &camera;
     inputs_ = &inputs;
+    seedManager_ = &seedManager;
+    spreadManager_ = & spreadManager;
     terrain_ = &terrain;
 }
 

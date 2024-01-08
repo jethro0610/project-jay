@@ -14,6 +14,8 @@ public:
         ResourceManager& resourceManager,
         Camera& camera,
         Inputs& inputs,
+        SeedManager& seedManager,
+        SpreadManager& spreadManager,
         Terrain& terrain
     );
 

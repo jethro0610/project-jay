@@ -115,7 +115,7 @@ void Game::Update() {
 
         for (Hit& hit : hitList) {
             hit.target->stun_ = true;
-            hit.target->hurtCooldown_ = 30;
+            hit.target->hurtCooldown_ = 5;
             hit.target->skipGroundCheck_ = true;
             hit.target->onGround_ = false;
             hit.target->initHitlag_ = true;
@@ -232,6 +232,8 @@ void Game::Update() {
             #undef ENTITYEXP
         }
     }
+    seedManager_.GetCaptures(entities_);
+    seedManager_.CalculatePositions(terrain_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
 
     renderer_.Render(

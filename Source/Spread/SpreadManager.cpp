@@ -108,6 +108,7 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
 
 bool SpreadManager::RemoveSpread(
     const SpreadKey& key, 
+    bool createSeed,
     Entity* remover,
     const vec3& seedOffset
 ) {
@@ -118,8 +119,10 @@ bool SpreadManager::RemoveSpread(
     int deleteIndex = foundKey->second;
     vec3 position = vec3(renderData_[deleteIndex].modelMatrix[3]);
 
-    vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
-    seedManager_.CreateSeed(seedPosition, remover, seedOffset);
+    if (createSeed) {
+        vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
+        seedManager_.CreateSeed(seedPosition, remover, seedOffset);
+    }
 
     mat4 swappedTransform = renderData_.remove(deleteIndex).modelMatrix;
     vec3 swappedPosition = vec3(swappedTransform[3]);
@@ -134,16 +137,18 @@ bool SpreadManager::RemoveSpread(
 
 bool SpreadManager::RemoveSpread(
     const vec3& position, 
+    bool createSeed,
     Entity* remover,
     const vec3& seedOffset
 ) {
     SpreadKey key = GetKey(position);
-    return RemoveSpread(key, remover, seedOffset);
+    return RemoveSpread(key, createSeed, remover, seedOffset);
 }
 
 int SpreadManager::RemoveSpread(
     const vec3& position, 
     int radius, 
+    bool createSeed,
     Entity* remover,
     const vec3& seedOffset
 ) {
@@ -153,7 +158,7 @@ int SpreadManager::RemoveSpread(
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z), remover, seedOffset))
+        if (RemoveSpread(origin + ivec2(x, z), createSeed, remover, seedOffset))
             count++;
     } }
     return count;

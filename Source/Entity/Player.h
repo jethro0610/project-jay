@@ -48,9 +48,13 @@ public:
     static constexpr int ATTACK_COOLDOWN = 10;
     static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
 
+    static constexpr int MAX_METER = 1024;
+
     PlayerMoveMode moveMode_;
     float speed_;
     float tilt_;
+
+    int meter_;
 
     int attackActiveTimer_;
     int attackCharge_;
@@ -63,4 +67,5 @@ public:
     void RenderUpdate();
     void OnHit();
     void OnHurt();
+    void OnCaptureSeed();
 };

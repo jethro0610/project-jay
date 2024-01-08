@@ -9,6 +9,7 @@
 #include "Camera/Camera.h"
 #include "Resource/ResourceManager.h"
 #include "Editor/Editor.h"
+#include "Entity/Player.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -367,14 +368,16 @@ void Renderer::RenderBlit() {
 }
 
 void Renderer::RenderUI(EntityList& entities) {
-    // bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
-    //
-    // vec4 meter = vec4(meterComponent.meter[PLAYER_ENTITY], meterComponent.maxMeter[PLAYER_ENTITY], 0.0f, 0.0f); 
-    // bgfx::setUniform(u_meter_, &meter);
-    //
-    // bgfx::setVertexBuffer(0, quad_->vertexBuffer);
-    // bgfx::setIndexBuffer(quad_->indexBuffer);
-    // bgfx::submit(UI_VIEW, barMaterial_->shaderHandle);
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
+
+    Player* player = (Player*)&entities[0];
+
+    vec4 meter = vec4(player->meter_, Player::MAX_METER, 0.0f, 0.0f); 
+    bgfx::setUniform(u_meter_, &meter);
+
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
 }
 
 void Renderer::RenderText(Text& text) {

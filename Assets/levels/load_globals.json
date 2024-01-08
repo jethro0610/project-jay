@@ -17,7 +17,9 @@
 
         "t_grass_c",
         "t_grass_n",
-        "t_marble_c"
+        "t_marble_c",
+    
+        "t_flower_m"
     ],
     "models": [
         "st_default",
@@ -25,6 +27,8 @@
         "sk_char",
         "sk_spinrat",
         "st_tpillar",
-        "st_rabbit_pole"
+        "st_rabbit_pole",
+
+        "st_flower_test"
     ]
 }

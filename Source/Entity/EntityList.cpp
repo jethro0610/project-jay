@@ -8,6 +8,8 @@ EntityList::EntityList(
     ResourceManager& resourceManager,
     Camera& camera,
     Inputs& inputs,
+    SeedManager& seedManager,
+    SpreadManager& spreadManager,
     Terrain& terrain
 ):
 particleManager_(particleManager),
@@ -15,7 +17,7 @@ resourceManager_(resourceManager)
 {
     rawEntities_ = rawEntities;
     for (int i = 0; i < 128; i++) {
-        rawEntities[i].entity.Construct(camera, inputs, terrain);
+        rawEntities[i].entity.Construct(camera, inputs, seedManager, spreadManager, terrain);
         available_[i] = i;
         #ifdef _DEBUG
         rawEntities_[i].entity.DBG_index_ = i;

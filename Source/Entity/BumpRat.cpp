@@ -2,7 +2,9 @@
 #include "Terrain/Terrain.h"
 #include "Helpers/Random.h"
 #include "Resource/ResourceManager.h"
+#include "Seed/SeedManager.h"
 #include "Rendering/Material.h"
+#include "Spread/SpreadManager.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
@@ -25,42 +27,47 @@ void BumpRat::Init(Entity::InitArgs args) {
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_spinrat");
     skeleton_ = resourceManager.GetSkeleton("sk_spinrat");
-    for (int i = 0; i < 7; i++) {
-        materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
-        materials_[i].castShadows = true;
+    for (int i = 0; i < 7; i++)
         materials_[i].properties = MaterialProperties::Default();
-    }
 
     materials_[BACK].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BACK].castShadows = false;
     materials_[BACK].properties.color = LINECOLOR;
     materials_[BACK].numTextures = 1;
     materials_[BACK].textures[0] = resourceManager.GetTexture("t_spinrat_back_m");
 
     materials_[BODY].shader = resourceManager.GetShader("vs_skeletal", "fs_aura");
+    materials_[BODY].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
+    materials_[BODY].castShadows = true;
     materials_[BODY].properties.color = BODYCOLOR;
     materials_[BODY].properties.fresnelPower = 0.15f;
 
     materials_[FRONTEARS].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[FRONTEARS].castShadows = false;
     materials_[FRONTEARS].properties.color = LINECOLOR;
     materials_[FRONTEARS].numTextures = 1;
     materials_[FRONTEARS].textures[0] = resourceManager.GetTexture("t_spinrat_ears_f_m");
 
     materials_[BACKEARS].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BACKEARS].castShadows = false;
     materials_[BACKEARS].properties.color = LINECOLOR;
     materials_[BACKEARS].numTextures = 1;
     materials_[BACKEARS].textures[0] = resourceManager.GetTexture("t_spinrat_ears_b_m");
 
     materials_[EYES].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BACK].castShadows = false;
     materials_[EYES].properties.color = LINECOLOR;
     materials_[EYES].numTextures = 1;
     materials_[EYES].textures[0] = resourceManager.GetTexture("t_spinrat_eyes_m");
 
     materials_[NOSE].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[NOSE].castShadows = false;
     materials_[NOSE].properties.color = LINECOLOR;
     materials_[NOSE].numTextures = 1;
     materials_[NOSE].textures[0] = resourceManager.GetTexture("t_spinrat_nose_m");
 
     materials_[BELLY].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
+    materials_[BELLY].castShadows = false;
     materials_[BELLY].properties.color = LINECOLOR;
     materials_[BELLY].numTextures = 1;
     materials_[BELLY].textures[0] = resourceManager.GetTexture("t_spinrat_swirl_m");
@@ -77,7 +84,7 @@ void BumpRat::Init(Entity::InitArgs args) {
 
     hurtbox_.radius = 6.0f;
     hurtbox_.top = 16.0f;
-    hurtbox_.bottom = 0.0f;
+    hurtbox_.bottom = 2.0f;
 
     pushbox_.radius = 3.0f;
     pushbox_.top = 12.0f;
@@ -102,6 +109,7 @@ void BumpRat::Update() {
     }
 
     if (onGround_) {
+        // spreadManager_->RemoveSpread(transform_.position, 6);
         if (stun_) {
             stun_ = false;
             desiredMovement_ = transform_.GetForwardVector();
@@ -148,4 +156,5 @@ void BumpRat::OnHit() {
 
 void BumpRat::OnHurt() {
     ChangeAnimation(5, 0.0f);
+    seedManager_->CreateMultipleSeed(transform_.position, 300, 20.0f);
 }

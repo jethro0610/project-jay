@@ -6,6 +6,7 @@
 #include <vector_contig.h>
 
 class Entity;
+class EntityList;
 
 struct Seed {
     glm::vec3 position;
@@ -36,11 +37,11 @@ public:
     void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, Entity* capturer = nullptr);
 
     void CalculatePositions(
-        Terrain& terrain,
-        float interpTime
+        Terrain& terrain
     );
 
     void GetCaptures(
+        EntityList& entities
     );
 
     void Reset();

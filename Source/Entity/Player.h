@@ -69,4 +69,5 @@ public:
     void OnHit();
     void OnHurt();
     void OnCaptureSeed();
+    void OnDestroy();
 };

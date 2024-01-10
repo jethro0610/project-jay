@@ -44,7 +44,11 @@ void EntityList::DestroyFlaggedEntities() {
         if (!rawEntities_[i].entity.alive_) continue;
         if (!rawEntities_[i].entity.destroy_) continue;
 
-        // Run generic destroy function
+        switch(rawEntities_[i].entity.typeId_) {
+            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.OnDestroy(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
 
         rawEntities_[i].entity.alive_ = false;
         availablePos_--;

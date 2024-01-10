@@ -151,6 +151,7 @@ public:
     void OnHurt() {};
 
     void OnCaptureSeed() {};
+    void OnDestroy() {};
 
     Camera* camera_;
     Inputs* inputs_;

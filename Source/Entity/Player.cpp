@@ -155,6 +155,12 @@ void Player::Init(Entity::InitArgs args)
     meter_ = 0.0f;
 }
 
+void Player::OnDestroy() {
+    speedEmtter_->release_ = true;
+    spinEmitter_->release_ = true;
+    slopeEmitter_->release_ = true;
+}
+
 void Player::Update() {
     speedEmtter_->active_ = speed_ > 35.0f && onGround_;
     spinEmitter_->active_ = false;

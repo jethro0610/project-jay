@@ -12,10 +12,10 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_spread",
 	"vs_particle_stretch",
 	"vs_particle_trail",
-	"vs_particle",
 	"vs_glyph",
-	"vs_terrain",
-	"vs_terrain_s",
+	"vs_particle",
 	"vs_skeletal",
 	"vs_static",
+	"vs_terrain",
+	"vs_terrain_s",
 };

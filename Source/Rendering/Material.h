@@ -55,6 +55,9 @@ struct Material {
     Material() {
         shader = nullptr;
         shadowShader = nullptr;
+        #ifdef _DEBUG
+        selectedShader = nullptr;
+        #endif
         castShadows = false;
         triangleType = TriangleType::ONE_SIDED;
 

@@ -8,7 +8,6 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_blit",
 	"fs_depth_masked_s",
 	"fs_leaves_strand",
-	"fs_aura",
 	"fs_color_masked",
 	"fs_dfsa",
 	"fs_dfsa_color",
@@ -19,4 +18,5 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_selected",
 	"fs_terrain",
 	"fs_uibar",
+	"fs_aura",
 };

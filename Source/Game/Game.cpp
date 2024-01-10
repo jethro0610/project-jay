@@ -190,20 +190,38 @@ void Game::Update() {
             if (push.sendA && push.recieveA && push.sendB && push.recieveB) {
                 push.a->transform_.position -= push.collision.resolution * 0.5f;
                 push.b->transform_.position += push.collision.resolution * 0.5f;
-                // pushboxComponent.sentPush[push.entityA] = true;
-                // pushboxComponent.sentPush[push.entityB] = true;
-                // pushboxComponent.recievedPush[push.entityA] = true;
-                // pushboxComponent.recievedPush[push.entityB] = true;
+
+                switch(push.a->typeId_) {
+                    #define ENTITYEXP(TYPE, VAR) \
+                    case TYPE::GetTypeID(): ((TYPE*)push.a)->OnPush(-push.collision.resolution * 0.5f); break;
+                    EXPANDENTITIES
+                    #undef ENTITYEXP
+                }
+
+                switch(push.b->typeId_) {
+                    #define ENTITYEXP(TYPE, VAR) \
+                    case TYPE::GetTypeID(): ((TYPE*)push.b)->OnPush(push.collision.resolution * 0.5f); break;
+                    EXPANDENTITIES
+                    #undef ENTITYEXP
+                }
             }
             else if (push.sendA && push.recieveB) {
                 push.b->transform_.position += push.collision.resolution * 1.0f;
-                // pushboxComponent.sentPush[push.entityA] = true;
-                // pushboxComponent.recievedPush[push.entityB] = true;
+                switch(push.b->typeId_) {
+                    #define ENTITYEXP(TYPE, VAR) \
+                    case TYPE::GetTypeID(): ((TYPE*)push.b)->OnPush(push.collision.resolution * 1.0f); break;
+                    EXPANDENTITIES
+                    #undef ENTITYEXP
+                }
             }
             else if (push.sendB && push.recieveA) {
                 push.a->transform_.position -= push.collision.resolution * 1.0f;
-                // pushboxComponent.sentPush[push.entityB] = true;
-                // pushboxComponent.recievedPush[push.entityA] = true;
+                switch(push.a->typeId_) {
+                    #define ENTITYEXP(TYPE, VAR) \
+                    case TYPE::GetTypeID(): ((TYPE*)push.a)->OnPush(-push.collision.resolution * 1.0f); break;
+                    EXPANDENTITIES
+                    #undef ENTITYEXP
+                }
             }
         }
 

@@ -149,6 +149,7 @@ public:
 
     void OnHit() {};
     void OnHurt() {};
+    void OnPush(glm::vec3 pushVec) {};
 
     void OnCaptureSeed() {};
     void OnDestroy() {};

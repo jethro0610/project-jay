@@ -377,6 +377,8 @@ void Player::Update() {
     }
     else
         tilt_ = 0.0f;
+
+    SCREENLINE(1, std::to_string(speed_));
 }
 
 void Player::RenderUpdate() {
@@ -399,4 +401,25 @@ void Player::OnHurt() {
 void Player::OnCaptureSeed() {
     meter_ += 0.001f;
     meter_ = min(1.0f, meter_);
+}
+
+void Player::OnPush(vec3 pushVec) {
+    if (speed_ < 50.0f || stun_) return;
+    vec3 planarPush = pushVec;
+    planarPush.y = 0.0f;
+    planarPush = normalize(planarPush);
+
+    vec3 planarVelocity = velocity_;
+    planarVelocity.y = 0.0f;
+    float velocityLen = length(planarVelocity);
+    planarVelocity = planarVelocity / velocityLen;
+
+    if (dot(planarPush, planarVelocity) < -0.25f) {
+        velocity_ = -planarVelocity * velocityLen * 0.5f;
+        velocity_.y = 10.0f;
+        stun_ = true;
+        skipGroundCheck_ = true;
+        onGround_ = false;
+        ChangeAnimation(7, 0.0f);
+    }
 }

@@ -80,20 +80,24 @@ bool Entity::GetFlag(Entity::Flag flag) {
 void Entity::BaseUpdate() {
     bool useVelocity = GetFlag(EF_UseVelocity);
 
-    if (hitlag_ == 0 && !skipGroundCheck_ && GetFlag(EF_GroundCheck)) {
+    if (hitlag_ == 0 && GetFlag(EF_GroundCheck)) {
         lastGroundNormal_ = groundNormal_;
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
-        if (distanceToSurface < traceDistance_)
+        if (distanceToSurface < traceDistance_ && !skipGroundCheck_)
             onGround_ = true;
         else 
             onGround_ = false;
 
-        if (onGround_ && GetFlag(EF_StickToGround)) {
-            if (useVelocity) 
-                velocity_.y = -distanceToSurface / GlobalTime::TIMESTEP;
-            else
+        if (GetFlag(EF_StickToGround)) {
+            if (!skipGroundCheck_ && onGround_) {
+                if (useVelocity) 
+                    velocity_.y = -distanceToSurface / GlobalTime::TIMESTEP;
+                else
+                    transform_.position.y = groundHeight_;
+            }
+            else if (transform_.position.y  < groundHeight_)
                 transform_.position.y = groundHeight_;
         }
     }

@@ -67,7 +67,7 @@ public:
 
     static constexpr TypeID GetTypeID() { return 0; };
     static constexpr const char* GetName() { return "e_base"; }
-    static constexpr EntityDependendies DEPS = {};
+    static EntityDependendies GetDeps() { return {}; };
 
     TypeID typeId_;
     bool alive_;

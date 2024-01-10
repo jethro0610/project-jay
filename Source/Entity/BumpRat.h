@@ -7,19 +7,7 @@ public:
 
     static constexpr TypeID GetTypeID() { return 2; };
     static constexpr const char* GetName() { return "e_spinrat"; }
-    static constexpr EntityDependendies DEPS = {
-        true,
-        "sk_spinrat",
-        6,
-        {
-            "t_spinrat_back_m",
-            "t_spinrat_swirl_m",
-            "t_spinrat_nose_m",
-            "t_spinrat_eyes_m",
-            "t_spinrat_ears_f_m",
-            "t_spinrat_ears_b_m",
-        }
-    };
+    static EntityDependendies GetDeps(); 
 
     static constexpr int BACK = 0;
     static constexpr int BODY = 1;

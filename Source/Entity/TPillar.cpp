@@ -2,6 +2,14 @@
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
 
+EntityDependendies TPillar::GetDeps() {
+    return {
+        true,
+        "st_tpillar",
+        0
+    };
+}
+
 void TPillar::Init(Entity::InitArgs args) {
     Entity::Init(args);
 

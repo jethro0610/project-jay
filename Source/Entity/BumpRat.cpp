@@ -9,6 +9,23 @@
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
+
+EntityDependendies BumpRat::GetDeps() {
+    return {
+        true,
+        "sk_spinrat",
+        6,
+        {
+            "t_spinrat_back_m",
+            "t_spinrat_swirl_m",
+            "t_spinrat_nose_m",
+            "t_spinrat_eyes_m",
+            "t_spinrat_ears_f_m",
+            "t_spinrat_ears_b_m",
+        }
+    };
+}
+
 void BumpRat::Init(Entity::InitArgs args) {
     Entity::Init(args);
     SetFlag(EF_SendPush, true);

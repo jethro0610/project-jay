@@ -7,11 +7,7 @@ public:
 
     static constexpr TypeID GetTypeID() { return 3; };
     static constexpr const char* GetName() { return "e_tpillar"; }
-    static constexpr EntityDependendies DEPS = {
-        true,
-        "st_tpillar",
-        0
-    };
+    static EntityDependendies GetDeps();
 
     void Update() {}; 
     void RenderUpdate() {};

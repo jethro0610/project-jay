@@ -12,6 +12,17 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
+EntityDependendies Player::GetDeps() {
+    return {
+        true,
+        "sk_char",
+        1,
+        {
+            "t_hair_m",
+        }
+    };
+}
+
 void Player::Init(Entity::InitArgs args)
 {
     Entity::Init(args);

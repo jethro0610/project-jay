@@ -2,6 +2,18 @@
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
 
+EntityDependendies RabbitPole::GetDeps() {
+    return {
+        true,
+        "st_rabbit_pole",
+        2,
+        {
+            "t_granite_c",
+            "t_granite_n"
+        }
+    };
+}
+
 void RabbitPole::Init(Entity::InitArgs args) {
     Entity::Init(args);
 

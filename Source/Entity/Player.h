@@ -15,12 +15,7 @@ public:
 
     static constexpr TypeID GetTypeID() { return 1; };
     static constexpr const char* GetName() { return "e_player"; }
-    static constexpr EntityDependendies DEPS = {
-        true,
-        "sk_char",
-        1,
-        { "t_hair_m" }
-    };
+    static EntityDependendies GetDeps();
 
     static constexpr int BAND = 0;
     static constexpr int BODY = 1;

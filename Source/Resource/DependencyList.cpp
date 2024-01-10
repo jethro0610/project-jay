@@ -1,11 +1,12 @@
 #include "DependencyList.h"
 #include "Entity/EntityTypes.h"
+#include "Logging/Logger.h"
 #include <nlohmann/json.hpp>
 
 void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDepList) {
     switch (typeId) {
         #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): {                      \
-            EntityDependendies deps = TYPE::DEPS;                                   \
+            EntityDependendies deps = TYPE::GetDeps();                              \
             if (deps.hasModel) {                                                    \
                 outDepList.models.insert(std::string(deps.model));                  \
             }                                                                       \

@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <ctime>
+#include "Rendering/PC_VertexTypes.h"
 using namespace glm;
 
 using namespace std::chrono;

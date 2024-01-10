@@ -15,6 +15,12 @@ public:
 
     static constexpr TypeID GetTypeID() { return 1; };
     static constexpr const char* GetName() { return "e_player"; }
+    static constexpr EntityDependendies DEPS = {
+        true,
+        "sk_char",
+        1,
+        { "t_hair_m" }
+    };
 
     static constexpr int BAND = 0;
     static constexpr int BODY = 1;
@@ -44,17 +50,15 @@ public:
     static constexpr int STRONG_CHARGE_THRESH = 15;
 
     static constexpr int ATTACK_STARTUP = 2;
-    static constexpr int ATTACK_ACTIVE = 13;
-    static constexpr int ATTACK_COOLDOWN = 10;
+    static constexpr int ATTACK_ACTIVE = 8;
+    static constexpr int ATTACK_COOLDOWN = 6;
     static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
-
-    static constexpr int MAX_METER = 1024;
 
     PlayerMoveMode moveMode_;
     float speed_;
     float tilt_;
 
-    int meter_;
+    float meter_;
 
     int attackActiveTimer_;
     int attackCharge_;

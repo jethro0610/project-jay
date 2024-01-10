@@ -7,6 +7,7 @@
 #include "Particle/ParticleManager.h"
 #include "Spread/SpreadManager.h"
 #include "Logging/Logger.h"
+#include "Logging/ScreenText.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -136,7 +137,7 @@ void Player::Init(Entity::InitArgs args)
     pushbox_.radius = 1.0f;
     pushbox_.top = 4.0f;
 
-    meter_ = 0;
+    meter_ = 0.0f;
 }
 
 void Player::Update() {
@@ -156,9 +157,10 @@ void Player::Update() {
         releasedSinceLastAttack_ = true;
 
     if (attackActiveTimer_ < ATTACK_TIME) {
-        releasedSinceLastAttack_ = false;
-        if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE)
+        if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE) {
             hitbox_.active = true;
+            releasedSinceLastAttack_ = false;
+        }
         else 
             hitbox_.active = false;
         attackActiveTimer_++;
@@ -294,22 +296,25 @@ void Player::Update() {
     // }
     // if (moveMode_ == MM_Spin || moveMode_ == MM_Slope)
     //     spreadManager_->AddSpread(transform_.position, 2);
-    int spreadAmount = 1 + ((float)meter_ / MAX_METER) * 7;
-    spreadManager_->AddSpread(transform_.position, spreadAmount);
-    meter_ -= 2;
-    meter_ = max(0, meter_);
+
+    if (onGround_) {
+        int spreadAmount = 1 + meter_ * 7;
+        spreadManager_->AddSpread(transform_.position, spreadAmount);
+        meter_ -= 0.001f;
+        meter_ = max(0.0f, meter_);
+    }
 
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.985f;
-        hitbox_.knocback.y = 35.0f;
-        hitbox_.hitlag = 3;
-        hitbox_.diStrength = 0.75f;
+        hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
+        hitbox_.hitlag = 4;
+        hitbox_.diStrength = 0.5f;
     }
     else {
         hitbox_.knocback = planarVelocity * 1.5f;
-        hitbox_.knocback.y = 35.0f;
-        hitbox_.hitlag = 4;
+        hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
+        hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.25f;
     }
 
@@ -367,6 +372,6 @@ void Player::OnHurt() {
 }
 
 void Player::OnCaptureSeed() {
-    meter_ += 1;
-    meter_ = min(Player::MAX_METER, meter_);
+    meter_ += 0.001f;
+    meter_ = min(1.0f, meter_);
 }

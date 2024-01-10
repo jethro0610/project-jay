@@ -109,7 +109,7 @@ void BumpRat::Update() {
     }
 
     if (onGround_) {
-        // spreadManager_->RemoveSpread(transform_.position, 6);
+        spreadManager_->RemoveSpread(transform_.position, 6);
         if (stun_) {
             stun_ = false;
             desiredMovement_ = transform_.GetForwardVector();

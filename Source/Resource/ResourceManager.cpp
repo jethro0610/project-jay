@@ -2,7 +2,7 @@
 
 void ResourceManager::LoadDependencies(DependencyList& dependencyList) {
     for(const std::string& name : dependencyList.textures) {
-        if (!models_.GetMap().contains(name))
+        if (!textures_.GetMap().contains(name))
             LoadTexture(name);
     }
 

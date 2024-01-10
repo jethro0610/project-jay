@@ -12,11 +12,13 @@ GlobalTime globalTime;
 Logger logger;
 ScreenText screenText;
 #endif
-Game game;
 
 int main() {
     DEBUGLOG("Starting Project Jay...");
-    game.Init();
+    // No clue why but this new call prevents vertices from uninitializing
+    // looking into this...
+    Game* game = new Game(); 
+    game->Init();
     DEBUGLOG("Closing Project Jay");
     Logger::Close();
 }

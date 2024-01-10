@@ -275,7 +275,7 @@ void ResourceManager::LoadModel(const std::string& name) {
     model.meshes.resize(modelHeader.numMeshes);
 
     int vertexSize = modelHeader.skeletal ? sizeof(SkeletalVertex) : sizeof(StaticVertex);
-    bgfx::VertexLayout layout = modelHeader.skeletal ? SkeletalVertex::layout : StaticVertex::layout;
+    bgfx::VertexLayout& layout = modelHeader.skeletal ? SkeletalVertex::layout : StaticVertex::layout;
     for (Mesh& mesh : model.meshes) {
         MeshFileHeader meshHeader;
         file.read((char*)&meshHeader, sizeof(MeshFileHeader));

@@ -67,10 +67,11 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     Clear();
     nlohmann::json levelData = nlohmann::json::parse(inFile);
 
-    // DependencyList deps = DependencyList::GenerateFromLevel(levelData);
+    DependencyList deps; 
+    DependencyList::GetFromLevelJson(levelData, deps);
     // resourceManager_.UnloadUnusedDependencies(deps);
-    // resourceManager_.LoadDependencies(deps);
-    // 
+    resourceManager_.LoadDependencies(deps);
+
     // properties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
     // properties_.spreadMaterials.clear();
     // for (auto& materialName : levelData["spread"]["materials"])
@@ -150,6 +151,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         
         nlohmann::json entityData; 
         entityData["name"] = entity.DBG_name_;
+        entityData["type_id"] = entity.typeId_;
         Transform& transform = entity.transform_;
 
         entityData["transform"]["position"]["x"] = transform.position.x;

@@ -3,7 +3,6 @@ const int NUM_FRAGMENT_SHADERS = 18;
 const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_depth_s",
 	"fs_text",
-	"fs_uibar",
 	"fs_particle",
 	"fs_postprocess",
 	"fs_blit",
@@ -19,4 +18,5 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_leaves_strand",
 	"fs_terrain",
 	"fs_dfsa",
+	"fs_uibar",
 };

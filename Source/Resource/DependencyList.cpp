@@ -1,4 +1,34 @@
 #include "DependencyList.h"
-#include "Helpers/LoadHelpers.h"
+#include "Entity/EntityTypes.h"
 #include <nlohmann/json.hpp>
-#include <fstream>
+
+void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDepList) {
+    switch (typeId) {
+        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): {                      \
+            EntityDependendies deps = TYPE::DEPS;                                   \
+            if (deps.hasModel) {                                                    \
+                outDepList.models.insert(std::string(deps.model));                  \
+            }                                                                       \
+            for (int i = 0; i < deps.numTextures; i++)                              \
+                outDepList.textures.insert(std::string(deps.textures[i]));          \
+            break;                                                                  \
+        }
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList& outDepList) {
+    auto& entitiesData = levelData["entities"];
+    for (auto& entityData : entitiesData) {
+        Entity::TypeID typeId;
+        if (!entityData.contains("type_id")) {
+            #define ENTITYEXP(TYPE, VAR) if (entityData["name"] == TYPE::GetName()) typeId = TYPE::GetTypeID();
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
+        else
+            typeId = entityData["type_id"];
+        GetFromEntity(typeId, outDepList);
+    }
+}

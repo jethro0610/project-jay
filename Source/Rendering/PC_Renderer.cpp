@@ -372,7 +372,7 @@ void Renderer::RenderUI(EntityList& entities) {
 
     Player* player = (Player*)&entities[0];
 
-    vec4 meter = vec4(player->meter_, Player::MAX_METER, 0.0f, 0.0f); 
+    vec4 meter = vec4(player->meter_, 0.0f, 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);

@@ -3,17 +3,6 @@
         "t_font",
         "t_bricks_c",
         "t_bricks_n",
-        "t_hair_m",
-
-        "t_spinrat_back_m",
-        "t_spinrat_ears_b_m",
-        "t_spinrat_ears_f_m",
-        "t_spinrat_eyes_m",
-        "t_spinrat_nose_m",
-        "t_spinrat_swirl_m",
-
-        "t_granite_c",
-        "t_granite_n",
 
         "t_grass_c",
         "t_grass_n",
@@ -23,12 +12,6 @@
     ],
     "models": [
         "st_default",
-
-        "sk_char",
-        "sk_spinrat",
-        "st_tpillar",
-        "st_rabbit_pole",
-
         "st_flower_test"
     ]
 }

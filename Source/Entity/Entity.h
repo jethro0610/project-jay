@@ -7,6 +7,7 @@
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
 #include <inttypes.h>
+#include <cstring>
 
 class Camera;
 struct Inputs;
@@ -17,6 +18,13 @@ class SpreadManager;
 class Terrain;
 
 class ParticleEmitter;
+
+struct EntityDependendies {
+    bool hasModel; 
+    char model[16];
+    int numTextures;
+    char textures[32][32];
+};
 
 class Entity {
 public:
@@ -59,6 +67,7 @@ public:
 
     static constexpr TypeID GetTypeID() { return 0; };
     static constexpr const char* GetName() { return "e_base"; }
+    static constexpr EntityDependendies DEPS = {};
 
     TypeID typeId_;
     bool alive_;

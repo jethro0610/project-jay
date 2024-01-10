@@ -5,7 +5,7 @@
 struct EntityUnion {
     EntityUnion() {}
     union {
-        #define ENTITYEXP(TYPE, VAR) TYPE VAR;
+        #define ENTITYEXP(TYPE, VAR, ID) TYPE VAR;
         EXPANDENTITIES
         #undef ENTITYEXP
     };

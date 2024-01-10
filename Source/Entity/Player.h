@@ -13,7 +13,7 @@ public:
 
     void Init(InitArgs args);
 
-    static constexpr TypeID GetTypeID() { return 1; };
+    static TypeID TYPEID;
     static constexpr const char* GetName() { return "e_player"; }
     static EntityDependendies GetDeps();
 

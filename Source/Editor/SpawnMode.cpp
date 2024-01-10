@@ -28,7 +28,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     const std::string entityName = "e_" + textInput_.Get();
 
     Entity::TypeID typeId = -1;
-    #define ENTITYEXP(TYPE, VAR) if (entityName == TYPE::GetName()) typeId = TYPE::GetTypeID();
+    #define ENTITYEXP(TYPE, VAR, ID) if (entityName == TYPE::GetName()) typeId = ID;
     EXPANDENTITIES
     #undef ENTITYEXP
 

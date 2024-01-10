@@ -5,7 +5,7 @@ class TPillar : public Entity {
 public:
     void Init(InitArgs args);
 
-    static constexpr TypeID GetTypeID() { return 3; };
+    static TypeID TYPEID;
     static constexpr const char* GetName() { return "e_tpillar"; }
     static EntityDependendies GetDeps();
 

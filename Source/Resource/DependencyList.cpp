@@ -5,7 +5,7 @@
 
 void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDepList) {
     switch (typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): {                      \
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: {                                 \
             EntityDependendies deps = TYPE::GetDeps();                              \
             if (deps.hasModel)                                                      \
                 outDepList.models.insert(deps.model);                               \
@@ -23,7 +23,7 @@ void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList&
     for (auto& entityData : entitiesData) {
         Entity::TypeID typeId;
         if (!entityData.contains("type_id")) {
-            #define ENTITYEXP(TYPE, VAR) if (entityData["name"] == TYPE::GetName()) typeId = TYPE::GetTypeID();
+            #define ENTITYEXP(TYPE, VAR, ID) if (entityData["name"] == TYPE::GetName()) typeId = ID;
             EXPANDENTITIES
             #undef ENTITYEXP
         }

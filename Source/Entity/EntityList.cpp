@@ -45,7 +45,7 @@ void EntityList::DestroyFlaggedEntities() {
         if (!rawEntities_[i].entity.destroy_) continue;
 
         switch(rawEntities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.OnDestroy(); break;
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.OnDestroy(); break;
             EXPANDENTITIES
             #undef ENTITYEXP
         }
@@ -62,14 +62,14 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     availablePos_++;
 
     switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }
 
     #ifdef _DEBUG
     switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

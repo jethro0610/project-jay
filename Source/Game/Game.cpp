@@ -124,13 +124,13 @@ void Game::Update() {
             hit.hitter->initHitlag_ = true;
 
             switch(hit.target->typeId_) {
-                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)hit.target)->OnHurt(); break;
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.target)->OnHurt(); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }
 
             switch(hit.hitter->typeId_) {
-                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)hit.hitter)->OnHit(); break;
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.hitter)->OnHit(); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }
@@ -192,15 +192,15 @@ void Game::Update() {
                 push.b->transform_.position += push.collision.resolution * 0.5f;
 
                 switch(push.a->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR) \
-                    case TYPE::GetTypeID(): ((TYPE*)push.a)->OnPush(-push.collision.resolution * 0.5f); break;
+                    #define ENTITYEXP(TYPE, VAR, ID) \
+                    case ID: ((TYPE*)push.a)->OnPush(-push.collision.resolution * 0.5f); break;
                     EXPANDENTITIES
                     #undef ENTITYEXP
                 }
 
                 switch(push.b->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR) \
-                    case TYPE::GetTypeID(): ((TYPE*)push.b)->OnPush(push.collision.resolution * 0.5f); break;
+                    #define ENTITYEXP(TYPE, VAR, ID) \
+                    case ID: ((TYPE*)push.b)->OnPush(push.collision.resolution * 0.5f); break;
                     EXPANDENTITIES
                     #undef ENTITYEXP
                 }
@@ -208,8 +208,8 @@ void Game::Update() {
             else if (push.sendA && push.recieveB) {
                 push.b->transform_.position += push.collision.resolution * 1.0f;
                 switch(push.b->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR) \
-                    case TYPE::GetTypeID(): ((TYPE*)push.b)->OnPush(push.collision.resolution * 1.0f); break;
+                    #define ENTITYEXP(TYPE, VAR, ID) \
+                    case ID: ((TYPE*)push.b)->OnPush(push.collision.resolution * 1.0f); break;
                     EXPANDENTITIES
                     #undef ENTITYEXP
                 }
@@ -217,8 +217,8 @@ void Game::Update() {
             else if (push.sendB && push.recieveA) {
                 push.a->transform_.position -= push.collision.resolution * 1.0f;
                 switch(push.a->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR) \
-                    case TYPE::GetTypeID(): ((TYPE*)push.a)->OnPush(-push.collision.resolution * 1.0f); break;
+                    #define ENTITYEXP(TYPE, VAR, ID) \
+                    case ID: ((TYPE*)push.a)->OnPush(-push.collision.resolution * 1.0f); break;
                     EXPANDENTITIES
                     #undef ENTITYEXP
                 }
@@ -229,7 +229,7 @@ void Game::Update() {
             if (!entities_[i].alive_) continue;
             if (entities_[i].hitlag_ == 0) {
                 switch(rawEntities_[i].entity.typeId_) {
-                    #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.Update(); break;
+                    #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.Update(); break;
                     EXPANDENTITIES
                     #undef ENTITYEXP
                 }
@@ -245,7 +245,7 @@ void Game::Update() {
         if (!entities_[i].alive_) continue;
         entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
         switch(rawEntities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): rawEntities_[i].VAR.RenderUpdate(); break;
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.RenderUpdate(); break;
             EXPANDENTITIES
             #undef ENTITYEXP
         }

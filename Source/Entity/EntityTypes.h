@@ -7,9 +7,9 @@
 #include "MagicSeed.h"
 
 #define EXPANDENTITIES \
-    ENTITYEXP(Entity, entity) \
-    ENTITYEXP(Player, player) \
-    ENTITYEXP(BumpRat, bumpRat) \
-    ENTITYEXP(TPillar, tpillar) \
-    ENTITYEXP(RabbitPole, rabbitPole) \
-    ENTITYEXP(MagicSeed, magicSeed)
+    ENTITYEXP(Entity, entity, 0) \
+    ENTITYEXP(Player, player, 1) \
+    ENTITYEXP(BumpRat, bumpRat, 2) \
+    ENTITYEXP(TPillar, tpillar, 3) \
+    ENTITYEXP(RabbitPole, rabbitPole, 4) \
+    ENTITYEXP(MagicSeed, magicSeed, 5)

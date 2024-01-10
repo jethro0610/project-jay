@@ -82,7 +82,7 @@ void SeedManager::CalculatePositions(
         timeSinceCapture *= 2.0f;
         if (timeSinceCapture >= 1.0f) {
             switch(seed.targetEntity->typeId_) {
-                #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): ((TYPE*)seed.targetEntity)->OnCaptureSeed(); break;
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)seed.targetEntity)->OnCaptureSeed(); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }

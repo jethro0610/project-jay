@@ -5,7 +5,7 @@ class BumpRat : public Entity {
 public:
     void Init(InitArgs args);
 
-    static constexpr TypeID GetTypeID() { return 2; };
+    static TypeID TYPEID;
     static constexpr const char* GetName() { return "e_spinrat"; }
     static EntityDependendies GetDeps(); 
 

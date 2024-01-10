@@ -5,7 +5,7 @@ class MagicSeed : public Entity {
 public:
     void Init(InitArgs args);
 
-    static constexpr TypeID GetTypeID() { return 5; };
+    static const TypeID TYPEID;
     static constexpr const char* GetName() { return "e_magicseed"; }
     static EntityDependendies GetDeps();
 

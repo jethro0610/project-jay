@@ -28,7 +28,7 @@ seedManager_(seedManager),
 spreadManager_(spreadManager),
 terrain_(terrain)
 {
-    #define ENTITYEXP(TYPE, VAR) entityIds_[TYPE::GetName()] = TYPE::GetTypeID();
+    #define ENTITYEXP(TYPE, VAR, ID) entityIds_[TYPE::GetName()] = ID;
     EXPANDENTITIES
     #undef ENTITYEXP
     loaded_ = false;

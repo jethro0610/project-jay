@@ -14,9 +14,7 @@ using namespace glm;
 
 EntityDependendies Player::GetDeps() {
     return {
-        true,
         "sk_char",
-        1,
         {
             "t_hair_m",
         }

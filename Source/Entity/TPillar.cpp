@@ -4,9 +4,7 @@
 
 EntityDependendies TPillar::GetDeps() {
     return {
-        true,
-        "st_tpillar",
-        0
+        "st_tpillar"
     };
 }
 

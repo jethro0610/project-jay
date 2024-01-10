@@ -12,9 +12,7 @@ using namespace glm;
 
 EntityDependendies BumpRat::GetDeps() {
     return {
-        true,
         "sk_spinrat",
-        6,
         {
             "t_spinrat_back_m",
             "t_spinrat_swirl_m",
@@ -22,7 +20,7 @@ EntityDependendies BumpRat::GetDeps() {
             "t_spinrat_eyes_m",
             "t_spinrat_ears_f_m",
             "t_spinrat_ears_b_m",
-        }
+        },
     };
 }
 

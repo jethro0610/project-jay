@@ -6,6 +6,7 @@
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
+#include <vector>
 #include <inttypes.h>
 #include <cstring>
 
@@ -20,10 +21,31 @@ class Terrain;
 class ParticleEmitter;
 
 struct EntityDependendies {
-    bool hasModel; 
-    char model[16];
-    int numTextures;
-    char textures[32][32];
+    EntityDependendies(std::string mdl, std::vector<std::string> txtrs) {
+        hasModel = true;
+        model = mdl;
+        textures = txtrs;
+    }
+
+    EntityDependendies(std::vector<std::string> txtrs) {
+        hasModel = false;
+        textures = txtrs;
+    }
+
+    EntityDependendies(std::string mdl) {
+        hasModel = true;
+        model = mdl;
+        textures = {};
+    }
+
+    EntityDependendies() {
+        hasModel = false;
+        textures = {};
+    }
+
+    bool hasModel;
+    std::string model;
+    std::vector<std::string> textures;
 };
 
 class Entity {

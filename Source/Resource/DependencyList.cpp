@@ -8,9 +8,9 @@ void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDep
         #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): {                      \
             EntityDependendies deps = TYPE::GetDeps();                              \
             if (deps.hasModel) {                                                    \
-                outDepList.models.insert(std::string(deps.model));                  \
+                outDepList.models.insert(deps.model);                               \
             }                                                                       \
-            for (int i = 0; i < deps.numTextures; i++)                              \
+            for (int i = 0; i < deps.textures.size(); i++)                          \
                 outDepList.textures.insert(std::string(deps.textures[i]));          \
             break;                                                                  \
         }

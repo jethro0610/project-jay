@@ -4,9 +4,7 @@
 
 EntityDependendies RabbitPole::GetDeps() {
     return {
-        true,
         "st_rabbit_pole",
-        2,
         {
             "t_granite_c",
             "t_granite_n"

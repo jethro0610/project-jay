@@ -172,8 +172,10 @@ void Editor::Update() {
     
     if (level_.loaded_) {
         for (int i = 0; i < 128; i++) {
-            entities_[i].CalculateBasePose();
-            entities_[i].renderTransform_ = entities_[i].transform_;
+            if (entities_[i].alive_) {
+                entities_[i].CalculateBasePose();
+                entities_[i].renderTransform_ = entities_[i].transform_;
+            }
         }
 
         renderer_.RenderEdit(

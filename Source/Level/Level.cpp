@@ -69,7 +69,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
     DependencyList deps; 
     DependencyList::GetFromLevelJson(levelData, deps);
-    // resourceManager_.UnloadUnusedDependencies(deps);
+    resourceManager_.UnloadUnusedDependencies(deps);
     resourceManager_.LoadDependencies(deps);
 
     // properties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);

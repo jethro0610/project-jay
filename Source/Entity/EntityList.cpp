@@ -39,6 +39,19 @@ void EntityList::Reset() {
     availablePos_ = 0;
 }
 
+void EntityList::DestroyFlaggedEntities() {
+    for (int i = 0; i < 128; i++) {
+        if (!rawEntities_[i].entity.alive_) continue;
+        if (!rawEntities_[i].entity.destroy_) continue;
+
+        // Run generic destroy function
+
+        rawEntities_[i].entity.alive_ = false;
+        availablePos_--;
+        available_[availablePos_] = i;
+    }
+}
+
 Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;

@@ -177,6 +177,7 @@ void Editor::Update() {
                 entities_[i].renderTransform_ = entities_[i].transform_;
             }
         }
+        entities_.DestroyFlaggedEntities();
 
         renderer_.RenderEdit(
             entities_, 

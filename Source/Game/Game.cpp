@@ -235,6 +235,7 @@ void Game::Update() {
     seedManager_.GetCaptures(entities_);
     seedManager_.CalculatePositions(terrain_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
+    entities_.DestroyFlaggedEntities();
 
     renderer_.Render(
         entities_, 

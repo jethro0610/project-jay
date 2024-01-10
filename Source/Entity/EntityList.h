@@ -21,6 +21,7 @@ public:
 
     Entity& operator[](int index);
     Entity& CreateEntity(Entity::TypeID type);
+    void DestroyFlaggedEntities();
     void Reset();
 
 private:

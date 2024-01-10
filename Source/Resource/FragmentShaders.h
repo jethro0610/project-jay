@@ -14,9 +14,9 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_dfsa_color_masked",
 	"fs_dfsa_color",
 	"fs_dfsa_variation",
-	"fs_aura",
 	"fs_leaves_strand",
 	"fs_terrain",
 	"fs_dfsa",
 	"fs_uibar",
+	"fs_aura",
 };

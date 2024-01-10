@@ -182,7 +182,8 @@ void Renderer::RenderMesh(
     Material* material, 
     InstanceBufferHandle* instanceBuffer, 
     glm::mat4* modelMatrix,
-    GPUPose* pose 
+    GPUPose* pose,
+    bool selected
 ) {
     vec4 normalMult;
 
@@ -219,7 +220,11 @@ void Renderer::RenderMesh(
         bgfx::ProgramHandle shaderHandle;
         if (curPass == 0) {
             view = RENDER_VIEW;
+            #ifndef _DEBUG
             shaderHandle = material->shader->handle;
+            #else
+            shaderHandle = selected ? material->selectedShader->handle : material->shader->handle;
+            #endif
             SetTexturesFromMaterial(material, true);
         }
         else {
@@ -287,7 +292,12 @@ void Renderer::RenderEntitiesS(
         for (int m = 0; m < model->meshes.size(); m++) {
             Material* material = &entity.materials_[m];
             Mesh* mesh = &model->meshes[m];
+
+            #ifndef _DEBUG
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr);
+            #else
+            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, entity.DBG_selected_);
+            #endif 
         }
     }
 }

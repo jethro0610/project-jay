@@ -9,7 +9,6 @@
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
-
 EntityDependendies BumpRat::GetDeps() {
     return {
         "sk_spinrat",
@@ -42,8 +41,10 @@ void BumpRat::Init(Entity::InitArgs args) {
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_spinrat");
     skeleton_ = resourceManager.GetSkeleton("sk_spinrat");
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 7; i++) {
+        materials_[i].selectedShader = resourceManager.GetShader("vs_skeletal", "fs_selected");
         materials_[i].properties = MaterialProperties::Default();
+    }
 
     materials_[BACK].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
     materials_[BACK].castShadows = false;
@@ -104,6 +105,9 @@ void BumpRat::Init(Entity::InitArgs args) {
     pushbox_.radius = 3.0f;
     pushbox_.top = 12.0f;
     pushbox_.bottom = 0.0f;
+    #ifdef _DEBUG
+    DBG_collider_ = pushbox_;
+    #endif
 
     vec3 centerOffset = RandomVectorPlanar(100.0f);
     desiredMovement_ = normalize(centerOffset - vec3(transform_.position.x, 0.0f, transform_.position.z));

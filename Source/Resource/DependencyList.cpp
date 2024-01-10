@@ -7,9 +7,8 @@ void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDep
     switch (typeId) {
         #define ENTITYEXP(TYPE, VAR) case TYPE::GetTypeID(): {                      \
             EntityDependendies deps = TYPE::GetDeps();                              \
-            if (deps.hasModel) {                                                    \
+            if (deps.hasModel)                                                      \
                 outDepList.models.insert(deps.model);                               \
-            }                                                                       \
             for (int i = 0; i < deps.textures.size(); i++)                          \
                 outDepList.textures.insert(std::string(deps.textures[i]));          \
             break;                                                                  \

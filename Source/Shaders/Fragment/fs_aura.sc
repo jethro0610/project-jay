@@ -8,7 +8,7 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 #include <lighting.sh>
 
 void main() {
-    DITHERDISCARD(0.5f);
+    DITHERDISCARD(PROP_COLOR.w);
     vec3 normal = v_normal;
     float brightness = getBrightness(normal, v_wposition, v_sposition);
 

@@ -25,10 +25,12 @@ void Player::Init(Entity::InitArgs args)
 {
     Entity::Init(args);
 
-    PlayerMoveMode moveMode_ = MM_Default;
-    float speed_ = MIN_SPEED;
+    moveMode_ = MM_Default;
+    speed_ = MIN_SPEED;
+    charging_ = false;
     attackActiveTimer_ = ATTACK_TIME;
     attackCharge_ = 0;
+    lastAttackCharge_ = 0;
 
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
@@ -52,6 +54,7 @@ void Player::Init(Entity::InitArgs args)
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
         materials_[i].properties = MaterialProperties::Default();
+        materials_[i].selectedShader = resourceManager.GetShader("vs_skeletal", "fs_selected");
     }
     materials_[BAND].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[BAND].properties.color = vec4(0.85f);
@@ -145,6 +148,9 @@ void Player::Init(Entity::InitArgs args)
 
     pushbox_.radius = 1.0f;
     pushbox_.top = 4.0f;
+    #ifdef _DEBUG
+    DBG_collider_ = pushbox_;
+    #endif
 
     meter_ = 0.0f;
 }
@@ -154,21 +160,25 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->attack && releasedSinceLastAttack_ && attackCharge_ < MAX_CHARGE)
+    if (inputs_->startAttack)
+        charging_ = true;
+    if (inputs_->releaseAttack)
+        charging_ = false;
+    if (attackCharge_ > MAX_CHARGE)
+        charging_ = false;
+
+    if (charging_) {
         attackCharge_++;
+    }
     else if (attackCharge_ != 0) {
         lastAttackCharge_ = attackCharge_;
         attackCharge_ = 0;
         attackActiveTimer_ = 0;
     }
 
-    if (!inputs_->attack)
-        releasedSinceLastAttack_ = true;
-
     if (attackActiveTimer_ < ATTACK_TIME) {
         if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE) {
             hitbox_.active = true;
-            releasedSinceLastAttack_ = false;
         }
         else 
             hitbox_.active = false;
@@ -315,7 +325,7 @@ void Player::Update() {
 
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
-        hitbox_.knocback = planarVelocity * 0.985f;
+        hitbox_.knocback = planarVelocity * 0.975f;
         hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
         hitbox_.hitlag = 4;
         hitbox_.diStrength = 0.5f;

@@ -67,6 +67,9 @@ struct Material {
 
     Shader* shader;
     Shader* shadowShader;
+    #ifdef _DEBUG
+    Shader* selectedShader;
+    #endif
 
     int numTextures;
     Texture* textures[MAX_TEXTURES];

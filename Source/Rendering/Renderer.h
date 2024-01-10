@@ -122,6 +122,7 @@ private:
 
     void StartFrame();
     void Clear();
+    #ifndef _DEBUG
     void RenderMesh(
         Mesh* mesh, 
         Material* material, 
@@ -129,6 +130,16 @@ private:
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr 
     );
+    #else
+    void RenderMesh(
+        Mesh* mesh, 
+        Material* material, 
+        InstanceBufferHandle* instanceBuffer = nullptr, 
+        glm::mat4* modelMatrix = nullptr,
+        GPUPose* pose = nullptr,
+        bool selected = false
+    );
+    #endif
     void RenderTerrain(
         Terrain& terrain, 
         Material* material,

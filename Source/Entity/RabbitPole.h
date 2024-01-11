@@ -6,7 +6,7 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_rabbit_pole"; }
+    static constexpr const char* GetName() { return "e_rabbitpole"; }
     static EntityDependendies GetDeps(); 
 
     void Update() {}; 

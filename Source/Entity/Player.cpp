@@ -166,14 +166,14 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->startAttack && attackActiveTimer_ == ATTACK_TIME)
+    if (inputs_->startAttack)
         charging_ = true;
     if (inputs_->releaseAttack)
         charging_ = false;
     if (attackCharge_ > MAX_CHARGE)
         charging_ = false;
 
-    if (charging_) {
+    if (charging_ && attackActiveTimer_ == ATTACK_TIME) {
         attackCharge_++;
     }
     else if (attackCharge_ != 0) {

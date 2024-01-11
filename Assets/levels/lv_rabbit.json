@@ -162,9 +162,9 @@
                     "z": 101.5166015625
                 },
                 "rotation": {
-                    "x": 6.104568228693097e-07,
-                    "y": -1.3399986028671265,
-                    "z": -4.955435883857717e-07
+                    "x": 6.104566523390531e-07,
+                    "y": -1.3399988412857056,
+                    "z": -4.955434178555151e-07
                 },
                 "scale": {
                     "x": 13.19999885559082,
@@ -175,7 +175,7 @@
             "type_id": 4
         },
         {
-            "name": "e_spinrat",
+            "name": "e_bumprat",
             "transform": {
                 "position": {
                     "x": 166.67254638671875,
@@ -196,7 +196,7 @@
             "type_id": 2
         },
         {
-            "name": "e_spinrat",
+            "name": "e_bumprat",
             "transform": {
                 "position": {
                     "x": 62.33583068847656,
@@ -217,7 +217,7 @@
             "type_id": 2
         },
         {
-            "name": "e_spinrat",
+            "name": "e_bumprat",
             "transform": {
                 "position": {
                     "x": -57.82136154174805,
@@ -238,7 +238,7 @@
             "type_id": 2
         },
         {
-            "name": "e_magicseed",
+            "name": "e_teleportpod",
             "transform": {
                 "position": {
                     "x": 49.33234786987305,

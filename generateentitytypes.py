@@ -6,7 +6,7 @@ type_ids = dict()
 with open('./Source/Entity/EntityIDS.csv', 'r') as file:
     csv = csv.reader(file)
     for line in csv:
-        type_ids[line[0]] = line[1]
+        type_ids[line[0]] = int(line[1])
 
 entity_names = []
 path_glob = glob.glob('./Source/Entity/*.h', recursive = True)

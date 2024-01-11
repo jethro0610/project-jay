@@ -15,7 +15,7 @@ file(GLOB SOURCES
     Source/Entity/BumpRat.cpp
     Source/Entity/TPillar.cpp
     Source/Entity/RabbitPole.cpp
-    Source/Entity/MagicSeed.cpp
+    Source/Entity/TeleportPod.cpp
 
     Source/Helpers/LoadHelpers.cpp
     Source/Helpers/Random.cpp

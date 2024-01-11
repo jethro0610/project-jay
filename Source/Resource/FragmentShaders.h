@@ -16,7 +16,7 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_flower_test",
 	"fs_seed_test",
 	"fs_selected",
-	"fs_terrain",
 	"fs_uibar",
 	"fs_aura",
+	"fs_terrain",
 };

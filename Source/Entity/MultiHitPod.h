@@ -1,19 +1,17 @@
 #pragma once
 #include "Entity.h"
 
-class TeleportPod : public Entity {
+class MultiHitPod : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_teleportpod"; }
+    static constexpr const char* GetName() { return "e_multihitpod"; }
     static EntityDependendies GetDeps();
 
-    static constexpr int MAX_TELEPORT_SCALE_TICKS = 15;
+    static constexpr int MAX_COOLDOWN_TICKS = 15;
 
-    bool shouldTeleport_;
-    glm::vec3 scaleBeforeTeleport_;
-    int teleportScaleTicks_;
+    int cooldown_;
 
     void Update(); 
     void RenderUpdate() {};

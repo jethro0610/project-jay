@@ -7,7 +7,6 @@
 #include "Logging/Logger.h"
 #include "Entity/EntityList.h"
 #include "Particle/ParticleManager.h"
-#include "Entity/EntityTypes.h"
 #include "Resource/ResourceManager.h"
 #ifdef _DEBUG
 #include <fstream>
@@ -28,9 +27,6 @@ seedManager_(seedManager),
 spreadManager_(spreadManager),
 terrain_(terrain)
 {
-    #define ENTITYEXP(TYPE, VAR, ID) entityIds_[TYPE::GetName()] = ID;
-    EXPANDENTITIES
-    #undef ENTITYEXP
     loaded_ = false;
 
     properties_.terrainMaterial.shader = resourceManager.GetShader("vs_terrain", "fs_terrain");

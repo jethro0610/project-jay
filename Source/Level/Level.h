@@ -33,7 +33,6 @@ public:
     #endif
 
 private:
-    std::map<std::string, Entity::TypeID> entityIds_;
     EntityList& entities_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;

@@ -36,7 +36,7 @@ void ParticleManager::Update(float deltaTime) {
         if (emitters_[i].release_ && emitters_[i].particles_.size() == 0) {
             emitters_[i] = ParticleEmitter();
             usableEmitters_.push_front(i);
-            DEBUGLOG("free emitter: " << i);
+            DEBUGLOG("Freed emitter: " << i);
         }
     }
 }

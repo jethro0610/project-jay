@@ -29,6 +29,15 @@ void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList&
         }
         else
             typeId = entityData["type_id"];
+
+        // Use typeId in file
+        // if (!entityData.contains("type_id")) {
+        //     #define ENTITYEXP(TYPE, VAR, ID) if (entityData["name"] == TYPE::GetName()) typeId = ID;
+        //     EXPANDENTITIES
+        //     #undef ENTITYEXP
+        // }
+        // else
+        //     typeId = entityData["type_id"];
         GetFromEntity(typeId, outDepList);
     }
 }

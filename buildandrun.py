@@ -14,6 +14,7 @@ if platform.system() == 'Windows':
 elif platform.system() == 'Linux':
     use_shell = True
 
+subprocess.run('python generateentitytypes.py', shell = True)
 subprocess.run('python generatetools.py', shell = True)
 subprocess.run('python copyassets.py', shell = True)
 subprocess.run('python generateshaderheaders.py', shell = True)

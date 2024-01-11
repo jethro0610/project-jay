@@ -10,6 +10,10 @@ using namespace glm;
 
 using namespace std::chrono;
 
+#define ENTITYEXP(TYPE, VAR, ID) Entity::TypeID TYPE::TYPEID = ID;
+EXPANDENTITIES
+#undef ENTITYEXP
+
 void Game::Init() {
     srand(time(0));
     renderer_.camera_ = &camera_;

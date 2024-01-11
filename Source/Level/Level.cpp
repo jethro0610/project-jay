@@ -9,6 +9,7 @@
 #include "Particle/ParticleManager.h"
 #include "Resource/ResourceManager.h"
 #ifdef _DEBUG
+#include "Entity/EntityTypes.h"
 #include <fstream>
 #endif
 
@@ -53,6 +54,12 @@ terrain_(terrain)
     properties_.spreadMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
     properties_.spreadMaterials[1].numTextures = 0;
     properties_.spreadMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
+
+    #ifdef _DEBUG
+    #define ENTITYEXP(TYPE, VAR, ID) DBG_entityTypes_[TYPE::GetName()] = ID;
+    EXPANDENTITIES
+    #undef ENTITYEXP
+    #endif
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {
@@ -101,8 +108,20 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     auto& entitiesData = levelData["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
-        Entity& entity = entities_.CreateEntity(entityData["type_id"]);
-        entity.transform_ = GetTransform(entityData, "transform");
+        Entity* entity;
+
+        #ifndef _DEBUG
+        entity = &entities.CreateEntity(entityData["type_id"]);
+        #else
+        if (entityData.contains("type_id"))
+            entity = &entities_.CreateEntity(entityData["type_id"]);
+        else if (DBG_entityTypes_.contains(entityData["name"]))
+            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]]);
+        else
+            DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
+        #endif
+
+        entity->transform_ = GetTransform(entityData, "transform");
     }
     DBG_name_ = name;
     loaded_ = true;

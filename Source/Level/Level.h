@@ -3,7 +3,7 @@
 #include "LevelProperties.h"
 #include <string>
 #include <nlohmann/json.hpp>
-#include <map>
+#include <unordered_map>
 
 class EntityList;
 class ParticleManager;
@@ -29,6 +29,7 @@ public:
 
     #ifdef _DEBUG
     std::string DBG_name_;
+    std::unordered_map<std::string, Entity::TypeID> DBG_entityTypes_;
     void Save(const std::string& name, const std::string& suffix = "");
     #endif
 

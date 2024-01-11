@@ -1,7 +1,0 @@
-{
-    "vertex": "vs_glyph",
-    "fragment": "fs_text",
-    "textures": [
-        "t_font"
-    ]
-}

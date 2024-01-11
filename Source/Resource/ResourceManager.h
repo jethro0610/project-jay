@@ -45,7 +45,6 @@ public:
 
 private:
     void LoadGlobals();
-    void LoadGlobalFile();
     void LoadRenderTextures();
     void CreateTerrainMapTexture();
     void LoadGlobalQuad();

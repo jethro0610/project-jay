@@ -105,12 +105,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     auto& entitiesData = levelData["entities"];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
-        Entity::TypeID type = GetFromMap<Entity::TypeID>(
-            entityIds_, 
-            entityData["name"], 
-            "entity " + entityData["name"].get<std::string>() + " not found"
-        ); 
-        Entity& entity = entities_.CreateEntity(type);
+        Entity& entity = entities_.CreateEntity(entityData["type_id"]);
         entity.transform_ = GetTransform(entityData, "transform");
     }
     DBG_name_ = name;

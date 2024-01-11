@@ -1,7 +1,0 @@
-{
-    "vertex": "vs_screenquad",
-    "fragment": "fs_postprocess",
-    "textures": [
-        "t_render_c"
-    ]
-}

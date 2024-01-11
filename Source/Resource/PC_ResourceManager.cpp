@@ -58,23 +58,24 @@ void ResourceManager::LoadGlobals() {
     LoadRenderTextures();
     LoadGlobalQuad();
     LoadGlobalTerrain();
-    LoadGlobalFile();
-}
 
-void ResourceManager::LoadGlobalFile() {
-    std::ifstream inFile("levels/load_globals.json");
-    ASSERT(inFile.is_open(), "Failed to load global file");
+    
+    LoadModel("st_default");
+    LoadTexture("t_font");
+    globals_.insert("st_default");
+    globals_.insert("t_font");
 
-    auto globals = nlohmann::json::parse(inFile);
-    for (auto& texture: globals["textures"]) {
-        LoadTexture(texture);
-        globals_.insert(texture);
-    }
-
-    for (auto& model : globals["models"]) {
-        LoadModel(model);
-        globals_.insert(model);
-    }
+    // TEST GLOBALS
+    LoadModel("st_flower_test");
+    LoadTexture("t_grass_c");
+    LoadTexture("t_grass_n");
+    LoadTexture("t_marble_c");
+    LoadTexture("t_flower_m");
+    globals_.insert("st_flower_test");
+    globals_.insert("t_grass_c");
+    globals_.insert("t_grass_n");
+    globals_.insert("t_marble_c");
+    globals_.insert("t_flower_m");
 }
 
 void ResourceManager::LoadRenderTextures() {

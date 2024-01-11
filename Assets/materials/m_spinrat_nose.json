@@ -1,9 +1,0 @@
-{
-    "vertex": "vs_skeletal",
-    "fragment": "fs_color_masked",
-    "cast_shadows": false,
-    "textures": [ 
-        "t_spinrat_nose_m"
-    ],
-    "color": { "x": 0.85, "y": 0.9, "z": 1.0 }
-}

@@ -1,9 +1,0 @@
-{
-    "vertex": "vs_static",
-    "fragment": "fs_dfsa_color",
-    "cast_shadows": false,
-    "vertex_shadow": "vs_static_s",
-    "fragment_shadow": "fs_depth_s",
-    "color": { "x": 1.0, "y": 0.95, "z": 0.6 },
-    "fresnel_brightness": 0.75
-}

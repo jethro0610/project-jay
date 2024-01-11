@@ -11,6 +11,7 @@
 #include <cstring>
 
 class Camera;
+class EntityList;
 struct Inputs;
 class ParticleManager;
 class ResourceManager;
@@ -78,6 +79,7 @@ public:
 
     void Construct(
         Camera& camera,
+        EntityList& entities,
         Inputs& inputs,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
@@ -155,6 +157,7 @@ public:
     void OnDestroy() {};
 
     Camera* camera_;
+    EntityList* entities_;
     Inputs* inputs_;
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;

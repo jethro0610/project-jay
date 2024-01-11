@@ -3,6 +3,7 @@
 #include "Terrain/Terrain.h"
 #include "Resource/ResourceManager.h"
 #include "Helpers/Random.h"
+#include "EntityList.h"
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
@@ -41,16 +42,14 @@ void TeleportPod::Init(Entity::InitArgs args) {
 
 void TeleportPod::Update() {
     if (hitlag_ == 0 && shouldTeleport_) {
-        vec3 pos;
         vec2 terrainDistance;
         do {
-            pos = RandomVectorPlanar(100.0f);
-            terrainDistance = terrain_->GetDistance(pos);
-            pos.y = terrainDistance.y;
+            transform_.position = RandomVectorPlanar(100.0f);
+            terrainDistance = terrain_->GetDistance(transform_.position);
+            transform_.position.y = terrainDistance.y;
         }
-        while(terrainDistance.x > -20.0f);
+        while(terrainDistance.x > -20.0f || entities_->IsAnyOverlapping(*this));
 
-        transform_.position = pos;
         scaleBeforeTeleport_ = transform_.scale;
         transform_.scale = vec3(0.0f);
         shouldTeleport_ = false;

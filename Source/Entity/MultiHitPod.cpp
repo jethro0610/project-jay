@@ -3,6 +3,7 @@
 #include "Terrain/Terrain.h"
 #include "Resource/ResourceManager.h"
 #include "Helpers/Random.h"
+#include "Entity/EntityList.h"
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
@@ -15,6 +16,7 @@ EntityDependendies MultiHitPod::GetDeps() {
 void MultiHitPod::Init(Entity::InitArgs args) {
     Entity::Init(args);
 
+    disableCollision_ = false;
     cooldown_ = 0;
 
     SetFlag(EF_RecieveHits, true);
@@ -38,8 +40,13 @@ void MultiHitPod::Init(Entity::InitArgs args) {
 }
 
 void MultiHitPod::Update() {
-    if (cooldown_ > 0) {
+    if (cooldown_ > 0 && hitlag_ == 0)
         cooldown_--;
+
+    if (disableCollision_ && cooldown_ == 0 && !entities_->IsAnyOverlapping(*this))
+        disableCollision_ = false;
+
+    if (disableCollision_) {
         SetFlag(EF_RecieveHits, false);
         SetFlag(EF_SendPush, false);
     }
@@ -51,5 +58,6 @@ void MultiHitPod::Update() {
 
 void MultiHitPod::OnHurt() {
     seedManager_->CreateMultipleSeed(transform_.position, 200, 20.0f);
+    disableCollision_ = true;
     cooldown_ = MAX_COOLDOWN_TICKS;
 }

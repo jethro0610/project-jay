@@ -9,9 +9,10 @@ public:
     static constexpr const char* GetName() { return "e_multihitpod"; }
     static EntityDependendies GetDeps();
 
-    static constexpr int MAX_COOLDOWN_TICKS = 15;
+    static constexpr int MAX_COOLDOWN_TICKS = 5;
 
     int cooldown_;
+    bool disableCollision_;
 
     void Update(); 
     void RenderUpdate() {};

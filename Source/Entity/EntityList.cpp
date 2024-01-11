@@ -1,5 +1,6 @@
 #include "EntityList.h"
 #include "EntityUnion.h"
+#include "Collision/Collision.h"
 #include <cstring>
 
 EntityList::EntityList(
@@ -17,7 +18,7 @@ resourceManager_(resourceManager)
 {
     rawEntities_ = rawEntities;
     for (int i = 0; i < 128; i++) {
-        rawEntities[i].entity.Construct(camera, inputs, seedManager, spreadManager, terrain);
+        rawEntities[i].entity.Construct(camera, *this, inputs, seedManager, spreadManager, terrain);
         available_[i] = i;
         #ifdef _DEBUG
         rawEntities_[i].entity.DBG_index_ = i;
@@ -77,3 +78,20 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     rawEntities_[entityId].entity.typeId_ = typeId;
     return rawEntities_[entityId].entity;
 }   
+
+bool EntityList::IsAnyOverlapping(Entity& entity) {
+    for (int i = 0; i < 128; i++) {
+        Entity& target = rawEntities_[i].entity;
+        if (!target.alive_) continue;
+        if (&entity == &target) continue;
+        if (target.pushbox_.radius <= 0.0f) continue;
+
+        if (Collision::GetCollision(
+            entity.transform_, 
+            entity.pushbox_, 
+            target.transform_, 
+            target.pushbox_
+        ).isColliding) return true;
+    }
+    return false;
+}

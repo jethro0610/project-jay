@@ -23,6 +23,7 @@ public:
     Entity& CreateEntity(Entity::TypeID type);
     void DestroyFlaggedEntities();
     void Reset();
+    bool IsAnyOverlapping(Entity& entity);
 
 private:
     int available_[128];

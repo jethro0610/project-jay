@@ -27,6 +27,8 @@ void Player::Init(Entity::InitArgs args)
 
     moveMode_ = MM_Default;
     speed_ = MIN_SPEED;
+    tilt_ = 0.0f;
+    meter_ = 0.0f;
     charging_ = false;
     attackActiveTimer_ = ATTACK_TIME;
     attackCharge_ = 0;

@@ -12,16 +12,15 @@ entity_names = []
 path_glob = glob.glob('./Source/Entity/*.h', recursive = True)
 for path in path_glob:
     path = path.replace('./Source/Entity/', '')
+    path = path.replace('./Source/Entity\\', '')
     path = path.replace('.h', '')
     if path == 'EntityList' or path == 'EntityUnion' or path == 'EntityTypes':
         continue
-
     entity_names.append(path)
 
 should_generate = False
 for entity_name in entity_names:
     if entity_name not in type_ids.keys():
-        print("entity name not in")
         should_generate = True
         break
 

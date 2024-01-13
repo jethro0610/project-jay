@@ -46,6 +46,7 @@ terrain_(terrain)
 
     properties_.spreadMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
     properties_.spreadMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[0].castShadows = true;
     properties_.spreadMaterials[0].numTextures = 1;
     properties_.spreadMaterials[0].textures[0] = resourceManager.GetTexture("t_flower_m");
     properties_.spreadMaterials[0].triangleType = TriangleType::TWO_SIDED;
@@ -109,19 +110,18 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         Entity* entity;
+        entityTransform = GetTransform(entityData, "transform");
 
         #ifndef _DEBUG
         entity = &entities.CreateEntity(entityData["type_id"]);
         #else
         if (entityData.contains("type_id"))
-            entity = &entities_.CreateEntity(entityData["type_id"]);
+            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         else if (DBG_entityTypes_.contains(entityData["name"]))
-            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]]);
+            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
-
-        entity->transform_ = GetTransform(entityData, "transform");
     }
     DBG_name_ = name;
     loaded_ = true;

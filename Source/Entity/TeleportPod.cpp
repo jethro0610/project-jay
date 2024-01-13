@@ -66,7 +66,7 @@ void TeleportPod::Update() {
     }
 }
 
-void TeleportPod::OnHurt() {
-    seedManager_->CreateMultipleSeed(transform_.position, 200, 20.0f);
+void TeleportPod::OnHurt(HurtArgs args) {
+    seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
     shouldTeleport_ = true;
 }

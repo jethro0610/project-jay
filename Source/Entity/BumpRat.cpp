@@ -25,7 +25,6 @@ EntityDependendies BumpRat::GetDeps() {
 
 void BumpRat::Init(Entity::InitArgs args) {
     Entity::Init(args);
-    SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -120,7 +119,7 @@ void BumpRat::Update() {
     float curDistance = terrain_->GetDistance(transform_.position).x;
     float forwardDistance = terrain_->GetDistance(transform_.position + desiredMovement_ * 10.0f).x;
 
-    desiredMovement_ = rotate(desiredMovement_, RandomFloatRange(-0.1f, 0.1f), Transform::worldUp);
+    desiredMovement_ = rotate(desiredMovement_, RandomFloatRange(-0.025f, 0.025f), Transform::worldUp);
 
     if (curDistance > -50.0f && forwardDistance - curDistance > 0.0f) {
         vec3 centerOffset = RandomVectorPlanar(100.0f);
@@ -169,11 +168,14 @@ void BumpRat::Update() {
         ChangeAnimation(animation, transitionLength);
 }
 
-void BumpRat::OnHit() {
+void BumpRat::OnHit(HitArgs args) {
     ChangeAnimation(6, 0.0f);
 }
 
-void BumpRat::OnHurt() {
+void BumpRat::OnHurt(HurtArgs args) {
     ChangeAnimation(5, 0.0f);
-    seedManager_->CreateMultipleSeed(transform_.position, 300, 20.0f);
+    if (args.attacker->typeId_ != BumpRat::TYPEID)
+        seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
+    else
+        seedManager_->CreateMultipleSeed(transform_.position, 100, 10.0f);
 }

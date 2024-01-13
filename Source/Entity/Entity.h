@@ -51,6 +51,13 @@ struct EntityDependendies {
 
 class Entity {
 public:
+    struct HitArgs {
+        Entity* target;
+    };
+    struct HurtArgs {
+        Entity* attacker;
+    };
+
     static constexpr int MAX_NAME = 32;
     typedef int TypeID;
 
@@ -149,8 +156,8 @@ public:
     void RenderUpdate() {};
     void ChangeAnimation(int index, float transitionLength);
 
-    void OnHit() {};
-    void OnHurt() {};
+    void OnHit(HitArgs args) {};
+    void OnHurt(HurtArgs args) {};
     void OnPush(glm::vec3 pushVec) {};
 
     void OnCaptureSeed() {};

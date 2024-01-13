@@ -1,8 +1,11 @@
 #include "TrailFish.h"
 #include "Resource/ResourceManager.h"
-#include "Particle/ParticleManager.h"
+#include "Entity/EntityList.h"
 #include "Helpers/Random.h"
 #include "Terrain/Terrain.h"
+#include "Bomb.h"
+#include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
 EntityDependendies TrailFish::GetDeps() {
@@ -18,6 +21,9 @@ void TrailFish::Init(Entity::InitArgs args) {
     SetFlag(EF_AlignToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_Interpolate, true);
+
+    spawnTimer_ = 0;
+    desiredMovement_ = vec3(0.0f);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -37,9 +43,11 @@ void TrailFish::Init(Entity::InitArgs args) {
 
 void TrailFish::Update() {
     float curDistance = terrain_->GetDistance(transform_.position).x;
-    if (curDistance > -50.0f) {
-        vec3 centerOffset = RandomVectorPlanar(100.0f);
+    float forwardDistance = terrain_->GetDistance(transform_.position + desiredMovement_ * 10.0f, TA_Low).x;
+    if (curDistance > -50.0f && forwardDistance - curDistance > 0.0f) {
+        vec3 centerOffset = RandomVectorPlanar(200.0f);
         desiredMovement_ = normalize(centerOffset - vec3(transform_.position.x, 0.0f, transform_.position.z));
+        // desiredMovement_ = rotate(-desiredMovement_, RandomFloatRange(-25.0f, 25.0f), Transform::worldUp);
     }
 
     velocity_.y -= 1.0f;
@@ -50,5 +58,11 @@ void TrailFish::Update() {
     if (length(desiredMovement_) > 0.001f) {
         quat rotation = quatLookAtRH(normalize(desiredMovement_), Transform::worldUp);
         transform_.rotation = slerp(transform_.rotation, rotation, ROTATION_SPEED);
+    }
+
+    spawnTimer_++;
+    if (spawnTimer_ > SPAWN_INTERVAL && !entities_->IsAnyOverlapping(*this)) {
+        Entity& bomb = entities_->CreateEntity(Bomb::TYPEID, transform_);
+        spawnTimer_ = 0;
     }
 }

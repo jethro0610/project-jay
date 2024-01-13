@@ -31,8 +31,8 @@ public:
      
     void Update(); 
     void RenderUpdate() {};
-    void OnHit();
-    void OnHurt();
+    void OnHit(HitArgs args);
+    void OnHurt(HurtArgs args);
     void OnCaptureSeed() {};
     void OnDestroy() {};
     void OnPush(glm::vec3 pushVec) {};

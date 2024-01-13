@@ -45,8 +45,8 @@ public:
     static constexpr int STRONG_CHARGE_THRESH = 15;
 
     static constexpr int ATTACK_STARTUP = 2;
-    static constexpr int ATTACK_ACTIVE = 10;
-    static constexpr int ATTACK_COOLDOWN = 13;
+    static constexpr int ATTACK_ACTIVE = 13;
+    static constexpr int ATTACK_COOLDOWN = 10;
     static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
 
     PlayerMoveMode moveMode_;
@@ -66,8 +66,8 @@ public:
      
     void Update(); 
     void RenderUpdate();
-    void OnHit();
-    void OnHurt();
+    void OnHit(HitArgs args);
+    void OnHurt(HurtArgs args);
     void OnCaptureSeed();
     void OnDestroy();
     void OnPush(glm::vec3 pushVec);

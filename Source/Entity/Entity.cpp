@@ -28,9 +28,8 @@ void Entity::Init(
     destroy_ = false; 
     flags_ = 0; 
     
-    transform_ = {};
-    lastTransform_ = {};
-    renderTransform_ = {};
+    lastTransform_ = transform_;
+    renderTransform_ = transform_;
     velocity_ = {};
 
     traceDistance_ = 1.0f;

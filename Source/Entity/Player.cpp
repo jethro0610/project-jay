@@ -140,7 +140,7 @@ void Player::Init(Entity::InitArgs args)
     slopeEmitter_->properties_.startColor = vec4(1.0f, 1.0f, 1.0f, 0.75f);
     slopeEmitter_->properties_.endColor = vec4(1.0f, 1.0f, 1.0f, 0.0f);
 
-    hitbox_.radius = 2.0f;
+    hitbox_.radius = 3.0f;
     hitbox_.top = 2.0f;
     hitbox_.bottom = 2.0f;
     hitbox_.active = false;
@@ -394,9 +394,10 @@ void Player::RenderUpdate() {
     renderTransform_.rotation = tiltDelta * renderTransform_.rotation;
 }
 
-void Player::OnHit() {}
+void Player::OnHit(HitArgs args) {
+}
 
-void Player::OnHurt() {
+void Player::OnHurt(HurtArgs args) {
     ChangeAnimation(6, 0.0f);
 }
 
@@ -406,7 +407,6 @@ void Player::OnCaptureSeed() {
 }
 
 void Player::OnPush(vec3 pushVec) {
-    if (speed_ < 50.0f || stun_) return;
     vec3 planarPush = pushVec;
     planarPush.y = 0.0f;
     planarPush = normalize(planarPush);
@@ -416,7 +416,11 @@ void Player::OnPush(vec3 pushVec) {
     float velocityLen = length(planarVelocity);
     planarVelocity = planarVelocity / velocityLen;
 
-    if (dot(planarPush, planarVelocity) < -0.25f) {
+    if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE) {
+        velocity_ = -planarVelocity * velocityLen;
+        transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
+    }
+    else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.25f) {
         velocity_ = -planarVelocity * velocityLen * 0.5f;
         velocity_.y = 10.0f;
         stun_ = true;

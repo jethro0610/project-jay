@@ -56,7 +56,7 @@ void MultiHitPod::Update() {
     }
 }
 
-void MultiHitPod::OnHurt() {
+void MultiHitPod::OnHurt(HurtArgs args) {
     seedManager_->CreateMultipleSeed(transform_.position, 200, 20.0f);
     disableCollision_ = true;
     cooldown_ = MAX_COOLDOWN_TICKS;

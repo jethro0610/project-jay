@@ -62,6 +62,32 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId) {
     available_[availablePos_] = -1;
     availablePos_++;
 
+    rawEntities_[entityId].entity.transform_ = {};
+
+    switch(typeId) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+
+    #ifdef _DEBUG
+    switch(typeId) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    #endif
+    rawEntities_[entityId].entity.typeId_ = typeId;
+    return rawEntities_[entityId].entity;
+}   
+
+Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transform) {
+    int entityId = available_[availablePos_];
+    available_[availablePos_] = -1;
+    availablePos_++;
+
+    rawEntities_[entityId].entity.transform_ = transform;
+
     switch(typeId) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
         EXPANDENTITIES

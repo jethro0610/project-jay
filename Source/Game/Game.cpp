@@ -128,13 +128,13 @@ void Game::Update() {
             hit.hitter->initHitlag_ = true;
 
             switch(hit.target->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.target)->OnHurt(); break;
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.target)->OnHurt({hit.hitter}); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }
 
             switch(hit.hitter->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.hitter)->OnHit(); break;
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.hitter)->OnHit({hit.target}); break;
                 EXPANDENTITIES
                 #undef ENTITYEXP
             }

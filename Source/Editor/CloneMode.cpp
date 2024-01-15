@@ -36,6 +36,8 @@ void CloneMode::OnStart() {
     EditorMode::OnStart();
     original_ = target_.Get();
     originalTransform_ = original_->transform_;
+    deltaX_ = 0.0f;
+    deltaY_ = 0.0f;
 
     Entity& createdEntity = entities_.CreateEntity(original_->typeId_);
     createdEntity.transform_ = originalTransform_;

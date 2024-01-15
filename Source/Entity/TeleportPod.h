@@ -14,6 +14,7 @@ public:
     bool shouldTeleport_;
     glm::vec3 scaleBeforeTeleport_;
     int teleportScaleTicks_;
+    int hurtCount_;
 
     void Update(); 
     void RenderUpdate() {};

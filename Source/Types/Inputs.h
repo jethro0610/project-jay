@@ -11,6 +11,9 @@ struct Inputs {
     bool startAttack;
     bool releaseAttack;
 
+    bool startBoost;
+    bool releaseBoost;
+
     Inputs() {
         forwardInput = 0.0f;
         sideInput = 0.0f;

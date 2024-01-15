@@ -2,6 +2,7 @@
 #include "Seed/SeedManager.h"
 #include "Terrain/Terrain.h"
 #include "Resource/ResourceManager.h"
+#include "Spread/SpreadManager.h"
 #include "Helpers/Random.h"
 #include "EntityList.h"
 #include <glm/gtx/string_cast.hpp>
@@ -20,8 +21,8 @@ void TeleportPod::Init(Entity::InitArgs args) {
     teleportScaleTicks_ = 0.0f;
     scaleBeforeTeleport_ = vec3(0.0f);
 
-    SetFlag(EF_RecieveHits, true);
     SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -67,6 +68,10 @@ void TeleportPod::Update() {
 }
 
 void TeleportPod::OnHurt(HurtArgs args) {
-    seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
-    shouldTeleport_ = true;
+    hurtCount_++;
+    if (hurtCount_ == 1) {
+        seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
+        shouldTeleport_ = true;
+        hurtCount_ = 0;
+    }
 }

@@ -33,6 +33,8 @@ void Player::Init(Entity::InitArgs args)
     attackActiveTimer_ = ATTACK_TIME;
     attackCharge_ = 0;
     lastAttackCharge_ = 0;
+    chargeBoost_ = false;
+    boostAmount_ = 0;
 
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
@@ -164,11 +166,30 @@ void Player::OnDestroy() {
 }
 
 void Player::Update() {
+    quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
+    vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
+    vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
+    vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
+
     speedEmtter_->active_ = speed_ > 35.0f && onGround_;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->startAttack)
+    if (inputs_->startBoost && !charging_)
+        chargeBoost_ = true;
+    if (inputs_->releaseBoost) {
+        chargeBoost_ = false;
+        if (boostAmount_ > 15) {
+            speed_ += boostAmount_;
+            boostAmount_ = 0;
+            velocity_ = desiredMovement * speed_;
+        }
+    }
+    if (chargeBoost_)
+        boostAmount_ += BOOST_CHARGE_SPEED;
+    boostAmount_ = min(boostAmount_, MAX_BOOST);
+
+    if (inputs_->startAttack && !chargeBoost_)
         charging_ = true;
     if (inputs_->releaseAttack)
         charging_ = false;
@@ -202,6 +223,9 @@ void Player::Update() {
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
+    else if (chargeBoost_) {
+        moveMode_ = MM_Boost;
+    }
     else if (attackCharge_ != 0) {
         moveMode_ = MM_Attack;
     }
@@ -214,10 +238,6 @@ void Player::Update() {
         moveMode_ = MM_Slope;
     }
 
-    quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
-    vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
-    vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
-    vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
     float moveLength = length(desiredMovement);
     if (moveLength < 0.1f) {
         moveLength = 0.0f;
@@ -248,6 +268,14 @@ void Player::Update() {
                 transform_.rotation = slerp(transform_.rotation, rotation, DEFAULT_ROTATION_SPEED);
             }
 
+            speed_ -= MOMENTUM_DECAY;
+            speed_ = max(speed_, MIN_SPEED);
+            break;
+        }
+
+        case MM_Boost: {
+            velocity_.x *= speedDecay;
+            velocity_.z *= speedDecay;
             speed_ -= MOMENTUM_DECAY;
             speed_ = max(speed_, MIN_SPEED);
             break;
@@ -381,6 +409,7 @@ void Player::Update() {
         tilt_ = 0.0f;
 
     SCREENLINE(1, std::to_string(speed_));
+    SCREENLINE(2, std::to_string(boostAmount_));
 }
 
 void Player::RenderUpdate() {
@@ -416,12 +445,13 @@ void Player::OnPush(vec3 pushVec) {
     float velocityLen = length(planarVelocity);
     planarVelocity = planarVelocity / velocityLen;
 
-    if (attackActiveTimer_ >= ATTACK_STARTUP && attackActiveTimer_ < ATTACK_STARTUP + ATTACK_ACTIVE) {
+    if (attackActiveTimer_ != ATTACK_TIME) {
         velocity_ = -planarVelocity * velocityLen;
         transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
     }
-    else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.25f) {
+    else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.75f) {
         velocity_ = -planarVelocity * velocityLen * 0.5f;
+        transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
         velocity_.y = 10.0f;
         stun_ = true;
         skipGroundCheck_ = true;

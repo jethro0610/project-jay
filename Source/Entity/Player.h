@@ -8,6 +8,7 @@ public:
         MM_Spin,
         MM_Slope,
         MM_Attack,
+        MM_Boost,
         MM_Stun
     };
 
@@ -40,6 +41,8 @@ public:
     static constexpr float SLOPE_DOWN_SCALING = 3.0f;
     static constexpr float SLOPE_UP_SCALING = 1.5f;
     static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.15f;
+    static constexpr float MAX_BOOST = 30.0f;
+    static constexpr float BOOST_CHARGE_SPEED = 0.5f;
 
     static constexpr int MAX_CHARGE = 75;
     static constexpr int STRONG_CHARGE_THRESH = 15;
@@ -59,6 +62,9 @@ public:
     int attackActiveTimer_;
     int attackCharge_;
     int lastAttackCharge_;
+
+    bool chargeBoost_;
+    float boostAmount_;
 
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;

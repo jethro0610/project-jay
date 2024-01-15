@@ -68,6 +68,14 @@ void Game::UpdateInputs_P() {
         platform_.gamepad_.releasedButtons_[Gamepad::Y] || 
         platform_.gamepad_.releasedButtons_[Gamepad::RSHOULDER];
 
+    inputs_.startBoost = 
+        platform_.pressedKeys_['E'] || 
+        platform_.gamepad_.pressedButtons_[Gamepad::A];
+
+    inputs_.releaseBoost = 
+        platform_.releasedKeys_['E'] || 
+        platform_.gamepad_.releasedButtons_[Gamepad::A];
+
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])
         inputs_.forwardInput += 1.0f;

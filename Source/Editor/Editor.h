@@ -50,7 +50,6 @@ private:
 
     std::vector<EditorMode*> modes_;
 
-
     Camera& camera_;
     EntityList& entities_;
     Inputs& inputs_;

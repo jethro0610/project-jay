@@ -16,10 +16,15 @@ void EditorTarget::Set(Entity* target) {
     // Select the new target
     if (target != nullptr) {
         target->DBG_selected_ = true;
-        text_ = std::string(target->DBG_name_) + '(' + std::to_string(target->DBG_index_) + ')';
+        name_ = std::string(target->DBG_name_) + '(' + std::to_string(target->DBG_index_) + ')';
+        phase_ = "Phase: " + std::to_string(target->phase_);
+        persist_ = "Persist: " + std::string((target->persist_ ? "True" : "False"));
     }
-    else
-        text_ = "";
+    else {
+        name_ = "";
+        phase_ = "";
+        persist_ = "";
+    }
 
     target_ = target;
 }

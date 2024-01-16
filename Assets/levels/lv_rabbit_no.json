@@ -25,7 +25,9 @@
                     "z": 1.0
                 }
             },
-            "type_id": 1
+            "type_id": 1,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_rabbitpole",
@@ -46,14 +48,16 @@
                     "z": 10.099998474121094
                 }
             },
-            "type_id": 4
+            "type_id": 4,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_rabbitpole",
             "transform": {
                 "position": {
                     "x": -66.48539733886719,
-                    "y": 22.999465942382813,
+                    "y": 22.999465942382812,
                     "z": 74.43962097167969
                 },
                 "rotation": {
@@ -67,7 +71,9 @@
                     "z": 11.900003433227539
                 }
             },
-            "type_id": 4
+            "type_id": 4,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_rabbitpole",
@@ -88,7 +94,9 @@
                     "z": 13.19999885559082
                 }
             },
-            "type_id": 4
+            "type_id": 4,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_teleportpod",
@@ -109,7 +117,9 @@
                     "z": 1.0
                 }
             },
-            "type_id": 5
+            "type_id": 5,
+            "persist": true,
+            "phase": 0
         }
     ],
     "noise_layers": [

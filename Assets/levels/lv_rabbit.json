@@ -8,6 +8,8 @@
     "entities": [
         {
             "name": "e_player",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": 70.3279800415039,
@@ -29,6 +31,8 @@
         },
         {
             "name": "e_rabbitpole",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": 196.49276733398438,
@@ -50,6 +54,8 @@
         },
         {
             "name": "e_bumprat",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": -60.635650634765625,
@@ -71,6 +77,8 @@
         },
         {
             "name": "e_rabbitpole",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": -66.48539733886719,
@@ -92,6 +100,8 @@
         },
         {
             "name": "e_rabbitpole",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": 80.67278289794922,
@@ -113,6 +123,8 @@
         },
         {
             "name": "e_bumprat",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": 166.67254638671875,
@@ -134,6 +146,8 @@
         },
         {
             "name": "e_bumprat",
+            "persist": true,
+            "phase": 0,
             "transform": {
                 "position": {
                     "x": 62.33583068847656,
@@ -152,27 +166,6 @@
                 }
             },
             "type_id": 2
-        },
-        {
-            "name": "e_trailfish",
-            "transform": {
-                "position": {
-                    "x": 13.360740661621094,
-                    "y": 6.918598175048828,
-                    "z": -72.84416961669922
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 3.200000286102295,
-                    "y": 3.200000286102295,
-                    "z": 3.200000286102295
-                }
-            },
-            "type_id": 7
         }
     ],
     "noise_layers": [

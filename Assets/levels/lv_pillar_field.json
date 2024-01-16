@@ -25,7 +25,9 @@
                     "z": 1.0
                 }
             },
-            "type_id": 1
+            "type_id": 1,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -46,7 +48,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -67,7 +71,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -88,7 +94,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -109,7 +117,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -130,7 +140,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -151,7 +163,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -172,7 +186,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -193,7 +209,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tpillar",
@@ -214,7 +232,9 @@
                     "z": 11.799986839294434
                 }
             },
-            "type_id": 3
+            "type_id": 3,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_trailfish",
@@ -235,14 +255,16 @@
                     "z": 2.8000001907348633
                 }
             },
-            "type_id": 7
+            "type_id": 7,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_teleportpod",
             "transform": {
                 "position": {
                     "x": 33.78607177734375,
-                    "y": 16.953750610351563,
+                    "y": 16.953750610351562,
                     "z": 62.454654693603516
                 },
                 "rotation": {
@@ -256,7 +278,9 @@
                     "z": 2.0
                 }
             },
-            "type_id": 5
+            "type_id": 5,
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_teleportpod",
@@ -277,7 +301,9 @@
                     "z": 2.0
                 }
             },
-            "type_id": 5
+            "type_id": 5,
+            "persist": true,
+            "phase": 0
         }
     ],
     "noise_layers": [

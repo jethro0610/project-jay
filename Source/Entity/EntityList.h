@@ -20,11 +20,13 @@ public:
     );
 
     Entity& operator[](int index);
-    Entity& CreateEntity(Entity::TypeID type);
-    Entity& CreateEntity(Entity::TypeID type, const Transform& transform);
+    Entity& CreateEntity(Entity::TypeID type, const Transform& transform = Transform(), int phase = -1, bool persist = false);
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);
+    void SetPhase(int phase);
+
+    int phase_;
 
 private:
     int available_[128];

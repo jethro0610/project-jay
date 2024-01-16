@@ -24,7 +24,9 @@
                     "y": 1.0,
                     "z": 1.0
                 }
-            }
+            },
+            "persist": true,
+            "phase": 0
         },
         {
             "name": "e_tree",
@@ -44,7 +46,9 @@
                     "y": 1.0,
                     "z": 1.0
                 }
-            }
+            },
+            "persist": true,
+            "phase": 0
         }
     ],
     "noise_layers": [

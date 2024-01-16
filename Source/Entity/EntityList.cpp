@@ -92,7 +92,8 @@ void EntityList::SetPhase(int phase) {
     phase_ = phase;
     for (int i = 0; i < 128; i++) {
         Entity& entity = rawEntities_[i].entity;
-        if (entity.asleep_ && entity.phase_ == phase) {
+        // Activate any sleeping entities if we reached their phase
+        if (entity.asleep_ && ((entity.phase_ <= phase && entity.persist_) || (entity.phase_ == phase))) {
             switch(entity.typeId_) {
                 #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.Init({particleManager_, resourceManager_}); break;
                 EXPANDENTITIES
@@ -102,6 +103,8 @@ void EntityList::SetPhase(int phase) {
             entity.asleep_ = false;
             continue;
         }
+
+        // Deactivate entities that dont persist, or those that are before the phase
         if (entity.alive_ && entity.phase_ != phase && !entity.persist_ || entity.phase_ > phase) {
             entity.alive_ = false;
             entity.asleep_ = true;

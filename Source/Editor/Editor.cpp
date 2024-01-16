@@ -107,6 +107,7 @@ void Editor::StopEditing() {
     target_.Set(nullptr);
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
+    entities_.SetPhase(0);
     level_.Save(level_.DBG_name_, "_autosave");
 }
 

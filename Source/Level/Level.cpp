@@ -179,7 +179,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
 
         entityData["phase"] = entity.phase_;
-        entityData["persist"] = (bool)entity.persist_;
+        entityData["persist"] = (bool)entity.persist_; // I guess booleans are implicit converted lmao
 
         level["entities"].push_back(entityData);
     }

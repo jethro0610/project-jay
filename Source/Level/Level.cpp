@@ -76,22 +76,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     resourceManager_.UnloadUnusedDependencies(deps);
     resourceManager_.LoadDependencies(deps);
 
-    // properties_.spreadModel = resourceManager_.GetModel(levelData["spread"]["model"]);
-    // properties_.spreadMaterials.clear();
-    // for (auto& materialName : levelData["spread"]["materials"])
-    //     properties_.spreadMaterials.push_back(resourceManager_.GetMaterial(materialName));
-    //
-    // properties_.terrainMaterial = resourceManager_.GetMaterial(levelData["terrain"]["material"]);
-    // properties_.seedMaterial = resourceManager_.GetMaterial(levelData["seed"]["material"]);
-
-    if (levelData.contains("blob")) {
+    if (loadTerrain) {
         properties_.blob.seed = levelData["blob"]["seed"];
         properties_.blob.frequency = levelData["blob"]["frequency"];
         properties_.blob.minRadius = levelData["blob"]["minRadius"];
         properties_.blob.maxRadius = levelData["blob"]["maxRadius"];
-    }
 
-    if (levelData.contains("noise_layers")) {
         for (int i = 0; i < NoiseLayer::MAX; i++) {
             nlohmann::json& noiseLayerData = levelData["noise_layers"][i];
             properties_.noiseLayers[i].active = noiseLayerData["active"];
@@ -101,12 +91,33 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             properties_.noiseLayers[i].multiplier = noiseLayerData["multiplier"];
             properties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
         }
+
+        terrain_.GenerateTerrainMap(properties_.noiseLayers, properties_.blob);
     }
 
-    if (loadTerrain)
-        terrain_.GenerateTerrainMap(properties_.noiseLayers, properties_.blob);
+    for (int i = 0; i < 4; i++)
+        phases_[i] = levelData["phases"][i];
 
-    auto& entitiesData = levelData["entities"];
+    SetPhase(0);
+
+    DBG_name_ = name;
+    loaded_ = true;
+    return true;
+}
+
+void Level::SetPhase(int phase) {
+    phase_ = phase;
+
+    // Destroy entities
+    for (int i = 0; i < 128; i++) {
+        Entity& entity = entities_[i];
+        if (entity.alive_)
+            entity.destroy_ = true;
+    }
+    entities_.DestroyFlaggedEntities();
+
+    // Load entities in the given phase
+    auto& entitiesData = phases_[phase];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
         Entity* entity;
@@ -123,37 +134,11 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
     }
-    DBG_name_ = name;
-    loaded_ = true;
-    return true;
 }
 
 #ifdef _DEBUG
-void Level::Save(const std::string& name, const std::string& suffix) {
-    nlohmann::json level;
-
-    // level["spread"]["model"] = properties_.spreadModel->DBG_name;
-    // for (Material* material : properties_.spreadMaterials)
-    //     level["spread"]["materials"].push_back(material->DBG_name);
-    //
-    // level["terrain"]["material"] = properties_.terrainMaterial->DBG_name;
-    // level["seed"]["material"] = properties_.seedMaterial->DBG_name;
-
-    level["blob"]["seed"] = properties_.blob.seed;
-    level["blob"]["frequency"] = properties_.blob.frequency;
-    level["blob"]["minRadius"] = properties_.blob.minRadius;
-    level["blob"]["maxRadius"] = properties_.blob.maxRadius;
-
-    for (int i = 0; i < NoiseLayer::MAX; i++) {
-        nlohmann::json noiseLayerData;
-        noiseLayerData["active"] = properties_.noiseLayers[i].active;
-        noiseLayerData["seed"] = properties_.noiseLayers[i].seed;
-        noiseLayerData["frequency"]["x"] = properties_.noiseLayers[i].frequency.x;
-        noiseLayerData["frequency"]["y"] = properties_.noiseLayers[i].frequency.y;
-        noiseLayerData["multiplier"] = properties_.noiseLayers[i].multiplier;
-        noiseLayerData["exponent"] = properties_.noiseLayers[i].exponent;
-        level["noise_layers"][i] = noiseLayerData;
-    }
+void Level::SaveCurrentPhase() {
+    phases_[phase_].clear();
 
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
@@ -177,17 +162,46 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
 
-        level["entities"].push_back(entityData);
+        phases_[phase_].push_back(entityData);
     }
+}
+
+void Level::Save(const std::string& name, const std::string& suffix) {
+    nlohmann::json levelData;
+    levelData["blob"]["seed"] = properties_.blob.seed;
+    levelData["blob"]["frequency"] = properties_.blob.frequency;
+    levelData["blob"]["minRadius"] = properties_.blob.minRadius;
+    levelData["blob"]["maxRadius"] = properties_.blob.maxRadius;
+
+    for (int i = 0; i < NoiseLayer::MAX; i++) {
+        nlohmann::json noiseLayerData;
+        noiseLayerData["active"] = properties_.noiseLayers[i].active;
+        noiseLayerData["seed"] = properties_.noiseLayers[i].seed;
+        noiseLayerData["frequency"]["x"] = properties_.noiseLayers[i].frequency.x;
+        noiseLayerData["frequency"]["y"] = properties_.noiseLayers[i].frequency.y;
+        noiseLayerData["multiplier"] = properties_.noiseLayers[i].multiplier;
+        noiseLayerData["exponent"] = properties_.noiseLayers[i].exponent;
+        levelData["noise_layers"][i] = noiseLayerData;
+    }
+
+    SaveCurrentPhase();
+    for (int i = 0; i < 4; i++)
+        levelData["phases"].push_back(phases_[i]);
+
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
-    assetLevelFile << std::setw(4) << level << std::endl;
+    assetLevelFile << std::setw(4) << levelData << std::endl;
     assetLevelFile.close();
 
     std::ofstream workingLevelFile("levels/" + name + suffix + ".json");
-    workingLevelFile<< std::setw(4) << level << std::endl;
+    workingLevelFile<< std::setw(4) << levelData << std::endl;
     workingLevelFile.close();
 
-    DEBUGLOG("Saved level: " << name + suffix);
+    DEBUGLOG("Saved level: " << name + suffix << " in phase " << phase_);
+}
+
+void Level::EditorSwitchPhase(int phase) {
+    SaveCurrentPhase();
+    SetPhase(phase);
 }
 #endif
 

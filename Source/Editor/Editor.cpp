@@ -97,6 +97,7 @@ void Editor::StartEditing() {
     ScreenText::SetEnabled(false);
     notification_.Clear();
 
+    // Reload the level once we start editing again
     if (level_.loaded_)
         level_.Load(level_.DBG_name_, "_autosave", false);
 }
@@ -108,7 +109,10 @@ void Editor::StopEditing() {
     target_.Set(nullptr);
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
+
+    // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
+    level_.SetPhase(0);
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -180,6 +184,8 @@ void Editor::Update() {
             }
         }
         entities_.DestroyFlaggedEntities();
+
+        // Need to free particle emitters
 
         renderer_.RenderEdit(
             entities_, 

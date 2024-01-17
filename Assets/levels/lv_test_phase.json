@@ -1,0 +1,100 @@
+{
+    "blob": {
+        "frequency": 100.0,
+        "maxRadius": 150.0,
+        "minRadius": 150.0,
+        "seed": 1337
+    },
+    "noise_layers": [
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        }
+    ],
+    "phases": [
+        [
+            {
+                "name": "e_player",
+                "transform": {
+                    "position": {
+                        "x": 0.7627496719360352,
+                        "y": 0.0,
+                        "z": 15.700103759765625
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                "type_id": 1
+            }
+        ],
+        [
+            {
+                "name": "e_tpillar",
+                "transform": {
+                    "position": {
+                        "x": 58.21796798706055,
+                        "y": 0.0,
+                        "z": 14.599447250366211
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                "type_id": 3
+            }
+        ],
+        null,
+        null
+    ]
+}

@@ -23,14 +23,20 @@ public:
         Terrain& terrain
     );
     bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true);
+    void SetPhase(int phase);
     void Clear();
+    nlohmann::json phases_[4];
     LevelProperties properties_;
     bool loaded_;
+    int phase_;
 
     #ifdef _DEBUG
     std::string DBG_name_;
     std::unordered_map<std::string, Entity::TypeID> DBG_entityTypes_;
+    void SaveGlobals(const std::string& name, const std::string& suffix = "");
     void Save(const std::string& name, const std::string& suffix = "");
+    void SaveCurrentPhase();
+    void EditorSwitchPhase(int phase);
     #endif
 
 private:

@@ -3,6 +3,7 @@
 #include "Platform/PC_Platform.h"
 #include "Collision/Ray.h"
 #include "Rendering/Renderer.h"
+#include "Level/Level.h"
 #include "EditorTarget.h"
 using namespace glm;
 
@@ -65,6 +66,10 @@ vec3 DefaultMode::GetMouseRay() {
 }
 
 void DefaultMode::Update() {
+    for (int i = 0; i < 4; i++) {
+        if (platform_.pressedKeys_['1' + i])
+            level_.EditorSwitchPhase(i);
+    }
     if (platform_.pressedKeys_[GetBinding()]) {
         switch(submode_) {
             case DS_Camera:

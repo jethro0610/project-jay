@@ -73,22 +73,6 @@ EXPANDMODES
     target_.name_.properties_.vAnchor = Text::BOTTOM_ALIGN;
     target_.name_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 
-    target_.phase_.properties_.scale = 40.0f;
-    target_.phase_.properties_.position.y -= 80.0f;
-    target_.phase_.properties_.hAlignment = Text::RIGHT_ALIGN;
-    target_.phase_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    target_.phase_.properties_.hAnchor = Text::RIGHT_ALIGN;
-    target_.phase_.properties_.vAnchor = Text::BOTTOM_ALIGN;
-    target_.phase_.properties_.vAnchor = Text::BOTTOM_ALIGN;
-
-    target_.persist_.properties_.scale = 40.0f;
-    target_.persist_.properties_.position.y -= 120.0f;
-    target_.persist_.properties_.hAlignment = Text::RIGHT_ALIGN;
-    target_.persist_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    target_.persist_.properties_.hAnchor = Text::RIGHT_ALIGN;
-    target_.persist_.properties_.vAnchor = Text::BOTTOM_ALIGN;
-    target_.persist_.properties_.vAnchor = Text::BOTTOM_ALIGN;
-
     textInput_.text_.properties_.scale = 40.0f;
     textInput_.text_.properties_.hAlignment = Text::LEFT_ALIGN;
     textInput_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
@@ -124,7 +108,6 @@ void Editor::StopEditing() {
     target_.Set(nullptr);
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
-    entities_.SetPhase(0);
     level_.Save(level_.DBG_name_, "_autosave");
 }
 

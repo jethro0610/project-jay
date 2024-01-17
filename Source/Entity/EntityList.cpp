@@ -24,7 +24,6 @@ resourceManager_(resourceManager)
         rawEntities_[i].entity.DBG_index_ = i;
         #endif
     }
-    phase_ = 0;
 
     availablePos_ = 0;
 }
@@ -58,22 +57,18 @@ void EntityList::DestroyFlaggedEntities() {
     }
 }
 
-Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transform, int phase, bool persist) {
+Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transform) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
     availablePos_++;
 
     rawEntities_[entityId].entity.transform_ = transform;
 
-    if (phase == phase_ || phase == -1) {
-        switch(typeId) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
+    switch(typeId) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
     }
-    else
-        rawEntities_[entityId].entity.asleep_ = true;
 
     #ifdef _DEBUG
     switch(typeId) {
@@ -83,35 +78,8 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transfo
     }
     #endif
     rawEntities_[entityId].entity.typeId_ = typeId;
-    rawEntities_[entityId].entity.phase_ = phase;
-    rawEntities_[entityId].entity.persist_ = persist;
     return rawEntities_[entityId].entity;
 }   
-
-void EntityList::SetPhase(int phase) {
-    phase_ = phase;
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = rawEntities_[i].entity;
-        // Activate any sleeping entities if we reached their phase
-        if (entity.asleep_ && ((entity.phase_ <= phase && entity.persist_) || (entity.phase_ == phase))) {
-            switch(entity.typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.Init({particleManager_, resourceManager_}); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
-            entity.alive_ = true;
-            entity.asleep_ = false;
-            continue;
-        }
-
-        // Deactivate entities that dont persist, or those that are before the phase
-        if (entity.alive_ && entity.phase_ != phase && !entity.persist_ || entity.phase_ > phase) {
-            entity.alive_ = false;
-            entity.asleep_ = true;
-            continue;
-        }
-    }
-}
 
 bool EntityList::IsAnyOverlapping(Entity& entity) {
     for (int i = 0; i < 128; i++) {

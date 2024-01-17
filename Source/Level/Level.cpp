@@ -113,19 +113,18 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         entityTransform = GetTransform(entityData, "transform");
 
         #ifndef _DEBUG
-        entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, entityData["phase"], entityData["persist"].get<bool>());
+        entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         #else
         if (entityData.contains("type_id"))
-            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, entityData["phase"], entityData["persist"].get<bool>());
+            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         else if (DBG_entityTypes_.contains(entityData["name"]))
-            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform, entityData["phase"], entityData["persist"].get<bool>());
+            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
     }
     DBG_name_ = name;
     loaded_ = true;
-    entities_.SetPhase(0);
     return true;
 }
 
@@ -158,7 +157,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
-        if (!entity.alive_ && !entity.asleep_) continue;
+        if (!entity.alive_) continue;
         
         nlohmann::json entityData; 
         entityData["name"] = entity.DBG_name_;
@@ -177,9 +176,6 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["transform"]["rotation"]["x"] = eulerRotation.x;
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
-
-        entityData["phase"] = entity.phase_;
-        entityData["persist"] = (bool)entity.persist_; // I guess booleans are implicit converted lmao
 
         level["entities"].push_back(entityData);
     }

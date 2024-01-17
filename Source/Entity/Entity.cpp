@@ -25,7 +25,6 @@ void Entity::Init(
     Entity::InitArgs args
 ) {
     alive_ = true;
-    asleep_ = false;
     destroy_ = false; 
     flags_ = 0; 
     

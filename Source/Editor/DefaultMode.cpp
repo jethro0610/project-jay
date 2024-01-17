@@ -65,12 +65,6 @@ vec3 DefaultMode::GetMouseRay() {
 }
 
 void DefaultMode::Update() {
-    for (int i = 0; i < 4; i++) {
-        if (platform_.pressedKeys_['1' + i]) {
-            entities_.SetPhase(i);
-            break;
-        }
-    }
     if (platform_.pressedKeys_[GetBinding()]) {
         switch(submode_) {
             case DS_Camera:

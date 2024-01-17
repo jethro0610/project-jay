@@ -101,9 +101,6 @@ public:
     static EntityDependendies GetDeps() { return {}; };
 
     TypeID typeId_;
-    int phase_;
-    int persist_;
-    bool asleep_;
     bool alive_;
     bool destroy_;
     uint32_t flags_; 

@@ -435,8 +435,6 @@ void Renderer::RenderScreenText() {
 void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.modeText_);
     RenderText(editor.target_.name_);
-    RenderText(editor.target_.phase_);
-    RenderText(editor.target_.persist_);
     RenderText(editor.textInput_.text_);
     RenderText(editor.notification_.text_);
 }

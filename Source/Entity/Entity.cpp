@@ -64,6 +64,7 @@ void Entity::Init(
     DBG_collider_.radius = 1.0f;
     DBG_collider_.top = 1.0f;
     DBG_collider_.bottom = 1.0f;
+    DBG_persistView_ = false;
     #endif
 }
 

@@ -67,12 +67,16 @@ vec3 DefaultMode::GetMouseRay() {
 
 void DefaultMode::Update() {
     for (int i = 0; i < Level::MAX_PHASES; i++) {
-        if (platform_.pressedKeys_['1' + i])
+        if (platform_.pressedKeys_['1' + i]) {
+            target_.Set(nullptr);
             level_.EditorSwitchPhase(i);
+        }
     }
 
-    if (platform_.pressedKeys_['P'])
+    if (platform_.pressedKeys_['P']) {
+        target_.Set(nullptr);
         level_.TogglePersistView();
+    }
 
     if (platform_.pressedKeys_[GetBinding()]) {
         switch(submode_) {

@@ -113,6 +113,10 @@ void Level::StartPhase() {
 }
 
 void Level::NextPhase() {
+    if (phase_ >= MAX_PHASES - 1) {
+        DEBUGLOG("Error: going to phase greater than max");
+        return;
+    }
     phase_++;
 
     // TODO: Only remove non-persistent entities

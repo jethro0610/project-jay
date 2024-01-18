@@ -25,7 +25,7 @@ struct SpreadRenderData {
 class SpreadManager {
 public:
     static constexpr float SPREAD_DIST = 2.0f;
-    static constexpr int MAX_SPREAD = 16384;
+    static constexpr int MAX_SPREAD = 32768;
     SpreadManager(
         SeedManager& seedManager,
         Terrain& terrain

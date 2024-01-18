@@ -91,9 +91,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
 
     #ifdef _DEBUG
-    defaultMesh_ = &resourceManager.GetModel("st_default")->meshes[0];
-    // defaultMaterial_ = resourceManager.GetMaterial("m_default");
-    // defaultSelectedMaterial_ = resourceManager.GetMaterial("m_default_selected");
+    selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
+    persistShader_ = resourceManager.GetShader("vs_static", "fs_persist");
     #endif
 }
 
@@ -183,7 +182,7 @@ void Renderer::RenderMesh(
     InstanceBufferHandle* instanceBuffer, 
     glm::mat4* modelMatrix,
     GPUPose* pose,
-    bool selected
+    DebugShaderType debugShaderType 
 ) {
     vec4 normalMult;
 
@@ -223,7 +222,19 @@ void Renderer::RenderMesh(
             #ifndef _DEBUG
             shaderHandle = material->shader->handle;
             #else
-            shaderHandle = selected ? material->selectedShader->handle : material->shader->handle;
+            switch (debugShaderType) {
+                case DS_Default:
+                    shaderHandle = material->shader->handle;
+                    break;
+
+                case DS_Selected:
+                    shaderHandle = selectedShader_->handle;
+                    break;
+
+                case DS_PersistPreview:
+                    shaderHandle = persistShader_->handle;
+                    break;
+            }
             #endif
             SetTexturesFromMaterial(material, true);
         }
@@ -296,7 +307,12 @@ void Renderer::RenderEntitiesS(
             #ifndef _DEBUG
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr);
             #else
-            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, entity.DBG_selected_);
+            DebugShaderType debugShaderType = DS_Default;
+            if (entity.DBG_selected_)
+                debugShaderType = DS_Selected;
+            else if (entity.DBG_persistPreview_)
+                debugShaderType = DS_PersistPreview;
+            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, debugShaderType);
             #endif 
         }
     }

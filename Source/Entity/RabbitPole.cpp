@@ -21,7 +21,6 @@ void RabbitPole::Init(Entity::InitArgs args) {
     model_ = resourceManager.GetModel("st_rabbit_pole");
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_variation");
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
-    materials_[0].selectedShader = resourceManager.GetShader("vs_static", "fs_selected");
     materials_[0].castShadows = true;
     materials_[0].numTextures = 2;
     materials_[0].textures[0] = resourceManager.GetTexture("t_granite_c");

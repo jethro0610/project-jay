@@ -72,9 +72,8 @@ private:
     Material textMaterial_;
 
     #ifdef _DEBUG
-    Mesh* defaultMesh_;
-    Material defaultMaterial_;
-    Material defaultSelectedMaterial_;
+    Shader* selectedShader_;
+    Shader* persistShader_;
     #endif
 
     glm::vec3 lightDirection_;
@@ -131,13 +130,18 @@ private:
         GPUPose* pose = nullptr 
     );
     #else
+    enum DebugShaderType {
+        DS_Default,
+        DS_Selected,
+        DS_PersistPreview
+    };
     void RenderMesh(
         Mesh* mesh, 
         Material* material, 
         InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr,
-        bool selected = false
+        DebugShaderType debugShader = DS_Default 
     );
     #endif
     void RenderTerrain(

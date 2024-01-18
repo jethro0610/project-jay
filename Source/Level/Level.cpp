@@ -220,7 +220,6 @@ void Level::EditorSwitchPhase(int phase) {
     phase_ = phase;
 
     entities_.Reset();
-    entities_.DestroyFlaggedEntities();
     SpawnEntitiesInPhase(phase_);
 }
 #endif

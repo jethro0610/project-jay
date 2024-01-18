@@ -144,6 +144,7 @@ public:
     bool DBG_selected_;
     char DBG_name_[MAX_NAME];
     int DBG_index_;
+    bool DBG_persistPreview_;
     #endif
 
     void SetFlag(Flag flag, bool enable);

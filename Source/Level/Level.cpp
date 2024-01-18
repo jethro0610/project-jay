@@ -95,7 +95,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         terrain_.GenerateTerrainMap(properties_.noiseLayers, properties_.blob);
     }
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_PHASES; i++)
         phases_[i] = levelData["phases"][i];
 
     StartPhase();
@@ -202,7 +202,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     }
 
     SaveCurrentPhase();
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MAX_PHASES; i++)
         levelData["phases"].push_back(phases_[i]);
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
@@ -216,18 +216,21 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     DEBUGLOG("Saved level: " << name + suffix);
 }
 
-void Level::EditorSwitchPhase(int phase, bool persistView) {
+void Level::EditorSwitchPhase(int phase) {
     SaveCurrentPhase();
     phase_ = phase;
 
     entities_.Reset();
     SpawnEntitiesInPhase(phase_, false);
-    if (persistView) {
-        for (int i = 0; i < phase_; i++) {
-            DEBUGLOG("Spawning entities in phase: " << i);
+    if (DBG_persistView_) {
+        for (int i = 0; i < phase_; i++)
             SpawnEntitiesInPhase(i, true);
-        }
     }
+}
+
+void Level::TogglePersistView() {
+    DBG_persistView_ = !DBG_persistView_;
+    EditorSwitchPhase(phase_);
 }
 #endif
 

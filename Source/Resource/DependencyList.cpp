@@ -1,5 +1,6 @@
 #include "DependencyList.h"
 #include "Entity/EntityTypes.h"
+#include "Level/Level.h"
 #include "Logging/Logger.h"
 #include <nlohmann/json.hpp>
 
@@ -19,7 +20,7 @@ void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDep
 }
 
 void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList& outDepList) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < Level::MAX_PHASES; i++) {
         auto& entitiesData = levelData["phases"][i];
         for (auto& entityData : entitiesData) {
             Entity::TypeID typeId;
@@ -31,14 +32,6 @@ void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList&
             else
                 typeId = entityData["type_id"];
 
-            // Use typeId in file
-            // if (!entityData.contains("type_id")) {
-            //     #define ENTITYEXP(TYPE, VAR, ID) if (entityData["name"] == TYPE::GetName()) typeId = ID;
-            //     EXPANDENTITIES
-            //     #undef ENTITYEXP
-            // }
-            // else
-            //     typeId = entityData["type_id"];
             GetFromEntity(typeId, outDepList);
         }
     }

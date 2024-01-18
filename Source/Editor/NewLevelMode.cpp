@@ -28,7 +28,7 @@ ConfirmBehavior NewLevelMode::PostConfirm() {
     level_.Clear();
     level_.loaded_ = true;
     level_.DBG_name_ = "lv_" + textInput_.Get();
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < Level::MAX_PHASES; i++)
         level_.phases_[0] = std::vector<nlohmann::json>();
 
     // TODO: Assign other level properties

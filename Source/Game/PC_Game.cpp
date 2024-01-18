@@ -40,6 +40,7 @@ Game::Game():
         entities_, 
         inputs_, 
         level_, 
+        particleManager_,
         platform_, 
         resourceManager_,
         renderer_, 
@@ -98,6 +99,9 @@ void Game::UpdateInputs_P() {
     inputs_.deltaLookY -= platform_.deltaMouseY_ * 0.005f;
     inputs_.deltaLookX -= platform_.gamepad_.rightStickX_ * GlobalTime::GetDeltaTime() * 2.0f;
     inputs_.deltaLookY += platform_.gamepad_.rightStickY_ * GlobalTime::GetDeltaTime() * 2.0f;
+
+    if (platform_.pressedKeys_['R'] && !editor_.IsActive())
+        level_.NextPhase();
 }
 
 void Game::FlushInputs_P() {

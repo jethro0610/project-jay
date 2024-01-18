@@ -98,25 +98,39 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     for (int i = 0; i < 4; i++)
         phases_[i] = levelData["phases"][i];
 
-    SetPhase(0);
+    StartPhase();
 
     DBG_name_ = name;
     loaded_ = true;
     return true;
 }
 
-void Level::SetPhase(int phase) {
-    phase_ = phase;
+void Level::StartPhase() {
+    phase_ = 0;
 
-    // Destroy entities
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
         if (entity.alive_)
             entity.destroy_ = true;
     }
     entities_.DestroyFlaggedEntities();
+    SpawnEntitiesInPhase(phase_);
+}
 
-    // Load entities in the given phase
+void Level::NextPhase() {
+    phase_++;
+
+    // TODO: Only remove non-persistent entities
+    for (int i = 0; i < 128; i++) {
+        Entity& entity = entities_[i];
+        if (entity.alive_ && !entity.persist_)
+            entity.destroy_ = true;
+    }
+    entities_.DestroyFlaggedEntities();
+    SpawnEntitiesInPhase(phase_);
+}
+
+void Level::SpawnEntitiesInPhase(int phase) {
     auto& entitiesData = phases_[phase];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
@@ -133,6 +147,7 @@ void Level::SetPhase(int phase) {
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
+        entity->persist_ = entityData["persist"];
     }
 }
 
@@ -161,6 +176,8 @@ void Level::SaveCurrentPhase() {
         entityData["transform"]["rotation"]["x"] = eulerRotation.x;
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
+
+        entityData["persist"] = entity.persist_;
 
         phases_[phase_].push_back(entityData);
     }
@@ -201,7 +218,15 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
 void Level::EditorSwitchPhase(int phase) {
     SaveCurrentPhase();
-    SetPhase(phase);
+    phase_ = phase;
+
+    for (int i = 0; i < 128; i++) {
+        Entity& entity = entities_[i];
+        if (entity.alive_)
+            entity.destroy_ = true;
+    }
+    entities_.DestroyFlaggedEntities();
+    SpawnEntitiesInPhase(phase_);
 }
 #endif
 

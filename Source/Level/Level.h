@@ -23,7 +23,9 @@ public:
         Terrain& terrain
     );
     bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true);
-    void SetPhase(int phase);
+    void StartPhase();
+    void NextPhase();
+    void SpawnEntitiesInPhase(int phase);
     void Clear();
     nlohmann::json phases_[4];
     LevelProperties properties_;

@@ -11,6 +11,7 @@ class Inputs;
 class Terrain;
 class Level;
 class LevelProperties;
+class ParticleManager;
 class Renderer;
 class ResourceManager;
 
@@ -25,6 +26,7 @@ public:
         EntityList& entities,
         Inputs& inputs,
         Level& level,
+        ParticleManager& particleManager,
         Platform& platform, 
         ResourceManager& resourceManager,
         Renderer& renderer,
@@ -54,6 +56,7 @@ private:
     EntityList& entities_;
     Inputs& inputs_;
     Level& level_;
+    ParticleManager& particleManager_;
     Platform& platform_;
     Renderer& renderer_;
     ResourceManager& resourceManager_;

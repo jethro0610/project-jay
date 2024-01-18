@@ -103,6 +103,7 @@ public:
     TypeID typeId_;
     bool alive_;
     bool destroy_;
+    bool persist_;
     uint32_t flags_; 
 
     Transform transform_;

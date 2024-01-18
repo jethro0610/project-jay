@@ -3,6 +3,7 @@
 #include "Level/Level.h"
 #include "Rendering/Renderer.h"
 #include "Terrain/Terrain.h"
+#include "Particle/ParticleManager.h"
 #include "Collision/Ray.h"
 #include "Entity/Player.h"
 #include <GLFW/glfw3.h>
@@ -13,6 +14,7 @@ Editor::Editor(
     EntityList& entities, 
     Inputs& inputs,
     Level& level,
+    ParticleManager& particleManager,
     Platform& platform, 
     ResourceManager& resourceManager,
     Renderer& renderer,
@@ -23,6 +25,7 @@ camera_(camera),
 entities_(entities),
 inputs_(inputs),
 level_(level),
+particleManager_(particleManager),
 platform_(platform),
 resourceManager_(resourceManager),
 renderer_(renderer),
@@ -112,7 +115,7 @@ void Editor::StopEditing() {
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
-    level_.SetPhase(0);
+    level_.StartPhase();
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -193,6 +196,7 @@ void Editor::Update() {
             level_.properties_,
             terrain_ 
         );
+        particleManager_.Update(0.0f); // Need this to free unused emitters
     }
     else {
         renderer_.RenderEditorOnly(*this);

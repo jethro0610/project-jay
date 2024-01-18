@@ -33,7 +33,7 @@ ConfirmBehavior FindMode::OnConfirm() {
     bool found = false;
     for (int i = 0; i < 128; i++) {
         int e = (i + lastFindIndex_ + 1) % 128;
-        if (!entities_[e].alive_) continue;
+        if (!entities_[e].alive_ || entities_[i].DBG_persistView_) continue;
         
         if (entities_[e].DBG_name_ == entityName) {
             lastFindIndex_ = e;

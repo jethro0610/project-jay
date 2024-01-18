@@ -21,7 +21,6 @@ void TeleportPod::Init(Entity::InitArgs args) {
     teleportScaleTicks_ = 0.0f;
     scaleBeforeTeleport_ = vec3(0.0f);
 
-    SetFlag(EF_SendPush, true);
     SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

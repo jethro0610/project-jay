@@ -133,6 +133,7 @@ void Level::SpawnEntitiesInPhase(int phase, bool persistView) {
     auto& entitiesData = phases_[phase];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
+        if (phase != phase_ && !entityData["persist"]) continue;
         Entity* entity;
         entityTransform = GetTransform(entityData, "transform");
 

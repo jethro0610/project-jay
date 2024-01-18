@@ -133,7 +133,7 @@ private:
     enum DebugShaderType {
         DS_Default,
         DS_Selected,
-        DS_PersistPreview
+        DS_Persist 
     };
     void RenderMesh(
         Mesh* mesh, 

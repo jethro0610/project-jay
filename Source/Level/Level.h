@@ -25,7 +25,7 @@ public:
     bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true);
     void StartPhase();
     void NextPhase();
-    void SpawnEntitiesInPhase(int phase);
+    void SpawnEntitiesInPhase(int phase, bool persistView = false);
     void Clear();
     nlohmann::json phases_[4];
     LevelProperties properties_;
@@ -38,7 +38,7 @@ public:
     void SaveGlobals(const std::string& name, const std::string& suffix = "");
     void Save(const std::string& name, const std::string& suffix = "");
     void SaveCurrentPhase();
-    void EditorSwitchPhase(int phase);
+    void EditorSwitchPhase(int phase, bool persistView);
     #endif
 
 private:

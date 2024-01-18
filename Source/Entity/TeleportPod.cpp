@@ -67,10 +67,10 @@ void TeleportPod::Update() {
 }
 
 void TeleportPod::OnHurt(HurtArgs args) {
-    hurtCount_++;
-    if (hurtCount_ == 1) {
+    // hurtCount_++;
+    // if (hurtCount_ == 1) {
         seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
         shouldTeleport_ = true;
         hurtCount_ = 0;
-    }
+    // }
 }

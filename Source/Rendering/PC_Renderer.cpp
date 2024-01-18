@@ -231,7 +231,7 @@ void Renderer::RenderMesh(
                     shaderHandle = selectedShader_->handle;
                     break;
 
-                case DS_PersistPreview:
+                case DS_Persist:
                     shaderHandle = persistShader_->handle;
                     break;
             }
@@ -310,8 +310,8 @@ void Renderer::RenderEntitiesS(
             DebugShaderType debugShaderType = DS_Default;
             if (entity.DBG_selected_)
                 debugShaderType = DS_Selected;
-            else if (entity.DBG_persistPreview_)
-                debugShaderType = DS_PersistPreview;
+            else if (entity.DBG_persistView_)
+                debugShaderType = DS_Persist;
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, debugShaderType);
             #endif 
         }

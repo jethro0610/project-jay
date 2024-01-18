@@ -125,7 +125,7 @@ void Level::NextPhase() {
     SpawnEntitiesInPhase(phase_);
 }
 
-void Level::SpawnEntitiesInPhase(int phase) {
+void Level::SpawnEntitiesInPhase(int phase, bool persistView) {
     auto& entitiesData = phases_[phase];
     Transform entityTransform;
     for (auto& entityData : entitiesData) {
@@ -141,6 +141,7 @@ void Level::SpawnEntitiesInPhase(int phase) {
             entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
+        entity->DBG_persistView_ = persistView;
         #endif
         entity->persist_ = entityData["persist"];
     }
@@ -152,7 +153,7 @@ void Level::SaveCurrentPhase() {
 
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
-        if (!entity.alive_) continue;
+        if (!entity.alive_ || entity.DBG_persistView_) continue;
         
         nlohmann::json entityData; 
         entityData["name"] = entity.DBG_name_;
@@ -215,12 +216,18 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     DEBUGLOG("Saved level: " << name + suffix);
 }
 
-void Level::EditorSwitchPhase(int phase) {
+void Level::EditorSwitchPhase(int phase, bool persistView) {
     SaveCurrentPhase();
     phase_ = phase;
 
     entities_.Reset();
-    SpawnEntitiesInPhase(phase_);
+    SpawnEntitiesInPhase(phase_, false);
+    if (persistView) {
+        for (int i = 0; i < phase_; i++) {
+            DEBUGLOG("Spawning entities in phase: " << i);
+            SpawnEntitiesInPhase(i, true);
+        }
+    }
 }
 #endif
 

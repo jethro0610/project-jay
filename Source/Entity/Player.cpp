@@ -58,7 +58,6 @@ void Player::Init(Entity::InitArgs args)
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
         materials_[i].properties = MaterialProperties::Default();
-        // materials_[i].persistPreviewShader = resourceManager.GetShader("vs_skeletal", "fs_selected");
     }
     materials_[BAND].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[BAND].properties.color = vec4(0.85f);

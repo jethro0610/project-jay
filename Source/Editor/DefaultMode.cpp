@@ -68,7 +68,7 @@ vec3 DefaultMode::GetMouseRay() {
 void DefaultMode::Update() {
     for (int i = 0; i < 4; i++) {
         if (platform_.pressedKeys_['1' + i])
-            level_.EditorSwitchPhase(i);
+            level_.EditorSwitchPhase(i, true);
     }
     if (platform_.pressedKeys_[GetBinding()]) {
         switch(submode_) {
@@ -114,7 +114,7 @@ void DefaultMode::CursorUpdate() {
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
         for (int i = 0; i < 128; i++) {
-            if (!entities_[i].alive_) continue;
+            if (!entities_[i].alive_ || entities_[i].DBG_persistView_) continue;
             Entity& entity = entities_[i];
 
             float dist = distance(camera_.transform_.position, entity.transform_.position);

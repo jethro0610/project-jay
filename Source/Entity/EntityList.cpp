@@ -36,6 +36,11 @@ void EntityList::Reset() {
     for (int i = 0; i < 128; i++) {
         available_[i] = i;
         rawEntities_[i].entity.alive_ = false;
+        switch(rawEntities_[i].entity.typeId_) {
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.OnDestroy(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
     }
     availablePos_ = 0;
 }

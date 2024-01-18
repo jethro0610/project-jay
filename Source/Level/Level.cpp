@@ -108,12 +108,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 void Level::StartPhase() {
     phase_ = 0;
 
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = entities_[i];
-        if (entity.alive_)
-            entity.destroy_ = true;
-    }
-    entities_.DestroyFlaggedEntities();
+    entities_.Reset();
     SpawnEntitiesInPhase(phase_);
 }
 
@@ -184,6 +179,10 @@ void Level::SaveCurrentPhase() {
 }
 
 void Level::Save(const std::string& name, const std::string& suffix) {
+    #ifdef _DEBUG
+    DBG_name_ = name;
+    #endif
+
     nlohmann::json levelData;
     levelData["blob"]["seed"] = properties_.blob.seed;
     levelData["blob"]["frequency"] = properties_.blob.frequency;
@@ -213,18 +212,14 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     workingLevelFile<< std::setw(4) << levelData << std::endl;
     workingLevelFile.close();
 
-    DEBUGLOG("Saved level: " << name + suffix << " in phase " << phase_);
+    DEBUGLOG("Saved level: " << name + suffix);
 }
 
 void Level::EditorSwitchPhase(int phase) {
     SaveCurrentPhase();
     phase_ = phase;
 
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = entities_[i];
-        if (entity.alive_)
-            entity.destroy_ = true;
-    }
+    entities_.Reset();
     entities_.DestroyFlaggedEntities();
     SpawnEntitiesInPhase(phase_);
 }

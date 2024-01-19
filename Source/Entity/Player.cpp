@@ -344,16 +344,10 @@ void Player::Update() {
         case MM_Stun:
             break;
     }
-    // if (meter_ > 0 && (moveMode_ == MM_Spin || moveMode_ == MM_Slope)) {
-    //     spreadManager_->AddSpread(transform_.position, 2, meter_);
-    //     meter_--;
-    // }
-    // if (moveMode_ == MM_Spin || moveMode_ == MM_Slope)
-    //     spreadManager_->AddSpread(transform_.position, 2);
 
     if (onGround_) {
         int spreadAmount = 1 + meter_ * 7;
-        spreadManager_->AddSpread(transform_.position, 16);
+        spreadManager_->AddSpread(transform_.position, spreadAmount);
         meter_ -= 0.001f;
         meter_ = max(0.0f, meter_);
     }

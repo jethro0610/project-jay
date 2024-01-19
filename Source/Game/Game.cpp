@@ -72,6 +72,11 @@ void Game::Update() {
     float spreadPercent = spreadManager_.GetCount() / (float)maxSpread;
 
     SCREENLINE(4, std::to_string(spreadPercent));
+    if (spreadPercent > 0.30f) {
+        level_.NextPhase();
+        spreadManager_.Reset();
+        rawEntities_[0].player.meter_ = 0.0f;
+    }
 
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {

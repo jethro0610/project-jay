@@ -1,3 +1,5 @@
+- Phase token
+
 - Pillars on test level are bell towers 
     - Sound wave effect
 - Inbetween are bell flowers that bloom

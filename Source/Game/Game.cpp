@@ -63,6 +63,16 @@ struct Push {
 };
 
 void Game::Update() {
+    float terrainUnitArea = (1.0f / Terrain::WORLD_TO_TERRAIN_SCALAR); 
+    terrainUnitArea *= terrainUnitArea;
+    float spreadUnitArea = SpreadManager::SPREAD_DIST * SpreadManager::SPREAD_DIST;
+
+    float terrainArea = terrain_.area_ * terrainUnitArea;
+    int maxSpread = terrainArea / spreadUnitArea; 
+    float spreadPercent = spreadManager_.GetCount() / (float)maxSpread;
+
+    SCREENLINE(4, std::to_string(spreadPercent));
+
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
         FlushInputs_P();

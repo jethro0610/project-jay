@@ -353,7 +353,7 @@ void Player::Update() {
 
     if (onGround_) {
         int spreadAmount = 1 + meter_ * 7;
-        spreadManager_->AddSpread(transform_.position, spreadAmount);
+        spreadManager_->AddSpread(transform_.position, 16);
         meter_ -= 0.001f;
         meter_ = max(0.0f, meter_);
     }

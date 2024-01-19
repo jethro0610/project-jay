@@ -53,6 +53,13 @@ void Terrain::GenerateTerrainMap(
     }
     for (std::thread& t : threads)
         t.join();
+
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        if (terrainMap_[x][y].x <= 0.0f)
+            area_++;
+    }}
+    DEBUGLOG("Area: " << area_);
      
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }

@@ -55,6 +55,7 @@ public:
         const glm::ivec2& end
     );
     void UpdateTerrainMapTexture();
+    int area_;
 
 private:
     glm::vec2 terrainMap_[RESOLUTION][RESOLUTION];

@@ -32,6 +32,7 @@ struct TerrainBubble {
 void Terrain::GenerateTerrainMap(
     const BlobProperties& blob
 ) {
+    area_ = 0.0;
     FastNoiseLite blobNoise(blob.seed);
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
@@ -45,6 +46,8 @@ void Terrain::GenerateTerrainMap(
         float curRadius = length(pos) / WORLD_TO_TERRAIN_SCALAR;
 
         terrainMap_[y][x].x = curRadius - blobRadius;
+        if (terrainMap_[y][x].x <= 0.0f)
+            area_++;
     } }
 
     vector_contig<TerrainBubble, 4> bubbles;

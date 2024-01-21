@@ -226,9 +226,9 @@ ConfirmBehavior TerrainEditMode::OnConfirm() {
 ConfirmBehavior TerrainEditMode::PostConfirm() {
     textInput_.ClearInput();
     terrain_.GenerateTerrainMap(
-        level_.properties_.noiseLayers, 
-        level_.properties_.blob,
-        entities_
+        // level_.properties_.noiseLayers, 
+        level_.properties_.blob
+        // entities_
     );
     SetPhase(TE_SelectProperty);
     notificaiton_.Set("Generated new terrain");

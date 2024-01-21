@@ -4,9 +4,11 @@
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
+#include "Helpers/Ease.h"
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
 #include <thread>
+#include <vector_contig.h>
 using namespace glm;
 
 Terrain::Terrain(
@@ -21,78 +23,18 @@ resourceManager_(resourceManager)
     } }
 }
 
-void TestStatic() {
 
-}
+struct TerrainBubble {
+    vec3 position;
+    float radius;
+};
 
 void Terrain::GenerateTerrainMap(
-    const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
     const BlobProperties& blob
 ) {
     FastNoiseLite blobNoise(blob.seed);
-    std::array<FastNoiseLite, 4> noises;
-    for (int i = 0; i < 4; i++)
-        noises[i].SetSeed(noiseLayers[i].seed);
-
-    // TODO: Make this into a generic threaded loop calculator
-    const auto cores = std::thread::hardware_concurrency();
-    int sectionSize = RESOLUTION / cores;
-    std::vector<std::thread> threads;
-    for (int i = 0; i < cores; i++) {
-        int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
-        threads.push_back(std::thread([this, noiseLayers, blob, blobNoise, noises, sectionSize, i, add] {
-            this->GenerateTerrainMapSection(
-                noiseLayers,
-                blob,
-                blobNoise,
-                noises,
-                ivec2(i * sectionSize, 0),
-                ivec2((i + 1) * sectionSize + add, RESOLUTION)
-            ); 
-        }));
-    }
-    for (std::thread& t : threads)
-        t.join();
-
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
-        if (terrainMap_[x][y].x <= 0.0f)
-            area_++;
-    }}
-    DEBUGLOG("Area: " << area_);
-     
-    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
-}
-
-void Terrain::GenerateTerrainMap(
-    const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
-    const BlobProperties& blob,
-    EntityList& entities
-) {
-    vector_const<Entity*, 128> entitiesToRespoition;
-    for (int i = 0; i < 128; i++) {
-        if (!entities[i].alive_) continue;
-            
-        if (abs(entities[i].transform_.position.y - GetHeight(entities[i].transform_.position)) < 0.5f)
-            entitiesToRespoition.push_back(&entities[i]);
-    }
-
-    GenerateTerrainMap(noiseLayers, blob);
-
-    for (Entity* entity : entitiesToRespoition)
-        entity->transform_.position.y = GetHeight(entity->transform_.position);
-}
-
-void Terrain::GenerateTerrainMapSection(
-    const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
-    const BlobProperties& blob,
-    const FastNoiseLite& blobNoise,
-    const std::array<FastNoiseLite, 4>& noises,
-    const glm::ivec2& start,
-    const glm::ivec2& end
-) {
-    for (int x = start.x; x < end.x; x++) {
-    for (int y = start.y; y < end.y; y++) {
         vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
         vec2 samplePos = normalize(pos);
         samplePos *= blob.frequency;
@@ -105,28 +47,66 @@ void Terrain::GenerateTerrainMapSection(
         terrainMap_[y][x].x = curRadius - blobRadius;
     } }
 
-    for (int x = start.x; x < end.x; x++) {
-    for (int y = start.y; y < end.y; y++) {
+    vector_contig<TerrainBubble, 4> bubbles;
+    bubbles.push_back({vec3(0.0f, 12.0f, 25.0f), 100.0f});
+    bubbles.push_back({vec3(50.0f, 16.0f, 50.0f), 150.0f});
+    bubbles.push_back({vec3(-100.0f, 18.0f, -150.0f), 175.0f});
+
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
         terrainMap_[y][x].y = 0.0f;
+        float wX = x - HALF_RESOLUTION;
+        wX /= WORLD_TO_TERRAIN_SCALAR;
+        float wY = y - HALF_RESOLUTION;
+        wY /= WORLD_TO_TERRAIN_SCALAR;
+        vec2 pos = vec2(wX, wY);
 
-        for (int i = 0; i < 4; i++) {
-            const NoiseLayer& layer = noiseLayers[i];
-            if (!layer.active) continue;
+        vector_const<float, 4> inverseDistances;
+        vector_const<float, 4> distances;
+        for (int i = 0; i < bubbles.size(); i++) {
+            vec2 bubblePos = vec2(bubbles[i].position.x, bubbles[i].position.z);
+            float d = distance(pos, bubblePos) / bubbles[i].radius;
+            distances.push_back(d);
 
-            float layerVal = noises[i].GetNoise(
-                (float)x * layer.frequency.x, 
-                (float)y * layer.frequency.y
-            );
-            layerVal = (layerVal + 1.0f) * 0.5f;
-            layerVal = std::pow(layerVal, layer.exponent);
-            layerVal *= layer.multiplier;
+            if (d > 1.0f) {
+                inverseDistances.push_back(0.0f);
+                continue;
+            }
 
-            terrainMap_[y][x].y += layerVal;
+            if (d == 0.0f)
+                d = INFINITY;
+            else
+                d = std::pow(d, -2.0f);
+            d -= 1.0f;
+
+            inverseDistances.push_back(d);
         }
 
+        float totalInverseDistances = 0.0f;
+        for (int i = 0; i < inverseDistances.size(); i++) {
+            totalInverseDistances += inverseDistances[i];
+        }
+
+        float val = 0.0f;
+        for (int i = 0; i < bubbles.size(); i++) {
+            if (inverseDistances[i] <= 0.0f)
+                continue;
+
+            if (distances[i] == 0.0f) {
+                val = bubbles[i].position.y;
+                break;
+            }
+
+            float t = EaseInOutQuad(distances[i]);
+            float height = bubbles[i].position.y * (1.0f - t);
+            val += (inverseDistances[i] / totalInverseDistances) * height;
+        }
+        terrainMap_[y][x].y = val;
         float edgeDistance = max((terrainMap_[y][x].x + EDGE_OFFSET) * 0.1f, 0.0f);
         terrainMap_[y][x].y += min(0.0f, -pow(edgeDistance, 2.0f));
-    }}
+    } }
+
+    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {

@@ -38,22 +38,18 @@ public:
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
     void GenerateTerrainMap(
-        const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
         const BlobProperties& blob
     );
-    void GenerateTerrainMap(
-        const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
-        const BlobProperties& blob,
-        EntityList& entities
-    );
-    void GenerateTerrainMapSection(
-        const std::array<NoiseLayer, NoiseLayer::MAX>& noiseLayers,
-        const BlobProperties& blob,
-        const FastNoiseLite& blobNoise,
-        const std::array<FastNoiseLite, 4>& noises,
-        const glm::ivec2& start,
-        const glm::ivec2& end
-    );
+    // void GenerateTerrainMap(
+    //     const BlobProperties& blob,
+    //     EntityList& entities
+    // );
+    // void GenerateTerrainMapSection(
+    //     const BlobProperties& blob,
+    //     const FastNoiseLite& blobNoise,
+    //     const glm::ivec2& start,
+    //     const glm::ivec2& end
+    // );
     void UpdateTerrainMapTexture();
     int area_;
 

@@ -33,16 +33,16 @@ void Terrain::GenerateTerrainMap(
     const BlobProperties& blob
 ) {
     bubbles_.clear();
-    bubbles_.push_back({vec3(0.0f, 12.0f, 25.0f), 100.0f});
-    bubbles_.push_back({vec3(50.0f, 16.0f, 50.0f), 150.0f});
-    bubbles_.push_back({vec3(-100.0f, 18.0f, -150.0f), 175.0f});
-    bubbles_.push_back({vec3(-75.0f, 6.0f, -0.0f), 125.0f});
+    bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
+    bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
+    bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
+    bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
 
     curves_.clear();
     TerrainCurve curve;
     curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 75.0f);
-    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
-    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 10.0f);
+    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 50.0f);
+    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 80.0f);
     curve.points[3] = vec4(100.0f, -12.0f, -50.0f, 75.0f);
     curves_.push_back(curve);
 
@@ -64,16 +64,16 @@ void Terrain::GenerateTerrainMap(
             area_++;
     } }
 
-    TerrainAffectMap& affectMap = *(new TerrainAffectMap);
+    TerrainAffectMap* affectMap = new TerrainAffectMap;
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
-        affectMap[x][y] = 0;
+        (*affectMap)[x][y] = 0;
     }}
 
     for (int i = 0; i < bubbles_.size(); i++) 
-        bubbles_[i].WriteAffect(affectMap, i);
+        bubbles_[i].WriteAffect(*affectMap, i);
     for (int i = 0; i < curves_.size(); i++) 
-        curves_[i].WriteAffect(affectMap, i + TerrainBubble::MAX);
+        curves_[i].WriteAffect(*affectMap, i + TerrainBubble::MAX);
 
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
@@ -87,7 +87,7 @@ void Terrain::GenerateTerrainMap(
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
         for (int i = 0; i < bubbles_.size(); i++) {
-            if (!(affectMap[x][y] & 1UL << i)) 
+            if (!((*affectMap)[x][y] & 1UL << i)) 
                 continue;
 
             TerrainInfluence influence = bubbles_[i].GetInfluence(pos);
@@ -106,7 +106,7 @@ void Terrain::GenerateTerrainMap(
             continue;
 
         for (int i = 0; i < curves_.size(); i++) {
-            if (!(affectMap[x][y] & 1UL << (i + TerrainBubble::MAX))) 
+            if (!((*affectMap)[x][y] & 1UL << (i + TerrainBubble::MAX))) 
                 continue;
 
             TerrainInfluence influence = curves_[i].GetInfluence(pos);
@@ -132,7 +132,7 @@ void Terrain::GenerateTerrainMap(
         for (int i = 0; i < inverseInfluences.size(); i++)
             terrainMap_[y][x].y += (inverseInfluences[i].inverseWeight / totalInverseDistances) * inverseInfluences[i].height;
     } }
-
+    delete affectMap;
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }
 

@@ -463,7 +463,7 @@ void Renderer::RenderTerrainBubbles(Terrain& terrain) {
     for (TerrainBubble& bubble : terrain.bubbles_) {
         bubbleTransform.position = bubble.position;
         bubbleMatrix = bubbleTransform.ToMatrix();
-        RenderMesh(&terrain.bubbleModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &bubbleMatrix);
+        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &bubbleMatrix);
     }
 }
 
@@ -472,10 +472,40 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
     curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
     mat4 curveMatrix;
     for (TerrainCurve& curve : terrain.curves_) {
-        for (int i = 0; i < 4; i++) {
-            curveTransform.position = curve.points[i];
+        for (int i = 0; i < 65; i++) {
+            if (i == 0 || i == 64)
+                curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
+            else
+                curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
+
+            vec4 curvePos = curve.GetPosition(i / 64.0f);
+            curveTransform.position = curvePos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.bubbleModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &curveMatrix);
+            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveMaterial_, nullptr, &curveMatrix);
+        }
+
+        curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
+        curveTransform.position = curve.points[1];
+        curveMatrix = curveTransform.ToMatrix();
+        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+        curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
+        for (int i = 1; i < 32; i++) {
+            vec4 pos = mix(curve.points[0], curve.points[1], i / 32.0f);
+            curveTransform.position = pos;
+            curveMatrix = curveTransform.ToMatrix();
+            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+        }
+
+        curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
+        curveTransform.position = curve.points[2];
+        curveMatrix = curveTransform.ToMatrix();
+        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+        curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
+        for (int i = 1; i < 32; i++) {
+            vec4 pos = mix(curve.points[2], curve.points[3], i / 32.0f);
+            curveTransform.position = pos;
+            curveMatrix = curveTransform.ToMatrix();
+            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
         }
     }
 }

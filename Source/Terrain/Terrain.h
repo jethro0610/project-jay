@@ -57,8 +57,10 @@ public:
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
 
-    Model* bubbleModel_;
+    Model* nodeModel_;
     Material bubbleMaterial_;
+    Material curveMaterial_;
+    Material curveControlMaterial_;
 
 private:
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];

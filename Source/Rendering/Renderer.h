@@ -129,7 +129,7 @@ private:
         Material* material, 
         InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
-        GPUPose* pose = nullptr 
+        GPUPose* pose = nullptr,
     );
     #else
     enum DebugShaderType {
@@ -143,7 +143,7 @@ private:
         InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr,
-        DebugShaderType debugShader = DS_Default 
+        DebugShaderType debugShader = DS_Default
     );
     void RenderTerrainBubbles(
         Terrain& terrain

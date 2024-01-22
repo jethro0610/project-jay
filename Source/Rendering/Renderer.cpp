@@ -41,12 +41,12 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
-    // RenderTerrainBubbles(terrain);
-    RenderTerrainCurves(terrain);
     RenderEntitiesS(entities);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);
+    RenderTerrainBubbles(terrain);
+    RenderTerrainCurves(terrain);
 
     PresentFrame();
 }

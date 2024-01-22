@@ -25,9 +25,13 @@ resourceManager_(resourceManager)
         terrainMap_[x][y] = vec2(0.0f);
     } }
 
-    bubbleModel_ = resourceManager.GetModel("st_default");
+    nodeModel_ = resourceManager.GetModel("st_default");
     bubbleMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     bubbleMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
+    curveMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
+    curveMaterial_.properties.color = vec4(0.0f, 0.0f, 1.0f, 0.5f);
+    curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
+    curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
 }
 
 struct InverseInfluence {

@@ -92,7 +92,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             properties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
         }
 
-        terrain_.GenerateTerrainMap(properties_.blob);
+        // terrain_.GenerateTerrainMap(properties_.blob);
     }
 
     for (int i = 0; i < MAX_PHASES; i++)

@@ -180,6 +180,7 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.loaded_) {
+        terrain_.Update(level_.properties_.blob);
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {
                 entities_[i].CalculateBasePose();

@@ -18,10 +18,17 @@ Terrain::Terrain(
 ):
 resourceManager_(resourceManager)
 {
+    cores_ = std::thread::hardware_concurrency();
+    sectionSize_ = RESOLUTION / cores_;
+    for (int i = 0; i < cores_; i++)
+        completeThreads_[i] = true;
+
+    threads_.clear();
     bubbles_.clear();
     curves_.clear();
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
+        terrainMapBack_[x][y] = vec2(0.0f);
         terrainMap_[x][y] = vec2(0.0f);
     } }
 
@@ -32,6 +39,18 @@ resourceManager_(resourceManager)
     curveMaterial_.properties.color = vec4(0.0f, 0.0f, 1.0f, 0.5f);
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
+
+    bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
+    bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
+    bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
+    bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
+
+    TerrainCurve curve;
+    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
+    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
+    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
+    curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
+    curves_.push_back(curve);
 }
 
 struct InverseInfluence {
@@ -39,55 +58,85 @@ struct InverseInfluence {
     float height;
 };
 
-void Terrain::GenerateTerrainMap(
-    const BlobProperties& blob
+// void Terrain::GenerateTerrainMap(
+//     const BlobProperties& blob
+// ) {
+//
+// }
+
+void Terrain::Update(const BlobProperties& blob) {
+    bool doneGenerating = true;
+    for (int i = 0; i < cores_; i++) {
+        bool complete;
+        threadMutexes_[i].lock();
+        complete = completeThreads_[i];
+        threadMutexes_[i].unlock();
+
+        if (!complete) {
+            doneGenerating = false;
+            break;
+        }
+    }
+    if (!doneGenerating)
+        return;
+
+    for (int i = 0; i < threads_.size(); i++)
+        threads_[i].join();
+    threads_.clear();
+
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        affectMap_[x][y] = 0;
+    }}
+
+    for (int i = 0; i < bubbles_.size(); i++) 
+        bubbles_[i].WriteAffect(affectMap_, i);
+    for (int i = 0; i < curves_.size(); i++) 
+        curves_[i].WriteAffect(affectMap_, i + TerrainBubble::MAX);
+    bubblesBack_ = bubbles_;
+    curvesBack_ = curves_;
+
+    memcpy(terrainMap_, terrainMapBack_, sizeof(glm::vec2) * RESOLUTION *  RESOLUTION);
+    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+
+    int sectionSize = RESOLUTION / cores_;
+    for (int i = 0; i < cores_; i++) {
+        completeThreads_[i] = false;
+        int add = (i == cores_ - 1 && RESOLUTION % cores_ != 0) ? 1 : 0;
+        threads_.push_back(std::thread([this, sectionSize, i, add] {
+            this->GenerateTerrainMapSectionThreaded(
+                ivec2(i * sectionSize, 0),
+                ivec2((i + 1) * sectionSize + add, RESOLUTION),
+                i
+            );
+        }));
+    }
+}
+
+void Terrain::GenerateTerrainMapSectionThreaded(
+    const glm::ivec2& start,
+    const glm::ivec2& end,
+    int index
 ) {
-    bubbles_.clear();
-    bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
-    bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
-    bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
-    bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
-
-    curves_.clear();
-    TerrainCurve curve;
-    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
-    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
-    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
-    curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
-    curves_.push_back(curve);
-
-    area_ = 0.0;
-    FastNoiseLite blobNoise(blob.seed);
+    FastNoiseLite blobNoise(1337);
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
         vec2 pos = vec2(x - HALF_RESOLUTION, y - HALF_RESOLUTION);
         vec2 samplePos = normalize(pos);
-        samplePos *= blob.frequency;
+        samplePos *= 150;
         float noiseVal = blobNoise.GetNoise(samplePos.x, samplePos.y);
         noiseVal = (noiseVal + 1.0f) * 0.5f;
 
-        float blobRadius = lerp(blob.minRadius, blob.maxRadius, noiseVal);
+        float blobRadius = lerp(150.0f, 250.0f, noiseVal);
         float curRadius = length(pos) / WORLD_TO_TERRAIN_SCALAR;
 
-        terrainMap_[y][x].x = curRadius - blobRadius;
-        if (terrainMap_[y][x].x <= 0.0f)
-            area_++;
+        terrainMapBack_[y][x].x = curRadius - blobRadius;
     } }
 
-    TerrainAffectMap* affectMap = new TerrainAffectMap;
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        (*affectMap)[x][y] = 0;
-    }}
+    for (int x = start.x; x < end.x; x++) {
+    for (int y = start.y; y < end.y; y++) {
+        terrainMapBack_[y][x].y = 0.0f;
 
-    for (int i = 0; i < bubbles_.size(); i++) 
-        bubbles_[i].WriteAffect(*affectMap, i);
-    for (int i = 0; i < curves_.size(); i++) 
-        curves_[i].WriteAffect(*affectMap, i + TerrainBubble::MAX);
-
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        terrainMap_[y][x].y = 0.0f;
         float wX = x - HALF_RESOLUTION;
         wX /= WORLD_TO_TERRAIN_SCALAR;
         float wY = y - HALF_RESOLUTION;
@@ -96,13 +145,13 @@ void Terrain::GenerateTerrainMap(
 
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
-        for (int i = 0; i < bubbles_.size(); i++) {
-            if (!((*affectMap)[x][y] & 1UL << i)) 
+        for (int i = 0; i < bubblesBack_.size(); i++) {
+            if (!(affectMap_[x][y] & 1UL << i)) 
                 continue;
 
-            TerrainInfluence influence = bubbles_[i].GetInfluence(pos);
+            TerrainInfluence influence = bubblesBack_[i].GetInfluence(pos);
             if (influence.distance == 0.0f) {
-                terrainMap_[y][x].y = influence.height;
+                terrainMapBack_[y][x].y = influence.height;
                 onPoint = true;
                 break;
             }
@@ -115,13 +164,13 @@ void Terrain::GenerateTerrainMap(
         if (onPoint)
             continue;
 
-        for (int i = 0; i < curves_.size(); i++) {
-            if (!((*affectMap)[x][y] & 1UL << (i + TerrainBubble::MAX))) 
+        for (int i = 0; i < curvesBack_.size(); i++) {
+            if (!(affectMap_[x][y] & 1UL << (i + TerrainBubble::MAX))) 
                 continue;
 
-            TerrainInfluence influence = curves_[i].GetInfluence(pos);
+            TerrainInfluence influence = curvesBack_[i].GetInfluence(pos);
             if (influence.distance == 0.0f) {
-                terrainMap_[y][x].y = influence.height;
+                terrainMapBack_[y][x].y = influence.height;
                 onPoint = true;
                 break;
             }
@@ -141,10 +190,12 @@ void Terrain::GenerateTerrainMap(
             continue;
 
         for (int i = 0; i < inverseInfluences.size(); i++)
-            terrainMap_[y][x].y += (inverseInfluences[i].inverseWeight / totalInverseDistances) * inverseInfluences[i].height;
-    } }
-    delete affectMap;
-    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+            terrainMapBack_[y][x].y += (inverseInfluences[i].inverseWeight / totalInverseDistances) * inverseInfluences[i].height;
+    }}
+
+    threadMutexes_[index].lock();
+    completeThreads_[index] = true;
+    threadMutexes_[index].unlock();
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {

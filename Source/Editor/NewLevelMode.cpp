@@ -37,7 +37,7 @@ ConfirmBehavior NewLevelMode::PostConfirm() {
     level_.properties_.blob = {};
 
     // terrain_.GenerateTerrainMap(level_.properties_.noiseLayers, level_.properties_.blob);
-    terrain_.GenerateTerrainMap(level_.properties_.blob);
+    // terrain_.GenerateTerrainMap(level_.properties_.blob);
     notificaiton_.Set("Created lv_" + textInput_.Get());
     return CB_Default;
 }

@@ -1,12 +1,13 @@
 #pragma once
 #include "Shared_TerrainConstants.h"
 #include "BlobProperties.h"
-#include "NoiseLayer.h"
 #include "Rendering/Texture.h"
+#include "TerrainCurve.h"
+#include "TerrainBubble.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
-#include <FastNoiseLite.h>
+#include <vector_contig.h>
 
 class EntityList;
 class LevelProperties;
@@ -19,7 +20,6 @@ enum TerrainAccuracy {
 
 class Terrain {
 public:
-    USE_TERRAIN_CONSTANTS
     Terrain(
         LevelProperties& levelProperties,
         ResourceManager& resourceManager
@@ -52,9 +52,11 @@ public:
     // );
     void UpdateTerrainMapTexture();
     int area_;
+    vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
+    vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
 
 private:
-    glm::vec2 terrainMap_[RESOLUTION][RESOLUTION];
+    glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
     Texture* terrainMapTexture_;
     ResourceManager& resourceManager_;
 };

@@ -63,7 +63,7 @@ struct Push {
 };
 
 void Game::Update() {
-    float terrainUnitArea = (1.0f / Terrain::WORLD_TO_TERRAIN_SCALAR); 
+    float terrainUnitArea = (1.0f / TerrainConsts::WORLD_TO_TERRAIN_SCALAR); 
     terrainUnitArea *= terrainUnitArea;
     float spreadUnitArea = SpreadManager::SPREAD_DIST * SpreadManager::SPREAD_DIST;
 

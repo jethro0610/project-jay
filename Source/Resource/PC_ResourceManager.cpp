@@ -27,8 +27,8 @@ ResourceManager::ResourceManager() {
 void ResourceManager::CreateTerrainMapTexture() {
     if (!textures_.Has("t_terrainmap")) {
         textures_.Add("t_terrainmap") = { bgfx::createTexture2D(
-            Terrain::RESOLUTION, 
-            Terrain::RESOLUTION, 
+            TerrainConsts::RESOLUTION, 
+            TerrainConsts::RESOLUTION, 
             false, 
             1, 
             bgfx::TextureFormat::RG32F,
@@ -48,9 +48,9 @@ void ResourceManager::UpdateTerrainMapTexture(glm::vec2* terrainMap) {
         0,
         0,
         0,
-        Terrain::RESOLUTION,
-        Terrain::RESOLUTION,
-        bgfx::copy(terrainMap, sizeof(glm::vec2) * Terrain::RESOLUTION * Terrain::RESOLUTION)
+        TerrainConsts::RESOLUTION,
+        TerrainConsts::RESOLUTION,
+        bgfx::copy(terrainMap, sizeof(glm::vec2) * TerrainConsts::RESOLUTION * TerrainConsts::RESOLUTION)
     );
 }
 
@@ -151,30 +151,30 @@ void ResourceManager::LoadGlobalTerrain() {
     ASSIGN_DEBUG_NAME(terrainModel, "st_terrainsheet");
     Mesh& terrainMesh = terrainModel.meshes.push_back();
 
-    WorldVertex vertices[Terrain::NUM_VERTICES];
-    for (int x = 0; x < Terrain::SIZE; x++)
-    for (int y = 0; y < Terrain::SIZE; y++) {
-        uint16_t index = y * Terrain::SIZE + x;
-        vec3 position = vec3(x / Terrain::MESH_DENSITY, 0.0f, y / Terrain::MESH_DENSITY);
+    WorldVertex vertices[TerrainConsts::NUM_VERTICES];
+    for (int x = 0; x < TerrainConsts::SIZE; x++)
+    for (int y = 0; y < TerrainConsts::SIZE; y++) {
+        uint16_t index = y * TerrainConsts::SIZE + x;
+        vec3 position = vec3(x / TerrainConsts::MESH_DENSITY, 0.0f, y / TerrainConsts::MESH_DENSITY);
         vertices[index] = { position };
     };
     terrainMesh.vertexBuffer = bgfx::createVertexBuffer(
         bgfx::copy(
             vertices, 
-            sizeof(WorldVertex) * Terrain::NUM_VERTICES 
+            sizeof(WorldVertex) * TerrainConsts::NUM_VERTICES 
         ), 
         WorldVertex::layout
     );
-    DEBUGLOG("Created terrain mesh with " << Terrain::NUM_VERTICES << " vertices");
+    DEBUGLOG("Created terrain mesh with " << TerrainConsts::NUM_VERTICES << " vertices");
     
-    uint16_t terrainIndices[Terrain::NUM_INDICES];
+    uint16_t terrainIndices[TerrainConsts::NUM_INDICES];
     int count = 0;
-    for (int x = 0; x < Terrain::SIZE - 1; x++)
-    for (int y = 0; y < Terrain::SIZE - 1; y++) {
-        uint16_t i0 = (y + 0) * Terrain::SIZE + (x + 0);
-        uint16_t i1 = (y + 1) * Terrain::SIZE + (x + 0);
-        uint16_t i2 = (y + 1) * Terrain::SIZE + (x + 1);
-        uint16_t i3 = (y + 0) * Terrain::SIZE + (x + 1);
+    for (int x = 0; x < TerrainConsts::SIZE - 1; x++)
+    for (int y = 0; y < TerrainConsts::SIZE - 1; y++) {
+        uint16_t i0 = (y + 0) * TerrainConsts::SIZE + (x + 0);
+        uint16_t i1 = (y + 1) * TerrainConsts::SIZE + (x + 0);
+        uint16_t i2 = (y + 1) * TerrainConsts::SIZE + (x + 1);
+        uint16_t i3 = (y + 0) * TerrainConsts::SIZE + (x + 1);
         
         terrainIndices[count++] = i0;
         terrainIndices[count++] = i1;
@@ -187,7 +187,7 @@ void ResourceManager::LoadGlobalTerrain() {
     terrainMesh.indexBuffer = bgfx::createIndexBuffer(
         bgfx::copy(
             terrainIndices, 
-            sizeof(uint16_t) * Terrain::NUM_INDICES
+            sizeof(uint16_t) * TerrainConsts::NUM_INDICES
         )
     );
     globals_.insert("st_terrainsheet");

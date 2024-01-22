@@ -401,6 +401,7 @@ void Player::Update() {
     else
         tilt_ = 0.0f;
 
+
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(boostAmount_));
 }

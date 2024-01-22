@@ -47,6 +47,7 @@ public:
     virtual void Update() { };
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }
+    bool requiresEntity_;
     bool requiresTarget_;
     bool requiresLevel_;
     bool ctrl_;

@@ -5,6 +5,7 @@
 #include "Rendering/Renderer.h"
 #include "Level/Level.h"
 #include "EditorTarget.h"
+#include "Terrain/Terrain.h"
 using namespace glm;
 
 DefaultMode::DefaultMode(EditorModeArgs args):
@@ -68,13 +69,13 @@ vec3 DefaultMode::GetMouseRay() {
 void DefaultMode::Update() {
     for (int i = 0; i < Level::MAX_PHASES; i++) {
         if (platform_.pressedKeys_['1' + i]) {
-            target_.Set(nullptr);
+            target_.Untarget();
             level_.EditorSwitchPhase(i);
         }
     }
 
     if (platform_.pressedKeys_['P']) {
-        target_.Set(nullptr);
+        target_.Untarget();
         level_.TogglePersistView();
     }
 
@@ -106,9 +107,9 @@ void DefaultMode::Update() {
             break;
     }
 
-    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.Get() != nullptr) {
-        target_.Get()->destroy_ = true;
-        target_.Set(nullptr);
+    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.HasTarget()&& target_.IsEntity()) {
+        target_.GetEntity()->destroy_ = true;
+        target_.Untarget();
     }
 }
 
@@ -118,20 +119,45 @@ void DefaultMode::CameraUpdate() {
 
 void DefaultMode::CursorUpdate() {
     if (platform_.pressedKeys_[LEFT_MOUSE_KEY]) {
-        target_.Set(nullptr);
+        target_.Untarget();
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
+
+        for (int i = 0; i < terrain_.bubbles_.size(); i++) {
+            vec3 bubblePos = terrain_.bubbles_[i].position;
+            float dist = distance(camera_.transform_.position, bubblePos);
+            if (
+                Ray::RayHitSphere(camera_.transform_.position, mouseRay, bubblePos, 2.0f) &&
+                dist < maxDist
+            ) {
+                maxDist = dist;
+                target_.SetBubble(&terrain_.bubbles_[i]);
+            }
+        }
+
+        for (int i = 0; i < terrain_.curves_.size(); i++) {
+        for (int j = 0; j < 4; j++) {
+            vec3 curvePointPos = terrain_.curves_[i].points[j];
+            float dist = distance(camera_.transform_.position, curvePointPos);
+            if (
+                Ray::RayHitSphere(camera_.transform_.position, mouseRay, curvePointPos, 2.0f) &&
+                dist < maxDist
+            ) {
+                maxDist = dist;
+                target_.SetCurve(&terrain_.curves_[i], j);
+            }
+        }}
+
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_ || entities_[i].DBG_persistView_) continue;
             Entity& entity = entities_[i];
-
             float dist = distance(camera_.transform_.position, entity.transform_.position);
             if (
                 Ray::RayHitCollider(camera_.transform_.position, mouseRay, entity.transform_, entity.DBG_collider_) &&
                 dist < maxDist
             ) {
                 maxDist = dist;
-                target_.Set(&entity);
+                target_.SetEntity(&entity);
             }
         }
     }

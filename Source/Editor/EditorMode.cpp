@@ -18,6 +18,7 @@ notificaiton_(args.notificaiton),
 target_(args.target),
 textInput_(args.textInput)
 {
+    requiresEntity_ = false;
     requiresLevel_ = true;
     ctrl_ = false;
 }
@@ -28,7 +29,10 @@ void EditorMode::OnStart() {
 }
 
 bool EditorMode::CanSwitch(bool holdingCtrl) const {
-    if (requiresTarget_ && target_.Get() == nullptr)
+    if (requiresTarget_ && !target_.HasTarget())
+        return false;
+
+    if (requiresEntity_ && !target_.IsEntity())
         return false;
 
     if (requiresLevel_ && !level_.loaded_)

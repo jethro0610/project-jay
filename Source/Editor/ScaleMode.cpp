@@ -32,13 +32,13 @@ void ScaleMode::OnStart() {
     deltaY_ = 0.0f;
     submode_ = SS_Uniform;
     fromZero_ = false;
-    startScale_ = target_.Get()->transform_.scale;
+    startScale_ = target_.GetScale();
 
     EditorMode::OnStart();
 }
 
 void ScaleMode::OnCancel() {
-    target_.Get()->transform_.scale = startScale_;
+    target_.SetScale(startScale_);
 }
 
 void ScaleMode::SetSubmode(ScaleSubmode submode) {
@@ -50,7 +50,6 @@ void ScaleMode::SetSubmode(ScaleSubmode submode) {
 }
 
 void ScaleMode::Update() {
-    Entity* entity = target_.Get();
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
     float delta = deltaX_ + deltaY_;
@@ -61,32 +60,33 @@ void ScaleMode::Update() {
         fromZero_ = !fromZero_;
     }
 
-    if (platform_.pressedKeys_['P'])
-        SetSubmode(SS_Planar);
-    else if (platform_.pressedKeys_['V'])
-        SetSubmode(SS_Vertical);
-    else if (platform_.pressedKeys_['U'])
-        SetSubmode(SS_Uniform);
+    if (target_.IsEntity()) {
+        if (platform_.pressedKeys_['P'])
+            SetSubmode(SS_Planar);
+        else if (platform_.pressedKeys_['V'])
+            SetSubmode(SS_Vertical);
+        else if (platform_.pressedKeys_['U'])
+            SetSubmode(SS_Uniform);
+    }
 
     vec3 referenceScale = fromZero_ ? vec3(1.0f) : startScale_;
 
     switch (submode_) {
-        case SS_Uniform:
-            entity->transform_.scale.x = referenceScale.x + delta;
-            entity->transform_.scale.y = referenceScale.y + delta;
-            entity->transform_.scale.z = referenceScale.z + delta;
+        case SS_Uniform: {
+            referenceScale.x += delta;
+            referenceScale.y += delta;
+            referenceScale.z += delta;
             break;
+        }
 
         case SS_Planar:
-            entity->transform_.scale.x = referenceScale.x + delta;
-            entity->transform_.scale.y = referenceScale.y;
-            entity->transform_.scale.z = referenceScale.x + delta;
+            referenceScale.x += delta;
+            referenceScale.x += delta;
             break;
 
         case SS_Vertical:
-            entity->transform_.scale.x = referenceScale.x;
-            entity->transform_.scale.y = referenceScale.y + delta;
-            entity->transform_.scale.z = referenceScale.z;
+            referenceScale.y += delta;
             break;
     }
+    target_.SetScale(referenceScale);
 }

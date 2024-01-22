@@ -6,6 +6,7 @@
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityTypes.h"
 #include "EditorTextInput.h"
+#include "EditorTarget.h"
 #include "EditorNotification.h"
 
 SpawnMode::SpawnMode(EditorModeArgs args):
@@ -43,6 +44,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
 
     Entity& entity = entities_.CreateEntity(typeId);
     entity.transform_.position = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
+    target_.SetEntity(&entity);
 
     return CB_Default;
 }

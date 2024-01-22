@@ -50,10 +50,10 @@ void Terrain::GenerateTerrainMap(
 
     curves_.clear();
     TerrainCurve curve;
-    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 75.0f);
-    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 50.0f);
-    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 80.0f);
-    curve.points[3] = vec4(100.0f, -12.0f, -50.0f, 75.0f);
+    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
+    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
+    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
+    curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
     curves_.push_back(curve);
 
     area_ = 0.0;
@@ -107,7 +107,7 @@ void Terrain::GenerateTerrainMap(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / (influence.distance * influence.distance);
+                float inverseDistance = 1.0f / EaseInOutCubic(influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }
@@ -123,9 +123,10 @@ void Terrain::GenerateTerrainMap(
             if (influence.distance == 0.0f) {
                 terrainMap_[y][x].y = influence.height;
                 onPoint = true;
+                break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / EaseInOutQuad(influence.distance);
+                float inverseDistance = 1.0f / EaseInOutCubic(influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }

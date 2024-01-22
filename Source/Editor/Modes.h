@@ -6,7 +6,6 @@
 #include "NewLevelMode.h"
 #include "OpenLevelMode.h"
 #include "RotateMode.h"
-#include "TerrainEditMode.h"
 #include "TranslateMode.h"
 #include "SaveMode.h"
 #include "ScaleMode.h"

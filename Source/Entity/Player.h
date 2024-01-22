@@ -69,7 +69,7 @@ public:
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;
     ParticleEmitter* slopeEmitter_;
-     
+
     void Update(); 
     void RenderUpdate();
     void OnHit(HitArgs args);

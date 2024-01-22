@@ -9,6 +9,7 @@ RotateMode::RotateMode(EditorModeArgs args):
 EditorMode(args) {
     mouseVisibile_ = false;
     requiresTarget_ = true;
+    requiresEntity_ = true;
 }
 
 std::string RotateMode::GetName() { 
@@ -38,17 +39,17 @@ void RotateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     fromZero_ = false;
-    startRotation_ = target_.Get()->transform_.rotation;
+    startRotation_ = target_.GetRotation();
     EditorMode::OnStart();
 }
 
 void RotateMode::OnCancel() {
-    target_.Get()->transform_.rotation = startRotation_;
+    target_.SetRotation(startRotation_);
     EditorMode::OnCancel();
 }
 
 void RotateMode::Update() {
-    Entity* entity = target_.Get();
+    // Entity* entity = target_.Get();
     if (platform_.pressedKeys_['0']) {
         deltaX_ = 0.0f;
         deltaY_ = 0.0f;
@@ -81,23 +82,23 @@ void RotateMode::Update() {
 
     switch(submode_) {
         case RS_Free:
-            entity->transform_.rotation = angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            target_.SetRotation(angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation);
             break;
 
         case RS_X:
-            entity->transform_.rotation = angleAxis(deltaX_, planarCameraForward) * referenceRotation;
+            target_.SetRotation(angleAxis(deltaX_, planarCameraForward) * referenceRotation);
             break;
 
         case RS_Y:
-            entity->transform_.rotation = angleAxis(deltaX_, Transform::worldUp) * referenceRotation;
+            target_.SetRotation(angleAxis(deltaX_, Transform::worldUp) * referenceRotation);
             break;
 
         case RS_Z:
-            entity->transform_.rotation = angleAxis(deltaY_, planarCameraRight) * referenceRotation;
+            target_.SetRotation(angleAxis(deltaY_, planarCameraRight) * referenceRotation);
             break;
 
         case RS_Roll:
-            entity->transform_.rotation = angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation;
+            target_.SetRotation(angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation);
             break;
     }
 }

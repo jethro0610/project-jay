@@ -33,13 +33,13 @@ void TranslateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = TS_Planar;
-    startPosition_ = target_.Get()->transform_.position;
+    startPosition_ = target_.GetPosition();
 
     EditorMode::OnStart();
 }
 
 void TranslateMode::OnCancel() {
-    target_.Get()->transform_.position = startPosition_;
+    target_.SetPosition(startPosition_);
 }
 
 void TranslateMode::SetSubmode(TranslateSubmode submode) {
@@ -55,7 +55,6 @@ void TranslateMode::SetSubmode(TranslateSubmode submode) {
 }
 
 void TranslateMode::Update() {
-    Entity* entity = target_.Get();
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -63,7 +62,7 @@ void TranslateMode::Update() {
         SetSubmode(TS_Planar);
     else if (platform_.pressedKeys_['V'])
         SetSubmode(TS_Vertical);
-    if (platform_.pressedKeys_['T'])
+    if (platform_.pressedKeys_['T'] && target_.IsEntity())
         SetSubmode(TS_Terrain);
 
     vec3 planarCameraForward = camera_.transform_.GetForwardVector();
@@ -76,22 +75,24 @@ void TranslateMode::Update() {
 
     switch (submode_) {
         case TS_Planar:
-            entity->transform_.position =
+            target_.SetPosition(
                 startPosition_ +
                 planarCameraForward * deltaY_ +
-                planarCameraRight * deltaX_;
+                planarCameraRight * deltaX_
+            );
             break;
 
         case TS_Vertical:
-            entity->transform_.position = startPosition_ + Transform::worldUp * deltaY_;
+            target_.SetPosition(startPosition_ + Transform::worldUp * deltaY_);
             break;
 
         case TS_Terrain:
-            entity->transform_.position =
+            vec3 terrainPos =
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            entity->transform_.position.y = terrain_.GetHeight(vec2(entity->transform_.position.x, entity->transform_.position.z));
+            terrainPos.y = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
+            target_.SetPosition(terrainPos);
             break;
     }
 }

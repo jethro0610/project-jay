@@ -11,6 +11,7 @@ EditorMode(args)
 {
     mouseVisibile_ = false;
     requiresTarget_ = true;
+    requiresEntity_ = true;
 }
 
 std::string CloneMode::GetName() {
@@ -34,24 +35,24 @@ void CloneMode::SetSubmode(CloneMode::CloneSubmode submode) {
 
 void CloneMode::OnStart() {
     EditorMode::OnStart();
-    original_ = target_.Get();
+    original_ = target_.GetEntity();
     originalTransform_ = original_->transform_;
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
 
     Entity& createdEntity = entities_.CreateEntity(original_->typeId_);
     createdEntity.transform_ = originalTransform_;
-    target_.Set(&createdEntity);
+    target_.SetEntity(&createdEntity);
 }
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    target_.Get()->destroy_ = true;
-    target_.Set(original_);
+    target_.GetEntity()->destroy_ = true;
+    target_.SetEntity(original_);
 }
 
 void CloneMode::Update() {
-    Entity* entity = target_.Get(); 
+    Entity* entity = target_.GetEntity(); 
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -87,8 +88,8 @@ void CloneMode::Update() {
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    Entity& createdEntity = entities_.CreateEntity(target_.Get()->typeId_);
-    createdEntity.transform_ = target_.Get()->transform_;
+    Entity& createdEntity = entities_.CreateEntity(target_.GetEntity()->typeId_);
+    createdEntity.transform_ = target_.GetEntity()->transform_;
 
     return CB_Stay;
 }

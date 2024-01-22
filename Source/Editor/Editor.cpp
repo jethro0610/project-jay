@@ -31,7 +31,7 @@ resourceManager_(resourceManager),
 renderer_(renderer),
 terrain_(terrain),
 running_(running),
-target_(entities),
+target_(),
 textInput_(platform),
 args_({
     camera, 
@@ -92,7 +92,7 @@ EXPANDMODES
 
 void Editor::StartEditing() {
     active_ = true;
-    target_.Set(nullptr);
+    target_.Untarget();
     SetMode(defaultMode_);
     defaultMode_.SetSubmode(DS_Camera);
     postConfirmMode_ = nullptr;
@@ -109,7 +109,7 @@ void Editor::StopEditing() {
     mode_->OnCancel();
     mode_->OnEnd();
     active_ = false;
-    target_.Set(nullptr);
+    target_.Untarget();
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
 
@@ -120,7 +120,7 @@ void Editor::StopEditing() {
 
 void Editor::SetMode(EditorMode* mode) {
     if (mode_ == mode) return;
-    if (mode->requiresTarget_ && target_.Get() == nullptr) return;
+    if (mode->requiresTarget_ && !target_.HasTarget()) return;
 
     if (mode_ != nullptr)
         mode_->OnEnd();

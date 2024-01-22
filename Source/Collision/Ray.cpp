@@ -1,5 +1,6 @@
 #include <glm/gtx/projection.hpp>
 #include "Ray.h"
+#include "Logging/Logger.h"
 using namespace glm;
 
 bool Ray::RayHitCollider(
@@ -28,4 +29,21 @@ bool Ray::RayHitCollider(
         return false;
 
     return true;
+}
+
+bool Ray::RayHitSphere(
+    glm::vec3 origin,
+    glm::vec3 direction,
+    glm::vec3 sphereOrigin,
+    float radius
+) {
+    vec3 vectorToSphere = sphereOrigin - origin; 
+
+    vec3 projected = glm::proj(vectorToSphere, direction);
+    vec3 projectedPosition = origin + projected;
+
+    if (distance(sphereOrigin, projectedPosition) > radius)
+        return false;
+    else
+        return true;
 }

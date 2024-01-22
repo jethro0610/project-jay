@@ -26,7 +26,10 @@ SAMPLER2D(s_terrainMap, 15);
 #endif
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
-    return SAMPLETERRAINMAP(position, accuracy);
+    vec2 pos = SAMPLETERRAINMAP(position, accuracy);
+    float edgeDistance = max((pos.x + GET_TC_VAR(EDGE_OFFSET)) * 0.1f, 0.0f);
+    pos.y += min(0.0f, -(edgeDistance * edgeDistance));
+    return pos;
 }
 
 INLINE vec3 getTerrainNormal(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {

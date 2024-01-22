@@ -1,7 +1,7 @@
 #ifndef SHARED_SHADER
 #define TC_FLOAT(varName) static constexpr float varName
 #define TC_INT(varName) static constexpr int varName
-#define GET_TC_VAR(varName) varName
+#define GET_TC_VAR(varName) Terrain::varName
 #else
 #define TC_FLOAT(varName) static const float TERRAIN_ ## varName
 #define TC_INT(varName) static const int TERRAIN_ ## varName

@@ -448,12 +448,38 @@ void Renderer::RenderScreenText() {
     }
 }
 
+#ifdef _DEBUG
 void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.modeText_);
     RenderText(editor.target_.name_);
     RenderText(editor.textInput_.text_);
     RenderText(editor.notification_.text_);
 }
+
+void Renderer::RenderTerrainBubbles(Terrain& terrain) {
+    Transform bubbleTransform;
+    bubbleTransform.scale = vec3(2.0f, 4.0f, 2.0f);
+    mat4 bubbleMatrix;
+    for (TerrainBubble& bubble : terrain.bubbles_) {
+        bubbleTransform.position = bubble.position;
+        bubbleMatrix = bubbleTransform.ToMatrix();
+        RenderMesh(&terrain.bubbleModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &bubbleMatrix);
+    }
+}
+
+void Renderer::RenderTerrainCurves(Terrain& terrain) {
+    Transform curveTransform;
+    curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
+    mat4 curveMatrix;
+    for (TerrainCurve& curve : terrain.curves_) {
+        for (int i = 0; i < 4; i++) {
+            curveTransform.position = curve.points[i];
+            curveMatrix = curveTransform.ToMatrix();
+            RenderMesh(&terrain.bubbleModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &curveMatrix);
+        }
+    }
+}
+#endif
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
     for (int i = 0; i < material->numTextures; i++)

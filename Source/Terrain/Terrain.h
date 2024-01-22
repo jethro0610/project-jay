@@ -2,6 +2,8 @@
 #include "Shared_TerrainConstants.h"
 #include "BlobProperties.h"
 #include "Rendering/Texture.h"
+#include "Rendering/Model.h"
+#include "Rendering/Material.h"
 #include "TerrainCurve.h"
 #include "TerrainBubble.h"
 #include <glm/vec2.hpp>
@@ -54,6 +56,9 @@ public:
     int area_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
+
+    Model* bubbleModel_;
+    Material bubbleMaterial_;
 
 private:
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];

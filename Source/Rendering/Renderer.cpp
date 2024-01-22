@@ -31,6 +31,7 @@ void Renderer::Render(
     PresentFrame();
 }
 
+#ifdef _DEBUG
 void Renderer::RenderEdit(
     EntityList& entities,
     Editor& editor,
@@ -40,6 +41,8 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
+    // RenderTerrainBubbles(terrain);
+    RenderTerrainCurves(terrain);
     RenderEntitiesS(entities);
     RenderPostProcess();
     RenderBlit();
@@ -53,3 +56,4 @@ void Renderer::RenderEditorOnly(Editor& editor) {
     RenderEditor(editor);
     PresentFrame();
 }
+#endif

@@ -59,7 +59,6 @@ void ResourceManager::LoadGlobals() {
     LoadGlobalQuad();
     LoadGlobalTerrain();
 
-    
     LoadModel("st_default");
     LoadTexture("t_font");
     globals_.insert("st_default");

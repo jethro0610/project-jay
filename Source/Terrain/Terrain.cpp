@@ -18,10 +18,16 @@ Terrain::Terrain(
 ):
 resourceManager_(resourceManager)
 {
+    bubbles_.clear();
+    curves_.clear();
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
         terrainMap_[x][y] = vec2(0.0f);
     } }
+
+    bubbleModel_ = resourceManager.GetModel("st_default");
+    bubbleMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
+    bubbleMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
 }
 
 struct InverseInfluence {

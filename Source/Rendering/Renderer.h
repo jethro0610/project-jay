@@ -39,6 +39,7 @@ public:
         Terrain& terrain
     );
 
+    #ifdef _DEBUG
     void RenderEdit(
         EntityList& entities,
         Editor& editor,
@@ -49,6 +50,7 @@ public:
     void RenderEditorOnly(
         Editor& editor
     );
+    #endif
 
     glm::mat4 GetProjectionMatrix() const { return projectionMatrix_; };
 
@@ -143,6 +145,13 @@ private:
         GPUPose* pose = nullptr,
         DebugShaderType debugShader = DS_Default 
     );
+    void RenderTerrainBubbles(
+        Terrain& terrain
+    );
+    void RenderTerrainCurves(
+        Terrain& terrain
+    );
+    void RenderEditor(Editor& editor);
     #endif
     void RenderTerrain(
         Terrain& terrain, 
@@ -163,7 +172,6 @@ private:
     void RenderBlit();
     void RenderUI(EntityList& entities);
     void RenderText(Text& text);
-    void RenderEditor(Editor& editor);
     #ifdef _DEBUG
     void RenderScreenText();
     #endif

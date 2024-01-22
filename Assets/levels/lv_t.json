@@ -1,0 +1,123 @@
+{
+    "blob": {
+        "frequency": 100.0,
+        "maxRadius": 200.0,
+        "minRadius": 150.0,
+        "seed": 1337
+    },
+    "noise_layers": [
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        },
+        {
+            "active": false,
+            "exponent": 1.0,
+            "frequency": {
+                "x": 0.15000000596046448,
+                "y": 0.15000000596046448
+            },
+            "multiplier": 12.0,
+            "seed": 1337
+        }
+    ],
+    "phases": [
+        [
+            {
+                "name": "e_player",
+                "persist": true,
+                "transform": {
+                    "position": {
+                        "x": -2.568321704864502,
+                        "y": 10.543806076049805,
+                        "z": 3.1017723083496094
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                "type_id": 1
+            },
+            {
+                "name": "e_teleportpod",
+                "persist": true,
+                "transform": {
+                    "position": {
+                        "x": -109.30392456054688,
+                        "y": 14.930441856384277,
+                        "z": -99.7548828125
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.900000810623169,
+                        "y": 41.20000457763672,
+                        "z": 1.900000810623169
+                    }
+                },
+                "type_id": 5
+            },
+            {
+                "name": "e_bumprat",
+                "persist": true,
+                "transform": {
+                    "position": {
+                        "x": -11.488181114196777,
+                        "y": 14.771780014038086,
+                        "z": -22.90302848815918
+                    },
+                    "rotation": {
+                        "x": 0.0,
+                        "y": -0.0,
+                        "z": 0.0
+                    },
+                    "scale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                "type_id": 2
+            }
+        ],
+        null,
+        null,
+        null
+    ]
+}

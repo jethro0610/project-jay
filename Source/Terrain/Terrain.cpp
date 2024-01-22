@@ -29,6 +29,71 @@ struct TerrainBubble {
     float radius;
 };
 
+struct TerrainCurve {
+    vec4 points[4];
+};
+
+inline vec4 GetCubicBezierPosition(TerrainCurve& curve, float t) {
+    t = std::clamp(t, 0.0f, 1.0f);
+    float invT = 1.0f - t;
+
+    vec4 point = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    point += invT * invT * invT * curve.points[0];
+    point += (t * 3.0f * invT * invT) * curve.points[1];
+    point += (t * t * 3.0f * invT) * curve.points[2];
+    point += t * t * t * curve.points[3];
+
+    return point;
+}
+
+static constexpr int ITERATIONS = 12;
+
+struct CurveInfluence {
+    float strength;
+    float height;
+};
+
+inline CurveInfluence GetCurveInfluence(TerrainCurve& curve, vec2 pos) {
+    float pivot = 0.0f;
+    float nearestSqr = INFINITY;
+    float nearestRadius = 0.0f;
+    float nearestHeight = 0.0f;
+    float notchLength = 0.25f;
+
+    for (int i = 1; i < 4; i++) {
+        float t = i * notchLength;
+        vec4 bezierPos = GetCubicBezierPosition(curve, t);
+        float dSqr = distance2(vec2(bezierPos.x, bezierPos.z), pos);
+        if (dSqr < nearestSqr) {
+            nearestSqr = dSqr;
+            pivot = t;
+        }
+    }
+
+    for (int i = 0; i < ITERATIONS - 1; i++) {
+        float start = pivot - notchLength;
+        notchLength *= 0.5f;
+
+        nearestSqr = INFINITY;
+        for (int j = 0; j < 5; j++) {
+            float t = start + j * notchLength;
+            vec4 bezierPos = GetCubicBezierPosition(curve, t);
+            float dSqr = distance2(vec2(bezierPos.x, bezierPos.z), pos);
+            if (dSqr < nearestSqr) {
+                nearestRadius = bezierPos.w;
+                nearestHeight = bezierPos.y;
+                nearestSqr = dSqr;
+                pivot = std::clamp(t, 0.0f, 1.0f);
+            }
+        }
+    }
+
+    CurveInfluence influence;
+    influence.strength = sqrt(nearestSqr) / nearestRadius;
+    influence.height = nearestHeight;
+    return influence;
+}
+
 void Terrain::GenerateTerrainMap(
     const BlobProperties& blob
 ) {
@@ -52,8 +117,98 @@ void Terrain::GenerateTerrainMap(
 
     vector_contig<TerrainBubble, 4> bubbles;
     bubbles.push_back({vec3(0.0f, 12.0f, 25.0f), 100.0f});
-    bubbles.push_back({vec3(50.0f, 16.0f, 50.0f), 150.0f});
+    bubbles.push_back({vec3(50.0f, -4.0f, 50.0f), 150.0f});
     bubbles.push_back({vec3(-100.0f, 18.0f, -150.0f), 175.0f});
+    bubbles.push_back({vec3(-75.0f, 6.0f, -0.0f), 125.0f});
+
+    // for (int x = 0; x < RESOLUTION; x++) {
+    // for (int y = 0; y < RESOLUTION; y++) {
+    //     terrainMap_[y][x].y = 0.0f;
+    //     float wX = x - HALF_RESOLUTION;
+    //     wX /= WORLD_TO_TERRAIN_SCALAR;
+    //     float wY = y - HALF_RESOLUTION;
+    //     wY /= WORLD_TO_TERRAIN_SCALAR;
+    //     vec2 pos = vec2(wX, wY);
+    //
+    //     vector_const<float, 4> inverseDistances;
+    //     vector_const<float, 4> distances;
+    //     for (int i = 0; i < bubbles.size(); i++) {
+    //         vec2 bubblePos = vec2(bubbles[i].position.x, bubbles[i].position.z);
+    //         float d = distance(pos, bubblePos) / bubbles[i].radius;
+    //         distances.push_back(d);
+    //
+    //         if (d > 1.0f) {
+    //             inverseDistances.push_back(0.0f);
+    //             continue;
+    //         }
+    //
+    //         if (d == 0.0f)
+    //             d = INFINITY;
+    //         else
+    //             d = 1.0f / EaseInOutQuad(d);//std::pow(d, -0.25f);
+    //         d -= 1.0f;
+    //
+    //         inverseDistances.push_back(d);
+    //     }
+    //
+    //     float totalInverseDistances = 0.0f;
+    //     for (int i = 0; i < inverseDistances.size(); i++) {
+    //         totalInverseDistances += inverseDistances[i];
+    //     }
+    //
+    //     float val = 0.0f;
+    //     for (int i = 0; i < bubbles.size(); i++) {
+    //         if (inverseDistances[i] <= 0.0f)
+    //             continue;
+    //
+    //         if (distances[i] == 0.0f) {
+    //             val = bubbles[i].position.y;
+    //             break;
+    //         }
+    //
+    //         float t = EaseInOutQuad(distances[i]);
+    //         float height = bubbles[i].position.y * (1.0f - t);
+    //         val += (inverseDistances[i] / totalInverseDistances) * height;
+    //     }
+    //     terrainMap_[y][x].y = val;
+    //     float edgeDistance = max((terrainMap_[y][x].x + EDGE_OFFSET) * 0.1f, 0.0f);
+    //     terrainMap_[y][x].y += min(0.0f, -pow(edgeDistance, 2.0f));
+    // } }
+    //
+
+
+    TerrainCurve curve;
+    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 75.0f);
+    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
+    curve.points[2] = vec4(50.0f, -8.0f, 50.0f, 35.0f);
+    curve.points[3] = vec4(100.0f, -4.0f, -50.0f, 75.0f);
+
+    bool curveAffected[RESOLUTION][RESOLUTION];
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        curveAffected[x][y] = false;
+    }}
+
+    for (int i = 0; i < 65; i++) {
+        float t = i / 64.0f;
+        vec4 bezierPos = GetCubicBezierPosition(curve, t);
+
+        int mapX = bezierPos.x * WORLD_TO_TERRAIN_SCALAR;
+        mapX += HALF_RESOLUTION;
+        int mapY = bezierPos.z * WORLD_TO_TERRAIN_SCALAR;
+        mapY += HALF_RESOLUTION;
+        int range = (bezierPos.w + 10.0f) * WORLD_TO_TERRAIN_SCALAR;
+        
+        int startX = max(mapX - range, 0);
+        int endX = min(mapX + range, RESOLUTION - 1);
+        int startY = max(mapY - range, 0);
+        int endY = min(mapY + range, RESOLUTION - 1);
+
+        for (int x = startX; x <= endX; x++) {
+        for (int y = startY; y <= endY; y++) {
+            curveAffected[x][y] = true;
+        }}
+    }
 
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
@@ -64,51 +219,13 @@ void Terrain::GenerateTerrainMap(
         wY /= WORLD_TO_TERRAIN_SCALAR;
         vec2 pos = vec2(wX, wY);
 
-        vector_const<float, 4> inverseDistances;
-        vector_const<float, 4> distances;
-        for (int i = 0; i < bubbles.size(); i++) {
-            vec2 bubblePos = vec2(bubbles[i].position.x, bubbles[i].position.z);
-            float d = distance(pos, bubblePos) / bubbles[i].radius;
-            distances.push_back(d);
-
-            if (d > 1.0f) {
-                inverseDistances.push_back(0.0f);
-                continue;
+        if (curveAffected[x][y]) {
+            CurveInfluence influence = GetCurveInfluence(curve, pos);
+            if (influence.strength <= 1.0f) {
+                terrainMap_[y][x].y = EaseInOutQuad(1.0f - influence.strength) * influence.height;
             }
-
-            if (d == 0.0f)
-                d = INFINITY;
-            else
-                d = std::pow(d, -2.0f);
-            d -= 1.0f;
-
-            inverseDistances.push_back(d);
         }
-
-        float totalInverseDistances = 0.0f;
-        for (int i = 0; i < inverseDistances.size(); i++) {
-            totalInverseDistances += inverseDistances[i];
-        }
-
-        float val = 0.0f;
-        for (int i = 0; i < bubbles.size(); i++) {
-            if (inverseDistances[i] <= 0.0f)
-                continue;
-
-            if (distances[i] == 0.0f) {
-                val = bubbles[i].position.y;
-                break;
-            }
-
-            float t = EaseInOutQuad(distances[i]);
-            float height = bubbles[i].position.y * (1.0f - t);
-            val += (inverseDistances[i] / totalInverseDistances) * height;
-        }
-        terrainMap_[y][x].y = val;
-        float edgeDistance = max((terrainMap_[y][x].x + EDGE_OFFSET) * 0.1f, 0.0f);
-        terrainMap_[y][x].y += min(0.0f, -pow(edgeDistance, 2.0f));
-    } }
-
+    }}
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }
 

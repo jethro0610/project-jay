@@ -37,8 +37,21 @@ void ResourceManager::CreateTerrainMapTexture() {
         )};
     }
 
+    if (!textures_.Has("t_terrainmap_low")) {
+        textures_.Add("t_terrainmap_low") = { bgfx::createTexture2D(
+            TerrainConsts::RESOLUTION_LOW, 
+            TerrainConsts::RESOLUTION_LOW, 
+            false, 
+            1, 
+            bgfx::TextureFormat::RG32F,
+            BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
+            NULL
+        )};
+    }
+
     ASSIGN_DEBUG_NAME(textures_.Get("t_terrainmap"), "t_terrainmap");
     globals_.insert("t_terrainmap");
+    globals_.insert("t_terrainmap_low");
 }
 
 void ResourceManager::UpdateTerrainMapTexture(glm::vec2* terrainMap) {
@@ -51,6 +64,19 @@ void ResourceManager::UpdateTerrainMapTexture(glm::vec2* terrainMap) {
         TerrainConsts::RESOLUTION,
         TerrainConsts::RESOLUTION,
         bgfx::copy(terrainMap, sizeof(glm::vec2) * TerrainConsts::RESOLUTION * TerrainConsts::RESOLUTION)
+    );
+}
+
+void ResourceManager::UpdateTerrainMapTextureLow(glm::vec2* terrainMap) {
+    bgfx::updateTexture2D(
+        textures_.Get("t_terrainmap_low").handle,
+        0,
+        0,
+        0,
+        0,
+        TerrainConsts::RESOLUTION_LOW,
+        TerrainConsts::RESOLUTION_LOW,
+        bgfx::copy(terrainMap, sizeof(glm::vec2) * TerrainConsts::RESOLUTION_LOW * TerrainConsts::RESOLUTION_LOW)
     );
 }
 

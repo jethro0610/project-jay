@@ -62,6 +62,7 @@ private:
 
     Texture* renderBufferTextures_[2];
     Texture* terrainMapTexture_;
+    Texture* terrainMapTextureLow_;
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
 

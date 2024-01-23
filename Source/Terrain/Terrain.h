@@ -40,16 +40,8 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
-    void Update(const BlobProperties& blob);
-    // void GenerateTerrainMap(
-    //     const BlobProperties& blob
-    // );
-    void GenerateTerrainMapSectionThreaded(
-        const glm::ivec2& start,
-        const glm::ivec2& end,
-        int index
-    );
-    void UpdateTerrainMapTexture();
+    void GenerateTerrainMap();
+    void GenerateTerrainMapLowRes();
     int area_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
@@ -58,21 +50,18 @@ public:
     Material bubbleMaterial_;
     Material curveMaterial_;
     Material curveControlMaterial_;
+    bool lowRes_;
+    bool highResDirty_;
 
 private:
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    TerrainAffectMap affectMap_;
+    uint32_t affectMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
     Texture* terrainMapTexture_;
     ResourceManager& resourceManager_;
 
     #ifdef _DEBUG
-    int cores_;
-    int sectionSize_;
-    glm::vec2 terrainMapBack_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    std::vector<std::thread> threads_;
-    bool completeThreads_[32];
-    std::mutex threadMutexes_[32];
-    vector_contig<TerrainBubble, TerrainBubble::MAX> bubblesBack_;
-    vector_contig<TerrainCurve, TerrainCurve::MAX> curvesBack_;
+    glm::vec2 terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
+    uint32_t affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
+    Texture* terrainMapTextureLow_;
     #endif
 };

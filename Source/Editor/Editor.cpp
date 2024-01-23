@@ -112,6 +112,7 @@ void Editor::StopEditing() {
     target_.Untarget();
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
+    terrain_.GenerateTerrainMap();
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
@@ -180,7 +181,11 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.loaded_) {
-        terrain_.Update(level_.properties_.blob);
+        if (target_.IsTerrainControl() && mode_ != &defaultMode_)
+            terrain_.GenerateTerrainMapLowRes();
+        else if (terrain_.highResDirty_)
+            terrain_.GenerateTerrainMap();
+
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {
                 entities_[i].CalculateBasePose();
@@ -188,8 +193,6 @@ void Editor::Update() {
             }
         }
         entities_.DestroyFlaggedEntities();
-
-        // Need to free particle emitters
 
         renderer_.RenderEdit(
             entities_, 

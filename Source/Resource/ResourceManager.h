@@ -42,6 +42,7 @@ public:
     void UnloadUnusedDependencies(DependencyList& depdencyList);
 
     void UpdateTerrainMapTexture(glm::vec2* terrainMap);
+    void UpdateTerrainMapTextureLow(glm::vec2* terrainMap);
 
 private:
     void LoadGlobals();

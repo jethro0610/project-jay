@@ -73,6 +73,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitUIBuffer();
 
     terrainMapTexture_ = resourceManager.GetTexture("t_terrainmap");
+    terrainMapTextureLow_ = resourceManager.GetTexture("t_terrainmap_low");
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
@@ -274,7 +275,10 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
         vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
+        if (terrain.lowRes_)
+            bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTextureLow_->handle);
+        else
+            bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
         RenderMesh(terrain_, material);
     };
 }

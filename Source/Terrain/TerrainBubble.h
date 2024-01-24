@@ -12,7 +12,26 @@ public:
     bool DBG_selected_;
     #endif
 
-    TerrainInfluence GetInfluence(glm::vec2& pos);
-    void WriteAffect(uint32_t affectMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION], int index);
-    void WriteAffectLow(uint32_t affectMap[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW], int index);
+    TerrainInfluence GetInfluence(glm::vec2& pos) const;
+
+    template<const int RES>
+    void WriteAffect(uint32_t affectMap[RES][RES], int index) const {
+        const int HALF_RES = RES * 0.5f;
+        const float WORLD_TO_TERRAIN = RES / TerrainConsts::RANGE;
+        int mapX = position.x * WORLD_TO_TERRAIN;
+        mapX += HALF_RES;
+        int mapY = position.z * WORLD_TO_TERRAIN;
+        mapY += HALF_RES;
+        int range = (position.w + 10.0f) * WORLD_TO_TERRAIN;
+        
+        int startX = std::max(mapX - range, 0);
+        int endX = std::min(mapX + range, RES - 1);
+        int startY = std::max(mapY - range, 0);
+        int endY = std::min(mapY + range, RES - 1);
+
+        for (int x = startX; x <= endX; x++) {
+        for (int y = startY; y <= endY; y++) {
+            affectMap[x][y] |= 1UL << index;
+        }}
+    }
 };

@@ -55,28 +55,28 @@ struct InverseInfluence {
 };
 
 template <const int RES>
-void GenerateTerrainMapSection(
-    const glm::vec2 start,
-    const glm::vec2 end,
+void BaseGenerateTerrainMapSection(
+    const glm::vec2& start,
+    const glm::vec2& end,
     glm::vec2 terrainMap[RES][RES],
     uint32_t affectMap[RES][RES],
-    vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
-    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
+    const vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
+    const vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
 ) {
-    const int halfResolution = RES * 0.5f;
-    const float worldToTerrainScalar = RES / RANGE;
+    const int HALF_RES = RES * 0.5f;
+    const float WORLD_TO_TERRAIN = RES / RANGE;
 
     FastNoiseLite noise;
     for (int x = 0; x < RES; x++) {
     for (int y = 0; y < RES; y++) {
-        vec2 pos = vec2(x - halfResolution + 0.5f, y - halfResolution + 0.5f);
+        vec2 pos = vec2(x - HALF_RES + 0.5f, y - HALF_RES + 0.5f);
         vec2 samplePos = normalize(pos);
         samplePos *= 150;
         float noiseVal = noise.GetNoise(samplePos.x, samplePos.y);
         noiseVal = (noiseVal + 1.0f) * 0.5f;
 
         float blobRadius = lerp(150.0f, 200.0f, noiseVal);
-        float curRadius = length(pos) / worldToTerrainScalar;
+        float curRadius = length(pos) / WORLD_TO_TERRAIN;
 
         terrainMap[y][x].x = curRadius - blobRadius;
     } }
@@ -85,12 +85,12 @@ void GenerateTerrainMapSection(
     for (int y = start.y; y < end.y; y++) {
         terrainMap[y][x].y = 0.0f;
 
-        float wX = x - halfResolution;
-        wX /= worldToTerrainScalar;
-        float wY = y - halfResolution;
-        wY /= worldToTerrainScalar;
+        float wX = x - HALF_RES;
+        wX /= WORLD_TO_TERRAIN;
+        float wY = y - HALF_RES;
+        wY /= WORLD_TO_TERRAIN;
         vec2 pos = vec2(wX, wY);
-        pos += vec2((1.0f / worldToTerrainScalar) * 0.5f);
+        pos += vec2((1.0f / WORLD_TO_TERRAIN) * 0.5f);
 
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
@@ -143,64 +143,46 @@ void GenerateTerrainMapSection(
     }}
 }
 
-void Terrain::GenerateTerrainMap(EntityList* entities) {
-    vector_const<int, 128> groundedEntities;
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = (*entities)[i];
-        if (!entity.alive_) continue;
-
-        if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
-            groundedEntities.push_back(i);
-    }
-
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        affectMap_[x][y] = 0;
+template <const int RES>
+void BaseGenerateTerrainMap(
+    EntityList* entities,
+    glm::vec2 terrainMap[RES][RES],
+    uint32_t affectMap[RES][RES],
+    vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
+    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
+) {
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        affectMap[x][y] = 0;
     }}
 
-    for (int i = 0; i < bubbles_.size(); i++) 
-        bubbles_[i].WriteAffect(affectMap_, i);
-    for (int i = 0; i < curves_.size(); i++) 
-        curves_[i].WriteAffect(affectMap_, i + TerrainBubble::MAX);
+    for (int i = 0; i < bubbles.size(); i++) 
+        bubbles[i].WriteAffect<RES>(affectMap, i);
+    for (int i = 0; i < curves.size(); i++) 
+        curves[i].WriteAffect<RES>(affectMap, i + TerrainBubble::MAX);
 
     std::vector<std::thread> threads;
     int cores = std::thread::hardware_concurrency();
-    int sectionSize = RESOLUTION / cores;
+    int sectionSize = RES / cores;
 
     for (int i = 0; i < cores; i++) {
-        int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
-        threads.push_back(std::thread([this, sectionSize, i, add] {
-            GenerateTerrainMapSection<RESOLUTION>(
+        int add = (i == cores - 1 && RES % cores != 0) ? 1 : 0;
+        threads.push_back(std::thread([terrainMap, bubbles, curves, affectMap, sectionSize, i, add] {
+            BaseGenerateTerrainMapSection<RES>(
                 ivec2(i * sectionSize, 0),
-                ivec2((i + 1) * sectionSize + add, RESOLUTION),
-                terrainMap_,
-                affectMap_,
-                bubbles_,
-                curves_
+                ivec2((i + 1) * sectionSize + add, RES),
+                terrainMap,
+                affectMap,
+                bubbles,
+                curves
             );
         }));
     }
     for (std::thread& thread : threads)
         thread.join();
-
-    area_ = 0;
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        if (terrainMap_[y][x].x <= 0.0f)
-            area_++;
-    }}
-
-    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
-    lowRes_ = false;
-    highResDirty_ = false;
-
-    for (int entityIndex : groundedEntities) {
-        Entity& entity = (*entities)[entityIndex];
-        entity.transform_.position.y = GetHeight(entity.transform_.position);
-    }
 }
 
-void Terrain::GenerateTerrainMapLowRes(EntityList* entities) {
+void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
     vector_const<int, 128> groundedEntities;
     for (int i = 0; i < 128; i++) {
         Entity& entity = (*entities)[i];
@@ -210,39 +192,37 @@ void Terrain::GenerateTerrainMapLowRes(EntityList* entities) {
             groundedEntities.push_back(i);
     }
 
-    for (int x = 0; x < RESOLUTION_LOW; x++) {
-    for (int y = 0; y < RESOLUTION_LOW; y++) {
-        affectMapLow_[x][y] = 0;
-    }}
-
-    for (int i = 0; i < bubbles_.size(); i++) 
-        bubbles_[i].WriteAffectLow(affectMapLow_, i);
-    for (int i = 0; i < curves_.size(); i++) 
-        curves_[i].WriteAffectLow(affectMapLow_, i + TerrainBubble::MAX);
-
-    std::vector<std::thread> threads;
-    int cores = std::thread::hardware_concurrency();
-    int sectionSize = RESOLUTION_LOW / cores;
-
-    for (int i = 0; i < cores; i++) {
-        int add = (i == cores - 1 && RESOLUTION_LOW % cores != 0) ? 1 : 0;
-        threads.push_back(std::thread([this, sectionSize, i, add] {
-            GenerateTerrainMapSection<RESOLUTION_LOW>(
-                ivec2(i * sectionSize, 0),
-                ivec2((i + 1) * sectionSize + add, RESOLUTION_LOW),
-                terrainMapLow_,
-                affectMapLow_,
-                bubbles_,
-                curves_
-            );
-        }));
+    if (lowRes) {
+        BaseGenerateTerrainMap<RESOLUTION_LOW>(
+            entities, 
+            terrainMapLow_, 
+            affectMapLow_, 
+            bubbles_, 
+            curves_
+        );
+        lowRes_ = true;
+        highResDirty_ = true;
+        resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)terrainMapLow_);
     }
-    for (std::thread& thread : threads)
-        thread.join();
+    else {
+        BaseGenerateTerrainMap<RESOLUTION>(
+            entities, 
+            terrainMap_, 
+            affectMap_, 
+            bubbles_, 
+            curves_
+        );
+        resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+        lowRes_ = false;
+        highResDirty_ = false;
 
-    resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)terrainMapLow_);
-    lowRes_ = true;
-    highResDirty_ = true;
+        area_ = 0;
+        for (int x = 0; x < RESOLUTION; x++) {
+        for (int y = 0; y < RESOLUTION; y++) {
+            if (terrainMap_[y][x].x <= 0.0f)
+                area_++;
+        }}
+    }
 
     for (int entityIndex : groundedEntities) {
         Entity& entity = (*entities)[entityIndex];

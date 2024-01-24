@@ -182,9 +182,9 @@ void Editor::Update() {
     
     if (level_.loaded_) {
         if (target_.IsTerrainControl() && mode_ != &defaultMode_)
-            terrain_.GenerateTerrainMapLowRes();
+            terrain_.GenerateTerrainMapLowRes(&entities_);
         else if (terrain_.highResDirty_)
-            terrain_.GenerateTerrainMap();
+            terrain_.GenerateTerrainMap(&entities_);
 
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {

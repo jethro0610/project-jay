@@ -40,8 +40,8 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
-    void GenerateTerrainMap();
-    void GenerateTerrainMapLowRes();
+    void GenerateTerrainMap(EntityList* entities = nullptr);
+    void GenerateTerrainMapLowRes(EntityList* entities = nullptr);
     int area_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;

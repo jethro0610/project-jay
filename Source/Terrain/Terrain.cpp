@@ -66,15 +66,16 @@ void GenerateTerrainMapSection(
     const int halfResolution = RES * 0.5f;
     const float worldToTerrainScalar = RES / RANGE;
 
+    FastNoiseLite noise;
     for (int x = 0; x < RES; x++) {
     for (int y = 0; y < RES; y++) {
-        vec2 pos = vec2(x - halfResolution, y - halfResolution);
+        vec2 pos = vec2(x - halfResolution + 0.5f, y - halfResolution + 0.5f);
         vec2 samplePos = normalize(pos);
         samplePos *= 150;
-        float noiseVal = 0.0f;
+        float noiseVal = noise.GetNoise(samplePos.x, samplePos.y);
         noiseVal = (noiseVal + 1.0f) * 0.5f;
 
-        float blobRadius = lerp(150.0f, 250.0f, noiseVal);
+        float blobRadius = lerp(150.0f, 200.0f, noiseVal);
         float curRadius = length(pos) / worldToTerrainScalar;
 
         terrainMap[y][x].x = curRadius - blobRadius;
@@ -142,7 +143,16 @@ void GenerateTerrainMapSection(
     }}
 }
 
-void Terrain::GenerateTerrainMap() {
+void Terrain::GenerateTerrainMap(EntityList* entities) {
+    vector_const<int, 128> groundedEntities;
+    for (int i = 0; i < 128; i++) {
+        Entity& entity = (*entities)[i];
+        if (!entity.alive_) continue;
+
+        if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
+            groundedEntities.push_back(i);
+    }
+
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
         affectMap_[x][y] = 0;
@@ -183,9 +193,23 @@ void Terrain::GenerateTerrainMap() {
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
     lowRes_ = false;
     highResDirty_ = false;
+
+    for (int entityIndex : groundedEntities) {
+        Entity& entity = (*entities)[entityIndex];
+        entity.transform_.position.y = GetHeight(entity.transform_.position);
+    }
 }
 
-void Terrain::GenerateTerrainMapLowRes() {
+void Terrain::GenerateTerrainMapLowRes(EntityList* entities) {
+    vector_const<int, 128> groundedEntities;
+    for (int i = 0; i < 128; i++) {
+        Entity& entity = (*entities)[i];
+        if (!entity.alive_) continue;
+
+        if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
+            groundedEntities.push_back(i);
+    }
+
     for (int x = 0; x < RESOLUTION_LOW; x++) {
     for (int y = 0; y < RESOLUTION_LOW; y++) {
         affectMapLow_[x][y] = 0;
@@ -219,9 +243,25 @@ void Terrain::GenerateTerrainMapLowRes() {
     resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)terrainMapLow_);
     lowRes_ = true;
     highResDirty_ = true;
+
+    for (int entityIndex : groundedEntities) {
+        Entity& entity = (*entities)[entityIndex];
+        entity.transform_.position.y = GetHeight(entity.transform_.position);
+    }
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {
+    if (lowRes_) {
+        x *= WORLD_TO_TERRAIN_SCALAR_LOW;
+        x += HALF_RESOLUTION_LOW;
+        y *= WORLD_TO_TERRAIN_SCALAR_LOW;
+        y += HALF_RESOLUTION_LOW;
+
+        int sX = (int)x % RESOLUTION_LOW;
+        int sY = (int)y % RESOLUTION_LOW;
+        return terrainMapLow_[sY][sX];
+    }
+
     switch (accuracy) {
         case TA_Normal: {
             x *= WORLD_TO_TERRAIN_SCALAR;

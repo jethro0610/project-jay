@@ -17,8 +17,6 @@ ParticleEmitter* ParticleManager::RequestEmitter() {
     emitter.alive_ = true;
     emitters_[emitterIndex].properties_ = {};
 
-    DEBUGLOG("Request emitter: " << emitterIndex);
-
     // TODO: Set particles array to 0 on emitter
     return &emitters_[emitterIndex]; 
 }
@@ -36,9 +34,8 @@ void ParticleManager::Update(float deltaTime) {
 
         // Only release once the emitter is finished
         if (emitters_[i].release_ && emitters_[i].particles_.size() == 0) {
-            emitters_[i] = ParticleEmitter();
+            emitters_[i].Reset();
             usableEmitters_.push_front(i);
-            DEBUGLOG("Freed emitter: " << i);
         }
     }
 }

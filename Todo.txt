@@ -1,3 +1,4 @@
+- Adjust heights on every terrain phase
 - Gaussian Blur terrain
 - Adjust camera height
 - Phase token

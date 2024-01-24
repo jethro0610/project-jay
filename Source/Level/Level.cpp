@@ -125,8 +125,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
 void Level::StartPhase() {
     phase_ = 0;
-
-    entities_.Reset();
+    Clear();
     SpawnEntitiesInPhase(phase_);
 }
 

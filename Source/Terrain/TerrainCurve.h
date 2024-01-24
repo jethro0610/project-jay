@@ -8,6 +8,7 @@ public:
     static constexpr int MAX = 8;
     static constexpr int ITERATIONS = 10;
     glm::vec4 points[4];
+    bool destroy_;
     #ifdef _DEBUG
     int DBG_selectedPoint_;
     #endif

@@ -40,7 +40,13 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
+    bool DestroyControls();
+
     void GenerateTerrainMap(bool lowRes = false, EntityList* entities = nullptr);
+
+    TerrainBubble* AddBubble(glm::vec3 position);
+    TerrainCurve* AddCurve(glm::vec3 position);
+
     int area_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
@@ -50,7 +56,6 @@ public:
     Material curveMaterial_;
     Material curveControlMaterial_;
     bool lowRes_;
-    bool highResDirty_;
 
 private:
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];

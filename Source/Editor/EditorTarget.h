@@ -15,6 +15,7 @@ public:
     void SetEntity(Entity* target);
     void SetCurve(TerrainCurve* target, int point);
     void SetBubble(TerrainBubble* target);
+    void Destroy();
     bool IsEntity() { return entity_ != nullptr; }
     bool IsTerrainControl() { return bubble_ != nullptr || curve_ != nullptr; }
     bool HasTarget() { return entity_ != nullptr | bubble_ != nullptr | curve_ != nullptr; }; 

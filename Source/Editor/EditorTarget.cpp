@@ -26,6 +26,17 @@ void EditorTarget::Untarget() {
     name_ = "";
 }
 
+void EditorTarget::Destroy() {
+    if (entity_ != nullptr)
+        entity_->destroy_ = true;
+    else if (bubble_ != nullptr)
+        bubble_->destroy_ = true;
+    else if (curve_ != nullptr)
+        curve_->destroy_ = true;
+
+    Untarget();
+}
+
 void EditorTarget::SetEntity(Entity* target) {
     assert(target != nullptr);
     Untarget();
@@ -41,7 +52,7 @@ void EditorTarget::SetBubble(TerrainBubble* target) {
     bubble_ = target;
 
     bubble_->DBG_selected_ = true;
-    name_ = "tr_bubble";
+    name_ = "e_bubble";
 }
 
 void EditorTarget::SetCurve(TerrainCurve* target, int point) {
@@ -51,7 +62,7 @@ void EditorTarget::SetCurve(TerrainCurve* target, int point) {
     curvePoint_ = point;
 
     curve_->DBG_selectedPoint_ = point;
-    name_ = "tr_curve";
+    name_ = "e_curve";
 }
 
 glm::vec3 EditorTarget::GetPosition() {

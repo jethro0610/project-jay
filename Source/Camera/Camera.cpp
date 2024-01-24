@@ -31,9 +31,7 @@ mat4 Camera::GetViewOnlyMatrix() const {
 void Camera::Update(EntityList& entities, Inputs& inputs) {
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
-    lookY_ += inputs.deltaLookY;
-
-    lookY_ = clamp(lookY_, radians(-50.0f), radians(5.0f));
+    lookY_ = radians(-25.0f);
     vec3 trackPosition = target_->renderTransform_.position;
     smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
     if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {

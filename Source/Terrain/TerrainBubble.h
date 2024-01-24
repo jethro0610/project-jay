@@ -8,6 +8,7 @@ class TerrainBubble {
 public:
     static constexpr int MAX = 8;
     glm::vec4 position;
+    bool destroy_;
     #ifdef _DEBUG
     bool DBG_selected_;
     #endif

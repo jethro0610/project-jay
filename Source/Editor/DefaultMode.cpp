@@ -107,9 +107,8 @@ void DefaultMode::Update() {
             break;
     }
 
-    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.HasTarget()&& target_.IsEntity()) {
-        target_.GetEntity()->destroy_ = true;
-        target_.Untarget();
+    if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.HasTarget()) {
+        target_.Destroy();
     }
 }
 

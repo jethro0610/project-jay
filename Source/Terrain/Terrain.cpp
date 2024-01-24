@@ -19,13 +19,13 @@ Terrain::Terrain(
 resourceManager_(resourceManager)
 {
     lowRes_ = true;
-    highResDirty_ = true;
 
     bubbles_.clear();
     curves_.clear();
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
         terrainMap_[x][y] = vec2(0.0f);
+        terrainMapLow_[x][y] = vec2(0.0f);
     } }
 
     nodeModel_ = resourceManager.GetModel("st_default");
@@ -36,17 +36,58 @@ resourceManager_(resourceManager)
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
 
-    bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
-    bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
-    bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
-    bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
+    // bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
+    // bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
+    // bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
+    // bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
+    //
+    // TerrainCurve curve;
+    // curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
+    // curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
+    // curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
+    // curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
+    // curves_.push_back(curve);
+}
 
+TerrainBubble* Terrain::AddBubble(vec3 position) {
+    int bubbleIdx = bubbles_.push_back({vec4(position, 50.0f), false, false});
+    return &bubbles_[bubbleIdx];
+}
+
+TerrainCurve* Terrain::AddCurve(vec3 position) {
+    vec4 pos = vec4(position, 50.0f);
     TerrainCurve curve;
-    curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
-    curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
-    curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
-    curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
-    curves_.push_back(curve);
+    curve.destroy_ = false;
+    curve.DBG_selectedPoint_ = -1;
+    for (int i = 0; i < 4; i++) {
+        curve.points[i] = pos + vec4(i * 50.0f, 0.0f, 0.0f, 0.0f);
+    }
+    int curveIdx = curves_.push_back(curve);
+    return &curves_[curveIdx];
+}
+
+bool Terrain::DestroyControls() {
+    bool destroyed = false;
+    int i = 0;
+    while(i < bubbles_.size()) {
+        while (i < bubbles_.size() && bubbles_[i].destroy_) {
+            destroyed = true;
+            bubbles_[i].destroy_ = false;
+            bubbles_.remove(i);
+        }
+        i++;
+    }
+
+    while(i < curves_.size()) {
+        while (i < bubbles_.size() && curves_[i].destroy_) {
+            destroyed = true;
+            curves_[i].destroy_ = false;
+            curves_.remove(i);
+        }
+        i++;
+    }
+
+    return destroyed;
 }
 
 struct InverseInfluence {
@@ -145,7 +186,6 @@ void BaseGenerateTerrainMapSection(
 
 template <const int RES>
 void BaseGenerateTerrainMap(
-    EntityList* entities,
     glm::vec2 terrainMap[RES][RES],
     uint32_t affectMap[RES][RES],
     vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
@@ -184,29 +224,28 @@ void BaseGenerateTerrainMap(
 
 void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
     vector_const<int, 128> groundedEntities;
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = (*entities)[i];
-        if (!entity.alive_) continue;
+    if (entities != nullptr) {
+        for (int i = 0; i < 128; i++) {
+            Entity& entity = (*entities)[i];
+            if (!entity.alive_) continue;
 
-        if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
-            groundedEntities.push_back(i);
+            if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
+                groundedEntities.push_back(i);
+        }
     }
 
     if (lowRes) {
         BaseGenerateTerrainMap<RESOLUTION_LOW>(
-            entities, 
             terrainMapLow_, 
             affectMapLow_, 
             bubbles_, 
             curves_
         );
         lowRes_ = true;
-        highResDirty_ = true;
         resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)terrainMapLow_);
     }
     else {
         BaseGenerateTerrainMap<RESOLUTION>(
-            entities, 
             terrainMap_, 
             affectMap_, 
             bubbles_, 
@@ -214,7 +253,6 @@ void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
         );
         resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
         lowRes_ = false;
-        highResDirty_ = false;
 
         area_ = 0;
         for (int x = 0; x < RESOLUTION; x++) {
@@ -270,8 +308,8 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
             y *= WORLD_TO_TERRAIN_SCALAR;
             y += HALF_RESOLUTION;
 
-            int sX = (int)x % RESOLUTION;//std::clamp((int)x, 0, RESOLUTION);
-            int sY = (int)y % RESOLUTION;//std::clamp((int)y, 0, RESOLUTION);
+            int sX = (int)x % RESOLUTION;
+            int sY = (int)y % RESOLUTION;
             return terrainMap_[sY][sX];
         }
         
@@ -307,11 +345,6 @@ float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
 
 float Terrain::GetHeight(const vec3& position, TerrainAccuracy accuracy) const {
     float height = GetHeight(vec2(position.x, position.z), accuracy);
-    // If the position is below 10 units of the ground,
-    // count it as un grounded
-    // if (position.y < height - 10.0f)
-    //     return -INFINITY;
-
     return height;
 }
 

@@ -1,3 +1,5 @@
+- Gaussian Blur terrain
+- Adjust camera height
 - Phase token
 
 - Pillars on test level are bell towers 

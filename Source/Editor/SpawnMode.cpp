@@ -9,6 +9,7 @@
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
 #include "EditorNotification.h"
+#include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
 SpawnMode::SpawnMode(EditorModeArgs args):
@@ -39,7 +40,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
 
         scanPosition += camera_.transform_.GetForwardVector() * distanceFromGround;
     }
-    if (distanceFromGround > 0.5f)
+    if (distanceFromGround > 0.5f || any(isnan(scanPosition)))
         scanPosition = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
 
     if (name == "e_bubble") {

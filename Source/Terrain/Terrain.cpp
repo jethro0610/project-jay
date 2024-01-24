@@ -79,7 +79,7 @@ bool Terrain::DestroyControls() {
     }
 
     while(i < curves_.size()) {
-        while (i < bubbles_.size() && curves_[i].destroy_) {
+        while (i < curves_.size() && curves_[i].destroy_) {
             destroyed = true;
             curves_[i].destroy_ = false;
             curves_.remove(i);
@@ -146,7 +146,7 @@ void BaseGenerateTerrainMapSection(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / EaseInOutCubic(influence.distance);
+                float inverseDistance = 1.0f / EaseInOutQuad(influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }

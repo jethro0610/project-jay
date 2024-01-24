@@ -25,7 +25,7 @@ ConfirmBehavior NewLevelMode::OnConfirm() {
 }
 
 ConfirmBehavior NewLevelMode::PostConfirm() {
-    level_.Clear();
+    level_.Clear(true);
     level_.loaded_ = true;
     level_.DBG_name_ = "lv_" + textInput_.Get();
     for (int i = 0; i < Level::MAX_PHASES; i++)

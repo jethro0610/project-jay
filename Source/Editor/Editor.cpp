@@ -112,7 +112,6 @@ void Editor::StopEditing() {
     target_.Untarget();
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
-    terrain_.GenerateTerrainMap();
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");

@@ -27,7 +27,7 @@ public:
     void StartPhase();
     void NextPhase();
     void SpawnEntitiesInPhase(int phase, bool persistEntities = false);
-    void Clear();
+    void Clear(bool clearTerrain = false);
     nlohmann::json phases_[MAX_PHASES];
     LevelProperties properties_;
     bool loaded_;

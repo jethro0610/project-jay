@@ -91,8 +91,26 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             properties_.noiseLayers[i].multiplier = noiseLayerData["multiplier"];
             properties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
         }
+        
+        for (auto& bubbleData : levelData["bubbles"]) {
+            TerrainBubble bubble;
+            bubble.destroy_ = false;
+            bubble.DBG_selected_ = false;
+            bubble.position = GetVec4(bubbleData);
+            terrain_.bubbles_.push_back(bubble);
+        }
 
-        // terrain_.GenerateTerrainMap(properties_.blob);
+        for (auto& curveData: levelData["curves"]) {
+            TerrainCurve curve;
+            curve.destroy_ = false;
+            curve.DBG_selectedPoint_ = -1;
+
+            for (int i = 0; i < 4; i++) {
+                curve.points[i] = GetVec4(curveData[i]);
+            }
+            terrain_.curves_.push_back(curve);
+        }
+        terrain_.GenerateTerrainMap();
     }
 
     for (int i = 0; i < MAX_PHASES; i++)
@@ -210,6 +228,32 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     for (int i = 0; i < MAX_PHASES; i++)
         levelData["phases"].push_back(phases_[i]);
 
+    for (int i = 0; i < terrain_.bubbles_.size(); i++) {
+        TerrainBubble& bubble = terrain_.bubbles_[i];
+        nlohmann::json bubbleData;
+
+        bubbleData["x"] = bubble.position.x;
+        bubbleData["y"] = bubble.position.y;
+        bubbleData["z"] = bubble.position.z;
+        bubbleData["w"] = bubble.position.w;
+        levelData["bubbles"].push_back(bubbleData);
+    }
+
+    for (int i = 0; i < terrain_.curves_.size(); i++) {
+        TerrainCurve& curve = terrain_.curves_[i];
+        nlohmann::json curveData;
+
+        for (int j = 0; j < 4; j++) {
+            nlohmann::json pointData;
+            pointData["x"] = curve.points[j].x;
+            pointData["y"] = curve.points[j].y;
+            pointData["z"] = curve.points[j].z;
+            pointData["w"] = curve.points[j].w;
+            curveData.push_back(pointData);
+        }
+        levelData["curves"].push_back(curveData);
+    }
+
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
     assetLevelFile << std::setw(4) << levelData << std::endl;
     assetLevelFile.close();
@@ -239,9 +283,15 @@ void Level::TogglePersistView() {
 }
 #endif
 
-void Level::Clear() {
+void Level::Clear(bool clearTerrain) {
     entities_.Reset();
     particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
+
+    if (clearTerrain) {
+        terrain_.bubbles_.clear();
+        terrain_.curves_.clear();
+        terrain_.GenerateTerrainMap();
+    }
 }

@@ -6,7 +6,7 @@ using namespace glm;
 using namespace TerrainConsts;
 
 vec4 TerrainCurve::GetPosition(float t) const {
-    t = clamp(t, 0.0f, 1.0f);
+    // t = clamp(t, 0.0f, 1.0f);
     float invT = 1.0f - t;
 
     vec4 point = vec4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -51,6 +51,31 @@ TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos) const {
                 pivot = clamp(t, 0.0f, 1.0f);
             }
         }
+    }
+
+    if (pivot == 0.0f) {
+        vec4 direction4D = points[0] - GetPosition(0.05f); 
+
+        vec2 direction = vec2(direction4D.x, direction4D.z);
+        float directionLen = length(direction);
+        float riseRate = (direction4D.y / directionLen) * points[0].w;
+        direction /= directionLen;
+
+        vec2 directionToSample = pos - vec2(points[0].x, points[0].z);
+        float d = dot(direction, directionToSample) / points[0].w;
+        nearestHeight = points[0].y + riseRate * d;
+    }
+    else if (pivot == 1.0f) {
+        vec4 direction4D = GetPosition(0.95f) - points[3]; 
+
+        vec2 direction = vec2(direction4D.x, direction4D.z);
+        float directionLen = length(direction);
+        float riseRate = (direction4D.y / directionLen) * points[3].w;
+        direction /= directionLen;
+
+        vec2 directionToSample = pos - vec2(points[3].x, points[3].z);
+        float d = dot(direction, directionToSample) / points[3].w;
+        nearestHeight = points[3].y + riseRate * d;
     }
 
     TerrainInfluence influence;

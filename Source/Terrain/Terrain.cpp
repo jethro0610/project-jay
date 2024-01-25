@@ -90,6 +90,48 @@ bool Terrain::DestroyControls() {
     return destroyed;
 }
 
+template <const int RES, const int RADIUS>
+void GaussianBlur(glm::vec2 terrainMap[RES][RES]) {
+    const float SIGMA = 1.0f;
+    const int LENGTH = RADIUS * 2 + 1;
+    float weights[LENGTH][LENGTH];
+    float values[RES][RES];
+    float sum = 0.0f;
+
+    for (int i = 0; i < LENGTH; i++) {
+    for (int j = 0; j < LENGTH; j++) {
+        int gI = i - RADIUS;
+        int gJ = j - RADIUS;
+
+        float coeff = 1.0f / 2 * pi<float>() * SIGMA * SIGMA;
+        float expo = (gI * gI + gJ * gJ) / 2.0f * SIGMA * SIGMA;
+        weights[i][j] = coeff * expf(-expo);
+        sum += weights[i][j];
+    }}
+
+    for (int i = 0; i < LENGTH; i++) {
+    for (int j = 0; j < LENGTH; j++) {
+        weights[i][j] /= sum;
+    }}
+
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        float value = 0;
+        for (int i = 0; i < LENGTH; i++) {
+        for (int j = 0; j < LENGTH; j++) {
+            int sX = clamp(x + i - RADIUS, 0, RES - 1);
+            int sY = clamp(y + i - RADIUS, 0, RES - 1);
+            value += weights[i][j] * terrainMap[sX][sY].y;
+        }}
+        values[x][y] = value;
+    }}
+
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        terrainMap[x][y].y = values[x][y];
+    }}
+}
+
 struct InverseInfluence {
     float inverseWeight;
     float height;
@@ -146,7 +188,7 @@ void BaseGenerateTerrainMapSection(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / EaseInOutQuad(influence.distance);
+                float inverseDistance = 1.0f / (influence.distance * influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }
@@ -165,7 +207,7 @@ void BaseGenerateTerrainMapSection(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / EaseInOutCubic(influence.distance);
+                float inverseDistance = 1.0f / (influence.distance * influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }

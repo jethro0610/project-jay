@@ -58,11 +58,11 @@ TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos) const {
 
         vec2 direction = vec2(direction4D.x, direction4D.z);
         float directionLen = length(direction);
-        float riseRate = (direction4D.y / directionLen) * points[0].w;
+        float riseRate = direction4D.y / directionLen;
         direction /= directionLen;
 
         vec2 directionToSample = pos - vec2(points[0].x, points[0].z);
-        float d = dot(direction, directionToSample) / points[0].w;
+        float d = dot(direction, directionToSample);
         nearestHeight = points[0].y + riseRate * d;
     }
     else if (pivot == 1.0f) {
@@ -70,11 +70,11 @@ TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos) const {
 
         vec2 direction = vec2(direction4D.x, direction4D.z);
         float directionLen = length(direction);
-        float riseRate = (direction4D.y / directionLen) * points[3].w;
+        float riseRate = direction4D.y / directionLen;
         direction /= directionLen;
 
         vec2 directionToSample = pos - vec2(points[3].x, points[3].z);
-        float d = dot(direction, directionToSample) / points[3].w;
+        float d = dot(direction, directionToSample);
         nearestHeight = points[3].y + riseRate * d;
     }
 

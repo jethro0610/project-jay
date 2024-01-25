@@ -68,7 +68,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     if (!inFile.is_open())
         return false;
 
-    Clear();
+    Clear(loadTerrain);
     nlohmann::json levelData = nlohmann::json::parse(inFile);
 
     DependencyList deps; 

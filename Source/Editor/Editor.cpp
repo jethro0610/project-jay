@@ -181,7 +181,8 @@ void Editor::Update() {
     
     if (level_.loaded_) {
         bool terrainDestroyed = terrain_.DestroyControls();
-        if (target_.IsTerrainControl() && mode_ != &defaultMode_)
+        bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
+        if (target_.IsTerrainControl() && isTransformMode)
             terrain_.GenerateTerrainMap(true, &entities_);
         else if (terrain_.lowRes_)
             terrain_.GenerateTerrainMap(false, &entities_);

@@ -188,7 +188,7 @@ void BaseGenerateTerrainMapSection(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / (influence.distance * influence.distance);
+                float inverseDistance = 1.0f / EaseInOutQuad(influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }
@@ -207,7 +207,7 @@ void BaseGenerateTerrainMapSection(
                 break;
             }
             else if (influence.distance <= 1.0f) {
-                float inverseDistance = 1.0f / (influence.distance * influence.distance);
+                float inverseDistance = 1.0f / EaseInOutQuad(influence.distance);
                 inverseDistance -= 1.0f;
                 inverseInfluences.push_back({inverseDistance, influence.height});
             }

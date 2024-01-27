@@ -30,12 +30,7 @@ Platform::Platform() {
     DEBUGLOG("Starting PC platform w/ GLFW...");
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
-    #ifdef _WINDOWS
-    window_ = glfwCreateWindow(1920, 1080, "Project Jay", NULL, NULL);
-    #else
     window_ = glfwCreateWindow(1280, 720, "Project Jay", NULL, NULL);
-    #endif
 
     glfwSetKeyCallback(window_, KeyCallback); 
 

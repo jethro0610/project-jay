@@ -25,6 +25,8 @@ void Player::Init(Entity::InitArgs args)
 {
     Entity::Init(args);
 
+    traceDistance_ = 10.0f;
+
     moveMode_ = MM_Default;
     speed_ = MIN_SPEED;
     tilt_ = 0.0f;
@@ -35,6 +37,7 @@ void Player::Init(Entity::InitArgs args)
     lastAttackCharge_ = 0;
     chargeBoost_ = false;
     boostAmount_ = 0;
+    spinTime_ = 0;
 
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
@@ -255,6 +258,12 @@ void Player::Update() {
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     speed_ = min(MAX_SPEED, length(planarVelocity));
 
+    if (moveMode_ == MM_Spin)
+        spinTime_ += 1;
+    else
+        spinTime_ -= 2;
+    spinTime_ = clamp(spinTime_, 0, 120);
+
     velocity_.y -= 1.0f;
     switch (moveMode_) {
         case MM_Default: {
@@ -275,7 +284,7 @@ void Player::Update() {
         case MM_Boost: {
             velocity_.x *= speedDecay;
             velocity_.z *= speedDecay;
-            speed_ -= MOMENTUM_DECAY;
+            // speed_ *= 0.999;
             speed_ = max(speed_, MIN_SPEED);
             break;
         }
@@ -287,6 +296,9 @@ void Player::Update() {
             transform_.rotation = slerp(transform_.rotation, rotation, SPIN_ROTATION_SPEED);
             vec3 direction = transform_.rotation * Transform::worldForward;
             
+            if (spinTime_ >= 120)
+                speed_ *= 0.99f;
+
             velocity_.x = direction.x * speed_;
             velocity_.z = direction.z * speed_;
             break;
@@ -404,6 +416,7 @@ void Player::Update() {
 
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(boostAmount_));
+    SCREENLINE(3, std::to_string(spinTime_));
 }
 
 void Player::RenderUpdate() {

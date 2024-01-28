@@ -8,6 +8,7 @@
 #include "Spread/SpreadManager.h"
 #include "Logging/Logger.h"
 #include "Logging/ScreenText.h"
+#include "Time/Time.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -24,8 +25,6 @@ EntityDependendies Player::GetDeps() {
 void Player::Init(Entity::InitArgs args)
 {
     Entity::Init(args);
-
-    traceDistance_ = 10.0f;
 
     moveMode_ = MM_Default;
     speed_ = MIN_SPEED;
@@ -413,6 +412,7 @@ void Player::Update() {
     else
         tilt_ = 0.0f;
 
+    traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 1.0f);
 
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(boostAmount_));

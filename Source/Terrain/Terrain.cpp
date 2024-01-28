@@ -36,17 +36,91 @@ resourceManager_(resourceManager)
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
 
-    // bubbles_.push_back({vec4(0.0f, 12.0f, 25.0f, 100.0f)});
-    // bubbles_.push_back({vec4(50.0f, 16.0f, 50.0f, 150.0f)});
-    // bubbles_.push_back({vec4(-100.0f, 18.0f, -150.0f, 175.0f)});
-    // bubbles_.push_back({vec4(-75.0f, 6.0f, -0.0f, 125.0f)});
-    //
-    // TerrainCurve curve;
-    // curve.points[0] = vec4(-50.0f, -12.0f, -50.0f, 80.0f);
-    // curve.points[1] = vec4(0.0f, -18.0f, 50.0f, 20.0f);
-    // curve.points[2] = vec4(50.0f, -14.0f, 50.0f, 20.0f);
-    // curve.points[3] = vec4(110.0f, -12.0f, -60.0f, 80.0f);
-    // curves_.push_back(curve);
+    GenerateBlob();
+}
+
+template <const int RES, const int RADIUS>
+void GaussianBlur(glm::vec2 terrainMap[RES][RES]) {
+    const float SIGMA = 1.0f;
+    const int LENGTH = RADIUS * 2 + 1;
+    float weights[LENGTH][LENGTH];
+    float values[RES][RES];
+    float sum = 0.0f;
+
+    for (int i = 0; i < LENGTH; i++) {
+    for (int j = 0; j < LENGTH; j++) {
+        int gI = i - RADIUS;
+        int gJ = j - RADIUS;
+
+        float coeff = 1.0f / 2 * pi<float>() * SIGMA * SIGMA;
+        float expo = (gI * gI + gJ * gJ) / 2.0f * SIGMA * SIGMA;
+        weights[i][j] = coeff * expf(-expo);
+        sum += weights[i][j];
+    }}
+
+    for (int i = 0; i < LENGTH; i++) {
+    for (int j = 0; j < LENGTH; j++) {
+        weights[i][j] /= sum;
+    }}
+
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        float value = 0;
+        for (int i = 0; i < LENGTH; i++) {
+        for (int j = 0; j < LENGTH; j++) {
+            int sX = clamp(x + i - RADIUS, 0, RES - 1);
+            int sY = clamp(y + i - RADIUS, 0, RES - 1);
+            value += weights[i][j] * terrainMap[sX][sY].x;
+        }}
+        values[x][y] = value;
+    }}
+
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        terrainMap[x][y].x = values[x][y];
+    }}
+}
+
+void Terrain::GenerateBlob() {
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        int cX = x - RESOLUTION / 2;
+        int cY = y - RESOLUTION / 2;
+        float d = sqrt(cX * cX + cY * cY);
+        if (d > 128 || d < 32)
+            blobMap_[x][y] = false;
+        else
+            blobMap_[x][y] = true;
+    }}
+
+    std::vector<glm::ivec2> edges;
+    edges.reserve(RESOLUTION * RESOLUTION);
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        if (blobMap_[x][y] == false)
+            continue;
+
+        if (blobMap_[max(x - 1, 0)][y] == false)
+            edges.push_back({x, y});
+        else if (blobMap_[min(x + 1, RESOLUTION - 1)][y] == false)
+            edges.push_back({x, y});
+        else if (blobMap_[x][max(y - 1, 0)] == false)
+            edges.push_back({x, y});
+        else if (blobMap_[x][min(y + 1, RESOLUTION - 1)] == false)
+            edges.push_back({x, y});
+    }}
+
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        float distance = INFINITY;
+        float multiplier = blobMap_[x][y] ? -1.0f : 1.0f;
+        for (const glm::ivec2& edge : edges) {
+            float dx = edge.x - x;
+            float dy = edge.y - y;
+            distance = std::min(dx * dx + dy * dy, distance);
+        }
+        terrainMap_[y][x].x = sqrt(distance) * multiplier;
+    }}
 }
 
 TerrainBubble* Terrain::AddBubble(vec3 position) {
@@ -90,48 +164,6 @@ bool Terrain::DestroyControls() {
     return destroyed;
 }
 
-template <const int RES, const int RADIUS>
-void GaussianBlur(glm::vec2 terrainMap[RES][RES]) {
-    const float SIGMA = 1.0f;
-    const int LENGTH = RADIUS * 2 + 1;
-    float weights[LENGTH][LENGTH];
-    float values[RES][RES];
-    float sum = 0.0f;
-
-    for (int i = 0; i < LENGTH; i++) {
-    for (int j = 0; j < LENGTH; j++) {
-        int gI = i - RADIUS;
-        int gJ = j - RADIUS;
-
-        float coeff = 1.0f / 2 * pi<float>() * SIGMA * SIGMA;
-        float expo = (gI * gI + gJ * gJ) / 2.0f * SIGMA * SIGMA;
-        weights[i][j] = coeff * expf(-expo);
-        sum += weights[i][j];
-    }}
-
-    for (int i = 0; i < LENGTH; i++) {
-    for (int j = 0; j < LENGTH; j++) {
-        weights[i][j] /= sum;
-    }}
-
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        float value = 0;
-        for (int i = 0; i < LENGTH; i++) {
-        for (int j = 0; j < LENGTH; j++) {
-            int sX = clamp(x + i - RADIUS, 0, RES - 1);
-            int sY = clamp(y + i - RADIUS, 0, RES - 1);
-            value += weights[i][j] * terrainMap[sX][sY].y;
-        }}
-        values[x][y] = value;
-    }}
-
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        terrainMap[x][y].y = values[x][y];
-    }}
-}
-
 struct InverseInfluence {
     float inverseWeight;
     float height;
@@ -148,21 +180,6 @@ void BaseGenerateTerrainMapSection(
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
-
-    FastNoiseLite noise;
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        vec2 pos = vec2(x - HALF_RES + 0.5f, y - HALF_RES + 0.5f);
-        vec2 samplePos = normalize(pos);
-        samplePos *= 150;
-        float noiseVal = noise.GetNoise(samplePos.x, samplePos.y);
-        noiseVal = (noiseVal + 1.0f) * 0.5f;
-
-        float blobRadius = lerp(150.0f, 200.0f, noiseVal);
-        float curRadius = length(pos) / WORLD_TO_TERRAIN;
-
-        terrainMap[y][x].x = curRadius - blobRadius;
-    } }
 
     for (int x = start.x; x < end.x; x++) {
     for (int y = start.y; y < end.y; y++) {

@@ -63,6 +63,9 @@ private:
     Texture* terrainMapTexture_;
     ResourceManager& resourceManager_;
 
+    bool blobMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
+    void GenerateBlob();
+
     #ifdef _DEBUG
     glm::vec2 terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
     uint32_t affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];

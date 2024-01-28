@@ -24,11 +24,14 @@ SAMPLER2D(s_terrainMap, 15);
 #define INLINE 
 
 #endif
+INLINE float Ease(float x) {
+    return x < 0.5 ? 2 * x * x : 1 - pow(-2 * x + 2, 2) / 2;
+}
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
-    float edgeDistance = max((pos.x + GET_TC_VAR(EDGE_OFFSET)) * 0.1f, 0.0f);
-    pos.y += min(0.0f, -(edgeDistance * edgeDistance));
+    float edgeDistance = max(pos.x * 0.25f, 0.0f);
+    pos.y -= edgeDistance * edgeDistance;
     return pos;
 }
 

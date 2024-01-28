@@ -117,8 +117,10 @@ void Terrain::GenerateBlob() {
         for (const glm::ivec2& edge : edges) {
             float dx = edge.x - x;
             float dy = edge.y - y;
-            distance = std::min(dx * dx + dy * dy, distance);
+            float d = dx * dx + dy * dy;
+            distance = std::min(d, distance);
         }
+
         terrainMap_[y][x].x = sqrt(distance) * multiplier;
     }}
 }

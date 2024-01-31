@@ -110,7 +110,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             }
             terrain_.curves_.push_back(curve);
         }
-        terrain_.GenerateTerrainMap();
+        terrain_.GenerateTerrainHeights();
     }
 
     for (int i = 0; i < MAX_PHASES; i++)
@@ -291,6 +291,6 @@ void Level::Clear(bool clearTerrain) {
     if (clearTerrain) {
         terrain_.bubbles_.clear();
         terrain_.curves_.clear();
-        terrain_.GenerateTerrainMap();
+        terrain_.GenerateTerrainHeights();
     }
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "BlobEditMode.h"
 #include "CloneMode.h"
 #include "DefaultMode.h"
 #include "FindMode.h"

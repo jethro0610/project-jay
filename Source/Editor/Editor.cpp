@@ -183,11 +183,11 @@ void Editor::Update() {
         bool terrainDestroyed = terrain_.DestroyControls();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
         if (target_.IsTerrainControl() && isTransformMode)
-            terrain_.GenerateTerrainMap(true, &entities_);
+            terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.lowRes_)
-            terrain_.GenerateTerrainMap(false, &entities_);
+            terrain_.GenerateTerrainHeights(false, &entities_);
         else if (terrainDestroyed)
-            terrain_.GenerateTerrainMap(false, &entities_);
+            terrain_.GenerateTerrainHeights(false, &entities_);
 
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {

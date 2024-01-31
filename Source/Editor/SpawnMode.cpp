@@ -46,13 +46,13 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     if (name == "e_bubble") {
         TerrainBubble* bubble = terrain_.AddBubble(scanPosition);
         target_.SetBubble(bubble);
-        terrain_.GenerateTerrainMap(false, &entities_);
+        // terrain_.GenerateTerrainMap(false, &entities_);
         return CB_Default;
     }
     else if (name == "e_curve") {
         TerrainCurve* curve = terrain_.AddCurve(scanPosition);
         target_.SetCurve(curve, 0);
-        terrain_.GenerateTerrainMap(false, &entities_);
+        // terrain_.GenerateTerrainMap(false, &entities_);
         return CB_Default;
     }
 

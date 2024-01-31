@@ -36,77 +36,35 @@ resourceManager_(resourceManager)
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
 
-    GenerateBlob();
+    GenerateTerrainDistances();
 }
 
-template <const int RES, const int RADIUS>
-void GaussianBlur(glm::vec2 terrainMap[RES][RES]) {
-    const float SIGMA = 1.0f;
-    const int LENGTH = RADIUS * 2 + 1;
-    float weights[LENGTH][LENGTH];
-    float values[RES][RES];
-    float sum = 0.0f;
-
-    for (int i = 0; i < LENGTH; i++) {
-    for (int j = 0; j < LENGTH; j++) {
-        int gI = i - RADIUS;
-        int gJ = j - RADIUS;
-
-        float coeff = 1.0f / 2 * pi<float>() * SIGMA * SIGMA;
-        float expo = (gI * gI + gJ * gJ) / 2.0f * SIGMA * SIGMA;
-        weights[i][j] = coeff * expf(-expo);
-        sum += weights[i][j];
-    }}
-
-    for (int i = 0; i < LENGTH; i++) {
-    for (int j = 0; j < LENGTH; j++) {
-        weights[i][j] /= sum;
-    }}
-
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        float value = 0;
-        for (int i = 0; i < LENGTH; i++) {
-        for (int j = 0; j < LENGTH; j++) {
-            int sX = clamp(x + i - RADIUS, 0, RES - 1);
-            int sY = clamp(y + i - RADIUS, 0, RES - 1);
-            value += weights[i][j] * terrainMap[sX][sY].x;
-        }}
-        values[x][y] = value;
-    }}
-
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        terrainMap[x][y].x = values[x][y];
-    }}
-}
-
-void Terrain::GenerateBlob() {
+void Terrain::GenerateTerrainDistances() {
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
         int cX = x - RESOLUTION / 2;
         int cY = y - RESOLUTION / 2;
         float d = sqrt(cX * cX + cY * cY);
-        if (d > 128 || d < 32)
-            blobMap_[x][y] = false;
-        else
+        if (d <= 128 && d >= 32)
             blobMap_[x][y] = true;
+        else
+            blobMap_[x][y] = false; 
     }}
 
     std::vector<glm::ivec2> edges;
     edges.reserve(RESOLUTION * RESOLUTION);
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
-        if (blobMap_[x][y] == false)
+        if (!blobMap_[x][y])
             continue;
 
-        if (blobMap_[max(x - 1, 0)][y] == false)
+        if (!blobMap_[max(x - 1, 0)][y])
             edges.push_back({x, y});
-        else if (blobMap_[min(x + 1, RESOLUTION - 1)][y] == false)
+        else if (!blobMap_[min(x + 1, RESOLUTION - 1)][y])
             edges.push_back({x, y});
-        else if (blobMap_[x][max(y - 1, 0)] == false)
+        else if (!blobMap_[x][max(y - 1, 0)])
             edges.push_back({x, y});
-        else if (blobMap_[x][min(y + 1, RESOLUTION - 1)] == false)
+        else if (!blobMap_[x][min(y + 1, RESOLUTION - 1)])
             edges.push_back({x, y});
     }}
 
@@ -121,6 +79,8 @@ void Terrain::GenerateBlob() {
         }
         terrainMap_[y][x].x = sqrt(distance) * multiplier;
     }}
+
+    resourceManager_.UpdateTerrainBlobTexture((uint8_t*)blobMap_);
 }
 
 TerrainBubble* Terrain::AddBubble(vec3 position) {
@@ -170,7 +130,7 @@ struct InverseInfluence {
 };
 
 template <const int RES>
-void BaseGenerateTerrainMapSection(
+void BaseGenerateTerrainHeightsSection(
     const glm::vec2& start,
     const glm::vec2& end,
     glm::vec2 terrainMap[RES][RES],
@@ -244,7 +204,7 @@ void BaseGenerateTerrainMapSection(
 }
 
 template <const int RES>
-void BaseGenerateTerrainMap(
+void BaseGenerateTerrainHeights(
     glm::vec2 terrainMap[RES][RES],
     uint32_t affectMap[RES][RES],
     vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
@@ -267,7 +227,7 @@ void BaseGenerateTerrainMap(
     for (int i = 0; i < cores; i++) {
         int add = (i == cores - 1 && RES % cores != 0) ? 1 : 0;
         threads.push_back(std::thread([terrainMap, bubbles, curves, affectMap, sectionSize, i, add] {
-            BaseGenerateTerrainMapSection<RES>(
+            BaseGenerateTerrainHeightsSection<RES>(
                 ivec2(i * sectionSize, 0),
                 ivec2((i + 1) * sectionSize + add, RES),
                 terrainMap,
@@ -281,7 +241,7 @@ void BaseGenerateTerrainMap(
         thread.join();
 }
 
-void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
+void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -294,7 +254,7 @@ void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
     }
 
     if (lowRes) {
-        BaseGenerateTerrainMap<RESOLUTION_LOW>(
+        BaseGenerateTerrainHeights<RESOLUTION_LOW>(
             terrainMapLow_, 
             affectMapLow_, 
             bubbles_, 
@@ -304,7 +264,7 @@ void Terrain::GenerateTerrainMap(bool lowRes, EntityList* entities) {
         resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)terrainMapLow_);
     }
     else {
-        BaseGenerateTerrainMap<RESOLUTION>(
+        BaseGenerateTerrainHeights<RESOLUTION>(
             terrainMap_, 
             affectMap_, 
             bubbles_, 

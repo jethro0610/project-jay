@@ -43,13 +43,11 @@ public:
 
     void UpdateTerrainMapTexture(glm::vec2* terrainMap);
     void UpdateTerrainMapTextureLow(glm::vec2* terrainMap);
-    void UpdateTerrainBlobTexture(uint8_t* renderBlobMap);
 
 private:
     void LoadGlobals();
     void LoadRenderTextures();
     void CreateTerrainMapTexture();
-    void CreateTerrainBlobTexture();
     void LoadGlobalQuad();
     void LoadGlobalTerrain();
 

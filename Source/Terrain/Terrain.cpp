@@ -5,6 +5,7 @@
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
 #include "Helpers/Ease.h"
+#include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
 #include <thread>
@@ -36,42 +37,19 @@ resourceManager_(resourceManager)
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
 
-    GenerateTerrainDistances();
+    GenerateTerrainDistancesFromTexture();
 }
 
-void Terrain::GenerateTerrainDistances() {
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        int cX = x - RESOLUTION / 2;
-        int cY = y - RESOLUTION / 2;
-        float d = sqrt(cX * cX + cY * cY);
-        if (d <= 128 && d >= 32)
-            blobMap_[x][y] = true;
-        else
-            blobMap_[x][y] = false; 
-    }}
-
-    std::vector<glm::ivec2> edges;
-    edges.reserve(RESOLUTION * RESOLUTION);
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
-        if (!blobMap_[x][y])
-            continue;
-
-        if (!blobMap_[max(x - 1, 0)][y])
-            edges.push_back({x, y});
-        else if (!blobMap_[min(x + 1, RESOLUTION - 1)][y])
-            edges.push_back({x, y});
-        else if (!blobMap_[x][max(y - 1, 0)])
-            edges.push_back({x, y});
-        else if (!blobMap_[x][min(y + 1, RESOLUTION - 1)])
-            edges.push_back({x, y});
-    }}
-
-    for (int x = 0; x < RESOLUTION; x++) {
-    for (int y = 0; y < RESOLUTION; y++) {
+void Terrain::GenerateTerrainDistanceSection(
+    const glm::vec2& start,
+    const glm::vec2& end,
+    const uint8_t blobMap[RESOLUTION][RESOLUTION],
+    const std::vector<glm::ivec2>& edges
+) {
+    for (int x = start.x; x < end.x; x++) {
+    for (int y = start.y; y < end.y; y++) {
         float distance = INFINITY;
-        float multiplier = blobMap_[x][y] ? -1.0f : 1.0f;
+        float multiplier = blobMap[x][y] ? -1.0f : 1.0f;
         for (const glm::ivec2& edge : edges) {
             float dx = edge.x - x;
             float dy = edge.y - y;
@@ -79,8 +57,49 @@ void Terrain::GenerateTerrainDistances() {
         }
         terrainMap_[y][x].x = sqrt(distance) * multiplier;
     }}
+}
 
-    resourceManager_.UpdateTerrainBlobTexture((uint8_t*)blobMap_);
+void Terrain::GenerateTerrainDistancesFromTexture() {
+    uint8_t blobMap[RESOLUTION][RESOLUTION];
+    std::ifstream blobTexture("./blobs/test.data");
+    blobTexture.read((char*)blobMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
+    blobTexture.close();
+
+    std::vector<glm::ivec2> edges;
+    edges.reserve(RESOLUTION * RESOLUTION);
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        if (!blobMap[x][y])
+            continue;
+
+        if (!blobMap[max(x - 1, 0)][y])
+            edges.push_back({x, y});
+        else if (!blobMap[min(x + 1, RESOLUTION - 1)][y])
+            edges.push_back({x, y});
+        else if (!blobMap[x][max(y - 1, 0)])
+            edges.push_back({x, y});
+        else if (!blobMap[x][min(y + 1, RESOLUTION - 1)])
+            edges.push_back({x, y});
+    }}
+
+    std::vector<std::thread> threads;
+    int cores = std::thread::hardware_concurrency();
+    int sectionSize = RESOLUTION / cores;
+
+    for (int i = 0; i < cores; i++) {
+        int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
+        threads.push_back(std::thread(
+                &Terrain::GenerateTerrainDistanceSection,
+                this, 
+                ivec2(i * sectionSize, 0),
+                ivec2((i + 1) * sectionSize + add, RESOLUTION),
+                blobMap,
+                edges
+            )
+        );
+    }
+    for (std::thread& thread : threads)
+        thread.join();
 }
 
 TerrainBubble* Terrain::AddBubble(vec3 position) {

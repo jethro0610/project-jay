@@ -20,7 +20,6 @@ ResourceManager::ResourceManager() {
     WorldVertex::Init();
     TextureQuadVertex::Init();
     CreateTerrainMapTexture();
-    CreateTerrainBlobTexture();
     LoadGlobals();
     LoadAllShaders();
 }
@@ -78,34 +77,6 @@ void ResourceManager::UpdateTerrainMapTextureLow(glm::vec2* terrainMap) {
         TerrainConsts::RESOLUTION_LOW,
         TerrainConsts::RESOLUTION_LOW,
         bgfx::copy(terrainMap, sizeof(glm::vec2) * TerrainConsts::RESOLUTION_LOW * TerrainConsts::RESOLUTION_LOW)
-    );
-}
-
-void ResourceManager::CreateTerrainBlobTexture() {
-    if (!textures_.Has("t_terrainblob")) {
-        textures_.Add("t_terrainblob") = { bgfx::createTexture2D(
-            TerrainConsts::RESOLUTION, 
-            TerrainConsts::RESOLUTION, 
-            false, 
-            1, 
-            bgfx::TextureFormat::R8,
-            BGFX_TEXTURE_NONE | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP,
-            NULL
-        )};
-    }
-    globals_.insert("t_terrainblob");
-}
-
-void ResourceManager::UpdateTerrainBlobTexture(uint8_t* renderBlobMap) {
-    bgfx::updateTexture2D(
-        textures_.Get("t_terrainblob").handle,
-        0,
-        0,
-        0,
-        0,
-        TerrainConsts::RESOLUTION,
-        TerrainConsts::RESOLUTION,
-        bgfx::copy(renderBlobMap, sizeof(uint8_t) * TerrainConsts::RESOLUTION * TerrainConsts::RESOLUTION)
     );
 }
 

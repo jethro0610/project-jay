@@ -43,7 +43,13 @@ public:
     bool DestroyControls();
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
-    void GenerateTerrainDistances();
+    void GenerateTerrainDistancesFromTexture();
+    void GenerateTerrainDistanceSection(
+        const glm::vec2& start,
+        const glm::vec2& end,
+        const uint8_t blobMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
+        const std::vector<glm::ivec2>& edges
+    );
 
     TerrainBubble* AddBubble(glm::vec3 position);
     TerrainCurve* AddCurve(glm::vec3 position);
@@ -63,17 +69,6 @@ private:
     uint32_t affectMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
     Texture* terrainMapTexture_;
     ResourceManager& resourceManager_;
-
-    enum RenderBlobBits {
-        BB_GeneratedAdd,
-        BB_GeneratedSubtract,
-        BB_DrawnAdd,
-        BB_DrawnSubtract,
-    };
-    bool blobDraws_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    bool blobSubs_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    bool blobMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    uint8_t renderBlobMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
 
     #ifdef _DEBUG
     glm::vec2 terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];

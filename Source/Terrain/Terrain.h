@@ -42,11 +42,11 @@ public:
     bool DestroyControls();
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
-    void GenerateTerrainDistances(const std::string& blob);
+    void GenerateTerrainDistances();
     void GenerateTerrainDistanceSection(
         const glm::vec2& start,
         const glm::vec2& end,
-        const uint8_t blobMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
+        const uint8_t landMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
         const std::vector<glm::ivec2>& edges
     );
 
@@ -54,6 +54,8 @@ public:
     TerrainCurve* AddCurve(glm::vec3 position);
 
     int area_;
+
+    std::string landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
 
@@ -69,9 +71,7 @@ private:
     Texture* terrainMapTexture_;
     ResourceManager& resourceManager_;
 
-    #ifdef _DEBUG
     glm::vec2 terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
     uint32_t affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
     Texture* terrainMapTextureLow_;
-    #endif
 };

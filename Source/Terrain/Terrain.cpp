@@ -19,6 +19,7 @@ Terrain::Terrain(
 ):
 resourceManager_(resourceManager)
 {
+    landMapName_ = "lm_default";
     lowRes_ = true;
 
     bubbles_.clear();
@@ -41,13 +42,13 @@ resourceManager_(resourceManager)
 void Terrain::GenerateTerrainDistanceSection(
     const glm::vec2& start,
     const glm::vec2& end,
-    const uint8_t blobMap[RESOLUTION][RESOLUTION],
+    const uint8_t distanceMap[RESOLUTION][RESOLUTION],
     const std::vector<glm::ivec2>& edges
 ) {
     for (int x = start.x; x < end.x; x++) {
     for (int y = start.y; y < end.y; y++) {
         float distance = INFINITY;
-        float multiplier = blobMap[x][y] ? -1.0f : 1.0f;
+        float multiplier = distanceMap[x][y] ? -1.0f : 1.0f;
         for (const glm::ivec2& edge : edges) {
             float dx = edge.x - x;
             float dy = edge.y - y;
@@ -57,27 +58,28 @@ void Terrain::GenerateTerrainDistanceSection(
     }}
 }
 
-void Terrain::GenerateTerrainDistances(const std::string& blob) {
-    uint8_t blobMap[RESOLUTION][RESOLUTION];
-    std::ifstream blobTexture("./blobs/" + blob + ".blb");
-    DEBUGLOG(blob);
-    blobTexture.read((char*)blobMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
-    blobTexture.close();
+void Terrain::GenerateTerrainDistances() {
+    uint8_t landMap[RESOLUTION][RESOLUTION];
+    std::ifstream landMapFile("./blobs/" + landMapName_ + ".blb");
+    landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
+    landMapFile.close();
 
     std::vector<glm::ivec2> edges;
     edges.reserve(RESOLUTION * RESOLUTION);
+    area_ = 0;
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
-        if (!blobMap[x][y])
+        if (!landMap[x][y])
             continue;
+        area_++;
 
-        if (!blobMap[max(x - 1, 0)][y])
+        if (!landMap[max(x - 1, 0)][y])
             edges.push_back({x, y});
-        else if (!blobMap[min(x + 1, RESOLUTION - 1)][y])
+        else if (!landMap[min(x + 1, RESOLUTION - 1)][y])
             edges.push_back({x, y});
-        else if (!blobMap[x][max(y - 1, 0)])
+        else if (!landMap[x][max(y - 1, 0)])
             edges.push_back({x, y});
-        else if (!blobMap[x][min(y + 1, RESOLUTION - 1)])
+        else if (!landMap[x][min(y + 1, RESOLUTION - 1)])
             edges.push_back({x, y});
     }}
 
@@ -87,12 +89,13 @@ void Terrain::GenerateTerrainDistances(const std::string& blob) {
 
     for (int i = 0; i < cores; i++) {
         int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
-        threads.push_back(std::thread(
+        threads.push_back(
+            std::thread(
                 &Terrain::GenerateTerrainDistanceSection,
                 this, 
                 ivec2(i * sectionSize, 0),
                 ivec2((i + 1) * sectionSize + add, RESOLUTION),
-                blobMap,
+                landMap,
                 edges
             )
         );

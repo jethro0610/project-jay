@@ -36,7 +36,6 @@ public:
     #ifdef _DEBUG
     bool DBG_persistView_;
     std::string DBG_name_;
-    std::string DBG_blob_; 
     std::unordered_map<std::string, Entity::TypeID> DBG_entityTypes_;
     void SaveGlobals(const std::string& name, const std::string& suffix = "");
     void Save(const std::string& name, const std::string& suffix = "");

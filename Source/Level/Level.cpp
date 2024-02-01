@@ -76,11 +76,13 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     resourceManager_.UnloadUnusedDependencies(deps);
     resourceManager_.LoadDependencies(deps);
 
+    #ifdef _DEBUG
+    DBG_name_ = name;
     if (loadTerrain) {
-        if (levelData.contains("blob"))
-            DBG_blob_ = levelData["blob"];
+        if (levelData.contains("landmap"))
+            terrain_.landMapName_ = levelData["landmap"];
         else
-            DBG_blob_ = "bl_default";
+            terrain_.landMapName_ = "lm_default";
         
         for (auto& bubbleData : levelData["bubbles"]) {
             TerrainBubble bubble;
@@ -100,16 +102,16 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             }
             terrain_.curves_.push_back(curve);
         }
-        terrain_.GenerateTerrainDistances(DBG_blob_);
+        terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
     }
+    #endif
 
     for (int i = 0; i < MAX_PHASES; i++)
         phases_[i] = levelData["phases"][i];
 
     StartPhase();
 
-    DBG_name_ = name;
     loaded_ = true;
     return true;
 }
@@ -198,7 +200,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     #endif
 
     nlohmann::json levelData;
-    levelData["blob"] = DBG_blob_;
+    levelData["landmap"] = terrain_.landMapName_;
 
     SaveCurrentPhase();
     for (int i = 0; i < MAX_PHASES; i++)

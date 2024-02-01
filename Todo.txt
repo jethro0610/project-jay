@@ -1,4 +1,5 @@
 - Adjust heights on every terrain phase
+- Fix layer sizes affecting positining
 - Phase token
 
 - Pillars on test level are bell towers 

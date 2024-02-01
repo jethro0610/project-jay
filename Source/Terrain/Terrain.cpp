@@ -352,7 +352,18 @@ void Terrain::GenerateTerrainDistanceSection(
     }}
 }
 
-void Terrain::GenerateTerrainDistances() {
+void Terrain::GenerateTerrainDistances(EntityList* entities) {
+    vector_const<int, 128> groundedEntities;
+    if (entities != nullptr) {
+        for (int i = 0; i < 128; i++) {
+            Entity& entity = (*entities)[i];
+            if (!entity.alive_) continue;
+
+            if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
+                groundedEntities.push_back(i);
+        }
+    }
+
     uint8_t landMap[RESOLUTION][RESOLUTION];
     std::ifstream landMapFile("./blobs/" + DBG_landMapName_ + ".blb");
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
@@ -411,5 +422,10 @@ void Terrain::GenerateTerrainDistances() {
         DBG_terrainMapLow_[x][y].x = averageDist / (scaleFactor * scaleFactor);
     }} 
     resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
+
+    for (int entityIndex : groundedEntities) {
+        Entity& entity = (*entities)[entityIndex];
+        entity.transform_.position.y = GetHeight(entity.transform_.position);
+    }
 }
 #endif

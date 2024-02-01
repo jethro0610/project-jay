@@ -48,7 +48,7 @@ private:
 #ifdef _DEBUG
 public:
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
-    void GenerateTerrainDistances();
+    void GenerateTerrainDistances(EntityList* entities = nullptr);
     void GenerateTerrainDistanceSection(
         const glm::vec2& start,
         const glm::vec2& end,

@@ -61,7 +61,7 @@ void Terrain::GenerateTerrainDistanceSection(
 
 void Terrain::GenerateTerrainDistancesFromTexture() {
     uint8_t blobMap[RESOLUTION][RESOLUTION];
-    std::ifstream blobTexture("./blobs/test.data");
+    std::ifstream blobTexture("./blobs/lv_t.blb");
     blobTexture.read((char*)blobMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     blobTexture.close();
 

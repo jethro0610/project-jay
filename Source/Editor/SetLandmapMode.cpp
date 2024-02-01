@@ -11,6 +11,7 @@ EditorMode(args) {
     requiresTarget_ = false;
     requiresLevel_ = true;
     ctrl_ = false;
+    reload_ = false;
 }
 
 void SetLandmapMode::OnStart() {
@@ -21,6 +22,12 @@ void SetLandmapMode::OnStart() {
 ConfirmBehavior SetLandmapMode::OnConfirm() {
     std::string landMapName = "lm_" + textInput_.Get();
     if (std::filesystem::exists("landmaps/" + landMapName + ".lmp")) {
+        reload_ = false;
+        notificaiton_.Set("Loading landmap " + landMapName + "...");
+        return CB_PostConfirm;
+    }
+    else if (std::filesystem::exists("../Assets/landmaps/" + landMapName + ".xcf")) {
+        reload_ = true;
         notificaiton_.Set("Loading landmap " + landMapName + "...");
         return CB_PostConfirm;
     }
@@ -33,7 +40,10 @@ ConfirmBehavior SetLandmapMode::OnConfirm() {
 
 ConfirmBehavior SetLandmapMode::PostConfirm() {
     terrain_.DBG_landMapName_ = "lm_" + textInput_.Get();
-    terrain_.GenerateTerrainDistances(&entities_);
+    if (reload_)
+        terrain_.ReloadTerrainDistances(&entities_);
+    else
+        terrain_.GenerateTerrainDistances(&entities_);
     notificaiton_.Set("Done loading landmap lm_" + textInput_.Get());
     return CB_Default;
 }

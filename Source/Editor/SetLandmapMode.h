@@ -11,4 +11,5 @@ public:
     ConfirmBehavior PostConfirm() override;
     void OnEnd() override;
     void Update() override;
+    bool reload_;
 };

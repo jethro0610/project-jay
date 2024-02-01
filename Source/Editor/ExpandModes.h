@@ -8,5 +8,6 @@
     MODEEXPANSION(RotateMode, rotateMode_) \
     MODEEXPANSION(SaveMode, saveMode_) \
     MODEEXPANSION(ScaleMode, scaleMode_) \
+    MODEEXPANSION(SetLandmapMode, setLandmapMode_) \
     MODEEXPANSION(SpawnMode, spawnMode_) \
     TAILMODEEXPANSION(TranslateMode, translateMode_)

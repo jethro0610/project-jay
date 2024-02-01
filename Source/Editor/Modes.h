@@ -8,4 +8,5 @@
 #include "TranslateMode.h"
 #include "SaveMode.h"
 #include "ScaleMode.h"
+#include "SetLandmapMode.h"
 #include "SpawnMode.h"

@@ -365,7 +365,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }
 
     uint8_t landMap[RESOLUTION][RESOLUTION];
-    std::ifstream landMapFile("./blobs/" + DBG_landMapName_ + ".blb");
+    std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".blb");
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();

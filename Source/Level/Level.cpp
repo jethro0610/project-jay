@@ -227,7 +227,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
             pointData["w"] = curve.points[j].w;
             curveData.push_back(pointData);
         }
-        levelData["DBG_curves"].push_back(curveData);
+        levelData["curves"].push_back(curveData);
     }
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");

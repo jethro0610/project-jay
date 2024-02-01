@@ -1,5 +1,4 @@
 {
-    "landmap": "lm_long",
     "bubbles": [
         {
             "w": 127.20001220703125,
@@ -94,48 +93,7 @@
             }
         ]
     ],
-    "noise_layers": [
-        {
-            "active": false,
-            "exponent": 1.0,
-            "frequency": {
-                "x": 0.15000000596046448,
-                "y": 0.15000000596046448
-            },
-            "multiplier": 12.0,
-            "seed": 1337
-        },
-        {
-            "active": false,
-            "exponent": 1.0,
-            "frequency": {
-                "x": 0.15000000596046448,
-                "y": 0.15000000596046448
-            },
-            "multiplier": 12.0,
-            "seed": 1337
-        },
-        {
-            "active": false,
-            "exponent": 1.0,
-            "frequency": {
-                "x": 0.15000000596046448,
-                "y": 0.15000000596046448
-            },
-            "multiplier": 12.0,
-            "seed": 1337
-        },
-        {
-            "active": false,
-            "exponent": 1.0,
-            "frequency": {
-                "x": 0.15000000596046448,
-                "y": 0.15000000596046448
-            },
-            "multiplier": 12.0,
-            "seed": 1337
-        }
-    ],
+    "landmap": "lm_default",
     "phases": [
         [
             {

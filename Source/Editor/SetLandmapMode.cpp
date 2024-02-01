@@ -20,7 +20,7 @@ void SetLandmapMode::OnStart() {
 
 ConfirmBehavior SetLandmapMode::OnConfirm() {
     std::string landMapName = "lm_" + textInput_.Get();
-    if (std::filesystem::exists("blobs/" + landMapName + ".blb")) {
+    if (std::filesystem::exists("landmaps/" + landMapName + ".blb")) {
         notificaiton_.Set("Loading landmap " + landMapName + "...");
         return CB_PostConfirm;
     }

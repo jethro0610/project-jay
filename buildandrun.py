@@ -17,7 +17,7 @@ elif platform.system() == 'Linux':
 subprocess.run('python generateentitytypes.py', shell = True)
 subprocess.run('python generatetools.py', shell = True)
 subprocess.run('python copyassets.py', shell = True)
-subprocess.run('python compileblobs.py', shell = True)
+subprocess.run('python compilelandmaps.py', shell = True)
 subprocess.run('python generateshaderheaders.py', shell = True)
 subprocess.run('python compilemodels.py ' + recompile, shell = True)
 

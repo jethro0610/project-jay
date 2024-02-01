@@ -1,10 +1,4 @@
 {
-    "blob": {
-        "frequency": 100.0,
-        "maxRadius": 150.0,
-        "minRadius": 150.0,
-        "seed": 1337
-    },
     "bubbles": [
         {
             "w": 50.0,

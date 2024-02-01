@@ -1,10 +1,4 @@
 {
-    "blob": {
-        "frequency": 100.0,
-        "maxRadius": 150.0,
-        "minRadius": 125.0,
-        "seed": 6822
-    },
     "noise_layers": [
         {
             "active": true,

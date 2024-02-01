@@ -30,14 +30,10 @@ ConfirmBehavior NewLevelMode::PostConfirm() {
     level_.DBG_name_ = "lv_" + textInput_.Get();
     for (int i = 0; i < Level::MAX_PHASES; i++)
         level_.phases_[0] = std::vector<nlohmann::json>();
+    level_.DBG_blob_ = "bl_default";
 
-    // TODO: Assign other level properties
-    for (NoiseLayer& noiseLayer : level_.properties_.noiseLayers)
-        noiseLayer = {};
-    level_.properties_.blob = {};
-
-    // terrain_.GenerateTerrainMap(level_.properties_.noiseLayers, level_.properties_.blob);
-    // terrain_.GenerateTerrainMap(level_.properties_.blob);
+    terrain_.GenerateTerrainHeights(false);
+    terrain_.GenerateTerrainDistances("bl_default");
     notificaiton_.Set("Created lv_" + textInput_.Get());
     return CB_Default;
 }

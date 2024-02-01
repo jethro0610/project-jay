@@ -1,10 +1,5 @@
 {
-    "blob": {
-        "frequency": 100.0,
-        "maxRadius": 150.0,
-        "minRadius": 150.0,
-        "seed": 1337
-    },
+    "blob": "lv_t",
     "bubbles": [
         {
             "w": 127.20001220703125,

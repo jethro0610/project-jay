@@ -1,7 +1,6 @@
 #include "Renderer.h"
 #include "Camera/Camera.h"
 #include "Level/LevelProperties.h"
-#include "Entity/Player.h"
 using namespace glm;
 
 mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
@@ -18,7 +17,7 @@ void Renderer::Render(
 ) {
     StartFrame();
 
-    RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
@@ -40,7 +39,7 @@ void Renderer::RenderEdit(
 ) {
     StartFrame();
 
-    RenderTerrain(terrain, &levelProperties.terrainMaterial, levelProperties.blob.maxRadius);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
     RenderTerrainBubbles(terrain);
     RenderTerrainCurves(terrain);
     RenderEntitiesS(entities);

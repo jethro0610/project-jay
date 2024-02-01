@@ -1,6 +1,5 @@
 #pragma once
 #include "Shared_TerrainConstants.h"
-#include "BlobProperties.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Model.h"
 #include "Rendering/Material.h"
@@ -43,7 +42,7 @@ public:
     bool DestroyControls();
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
-    void GenerateTerrainDistancesFromTexture();
+    void GenerateTerrainDistances(const std::string& blob);
     void GenerateTerrainDistanceSection(
         const glm::vec2& start,
         const glm::vec2& end,

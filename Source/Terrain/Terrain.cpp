@@ -36,8 +36,6 @@ resourceManager_(resourceManager)
     curveMaterial_.properties.color = vec4(0.0f, 0.0f, 1.0f, 0.5f);
     curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
-
-    GenerateTerrainDistancesFromTexture();
 }
 
 void Terrain::GenerateTerrainDistanceSection(
@@ -59,9 +57,10 @@ void Terrain::GenerateTerrainDistanceSection(
     }}
 }
 
-void Terrain::GenerateTerrainDistancesFromTexture() {
+void Terrain::GenerateTerrainDistances(const std::string& blob) {
     uint8_t blobMap[RESOLUTION][RESOLUTION];
-    std::ifstream blobTexture("./blobs/lv_t.blb");
+    std::ifstream blobTexture("./blobs/" + blob + ".blb");
+    DEBUGLOG(blob);
     blobTexture.read((char*)blobMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     blobTexture.close();
 
@@ -100,6 +99,8 @@ void Terrain::GenerateTerrainDistancesFromTexture() {
     }
     for (std::thread& thread : threads)
         thread.join();
+
+    resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 }
 
 TerrainBubble* Terrain::AddBubble(vec3 position) {

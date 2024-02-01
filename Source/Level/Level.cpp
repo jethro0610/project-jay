@@ -77,20 +77,10 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     resourceManager_.LoadDependencies(deps);
 
     if (loadTerrain) {
-        properties_.blob.seed = levelData["blob"]["seed"];
-        properties_.blob.frequency = levelData["blob"]["frequency"];
-        properties_.blob.minRadius = levelData["blob"]["minRadius"];
-        properties_.blob.maxRadius = levelData["blob"]["maxRadius"];
-
-        for (int i = 0; i < NoiseLayer::MAX; i++) {
-            nlohmann::json& noiseLayerData = levelData["noise_layers"][i];
-            properties_.noiseLayers[i].active = noiseLayerData["active"];
-            properties_.noiseLayers[i].seed = noiseLayerData["seed"];
-            properties_.noiseLayers[i].frequency.x = noiseLayerData["frequency"]["x"];
-            properties_.noiseLayers[i].frequency.y = noiseLayerData["frequency"]["y"];
-            properties_.noiseLayers[i].multiplier = noiseLayerData["multiplier"];
-            properties_.noiseLayers[i].exponent = noiseLayerData["exponent"];
-        }
+        if (levelData.contains("blob"))
+            DBG_blob_ = levelData["blob"];
+        else
+            DBG_blob_ = "bl_default";
         
         for (auto& bubbleData : levelData["bubbles"]) {
             TerrainBubble bubble;
@@ -110,6 +100,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             }
             terrain_.curves_.push_back(curve);
         }
+        terrain_.GenerateTerrainDistances(DBG_blob_);
         terrain_.GenerateTerrainHeights();
     }
 
@@ -207,21 +198,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     #endif
 
     nlohmann::json levelData;
-    levelData["blob"]["seed"] = properties_.blob.seed;
-    levelData["blob"]["frequency"] = properties_.blob.frequency;
-    levelData["blob"]["minRadius"] = properties_.blob.minRadius;
-    levelData["blob"]["maxRadius"] = properties_.blob.maxRadius;
-
-    for (int i = 0; i < NoiseLayer::MAX; i++) {
-        nlohmann::json noiseLayerData;
-        noiseLayerData["active"] = properties_.noiseLayers[i].active;
-        noiseLayerData["seed"] = properties_.noiseLayers[i].seed;
-        noiseLayerData["frequency"]["x"] = properties_.noiseLayers[i].frequency.x;
-        noiseLayerData["frequency"]["y"] = properties_.noiseLayers[i].frequency.y;
-        noiseLayerData["multiplier"] = properties_.noiseLayers[i].multiplier;
-        noiseLayerData["exponent"] = properties_.noiseLayers[i].exponent;
-        levelData["noise_layers"][i] = noiseLayerData;
-    }
+    levelData["blob"] = DBG_blob_;
 
     SaveCurrentPhase();
     for (int i = 0; i < MAX_PHASES; i++)

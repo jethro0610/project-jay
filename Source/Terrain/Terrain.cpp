@@ -32,7 +32,6 @@ resourceManager_(resourceManager)
     #ifdef _DEBUG
     DBG_landMapName_ = "lm_default";
     DBG_lowRes_ = true;
-
     DBG_bubbles_.clear();
     DBG_curves_.clear();
     DBG_nodeModel_ = resourceManager.GetModel("st_default");
@@ -365,7 +364,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }
 
     uint8_t landMap[RESOLUTION][RESOLUTION];
-    std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".blb");
+    std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp");
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();
@@ -427,5 +426,13 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
         Entity& entity = (*entities)[entityIndex];
         entity.transform_.position.y = GetHeight(entity.transform_.position);
     }
+}
+
+void Terrain::ReloadTerrainDistances(EntityList* entities) {
+    std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
+    std::string landmapOutput = "./landmaps/" + DBG_landMapName_ + ".lmp";
+    std::string command = "convert -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
+    system(command.c_str());
+    GenerateTerrainDistances(entities);
 }
 #endif

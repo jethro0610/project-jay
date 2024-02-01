@@ -138,6 +138,13 @@ void Editor::Update() {
     notification_.Update();
 
     bool holdingCtrl = platform_.heldKeys_[GLFW_KEY_LEFT_CONTROL];
+
+    bool shouldReloadLandmap = false;
+    if (holdingCtrl && platform_.pressedKeys_['L'] && level_.loaded_) {
+        notification_.Set("Reloading landmap...");
+        shouldReloadLandmap = true;
+    }
+
     if (holdingCtrl && platform_.pressedKeys_['E'] && level_.loaded_) {
         StopEditing();
         FlushInputs();
@@ -209,6 +216,11 @@ void Editor::Update() {
         renderer_.RenderEditorOnly(*this);
     }
     FlushInputs();
+
+    if (shouldReloadLandmap) {
+        terrain_.ReloadTerrainDistances(&entities_);
+        notification_.Set("Done reloading landmap");
+    }
 }
 
 // Since editor is PC only this will just be in the regular file

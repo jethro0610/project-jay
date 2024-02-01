@@ -47,6 +47,10 @@ private:
 
 #ifdef _DEBUG
 public:
+    TerrainBubble* AddBubble(glm::vec3 position);
+    TerrainCurve* AddCurve(glm::vec3 position);
+    bool DestroyControls();
+
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
     void GenerateTerrainDistances(EntityList* entities = nullptr);
     void GenerateTerrainDistanceSection(
@@ -55,11 +59,7 @@ public:
         const uint8_t landMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
         const std::vector<glm::ivec2>& edges
     );
-    bool DestroyControls();
-
-    TerrainBubble* AddBubble(glm::vec3 position);
-    TerrainCurve* AddCurve(glm::vec3 position);
-
+    void ReloadTerrainDistances(EntityList* entities);
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;

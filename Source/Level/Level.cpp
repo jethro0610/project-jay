@@ -92,7 +92,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             terrain_.DBG_bubbles_.push_back(bubble);
         }
 
-        for (auto& curveData: levelData["DBG_curves"]) {
+        for (auto& curveData: levelData["curves"]) {
             TerrainCurve curve;
             curve.destroy_ = false;
             curve.DBG_selectedPoint_ = -1;

@@ -5,6 +5,7 @@
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
 #include "Helpers/Ease.h"
+#include "Helpers/Assert.h"
 #include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
@@ -354,6 +355,7 @@ void Terrain::GenerateTerrainDistanceSection(
 void Terrain::GenerateTerrainDistances() {
     uint8_t landMap[RESOLUTION][RESOLUTION];
     std::ifstream landMapFile("./blobs/" + DBG_landMapName_ + ".blb");
+    ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();
 
@@ -397,5 +399,17 @@ void Terrain::GenerateTerrainDistances() {
         thread.join();
 
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
+
+    const int scaleFactor = RESOLUTION / RESOLUTION_LOW;
+    for (int x = 0; x < RESOLUTION_LOW; x++) {
+    for (int y = 0; y < RESOLUTION_LOW; y++) {
+        float averageDist = 0.0f;
+        for (int dx = 0; dx < scaleFactor; dx++) {
+        for (int dy = 0; dy < scaleFactor; dy++) {
+            averageDist += terrainMap_[x * scaleFactor + dx][y * scaleFactor + dy].x; 
+        }}
+        DBG_terrainMapLow_[x][y].x = averageDist / (scaleFactor * scaleFactor);
+    }} 
+    resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
 }
 #endif

@@ -38,9 +38,15 @@ public:
 
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
+    int area_;
 
-    bool DestroyControls();
+private:
+    ResourceManager& resourceManager_;
+    glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
+    Texture* terrainMapTexture_;
 
+#ifdef _DEBUG
+public:
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
     void GenerateTerrainDistances();
     void GenerateTerrainDistanceSection(
@@ -49,29 +55,26 @@ public:
         const uint8_t landMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
         const std::vector<glm::ivec2>& edges
     );
+    bool DestroyControls();
 
     TerrainBubble* AddBubble(glm::vec3 position);
     TerrainCurve* AddCurve(glm::vec3 position);
 
-    int area_;
 
-    std::string landMapName_;
-    vector_contig<TerrainBubble, TerrainBubble::MAX> bubbles_;
-    vector_contig<TerrainCurve, TerrainCurve::MAX> curves_;
+    std::string DBG_landMapName_;
+    vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;
+    vector_contig<TerrainCurve, TerrainCurve::MAX> DBG_curves_;
 
-    Model* nodeModel_;
-    Material bubbleMaterial_;
-    Material curveMaterial_;
-    Material curveControlMaterial_;
-    bool lowRes_;
+    Model* DBG_nodeModel_;
+    Material DBG_bubbleMaterial_;
+    Material DBG_curveMaterial_;
+    Material DBG_curveControlMaterial_;
+    bool DBG_lowRes_;
 
 private:
-    glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    uint32_t affectMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
-    Texture* terrainMapTexture_;
-    ResourceManager& resourceManager_;
-
-    glm::vec2 terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
-    uint32_t affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
-    Texture* terrainMapTextureLow_;
+    uint32_t DBG_affectMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
+    glm::vec2 DBG_terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
+    uint32_t DBG_affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
+    Texture* DBG_terrainMapTextureLow_;
+#endif
 };

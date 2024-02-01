@@ -80,19 +80,19 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     DBG_name_ = name;
     if (loadTerrain) {
         if (levelData.contains("landmap"))
-            terrain_.landMapName_ = levelData["landmap"];
+            terrain_.DBG_landMapName_ = levelData["landmap"];
         else
-            terrain_.landMapName_ = "lm_default";
+            terrain_.DBG_landMapName_ = "lm_default";
         
         for (auto& bubbleData : levelData["bubbles"]) {
             TerrainBubble bubble;
             bubble.destroy_ = false;
             bubble.DBG_selected_ = false;
             bubble.position = GetVec4(bubbleData);
-            terrain_.bubbles_.push_back(bubble);
+            terrain_.DBG_bubbles_.push_back(bubble);
         }
 
-        for (auto& curveData: levelData["curves"]) {
+        for (auto& curveData: levelData["DBG_curves"]) {
             TerrainCurve curve;
             curve.destroy_ = false;
             curve.DBG_selectedPoint_ = -1;
@@ -100,7 +100,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             for (int i = 0; i < 4; i++) {
                 curve.points[i] = GetVec4(curveData[i]);
             }
-            terrain_.curves_.push_back(curve);
+            terrain_.DBG_curves_.push_back(curve);
         }
         terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
@@ -195,19 +195,17 @@ void Level::SaveCurrentPhase() {
 }
 
 void Level::Save(const std::string& name, const std::string& suffix) {
-    #ifdef _DEBUG
     DBG_name_ = name;
-    #endif
 
     nlohmann::json levelData;
-    levelData["landmap"] = terrain_.landMapName_;
+    levelData["landmap"] = terrain_.DBG_landMapName_;
 
     SaveCurrentPhase();
     for (int i = 0; i < MAX_PHASES; i++)
         levelData["phases"].push_back(phases_[i]);
 
-    for (int i = 0; i < terrain_.bubbles_.size(); i++) {
-        TerrainBubble& bubble = terrain_.bubbles_[i];
+    for (int i = 0; i < terrain_.DBG_bubbles_.size(); i++) {
+        TerrainBubble& bubble = terrain_.DBG_bubbles_[i];
         nlohmann::json bubbleData;
 
         bubbleData["x"] = bubble.position.x;
@@ -217,8 +215,8 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         levelData["bubbles"].push_back(bubbleData);
     }
 
-    for (int i = 0; i < terrain_.curves_.size(); i++) {
-        TerrainCurve& curve = terrain_.curves_[i];
+    for (int i = 0; i < terrain_.DBG_curves_.size(); i++) {
+        TerrainCurve& curve = terrain_.DBG_curves_[i];
         nlohmann::json curveData;
 
         for (int j = 0; j < 4; j++) {
@@ -229,7 +227,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
             pointData["w"] = curve.points[j].w;
             curveData.push_back(pointData);
         }
-        levelData["curves"].push_back(curveData);
+        levelData["DBG_curves"].push_back(curveData);
     }
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
@@ -267,9 +265,11 @@ void Level::Clear(bool clearTerrain) {
     spreadManager_.Reset();
     seedManager_.Reset();
 
+    #ifdef _DEBUG
     if (clearTerrain) {
-        terrain_.bubbles_.clear();
-        terrain_.curves_.clear();
+        terrain_.DBG_bubbles_.clear();
+        terrain_.DBG_curves_.clear();
         terrain_.GenerateTerrainHeights();
     }
+    #endif 
 }

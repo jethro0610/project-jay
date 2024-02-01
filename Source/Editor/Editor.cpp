@@ -184,7 +184,7 @@ void Editor::Update() {
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
         if (target_.IsTerrainControl() && isTransformMode)
             terrain_.GenerateTerrainHeights(true, &entities_);
-        else if (terrain_.lowRes_)
+        else if (terrain_.DBG_lowRes_)
             terrain_.GenerateTerrainHeights(false, &entities_);
         else if (terrainDestroyed)
             terrain_.GenerateTerrainHeights(false, &entities_);

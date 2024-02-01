@@ -31,7 +31,7 @@ ConfirmBehavior NewLevelMode::PostConfirm() {
     for (int i = 0; i < Level::MAX_PHASES; i++)
         level_.phases_[0] = std::vector<nlohmann::json>();
 
-    terrain_.landMapName_ = "lm_default";
+    terrain_.DBG_landMapName_ = "lm_default";
     terrain_.GenerateTerrainHeights(false);
     terrain_.GenerateTerrainDistances();
 

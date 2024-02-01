@@ -122,28 +122,28 @@ void DefaultMode::CursorUpdate() {
         float maxDist = INFINITY;
         vec3 mouseRay = GetMouseRay();
 
-        for (int i = 0; i < terrain_.bubbles_.size(); i++) {
-            vec3 bubblePos = terrain_.bubbles_[i].position;
+        for (int i = 0; i < terrain_.DBG_bubbles_.size(); i++) {
+            vec3 bubblePos = terrain_.DBG_bubbles_[i].position;
             float dist = distance(camera_.transform_.position, bubblePos);
             if (
                 Ray::RayHitSphere(camera_.transform_.position, mouseRay, bubblePos, 2.0f) &&
                 dist < maxDist
             ) {
                 maxDist = dist;
-                target_.SetBubble(&terrain_.bubbles_[i]);
+                target_.SetBubble(&terrain_.DBG_bubbles_[i]);
             }
         }
 
-        for (int i = 0; i < terrain_.curves_.size(); i++) {
+        for (int i = 0; i < terrain_.DBG_curves_.size(); i++) {
         for (int j = 0; j < 4; j++) {
-            vec3 curvePointPos = terrain_.curves_[i].points[j];
+            vec3 curvePointPos = terrain_.DBG_curves_[i].points[j];
             float dist = distance(camera_.transform_.position, curvePointPos);
             if (
                 Ray::RayHitSphere(camera_.transform_.position, mouseRay, curvePointPos, 2.0f) &&
                 dist < maxDist
             ) {
                 maxDist = dist;
-                target_.SetCurve(&terrain_.curves_[i], j);
+                target_.SetCurve(&terrain_.DBG_curves_[i], j);
             }
         }}
 

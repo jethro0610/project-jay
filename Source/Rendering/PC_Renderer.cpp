@@ -275,10 +275,14 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
         vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
 
-        if (terrain.lowRes_)
+        #ifdef _DEBUG
+        if (terrain.DBG_lowRes_)
             bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTextureLow_->handle);
         else
             bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
+        #else
+        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
+        #endif
         RenderMesh(terrain_, material);
     };
 }
@@ -464,10 +468,10 @@ void Renderer::RenderTerrainBubbles(Terrain& terrain) {
     Transform bubbleTransform;
     bubbleTransform.scale = vec3(2.0f, 4.0f, 2.0f);
     mat4 bubbleMatrix;
-    for (TerrainBubble& bubble : terrain.bubbles_) {
+    for (TerrainBubble& bubble : terrain.DBG_bubbles_) {
         bubbleTransform.position = bubble.position;
         bubbleMatrix = bubbleTransform.ToMatrix();
-        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.bubbleMaterial_, nullptr, &bubbleMatrix);
+        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_bubbleMaterial_, nullptr, &bubbleMatrix);
     }
 }
 
@@ -475,7 +479,7 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
     Transform curveTransform;
     curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
     mat4 curveMatrix;
-    for (TerrainCurve& curve : terrain.curves_) {
+    for (TerrainCurve& curve : terrain.DBG_curves_) {
         for (int i = 0; i < 65; i++) {
             if (i == 0 || i == 64)
                 curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
@@ -485,31 +489,31 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
             vec4 curvePos = curve.GetPosition(i / 64.0f);
             curveTransform.position = curvePos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveMaterial_, nullptr, &curveMatrix);
+            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveMaterial_, nullptr, &curveMatrix);
         }
 
         curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
         curveTransform.position = curve.points[1];
         curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
         curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
         for (int i = 1; i < 32; i++) {
             vec4 pos = mix(curve.points[0], curve.points[1], i / 32.0f);
             curveTransform.position = pos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
         }
 
         curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
         curveTransform.position = curve.points[2];
         curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
         curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
         for (int i = 1; i < 32; i++) {
             vec4 pos = mix(curve.points[2], curve.points[3], i / 32.0f);
             curveTransform.position = pos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.nodeModel_->meshes[0], &terrain.curveControlMaterial_, nullptr, &curveMatrix);
+            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
         }
     }
 }

@@ -190,11 +190,11 @@ void Editor::Update() {
         bool terrainDestroyed = terrain_.DestroyControls();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
         if (target_.IsTerrainControl() && isTransformMode)
-            terrain_.GenerateTerrainHeights(true, &entities_);
+            terrain_.GenerateTerrainHeights(true, &entities_, level_.phases_);
         else if (terrain_.DBG_lowRes_)
-            terrain_.GenerateTerrainHeights(false, &entities_);
+            terrain_.GenerateTerrainHeights(false, &entities_, level_.phases_);
         else if (terrainDestroyed)
-            terrain_.GenerateTerrainHeights(false, &entities_);
+            terrain_.GenerateTerrainHeights(false, &entities_, level_.phases_);
 
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {
@@ -218,7 +218,7 @@ void Editor::Update() {
     FlushInputs();
 
     if (shouldReloadLandmap) {
-        terrain_.ReloadTerrainDistances(&entities_);
+        terrain_.ReloadTerrainDistances(&entities_, level_.phases_);
         notification_.Set("Done reloading landmap");
     }
 }

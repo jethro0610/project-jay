@@ -6,6 +6,8 @@
 #include "Entity/EntityList.h"
 #include "Helpers/Ease.h"
 #include "Helpers/Assert.h"
+#include "Helpers/LoadHelpers.h"
+#include "Level/Level.h"
 #include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
@@ -293,7 +295,7 @@ void BaseGenerateTerrainHeights(
         thread.join();
 }
 
-void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
+void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities, nlohmann::json* phases) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -302,6 +304,19 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
 
             if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
                 groundedEntities.push_back(i);
+        }
+    }
+    vector_const<ivec2, 512> groundedPhaseEntities;
+    if (phases != nullptr) {
+        for (int i = 0; i < Level::MAX_PHASES; i++) {
+            nlohmann::json& phase = phases[i];
+            for (int j = 0; j < phase.size(); j++) {
+                nlohmann::json& phaseEntity = phase[j];
+                Transform transform = GetTransform(phaseEntity, "transform");
+
+                if (abs(GetHeight(transform.position) - transform.position.y) < 5.0f)
+                    groundedPhaseEntities.push_back({i, j});
+            }
         }
     }
 
@@ -330,6 +345,11 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
         Entity& entity = (*entities)[entityIndex];
         entity.transform_.position.y = GetHeight(entity.transform_.position);
     }
+    for (ivec2& phaseIndex : groundedPhaseEntities) {
+        nlohmann::json& phaseEntity = phases[phaseIndex.x][phaseIndex.y];
+        Transform transform = GetTransform(phaseEntity, "transform");
+        phaseEntity["transform"]["position"]["y"] = GetHeight(transform.position);
+    }
 }
 
 void Terrain::GenerateTerrainDistanceSection(
@@ -351,7 +371,7 @@ void Terrain::GenerateTerrainDistanceSection(
     }}
 }
 
-void Terrain::GenerateTerrainDistances(EntityList* entities) {
+void Terrain::GenerateTerrainDistances(EntityList* entities, nlohmann::json* phases) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -360,6 +380,19 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 
             if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
                 groundedEntities.push_back(i);
+        }
+    }
+    vector_const<ivec2, 512> groundedPhaseEntities;
+    if (phases != nullptr) {
+        for (int i = 0; i < Level::MAX_PHASES; i++) {
+            nlohmann::json& phase = phases[i];
+            for (int j = 0; j < phase.size(); j++) {
+                nlohmann::json& phaseEntity = phase[j];
+                Transform transform = GetTransform(phaseEntity, "transform");
+
+                if (abs(GetHeight(transform.position) - transform.position.y) < 5.0f)
+                    groundedPhaseEntities.push_back({i, j});
+            }
         }
     }
 
@@ -426,13 +459,18 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
         Entity& entity = (*entities)[entityIndex];
         entity.transform_.position.y = GetHeight(entity.transform_.position);
     }
+    for (ivec2& phaseIndex : groundedPhaseEntities) {
+        nlohmann::json& phaseEntity = phases[phaseIndex.x][phaseIndex.y];
+        Transform transform = GetTransform(phaseEntity, "transform");
+        phaseEntity["transform"]["position"]["y"] = GetHeight(transform.position);
+    }
 }
 
-void Terrain::ReloadTerrainDistances(EntityList* entities) {
+void Terrain::ReloadTerrainDistances(EntityList* entities, nlohmann::json* phases) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
     std::string landmapOutput = "./landmaps/" + DBG_landMapName_ + ".lmp";
     std::string command = "convert -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
     system(command.c_str());
-    GenerateTerrainDistances(entities);
+    GenerateTerrainDistances(entities, phases);
 }
 #endif

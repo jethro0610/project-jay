@@ -10,6 +10,7 @@
 #include <glm/gtx/hash.hpp>
 #include <vector_contig.h>
 #include <thread>
+#include <nlohmann/json.hpp>
 
 class EntityList;
 class LevelProperties;
@@ -51,15 +52,15 @@ public:
     TerrainCurve* AddCurve(glm::vec3 position);
     bool DestroyControls();
 
-    void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
-    void GenerateTerrainDistances(EntityList* entities = nullptr);
+    void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr, nlohmann::json* phases = nullptr);
+    void GenerateTerrainDistances(EntityList* entities = nullptr, nlohmann::json* phases = nullptr);
     void GenerateTerrainDistanceSection(
         const glm::vec2& start,
         const glm::vec2& end,
         const uint8_t landMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
         const std::vector<glm::ivec2>& edges
     );
-    void ReloadTerrainDistances(EntityList* entities);
+    void ReloadTerrainDistances(EntityList* entities = nullptr, nlohmann::json* phases = nullptr);
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;

@@ -41,9 +41,9 @@ ConfirmBehavior SetLandmapMode::OnConfirm() {
 ConfirmBehavior SetLandmapMode::PostConfirm() {
     terrain_.DBG_landMapName_ = "lm_" + textInput_.Get();
     if (reload_)
-        terrain_.ReloadTerrainDistances(&entities_);
+        terrain_.ReloadTerrainDistances(&entities_, level_.phases_);
     else
-        terrain_.GenerateTerrainDistances(&entities_);
+        terrain_.GenerateTerrainDistances(&entities_, level_.phases_);
     notificaiton_.Set("Done loading landmap lm_" + textInput_.Get());
     return CB_Default;
 }

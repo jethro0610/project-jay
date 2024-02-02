@@ -91,7 +91,9 @@ void TranslateMode::Update() {
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            terrainPos.y = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
+            float height = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
+            if (height > -INFINITY)
+                terrainPos.y = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
             target_.SetPosition(terrainPos);
             break;
     }

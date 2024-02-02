@@ -81,7 +81,7 @@ void ScaleMode::Update() {
 
         case SS_Planar:
             referenceScale.x += delta;
-            referenceScale.y += delta;
+            referenceScale.z += delta;
             break;
 
         case SS_Vertical:

@@ -457,12 +457,16 @@ void Terrain::GenerateTerrainDistances(EntityList* entities, nlohmann::json* pha
 
     for (int entityIndex : groundedEntities) {
         Entity& entity = (*entities)[entityIndex];
-        entity.transform_.position.y = GetHeight(entity.transform_.position);
+        float height = GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
+        if (height > -INFINITY)
+            entity.transform_.position.y = height;
     }
     for (ivec2& phaseIndex : groundedPhaseEntities) {
         nlohmann::json& phaseEntity = phases[phaseIndex.x][phaseIndex.y];
         Transform transform = GetTransform(phaseEntity, "transform");
-        phaseEntity["transform"]["position"]["y"] = GetHeight(transform.position);
+        float height = GetHeight(vec2(transform.position.x, transform.position.z));
+        if (height > -INFINITY)
+            phaseEntity["transform"]["position"]["y"] = height;
     }
 }
 

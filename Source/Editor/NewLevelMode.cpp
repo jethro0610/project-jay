@@ -20,8 +20,16 @@ void NewLevelMode::OnStart() {
 }
 
 ConfirmBehavior NewLevelMode::OnConfirm() {
-    notificaiton_.Set("Creating lv_" + textInput_.Get() + "...");
-    return CB_PostConfirm;
+    std::string levelName = "lv_" + textInput_.Get();
+
+    if (std::filesystem::exists("levels/" + levelName + ".json")) {
+        notificaiton_.Set(levelName + " already exists");
+        return CB_Stay;
+    }
+    else {
+        notificaiton_.Set("Creating " + levelName + "...");
+        return CB_PostConfirm;
+    }
 }
 
 ConfirmBehavior NewLevelMode::PostConfirm() {

@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include "Camera/Camera.h"
 #include "Level/LevelProperties.h"
+#include "Editor/Editor.h"
 using namespace glm;
 
 mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
@@ -40,9 +41,12 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
-    RenderTerrainBubbles(terrain);
-    RenderTerrainCurves(terrain);
-    RenderEntitiesS(entities);
+    if (editor.visibility_ == EV_All || editor.visibility_ == EV_TerrainControlsOnly) {
+        RenderTerrainBubbles(terrain);
+        RenderTerrainCurves(terrain);
+    }
+    if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
+        RenderEntitiesS(entities);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

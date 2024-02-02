@@ -45,7 +45,8 @@ args_({
     modeText_,
     notification_,
     target_, 
-    textInput_
+    textInput_,
+    visibility_
 }),
 #define MODEEXPANSION(TYPE, VAR) VAR(args_),
 #define TAILMODEEXPANSION(TYPE, VAR) VAR(args_)
@@ -91,6 +92,7 @@ EXPANDMODES
 }
 
 void Editor::StartEditing() {
+    visibility_ = EV_EntitiesOnly;
     active_ = true;
     target_.Untarget();
     SetMode(defaultMode_);

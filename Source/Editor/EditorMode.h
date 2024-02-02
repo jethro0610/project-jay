@@ -1,4 +1,5 @@
 #pragma once
+#include "EditorVisibility.h"
 #include <string>
 
 class Camera;
@@ -28,6 +29,7 @@ struct EditorModeArgs {
     EditorNotification& notificaiton;
     EditorTarget& target;
     EditorTextInput& textInput;
+    EditorVisibility& visibility;
 };
 
 enum ConfirmBehavior {
@@ -69,4 +71,5 @@ protected:
     EditorNotification& notificaiton_;
     EditorTarget& target_;
     EditorTextInput& textInput_;
+    EditorVisibility& visibility_;
 };

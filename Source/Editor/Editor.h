@@ -4,6 +4,7 @@
 #include "EditorTextInput.h"
 #include "Modes.h"
 #include "ExpandModes.h"
+#include "EditorVisibility.h"
 #include <vector>
 
 class Camera;
@@ -37,6 +38,7 @@ public:
     EditorTarget target_;
     EditorTextInput textInput_;
     Text modeText_;
+    EditorVisibility visibility_;
 
     void StartEditing();
     void StopEditing();

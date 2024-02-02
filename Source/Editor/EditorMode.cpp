@@ -16,7 +16,8 @@ modeText_(args.modeText),
 level_(args.level),
 notificaiton_(args.notificaiton),
 target_(args.target),
-textInput_(args.textInput)
+textInput_(args.textInput),
+visibility_(args.visibility)
 {
     requiresEntity_ = false;
     requiresLevel_ = true;

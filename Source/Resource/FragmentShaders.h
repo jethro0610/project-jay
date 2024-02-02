@@ -20,8 +20,8 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_persist",
 	"fs_color",
 	"fs_color_front",
-	"fs_terrain",
 	"fs_selected_unshaded",
 	"fs_selected",
 	"fs_selected_front",
+	"fs_terrain",
 };

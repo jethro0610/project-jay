@@ -30,7 +30,7 @@ INLINE float Ease(float x) {
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
-    float edgeDistance = max(pos.x * 0.25f, 0.0f);
+    float edgeDistance = max(pos.x * 0.35f, 0.0f);
     pos.y -= edgeDistance * edgeDistance;
     return pos;
 }

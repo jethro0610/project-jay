@@ -79,13 +79,7 @@ void DefaultMode::Update() {
         target_.Untarget();
         visibility_ = EV_All;
     }
-
-    if (platform_.pressedKeys_['C']) {
-        target_.Untarget();
-        visibility_ = EV_TerrainControlsOnly;
-    }
-
-    if (platform_.pressedKeys_['X']) {
+    if (platform_.pressedKeys_['E']) {
         target_.Untarget();
         visibility_ = EV_EntitiesOnly;
     }

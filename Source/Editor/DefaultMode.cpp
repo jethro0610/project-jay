@@ -126,7 +126,7 @@ void DefaultMode::CursorUpdate() {
             vec3 bubblePos = terrain_.DBG_bubbles_[i].position;
             float dist = distance(camera_.transform_.position, bubblePos);
             if (
-                Ray::RayHitSphere(camera_.transform_.position, mouseRay, bubblePos, 2.0f) &&
+                Ray::RayHitSphere(camera_.transform_.position, mouseRay, bubblePos, 4.0f) &&
                 dist < maxDist
             ) {
                 maxDist = dist;
@@ -139,7 +139,7 @@ void DefaultMode::CursorUpdate() {
             vec3 curvePointPos = terrain_.DBG_curves_[i].points[j];
             float dist = distance(camera_.transform_.position, curvePointPos);
             if (
-                Ray::RayHitSphere(camera_.transform_.position, mouseRay, curvePointPos, 2.0f) &&
+                Ray::RayHitSphere(camera_.transform_.position, mouseRay, curvePointPos, 4.0f) &&
                 dist < maxDist
             ) {
                 maxDist = dist;

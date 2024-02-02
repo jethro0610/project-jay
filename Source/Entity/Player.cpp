@@ -68,6 +68,7 @@ void Player::Init(Entity::InitArgs args)
     materials_[BODY].properties.color = vec4(0.95f);
 
     materials_[HAIR].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color_masked");
+    materials_[HAIR].triangleType = TriangleType::TWO_SIDED;
     materials_[HAIR].properties.color = vec4(0.65f);
     materials_[HAIR].numTextures = 1;
     materials_[HAIR].textures[0] = resourceManager.GetTexture("t_hair_m");

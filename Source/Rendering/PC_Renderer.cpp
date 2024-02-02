@@ -93,6 +93,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     #ifdef _DEBUG
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
+    selectedUnshadedShader_ = resourceManager.GetShader("vs_static", "fs_selected_unshaded");
+    selectedFrontShader_ = resourceManager.GetShader("vs_static", "fs_selected_front");
     persistShader_ = resourceManager.GetShader("vs_static", "fs_persist");
     #endif
 }
@@ -230,6 +232,14 @@ void Renderer::RenderMesh(
 
                 case DS_Selected:
                     shaderHandle = selectedShader_->handle;
+                    break;
+
+                case DS_SelectedUnshaded:
+                    shaderHandle = selectedUnshadedShader_->handle;
+                    break;
+
+                case DS_SelectedFront:
+                    shaderHandle = selectedFrontShader_->handle;
                     break;
 
                 case DS_Persist:
@@ -471,7 +481,14 @@ void Renderer::RenderTerrainBubbles(Terrain& terrain) {
     for (TerrainBubble& bubble : terrain.DBG_bubbles_) {
         bubbleTransform.position = bubble.position;
         bubbleMatrix = bubbleTransform.ToMatrix();
-        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_bubbleMaterial_, nullptr, &bubbleMatrix);
+        RenderMesh(
+            &terrain.DBG_nodeModel_->meshes[0],
+            &terrain.DBG_bubbleMaterial_,
+            nullptr,
+            &bubbleMatrix,
+            nullptr,
+            bubble.DBG_selected_ ? DS_SelectedUnshaded : DS_Default
+        );
     }
 }
 
@@ -481,21 +498,33 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
     mat4 curveMatrix;
     for (TerrainCurve& curve : terrain.DBG_curves_) {
         for (int i = 0; i < 65; i++) {
-            if (i == 0 || i == 64)
+            DebugShaderType shaderType = DS_Default;
+            if (i == 0 || i == 64) {
                 curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-            else
+                if (curve.DBG_selectedPoint_ == (i / 64) * 3)
+                    shaderType = DS_SelectedUnshaded;
+            }
+            else {
                 curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
+            }
 
             vec4 curvePos = curve.GetPosition(i / 64.0f);
             curveTransform.position = curvePos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveMaterial_, nullptr, &curveMatrix);
+            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveMaterial_, nullptr, &curveMatrix, nullptr, shaderType);
         }
 
         curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
         curveTransform.position = curve.points[1];
         curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
+        RenderMesh(
+            &terrain.DBG_nodeModel_->meshes[0], 
+            &terrain.DBG_curveControlMaterial_, 
+            nullptr, 
+            &curveMatrix, 
+            nullptr, 
+            curve.DBG_selectedPoint_ == 1 ? DS_SelectedFront : DS_Default
+        );
         curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
         for (int i = 1; i < 32; i++) {
             vec4 pos = mix(curve.points[0], curve.points[1], i / 32.0f);
@@ -507,7 +536,14 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
         curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
         curveTransform.position = curve.points[2];
         curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveControlMaterial_, nullptr, &curveMatrix);
+        RenderMesh(
+            &terrain.DBG_nodeModel_->meshes[0], 
+            &terrain.DBG_curveControlMaterial_, 
+            nullptr, 
+            &curveMatrix, 
+            nullptr, 
+            curve.DBG_selectedPoint_ == 2 ? DS_SelectedFront : DS_Default
+        );
         curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
         for (int i = 1; i < 32; i++) {
             vec4 pos = mix(curve.points[2], curve.points[3], i / 32.0f);

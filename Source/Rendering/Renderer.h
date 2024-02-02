@@ -76,6 +76,8 @@ private:
 
     #ifdef _DEBUG
     Shader* selectedShader_;
+    Shader* selectedFrontShader_;
+    Shader* selectedUnshadedShader_;
     Shader* persistShader_;
     #endif
 
@@ -136,6 +138,8 @@ private:
     enum DebugShaderType {
         DS_Default,
         DS_Selected,
+        DS_SelectedUnshaded,
+        DS_SelectedFront,
         DS_Persist 
     };
     void RenderMesh(

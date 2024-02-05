@@ -9,6 +9,7 @@ void Entity::Construct(
     Camera& camera,
     EntityList& entities,
     Inputs& inputs,
+    Level& level,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     Terrain& terrain
@@ -16,6 +17,7 @@ void Entity::Construct(
     camera_ = &camera;
     entities_ = &entities;
     inputs_ = &inputs;
+    level_ = &level;
     seedManager_ = &seedManager;
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;

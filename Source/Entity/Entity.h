@@ -13,6 +13,7 @@
 class Camera;
 class EntityList;
 struct Inputs;
+class Level;
 class ParticleManager;
 class ResourceManager;
 class SeedManager;
@@ -88,6 +89,7 @@ public:
         Camera& camera,
         EntityList& entities,
         Inputs& inputs,
+        Level& level,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain
@@ -168,6 +170,7 @@ public:
     Camera* camera_;
     EntityList* entities_;
     Inputs* inputs_;
+    Level* level_;
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;

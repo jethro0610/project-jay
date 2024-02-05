@@ -198,3 +198,13 @@ void SpreadManager::Reset() {
     keyIndices_.clear();
     tramples_.clear();
 }
+
+float SpreadManager::GetCoverage() {
+    float terrainUnitArea = (1.0f / TerrainConsts::WORLD_TO_TERRAIN_SCALAR); 
+    terrainUnitArea *= terrainUnitArea;
+    float spreadUnitArea = SpreadManager::SPREAD_DIST * SpreadManager::SPREAD_DIST;
+
+    float terrainArea = terrain_.area_ * terrainUnitArea;
+    int maxSpread = terrainArea / spreadUnitArea; 
+    return GetCount() / (float)maxSpread;
+}

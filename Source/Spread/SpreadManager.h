@@ -63,6 +63,7 @@ public:
     void Trample(const glm::vec3& position);
     void Trample(const glm::vec3& position, int radius);
     void Reset();
+    float GetCoverage();
 
 private:
     bool AddSpread(const SpreadKey& key); 

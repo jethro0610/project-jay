@@ -31,6 +31,7 @@ Game::Game():
         resourceManager_, 
         camera_, 
         inputs_, 
+        level_,
         seedManager_, 
         spreadManager_,
         terrain_

@@ -63,7 +63,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
-    SetLightDirection(vec3(1.0f, -1.0f, 1.0f));
+    SetLightDirection(normalize(vec3(0.75f, -1.0f, 0.75f)));
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 

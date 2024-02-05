@@ -264,7 +264,7 @@ void Player::Update() {
         spinTime_ -= 2;
     spinTime_ = clamp(spinTime_, 0, 120);
 
-    velocity_.y -= 1.0f;
+    velocity_.y -= 1.5f;
     switch (moveMode_) {
         case MM_Default: {
             velocity_.x += desiredMovement.x * acceleration;

@@ -9,7 +9,10 @@ public:
     static constexpr const char* GetName() { return "e_levelclear"; }
     static EntityDependendies GetDeps(); 
 
-    void Update() {}; 
+    bool canGoNext_;
+    bool shouldGoNext_;
+
+    void Update(); 
     void RenderUpdate() {};
     void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args);

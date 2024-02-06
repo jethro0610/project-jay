@@ -63,6 +63,7 @@ struct Push {
 };
 
 void Game::Update() {
+    SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
         FlushInputs_P();

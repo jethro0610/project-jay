@@ -26,6 +26,7 @@ class SpreadManager {
 public:
     static constexpr float SPREAD_DIST = 2.0f;
     static constexpr int MAX_SPREAD = 32768;
+    static constexpr int KEY_LENGTH = 1024;
     SpreadManager(
         SeedManager& seedManager,
         Terrain& terrain
@@ -58,10 +59,6 @@ public:
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
 
-    void ClearTramples() { tramples_.clear(); }
-    void Trample(const SpreadKey& key);
-    void Trample(const glm::vec3& position);
-    void Trample(const glm::vec3& position, int radius);
     void Reset();
     float GetCoverage();
 
@@ -76,10 +73,8 @@ private:
 
     Terrain& terrain_;
     SeedManager& seedManager_;
-    vector_contig<SpreadKey, 8192> viableAddKeys_;
 
     vector_contig<SpreadRenderData, MAX_SPREAD> renderData_;
-    std::unordered_map<SpreadKey, int> keyIndices_;
-    std::unordered_set<SpreadKey> tramples_;
+    int spreadKeys_[KEY_LENGTH][KEY_LENGTH];
     int count_;
 };

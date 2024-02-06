@@ -1,5 +1,9 @@
-- Fix layer sizes affecting positining
 - Phase token
+    - Spread particles
+        - Move towards token when ready to be hit
+        - Clear spread once hit like being blown out
+
+- Fix layer sizes affecting positining
 
 - Pillars on test level are bell towers 
     - Sound wave effect

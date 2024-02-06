@@ -8,6 +8,7 @@
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include "Logging/Logger.h"
 using namespace glm;
 
 SpreadManager::SpreadManager(
@@ -18,11 +19,15 @@ SpreadManager::SpreadManager(
     terrain_(terrain),
     count_(0)
 { 
-
+    for (int i = 0; i < KEY_LENGTH; i++) {
+    for (int j = 0; j < KEY_LENGTH; j++) {
+        spreadKeys_[i][j] = -1;
+    }}
 }
 
 SpreadKey SpreadManager::GetKey(const vec2& position) const {
-    return ivec2(floor(position / SPREAD_DIST));
+    SpreadKey key = ivec2(floor(position / SPREAD_DIST)) + ivec2(KEY_LENGTH / 2);
+    return key;
 }
 
 SpreadKey SpreadManager::GetKey(const vec3& position) const {
@@ -31,7 +36,7 @@ SpreadKey SpreadManager::GetKey(const vec3& position) const {
 
 bool SpreadManager::SpreadIsActive(const vec2& position) const {
     SpreadKey key = GetKey(position);
-    return keyIndices_.contains(key);
+    return spreadKeys_[key.x][key.y] != -1;
 }
 
 bool SpreadManager::SpreadIsActive(const vec3& position) const {
@@ -39,14 +44,18 @@ bool SpreadManager::SpreadIsActive(const vec3& position) const {
 }
 
 bool SpreadManager::AddSpread(const ivec2& key) {
-    if (keyIndices_.contains(key) || tramples_.contains(key))
+    if (spreadKeys_[key.x][key.y] != -1)
         return false;
 
     const float offset = SPREAD_DIST / 2.0f;
 
     Transform transform;
 
-    transform.position = vec3(key.x * SPREAD_DIST + offset, 0.0f, key.y * SPREAD_DIST + offset);
+    transform.position = vec3(
+        (key.x - KEY_LENGTH / 2) * SPREAD_DIST + offset, 
+        0.0f, 
+        (key.y - KEY_LENGTH / 2) * SPREAD_DIST + offset 
+    );
     vec2 randOffset = RandomVector2D(1.0f);
     transform.position.x += randOffset.x;
     transform.position.z += randOffset.y;
@@ -66,7 +75,8 @@ bool SpreadManager::AddSpread(const ivec2& key) {
     renderData.color.b = RandomFloatRange(0.65f, 0.75f);
     renderData.time = GlobalTime::GetTime();
 
-    keyIndices_[key] = renderData_.push_back(renderData);
+    int addIndex = renderData_.push_back(renderData);
+    spreadKeys_[key.x][key.y] = addIndex;
     count_++;
 
     return true;
@@ -81,8 +91,6 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
     ivec2 origin = GetKey(position);
     int count = 0;
 
-    // Get the spreads we can add in this radius
-    viableAddKeys_.clear();
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         float distance = sqrtf(x*x + z*z);
@@ -90,18 +98,9 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
             continue;
         
         ivec2 key = origin + ivec2(x, z);
-        if (!keyIndices_.contains(key))
-            viableAddKeys_.push_back(key);
+        if (AddSpread(key))
+            count++;
     } }
-
-    // Randomly select a spread from the viable ones and
-    // add it
-    while (viableAddKeys_.size() > 0 && count < amount) {
-        int index = std::rand() % viableAddKeys_.size();
-        AddSpread(viableAddKeys_[index]);
-        viableAddKeys_.remove(index);
-        count++;
-    }
 
     return AddSpreadInfo{count, origin};
 }
@@ -112,24 +111,28 @@ bool SpreadManager::RemoveSpread(
     Entity* remover,
     const vec3& seedOffset
 ) {
-    auto foundKey = keyIndices_.find(key);
-    if (foundKey == keyIndices_.end())
+    if (spreadKeys_[key.x][key.y] == -1)
         return false;
 
-    int deleteIndex = foundKey->second;
-    vec3 position = vec3(renderData_[deleteIndex].modelMatrix[3]);
-
+    // Get the index of the spread to delete 
+    int indexToRemove = spreadKeys_[key.x][key.y];
     if (createSeed) {
+        vec3 position = vec3(renderData_[indexToRemove].modelMatrix[3]);
         vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
         seedManager_.CreateSeed(seedPosition, remover, seedOffset);
     }
 
-    mat4 swappedTransform = renderData_.remove(deleteIndex).modelMatrix;
-    vec3 swappedPosition = vec3(swappedTransform[3]);
-    SpreadKey keyToSwap = GetKey(vec2(swappedPosition.x, swappedPosition.z));
+    // Remove the element at the index...
+    renderData_.remove(indexToRemove);
+    spreadKeys_[key.x][key.y] = -1;
 
-    keyIndices_[keyToSwap] = deleteIndex;
-    keyIndices_.erase(key);
+    // ...and get the key of the spread that
+    // replaced that index...
+    vec3 swappedPosition = renderData_[indexToRemove].modelMatrix[3];
+    SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
+
+    // ...then the index to the key
+    spreadKeys_[swapKey.x][swapKey.y] = indexToRemove;
     count_--;
 
     return true;
@@ -164,39 +167,10 @@ int SpreadManager::RemoveSpread(
     return count;
 }
 
-void SpreadManager::Trample(const SpreadKey& key) {
-    RemoveSpread(key);
-    tramples_.insert(key); 
-}
-
-void SpreadManager::Trample(const glm::vec3& position) {
-    Trample(GetKey(position));
-}
-
-void SpreadManager::Trample(const glm::vec3& position, int radius) {
-    if (radius == 0)
-        return;
-
-    ivec2 origin = GetKey(position);
-    radius--;
-    
-    for (int x = -radius; x <= radius; x++) {
-    for (int z = -radius; z <= radius; z++) {
-        float distance = sqrtf(x*x + z*z);
-        if (distance > radius)
-            continue;
-        
-        ivec2 key = origin + ivec2(x, z);
-        Trample(key);
-    } }
-}
 
 void SpreadManager::Reset() {
     count_ = 0;
     renderData_.clear();
-    viableAddKeys_.clear();
-    keyIndices_.clear();
-    tramples_.clear();
 }
 
 float SpreadManager::GetCoverage() {

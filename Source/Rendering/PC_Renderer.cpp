@@ -91,6 +91,10 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_.numTextures = 1;
     textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
 
+    spreadParticleMaterial_.shader = resourceManager.GetShader("vs_spreadparticle", "fs_spreadparticle");
+    spreadParticleMaterial_.numTextures = 0;
+    spreadParticleMaterial_.castShadows = false;
+
     #ifdef _DEBUG
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
     selectedUnshadedShader_ = resourceManager.GetShader("vs_static", "fs_selected_unshaded");
@@ -354,6 +358,17 @@ void Renderer::RenderSpread(
         Material* material = &materials[m];
         RenderMesh(mesh, material, &instanceBuffer);
     }
+}
+
+void Renderer::RenderSpreadParticles(SpreadManager& spreadManager) {
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, spreadManager.spreadParticles_.size(), sizeof(SpreadParticle));
+    memcpy(
+        instanceBuffer.data, 
+        spreadManager.spreadParticles_.data(), 
+        sizeof(SpreadParticle) * spreadManager.spreadParticles_.size()
+    );
+    RenderMesh(quad_, &spreadParticleMaterial_, &instanceBuffer);
 }
 
 void Renderer::RenderSeed(SeedManager& seedManager, Material* material) {

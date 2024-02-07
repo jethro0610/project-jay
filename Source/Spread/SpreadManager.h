@@ -22,11 +22,19 @@ struct SpreadRenderData {
     float time;
 };
 
+struct SpreadParticle {
+    glm::vec4 position;
+    float time;
+    float padding[11];
+};
+
 class SpreadManager {
 public:
     static constexpr float SPREAD_DIST = 2.0f;
     static constexpr int MAX_SPREAD = 32768;
     static constexpr int KEY_LENGTH = 1024;
+    static constexpr int MAX_SPREAD_PARTICLES = 4096;
+
     SpreadManager(
         SeedManager& seedManager,
         Terrain& terrain
@@ -59,6 +67,9 @@ public:
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
 
+    float particleTimer_;
+    vector_contig<SpreadParticle, MAX_SPREAD_PARTICLES> spreadParticles_;
+    void Update(float deltaTime);
     void Reset();
     float GetCoverage();
 

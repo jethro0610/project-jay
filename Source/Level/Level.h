@@ -14,7 +14,7 @@ class Terrain;
 
 class Level {
 public:
-    static constexpr int MAX_PHASES = 4;
+    static constexpr int MAX_PHASES = 2;
     Level(
         EntityList& entities,
         ParticleManager& particleManager,

@@ -23,6 +23,31 @@ SpreadManager::SpreadManager(
     for (int j = 0; j < KEY_LENGTH; j++) {
         spreadKeys_[i][j] = -1;
     }}
+    particleTimer_ = 0.0f;
+}
+
+void SpreadManager::Update(float deltaTime) {
+    particleTimer_ += deltaTime;
+    if (particleTimer_ > 0.5f) {
+        particleTimer_ = 0.0f;
+        int spreadIndex = rand() % renderData_.size();
+        vec3 position = renderData_[spreadIndex].modelMatrix[3];
+        SpreadParticle particle;
+        particle.position = vec4(position, 1.0f);
+        spreadParticles_.push_back(particle);
+    }
+
+    for (int i = 0; i < spreadParticles_.size(); i++) {
+        SpreadParticle& particle = spreadParticles_[i];
+        particle.time += deltaTime;
+        if (particle.time > 5.0f) {
+            spreadParticles_.remove(i);
+            i--;
+            continue;
+        }
+
+        particle.position.y += deltaTime;
+    }
 }
 
 SpreadKey SpreadManager::GetKey(const vec2& position) const {

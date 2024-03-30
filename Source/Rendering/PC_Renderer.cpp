@@ -361,6 +361,9 @@ void Renderer::RenderSpread(
 }
 
 void Renderer::RenderSpreadParticles(SpreadManager& spreadManager) {
+    if (spreadManager.spreadParticles_.size() <= 0)
+        return;
+
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, spreadManager.spreadParticles_.size(), sizeof(SpreadParticle));
     memcpy(

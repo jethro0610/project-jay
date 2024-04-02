@@ -73,7 +73,6 @@ private:
     Material blitMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
-    Material spreadParticleMaterial_;
 
     #ifdef _DEBUG
     Shader* selectedShader_;

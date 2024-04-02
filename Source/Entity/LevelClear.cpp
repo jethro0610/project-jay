@@ -37,7 +37,7 @@ void LevelClear::Init(Entity::InitArgs args) {
 }
 
 void LevelClear::Update() {
-    if (spreadManager_->GetCoverage() >= 0.002f) {
+    if (spreadManager_->GetCoverage() >= 0.6f) {
         materials_[0].properties.color = vec4(1.0f, 0.0f, 1.0f, 1.0f);
         canGoNext_ = true;
     }
@@ -60,4 +60,4 @@ void LevelClear::OnHurt(HurtArgs args) {
         return;
 
     shouldGoNext_ = true;
-};
+}

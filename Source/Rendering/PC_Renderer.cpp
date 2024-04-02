@@ -91,10 +91,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_.numTextures = 1;
     textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
 
-    spreadParticleMaterial_.shader = resourceManager.GetShader("vs_spreadparticle", "fs_spreadparticle");
-    spreadParticleMaterial_.numTextures = 0;
-    spreadParticleMaterial_.castShadows = false;
-
     #ifdef _DEBUG
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
     selectedUnshadedShader_ = resourceManager.GetShader("vs_static", "fs_selected_unshaded");

@@ -1,3 +1,10 @@
+- Phases of tele:
+    - Pillars
+    - Wanderer
+    - More pillars
+
+- Save before closing prompt
+
 - Phase token
     - Spread particles
         - Move towards token when ready to be hit

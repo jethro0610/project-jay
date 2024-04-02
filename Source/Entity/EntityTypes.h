@@ -7,8 +7,8 @@
 #include "MultiHitPod.h"
 #include "TeleportPod.h"
 #include "Entity.h"
-#include "Player.h"
 #include "LevelClear.h"
+#include "Player.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \

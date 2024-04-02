@@ -17,6 +17,7 @@ void LevelClear::Init(Entity::InitArgs args) {
 
     SetFlag(EF_SendPush, false);
     SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_SendPush, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -37,7 +38,7 @@ void LevelClear::Init(Entity::InitArgs args) {
 }
 
 void LevelClear::Update() {
-    if (spreadManager_->GetCoverage() >= 0.6f) {
+    if (spreadManager_->GetCoverage() >= 0.4f) {
         materials_[0].properties.color = vec4(1.0f, 0.0f, 1.0f, 1.0f);
         canGoNext_ = true;
     }

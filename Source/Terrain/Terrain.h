@@ -9,7 +9,6 @@
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 #include <vector_contig.h>
-#include <thread>
 #include <nlohmann/json.hpp>
 
 class EntityList;
@@ -40,6 +39,7 @@ public:
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
     int area_;
+    glm::vec4 holes_[8];
 
 private:
     ResourceManager& resourceManager_;

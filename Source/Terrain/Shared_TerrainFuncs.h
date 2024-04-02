@@ -8,12 +8,14 @@
 #define ACCURACY_TYPE TerrainAccuracy
 #define ACCURACY_DEFAULT = TA_Normal 
 #define SAMPLETERRAINMAP(pos, accuracy) terrain.SampleTerrainMap(pos, accuracy)
+#define TERRAINHOLES terrain.holes_
 #define INLINE inline
 using namespace glm;
 
 #else
 #include <Shared_TerrainConstants.h>
 uniform vec4 u_terrainMeshOffset;
+uniform vec4 u_terrainHoles[8];
 SAMPLER2D(s_terrainMap, 15);
 
 #define TERRAIN_TYPE int
@@ -21,6 +23,7 @@ SAMPLER2D(s_terrainMap, 15);
 #define ACCURACY_TYPE int 
 #define ACCURACY_DEFAULT = 0
 #define SAMPLETERRAINMAP(pos, accuracy) texture2DLod(s_terrainMap, pos / TERRAIN_RANGE + vec2(0.5f, 0.5f), 0)
+#define TERRAINHOLES u_terrainHoles
 #define INLINE 
 
 #endif
@@ -30,7 +33,15 @@ INLINE float Ease(float x) {
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
-    float edgeDistance = max(pos.x * 0.35f, 0.0f);
+
+    for (int i = 0; i < 8; i++) {
+        vec2 holePosition = vec2(TERRAINHOLES[i].x, TERRAINHOLES[i].y);
+        float dist = distance(position, holePosition);
+        dist -= TERRAINHOLES[i].z;
+        pos.x = max(-dist, pos.x);
+    }
+
+    float edgeDistance = max(pos.x * 0.5f, 0.0f);
     pos.y -= edgeDistance * edgeDistance;
     return pos;
 }

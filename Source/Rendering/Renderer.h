@@ -119,6 +119,7 @@ private:
     UniformHandle u_meter_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_textProps_;
+    UniformHandle u_terrainHoles_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
     void SetTexturesFromMaterial(Material* material, bool shadowMap = true);

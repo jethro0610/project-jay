@@ -1,6 +1,5 @@
 #include "Terrain.h"
 #include "Shared_TerrainFuncs.h"
-#include "Logging/Logger.h"
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
@@ -44,6 +43,13 @@ resourceManager_(resourceManager)
     DBG_curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     DBG_curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
     #endif
+
+    for (int i = 0; i < 8; i++) {
+        holes_[i] = vec4(0.0f);
+    }
+    holes_[0].z = 16.0f;
+    holes_[0].x = 32.0f;
+    holes_[0].y = 32.0f;
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {

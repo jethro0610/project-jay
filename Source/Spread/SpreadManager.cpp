@@ -195,6 +195,10 @@ int SpreadManager::RemoveSpread(
 
 void SpreadManager::Reset() {
     count_ = 0;
+    for (int x = 0; x < KEY_LENGTH; x++) {
+    for (int y = 0; y < KEY_LENGTH; y++) {
+        spreadKeys_[x][y] = -1;
+    }}
     renderData_.clear();
 }
 

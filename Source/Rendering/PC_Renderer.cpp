@@ -360,20 +360,6 @@ void Renderer::RenderSpread(
     }
 }
 
-void Renderer::RenderSpreadParticles(SpreadManager& spreadManager) {
-    if (spreadManager.spreadParticles_.size() <= 0)
-        return;
-
-    bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, spreadManager.spreadParticles_.size(), sizeof(SpreadParticle));
-    memcpy(
-        instanceBuffer.data, 
-        spreadManager.spreadParticles_.data(), 
-        sizeof(SpreadParticle) * spreadManager.spreadParticles_.size()
-    );
-    RenderMesh(quad_, &spreadParticleMaterial_, &instanceBuffer);
-}
-
 void Renderer::RenderSeed(SeedManager& seedManager, Material* material) {
     uint32_t count = seedManager.seeds_.size();
     if (count == 0)

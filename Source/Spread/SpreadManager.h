@@ -22,12 +22,6 @@ struct SpreadRenderData {
     float time;
 };
 
-struct SpreadParticle {
-    glm::vec4 position;
-    float time;
-    float padding[11];
-};
-
 class SpreadManager {
 public:
     static constexpr float SPREAD_DIST = 2.0f;
@@ -67,9 +61,6 @@ public:
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
 
-    float particleTimer_;
-    vector_contig<SpreadParticle, MAX_SPREAD_PARTICLES> spreadParticles_;
-    void Update(float deltaTime);
     void Reset();
     float GetCoverage();
 

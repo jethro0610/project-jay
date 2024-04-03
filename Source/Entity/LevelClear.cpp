@@ -38,7 +38,7 @@ void LevelClear::Init(Entity::InitArgs args) {
 }
 
 void LevelClear::Update() {
-    if (spreadManager_->GetCoverage() >= 0.4f) {
+    if (spreadManager_->GetCoverage() >= 0.65f) {
         materials_[0].properties.color = vec4(1.0f, 0.0f, 1.0f, 1.0f);
         canGoNext_ = true;
     }

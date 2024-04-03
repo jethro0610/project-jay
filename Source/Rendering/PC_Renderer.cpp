@@ -29,7 +29,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1280;
     height_ = 720;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(70.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 1000.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 1000.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 
@@ -63,7 +63,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
-    u_terrainHoles_ = bgfx::createUniform("u_terrainHoles", bgfx::UniformType::Vec4, 8);
     SetLightDirection(normalize(vec3(0.75f, -1.0f, 0.75f)));
 
     backBuffer_ = BGFX_INVALID_HANDLE;
@@ -279,8 +278,6 @@ void Renderer::RenderMesh(
 }
 
 void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadius) {
-    bgfx::setUniform(u_terrainHoles_, terrain.holes_, 8);
-
     int radius = maxRadius / TerrainConsts::MESH_SIZE;
     radius += 1;
     for (int x = -radius; x < radius; x++)

@@ -64,6 +64,10 @@ struct Push {
 
 void Game::Update() {
     SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
+    if (spreadManager_.GetCoverage() >= 0.15f) {
+        level_.NextPhase();
+    }
+
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
         FlushInputs_P();

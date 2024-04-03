@@ -7,9 +7,7 @@
 #include "MultiHitPod.h"
 #include "TeleportPod.h"
 #include "Entity.h"
-#include "LevelClear.h"
 #include "Player.h"
-#include "Wanderer.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -20,6 +18,4 @@
 	ENTITYEXP(TeleportPod, teleportpod, 5) \
 	ENTITYEXP(MultiHitPod, multihitpod, 6) \
 	ENTITYEXP(TrailFish, trailfish, 7) \
-	ENTITYEXP(Bomb, bomb, 8) \
-	ENTITYEXP(LevelClear, levelclear, 9) \
-	ENTITYEXP(Wanderer, wanderer, 10)
+	ENTITYEXP(Bomb, bomb, 8)

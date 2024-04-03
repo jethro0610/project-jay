@@ -78,6 +78,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
     barMaterial_.shader = resourceManager.GetShader("vs_uibar", "fs_uibar");
+    coverageBarMaterial_.shader = resourceManager.GetShader("vs_coveragebar", "fs_coveragebar");
 
     blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
     blitMaterial_.numTextures = 1;
@@ -411,7 +412,7 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
 }
 
-void Renderer::RenderUI(EntityList& entities) {
+void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
 
     Player* player = (Player*)&entities[0];
@@ -422,6 +423,13 @@ void Renderer::RenderUI(EntityList& entities) {
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
+
+    meter = vec4(spreadManager.GetCoverage(), 0.0f, 0.0f, 0.0f); 
+    bgfx::setUniform(u_meter_, &meter);
+
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, coverageBarMaterial_.shader->handle);
 }
 
 void Renderer::RenderText(Text& text) {

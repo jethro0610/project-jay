@@ -25,7 +25,7 @@ void Renderer::Render(
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(entities);
+    RenderUI(entities, spreadManager);
     RenderScreenText();
 
     PresentFrame();

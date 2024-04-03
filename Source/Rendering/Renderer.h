@@ -70,6 +70,7 @@ private:
     Mesh* terrain_;
 
     Material barMaterial_;
+    Material coverageBarMaterial_;
     Material blitMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
@@ -175,7 +176,7 @@ private:
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();
-    void RenderUI(EntityList& entities);
+    void RenderUI(EntityList& entities, SpreadManager& spreadManager);
     void RenderText(Text& text);
     #ifdef _DEBUG
     void RenderScreenText();

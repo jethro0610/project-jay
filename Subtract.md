@@ -1,0 +1,74 @@
+- Problem: How do we define the win condition of the game?
+
+- What feels intrisically good?
+    - Weaving around and moving in the level
+    - Circle weaves
+    - Hitting stuff
+
+- Spread
+    - Pros:
+        - Feels good to paint the level
+        - Encourages players to take multiple "routes"
+        - Gives levels a good length
+    - Cons:
+        - Very difficult to expand upon (at least in my head)
+        - Levels may feel homogenous
+        - How can I introduce a more varied win condition?
+        - When introducing a secondary win condition, levels feels "fuzzy"; players have to juggle two things at once
+            - Maybe this is a good thing?
+    - Solutions:
+        - Have anothing entity in the level creating weeds that the player competes against
+        - Have objects to hit that create more spread
+        - Allow multiple clears per phase, then have locked time (most points till time up)
+            - This may get annoying and feel like padding though
+        - Issues with below: what does this have to do with movement?
+            - Have objects that remove spread that player has to get rid of
+            - Have objects that prevent spread from forming
+        - Items that change how player moves (ie. mushroom, jumper)
+        - Have spread count towards meter, AND have seeds count towards meter too
+            - This could give players more options on how to beat a level
+            - Some levels could be seed preventative, so players have to only do spread
+            - While others can have lots of weeds implictly, so players have to do seeds
+            - Items to remove weeds may be interesting for some levels
+            - Maybe make growing spread release seeds too?
+            - Makes hitting and spreading feel a little more disconnected though
+                - Could make design easier however
+            - How do I make it clear what is happening?
+                - Difference between which is adding to clearance bar
+            - One could end up being more important than the other, players ignore part of the game then
+            - Compared to increased spread system, there will now be two goals instead of one with a secondary
+            - Maybe have a minimum spread amount?
+            - This feels like I'm overcomplicating the design
+        - Core design: Spread as much on level, while other things stop you (obstacles)
+            - Kinda boring
+            - Hard to sustain a full game around
+            - Could maybe make for a set of levels at the start?
+        - Variable win conditions per level
+            - Makes for lots of variety (ie. We Love Katamari)
+            - Requires more work to quantify win conditions
+            - Would likely need short levels
+        - Have lock objects that player needs to interact with in some way before clearing a level
+            - Give a fixed amount rather than arbitrary point assignment to seeds
+            - Only one meter to keep track of
+            - Could allow for boss only levels
+            - Good movement should make the locks easier to clear
+            - Issue: a lot more disconnected from spread
+
+- Multiphase levels are pretty ass, but need continuity between short levels to keep the pace up
+
+- The core of the problem: Players need to both interact with the enviornment and spread as much in the arena
+- What solution covers both these criteria
+- What is the core design of the game. Put it in a sentence:
+    - High speed gardening
+    - Flow state
+
+- Enemy Clearance
+    - Pros:
+        - Encourages hitting
+        - Can have varied enemies = varied challenges
+        - Different win conditions per enemy type
+    - Cons:
+        - Hard to scale, need different enemies per level
+        - Enemies would have to be tanky
+        - No incentive to explore movement mechanics
+        - Feels generic

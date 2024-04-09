@@ -117,7 +117,7 @@ void Editor::StopEditing() {
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
-    level_.Load(level_.DBG_name_, "_autosave");
+    level_.Load(level_.DBG_name_, "_autosave", false);
 }
 
 void Editor::SetMode(EditorMode* mode) {

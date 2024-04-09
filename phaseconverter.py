@@ -12,20 +12,20 @@ def convert_level(level_name):
     file.close()
 
     convert_level = level_json.copy()
-    if "entities" in convert_level:
-        del convert_level["entities"];
+    if "phases" in convert_level:
+        del convert_level["phases"];
 
-    convert_level["phases"] = []
-    convert_level["phases"].append([])
-    convert_level["phases"].append([])
-    convert_level["phases"].append([])
-    convert_level["phases"].append([])
+    convert_level["entities"] = [] 
 
-    if "entities" in level_json:
-        for entity in level_json["entities"]:
-            phase = entity["phase"]
-            del entity["phase"]
-            convert_level["phases"][phase].append(entity)
+    for phase in level_json["phases"]:
+        if phase == None:
+            continue
+
+        for entity in phase:
+            if "persist" in entity:
+                del entity["persist"]
+
+            convert_level["entities"].append(entity)
 
     dump = json.dumps(convert_level, indent=4)
 

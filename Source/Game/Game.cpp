@@ -64,11 +64,6 @@ struct Push {
 
 void Game::Update() {
     SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
-    if (spreadManager_.GetCoverage() >= 0.45f) {
-        spreadManager_.Reset();
-        level_.NextPhase();
-        rawEntities_[0].player.meter_ = 0.0f;
-    }
 
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {

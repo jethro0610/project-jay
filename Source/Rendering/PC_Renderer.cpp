@@ -424,7 +424,7 @@ void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
 
-    meter = vec4(spreadManager.GetCoverage() / 0.65f, 0.0f, 0.0f, 0.0f); 
+    meter = vec4(spreadManager.GetCoverage() / 0.45f, 0.0f, 0.0f, 0.0f); 
     bgfx::setUniform(u_meter_, &meter);
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);

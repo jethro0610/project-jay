@@ -68,13 +68,6 @@ vec3 DefaultMode::GetMouseRay() {
 }
 
 void DefaultMode::Update() {
-    for (int i = 0; i < Level::MAX_PHASES; i++) {
-        if (platform_.pressedKeys_['1' + i]) {
-            target_.Untarget();
-            level_.EditorSwitchPhase(i);
-        }
-    }
-
     if (platform_.pressedKeys_['V']) {
         target_.Untarget();
         visibility_ = EV_All;
@@ -82,11 +75,6 @@ void DefaultMode::Update() {
     if (platform_.pressedKeys_['E']) {
         target_.Untarget();
         visibility_ = EV_EntitiesOnly;
-    }
-
-    if (platform_.pressedKeys_['P']) {
-        target_.Untarget();
-        level_.TogglePersistView();
     }
 
     if (platform_.pressedKeys_[GetBinding()]) {

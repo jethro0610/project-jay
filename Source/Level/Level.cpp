@@ -107,45 +107,9 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     }
     #endif
 
-    for (int i = 0; i < MAX_PHASES; i++)
-        phases_[i] = levelData["phases"][i];
-
-    StartPhase();
-
-    loaded_ = true;
-    return true;
-}
-
-void Level::StartPhase() {
-    phase_ = 0;
-    Clear();
-    SpawnEntitiesInPhase(phase_);
-}
-
-void Level::NextPhase() {
-    if (phase_ >= MAX_PHASES - 1) {
-        DEBUGLOG("Error: going to phase greater than max");
-        return;
-    }
-    phase_++;
-
-    // TODO: Only remove non-persistent entities
-    for (int i = 0; i < 128; i++) {
-        Entity& entity = entities_[i];
-        if (entity.alive_ && !entity.persist_)
-            entity.destroy_ = true;
-    }
-    entities_.DestroyFlaggedEntities();
-    SpawnEntitiesInPhase(phase_);
-}
-
-void Level::SpawnEntitiesInPhase(int phase, bool persistView) {
-    auto& entitiesData = phases_[phase];
-    Transform entityTransform;
-    for (auto& entityData : entitiesData) {
-        if (phase != phase_ && !entityData["persist"]) continue;
+    for (auto& entityData : levelData["entities"]) {
         Entity* entity;
-        entityTransform = GetTransform(entityData, "transform");
+        Transform entityTransform = GetTransform(entityData, "transform");
 
         #ifndef _DEBUG
         entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
@@ -156,15 +120,19 @@ void Level::SpawnEntitiesInPhase(int phase, bool persistView) {
             entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
-        entity->DBG_persistView_ = persistView;
         #endif
-        entity->persist_ = entityData["persist"];
     }
+
+    loaded_ = true;
+    return true;
 }
 
 #ifdef _DEBUG
-void Level::SaveCurrentPhase() {
-    phases_[phase_].clear();
+void Level::Save(const std::string& name, const std::string& suffix) {
+    DBG_name_ = name;
+
+    nlohmann::json levelData;
+    levelData["landmap"] = terrain_.DBG_landMapName_;
 
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
@@ -188,21 +156,8 @@ void Level::SaveCurrentPhase() {
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
 
-        entityData["persist"] = entity.persist_;
-
-        phases_[phase_].push_back(entityData);
+        levelData["entities"].push_back(entityData);
     }
-}
-
-void Level::Save(const std::string& name, const std::string& suffix) {
-    DBG_name_ = name;
-
-    nlohmann::json levelData;
-    levelData["landmap"] = terrain_.DBG_landMapName_;
-
-    SaveCurrentPhase();
-    for (int i = 0; i < MAX_PHASES; i++)
-        levelData["phases"].push_back(phases_[i]);
 
     for (int i = 0; i < terrain_.DBG_bubbles_.size(); i++) {
         TerrainBubble& bubble = terrain_.DBG_bubbles_[i];
@@ -239,23 +194,6 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     workingLevelFile.close();
 
     DEBUGLOG("Saved level: " << name + suffix);
-}
-
-void Level::EditorSwitchPhase(int phase) {
-    SaveCurrentPhase();
-    phase_ = phase;
-
-    entities_.Reset();
-    SpawnEntitiesInPhase(phase_, false);
-    if (DBG_persistView_) {
-        for (int i = 0; i < phase_; i++)
-            SpawnEntitiesInPhase(i, true);
-    }
-}
-
-void Level::TogglePersistView() {
-    DBG_persistView_ = !DBG_persistView_;
-    EditorSwitchPhase(phase_);
 }
 #endif
 

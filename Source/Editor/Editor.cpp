@@ -117,7 +117,7 @@ void Editor::StopEditing() {
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
-    level_.StartPhase();
+    level_.Load(level_.DBG_name_, "_autosave");
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -192,11 +192,11 @@ void Editor::Update() {
         bool terrainDestroyed = terrain_.DestroyControls();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
         if (target_.IsTerrainControl() && isTransformMode)
-            terrain_.GenerateTerrainHeights(true, &entities_, level_.phases_);
+            terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.DBG_lowRes_)
-            terrain_.GenerateTerrainHeights(false, &entities_, level_.phases_);
+            terrain_.GenerateTerrainHeights(false, &entities_);
         else if (terrainDestroyed)
-            terrain_.GenerateTerrainHeights(false, &entities_, level_.phases_);
+            terrain_.GenerateTerrainHeights(false, &entities_);
 
         for (int i = 0; i < 128; i++) {
             if (entities_[i].alive_) {
@@ -220,7 +220,7 @@ void Editor::Update() {
     FlushInputs();
 
     if (shouldReloadLandmap) {
-        terrain_.ReloadTerrainDistances(&entities_, level_.phases_);
+        terrain_.ReloadTerrainDistances(&entities_);
         notification_.Set("Done reloading landmap");
     }
 }

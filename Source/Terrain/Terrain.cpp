@@ -294,7 +294,7 @@ void BaseGenerateTerrainHeights(
         thread.join();
 }
 
-void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities, nlohmann::json* phases) {
+void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -303,19 +303,6 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities, nlohmann
 
             if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
                 groundedEntities.push_back(i);
-        }
-    }
-    vector_const<ivec2, 512> groundedPhaseEntities;
-    if (phases != nullptr) {
-        for (int i = 0; i < Level::MAX_PHASES; i++) {
-            nlohmann::json& phase = phases[i];
-            for (int j = 0; j < phase.size(); j++) {
-                nlohmann::json& phaseEntity = phase[j];
-                Transform transform = GetTransform(phaseEntity, "transform");
-
-                if (abs(GetHeight(transform.position) - transform.position.y) < 5.0f)
-                    groundedPhaseEntities.push_back({i, j});
-            }
         }
     }
 
@@ -344,11 +331,6 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities, nlohmann
         Entity& entity = (*entities)[entityIndex];
         entity.transform_.position.y = GetHeight(entity.transform_.position);
     }
-    for (ivec2& phaseIndex : groundedPhaseEntities) {
-        nlohmann::json& phaseEntity = phases[phaseIndex.x][phaseIndex.y];
-        Transform transform = GetTransform(phaseEntity, "transform");
-        phaseEntity["transform"]["position"]["y"] = GetHeight(transform.position);
-    }
 }
 
 void Terrain::GenerateTerrainDistanceSection(
@@ -370,7 +352,7 @@ void Terrain::GenerateTerrainDistanceSection(
     }}
 }
 
-void Terrain::GenerateTerrainDistances(EntityList* entities, nlohmann::json* phases) {
+void Terrain::GenerateTerrainDistances(EntityList* entities) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -379,19 +361,6 @@ void Terrain::GenerateTerrainDistances(EntityList* entities, nlohmann::json* pha
 
             if (abs(GetHeight(entity.transform_.position) - entity.transform_.position.y) < 5.0f)
                 groundedEntities.push_back(i);
-        }
-    }
-    vector_const<ivec2, 512> groundedPhaseEntities;
-    if (phases != nullptr) {
-        for (int i = 0; i < Level::MAX_PHASES; i++) {
-            nlohmann::json& phase = phases[i];
-            for (int j = 0; j < phase.size(); j++) {
-                nlohmann::json& phaseEntity = phase[j];
-                Transform transform = GetTransform(phaseEntity, "transform");
-
-                if (abs(GetHeight(transform.position) - transform.position.y) < 5.0f)
-                    groundedPhaseEntities.push_back({i, j});
-            }
         }
     }
 
@@ -460,20 +429,13 @@ void Terrain::GenerateTerrainDistances(EntityList* entities, nlohmann::json* pha
         if (height > -INFINITY)
             entity.transform_.position.y = height;
     }
-    for (ivec2& phaseIndex : groundedPhaseEntities) {
-        nlohmann::json& phaseEntity = phases[phaseIndex.x][phaseIndex.y];
-        Transform transform = GetTransform(phaseEntity, "transform");
-        float height = GetHeight(vec2(transform.position.x, transform.position.z));
-        if (height > -INFINITY)
-            phaseEntity["transform"]["position"]["y"] = height;
-    }
 }
 
-void Terrain::ReloadTerrainDistances(EntityList* entities, nlohmann::json* phases) {
+void Terrain::ReloadTerrainDistances(EntityList* entities) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
     std::string landmapOutput = "./landmaps/" + DBG_landMapName_ + ".lmp";
     std::string command = "convert -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
     system(command.c_str());
-    GenerateTerrainDistances(entities, phases);
+    GenerateTerrainDistances(entities);
 }
 #endif

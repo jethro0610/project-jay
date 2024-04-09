@@ -53,6 +53,10 @@
             - Could allow for boss only levels
             - Good movement should make the locks easier to clear
             - Issue: a lot more disconnected from spread
+        - Have spread meter be permanent gain
+        - Lock objects add a "ring" of meter instead of preventing clearance
+
+- The game needs some element of randomness to be interesting
 
 - Multiphase levels are pretty ass, but need continuity between short levels to keep the pace up
 

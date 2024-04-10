@@ -22,6 +22,7 @@ public:
 
     Entity& operator[](int index);
     Entity& CreateEntity(Entity::TypeID type, const Transform& transform = Transform());
+    int GetNumLocks();
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

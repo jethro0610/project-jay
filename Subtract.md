@@ -55,6 +55,25 @@
             - Issue: a lot more disconnected from spread
         - Have spread meter be permanent gain
         - Lock objects add a "ring" of meter instead of preventing clearance
+        - Objects that clear weeds
+            - Weeds should limit then
+        - Object that blocks spread growth until another one is removed/interacted with
+        - Collect seed till meter builds
+        - Just open sandbox no goal
+        - Loop around objects in a circle to "capture" them
+        - Loop around in a circle to create spread in that circle
+        - Meter is fixed radius as long as you have some
+        - Combination of fixed radius system and locks
+            - No meter = remove spread?
+                - How would weeds work then?
+            - Max out meter = huge spread burst
+            - Issue: Once lock is cleared, no way to gain spread
+        - Medal system, lower time = better medal, minimum 1 medal per clear, 4 medals max
+            - Bonus medal for certain condition
+                - ie. beat the target in low amount of hits
+
+- Missile that will switch targets when close
+    - Player leads it to target = more spread and key damage
 
 - The game needs some element of randomness to be interesting
 

@@ -357,10 +357,9 @@ void Player::Update() {
             break;
     }
 
-    if (onGround_) {
-        int spreadAmount = 1 + meter_ * 7;
+    if (onGround_ && meter_ > 0) {
         spreadManager_->AddSpread(transform_.position, 3);
-        meter_ -= 0.001f;
+        meter_ -= 0.0015f;
         meter_ = max(0.0f, meter_);
     }
 
@@ -460,7 +459,7 @@ void Player::OnPush(vec3 pushVec) {
     else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.75f) {
         velocity_ = -planarVelocity * velocityLen * 0.5f;
         transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
-        velocity_.y = 10.0f;
+        velocity_.y = 20.0f;
         stun_ = true;
         skipGroundCheck_ = true;
         onGround_ = false;

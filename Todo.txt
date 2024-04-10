@@ -1,8 +1,4 @@
-- Phases of tele:
-    - Pillars
-    - Wanderer
-    - More pillars
-
+- Win keys
 - Save before closing prompt
 
 - Phase token

@@ -69,6 +69,9 @@ bool SpreadManager::AddSpread(const ivec2& key) {
 
     SpreadRenderData renderData;
     renderData.modelMatrix = transform.ToMatrix();
+    if (any(isnan(renderData.modelMatrix[3]))) {
+        return false;
+    }
 
     renderData.color.r = RandomFloatRange(0.95f, 1.0f);
     renderData.color.g = RandomFloatRange(0.85f, 0.95f);
@@ -111,6 +114,9 @@ bool SpreadManager::RemoveSpread(
     Entity* remover,
     const vec3& seedOffset
 ) {
+    if (key.x < 0 || key.y < 0 || key.x >= KEY_LENGTH || key.y >= KEY_LENGTH)
+        return false;
+
     if (spreadKeys_[key.x][key.y] == -1)
         return false;
 
@@ -125,6 +131,11 @@ bool SpreadManager::RemoveSpread(
     // Remove the element at the index...
     renderData_.remove(indexToRemove);
     spreadKeys_[key.x][key.y] = -1;
+    count_--;
+
+    // Skip swapping if the last element was removed
+    if (indexToRemove >= renderData_.size())
+        return true;
 
     // ...and get the key of the spread that
     // replaced that index...
@@ -133,7 +144,6 @@ bool SpreadManager::RemoveSpread(
 
     // ...then the index to the key
     spreadKeys_[swapKey.x][swapKey.y] = indexToRemove;
-    count_--;
 
     return true;
 }

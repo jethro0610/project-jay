@@ -103,3 +103,12 @@ bool EntityList::IsAnyOverlapping(Entity& entity) {
     }
     return false;
 }
+
+int EntityList::GetNumLocks() {
+    int count = 0;
+    for (int i = 0; i < 128; i++) {
+        if (rawEntities_[i].entity.alive_ && rawEntities_[i].entity.lock_)
+            count++;
+    }
+    return count;
+}

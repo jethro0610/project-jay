@@ -5,9 +5,11 @@
 #include "BumpRat.h"
 #include "Bomb.h"
 #include "MultiHitPod.h"
-#include "TeleportPod.h"
-#include "Entity.h"
 #include "Player.h"
+#include "Entity.h"
+#include "TeleportPod.h"
+#include "Comet.h"
+#include "CometSpawner.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -18,4 +20,6 @@
 	ENTITYEXP(TeleportPod, teleportpod, 5) \
 	ENTITYEXP(MultiHitPod, multihitpod, 6) \
 	ENTITYEXP(TrailFish, trailfish, 7) \
-	ENTITYEXP(Bomb, bomb, 8)
+	ENTITYEXP(Bomb, bomb, 8) \
+	ENTITYEXP(Comet, comet, 9) \
+	ENTITYEXP(CometSpawner, cometspawner, 10)

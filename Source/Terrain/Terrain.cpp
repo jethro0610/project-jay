@@ -165,6 +165,7 @@ bool Terrain::DestroyControls() {
         i++;
     }
 
+    i = 0;
     while(i < DBG_curves_.size()) {
         while (i < DBG_curves_.size() && DBG_curves_[i].destroy_) {
             destroyed = true;

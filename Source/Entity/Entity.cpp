@@ -28,7 +28,6 @@ void Entity::Init(
 ) {
     alive_ = true;
     destroy_ = false; 
-    lock_ = false;
     flags_ = 0; 
     
     lastTransform_ = transform_;

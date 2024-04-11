@@ -72,6 +72,35 @@
             - Bonus medal for certain condition
                 - ie. beat the target in low amount of hits
 
+- How to give levels a sense of progression?
+    - Phases
+        - Pros: 
+            - Simple progression from start to finish
+        - Cons
+            - Trivial easy part of level = really boring replay
+            - Very difficult to program and design around (overlap issue)
+    - Separate islands
+        - Pros:
+            - Can create a sense of space in the level
+            - Players can chose which islands they go back and forth to
+            - Can have min spreads for getting to other islands, but global total
+        - Cons:
+            - Hella memory usage
+            - Sheet based levels don't lend to islands, feels weird
+            - Hard to scale
+    - No need for progression?
+        - Super Meat Boy, 1 minute levels
+        - Rather, levels progress as units over time
+        - Difference with this game is there isn't the same degree of mechanical incrementation/skill checking
+
+- For now:
+    - Phaseless levels
+    - Fixed radius
+    - No locks
+    - This is SIMPLE, KEEP IT SIMPLE STUPID
+    - Don't scale up until you know you can do it
+
+
 - Missile that will switch targets when close
     - Player leads it to target = more spread and key damage
 

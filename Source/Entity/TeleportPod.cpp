@@ -17,7 +17,6 @@ EntityDependendies TeleportPod::GetDeps() {
 void TeleportPod::Init(Entity::InitArgs args) {
     Entity::Init(args);
 
-    hurtCount_ = 0;
     shouldTeleport_ = false;
     teleportScaleTicks_ = 0.0f;
     scaleBeforeTeleport_ = vec3(0.0f);
@@ -69,5 +68,4 @@ void TeleportPod::Update() {
 void TeleportPod::OnHurt(HurtArgs args) {
     seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
     shouldTeleport_ = true;
-    hurtCount_++;
 }

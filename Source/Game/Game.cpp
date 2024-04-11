@@ -63,9 +63,8 @@ struct Push {
 };
 
 void Game::Update() {
-    SCREENLINE(7, std::to_string(entities_.GetNumLocks()));
     SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
-    if (spreadManager_.GetCoverage() > 0.33f && entities_.GetNumLocks() == 0) {
+    if (spreadManager_.GetCoverage() > 0.33f) {
         editor_.StartEditing();
         return;
     }

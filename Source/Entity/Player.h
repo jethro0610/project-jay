@@ -28,7 +28,7 @@ public:
     static constexpr int SLIPPERS = 7;
 
     static constexpr float MIN_SPEED = 12.0f;
-    static constexpr float MAX_SPEED = 120.0f;
+    static constexpr float MAX_SPEED = 160.0f;
     static constexpr float MIN_FRICTION = 0.015f;
     static constexpr float MAX_FRICTION = 0.1f;
     static constexpr float MOMENTUM_DECAY = 2.0f;

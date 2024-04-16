@@ -172,6 +172,11 @@ private:
         Model* model, 
         std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
     );
+    void RenderWeed(
+        SpreadManager& spreadManager,
+        Model* model,
+        std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
+    );
     void RenderSeed(SeedManager& seedManagerm, Material* material);
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();

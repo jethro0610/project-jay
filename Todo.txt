@@ -1,4 +1,6 @@
+- Remove LevelProperties
 - Comets
+    - Speed up comet spawn rate, lower spread amount per comet
 - Save before closing prompt
 
 - Phase token

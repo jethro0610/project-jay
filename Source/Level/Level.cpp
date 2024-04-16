@@ -43,6 +43,7 @@ terrain_(terrain)
     properties_.seedMaterial.castShadows = false;
 
     properties_.spreadModel = resourceManager.GetModel("st_flower_test");
+    properties_.weedModel_ = resourceManager.GetModel("st_flower_test");
 
     properties_.spreadMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
     properties_.spreadMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
@@ -55,6 +56,18 @@ terrain_(terrain)
     properties_.spreadMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
     properties_.spreadMaterials[1].numTextures = 0;
     properties_.spreadMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
+
+    properties_.weedMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_dfsa");
+    properties_.weedMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.weedMaterials[0].castShadows = true;
+    properties_.weedMaterials[0].numTextures = 1;
+    properties_.weedMaterials[0].textures[0] = resourceManager.GetTexture("t_flower_m");
+    properties_.weedMaterials[0].triangleType = TriangleType::TWO_SIDED;
+
+    properties_.weedMaterials[1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
+    properties_.weedMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.weedMaterials[1].numTextures = 0;
+    properties_.weedMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 
     #ifdef _DEBUG
     #define ENTITYEXP(TYPE, VAR, ID) DBG_entityTypes_[TYPE::GetName()] = ID;

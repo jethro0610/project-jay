@@ -348,7 +348,27 @@ void Renderer::RenderSpread(
 
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
-    memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadManager::RenderData) * count);
+    memcpy(instanceBuffer.data, spreadManager.GetSpreadData(), sizeof(SpreadManager::RenderData) * count);
+
+    for (int m = 0; m < model->meshes.size(); m++) {
+        Mesh* mesh = &model->meshes[m];
+        Material* material = &materials[m];
+        RenderMesh(mesh, material, &instanceBuffer);
+    }
+}
+
+void Renderer::RenderWeed(
+    SpreadManager& spreadManager, 
+    Model* model,
+    std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
+) {
+    uint32_t count = spreadManager.GetWeedCount();
+    if (count == 0)
+        return;
+
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
+    memcpy(instanceBuffer.data, spreadManager.GetWeedData(), sizeof(SpreadManager::RenderData) * count);
 
     for (int m = 0; m < model->meshes.size(); m++) {
         Mesh* mesh = &model->meshes[m];

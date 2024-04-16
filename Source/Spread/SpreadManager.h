@@ -52,7 +52,8 @@ public:
     ); 
     void UpdateRenderData_P();
 
-    void* GetRenderData() { return spreadData_.data(); }
+    void* GetSpreadData() { return spreadData_.data(); }
+    void* GetWeedData() { return weedData_.data(); }
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
 

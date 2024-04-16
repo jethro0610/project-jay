@@ -358,7 +358,7 @@ void Player::Update() {
     }
 
     if (onGround_ && meter_ > 0) {
-        spreadManager_->AddSpread(transform_.position, 3);
+        spreadManager_->AddSpread(transform_.position, 3, INT_MAX, inputs_->ski);
         meter_ -= 0.0015f;
         meter_ = max(0.0f, meter_);
     }

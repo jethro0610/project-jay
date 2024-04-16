@@ -21,6 +21,7 @@ void Renderer::Render(
     RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
+    RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
     RenderPostProcess();

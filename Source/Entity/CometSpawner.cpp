@@ -23,15 +23,18 @@ void CometSpawner::Init(Entity::InitArgs args) {
     materials_[0].castShadows = false;
     materials_[0].properties.color = vec4(0.0f, 1.0f, 0.0f, 1.0f);
     materials_[0].numTextures = 0;
+
+    timer_ = 0;
+    interval_ = 0;
 }
 
 void CometSpawner::Update() {
-    static int INTERVAL = 80;
     static float spawnRadius = 120.0f;
 
     timer_++;
-    if (timer_ >= INTERVAL) {
+    if (timer_ >= interval_) {
         timer_ = 0;
+        interval_ = RandomFloatRange(20, 60);
 
         Transform cometTransform;
 

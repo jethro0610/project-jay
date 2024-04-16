@@ -10,6 +10,7 @@ public:
     static EntityDependendies GetDeps(); 
 
     int timer_;
+    int interval_;
 
     void Update(); 
     void RenderUpdate() {};

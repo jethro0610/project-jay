@@ -16,14 +16,14 @@ struct AddSpreadInfo {
     SpreadKey key;
 };
 
-struct SpreadRenderData {
-    glm::mat4 modelMatrix;
-    glm::vec3 color;
-    float time;
-};
-
 class SpreadManager {
 public:
+    struct RenderData {
+        glm::mat4 modelMatrix;
+        glm::vec3 color;
+        float time;
+    };
+
     static constexpr float SPREAD_DIST = 2.0f;
     static constexpr int MAX_SPREAD = 32768;
     static constexpr int KEY_LENGTH = 1024;
@@ -38,45 +38,46 @@ public:
     bool SpreadIsActive(const glm::vec2& position) const;
     bool SpreadIsActive(const glm::vec3& position) const;
 
-    bool AddSpread(const glm::vec3& position); 
-    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, int amount = INT_MAX);
+    bool AddSpread(const glm::vec3& position, bool weed = false); 
+    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, int amount = INT_MAX, bool weed = false);
 
     bool RemoveSpread(
         const glm::vec3& position, 
-        bool createSeed = false,
-        Entity* remover = nullptr, 
-        const glm::vec3& seedOffset = glm::vec3(0.0f)
+        Entity* remover = nullptr 
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
-        bool createSeed = false,
-        Entity* remover = nullptr, 
-        const glm::vec3& seedOffset = glm::vec3(0.0f)
+        Entity* remover = nullptr
     ); 
     void UpdateRenderData_P();
 
-    int GetCount() const { return count_; }
-    SpreadRenderData* GetRenderData() { return renderData_.data(); }
+    void* GetRenderData() { return spreadData_.data(); }
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
 
     void Reset();
+    int GetSpreadCount() const { return spreadData_.size(); }
+    int GetWeedCount() const { return weedData_.size(); }
+    int GetCount() const { return spreadData_.size() + weedData_.size(); }
     float GetCoverage();
 
 private:
-    bool AddSpread(const SpreadKey& key); 
+    struct KeyIndex {
+        int index;
+        bool weed;
+    };
+
+    bool AddSpread(const SpreadKey& key, bool weed); 
     bool RemoveSpread(
         const SpreadKey& key,
-        bool createSeed = false,
-        Entity* remover = nullptr,
-        const glm::vec3& seedOffset = glm::vec3(0.0f)
+        Entity* remover = nullptr
     );
 
     Terrain& terrain_;
     SeedManager& seedManager_;
 
-    vector_contig<SpreadRenderData, MAX_SPREAD> renderData_;
-    int spreadKeys_[KEY_LENGTH][KEY_LENGTH];
-    int count_;
+    vector_contig<RenderData, MAX_SPREAD> spreadData_;
+    vector_contig<RenderData, MAX_SPREAD> weedData_;
+    KeyIndex keys_[KEY_LENGTH][KEY_LENGTH];
 };

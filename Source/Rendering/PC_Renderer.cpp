@@ -342,13 +342,13 @@ void Renderer::RenderSpread(
     Model* model,
     std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
 ) {
-    uint32_t count = spreadManager.GetCount();
+    uint32_t count = spreadManager.GetSpreadCount();
     if (count == 0)
         return;
 
     bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadRenderData));
-    memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadRenderData) * count);
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
+    memcpy(instanceBuffer.data, spreadManager.GetRenderData(), sizeof(SpreadManager::RenderData) * count);
 
     for (int m = 0; m < model->meshes.size(); m++) {
         Mesh* mesh = &model->meshes[m];

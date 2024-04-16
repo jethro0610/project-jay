@@ -16,12 +16,11 @@ SpreadManager::SpreadManager(
     Terrain& terrain 
 ) :
     seedManager_(seedManager),
-    terrain_(terrain),
-    count_(0)
+    terrain_(terrain)
 { 
     for (int i = 0; i < KEY_LENGTH; i++) {
     for (int j = 0; j < KEY_LENGTH; j++) {
-        spreadKeys_[i][j] = -1;
+        keys_[i][j] = {-1, false};
     }}
 }
 
@@ -36,15 +35,15 @@ SpreadKey SpreadManager::GetKey(const vec3& position) const {
 
 bool SpreadManager::SpreadIsActive(const vec2& position) const {
     SpreadKey key = GetKey(position);
-    return spreadKeys_[key.x][key.y] != -1;
+    return keys_[key.x][key.y].index != -1;
 }
 
 bool SpreadManager::SpreadIsActive(const vec3& position) const {
     return SpreadIsActive(vec2(position.x, position.z));
 }
 
-bool SpreadManager::AddSpread(const ivec2& key) {
-    if (spreadKeys_[key.x][key.y] != -1)
+bool SpreadManager::AddSpread(const ivec2& key, bool weed) {
+    if (keys_[key.x][key.y].index != -1)
         return false;
 
     const float offset = SPREAD_DIST / 2.0f;
@@ -67,7 +66,7 @@ bool SpreadManager::AddSpread(const ivec2& key) {
     vec3 randomEuler = RandomVector(radians(15.0f));
     transform.rotation = quat(randomEuler) * transform.rotation;
 
-    SpreadRenderData renderData;
+    RenderData renderData;
     renderData.modelMatrix = transform.ToMatrix();
     if (any(isnan(renderData.modelMatrix[3]))) {
         return false;
@@ -78,18 +77,18 @@ bool SpreadManager::AddSpread(const ivec2& key) {
     renderData.color.b = RandomFloatRange(0.65f, 0.75f);
     renderData.time = GlobalTime::GetTime();
 
-    int addIndex = renderData_.push_back(renderData);
-    spreadKeys_[key.x][key.y] = addIndex;
-    count_++;
+    int addIndex = weed ? weedData_.push_back(renderData) : spreadData_.push_back(renderData);
+    keys_[key.x][key.y].index = addIndex;
+    keys_[key.x][key.y].weed = weed;
 
     return true;
 }
 
-bool SpreadManager::AddSpread(const glm::vec3& position) {
-    return AddSpread(GetKey(position));
+bool SpreadManager::AddSpread(const glm::vec3& position, bool weed) {
+    return AddSpread(GetKey(position), weed);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, int amount) {
+AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, int amount, bool weed) {
     radius--;
     ivec2 origin = GetKey(position);
     int count = 0;
@@ -101,7 +100,7 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
             continue;
         
         ivec2 key = origin + ivec2(x, z);
-        if (AddSpread(key))
+        if (AddSpread(key, weed))
             count++;
     } }
 
@@ -110,60 +109,50 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
 
 bool SpreadManager::RemoveSpread(
     const SpreadKey& key, 
-    bool createSeed,
-    Entity* remover,
-    const vec3& seedOffset
+    Entity* remover
 ) {
     if (key.x < 0 || key.y < 0 || key.x >= KEY_LENGTH || key.y >= KEY_LENGTH)
         return false;
 
-    if (spreadKeys_[key.x][key.y] == -1)
+    if (keys_[key.x][key.y].index == -1)
         return false;
 
+    vector_contig<RenderData, MAX_SPREAD>& data = keys_[key.x][key.y].weed ? weedData_ : spreadData_;
+
     // Get the index of the spread to delete 
-    int indexToRemove = spreadKeys_[key.x][key.y];
-    if (createSeed) {
-        vec3 position = vec3(renderData_[indexToRemove].modelMatrix[3]);
-        vec3 seedPosition = position + vec3(0.0f, 0.25f, 0.0f);
-        seedManager_.CreateSeed(seedPosition, remover, seedOffset);
-    }
+    int indexToRemove = keys_[key.x][key.y].index;
 
     // Remove the element at the index...
-    renderData_.remove(indexToRemove);
-    spreadKeys_[key.x][key.y] = -1;
-    count_--;
+    data.remove(indexToRemove);
+    keys_[key.x][key.y].index = -1;
 
     // Skip swapping if the last element was removed
-    if (indexToRemove >= renderData_.size())
+    if (indexToRemove >= data.size())
         return true;
 
     // ...and get the key of the spread that
     // replaced that index...
-    vec3 swappedPosition = renderData_[indexToRemove].modelMatrix[3];
+    vec3 swappedPosition = data[indexToRemove].modelMatrix[3];
     SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 
     // ...then the index to the key
-    spreadKeys_[swapKey.x][swapKey.y] = indexToRemove;
+    keys_[swapKey.x][swapKey.y].index = indexToRemove;
 
     return true;
 }
 
 bool SpreadManager::RemoveSpread(
     const vec3& position, 
-    bool createSeed,
-    Entity* remover,
-    const vec3& seedOffset
+    Entity* remover
 ) {
     SpreadKey key = GetKey(position);
-    return RemoveSpread(key, createSeed, remover, seedOffset);
+    return RemoveSpread(key, remover);
 }
 
 int SpreadManager::RemoveSpread(
     const vec3& position, 
     int radius, 
-    bool createSeed,
-    Entity* remover,
-    const vec3& seedOffset
+    Entity* remover
 ) {
     int count = 0;
     ivec2 origin = GetKey(position);
@@ -171,7 +160,7 @@ int SpreadManager::RemoveSpread(
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z), createSeed, remover, seedOffset))
+        if (RemoveSpread(origin + ivec2(x, z), remover))
             count++;
     } }
     return count;
@@ -179,12 +168,12 @@ int SpreadManager::RemoveSpread(
 
 
 void SpreadManager::Reset() {
-    count_ = 0;
     for (int x = 0; x < KEY_LENGTH; x++) {
     for (int y = 0; y < KEY_LENGTH; y++) {
-        spreadKeys_[x][y] = -1;
+        keys_[x][y] = {-1, false};
     }}
-    renderData_.clear();
+    spreadData_.clear();
+    weedData_.clear();
 }
 
 float SpreadManager::GetCoverage() {

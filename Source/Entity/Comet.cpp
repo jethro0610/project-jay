@@ -44,7 +44,7 @@ void Comet::Init(Entity::InitArgs args) {
 
     velocity_.x = RandomFloatRange(25.0f, 50.0f);
     velocity_.z = RandomFloatRange(25.0f, 50.0f);
-    velocity_.y = -150.0f;
+    velocity_.y = -200.0f;
     transform_.rotation = quatLookAt(normalize(velocity_ ), Transform::worldForward);
     transform_.scale = vec3(2.0f);
 }

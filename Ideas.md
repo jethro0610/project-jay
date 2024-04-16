@@ -1,0 +1,3 @@
+- Multiple spread types
+    - Already have weeds
+    - Can just be a visual based on player state (ie. one type on ski, another on walk, etc.)

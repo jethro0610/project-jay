@@ -10,6 +10,7 @@
 #include "TeleportPod.h"
 #include "Comet.h"
 #include "CometSpawner.h"
+#include "Mower.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -22,4 +23,5 @@
 	ENTITYEXP(TrailFish, trailfish, 7) \
 	ENTITYEXP(Bomb, bomb, 8) \
 	ENTITYEXP(Comet, comet, 9) \
-	ENTITYEXP(CometSpawner, cometspawner, 10)
+	ENTITYEXP(CometSpawner, cometspawner, 10) \
+	ENTITYEXP(Mower, mower, 11)

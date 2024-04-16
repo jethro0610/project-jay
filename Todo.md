@@ -1,6 +1,6 @@
+- Spread Mower
 - Remove LevelProperties
-- Comets
-    - Speed up comet spawn rate, lower spread amount per comet
+- Items
 - Save before closing prompt
 
 - Phase token

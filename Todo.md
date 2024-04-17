@@ -1,4 +1,13 @@
 - Spread Mower
+    - Item?
+    - Follower
+        - Attached via chain, have some object in level to break it?
+        - Break chain using attack?
+        - Break chain by falling in hole?
+            - Then needs jumps mechanic
+    - Hittable
+        - Hard to aim, prolbably shouldn't use this
+    
 - Remove LevelProperties
 - Items
 - Save before closing prompt

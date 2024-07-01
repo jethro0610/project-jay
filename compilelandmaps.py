@@ -1,12 +1,22 @@
 import subprocess
 import os
+import platform
 from termcolor import colored
 
 input_dir = './Assets/landmaps/'
 output_dir = './Output/landmaps/'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
+convert_cmd = ''
+if platform.system() == 'Windows':
+    convert_cmd = 'magick'
+elif platform.system() == 'Linux':
+    convert_cmd = 'convert'
+
 
 def compile_landmap(input_path, output_path):
-    command = 'convert -flatten -resize 1024x1024 ' + input_path + ' GRAY:' + output_path 
+    command = convert_cmd + ' ' + input_path + ' -flatten -resize 1024x1024 ' + ' GRAY:' + output_path 
     print(colored("Compiling landmap %s..." % input_path, "yellow"))
     subprocess.run(command, shell = True)
 

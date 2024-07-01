@@ -56,7 +56,7 @@ public:
     void GenerateTerrainDistanceSection(
         const glm::vec2& start,
         const glm::vec2& end,
-        const uint8_t landMap[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION],
+        const uint8_t* landMap,
         const std::vector<glm::ivec2>& edges
     );
     void ReloadTerrainDistances(EntityList* entities = nullptr);

@@ -337,13 +337,13 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
 void Terrain::GenerateTerrainDistanceSection(
     const glm::vec2& start,
     const glm::vec2& end,
-    const uint8_t distanceMap[RESOLUTION][RESOLUTION],
+    const uint8_t* landMap,
     const std::vector<glm::ivec2>& edges
 ) {
     for (int x = start.x; x < end.x; x++) {
     for (int y = start.y; y < end.y; y++) {
         float distance = INFINITY;
-        float multiplier = distanceMap[x][y] ? -1.0f : 1.0f;
+        float multiplier = landMap[y * RESOLUTION + x] ? -1.0f : 1.0f;
         for (const glm::ivec2& edge : edges) {
             float dx = edge.x - x;
             float dy = edge.y - y;
@@ -365,7 +365,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
         }
     }
 
-    uint8_t landMap[RESOLUTION][RESOLUTION];
+    uint8_t* landMap = new uint8_t[RESOLUTION * RESOLUTION];
     std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp");
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
@@ -376,17 +376,17 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     area_ = 0;
     for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
-        if (!landMap[x][y])
+        if (!landMap[y * RESOLUTION + x])
             continue;
         area_++;
 
-        if (!landMap[max(x - 1, 0)][y])
+        if (!landMap[y * RESOLUTION + max(x - 1, 0)])
             edges.push_back({x, y});
-        else if (!landMap[min(x + 1, RESOLUTION - 1)][y])
+        else if (!landMap[y * RESOLUTION + min(x + 1, RESOLUTION - 1)])
             edges.push_back({x, y});
-        else if (!landMap[x][max(y - 1, 0)])
+        else if (!landMap[max(y - 1, 0) * RESOLUTION + x])
             edges.push_back({x, y});
-        else if (!landMap[x][min(y + 1, RESOLUTION - 1)])
+        else if (!landMap[min(y + 1, RESOLUTION - 1) * RESOLUTION + x])
             edges.push_back({x, y});
     }}
 
@@ -430,6 +430,8 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
         if (height > -INFINITY)
             entity.transform_.position.y = height;
     }
+
+    delete[] landMap;
 }
 
 void Terrain::ReloadTerrainDistances(EntityList* entities) {

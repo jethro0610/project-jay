@@ -11,8 +11,8 @@ struct Inputs {
     bool startAttack;
     bool releaseAttack;
 
-    bool startBoost;
-    bool releaseBoost;
+    bool startJump;
+    bool releaseJump;
 
     Inputs() {
         forwardInput = 0.0f;

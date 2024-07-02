@@ -22,8 +22,7 @@ EntityDependendies Player::GetDeps() {
     };
 }
 
-void Player::Init(Entity::InitArgs args)
-{
+void Player::Init(Entity::InitArgs args) {
     Entity::Init(args);
 
     moveMode_ = MM_Default;
@@ -34,8 +33,8 @@ void Player::Init(Entity::InitArgs args)
     attackActiveTimer_ = ATTACK_TIME;
     attackCharge_ = 0;
     lastAttackCharge_ = 0;
-    chargeBoost_ = false;
-    boostAmount_ = 0;
+    chargingJump_ = false;
+    jumpCharge_ = 0;
     spinTime_ = 0;
 
     SetFlag(EF_SendPush, true);
@@ -177,21 +176,19 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->startBoost && !charging_)
-        chargeBoost_ = true;
-    if (inputs_->releaseBoost) {
-        chargeBoost_ = false;
-        if (boostAmount_ > 15) {
-            speed_ += boostAmount_;
-            boostAmount_ = 0;
-            velocity_ = desiredMovement * speed_;
-        }
+    if (inputs_->startJump && !charging_)
+        chargingJump_= true; 
+    if (inputs_->releaseJump) {
+        chargingJump_ = false;
+        velocity_.y = jumpCharge_;
+        skipGroundCheck_ = true;
+        jumpCharge_ = 0.0f;
     }
-    if (chargeBoost_)
-        boostAmount_ += BOOST_CHARGE_SPEED;
-    boostAmount_ = min(boostAmount_, MAX_BOOST);
+    if (chargingJump_)
+        jumpCharge_ += JUMP_CHARGE_SPEED;
+    jumpCharge_ = min(jumpCharge_, MAX_JUMP);
 
-    if (inputs_->startAttack && !chargeBoost_)
+    if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
     if (inputs_->releaseAttack)
         charging_ = false;
@@ -225,8 +222,8 @@ void Player::Update() {
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
-    else if (chargeBoost_) {
-        moveMode_ = MM_Boost;
+    else if (chargingJump_) {
+        moveMode_ = MM_JumpCharge;
     }
     else if (attackCharge_ != 0) {
         moveMode_ = MM_Attack;
@@ -281,11 +278,21 @@ void Player::Update() {
             break;
         }
 
-        case MM_Boost: {
-            velocity_.x *= speedDecay;
-            velocity_.z *= speedDecay;
-            // speed_ *= 0.999;
-            speed_ = max(speed_, MIN_SPEED);
+        case MM_JumpCharge: {
+            quat initialRotation = transform_.rotation;
+            if (length(planarVelocity) > 0.1f)
+                initialRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
+
+            quat desiredRotation = initialRotation;
+
+            if (length(desiredMovement) > 0.001f) 
+               desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
+            transform_.rotation= slerp(transform_.rotation, desiredRotation, ATTACK_ROTATION_SPEED);
+            vec3 travelDirection = slerp(initialRotation, desiredRotation, ATTACK_ROTATION_SPEED) * Transform::worldForward;
+            
+            velocity_.x = travelDirection.x * speed_;
+            velocity_.z = travelDirection.z * speed_;
             break;
         }
 
@@ -415,7 +422,7 @@ void Player::Update() {
     traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 1.0f);
 
     SCREENLINE(1, std::to_string(speed_));
-    SCREENLINE(2, std::to_string(boostAmount_));
+    SCREENLINE(2, std::to_string(jumpCharge_));
     SCREENLINE(3, std::to_string(spinTime_));
 }
 

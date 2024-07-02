@@ -1,3 +1,7 @@
+- Jump
+
+- Holes
+
 - Spread Mower
     - Item?
     - Follower

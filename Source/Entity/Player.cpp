@@ -180,7 +180,7 @@ void Player::Update() {
         chargingJump_= true; 
     if (inputs_->releaseJump) {
         chargingJump_ = false;
-        velocity_.y = jumpCharge_;
+        velocity_.y += std::max(jumpCharge_, 15.0f);
         skipGroundCheck_ = true;
         jumpCharge_ = 0.0f;
     }
@@ -365,7 +365,7 @@ void Player::Update() {
     }
 
     if (onGround_ && meter_ > 0) {
-        spreadManager_->AddSpread(transform_.position, 3, INT_MAX, inputs_->ski);
+        spreadManager_->AddSpread(transform_.position, 3, INT_MAX);
         meter_ -= 0.0015f;
         meter_ = max(0.0f, meter_);
     }
@@ -419,7 +419,10 @@ void Player::Update() {
     else
         tilt_ = 0.0f;
 
-    traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 1.0f);
+    if (!onGround_)
+        traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.0f);
+    else
+        traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 1.0f);
 
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(jumpCharge_));

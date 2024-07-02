@@ -30,17 +30,20 @@ void Mower::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+    target = &(*entities_)[0];
 }
 
 void Mower::Update() {
     static const float MAX_DIST = 10.0f;
 
-    Entity& player = (*entities_)[0];
-    vec3 dirToPlayer = player.transform_.position - transform_.position;
-    dirToPlayer.y = 0.0f;
-    if (length(dirToPlayer) > 20.0f) {
+    if (target == nullptr)
+        return;
+
+    vec3 dirToTarget = target->transform_.position - transform_.position;
+    dirToTarget.y = 0.0f;
+    if (length(dirToTarget) > MAX_DIST) {
         float prevY = transform_.position.y;
-        transform_.position = player.transform_.position - normalize(dirToPlayer) * 20.0f;
+        transform_.position = target->transform_.position - normalize(dirToTarget) * MAX_DIST;
         transform_.position.y = prevY;
     }
     velocity_.y -= 1.0f;

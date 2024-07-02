@@ -1,16 +1,13 @@
-- Jump
-
-- Holes
-
 - Spread Mower
-    - Item?
+    - Item? Maybe make a separate item for this
     - Follower
         - Attached via chain, have some object in level to break it?
         - Break chain using attack?
         - Break chain by falling in hole?
             - Then needs jumps mechanic
-    - Hittable
-        - Hard to aim, prolbably shouldn't use this
+            - Keeping jump but this doesn't really work well
+            - Player cant see the mower fall
+    - How to reattach
     
 - Remove LevelProperties
 - Items

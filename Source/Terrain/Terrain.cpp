@@ -366,7 +366,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }
 
     uint8_t* landMap = new uint8_t[RESOLUTION * RESOLUTION];
-    std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp");
+    std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp", std::ios::binary);
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();
@@ -437,7 +437,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 void Terrain::ReloadTerrainDistances(EntityList* entities) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
     std::string landmapOutput = "./landmaps/" + DBG_landMapName_ + ".lmp";
-    std::string command = "convert -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
+    std::string command = "magick -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
     system(command.c_str());
     GenerateTerrainDistances(entities);
 }

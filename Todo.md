@@ -7,7 +7,11 @@
             - Then needs jumps mechanic
             - Keeping jump but this doesn't really work well
             - Player cant see the mower fall
-    - How to reattach
+    - How to reattach?
+         - Hit again: makes player take action when they want
+         - Timer: Forces player to go back to detacher
+            - How does the object return to player?
+                - Teleport back?
     
 - Remove LevelProperties
 - Items

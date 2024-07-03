@@ -44,6 +44,7 @@ public:
         EntityList& entities,
         Editor& editor,
         LevelProperties& levelProperties,
+        SpreadManager& spreadManager,
         Terrain& terrain
     );
 

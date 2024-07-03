@@ -9,13 +9,14 @@ public:
     static constexpr const char* GetName() { return "e_mower"; }
     static EntityDependendies GetDeps();
 
-    Entity* target;
+    Entity* target_;
+    int numberOfSeed_;
 
     void Update(); 
     void RenderUpdate() {};
     void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args) {};
     void OnCaptureSeed() {};
-    void OnDestroy() {};
+    void OnDestroy();
     void OnPush(glm::vec3 pushVec) {}
 };

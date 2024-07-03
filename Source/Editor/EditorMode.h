@@ -8,9 +8,10 @@ class Inputs;
 class Level;
 class Platform;
 class Renderer;
+class ResourceManager;
+class SpreadManager;
 class Terrain;
 class Text;
-class ResourceManager;
 
 class EditorNotification;
 class EditorTarget;
@@ -24,6 +25,7 @@ struct EditorModeArgs {
     Platform& platform;
     Renderer& renderer;
     ResourceManager& resourceManager;
+    SpreadManager& spreadManager;
     Terrain& terrain;
     Text& modeText;
     EditorNotification& notificaiton;

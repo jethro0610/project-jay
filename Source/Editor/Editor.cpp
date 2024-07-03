@@ -18,6 +18,7 @@ Editor::Editor(
     Platform& platform, 
     ResourceManager& resourceManager,
     Renderer& renderer,
+    SpreadManager& spreadManager,
     Terrain& terrain,
     bool& running
 ):
@@ -29,6 +30,7 @@ particleManager_(particleManager),
 platform_(platform),
 resourceManager_(resourceManager),
 renderer_(renderer),
+spreadManager_(spreadManager),
 terrain_(terrain),
 running_(running),
 target_(),
@@ -41,6 +43,7 @@ args_({
     platform, 
     renderer, 
     resourceManager, 
+    spreadManager,
     terrain, 
     modeText_,
     notification_,
@@ -210,6 +213,7 @@ void Editor::Update() {
             entities_, 
             *this,
             level_.properties_,
+            spreadManager_,
             terrain_ 
         );
         particleManager_.Update(0.0f); // Need this to free unused emitters

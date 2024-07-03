@@ -51,27 +51,6 @@
             "type_id": 11
         },
         {
-            "name": "e_cometspawner",
-            "transform": {
-                "position": {
-                    "x": 0.0,
-                    "y": 100.0,
-                    "z": 0.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                }
-            },
-            "type_id": 10
-        },
-        {
             "name": "e_detacher",
             "transform": {
                 "position": {

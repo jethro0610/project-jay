@@ -10,3 +10,4 @@
 #include "ScaleMode.h"
 #include "SetLandmapMode.h"
 #include "SpawnMode.h"
+#include "WeedMode.h"

@@ -45,6 +45,7 @@ Game::Game():
         platform_, 
         resourceManager_,
         renderer_, 
+        spreadManager_,
         terrain_,
         running_
     ),

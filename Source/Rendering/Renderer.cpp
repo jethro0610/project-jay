@@ -37,6 +37,7 @@ void Renderer::RenderEdit(
     EntityList& entities,
     Editor& editor,
     LevelProperties& levelProperties,
+    SpreadManager& spreadManager,
     Terrain& terrain 
 ) {
     StartFrame();
@@ -48,6 +49,8 @@ void Renderer::RenderEdit(
     }
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
         RenderEntitiesS(entities);
+    RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
+    RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

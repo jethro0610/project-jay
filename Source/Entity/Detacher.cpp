@@ -34,8 +34,9 @@ void Detacher::OnHurt(HurtArgs args) {
         Entity* entity = &(*entities_)[i];
         if (entity->typeId_ == Mower::TYPEID) {
             Mower* mower = (Mower*)entity;
-            if (mower->target == args.attacker)
-                mower-> target = nullptr;
+            if (mower->target_ == args.attacker) {
+                mower->destroy_ = true;
+            }
         }
     }
 }

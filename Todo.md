@@ -12,10 +12,18 @@
          - Timer: Forces player to go back to detacher
             - How does the object return to player?
                 - Teleport back?
+    - Hit object to gain seed, but have to get mower
+    - Mower absorbs part of removed spread
+    - Once detached, mower will give new seeds
+        - Should also just give a minimum amount
+
+- Aerial move mode
     
 - Remove LevelProperties
 - Items
 - Save before closing prompt
+
+- Make singletons
 
 - Phase token
     - Spread particles

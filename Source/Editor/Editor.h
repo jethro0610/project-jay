@@ -31,6 +31,7 @@ public:
         Platform& platform, 
         ResourceManager& resourceManager,
         Renderer& renderer,
+        SpreadManager& spreadManager,
         Terrain& terrain,
         bool& running
     );
@@ -62,6 +63,7 @@ private:
     Platform& platform_;
     Renderer& renderer_;
     ResourceManager& resourceManager_;
+    SpreadManager& spreadManager_;
     Terrain& terrain_;
     EditorModeArgs args_;
 

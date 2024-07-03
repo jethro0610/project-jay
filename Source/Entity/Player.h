@@ -9,7 +9,8 @@ public:
         MM_Slope,
         MM_Attack,
         MM_JumpCharge,
-        MM_Stun
+        MM_Stun,
+        MM_Air
     };
 
     void Init(InitArgs args);
@@ -37,6 +38,7 @@ public:
     static constexpr float SPIN_ROTATION_SPEED = 0.06f;
     static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
     static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
+    static constexpr float AIR_ROTATION_SPEED = 0.015f;
     static constexpr float SLOPE_ACCELERATION = 4.0f;
     static constexpr float SLOPE_DOWN_SCALING = 4.0f;
     static constexpr float SLOPE_UP_SCALING = 1.5f;

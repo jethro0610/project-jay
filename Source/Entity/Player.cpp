@@ -219,6 +219,9 @@ void Player::Update() {
     if (stun_) {
         moveMode_ = MM_Stun;
     }
+    else if (!onGround_) {
+        moveMode_ = MM_Air;
+    }
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
@@ -354,6 +357,24 @@ void Player::Update() {
 
             transform_.rotation= slerp(transform_.rotation, desiredRotation, ATTACK_ROTATION_SPEED);
             vec3 travelDirection = slerp(initialRotation, desiredRotation, ATTACK_ROTATION_SPEED) * Transform::worldForward;
+            
+            velocity_.x = travelDirection.x * speed_;
+            velocity_.z = travelDirection.z * speed_;
+            break;
+        }
+
+        case MM_Air: {
+            quat initialRotation = transform_.rotation;
+            if (length(planarVelocity) > 0.1f)
+                initialRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
+
+            quat desiredRotation = initialRotation;
+
+            if (length(desiredMovement) > 0.001f) 
+               desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
+            transform_.rotation = slerp(transform_.rotation, desiredRotation, AIR_ROTATION_SPEED);
+            vec3 travelDirection = slerp(initialRotation, desiredRotation, AIR_ROTATION_SPEED) * Transform::worldForward;
             
             velocity_.x = travelDirection.x * speed_;
             velocity_.z = travelDirection.z * speed_;

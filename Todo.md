@@ -18,6 +18,8 @@
         - Should also just give a minimum amount
 
 - Aerial move mode
+
+- Remove SpreadKey
     
 - Remove LevelProperties
 - Items

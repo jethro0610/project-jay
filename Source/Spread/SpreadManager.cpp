@@ -51,9 +51,9 @@ bool SpreadManager::AddSpread(const ivec2& key, bool weed) {
     Transform transform;
 
     transform.position = vec3(
-        (key.x - KEY_LENGTH / 2) * SPREAD_DIST + offset, 
+        (key.x - KEY_LENGTH * 0.5f) * SPREAD_DIST + offset, 
         0.0f, 
-        (key.y - KEY_LENGTH / 2) * SPREAD_DIST + offset 
+        (key.y - KEY_LENGTH * 0.5f) * SPREAD_DIST + offset 
     );
     vec2 randOffset = RandomVector2D(1.0f);
     transform.position.x += randOffset.x;
@@ -184,4 +184,12 @@ float SpreadManager::GetCoverage() {
     float terrainArea = terrain_.area_ * terrainUnitArea;
     int maxSpread = terrainArea / spreadUnitArea; 
     return GetCount() / (float)maxSpread;
+}
+
+void SpreadManager::GetWeedLocations(std::vector<ivec2>& locations) {
+    for (int x = 0; x < KEY_LENGTH; x++) {
+    for (int y = 0; y < KEY_LENGTH; y++) {
+        if (keys_[x][y].index != -1 && keys_[x][y].weed)
+            locations.push_back(ivec2(x,y)); 
+    }}
 }

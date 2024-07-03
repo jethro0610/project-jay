@@ -72,5 +72,8 @@
             "type_id": 12
         }
     ],
-    "landmap": "lm_weeds"
+    "landmap": "lm_weeds",
+    "weeds": [
+        [487, 515]
+    ]
 }

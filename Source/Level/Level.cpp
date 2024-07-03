@@ -136,6 +136,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         #endif
     }
 
+    for (auto& weedData : levelData["weeds"]) {
+        int x = weedData[0];
+        int y = weedData[1];
+        spreadManager_.AddSpread(glm::ivec2(x, y), true);
+    }
+
     loaded_ = true;
     return true;
 }
@@ -196,6 +202,15 @@ void Level::Save(const std::string& name, const std::string& suffix) {
             curveData.push_back(pointData);
         }
         levelData["curves"].push_back(curveData);
+    }
+
+    std::vector<glm::ivec2> weedLocations;
+    spreadManager_.GetWeedLocations(weedLocations);
+    for (auto& weed : weedLocations) {
+        nlohmann::json weedData;
+        weedData.push_back(weed.x);
+        weedData.push_back(weed.y);
+        levelData["weeds"].push_back(weedData);
     }
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");

@@ -39,8 +39,13 @@ public:
     bool SpreadIsActive(const glm::vec3& position) const;
 
     bool AddSpread(const glm::vec3& position, bool weed = false); 
+    bool AddSpread(const SpreadKey& key, bool weed); 
     AddSpreadInfo AddSpread(const glm::vec3& position, int radius, int amount = INT_MAX, bool weed = false);
 
+    bool RemoveSpread(
+        const SpreadKey& key,
+        Entity* remover = nullptr
+    );
     bool RemoveSpread(
         const glm::vec3& position, 
         Entity* remover = nullptr 
@@ -63,17 +68,13 @@ public:
     int GetCount() const { return spreadData_.size() + weedData_.size(); }
     float GetCoverage();
 
+    void GetWeedLocations(std::vector<glm::ivec2>& locations);
+
 private:
     struct KeyIndex {
         int index;
         bool weed;
     };
-
-    bool AddSpread(const SpreadKey& key, bool weed); 
-    bool RemoveSpread(
-        const SpreadKey& key,
-        Entity* remover = nullptr
-    );
 
     Terrain& terrain_;
     SeedManager& seedManager_;

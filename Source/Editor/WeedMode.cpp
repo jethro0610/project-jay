@@ -1,8 +1,10 @@
 #include "WeedMode.h"
+#include "Spread/SpreadManager.h"
 using namespace glm;
 
 WeedMode::WeedMode(EditorModeArgs args):
-EditorMode(args) 
+EditorMode(args),
+spreadManager_(args.spreadManager)
 {
     mouseVisibile_ = true;
     requiresTarget_ = false;
@@ -11,6 +13,11 @@ EditorMode(args)
 
 std::string WeedMode::GetName() { 
     return "Create Weeds";
+}
+
+void WeedMode::OnStart() {
+    spreadManager_.AddSpread(vec3(0.0f), 8, INT_MAX, true);
+    EditorMode::OnStart();
 }
 
 void WeedMode::Update() {

@@ -8,4 +8,8 @@ public:
     int GetBinding() override { return 'G'; }
     std::string GetName() override;
     void Update() override;
+    void OnStart() override;
+
+private:
+    SpreadManager& spreadManager_;
 };

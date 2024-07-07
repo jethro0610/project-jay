@@ -90,6 +90,9 @@ void ResourceManager::LoadGlobals() {
     globals_.insert("st_default");
     globals_.insert("t_font");
 
+    LoadModel("st_terraincursor");
+    globals_.insert("st_terraincursor");
+
     // TEST GLOBALS
     LoadModel("st_flower_test");
     LoadTexture("t_grass_c");

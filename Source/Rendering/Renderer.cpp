@@ -2,6 +2,7 @@
 #include "Camera/Camera.h"
 #include "Level/LevelProperties.h"
 #include "Editor/Editor.h"
+#include "Terrain/Terrain.h"
 using namespace glm;
 
 mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
@@ -24,6 +25,7 @@ void Renderer::Render(
     RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
+    RenderTerrainCursor(entities[0].transform_.position);
     RenderPostProcess();
     RenderBlit();
     RenderUI(entities, spreadManager);
@@ -40,6 +42,7 @@ void Renderer::RenderEdit(
     SpreadManager& spreadManager,
     Terrain& terrain 
 ) {
+    DBG_lowResTerrain_ = terrain.DBG_lowRes_;
     StartFrame();
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
@@ -51,6 +54,7 @@ void Renderer::RenderEdit(
         RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
+    RenderTerrainCursor(entities[0].transform_.position);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

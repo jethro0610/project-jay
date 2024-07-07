@@ -70,7 +70,7 @@ void TranslateMode::Update() {
     planarCameraForward = normalize(planarCameraForward);
 
     vec3 planarCameraRight = camera_.transform_.GetRightVector();
-    planarCameraRight .y = 0.0f;
+    planarCameraRight.y = 0.0f;
     planarCameraRight = normalize(planarCameraRight);
 
     switch (submode_) {

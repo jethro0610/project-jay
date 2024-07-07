@@ -1,5 +1,6 @@
 #include "WeedMode.h"
 #include "Spread/SpreadManager.h"
+#include "Terrain/Terrain.h"
 using namespace glm;
 
 WeedMode::WeedMode(EditorModeArgs args):
@@ -16,7 +17,6 @@ std::string WeedMode::GetName() {
 }
 
 void WeedMode::OnStart() {
-    spreadManager_.AddSpread(vec3(0.0f), 8, INT_MAX, true);
     EditorMode::OnStart();
 }
 

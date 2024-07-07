@@ -51,6 +51,8 @@ public:
     void RenderEditorOnly(
         Editor& editor
     );
+
+    bool DBG_lowResTerrain_;
     #endif
 
     glm::mat4 GetProjectionMatrix() const { return projectionMatrix_; };
@@ -63,18 +65,22 @@ private:
 
     Texture* renderBufferTextures_[2];
     Texture* terrainMapTexture_;
-    Texture* terrainMapTextureLow_;
     Texture* shadowBufferTexture_;
     Texture* postProcessTexture_;
+    #ifdef _DEBUG
+    Texture* DBG_terrainMapTextureLow_;
+    #endif
 
     Mesh* quad_;
     Mesh* terrain_;
+    Mesh* terrainCursor_;
 
     Material barMaterial_;
     Material coverageBarMaterial_;
     Material blitMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
+    Material terrainCursorMaterial_;
 
     #ifdef _DEBUG
     Shader* selectedShader_;
@@ -159,6 +165,7 @@ private:
         Terrain& terrain
     );
     void RenderEditor(Editor& editor);
+    void RenderTerrainCursor(glm::vec3 position);
     #endif
     void RenderTerrain(
         Terrain& terrain, 

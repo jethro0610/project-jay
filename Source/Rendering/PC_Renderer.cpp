@@ -73,8 +73,12 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitUIBuffer();
 
     terrainMapTexture_ = resourceManager.GetTexture("t_terrainmap");
-    terrainMapTextureLow_ = resourceManager.GetTexture("t_terrainmap_low");
+    #ifdef _DEBUG
+    DBG_terrainMapTextureLow_ = resourceManager.GetTexture("t_terrainmap_low");
+    #endif
+
     terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
+    terrainCursor_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
     barMaterial_.shader = resourceManager.GetShader("vs_uibar", "fs_uibar");
@@ -91,6 +95,10 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_.shader = resourceManager.GetShader("vs_glyph", "fs_text");
     textMaterial_.numTextures = 1;
     textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
+
+    terrainCursorMaterial_.shader = resourceManager.GetShader("vs_terraincursor", "fs_terraincursor");
+    terrainCursorMaterial_.numTextures = 0;
+    terrainCursorMaterial_.castShadows = false;
 
     #ifdef _DEBUG
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
@@ -285,15 +293,6 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     for (int y = -radius; y < radius; y++) { 
         vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
-
-        #ifdef _DEBUG
-        if (terrain.DBG_lowRes_)
-            bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTextureLow_->handle);
-        else
-            bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
-        #else
-        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
-        #endif
         RenderMesh(terrain_, material);
     };
 }
@@ -581,11 +580,28 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
         }
     }
 }
+
+void Renderer::RenderTerrainCursor(vec3 position) {
+    Transform cursorTransform;
+    cursorTransform.position = position;
+    mat4 cursorMatrix = cursorTransform.ToMatrix();
+    RenderMesh(terrainCursor_, &terrainCursorMaterial_, nullptr, &cursorMatrix);
+}
 #endif
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {
     for (int i = 0; i < material->numTextures; i++)
         bgfx::setTexture(i, samplers_[i], material->textures[i]->handle);
+
+
+    #ifdef _DEBUG
+    if (DBG_lowResTerrain_)
+        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, DBG_terrainMapTextureLow_->handle);
+    else 
+        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
+    #else
+        bgfx::setTexture(Material::TERRAIN_MAP_TEXINDEX, terrainMapSampler_, terrainMapTexture_->handle);
+    #endif
 
     if (shadowMap)
         bgfx::setTexture(Material::SHADOW_TEXINDEX, shadowSampler_, shadowBufferTexture_->handle);

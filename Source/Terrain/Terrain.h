@@ -60,6 +60,7 @@ public:
         const std::vector<glm::ivec2>& edges
     );
     void ReloadTerrainDistances(EntityList* entities = nullptr);
+    glm::vec3 RaycastTerrain(glm::vec3 origin, glm::vec3 direction);
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;

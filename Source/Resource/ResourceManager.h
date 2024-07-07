@@ -12,7 +12,7 @@
 
 class ResourceManager {
 public:
-    static constexpr int MAX_SHADERS = 128;
+    static constexpr int MAX_SHADERS = 512;
     static constexpr int MAX_TEXTURES = 32;
     static constexpr int MAX_MODELS = 32;
     static constexpr int MAX_SKELETONS = 32;

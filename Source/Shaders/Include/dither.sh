@@ -28,6 +28,7 @@ float dither(vec2 coords, float a) {
 }
 
 #define DITHERDISCARD(alpha) if(dither(gl_FragCoord, (alpha)) <= 0.0f) discard
+#define DITHEROPACITY(alpha) if(dither(gl_FragCoord, 1.0f - (alpha)) <= 0.0f) discard
 
 // LIGHTERWEIGHT VERSION
 // static const float bayerMatrix[4][4] = {

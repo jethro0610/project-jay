@@ -445,11 +445,16 @@ void Terrain::ReloadTerrainDistances(EntityList* entities) {
 
 vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
     vec3 curOrigin = origin; 
+    float curHeight = GetHeight(curOrigin);
+
     for (int i = 0; i < 512; i++) {
-        float height = GetHeight(curOrigin, TA_Low);
-        float diff = curOrigin.y - height;
-        if (abs(diff) <= 0.25f)
-            return vec3(curOrigin.x, height, curOrigin.z);
+        vec2 distance = GetDistance(curOrigin, TA_Low);
+        if (distance.x < 0.0f)
+            curHeight = distance.y;
+
+        float diff = curOrigin.y - curHeight;
+        if (abs(diff) <= 0.5f)
+            return vec3(curOrigin.x, curHeight, curOrigin.z);
 
         curOrigin += direction * diff;
     }

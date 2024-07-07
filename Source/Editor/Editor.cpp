@@ -45,6 +45,7 @@ args_({
     resourceManager, 
     spreadManager,
     terrain, 
+    terrainCursor_,
     modeText_,
     notification_,
     target_, 
@@ -214,7 +215,8 @@ void Editor::Update() {
             *this,
             level_.properties_,
             spreadManager_,
-            terrain_ 
+            terrain_,
+            terrainCursor_
         );
         particleManager_.Update(0.0f); // Need this to free unused emitters
     }

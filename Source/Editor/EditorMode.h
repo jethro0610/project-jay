@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorVisibility.h"
+#include <glm/vec3.hpp>
 #include <string>
 
 class Camera;
@@ -11,6 +12,7 @@ class Renderer;
 class ResourceManager;
 class SpreadManager;
 class Terrain;
+class TerrainCursor;
 class Text;
 
 class EditorNotification;
@@ -27,6 +29,7 @@ struct EditorModeArgs {
     ResourceManager& resourceManager;
     SpreadManager& spreadManager;
     Terrain& terrain;
+    TerrainCursor& terrainCursor;
     Text& modeText;
     EditorNotification& notificaiton;
     EditorTarget& target;
@@ -58,6 +61,7 @@ public:
     bool mouseVisibile_;
 
     bool CanSwitch(bool holdingCtrl) const;
+    glm::vec3 GetMouseRay();
 
 protected:
     Camera& camera_;
@@ -66,7 +70,9 @@ protected:
     Platform& platform_;
     Renderer& renderer_;
     ResourceManager& resourceManager_;
+    SpreadManager& spreadManager_;
     Terrain& terrain_;
+    TerrainCursor& terrainCursor_;
 
     Text& modeText_;
     Level& level_;

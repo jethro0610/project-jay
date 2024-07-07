@@ -16,7 +16,6 @@ public:
     int GetBinding() override { return GLFW_KEY_TAB; }
     void OnStart() override;
     void Update() override;
-    glm::vec3 GetMouseRay();
 
 private:
     DefaultSubmode submode_;

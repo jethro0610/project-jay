@@ -9,7 +9,5 @@ public:
     std::string GetName() override;
     void Update() override;
     void OnStart() override;
-
-private:
-    SpreadManager& spreadManager_;
+    void OnEnd() override;
 };

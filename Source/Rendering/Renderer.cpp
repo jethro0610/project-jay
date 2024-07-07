@@ -25,7 +25,6 @@ void Renderer::Render(
     RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
-    RenderTerrainCursor(entities[0].transform_.position);
     RenderPostProcess();
     RenderBlit();
     RenderUI(entities, spreadManager);
@@ -40,7 +39,8 @@ void Renderer::RenderEdit(
     Editor& editor,
     LevelProperties& levelProperties,
     SpreadManager& spreadManager,
-    Terrain& terrain 
+    Terrain& terrain,
+    TerrainCursor& terrainCursor
 ) {
     DBG_lowResTerrain_ = terrain.DBG_lowRes_;
     StartFrame();
@@ -54,7 +54,7 @@ void Renderer::RenderEdit(
         RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
-    RenderTerrainCursor(entities[0].transform_.position);
+    RenderTerrainCursor(terrainCursor);
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

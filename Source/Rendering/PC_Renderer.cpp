@@ -581,9 +581,13 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
     }
 }
 
-void Renderer::RenderTerrainCursor(vec3 position) {
+void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {
+    if (!terrainCursor.visible)
+        return;
+
     Transform cursorTransform;
-    cursorTransform.position = position;
+    cursorTransform.position = terrainCursor.position;
+    cursorTransform.scale = vec3(terrainCursor.radius);
     mat4 cursorMatrix = cursorTransform.ToMatrix();
     RenderMesh(terrainCursor_, &terrainCursorMaterial_, nullptr, &cursorMatrix);
 }

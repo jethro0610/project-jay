@@ -3,6 +3,8 @@
 #include "Text/Text.h"
 #include "EditorTarget.h"
 #include "Level/Level.h"
+#include "Camera/Camera.h"
+#include "Rendering/Renderer.h"
 
 EditorMode::EditorMode(EditorModeArgs args):
 camera_(args.camera),
@@ -11,7 +13,9 @@ inputs_(args.inputs),
 platform_(args.platform),
 renderer_(args.renderer),
 resourceManager_(args.resourceManager),
+spreadManager_(args.spreadManager),
 terrain_(args.terrain),
+terrainCursor_(args.terrainCursor),
 modeText_(args.modeText),
 level_(args.level),
 notificaiton_(args.notificaiton),
@@ -43,4 +47,17 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
         return false;
 
     return true;
+}
+
+glm::vec3 EditorMode::GetMouseRay() {
+    float mouseX = platform_.mouseX_ / (1280  * 0.5f) - 1.0f;
+    float mouseY = platform_.mouseY_ / (720 * 0.5f) - 1.0f;
+
+    glm::mat4 invVP = glm::inverse(renderer_.GetProjectionMatrix() * camera_.GetViewOnlyMatrix());
+    glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);
+    glm::vec4 worldPos = invVP * screenPos;
+
+    glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
+
+    return dir;
 }

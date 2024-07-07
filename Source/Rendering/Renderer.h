@@ -19,6 +19,7 @@ class LevelProperties;
 class SeedManager;
 class SpreadManager;
 class Terrain;
+class TerrainCursor;
 class ParticleManager;
 class Player;
 class ResourceManager;
@@ -45,7 +46,8 @@ public:
         Editor& editor,
         LevelProperties& levelProperties,
         SpreadManager& spreadManager,
-        Terrain& terrain
+        Terrain& terrain,
+        TerrainCursor& terrainCursor
     );
 
     void RenderEditorOnly(
@@ -165,7 +167,7 @@ private:
         Terrain& terrain
     );
     void RenderEditor(Editor& editor);
-    void RenderTerrainCursor(glm::vec3 position);
+    void RenderTerrainCursor(TerrainCursor& terrainCursor);
     #endif
     void RenderTerrain(
         Terrain& terrain, 

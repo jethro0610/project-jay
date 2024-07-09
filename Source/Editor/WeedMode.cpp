@@ -44,4 +44,8 @@ void WeedMode::Update() {
     }
     else
         terrainCursor_.visible = true;
+
+    int spreadRadius = terrainCursor_.radius / SpreadManager::SPREAD_DIST;
+    if (platform_.heldKeys_[LEFT_MOUSE_KEY])
+        spreadManager_.AddSpread(terrainCursor_.position, spreadRadius, INT_MAX, true);
 }

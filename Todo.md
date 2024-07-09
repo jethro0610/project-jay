@@ -1,5 +1,7 @@
 - Weed spawning using mouse
 
+- Use terrain cursor on curves and bubbles
+
 - Spread Mower
     - Item? Maybe make a separate item for this
     - Follower
@@ -19,7 +21,8 @@
     - Once detached, mower will give new seeds
         - Should also just give a minimum amount
 
-- Aerial move mode
+- Multi entity placement using terrain cursor
+    - Needs some way to control density
 
 - Remove SpreadKey
     

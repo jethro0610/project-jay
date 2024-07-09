@@ -23,6 +23,7 @@ Platform* Platform::platform_ = nullptr;
 void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods);
 void CursorCallback(GLFWwindow* window, double x, double y);
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset);
 void LoadMappingFile();
 
 Platform::Platform() {
@@ -41,6 +42,7 @@ Platform::Platform() {
     glfwGetCursorPos(window_, &mouseX_, &mouseY_);
     glfwSetCursorPosCallback(window_, CursorCallback);
     glfwSetMouseButtonCallback(window_, MouseButtonCallback);
+    glfwSetScrollCallback(window_, ScrollCallback);
 
     LoadMappingFile();
 
@@ -96,6 +98,8 @@ void Platform::OnKeyUp(int key) {
 void Platform::FlushKeys() {
     pressedKeys_.reset();
     releasedKeys_.reset();
+    heldKeys_[SCROLL_UP_KEY] = false;
+    heldKeys_[SCROLL_DOWN_KEY] = false;
 }
 
 void CursorCallback(GLFWwindow* window, double x, double y) {
@@ -136,6 +140,13 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
             Platform::Get()->OnKeyUp(MOUSE_KEYS[button]);
             break;
     }
+}
+
+void ScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
+    if (yOffset > 0)
+        Platform::Get()->OnKeyDown(SCROLL_UP_KEY);
+    else if (yOffset < 0)
+        Platform::Get()->OnKeyDown(SCROLL_DOWN_KEY);
 }
 
 void Platform::PollGamepad() {

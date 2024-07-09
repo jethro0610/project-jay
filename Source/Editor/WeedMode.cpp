@@ -29,10 +29,10 @@ void WeedMode::OnEnd() {
 }
 
 void WeedMode::Update() {
-    if (platform_.pressedKeys_[GLFW_KEY_UP])
+    if (platform_.pressedKeys_[GLFW_KEY_UP] || platform_.pressedKeys_[SCROLL_UP_KEY])
         terrainCursor_.radius += 2.0f;
 
-    if (platform_.pressedKeys_[GLFW_KEY_DOWN])
+    if (platform_.pressedKeys_[GLFW_KEY_DOWN] || platform_.pressedKeys_[SCROLL_DOWN_KEY])
         terrainCursor_.radius -= 2.0f;
 
     terrainCursor_.radius = std::max(1.0f, terrainCursor_.radius);
@@ -46,6 +46,9 @@ void WeedMode::Update() {
         terrainCursor_.visible = true;
 
     int spreadRadius = terrainCursor_.radius / SpreadManager::SPREAD_DIST;
-    if (platform_.heldKeys_[LEFT_MOUSE_KEY])
+    if (platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.heldKeys_[GLFW_KEY_Q])
         spreadManager_.AddSpread(terrainCursor_.position, spreadRadius, INT_MAX, true);
+
+    if (platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.heldKeys_[GLFW_KEY_E])
+        spreadManager_.RemoveSpread(terrainCursor_.position, spreadRadius);
 }

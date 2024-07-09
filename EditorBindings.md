@@ -25,4 +25,8 @@
 - Reload LM:    Ctrl+L   
 
 # Weeds
-- Create Weeds: G
+- Weed Mode:    G
+- Add Weeds:    Left Click or Q
+- Remove Weeds: Right Click or E
+- Up Radius:    Up Arrow
+- Down Radius:  Down Arrow

@@ -6,6 +6,8 @@ class GLFWwindow;
 const int NUM_KEYS = 349;
 const int LEFT_MOUSE_KEY = NUM_KEYS;
 const int RIGHT_MOUSE_KEY = NUM_KEYS + 1;
+const int SCROLL_UP_KEY = NUM_KEYS + 2;
+const int SCROLL_DOWN_KEY = NUM_KEYS + 3;
 const int MOUSE_KEYS[] = { LEFT_MOUSE_KEY, RIGHT_MOUSE_KEY };
 
 class Platform {
@@ -13,9 +15,9 @@ public:
     Platform();
     GLFWwindow* window_;
 
-    std::bitset<NUM_KEYS + 2> heldKeys_;
-    std::bitset<NUM_KEYS + 2> pressedKeys_;
-    std::bitset<NUM_KEYS + 2> releasedKeys_;
+    std::bitset<NUM_KEYS + 4> heldKeys_;
+    std::bitset<NUM_KEYS + 4> pressedKeys_;
+    std::bitset<NUM_KEYS + 4> releasedKeys_;
 
     Gamepad gamepad_;
     double mouseX_;

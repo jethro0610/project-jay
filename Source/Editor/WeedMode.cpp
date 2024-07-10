@@ -16,7 +16,7 @@ EditorMode(args)
 }
 
 std::string WeedMode::GetName() { 
-    return "Create Weeds";
+    return "Weed Growth";
 }
 
 void WeedMode::OnStart() {

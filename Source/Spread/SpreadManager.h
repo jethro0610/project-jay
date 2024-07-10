@@ -65,7 +65,7 @@ public:
     void Reset();
     int GetSpreadCount() const { return spreadData_.size(); }
     int GetWeedCount() const { return weedData_.size(); }
-    int GetCount() const { return spreadData_.size() + weedData_.size(); }
+    int GetCount() const { return spreadData_.size(); }
     float GetCoverage();
 
     void GetWeedLocations(std::vector<glm::ivec2>& locations);

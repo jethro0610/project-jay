@@ -1,5 +1,3 @@
-- Weed spawning using mouse
-
 - Use terrain cursor on curves and bubbles
 
 - Spread Mower

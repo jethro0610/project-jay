@@ -33,7 +33,7 @@ void Mower::Init(Entity::InitArgs args) {
     pushbox_.radius = 1.0f;
 
     target_ = &(*entities_)[0];
-    mode_ = Mode::Cut;
+    SetMode(Sleep);
 }
 
 void Mower::Update() {

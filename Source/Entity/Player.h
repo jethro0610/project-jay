@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Item.h"
 
 class Player : public Entity {
 public:
@@ -69,6 +70,8 @@ public:
     bool chargingJump_;
     float jumpCharge_;
 
+    Item item_;
+
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;
     ParticleEmitter* slopeEmitter_;
@@ -80,4 +83,5 @@ public:
     void OnCaptureSeed();
     void OnDestroy();
     void OnPush(glm::vec3 pushVec);
+    void UseItem();
 };

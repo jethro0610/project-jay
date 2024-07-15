@@ -14,6 +14,8 @@ struct Inputs {
     bool startJump;
     bool releaseJump;
 
+    bool useItem;
+
     Inputs() {
         forwardInput = 0.0f;
         sideInput = 0.0f;

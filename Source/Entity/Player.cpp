@@ -158,6 +158,7 @@ void Player::Init(Entity::InitArgs args) {
     #endif
 
     meter_ = 0.0f;
+    item_ = Item::None;
 }
 
 void Player::OnDestroy() {
@@ -176,6 +177,7 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
+
     if (inputs_->startJump && !charging_)
         chargingJump_= true; 
     if (inputs_->releaseJump) {
@@ -187,6 +189,9 @@ void Player::Update() {
     if (chargingJump_)
         jumpCharge_ += JUMP_CHARGE_SPEED;
     jumpCharge_ = min(jumpCharge_, MAX_JUMP);
+
+    if (inputs_->useItem)
+        UseItem();
 
     if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
@@ -496,4 +501,21 @@ void Player::OnPush(vec3 pushVec) {
         onGround_ = false;
         ChangeAnimation(7, 0.0f);
     }
+}
+
+void Player::UseItem() {
+    switch (item_) {
+        case Item::None:
+            break;
+
+        case Item::NumItems:
+            break;
+
+        case Item::Boost: {
+            velocity_ = transform_.GetForwardVector() * 80.0f;
+            break;
+        }
+    }
+
+    item_ = Item::None;
 }

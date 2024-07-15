@@ -1,5 +1,7 @@
 - Use terrain cursor on curves and bubbles
 
+- Add items
+
 - Spread Mower
     - Item? Maybe make a separate item for this
     - Follower
@@ -18,6 +20,18 @@
     - Mower absorbs part of removed spread
     - Once detached, mower will give new seeds
         - Should also just give a minimum amount
+
+- Rename Sleeper to Switcher
+- New layout for lv_weeds
+    - Maybe follows a line?
+    - Needs to establish a good flow
+    - Likely needs to be pretty big
+
+- lv_tele flow redesign
+    - Instead of teleporting, pod is stationary
+    - Then, pod disappears for a length of time before coming back
+    - Multiple pods though
+    - Player needs to flow between pods to beat level
 
 - Multi entity placement using terrain cursor
     - Needs some way to control density

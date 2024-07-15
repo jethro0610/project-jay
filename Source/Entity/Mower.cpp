@@ -26,12 +26,14 @@ void Mower::Init(Entity::InitArgs args) {
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
-    materials_[0].properties.color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
 
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
     target_ = &(*entities_)[0];
+    mode_ = Mode::Cut;
 }
 
 void Mower::Update() {
@@ -49,9 +51,46 @@ void Mower::Update() {
     }
     velocity_.y -= 1.0f;
 
-    numberOfSeed_ += spreadManager_->RemoveSpread(transform_.position, 5, this);
+    switch(mode_) {
+        case Mode::Cut: {
+            numberOfSeeds_ += spreadManager_->RemoveSpread(transform_.position, 5, this);
+            break;
+        }
+
+        case Mode::Sleep: {
+            break;
+        }
+    }
+
 }
 
 void Mower::OnDestroy() {
-    seedManager_->CreateMultipleSeed(transform_.position, std::max(50, numberOfSeed_), 4.0f);
+    // seedManager_->CreateMultipleSeed(transform_.position, std::clamp(numberOfSeed_ / 2, 50, 1000), 4.0f);
+}
+
+void Mower::SetMode(Mode mode) {
+    mode_ = mode;
+    switch(mode_) {
+        case Mode::Cut:
+            materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
+            break;
+
+        case Mode::Sleep:
+            materials_[0].properties.color = glm::vec4(0.0f, 0.5f, 0.5f, 1.0f);
+            seedManager_->CreateMultipleSeed(transform_.position, numberOfSeeds_ / 2, 16.0f, target_);
+            numberOfSeeds_ = 0;
+            break;
+    }
+}
+
+void Mower::ToggleMode() {
+    switch(mode_) {
+        case Mode::Cut:
+            SetMode(Mode::Sleep);
+            break;
+
+        case Mode::Sleep:
+            SetMode(Mode::Cut);
+            break;
+    }
 }

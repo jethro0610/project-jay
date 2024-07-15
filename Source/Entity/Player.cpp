@@ -443,7 +443,7 @@ void Player::Update() {
     if (!onGround_)
         traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.0f);
     else
-        traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 1.0f);
+        traceDistance_ = 10.0f;
 
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(jumpCharge_));

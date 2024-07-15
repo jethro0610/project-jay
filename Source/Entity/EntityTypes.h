@@ -10,8 +10,10 @@
 #include "Entity.h"
 #include "TeleportPod.h"
 #include "Player.h"
-#include "Detacher.h"
 #include "Mower.h"
+#include "Sleeper.h"
+#include "TimerPod.h"
+#include "SinglePod.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -26,4 +28,6 @@
 	ENTITYEXP(Comet, comet, 9) \
 	ENTITYEXP(CometSpawner, cometspawner, 10) \
 	ENTITYEXP(Mower, mower, 11) \
-	ENTITYEXP(Detacher, detacher, 12)
+	ENTITYEXP(Sleeper, sleeper, 12) \
+	ENTITYEXP(TimerPod, timerpod, 13) \
+	ENTITYEXP(SinglePod, singlepod, 14)

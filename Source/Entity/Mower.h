@@ -8,9 +8,14 @@ public:
     static TypeID TYPEID;
     static constexpr const char* GetName() { return "e_mower"; }
     static EntityDependendies GetDeps();
+    enum Mode {
+        Cut,
+        Sleep
+    };
 
     Entity* target_;
-    int numberOfSeed_;
+    int numberOfSeeds_;
+    Mode mode_;
 
     void Update(); 
     void RenderUpdate() {};
@@ -19,4 +24,6 @@ public:
     void OnCaptureSeed() {};
     void OnDestroy();
     void OnPush(glm::vec3 pushVec) {}
+    void SetMode(Mode mode);
+    void ToggleMode();
 };

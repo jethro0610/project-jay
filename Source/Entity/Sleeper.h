@@ -1,12 +1,12 @@
 #pragma once
 #include "Entity.h"
 
-class Detacher : public Entity {
+class Sleeper : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_detacher"; }
+    static constexpr const char* GetName() { return "e_sleeper"; }
     static EntityDependendies GetDeps();
 
     void Update() {}; 

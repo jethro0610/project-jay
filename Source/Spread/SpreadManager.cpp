@@ -138,6 +138,9 @@ bool SpreadManager::RemoveSpread(
     // ...then the index to the key
     keys_[swapKey.x][swapKey.y].index = indexToRemove;
 
+    vec2 position = vec2(key - ivec2(KEY_LENGTH / 2)) * SPREAD_DIST;
+    seedManager_.CreateSeed(vec3(position.x, 0.0f, position.y), nullptr, vec3(0.0f, 1.0f, 0.0f));
+
     return true;
 }
 

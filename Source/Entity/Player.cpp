@@ -158,7 +158,7 @@ void Player::Init(Entity::InitArgs args) {
     #endif
 
     meter_ = 0.0f;
-    item_ = Item::None;
+    item_ = Item::Cut;
 }
 
 void Player::OnDestroy() {
@@ -193,6 +193,11 @@ void Player::Update() {
     if (inputs_->useItem)
         UseItem();
 
+    if (itemTimer_ > 0) {
+        itemTimer_--;
+        spreadManager_->RemoveSpread(transform_.position, 5, nullptr);
+    }
+
     if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
     if (inputs_->releaseAttack)
@@ -226,6 +231,9 @@ void Player::Update() {
     }
     else if (!onGround_) {
         moveMode_ = MM_Air;
+    }
+    else if (itemTimer_ > 0) {
+        moveMode_ = MM_Item;
     }
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
@@ -319,6 +327,18 @@ void Player::Update() {
             break;
         }
 
+        case MM_Item: {
+            quat rotation = transform_.rotation;
+            if (length(desiredMovement) > 0.001f) 
+                rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+            transform_.rotation = slerp(transform_.rotation, rotation, ITEM_ROTATION_SPEED);
+            vec3 direction = transform_.rotation * Transform::worldForward;
+            
+            velocity_.x = direction.x * speed_;
+            velocity_.z = direction.z * speed_;
+            break;
+        }
+
         case MM_Slope: {
             quat rotation;
             if (length(desiredMovement) > 0.001f) {
@@ -390,7 +410,7 @@ void Player::Update() {
             break;
     }
 
-    if (onGround_ && meter_ > 0) {
+    if (onGround_ && meter_ > 0 && itemTimer_ <= 0) {
         spreadManager_->AddSpread(transform_.position, 3, INT_MAX);
         meter_ -= 0.0015f;
         meter_ = max(0.0f, meter_);
@@ -504,6 +524,7 @@ void Player::OnPush(vec3 pushVec) {
 }
 
 void Player::UseItem() {
+    static constexpr int CUT_TIME = 5 * 60;
     switch (item_) {
         case Item::None:
             break;
@@ -513,6 +534,11 @@ void Player::UseItem() {
 
         case Item::Boost: {
             velocity_ = transform_.GetForwardVector() * 80.0f;
+            break;
+        }
+
+        case Item::Cut: {
+            itemTimer_ = CUT_TIME;
             break;
         }
     }

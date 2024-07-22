@@ -3,5 +3,6 @@
 enum Item {
     None,
     Boost,
+    Cut,
     NumItems
 };

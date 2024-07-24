@@ -4,5 +4,6 @@ enum Item {
     None,
     Boost,
     Cut,
+    Radius,
     NumItems
 };

@@ -158,7 +158,7 @@ void Player::Init(Entity::InitArgs args) {
     #endif
 
     meter_ = 0.0f;
-    item_ = Item::Cut;
+    item_ = Item::Boost;
 }
 
 void Player::OnDestroy() {
@@ -177,7 +177,6 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-
     if (inputs_->startJump && !charging_)
         chargingJump_= true; 
     if (inputs_->releaseJump) {
@@ -195,8 +194,32 @@ void Player::Update() {
 
     if (itemTimer_ > 0) {
         itemTimer_--;
-        spreadManager_->RemoveSpread(transform_.position, 5, nullptr);
+
+        switch(item_) {
+            case Item::None:
+                break;
+
+            case Item::Boost:
+                break;
+
+            case Item::Cut:
+                spreadManager_->RemoveSpread(transform_.position, 6, nullptr);
+                break;
+
+            case Item::Radius:
+                spreadManager_->AddSpread(transform_.position, 8);
+                break;
+
+            case Item::NumItems:
+                break;
+        }
+
+        if (itemTimer_ == 0)
+            item_ = Item::None;
     }
+
+    if (itemMoveTimer_ > 0)
+        itemMoveTimer_--;
 
     if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
@@ -232,7 +255,7 @@ void Player::Update() {
     else if (!onGround_) {
         moveMode_ = MM_Air;
     }
-    else if (itemTimer_ > 0) {
+    else if (itemMoveTimer_ > 0) {
         moveMode_ = MM_Item;
     }
     else if (attackActiveTimer_ < ATTACK_TIME) {
@@ -446,7 +469,7 @@ void Player::Update() {
     }
     else if (attackCharge_ > 0) 
         animation = 5;
-    else if (moveMode_ == MM_Spin)
+    else if (moveMode_ == MM_Spin || moveMode_ == MM_Item)
         animation = 3;
     else if (moveMode_ == MM_Slope)
         animation = 2;
@@ -524,7 +547,15 @@ void Player::OnPush(vec3 pushVec) {
 }
 
 void Player::UseItem() {
-    static constexpr int CUT_TIME = 5 * 60;
+    if (item_ == Item::None || itemTimer_ > 0)
+        return;
+
+    static constexpr int CUT_TIME = 4 * 60;
+    static constexpr int CUT_MOVE_TIME = 4 * 60;
+
+    static constexpr int RADIUS_TIME = 3 * 60;
+    static constexpr int RADIUS_MOVE_TIME = 30;
+
     switch (item_) {
         case Item::None:
             break;
@@ -533,15 +564,21 @@ void Player::UseItem() {
             break;
 
         case Item::Boost: {
-            velocity_ = transform_.GetForwardVector() * 80.0f;
+            velocity_ = transform_.GetForwardVector() * 60.0f;
+            item_ = Item::None;
             break;
         }
 
         case Item::Cut: {
             itemTimer_ = CUT_TIME;
+            itemMoveTimer_ = CUT_MOVE_TIME;
+            break;
+        }
+        
+        case Item::Radius: {
+            itemTimer_ = RADIUS_TIME;
+            itemMoveTimer_ = RADIUS_MOVE_TIME;
             break;
         }
     }
-
-    item_ = Item::None;
 }

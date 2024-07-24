@@ -38,7 +38,7 @@ public:
     static constexpr float FRICTION_CAP = MAX_SPEED * 0.35f;
     static constexpr float DEFAULT_ROTATION_SPEED = 0.25f;
     static constexpr float SPIN_ROTATION_SPEED = 0.06f;
-    static constexpr float ITEM_ROTATION_SPEED = 0.035f;
+    static constexpr float ITEM_ROTATION_SPEED = 0.1f;
     static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
     static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
     static constexpr float AIR_ROTATION_SPEED = 0.015f;
@@ -74,6 +74,7 @@ public:
 
     Item item_;
     int itemTimer_;
+    int itemMoveTimer_;
 
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;

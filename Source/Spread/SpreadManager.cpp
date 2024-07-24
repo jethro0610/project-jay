@@ -139,6 +139,8 @@ bool SpreadManager::RemoveSpread(
     keys_[swapKey.x][swapKey.y].index = indexToRemove;
 
     vec2 position = vec2(key - ivec2(KEY_LENGTH / 2)) * SPREAD_DIST;
+    vec2 offset = RandomVector2D(SPREAD_DIST / 2.0f);
+    position += offset;
     seedManager_.CreateSeed(vec3(position.x, 0.0f, position.y), nullptr, vec3(0.0f, 1.0f, 0.0f));
 
     return true;
@@ -186,7 +188,7 @@ float SpreadManager::GetCoverage() {
 
     float terrainArea = terrain_.area_ * terrainUnitArea;
     int maxSpread = terrainArea / spreadUnitArea; 
-    return GetCount() / (float)maxSpread;
+    return (GetCount() - GetWeedCount()) / (float)maxSpread;
 }
 
 void SpreadManager::GetWeedLocations(std::vector<ivec2>& locations) {

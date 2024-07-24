@@ -1,3 +1,6 @@
+- Slow mower that slowly follows player and cuts
+    - Needs way to teleport to new spot. Item?
+
 - Use terrain cursor on curves and bubbles
 
 - Add items

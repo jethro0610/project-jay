@@ -34,6 +34,11 @@ void ItemBox::Init(Entity::InitArgs args) {
 void ItemBox::OnHurt(HurtArgs args) {
     if (args.attacker->typeId_ == Player::TYPEID) {
         Player* player = (Player*)args.attacker;
-        player->item_ = Item::Cut;
+
+        int random = rand() % 2;
+        if (random == 0)
+            player->item_ = Item::Cut;
+        else
+            player->item_ = Item::Radius;
     }
 }

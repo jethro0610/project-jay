@@ -44,6 +44,6 @@ void TimerPod::OnHurt(HurtArgs args) {
     static constexpr int SEEDS = 500;
 
     SetFlag(EF_RecieveHits, false);
-    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 8.0f);
+    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 8.0f, args.attacker);
     timer_ = 0;
 }

@@ -2,6 +2,7 @@
 #include "CloneMode.h"
 #include "DefaultMode.h"
 #include "FindMode.h"
+#include "ModifyEntityMode.h"
 #include "NewLevelMode.h"
 #include "OpenLevelMode.h"
 #include "RotateMode.h"

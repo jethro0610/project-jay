@@ -6,6 +6,7 @@
 #include "Rendering/Model.h"
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
+#include "Editor/ConfirmBehavior.h"
 #include <vector>
 #include <inttypes.h>
 #include <cstring>
@@ -19,6 +20,8 @@ class ResourceManager;
 class SeedManager;
 class SpreadManager;
 class Terrain;
+class EditorTextInput;
+class EditorNotification;
 
 class ParticleEmitter;
 
@@ -165,6 +168,14 @@ public:
 
     void OnCaptureSeed() {};
     void OnDestroy() {};
+
+    #ifdef _DEBUG
+    static bool DBG_Modifyable() { return false; };
+    void DBG_OnStartModify(EditorTextInput& textInput, EditorNotification& notification) {};
+    void DBG_OnCancelModify(EditorTextInput& textInput, EditorNotification& notification) {};
+    void DBG_UpdateModify(EditorTextInput& textInput, EditorNotification& notification) {};
+    ConfirmBehavior DBG_OnConfirmModify(EditorTextInput& textInput, EditorNotification& notification) { return CB_Default; };
+    #endif
 
     Camera* camera_;
     EntityList* entities_;

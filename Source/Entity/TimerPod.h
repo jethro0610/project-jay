@@ -18,4 +18,12 @@ public:
     void OnCaptureSeed() {};
     void OnDestroy() {};
     void OnPush(glm::vec3 pushVec) {}
+
+    #ifdef _DEBUG
+    static bool DBG_Modifyable() { return true; };
+    void DBG_OnStartModify(EditorTextInput& textInput, EditorNotification& notification);
+    void DBG_OnCancelModify(EditorTextInput& textInput, EditorNotification& notification);
+    void DBG_UpdateModify(EditorTextInput& textInput, EditorNotification& notification);
+    ConfirmBehavior DBG_OnConfirmModify(EditorTextInput& textInput, EditorNotification& notification);
+    #endif
 };

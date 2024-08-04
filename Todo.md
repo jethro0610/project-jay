@@ -1,3 +1,10 @@
+- Editor options for entities
+- Additive modifiers
+- Jump item
+- Shorten cut time
+
+- lv_weedline_patches needs some moving objects
+
 - Slow mower that slowly follows player and cuts
     - Needs way to teleport to new spot. Item?
 
@@ -35,6 +42,7 @@
     - Then, pod disappears for a length of time before coming back
     - Multiple pods though
     - Player needs to flow between pods to beat level
+    - Transparency on pads
 
 - Multi entity placement using terrain cursor
     - Needs some way to control density

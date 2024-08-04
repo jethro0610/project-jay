@@ -24,6 +24,7 @@ textInput_(args.textInput),
 visibility_(args.visibility)
 {
     requiresEntity_ = false;
+    requiresModifyable_ = false;
     requiresLevel_ = true;
     ctrl_ = false;
 }

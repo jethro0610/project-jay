@@ -1,5 +1,6 @@
 #pragma once
 #include "EditorVisibility.h"
+#include "ConfirmBehavior.h"
 #include <glm/vec3.hpp>
 #include <string>
 
@@ -37,12 +38,6 @@ struct EditorModeArgs {
     EditorVisibility& visibility;
 };
 
-enum ConfirmBehavior {
-    CB_Default,
-    CB_Stay,
-    CB_PostConfirm
-};
-
 class EditorMode {
 public:
     EditorMode(EditorModeArgs args);
@@ -55,6 +50,7 @@ public:
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }
     bool requiresEntity_;
+    bool requiresModifyable_;
     bool requiresTarget_;
     bool requiresLevel_;
     bool ctrl_;

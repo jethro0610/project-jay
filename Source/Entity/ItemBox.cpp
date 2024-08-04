@@ -1,6 +1,7 @@
 #include "ItemBox.h"
 #include "Resource/ResourceManager.h"
 #include "Player.h"
+#include "Seed/SeedManager.h"
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
@@ -41,4 +42,9 @@ void ItemBox::OnHurt(HurtArgs args) {
         else
             player->item_ = Item::Radius;
     }
+
+    static constexpr int SEEDS = 200;
+
+    SetFlag(EF_RecieveHits, false);
+    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 8.0f, args.attacker);
 }

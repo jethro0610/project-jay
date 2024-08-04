@@ -69,6 +69,9 @@
     ],
     "entities": [
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_player",
             "transform": {
                 "position": {
@@ -90,6 +93,9 @@
             "type_id": 1
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -111,6 +117,9 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -132,6 +141,9 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -153,6 +165,9 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -174,6 +189,9 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -195,6 +213,9 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
             "name": "e_itembox",
             "transform": {
                 "position": {
@@ -216,6 +237,11 @@
             "type_id": 15
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": {
+                "p_seeds": 500
+            },
             "name": "e_timerpod",
             "transform": {
                 "position": {
@@ -237,6 +263,11 @@
             "type_id": 13
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": {
+                "p_seeds": 500
+            },
             "name": "e_timerpod",
             "transform": {
                 "position": {
@@ -258,6 +289,11 @@
             "type_id": 13
         },
         {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": {
+                "p_seeds": 500
+            },
             "name": "e_timerpod",
             "transform": {
                 "position": {
@@ -33020,10 +33056,6 @@
         [
             576,
             531
-        ],
-        [
-            576,
-            532
         ],
         [
             576,

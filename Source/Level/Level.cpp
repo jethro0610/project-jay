@@ -142,12 +142,18 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             #undef ENTITYEXP
         }
 
-        for (auto& pair : properties.floats)
-            *pair.second = entityData["float_properties"][pair.first];
-        for (auto& pair : properties.ints)
-            *pair.second = entityData["int_properties"][pair.first];
-        for (auto& pair : properties.bools)
-            *pair.second = entityData["bool_properties"][pair.first];
+        if (entityData.contains("float_properties")) {
+            for (auto& pair : properties.floats)
+                *pair.second = entityData["float_properties"][pair.first];
+        }
+        if (entityData.contains("int_properties")) {
+            for (auto& pair : properties.ints)
+                *pair.second = entityData["int_properties"][pair.first];
+        }
+        if (entityData.contains("bool_properties")) {
+            for (auto& pair : properties.bools)
+                *pair.second = entityData["bool_properties"][pair.first];
+        }
     }
 
     for (auto& weedData : levelData["weeds"]) {

@@ -52,7 +52,7 @@ ConfirmBehavior ModifyEntityMode::OnConfirm() {
         case ModifyProperty: {
             bool validValue = ModifySelectedProperty(textInput_.Get());
             if (validValue) {
-                state_ = SelectProperty;
+                return CB_Default;
             }
             else {
                 notificaiton_.Set("Invalid value");
@@ -65,7 +65,6 @@ ConfirmBehavior ModifyEntityMode::OnConfirm() {
             bool validProperty = SetSelectedProperty(property);
             if (validProperty) {
                 textInput_.Clear();
-
                 textInput_.SetLabel(property + ": ");
                 textInput_.SetInput(properties_.GetValueAsString(property));
                 state_ = ModifyProperty;

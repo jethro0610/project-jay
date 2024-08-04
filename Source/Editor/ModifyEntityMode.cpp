@@ -6,10 +6,8 @@
 #include "Entity/EntityTypes.h"
 
 ModifyEntityMode::ModifyEntityMode(EditorModeArgs args):
-target_(args.target),
 EditorMode(args) {
     requiresEntity_ = true;
-    requiresModifyable_ = true;
     requiresLevel_ = true;
     mouseVisibile_ = false;
     ctrl_ = false;
@@ -17,12 +15,15 @@ EditorMode(args) {
 
 void ModifyEntityMode::OnStart() {
     entity_ = target_.GetEntity();
-    modeText_ = "Modify Entity";
     switch(entity_->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)entity_)->DBG_OnStartModify(textInput_, notificaiton_); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties_ = ((TYPE*)entity_)->GetProperties(); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }
+
+    modeText_ = "Modify Entity";
+    textInput_.SetLabel("Select property: p_");
+    state_ = SelectProperty;
     EditorMode::OnStart();
 }
 
@@ -32,31 +33,85 @@ void ModifyEntityMode::OnEnd() {
 }
 
 void ModifyEntityMode::OnCancel() {
-    switch(entity_->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)entity_)->DBG_OnCancelModify(textInput_, notificaiton_); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
     EditorMode::OnCancel();
 }
 
 void ModifyEntityMode::Update() {
     textInput_.ReadInput();
-    switch(entity_->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)entity_)->DBG_UpdateModify(textInput_, notificaiton_); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
     EditorMode::Update();
 }
 
 ConfirmBehavior ModifyEntityMode::OnConfirm() {
-    textInput_.ReadInput();
-    switch(entity_->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)entity_)->DBG_OnConfirmModify(textInput_, notificaiton_); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
+    switch (state_) {
+        case ModifyProperty: {
+            bool validValue = ModifySelectedProperty(textInput_.Get());
+            if (validValue) {
+                state_ = SelectProperty;
+            }
+            else {
+                notificaiton_.Set("Invalid value");
+            }
+            break;
+        }
+
+        case SelectProperty: {
+            std::string property = "p_" + textInput_.Get();
+            bool validProperty = SetSelectedProperty(property);
+            if (validProperty) {
+                textInput_.Clear();
+
+                textInput_.SetLabel(property + ": ");
+                textInput_.SetInput(properties_.GetValueAsString(property));
+                state_ = ModifyProperty;
+            }
+            else {
+                notificaiton_.Set("Invalid property");
+            }
+            break;
+        }
+    }
+     
+
+    return CB_Stay;
+}
+
+bool ModifyEntityMode::SetSelectedProperty(const std::string& property) {
+    int* propInt = properties_.GetInt(property);
+    if (propInt != nullptr) {
+        property_ = property;
+        propInt_ = propInt; 
+        return true;
     }
 
-    return CB_Default;
+    float* propFloat = properties_.GetFloat(property);
+    if (propFloat != nullptr) {
+        property_ = property;
+        return true;
+    }
+
+    return false;
+}
+
+bool ModifyEntityMode::ModifySelectedProperty(const std::string& value) {
+    if (propInt_ != nullptr) {
+        try {
+            *propInt_ = std::stoi(value);
+            return true;
+        }
+        catch (...) {
+            return false;
+        }
+    }
+
+    if (propFloat_ != nullptr) {
+        try {
+            *propFloat_ = std::stof(value);
+            return true;
+        }
+        catch (...) {
+            return false;
+        }
+    }
+
+    return false;
 }

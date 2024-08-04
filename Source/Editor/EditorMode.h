@@ -50,7 +50,6 @@ public:
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }
     bool requiresEntity_;
-    bool requiresModifyable_;
     bool requiresTarget_;
     bool requiresLevel_;
     bool ctrl_;

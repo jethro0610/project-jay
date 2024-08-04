@@ -1,14 +1,22 @@
 #include "TimerPod.h"
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
-#include "EntityList.h"
-#include "Editor/EditorTextInput.h"
-#include "Editor/EditorNotification.h"
 using namespace glm;
 
 EntityDependendies TimerPod::GetDeps() {
     return {
         "st_tpillar"
+    };
+}
+
+EntityProperties TimerPod::GetProperties() {
+    return {
+        {
+
+        },
+        {
+            {"p_seeds", &seedAmount_}
+        }
     };
 }
 
@@ -29,6 +37,7 @@ void TimerPod::Init(Entity::InitArgs args) {
     pushbox_.radius = 1.0f;
 
     timer_ = 0;
+    seedAmount_ = 500;
 }
 
 void TimerPod::Update() {
@@ -43,25 +52,7 @@ void TimerPod::Update() {
 }
 
 void TimerPod::OnHurt(HurtArgs args) {
-    static constexpr int SEEDS = 500;
-
     SetFlag(EF_RecieveHits, false);
-    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 16.0f, args.attacker);
+    seedManager_->CreateMultipleSeed(transform_.position, seedAmount_, 16.0f, args.attacker);
     timer_ = 0;
 }
-
-#ifdef _DEBUG
-void TimerPod::DBG_OnStartModify(EditorTextInput& textInput, EditorNotification& notification) {
-    textInput.SetLabel("Test Label: ");
-}
-
-void TimerPod::DBG_OnCancelModify(EditorTextInput& textInput, EditorNotification& notification) {
-}
-
-void TimerPod::DBG_UpdateModify(EditorTextInput& textInput, EditorNotification& notification) {
-}
-
-ConfirmBehavior TimerPod::DBG_OnConfirmModify(EditorTextInput& textInput, EditorNotification& notification) { 
-    return CB_Stay; 
-};
-#endif

@@ -14,7 +14,7 @@ for path in path_glob:
     path = path.replace('./Source/Entity/', '')
     path = path.replace('./Source/Entity\\', '')
     path = path.replace('.h', '')
-    if path == 'EntityList' or path == 'EntityUnion' or path == 'EntityTypes' or path == 'Item':
+    if path == 'EntityList' or path == 'EntityUnion' or path == 'EntityTypes' or path == 'Item' or path == 'EntityProperties':
         continue
     entity_names.append(path)
 

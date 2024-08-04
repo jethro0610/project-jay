@@ -130,17 +130,6 @@ void Editor::SetMode(EditorMode* mode) {
     if ((mode->requiresTarget_ || mode->requiresEntity_) && !target_.HasTarget()) return;
     if (mode->requiresEntity_ && !target_.IsEntity()) return;
 
-    if (mode->requiresModifyable_) {
-        bool modifyable = false;
-        switch(target_.GetEntity()->typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: modifyable = TYPE::DBG_Modifyable(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
-        if (!modifyable)
-            return;
-    }
-
     if (mode_ != nullptr)
         mode_->OnEnd();
 

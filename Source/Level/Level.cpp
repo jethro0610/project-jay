@@ -134,6 +134,20 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
+
+        EntityProperties properties;
+        switch(entity->typeId_) {
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)entity)->GetProperties(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
+
+        for (auto& pair : properties.floats)
+            *pair.second = entityData["float_properties"][pair.first];
+        for (auto& pair : properties.ints)
+            *pair.second = entityData["int_properties"][pair.first];
+        for (auto& pair : properties.bools)
+            *pair.second = entityData["bool_properties"][pair.first];
     }
 
     for (auto& weedData : levelData["weeds"]) {
@@ -174,6 +188,28 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["transform"]["rotation"]["x"] = eulerRotation.x;
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
+
+        EntityProperties properties;
+        switch(entity.typeId_) {
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE&)entity).GetProperties(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
+
+        nlohmann::json floatProperties;
+        for (auto& pair : properties.floats)
+            floatProperties[pair.first] = *pair.second;    
+        entityData["float_properties"] = floatProperties;
+
+        nlohmann::json intProperties;
+        for (auto& pair : properties.ints)
+            intProperties[pair.first] = *pair.second;    
+        entityData["int_properties"] = intProperties;
+
+        nlohmann::json boolProperties;
+        for (auto& pair : properties.bools)
+            boolProperties[pair.first] = *pair.second;    
+        entityData["bool_properties"] = boolProperties;
 
         levelData["entities"].push_back(entityData);
     }

@@ -15,6 +15,12 @@ EditorMode(args) {
 
 void ModifyEntityMode::OnStart() {
     entity_ = target_.GetEntity();
+    property_ = "";
+
+    propFloat_ = nullptr;
+    propInt_ = nullptr;
+    propBool_ = nullptr;
+
     switch(entity_->typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: properties_ = ((TYPE*)entity_)->GetProperties(); break;
         EXPANDENTITIES
@@ -76,6 +82,13 @@ ConfirmBehavior ModifyEntityMode::OnConfirm() {
 }
 
 bool ModifyEntityMode::SetSelectedProperty(const std::string& property) {
+    float* propFloat = properties_.GetFloat(property);
+    if (propFloat != nullptr) {
+        property_ = property;
+        propFloat_ = propFloat;
+        return true;
+    }
+
     int* propInt = properties_.GetInt(property);
     if (propInt != nullptr) {
         property_ = property;
@@ -83,9 +96,10 @@ bool ModifyEntityMode::SetSelectedProperty(const std::string& property) {
         return true;
     }
 
-    float* propFloat = properties_.GetFloat(property);
-    if (propFloat != nullptr) {
+    bool* propBool = properties_.GetBool(property);
+    if (propBool_ != nullptr) {
         property_ = property;
+        propBool_ = propBool;
         return true;
     }
 
@@ -93,6 +107,16 @@ bool ModifyEntityMode::SetSelectedProperty(const std::string& property) {
 }
 
 bool ModifyEntityMode::ModifySelectedProperty(const std::string& value) {
+    if (propFloat_ != nullptr) {
+        try {
+            *propFloat_ = std::stof(value);
+            return true;
+        }
+        catch (...) {
+            return false;
+        }
+    }
+
     if (propInt_ != nullptr) {
         try {
             *propInt_ = std::stoi(value);
@@ -103,14 +127,17 @@ bool ModifyEntityMode::ModifySelectedProperty(const std::string& value) {
         }
     }
 
-    if (propFloat_ != nullptr) {
-        try {
-            *propFloat_ = std::stof(value);
+    if (propBool_ != nullptr) {
+        if (value == "t") {
+            *propBool_ = true;
             return true;
         }
-        catch (...) {
-            return false;
+        else if (value == "f") {
+            *propBool_ = false;
+            return true;
         }
+        else
+            return false;
     }
 
     return false;

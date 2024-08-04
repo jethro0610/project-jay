@@ -16,6 +16,9 @@ EntityProperties TimerPod::GetProperties() {
         },
         {
             {"p_seeds", &seedAmount_}
+        },
+        {
+
         }
     };
 }

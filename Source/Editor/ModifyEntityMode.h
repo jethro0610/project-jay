@@ -27,6 +27,8 @@ private:
     ModifyState state_;
     Entity* entity_;
     std::string property_;
-    int* propInt_;
+
     float* propFloat_;
+    int* propInt_;
+    bool* propBool_;
 };

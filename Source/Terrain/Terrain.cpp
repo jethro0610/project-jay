@@ -55,7 +55,7 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
 
         int sX = (int)x % RESOLUTION_LOW;
         int sY = (int)y % RESOLUTION_LOW;
-        return DBG_terrainMapLow_[sY][sX];
+        return DBG_terrainMapLow_[sX][sY];
     }
     #endif
 
@@ -75,10 +75,10 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
             float b = y - sY;
 
             return 
-                (1 - b) * (1 - a) * terrainMap_[sY][sX] +
-                b * (1 - a) * terrainMap_[sY1][sX] +
-                (1 - b) * a * terrainMap_[sY][sX1] +
-                b * a * terrainMap_[sY1][sX1];
+                (1 - b) * (1 - a) * terrainMap_[sX][sY] +
+                b * (1 - a) * terrainMap_[sX][sY1] +
+                (1 - b) * a * terrainMap_[sX1][sY] +
+                b * a * terrainMap_[sX1][sY1];
         }
 
         case TA_Low: {
@@ -89,7 +89,7 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
 
             int sX = (int)x % RESOLUTION;
             int sY = (int)y % RESOLUTION;
-            return terrainMap_[sY][sX];
+            return terrainMap_[sX][sY];
         }
         
         default:
@@ -206,7 +206,7 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int x = 0; x < RES; x++) {
     for (int y = 0; y < RES; y++) {
-        terrainMap[y][x].y = 0.0f;
+        terrainMap[x][y].y = 0.0f;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -223,7 +223,7 @@ void TemplateGenerateTerrainHeights(
 
             TerrainInfluence influence = bubbles[i].GetInfluence(pos);
             if (influence.distance == 0.0f) {
-                terrainMap[y][x].y = influence.height;
+                terrainMap[x][y].y = influence.height;
                 onPoint = true;
                 break;
             }
@@ -242,7 +242,7 @@ void TemplateGenerateTerrainHeights(
 
             TerrainInfluence influence = curves[i].GetInfluence(pos);
             if (influence.distance == 0.0f) {
-                terrainMap[y][x].y = influence.height;
+                terrainMap[x][y].y = influence.height;
                 onPoint = true;
                 break;
             }
@@ -262,7 +262,7 @@ void TemplateGenerateTerrainHeights(
             continue;
 
         for (int i = 0; i < inverseInfluences.size(); i++)
-            terrainMap[y][x].y += (inverseInfluences[i].inverseWeight / totalInverseDistances) * inverseInfluences[i].height;
+            terrainMap[x][y].y += (inverseInfluences[i].inverseWeight / totalInverseDistances) * inverseInfluences[i].height;
     }}
 }
 
@@ -330,8 +330,8 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     std::vector<glm::ivec2> edges;
     edges.reserve(RESOLUTION * RESOLUTION);
     area_ = 0;
-    for (int x = 0; x < RESOLUTION; x++) {
     for (int y = 0; y < RESOLUTION; y++) {
+    for (int x = 0; x < RESOLUTION; x++) {
         if (!landMap[y * RESOLUTION + x])
             continue;
         area_++;
@@ -357,7 +357,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
             float dy = edge.y - y;
             distance = std::min(dx * dx + dy * dy, distance);
         }
-        terrainMap_[y][x].x = sqrt(distance) * multiplier;
+        terrainMap_[x][y].x = sqrt(distance) * multiplier;
     }}
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 

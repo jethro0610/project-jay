@@ -30,9 +30,9 @@ public:
         int startY = std::max(mapY - range, 0);
         int endY = std::min(mapY + range, RES - 1);
 
-        for (int x = startX; x <= endX; x++) {
         for (int y = startY; y <= endY; y++) {
-            affectMap[x][y] |= 1UL << index;
+        for (int x = startX; x <= endX; x++) {
+            affectMap[y][x] |= 1UL << index;
         }}
     }
 };

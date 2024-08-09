@@ -53,14 +53,9 @@ public:
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
     void GenerateTerrainDistances(EntityList* entities = nullptr);
-    void GenerateTerrainDistanceSection(
-        const glm::vec2& start,
-        const glm::vec2& end,
-        const uint8_t* landMap,
-        const std::vector<glm::ivec2>& edges
-    );
     void ReloadTerrainDistances(EntityList* entities = nullptr);
     glm::vec3 RaycastTerrain(glm::vec3 origin, glm::vec3 direction);
+    void LoadAdditiveMap();
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;
@@ -73,7 +68,7 @@ public:
     bool DBG_lowRes_;
 
 private:
-    // uint8_t DBG_additiveMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
+    uint8_t DBG_additiveMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
     uint32_t DBG_affectMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];
     glm::vec2 DBG_terrainMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];
     uint32_t DBG_affectMapLow_[TerrainConsts::RESOLUTION_LOW][TerrainConsts::RESOLUTION_LOW];

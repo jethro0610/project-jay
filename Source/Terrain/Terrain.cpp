@@ -10,8 +10,8 @@
 #include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
-#include <thread>
 #include <vector_contig.h>
+#include <omp.h>
 using namespace glm;
 using namespace TerrainConsts;
 
@@ -184,19 +184,28 @@ struct InverseInfluence {
 };
 
 template <const int RES>
-void BaseGenerateTerrainHeightsSection(
-    const glm::vec2& start,
-    const glm::vec2& end,
+void TemplateGenerateTerrainHeights(
     glm::vec2 terrainMap[RES][RES],
     uint32_t affectMap[RES][RES],
-    const vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
-    const vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
+    vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
+    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
 
-    for (int x = start.x; x < end.x; x++) {
-    for (int y = start.y; y < end.y; y++) {
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
+        affectMap[x][y] = 0;
+    }}
+
+    for (int i = 0; i < bubbles.size(); i++) 
+        bubbles[i].WriteAffect<RES>(affectMap, i);
+    for (int i = 0; i < curves.size(); i++) 
+        curves[i].WriteAffect<RES>(affectMap, i + TerrainBubble::MAX);
+
+    #pragma omp parallel for
+    for (int x = 0; x < RES; x++) {
+    for (int y = 0; y < RES; y++) {
         terrainMap[y][x].y = 0.0f;
 
         float wX = x - HALF_RES;
@@ -257,44 +266,6 @@ void BaseGenerateTerrainHeightsSection(
     }}
 }
 
-template <const int RES>
-void BaseGenerateTerrainHeights(
-    glm::vec2 terrainMap[RES][RES],
-    uint32_t affectMap[RES][RES],
-    vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
-    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
-) {
-    for (int x = 0; x < RES; x++) {
-    for (int y = 0; y < RES; y++) {
-        affectMap[x][y] = 0;
-    }}
-
-    for (int i = 0; i < bubbles.size(); i++) 
-        bubbles[i].WriteAffect<RES>(affectMap, i);
-    for (int i = 0; i < curves.size(); i++) 
-        curves[i].WriteAffect<RES>(affectMap, i + TerrainBubble::MAX);
-
-    std::vector<std::thread> threads;
-    int cores = std::thread::hardware_concurrency();
-    int sectionSize = RES / cores;
-
-    for (int i = 0; i < cores; i++) {
-        int add = (i == cores - 1 && RES % cores != 0) ? 1 : 0;
-        threads.push_back(std::thread([terrainMap, bubbles, curves, affectMap, sectionSize, i, add] {
-            BaseGenerateTerrainHeightsSection<RES>(
-                ivec2(i * sectionSize, 0),
-                ivec2((i + 1) * sectionSize + add, RES),
-                terrainMap,
-                affectMap,
-                bubbles,
-                curves
-            );
-        }));
-    }
-    for (std::thread& thread : threads)
-        thread.join();
-}
-
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
@@ -308,7 +279,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     }
 
     if (lowRes) {
-        BaseGenerateTerrainHeights<RESOLUTION_LOW>(
+        TemplateGenerateTerrainHeights<RESOLUTION_LOW>(
             DBG_terrainMapLow_, 
             DBG_affectMapLow_, 
             DBG_bubbles_, 
@@ -318,7 +289,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
         resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
     }
     else {
-        BaseGenerateTerrainHeights<RESOLUTION>(
+        TemplateGenerateTerrainHeights<RESOLUTION>(
             terrainMap_, 
             DBG_affectMap_, 
             DBG_bubbles_, 
@@ -334,26 +305,9 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     }
 }
 
-void Terrain::GenerateTerrainDistanceSection(
-    const glm::vec2& start,
-    const glm::vec2& end,
-    const uint8_t* landMap,
-    const std::vector<glm::ivec2>& edges
-) {
-    for (int x = start.x; x < end.x; x++) {
-    for (int y = start.y; y < end.y; y++) {
-        float distance = INFINITY;
-        float multiplier = landMap[y * RESOLUTION + x] ? -1.0f : 1.0f;
-        for (const glm::ivec2& edge : edges) {
-            float dx = edge.x - x;
-            float dy = edge.y - y;
-            distance = std::min(dx * dx + dy * dy, distance);
-        }
-        terrainMap_[y][x].x = sqrt(distance) * multiplier;
-    }}
-}
 
 void Terrain::GenerateTerrainDistances(EntityList* entities) {
+    // Determine which entities are on the ground before regenerating
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -365,12 +319,14 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
         }
     }
 
+    // Load the landmap
     uint8_t* landMap = new uint8_t[RESOLUTION * RESOLUTION];
     std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp", std::ios::binary);
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();
 
+    // Determine the edges
     std::vector<glm::ivec2> edges;
     edges.reserve(RESOLUTION * RESOLUTION);
     area_ = 0;
@@ -390,28 +346,22 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
             edges.push_back({x, y});
     }}
 
-    std::vector<std::thread> threads;
-    int cores = std::thread::hardware_concurrency();
-    int sectionSize = RESOLUTION / cores;
-
-    for (int i = 0; i < cores; i++) {
-        int add = (i == cores - 1 && RESOLUTION % cores != 0) ? 1 : 0;
-        threads.push_back(
-            std::thread(
-                &Terrain::GenerateTerrainDistanceSection,
-                this, 
-                ivec2(i * sectionSize, 0),
-                ivec2((i + 1) * sectionSize + add, RESOLUTION),
-                landMap,
-                edges
-            )
-        );
-    }
-    for (std::thread& thread : threads)
-        thread.join();
-
+    // Generate the the distance field
+    #pragma omp parallel for
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        float distance = INFINITY;
+        float multiplier = landMap[y * RESOLUTION + x] ? -1.0f : 1.0f;
+        for (const glm::ivec2& edge : edges) {
+            float dx = edge.x - x;
+            float dy = edge.y - y;
+            distance = std::min(dx * dx + dy * dy, distance);
+        }
+        terrainMap_[y][x].x = sqrt(distance) * multiplier;
+    }}
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 
+    // Generate the low resolution distance field
     const int scaleFactor = RESOLUTION / RESOLUTION_LOW;
     for (int x = 0; x < RESOLUTION_LOW; x++) {
     for (int y = 0; y < RESOLUTION_LOW; y++) {
@@ -424,6 +374,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }} 
     resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
 
+    // Reground all grounded entities
     for (int entityIndex : groundedEntities) {
         Entity& entity = (*entities)[entityIndex];
         float height = GetHeight(vec2(entity.transform_.position.x, entity.transform_.position.z));
@@ -459,4 +410,8 @@ vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
         curOrigin += direction * diff;
     }
     return vec3(0.0f);
+}
+
+void Terrain::LoadAdditiveMap() {
+
 }

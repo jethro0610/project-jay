@@ -9,7 +9,7 @@ if not os.path.exists(output_dir):
 
 
 def compile_landmap(input_path, output_path):
-    command = 'magick ' + input_path + ' -flatten -resize 1024x1024 ' + ' GRAY:' + output_path 
+    command = 'magick ' + input_path + ' -channel B -flatten -resize 1024x1024 ' + ' GRAY:' + output_path 
     print(colored("Compiling landmap %s..." % input_path, "yellow"))
     subprocess.run(command, shell = True)
 

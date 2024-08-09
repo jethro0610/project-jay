@@ -1,4 +1,3 @@
-- Editor options for entities
 - Additive modifiers
 - Jump item
 - Shorten cut time

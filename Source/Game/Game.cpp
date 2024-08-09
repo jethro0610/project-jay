@@ -43,6 +43,8 @@ void Game::Init() {
             Update(); 
         #endif
     }
+
+    bgfx::shutdown();
 }
 
 struct Hit {

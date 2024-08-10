@@ -188,6 +188,7 @@ template <const int RES>
 void TemplateGenerateTerrainHeights(
     glm::vec2 terrainMap[RES][RES],
     uint32_t affectMap[RES][RES],
+    uint8_t additiveMap[RES][RES],
     vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
     vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
 ) {
@@ -207,7 +208,7 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
-        terrainMap[y][x].y = 0.0f;
+        terrainMap[y][x].y = additiveMap[y][x] / 25.0;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -283,6 +284,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
         TemplateGenerateTerrainHeights<RESOLUTION_LOW>(
             DBG_terrainMapLow_, 
             DBG_affectMapLow_, 
+            DBG_additiveMapLow_,
             DBG_bubbles_, 
             DBG_curves_
         );
@@ -293,6 +295,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
         TemplateGenerateTerrainHeights<RESOLUTION>(
             terrainMap_, 
             DBG_affectMap_, 
+            DBG_additiveMap_,
             DBG_bubbles_, 
             DBG_curves_
         );
@@ -364,16 +367,33 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 
     // Generate the low resolution distance field
     const int scaleFactor = RESOLUTION / RESOLUTION_LOW;
-    for (int x = 0; x < RESOLUTION_LOW; x++) {
     for (int y = 0; y < RESOLUTION_LOW; y++) {
+    for (int x = 0; x < RESOLUTION_LOW; x++) {
         float averageDist = 0.0f;
-        for (int dx = 0; dx < scaleFactor; dx++) {
         for (int dy = 0; dy < scaleFactor; dy++) {
-            averageDist += terrainMap_[x * scaleFactor + dx][y * scaleFactor + dy].x; 
+        for (int dx = 0; dx < scaleFactor; dx++) {
+            averageDist += terrainMap_[y * scaleFactor + dy][x * scaleFactor + dx].x; 
         }}
         DBG_terrainMapLow_[y][x].x = averageDist / (scaleFactor * scaleFactor);
     }} 
     resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
+
+    // Load the additive map
+    std::ifstream additiveMapFile("./landmaps/" + DBG_landMapName_ + ".amp", std::ios::binary);
+    ASSERT(additiveMapFile.is_open(), "Tried generating from invalid additive map " + DBG_landMapName_);
+    additiveMapFile.read((char*)DBG_additiveMap_, RESOLUTION * RESOLUTION * sizeof(uint8_t));
+    additiveMapFile.close();
+
+    // Generate the low resolution additive map
+    for (int y = 0; y < RESOLUTION_LOW; y++) {
+    for (int x = 0; x < RESOLUTION_LOW; x++) {
+        uint8_t average = 0;
+        for (int dy = 0; dy < scaleFactor; dy++) {
+        for (int dx = 0; dx < scaleFactor; dx++) {
+            average += DBG_additiveMap_[y * scaleFactor + dy][x * scaleFactor + dx]; 
+        }}
+        DBG_additiveMapLow_[y][x] = average / (scaleFactor * scaleFactor);
+    }} 
 
     // Reground all grounded entities
     for (int entityIndex : groundedEntities) {
@@ -388,9 +408,11 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 
 void Terrain::ReloadTerrainDistances(EntityList* entities) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
-    std::string landmapOutput = "./landmaps/" + DBG_landMapName_ + ".lmp";
-    std::string command = "magick -flatten -resize 1024x1024 " + landmapXCF + " GRAY:" + landmapOutput;
-    system(command.c_str());
+    std::string output = "./landmaps/" + DBG_landMapName_;
+    std::string landmapCommand = "magick -flatten -resize 1024x1024 -channel B -separate " + landmapXCF + " GRAY:" + output + ".lmp";
+    std::string additiveCommand = "magick -flatten -resize 1024x1024 -channel R -separate " + landmapXCF + " GRAY:" + output + ".amp";
+    system(landmapCommand.c_str());
+    system(additiveCommand.c_str());
     GenerateTerrainDistances(entities);
 }
 #endif
@@ -411,8 +433,4 @@ vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
         curOrigin += direction * diff;
     }
     return vec3(0.0f);
-}
-
-void Terrain::LoadAdditiveMap() {
-
 }

@@ -13,7 +13,7 @@ public:
     int DBG_selectedPoint_;
     #endif
 
-    TerrainInfluence GetInfluence(glm::vec2& pos) const;
+    TerrainInfluence GetInfluence(glm::vec2& pos, float offset = 0.0f) const;
     glm::vec4 GetPosition(float t) const;
 
     template <const int RES>

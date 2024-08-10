@@ -137,6 +137,28 @@ vec3 Terrain::GetNormal(const vec3& position, TerrainAccuracy accuracy) const {
 }
 
 #ifdef _DEBUG
+template <const int RES>
+float SampleAdditiveMap(float x, float y, uint8_t additiveMap[RES][RES]) {
+    x *= WORLD_TO_TERRAIN_SCALAR;
+    x += HALF_RESOLUTION;
+    y *= WORLD_TO_TERRAIN_SCALAR;
+    y += HALF_RESOLUTION;
+
+    int sX = std::clamp((int)x, 0, RES);
+    int sY = std::clamp((int)y, 0, RES);
+    int sX1 = std::min(sX + 1, RES);
+    int sY1 = std::min(sY + 1, RES);
+
+    float a = x - sX;
+    float b = y - sY;
+
+    return 
+        (1 - b) * (1 - a) * additiveMap[sY][sX] +
+        b * (1 - a) * additiveMap[sY1][sX] +
+        (1 - b) * a * additiveMap[sY][sX1] +
+        b * a * additiveMap[sY1][sX1];
+}
+
 TerrainBubble* Terrain::AddBubble(vec3 position) {
     int bubbleIdx = DBG_bubbles_.push_back({vec4(position, 50.0f), false, false});
     return &DBG_bubbles_[bubbleIdx];
@@ -208,7 +230,7 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
-        terrainMap[y][x].y = additiveMap[y][x] / 25.0;
+        terrainMap[y][x].y = additiveMap[y][x] / 25.0f;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -216,6 +238,7 @@ void TemplateGenerateTerrainHeights(
         wY /= WORLD_TO_TERRAIN;
         vec2 pos = vec2(wX, wY);
         pos += vec2((1.0f / WORLD_TO_TERRAIN) * 0.5f);
+        float additiveHeight = additiveMap[y][x] / 25.0f;
 
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
@@ -223,7 +246,7 @@ void TemplateGenerateTerrainHeights(
             if (!(affectMap[y][x] & 1UL << i)) 
                 continue;
 
-            TerrainInfluence influence = bubbles[i].GetInfluence(pos);
+            TerrainInfluence influence = bubbles[i].GetInfluence(pos, -additiveHeight);
             if (influence.distance == 0.0f) {
                 terrainMap[y][x].y = influence.height;
                 onPoint = true;
@@ -242,7 +265,7 @@ void TemplateGenerateTerrainHeights(
             if (!(affectMap[y][x] & 1UL << (i + TerrainBubble::MAX))) 
                 continue;
 
-            TerrainInfluence influence = curves[i].GetInfluence(pos);
+            TerrainInfluence influence = curves[i].GetInfluence(pos, -additiveHeight);
             if (influence.distance == 0.0f) {
                 terrainMap[y][x].y = influence.height;
                 onPoint = true;
@@ -387,7 +410,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     // Generate the low resolution additive map
     for (int y = 0; y < RESOLUTION_LOW; y++) {
     for (int x = 0; x < RESOLUTION_LOW; x++) {
-        uint8_t average = 0;
+        uint32_t average = 0;
         for (int dy = 0; dy < scaleFactor; dy++) {
         for (int dx = 0; dx < scaleFactor; dx++) {
             average += DBG_additiveMap_[y * scaleFactor + dy][x * scaleFactor + dx]; 

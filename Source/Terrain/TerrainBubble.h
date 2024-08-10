@@ -13,7 +13,7 @@ public:
     bool DBG_selected_;
     #endif
 
-    TerrainInfluence GetInfluence(glm::vec2& pos) const;
+    TerrainInfluence GetInfluence(glm::vec2& pos, float offset = 0.0f) const;
 
     template<const int RES>
     void WriteAffect(uint32_t affectMap[RES][RES], int index) const {

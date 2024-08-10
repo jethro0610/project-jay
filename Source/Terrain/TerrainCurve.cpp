@@ -18,7 +18,7 @@ vec4 TerrainCurve::GetPosition(float t) const {
     return point;
 }
 
-TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos) const {
+TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos, float offset) const {
     float pivot = 0.0f;
     float nearestSqr = INFINITY;
     float nearestRadius = 0.0f;
@@ -80,6 +80,6 @@ TerrainInfluence TerrainCurve::GetInfluence(glm::vec2& pos) const {
 
     TerrainInfluence influence;
     influence.distance = (sqrt(nearestSqr) / nearestRadius);
-    influence.height = nearestHeight * EaseInOutQuad(1.0f - influence.distance);
+    influence.height = (nearestHeight + offset) * EaseInOutQuad(1.0f - influence.distance);
     return influence;
 }

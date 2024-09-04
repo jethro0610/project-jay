@@ -32,6 +32,7 @@ terrain_(terrain)
 
     properties_.terrainMaterial.shader = resourceManager.GetShader("vs_terrain", "fs_terrain");
     properties_.terrainMaterial.numTextures = 3;
+    properties_.terrainMaterial.triangleType = TriangleType::TWO_SIDED_NEGATIVE_BACK;
     properties_.terrainMaterial.textures[0] = resourceManager.GetTexture("t_grass_c");
     properties_.terrainMaterial.textures[1] = resourceManager.GetTexture("t_grass_n");
     properties_.terrainMaterial.textures[2] = resourceManager.GetTexture("t_marble_c");

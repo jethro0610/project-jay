@@ -1,4 +1,3 @@
-- Additive modifiers
 - Jump item
 - Shorten cut time
 

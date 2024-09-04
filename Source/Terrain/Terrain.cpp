@@ -230,7 +230,8 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
-        terrainMap[y][x].y = additiveMap[y][x] / 25.0f;
+        float additiveHeight = additiveMap[y][x];
+        terrainMap[y][x].y = additiveHeight;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -238,7 +239,6 @@ void TemplateGenerateTerrainHeights(
         wY /= WORLD_TO_TERRAIN;
         vec2 pos = vec2(wX, wY);
         pos += vec2((1.0f / WORLD_TO_TERRAIN) * 0.5f);
-        float additiveHeight = additiveMap[y][x] / 25.0f;
 
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
@@ -432,11 +432,12 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 void Terrain::ReloadTerrainDistances(EntityList* entities) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
     std::string output = "./landmaps/" + DBG_landMapName_;
-    std::string landmapCommand = "magick -flatten -resize 1024x1024 -channel B -separate " + landmapXCF + " GRAY:" + output + ".lmp";
-    std::string additiveCommand = "magick -flatten -resize 1024x1024 -channel R -separate " + landmapXCF + " GRAY:" + output + ".amp";
+    std::string landmapCommand = "magick " + landmapXCF + " -flatten -resize 1024x1024 -channel B -separate " + " GRAY:" + output + ".lmp";
+    std::string additiveCommand = "magick " + landmapXCF + " -flatten -resize 1024x1024 -channel R -separate " + " GRAY:" + output + ".amp";
     system(landmapCommand.c_str());
     system(additiveCommand.c_str());
     GenerateTerrainDistances(entities);
+    GenerateTerrainHeights(false, entities);
 }
 #endif
 

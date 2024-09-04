@@ -24,6 +24,6 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_persist",
 	"fs_selected_front",
 	"fs_selected_unshaded",
-	"fs_terrain",
 	"fs_terraincursor",
+	"fs_terrain",
 };

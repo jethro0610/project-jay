@@ -101,6 +101,93 @@
                 }
             },
             "type_id": 1
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 125.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 50
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": 174.79171752929688,
+                    "y": 13.550936698913574,
+                    "z": -92.00284576416016
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.90000057220459,
+                    "y": 9.599997520446777,
+                    "z": 7.90000057220459
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 125.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 50
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": 56.803863525390625,
+                    "y": 40.0,
+                    "z": -272.3807373046875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.90000057220459,
+                    "y": 9.599997520446777,
+                    "z": 7.90000057220459
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 125.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 50
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": -129.42869567871094,
+                    "y": 20.0,
+                    "z": 102.72586059570313
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.90000057220459,
+                    "y": 9.599997520446777,
+                    "z": 7.90000057220459
+                }
+            },
+            "type_id": 16
         }
     ],
     "landmap": "lm_jumper"

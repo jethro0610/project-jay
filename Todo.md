@@ -1,3 +1,4 @@
+- Homing attack
 - Jump item
 - Shorten cut time
 

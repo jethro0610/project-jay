@@ -2,6 +2,8 @@
 #include "Time/Time.h"
 #include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
+#include "EntityTypes.h"
+#include "Helpers/Assert.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -206,4 +208,31 @@ void Entity::ChangeAnimation(int index, float transitionLength) {
 
     transitionLength_ = transitionLength;
     transitionTime_ = 0.0f;
+}
+
+void Entity::CopyProperties(Entity* from) {
+    ASSERT((typeId_ == from->typeId_), "Attempted to copy from entity with different type");
+
+    EntityProperties properties;
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)this)->GetProperties(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+
+    EntityProperties fromProperties;
+    switch(from->typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: fromProperties = ((TYPE*)from)->GetProperties(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+
+    for (int i = 0; i < properties.floats.size(); i++)
+        *properties.floats[i].second = *fromProperties.floats[i].second;
+
+    for (int i = 0; i < properties.ints.size(); i++)
+        *properties.ints[i].second = *fromProperties.ints[i].second;
+
+    for (int i = 0; i < properties.bools.size(); i++)
+        *properties.bools[i].second = *fromProperties.bools[i].second;
 }

@@ -16,4 +16,5 @@ public:
     void OnCaptureSeed() {};
     void OnDestroy() {};
     void OnPush(glm::vec3 pushVec) {}
+    void OnOverlap(Entity* overlappedEntity) {};
 };

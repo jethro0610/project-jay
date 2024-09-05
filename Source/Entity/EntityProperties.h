@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+class Entity;
 
 struct EntityProperties {
     std::vector<std::pair<std::string, float*>> floats;

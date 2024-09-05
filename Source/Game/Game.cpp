@@ -64,6 +64,12 @@ struct Push {
     Collision collision;
 };
 
+struct Overlap {
+    Entity* a;
+    Entity* b;
+    Collision collision;
+};
+
 void Game::Update() {
     SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
     if (spreadManager_.GetCoverage() > 0.33f) {
@@ -84,6 +90,45 @@ void Game::Update() {
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
             entities_[i].lastTransform_ = entities_[i].transform_;
+        }
+
+        vector_const<Overlap, 128> overlapList;
+        for (int a = 0; a < 128; a++) {
+            if (!entities_[a].alive_) continue;
+            bool overlapA = entities_[a].GetFlag(Entity::EF_Overlap);
+
+            for (int b = a + 1; b < 128; b++) {
+                if (a == b)
+                    continue;
+
+                if (!entities_[b].alive_) continue;
+                if (!overlapA && !entities_[b].GetFlag(Entity::EF_Overlap)) continue;
+
+                Collision collision = Collision::GetCollision(
+                    entities_[a].transform_,
+                    entities_[a].pushbox_,
+                    entities_[b].transform_,
+                    entities_[b].pushbox_
+                );
+
+                if (collision.isColliding) {
+                    overlapList.push_back({&entities_[a], &entities_[b], collision});
+                }
+            }
+        }
+
+        for (Overlap& overlap : overlapList) {
+            switch(overlap.a->typeId_) {
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)overlap.a)->OnOverlap(overlap.b); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
+
+            switch(overlap.b->typeId_) {
+                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)overlap.b)->OnOverlap(overlap.a); break;
+                EXPANDENTITIES
+                #undef ENTITYEXP
+            }
         }
 
         vector_const<Hit, 128> hitList;

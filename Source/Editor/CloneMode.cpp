@@ -42,6 +42,7 @@ void CloneMode::OnStart() {
 
     Entity& createdEntity = entities_.CreateEntity(original_->typeId_);
     createdEntity.transform_ = originalTransform_;
+    createdEntity.CopyProperties(original_);
     target_.SetEntity(&createdEntity);
 }
 
@@ -90,6 +91,7 @@ void CloneMode::Update() {
 ConfirmBehavior CloneMode::OnConfirm() {
     Entity& createdEntity = entities_.CreateEntity(target_.GetEntity()->typeId_);
     createdEntity.transform_ = target_.GetEntity()->transform_;
+    createdEntity.CopyProperties(original_);
 
     return CB_Stay;
 }

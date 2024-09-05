@@ -44,9 +44,9 @@ void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 off
     seeds_.push_back(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, Entity* capturer) {
+void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, Entity* capturer, glm::vec3 offset) {
     for (int i = 0; i < amount; i++) {
-        CreateSeed(position, capturer, RandomVector(radius));
+        CreateSeed(position, capturer, RandomVector(radius) + offset);
     }
 }
 

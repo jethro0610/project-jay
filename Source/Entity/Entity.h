@@ -79,6 +79,7 @@ public:
         EF_RecievePush,
         EF_SendHits,
         EF_RecieveHits,
+        EF_Overlap,
         EF_RecieveKnockback,
         EF_HurtFaceForward,
         EF_HurtFaceBack,
@@ -152,6 +153,7 @@ public:
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
+    void CopyProperties(Entity* from);
 
     void Update() {};
     void BaseUpdate();
@@ -164,6 +166,7 @@ public:
     void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args) {};
     void OnPush(glm::vec3 pushVec) {};
+    void OnOverlap(Entity* overlappedEntity) {};
 
     void OnCaptureSeed() {};
     void OnDestroy() {};

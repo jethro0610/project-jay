@@ -9,6 +9,7 @@
 #include "Logging/Logger.h"
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
+#include "EntityList.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -159,6 +160,7 @@ void Player::Init(Entity::InitArgs args) {
 
     meter_ = 0.0f;
     item_ = Item::Boost;
+    homingTarget_ = nullptr;
 }
 
 void Player::OnDestroy() {
@@ -177,8 +179,37 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->startJump && !charging_)
-        chargingJump_= true; 
+    if (inputs_->startJump && !charging_) {
+        if (onGround_)
+            chargingJump_= true; 
+        else {
+            float closestDistance = INFINITY;
+            for (int i = 0; i < 128; i++) {
+                Entity* entity = &(*entities_)[i];
+                if (entity == this)
+                    continue;
+
+                float dist = distance(transform_.position, entity->transform_.position);
+                vec3 vectorToEntity = normalize(entity->transform_.position - transform_.position);
+                if (dot(camera_->transform_.GetForwardVector(), vectorToEntity) < 0.5f)
+                    continue;
+
+                if (dist < closestDistance) {
+                    homingTarget_ = entity;
+                    closestDistance = dist;
+                }
+            }
+        }
+    }
+
+    if (onGround_)
+        homingTarget_ = nullptr;
+
+    if (homingTarget_ != nullptr) {
+        vec3 vectorToTarget = normalize(homingTarget_->transform_.position - transform_.position);
+        velocity_ = vectorToTarget * 500.0f;
+    }
+
     if (inputs_->releaseJump) {
         chargingJump_ = false;
         velocity_.y += std::max(jumpCharge_, 15.0f);
@@ -252,6 +283,9 @@ void Player::Update() {
     if (stun_) {
         moveMode_ = MM_Stun;
     }
+    else if (homingTarget_ != nullptr) {
+        moveMode_ = MM_Target;
+    }
     else if (!onGround_) {
         moveMode_ = MM_Air;
     }
@@ -300,7 +334,9 @@ void Player::Update() {
         spinTime_ -= 2;
     spinTime_ = clamp(spinTime_, 0, 120);
 
-    velocity_.y -= 1.5f;
+    if (homingTarget_ == nullptr)
+        velocity_.y -= 2.0f;
+
     switch (moveMode_) {
         case MM_Default: {
             velocity_.x += desiredMovement.x * acceleration;
@@ -430,6 +466,9 @@ void Player::Update() {
         }
 
         case MM_Stun:
+            break;
+
+        case MM_Target:
             break;
     }
 
@@ -581,4 +620,9 @@ void Player::UseItem() {
             break;
         }
     }
+}
+
+void Player::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity == homingTarget_)
+        homingTarget_ = nullptr;
 }

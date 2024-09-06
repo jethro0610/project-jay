@@ -12,7 +12,8 @@ public:
         MM_JumpCharge,
         MM_Stun,
         MM_Air,
-        MM_Item
+        MM_Item,
+        MM_Target
     };
 
     void Init(InitArgs args);
@@ -72,6 +73,8 @@ public:
     bool chargingJump_;
     float jumpCharge_;
 
+    Entity* homingTarget_;
+
     Item item_;
     int itemTimer_;
     int itemMoveTimer_;
@@ -87,7 +90,7 @@ public:
     void OnCaptureSeed();
     void OnDestroy();
     void OnPush(glm::vec3 pushVec);
-    void OnOverlap(Entity* overlappedEntity) {};
+    void OnOverlap(Entity* overlappedEntity);
 
     void UseItem();
 };

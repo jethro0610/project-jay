@@ -5,7 +5,7 @@
 
 class TerrainCurve {
 public:
-    static constexpr int MAX = 8;
+    static constexpr int MAX = 16;
     static constexpr int ITERATIONS = 16;
     glm::vec4 points[4];
     bool destroy_;

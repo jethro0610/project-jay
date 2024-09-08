@@ -29,7 +29,7 @@ resourceManager_(resourceManager)
         #ifdef _DEBUG
         DBG_terrainMapLow_[y][x] = vec2(0.0f);
         #endif
-    } }
+    }}
 
     #ifdef _DEBUG
     DBG_landMapName_ = "lm_default";

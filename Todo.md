@@ -1,3 +1,8 @@
+- Shift speed up camera
+- Coyote time jumps
+- Multiply jump height based on charge (higher charge = more carry over)
+- 3-5 frame windows for highest velocity before jump
+
 - Homing attack
 - Jump item
 - Shorten cut time

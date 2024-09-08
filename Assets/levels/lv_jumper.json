@@ -47,6 +47,12 @@
             "x": -196.04603576660156,
             "y": 56.049171447753906,
             "z": -9.869281768798828
+        },
+        {
+            "w": 59.98046875,
+            "x": -51.01231384277344,
+            "y": 56.90800094604492,
+            "z": -221.71485900878906
         }
     ],
     "curves": [
@@ -188,6 +194,59 @@
                 }
             },
             "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_headspitter",
+            "transform": {
+                "position": {
+                    "x": 172.9037322998047,
+                    "y": -3.216891288757324,
+                    "z": 167.6124267578125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 18
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_horizontalkb": 20.0,
+                "p_verticalkb": 20.0
+            },
+            "int_properties": {
+                "p_lifespan": 120
+            },
+            "name": "e_timedhitbox",
+            "transform": {
+                "position": {
+                    "x": 209.7789764404297,
+                    "y": -4.294491767883301,
+                    "z": 147.80517578125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.80000114440918,
+                    "y": 9.80000114440918,
+                    "z": 9.80000114440918
+                }
+            },
+            "type_id": 17
         }
     ],
     "landmap": "lm_jumper"

@@ -15,3 +15,5 @@ TimerPod,13
 SinglePod,14
 ItemBox,15
 JumpPad,16
+TimedHitbox,17
+HeadSpitter,18

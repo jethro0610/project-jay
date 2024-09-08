@@ -6,7 +6,7 @@
 
 class TerrainBubble {
 public:
-    static constexpr int MAX = 8;
+    static constexpr int MAX = 16;
     glm::vec4 position;
     bool destroy_;
     #ifdef _DEBUG

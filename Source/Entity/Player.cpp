@@ -549,6 +549,7 @@ void Player::RenderUpdate() {
 }
 
 void Player::OnHit(HitArgs args) {
+    DEBUGLOG("player hit");
 }
 
 void Player::OnHurt(HurtArgs args) {

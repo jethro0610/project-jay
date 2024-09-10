@@ -60,6 +60,7 @@ void Game::UpdateInputs_P() {
     inputs_.cut = platform_.heldKeys_[' '] || platform_.gamepad_.heldButtons_[Gamepad::Y];
     inputs_.ski = platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::RTRIGGER];
     inputs_.flow = platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.gamepad_.heldButtons_[Gamepad::LTRIGGER]; 
+    inputs_.shift = platform_.heldKeys_[GLFW_KEY_LEFT_SHIFT];
 
     inputs_.startAttack = 
         platform_.pressedKeys_['Q'] || 

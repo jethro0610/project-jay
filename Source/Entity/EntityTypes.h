@@ -16,8 +16,9 @@
 #include "TeleportPod.h"
 #include "TimerPod.h"
 #include "TrailFish.h"
-#include "TimedHitbox.h"
 #include "HeadSpitter.h"
+#include "TimedHitbox.h"
+#include "GroundSpawnProjectile.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -38,4 +39,5 @@
 	ENTITYEXP(ItemBox, itembox, 15) \
 	ENTITYEXP(JumpPad, jumppad, 16) \
 	ENTITYEXP(TimedHitbox, timedhitbox, 17) \
-	ENTITYEXP(HeadSpitter, headspitter, 18)
+	ENTITYEXP(HeadSpitter, headspitter, 18) \
+	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19)

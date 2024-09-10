@@ -236,3 +236,13 @@ void Entity::CopyProperties(Entity* from) {
     for (int i = 0; i < properties.bools.size(); i++)
         *properties.bools[i].second = *fromProperties.bools[i].second;
 }
+
+void Entity::AssignProperties(EntityPropertiesAssigner& assigner) {
+    EntityProperties properties;
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)this)->GetProperties(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    properties.AssignProperties(assigner);
+}

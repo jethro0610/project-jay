@@ -55,7 +55,8 @@ void Camera::Update(Inputs& inputs) {
 
     lookY_ = clamp(lookY_, radians(-89.0f), radians(89.0f));
     transform_.rotation = quat(vec3(lookY_, lookX_, 0.0f));
-    vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime;
-    vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 32.0f * deltaTime;
+    float shiftSpeed = inputs.shift ? 4.0f : 1.0f;
+    vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime * shiftSpeed;
+    vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 32.0f * deltaTime * shiftSpeed;
     transform_.position += forwardMovement + rightMovement;
 }

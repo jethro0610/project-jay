@@ -17,3 +17,4 @@ ItemBox,15
 JumpPad,16
 TimedHitbox,17
 HeadSpitter,18
+GroundSpawnProjectile,19

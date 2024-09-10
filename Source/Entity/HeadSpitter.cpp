@@ -1,6 +1,7 @@
 #include "HeadSpitter.h"
 #include "Resource/ResourceManager.h"
 #include "EntityList.h"
+#include "GroundSpawnProjectile.h"
 #include "TimedHitbox.h"
 using namespace glm;
 
@@ -45,15 +46,21 @@ void HeadSpitter::Update() {
     timer_++;
 
     if (timer_ >= 30) {
-        TimedHitbox* hitbox = (TimedHitbox*)&entities_->CreateEntity(TimedHitbox::TYPEID);
-        hitbox->hitbox_.knocback.x = 50.0f;
-        hitbox->hitbox_.knocback.y = 100.0f;
-        hitbox->transform_.scale.x = 25.0f;
-        hitbox->transform_.scale.y = 50.0f;
-        hitbox->transform_.scale.z = 25.0f;
-        hitbox->lifespan_ = 15;
+        GroundSpawnProjectile* projectile = (GroundSpawnProjectile*)&entities_->CreateEntity(GroundSpawnProjectile::TYPEID);
 
-        hitbox->transform_.position = transform_.position + vec3(10.0f, 0.0f, 0.0f);
+        projectile->spawn_ = TimedHitbox::TYPEID;
+        projectile->spawnProperties_.SetFloat("p_horizontalkb", 60);
+        projectile->spawnProperties_.SetFloat("p_verticalkb", 20);
+        projectile->spawnProperties_.SetInt("p_lifespan", 5);
+
+        projectile->transform_.position = transform_.position + vec3(0.0f, 5.0f, 0.0f);
+        projectile->spawnScale_.x = 25.0f;
+        projectile->spawnScale_.y = 50.0f;
+        projectile->spawnScale_.z = 25.0f;
+
+        projectile->velocity_.y = 20.0f;
+        projectile->velocity_.x = 20.0f;
+
         timer_ = 0;
     }
 }

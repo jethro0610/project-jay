@@ -154,6 +154,7 @@ public:
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
     void CopyProperties(Entity* from);
+    void AssignProperties(EntityPropertiesAssigner& assigner);
 
     void Update() {};
     void BaseUpdate();

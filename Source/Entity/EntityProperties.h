@@ -41,6 +41,9 @@ public:
     void SetFloat(const std::string& property, float value);
     void SetBool(const std::string& property, bool value);
 
+// We want to be able to store this in Entities,
+// which are in a union. So, we need static allocation
+// on the strings.
 private:
     char intStrings[8][32];
     int ints[8];

@@ -84,6 +84,7 @@ public:
         EF_HurtFaceForward,
         EF_HurtFaceBack,
         EF_CaptureSeed,
+        EF_Targetable,
         EF_Count
     };
 

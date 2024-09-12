@@ -1,4 +1,11 @@
-- Shift speed up camera
+- Jump bonk system
+- Objective tokens: Complete an objective in level grants permanent range boost
+- Double jumping?
+- Light volume texture
+- Full meter bonus (larger radius for a time when max out meter)
+- Something with moving entities and targeting (ie. whiff on moving, reduced speed)
+- Reduced speed on target bounce
+- Targetable flag on entities
 - Coyote time jumps
 - Multiply jump height based on charge (higher charge = more carry over)
 - 3-5 frame windows for highest velocity before jump

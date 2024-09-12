@@ -14,6 +14,51 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
+static constexpr int BAND = 0;
+static constexpr int BODY = 1;
+static constexpr int HAIR = 2;
+static constexpr int MASK = 3;
+static constexpr int PANTS = 4;
+static constexpr int RIBBON = 5;
+static constexpr int SHIRT = 6;
+static constexpr int SLIPPERS = 7;
+
+static constexpr float MIN_SPEED = 12.0f;
+static constexpr float MAX_SPEED = 160.0f;
+static constexpr float MIN_FRICTION = 0.015f;
+static constexpr float MAX_FRICTION = 0.1f;
+static constexpr float MOMENTUM_DECAY = 2.0f;
+static constexpr float FRICTION_CAP = MAX_SPEED * 0.35f;
+static constexpr float DEFAULT_ROTATION_SPEED = 0.25f;
+static constexpr float SPIN_ROTATION_SPEED = 0.06f;
+static constexpr float ITEM_ROTATION_SPEED = 0.1f;
+static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
+static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
+static constexpr float JUMP_CHARGE_ROTATION_SPEED = 0.015f;
+static constexpr float AIR_ROTATION_SPEED = 0.015f;
+static constexpr float SLOPE_ACCELERATION = 4.0f;
+static constexpr float SLOPE_DOWN_SCALING = 4.0f;
+static constexpr float SLOPE_UP_SCALING = 1.5f;
+static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.15f;
+
+static constexpr float MAX_JUMP_CHARGE = 30.0f;
+static constexpr float MIN_JUMP_ADD = 25.0f;
+static constexpr float MAX_JUMP_ADD = 60.0f;
+static constexpr float MIN_JUMP_VEL_RATIO = 0.5f;
+static constexpr float MAX_JUMP_VEL_RATIO = 1.0f;
+static constexpr float DOWN_VEL_JUMP_MULT = 0.25f;
+static constexpr float JUMP_CHARGE_SPEED = 1.0f;
+
+static constexpr int MAX_CHARGE = 75;
+static constexpr int STRONG_CHARGE_THRESH = 15;
+static constexpr int ATTACK_STARTUP = 2;
+static constexpr int ATTACK_ACTIVE = 13;
+static constexpr int ATTACK_COOLDOWN = 10;
+static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
+
+static constexpr float MIN_HOMING_VERTICAL_DELTA= 30;
+static constexpr float MAX_HOMING_DISTANCE = 500;
+
 EntityDependendies Player::GetDeps() {
     return {
         "sk_char",
@@ -189,16 +234,29 @@ void Player::Update() {
                 if (entity == this)
                     continue;
 
-                float dist = distance(transform_.position, entity->transform_.position);
+                if (!entity->GetFlag(EF_Targetable))
+                    continue;
+
+                float verticalDelta = transform_.position.y - entity->transform_.position.y;
+                if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
+                    continue;
+
+                vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
+                vec3 entityPlanarPosition = vec3(entity->transform_.position.x, 0.0f, entity->transform_.position.z);
+                float planarDist = distance(planarPosition, entityPlanarPosition);
+                if (planarDist > MAX_HOMING_DISTANCE)
+                    continue;
+
                 vec3 vectorToEntity = normalize(entity->transform_.position - transform_.position);
                 if (dot(camera_->transform_.GetForwardVector(), vectorToEntity) < 0.5f)
                     continue;
 
-                if (dist < closestDistance) {
+                if (planarDist < closestDistance) {
                     homingTarget_ = entity;
-                    closestDistance = dist;
+                    closestDistance = planarDist;
                 }
             }
+            planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
         }
     }
 
@@ -212,13 +270,24 @@ void Player::Update() {
 
     if (inputs_->releaseJump) {
         chargingJump_ = false;
-        velocity_.y += std::max(jumpCharge_, 15.0f);
-        skipGroundCheck_ = true;
-        jumpCharge_ = 0.0f;
+        if (onGround_) {
+            float chargeRatio = std::lerp(MIN_JUMP_VEL_RATIO, MAX_JUMP_VEL_RATIO, jumpCharge_ / MAX_JUMP_CHARGE);
+            chargeRatio = velocity_.y < 0.0f ? 1.0f - chargeRatio : chargeRatio;
+            float jumpAdd = std::lerp(MIN_JUMP_ADD, MAX_JUMP_ADD, jumpCharge_ / MAX_JUMP_CHARGE);
+            float jumpVelocity = velocity_.y * chargeRatio + jumpAdd;
+
+            velocity_.y = max(jumpVelocity, jumpAdd);
+            skipGroundCheck_ = true;
+            DEBUGLOG(velocity_.y);
+            DEBUGLOG(chargeRatio);
+            DEBUGLOG(jumpAdd);
+            jumpCharge_ = 0.0f;
+        }
     }
     if (chargingJump_)
         jumpCharge_ += JUMP_CHARGE_SPEED;
-    jumpCharge_ = min(jumpCharge_, MAX_JUMP);
+
+    jumpCharge_ = min(jumpCharge_, MAX_JUMP_CHARGE);
 
     if (inputs_->useItem)
         UseItem();
@@ -363,8 +432,8 @@ void Player::Update() {
             if (length(desiredMovement) > 0.001f) 
                desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
 
-            transform_.rotation= slerp(transform_.rotation, desiredRotation, ATTACK_ROTATION_SPEED);
-            vec3 travelDirection = slerp(initialRotation, desiredRotation, ATTACK_ROTATION_SPEED) * Transform::worldForward;
+            transform_.rotation = slerp(transform_.rotation, desiredRotation, JUMP_CHARGE_ROTATION_SPEED);
+            vec3 travelDirection = slerp(initialRotation, desiredRotation, JUMP_CHARGE_ROTATION_SPEED) * Transform::worldForward;
             
             velocity_.x = travelDirection.x * speed_;
             velocity_.z = travelDirection.z * speed_;
@@ -624,6 +693,11 @@ void Player::UseItem() {
 }
 
 void Player::OnOverlap(Entity* overlappedEntity) {
-    if (overlappedEntity == homingTarget_)
+    if (overlappedEntity == homingTarget_) {
         homingTarget_ = nullptr;
+
+        vec3 planarDir = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
+        planarDir *= planarVelocityBeforeHoming_;
+        velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
+    }
 }

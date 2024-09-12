@@ -51,8 +51,15 @@ void JumpPad::Init(Entity::InitArgs args) {
 }
 
 void JumpPad::Update() {
-    if (timer_ > 0)
+    if (timer_ > 0) {
+        SetFlag(EF_Targetable, false);
+        materials_[0].properties.color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
         timer_--;
+    }
+    else {
+        SetFlag(EF_Targetable, true);
+        materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
+    }
 }
 
 void JumpPad::OnOverlap(Entity* overlappedEntity) {

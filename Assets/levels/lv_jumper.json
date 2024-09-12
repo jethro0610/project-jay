@@ -114,8 +114,8 @@
                 "p_jump_strength": 120.0
             },
             "int_properties": {
-                "p_cooldown": 0,
-                "p_num_seeds": 50
+                "p_cooldown": 120,
+                "p_num_seeds": 300
             },
             "name": "e_jumppad",
             "transform": {
@@ -143,8 +143,8 @@
                 "p_jump_strength": 120.0
             },
             "int_properties": {
-                "p_cooldown": 0,
-                "p_num_seeds": 50
+                "p_cooldown": 120,
+                "p_num_seeds": 300
             },
             "name": "e_jumppad",
             "transform": {
@@ -172,8 +172,8 @@
                 "p_jump_strength": 125.0
             },
             "int_properties": {
-                "p_cooldown": 0,
-                "p_num_seeds": 50
+                "p_cooldown": 120,
+                "p_num_seeds": 300
             },
             "name": "e_jumppad",
             "transform": {
@@ -222,18 +222,18 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_horizontalkb": 20.0,
+                "p_horizontalkb": 60.0,
                 "p_verticalkb": 20.0
             },
             "int_properties": {
-                "p_lifespan": 120
+                "p_lifespan": 5
             },
             "name": "e_timedhitbox",
             "transform": {
                 "position": {
-                    "x": 209.7789764404297,
-                    "y": -4.294491767883301,
-                    "z": 147.80517578125
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
                 },
                 "rotation": {
                     "x": 0.0,
@@ -241,9 +241,38 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 9.80000114440918,
-                    "y": 9.80000114440918,
-                    "z": 9.80000114440918
+                    "x": 25.0,
+                    "y": 50.0,
+                    "z": 25.0
+                }
+            },
+            "type_id": 17
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_horizontalkb": 60.0,
+                "p_verticalkb": 20.0
+            },
+            "int_properties": {
+                "p_lifespan": 5
+            },
+            "name": "e_timedhitbox",
+            "transform": {
+                "position": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 25.0,
+                    "y": 50.0,
+                    "z": 25.0
                 }
             },
             "type_id": 17

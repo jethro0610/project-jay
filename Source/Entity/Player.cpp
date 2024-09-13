@@ -48,6 +48,7 @@ static constexpr float MIN_JUMP_VEL_RATIO = 0.5f;
 static constexpr float MAX_JUMP_VEL_RATIO = 1.0f;
 static constexpr float DOWN_VEL_JUMP_MULT = 0.25f;
 static constexpr float JUMP_CHARGE_SPEED = 1.0f;
+static constexpr int MAX_COYOTE_TIME = 20;
 
 static constexpr int MAX_CHARGE = 75;
 static constexpr int STRONG_CHARGE_THRESH = 15;
@@ -57,7 +58,7 @@ static constexpr int ATTACK_COOLDOWN = 10;
 static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
 
 static constexpr float MIN_HOMING_VERTICAL_DELTA= 30;
-static constexpr float MAX_HOMING_DISTANCE = 500;
+static constexpr float MAX_HOMING_DISTANCE = 150;
 
 EntityDependendies Player::GetDeps() {
     return {
@@ -230,7 +231,7 @@ void Player::Update() {
         else {
             float closestDistance = INFINITY;
             for (int i = 0; i < 128; i++) {
-                Entity* entity = &(*entities_)[i];
+                Entity* entity = &((*entities_)[i]);
                 if (entity == this)
                     continue;
 
@@ -243,12 +244,16 @@ void Player::Update() {
 
                 vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
                 vec3 entityPlanarPosition = vec3(entity->transform_.position.x, 0.0f, entity->transform_.position.z);
+                vec3 planarCameraForward = camera_->transform_.GetForwardVector();
+                planarCameraForward.y = 0.0f;
+                planarCameraForward = normalize(planarCameraForward);
+
                 float planarDist = distance(planarPosition, entityPlanarPosition);
                 if (planarDist > MAX_HOMING_DISTANCE)
                     continue;
 
-                vec3 vectorToEntity = normalize(entity->transform_.position - transform_.position);
-                if (dot(camera_->transform_.GetForwardVector(), vectorToEntity) < 0.5f)
+                vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
+                if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
                     continue;
 
                 if (planarDist < closestDistance) {
@@ -268,19 +273,33 @@ void Player::Update() {
         velocity_ = vectorToTarget * 500.0f;
     }
 
+    if (onGround_) 
+        coyoteAirTime_ = 0;
+    else if (coyoteAirTime_ <= MAX_COYOTE_TIME)
+        coyoteAirTime_++;
+
+    if (onGround_) {
+        for (int i = 1; i < JUMP_BUFFER_FRAMES; i++)
+            jumpBuffer_[i] = jumpBuffer_[i - 1]; 
+        jumpBuffer_[0] = velocity_.y;
+    }
+
+    float greatestYVel = -INFINITY;
+    for (int i = 0; i < JUMP_BUFFER_FRAMES; i++) {
+        if (jumpBuffer_[i] > greatestYVel)
+            greatestYVel = jumpBuffer_[i];
+    }
+
     if (inputs_->releaseJump) {
         chargingJump_ = false;
-        if (onGround_) {
+        if (coyoteAirTime_ <= MAX_COYOTE_TIME) {
             float chargeRatio = std::lerp(MIN_JUMP_VEL_RATIO, MAX_JUMP_VEL_RATIO, jumpCharge_ / MAX_JUMP_CHARGE);
-            chargeRatio = velocity_.y < 0.0f ? 1.0f - chargeRatio : chargeRatio;
+            chargeRatio = greatestYVel < 0.0f ? 1.0f - chargeRatio : chargeRatio;
             float jumpAdd = std::lerp(MIN_JUMP_ADD, MAX_JUMP_ADD, jumpCharge_ / MAX_JUMP_CHARGE);
-            float jumpVelocity = velocity_.y * chargeRatio + jumpAdd;
+            float jumpVelocity = greatestYVel * chargeRatio + jumpAdd;
 
             velocity_.y = max(jumpVelocity, jumpAdd);
             skipGroundCheck_ = true;
-            DEBUGLOG(velocity_.y);
-            DEBUGLOG(chargeRatio);
-            DEBUGLOG(jumpAdd);
             jumpCharge_ = 0.0f;
         }
     }

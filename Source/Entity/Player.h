@@ -34,8 +34,11 @@ public:
     int attackCharge_;
     int lastAttackCharge_;
 
+    static constexpr int JUMP_BUFFER_FRAMES = 5;
     bool chargingJump_;
     float jumpCharge_;
+    float jumpBuffer_[JUMP_BUFFER_FRAMES];
+    int coyoteAirTime_;
 
     Entity* homingTarget_;
     float planarVelocityBeforeHoming_;

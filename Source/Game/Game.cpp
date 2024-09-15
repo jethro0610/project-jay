@@ -106,9 +106,9 @@ void Game::Update() {
 
                 Collision collision = Collision::GetCollision(
                     entities_[a].transform_,
-                    entities_[a].pushbox_,
+                    entities_[a].overlapbox_,
                     entities_[b].transform_,
-                    entities_[b].pushbox_
+                    entities_[b].overlapbox_
                 );
 
                 if (collision.isColliding) {

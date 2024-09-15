@@ -200,6 +200,9 @@ void Player::Init(Entity::InitArgs args) {
 
     pushbox_.radius = 1.0f;
     pushbox_.top = 4.0f;
+    overlapbox_.top = 2.0f;
+    overlapbox_.radius = 1.0f;
+    overlapbox_.bottom = 1.0f;
     #ifdef _DEBUG
     DBG_collider_ = pushbox_;
     #endif
@@ -711,12 +714,11 @@ void Player::UseItem() {
     }
 }
 
-void Player::OnOverlap(Entity* overlappedEntity) {
-    if (overlappedEntity == homingTarget_) {
-        homingTarget_ = nullptr;
+void Player::EndHoming() {
+    if (homingTarget_ == nullptr) return;
 
-        vec3 planarDir = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
-        planarDir *= planarVelocityBeforeHoming_;
-        velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
-    }
+    homingTarget_ = nullptr;
+    vec3 planarDir = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
+    planarDir *= planarVelocityBeforeHoming_;
+    velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
 }

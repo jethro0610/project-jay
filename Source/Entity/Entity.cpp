@@ -58,6 +58,7 @@ void Entity::Init(
     pushbox_ = {};
     hitbox_ = {};
     hurtbox_ = {};
+    overlapbox_ = {};
     stun_ = false;
     hitlag_ = 0;
     hurtCooldown_ = 0;

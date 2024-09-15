@@ -4,6 +4,7 @@
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
 #include "EntityList.h"
+#include "Player.h"
 using namespace glm;
 
 EntityDependendies JumpPad::GetDeps() {
@@ -39,9 +40,13 @@ void JumpPad::Init(Entity::InitArgs args) {
     materials_[0].castShadows = true;
     materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
 
-    pushbox_.top = 2.0f;
-    pushbox_.bottom = 2.0f;
-    pushbox_.radius = 2.0f;
+    pushbox_.top = 1.0f;
+    pushbox_.bottom = 1.0f;
+    pushbox_.radius = 1.0f;
+
+    overlapbox_.top = 2.0f;
+    overlapbox_.bottom = 0.0f;
+    overlapbox_.radius = 2.0f;
 
     numSeeds_ = 0;
     jumpStregth_ = 100.0f;
@@ -70,4 +75,7 @@ void JumpPad::OnOverlap(Entity* overlappedEntity) {
     overlappedEntity->skipGroundCheck_ = true;
     overlappedEntity->velocity_.y = jumpStregth_;
     timer_ = cooldown_;
+
+    if (overlappedEntity->typeId_ == Player::TYPEID)
+        ((Player*)overlappedEntity)->EndHoming();
 }

@@ -139,6 +139,7 @@ public:
     Collider pushbox_;
     Hitbox hitbox_;
     Collider hurtbox_;
+    Collider overlapbox_;
     bool stun_;
     bool initHitlag_;
     int hitlag_;

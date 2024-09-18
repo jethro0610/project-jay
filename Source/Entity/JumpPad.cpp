@@ -13,7 +13,7 @@ EntityDependendies JumpPad::GetDeps() {
     };
 }
 
-EntityProperties JumpPad::GetProperties() {
+EntityProperties JumpPad::GetStaticProperties() {
     return {
         {
             {"p_jump_strength", &jumpStregth_}
@@ -29,8 +29,6 @@ EntityProperties JumpPad::GetProperties() {
 }
 
 void JumpPad::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_Overlap, true);
 
     ResourceManager& resourceManager = args.resourceManager;
@@ -71,11 +69,22 @@ void JumpPad::OnOverlap(Entity* overlappedEntity) {
     if (timer_ > 0)
         return;
 
-    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 20.0f, overlappedEntity, vec3(0.0f, 30.0f, 0.0f));
     overlappedEntity->skipGroundCheck_ = true;
     overlappedEntity->velocity_.y = jumpStregth_;
     timer_ = cooldown_;
 
+    hitlag_ = 2;
+    initHitlag_ = true;
+
+    overlappedEntity->hitlag_ = 2;
+    overlappedEntity->initHitlag_ = true;
+
     if (overlappedEntity->typeId_ == Player::TYPEID)
         ((Player*)overlappedEntity)->EndHoming();
+
+    lastOverlappedEntity_ = overlappedEntity;
+}
+
+void JumpPad::OnHitlagEnd() {
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 20.0f, lastOverlappedEntity_, vec3(0.0f, 30.0f, 0.0f));
 }

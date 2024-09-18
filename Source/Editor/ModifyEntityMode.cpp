@@ -3,7 +3,6 @@
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
-#include "Entity/EntityTypes.h"
 
 ModifyEntityMode::ModifyEntityMode(EditorModeArgs args):
 EditorMode(args) {
@@ -21,11 +20,7 @@ void ModifyEntityMode::OnStart() {
     propInt_ = nullptr;
     propBool_ = nullptr;
 
-    switch(entity_->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties_ = ((TYPE*)entity_)->GetProperties(); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
+    properties_ = entity_->GetProperties();
 
     modeText_ = "Modify Entity";
     textInput_.SetLabel("Select property: p_");

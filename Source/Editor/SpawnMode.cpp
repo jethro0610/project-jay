@@ -4,7 +4,6 @@
 #include "Level/Level.h"
 #include "Resource/DependencyList.h"
 #include "Resource/ResourceManager.h"
-#include "Entity/EntityTypes.h"
 #include "Terrain/Terrain.h"
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
@@ -56,10 +55,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
         return CB_Default;
     }
 
-    Entity::TypeID typeId = -1;
-    #define ENTITYEXP(TYPE, VAR, ID) if (name == TYPE::GetName()) typeId = ID;
-    EXPANDENTITIES
-    #undef ENTITYEXP
+    Entity::TypeID typeId = Entity::GetTypeIDFromName(name);
 
     if (typeId == -1) {
         notificaiton_.Set(name + " does not exist");

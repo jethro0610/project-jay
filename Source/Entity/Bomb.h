@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_bomb"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_bomb"; }
+    static EntityDependendies GetStaticDependencies();
     static constexpr int LIFETIME = 60 * 2;
     static constexpr int RISETIME = 15;
     static constexpr int FALLTIME = 15;

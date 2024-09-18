@@ -2,7 +2,7 @@
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
 
-EntityDependendies RabbitPole::GetDeps() {
+EntityDependendies RabbitPole::GetStaticDependencies() {
     return {
         "st_rabbit_pole",
         {
@@ -13,8 +13,6 @@ EntityDependendies RabbitPole::GetDeps() {
 }
 
 void RabbitPole::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_SendPush, true);
 
     ResourceManager& resourceManager = args.resourceManager;

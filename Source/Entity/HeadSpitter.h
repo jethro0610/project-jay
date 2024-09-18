@@ -6,9 +6,9 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_headspitter"; }
-    static EntityDependendies GetDeps();
-    EntityProperties GetProperties();
+    static const char* GetStaticName() { return "e_headspitter"; }
+    static EntityDependendies GetStaticDependencies();
+    EntityProperties GetStaticProperties();
 
     int timer_;
 

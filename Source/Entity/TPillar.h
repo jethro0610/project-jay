@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_tpillar"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_tpillar"; }
+    static EntityDependendies GetStaticDependencies();
 
     void Update() {}; 
     void RenderUpdate() {};

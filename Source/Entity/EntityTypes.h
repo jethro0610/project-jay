@@ -3,12 +3,9 @@
 #include "BumpRat.h"
 #include "Comet.h"
 #include "CometSpawner.h"
-#include "Entity.h"
 #include "ItemBox.h"
-#include "JumpPad.h"
 #include "Mower.h"
 #include "MultiHitPod.h"
-#include "Player.h"
 #include "RabbitPole.h"
 #include "SinglePod.h"
 #include "Sleeper.h"
@@ -19,6 +16,9 @@
 #include "HeadSpitter.h"
 #include "TimedHitbox.h"
 #include "GroundSpawnProjectile.h"
+#include "JumpPad.h"
+#include "Player.h"
+#include "Entity.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \

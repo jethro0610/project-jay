@@ -9,7 +9,6 @@
 #include "Particle/ParticleManager.h"
 #include "Resource/ResourceManager.h"
 #ifdef _DEBUG
-#include "Entity/EntityTypes.h"
 #include <fstream>
 #endif
 
@@ -69,12 +68,6 @@ terrain_(terrain)
     properties_.weedMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
     properties_.weedMaterials[1].numTextures = 0;
     properties_.weedMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
-
-    #ifdef _DEBUG
-    #define ENTITYEXP(TYPE, VAR, ID) DBG_entityTypes_[TYPE::GetName()] = ID;
-    EXPANDENTITIES
-    #undef ENTITYEXP
-    #endif
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {
@@ -128,20 +121,16 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         #ifndef _DEBUG
         entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         #else
+        Entity::TypeID typeIdFromName = entity->GetTypeIDFromName(entityData["name"]);
         if (entityData.contains("type_id"))
             entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
-        else if (DBG_entityTypes_.contains(entityData["name"]))
-            entity = &entities_.CreateEntity(DBG_entityTypes_[entityData["name"]], entityTransform);
+        else if (typeIdFromName != -1)
+            entity = &entities_.CreateEntity(typeIdFromName, entityTransform);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
 
-        EntityProperties properties;
-        switch(entity->typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)entity)->GetProperties(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
+        EntityProperties properties = entity->GetProperties();
 
         if (entityData.contains("float_properties") && !entityData["float_properties"].is_null()) {
             for (auto& pair : properties.floats)
@@ -179,7 +168,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         if (!entity.alive_ || entity.DBG_persistView_) continue;
         
         nlohmann::json entityData; 
-        entityData["name"] = entity.DBG_name_;
+        entityData["name"] = entity.GetName();
         entityData["type_id"] = entity.typeId_;
         Transform& transform = entity.transform_;
 
@@ -196,12 +185,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["transform"]["rotation"]["y"] = eulerRotation.y;
         entityData["transform"]["rotation"]["z"] = eulerRotation.z;
 
-        EntityProperties properties;
-        switch(entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE&)entity).GetProperties(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
+        EntityProperties properties = entity.GetProperties();
 
         nlohmann::json floatProperties;
         for (auto& pair : properties.floats)

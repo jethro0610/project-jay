@@ -102,9 +102,11 @@ public:
     );
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_base"; }
-    static EntityDependendies GetDeps() { return {}; };
-    EntityProperties GetProperties() { return {}; };
+    const char* GetName();
+    EntityDependendies GetDependencies();
+    static EntityDependendies GetDependencies(TypeID typeId);
+    EntityProperties GetProperties();
+    static TypeID GetTypeIDFromName(const std::string& name);
 
     TypeID typeId_;
     bool alive_;
@@ -148,7 +150,6 @@ public:
     #ifdef _DEBUG
     Collider DBG_collider_;
     bool DBG_selected_;
-    char DBG_name_[MAX_NAME];
     int DBG_index_;
     bool DBG_persistView_;
     #endif
@@ -158,21 +159,23 @@ public:
     void CopyProperties(Entity* from);
     void AssignProperties(EntityPropertiesAssigner& assigner);
 
-    void Update() {};
     void BaseUpdate();
+    void BaseRenderUpdate(float interpTime);
+
+    void DoUpdate();
+    void DoRenderUpdate();
 
     void CalculateBasePose();
-    void BaseRenderUpdate(float interpTime);
-    void RenderUpdate() {};
     void ChangeAnimation(int index, float transitionLength);
 
-    void OnHit(HitArgs args) {};
-    void OnHurt(HurtArgs args) {};
-    void OnPush(glm::vec3 pushVec) {};
-    void OnOverlap(Entity* overlappedEntity) {};
+    void DoHit(HitArgs args);
+    void DoHurt(HurtArgs args);
+    void DoPush(glm::vec3 pushVec);
+    void DoOverlap(Entity* overlappedEntity);
+    void DoHitlagEnd();
 
-    void OnCaptureSeed() {};
-    void OnDestroy() {};
+    void DoCaptureSeed();
+    void DoDestroy();
 
     Camera* camera_;
     EntityList* entities_;
@@ -181,4 +184,19 @@ public:
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;
+
+private:
+    void Update() {};
+    void RenderUpdate() {};
+    void OnHit(HitArgs args) {};
+    void OnHurt(HurtArgs args) {};
+    void OnPush(glm::vec3 pushVec) {}
+    void OnOverlap(Entity* overlappedEntity) {}
+    void OnHitlagEnd() {}
+    void OnCaptureSeed() {};
+    void OnDestroy() {};
+
+    static EntityDependendies GetStaticDependencies() { return {}; }
+    static const char* GetStaticName() { return "e_base"; }
+    EntityProperties GetStaticProperties() { return {}; }
 };

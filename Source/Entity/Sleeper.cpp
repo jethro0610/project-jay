@@ -6,15 +6,13 @@
 #include "EntityList.h"
 using namespace glm;
 
-EntityDependendies Sleeper::GetDeps() {
+EntityDependendies Sleeper::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void Sleeper::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

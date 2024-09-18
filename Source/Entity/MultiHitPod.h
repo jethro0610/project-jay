@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_multihitpod"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_multihitpod"; }
+    static EntityDependendies GetStaticDependencies();
 
     static constexpr int MAX_COOLDOWN_TICKS = 5;
 

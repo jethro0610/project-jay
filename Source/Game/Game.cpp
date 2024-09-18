@@ -118,17 +118,8 @@ void Game::Update() {
         }
 
         for (Overlap& overlap : overlapList) {
-            switch(overlap.a->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)overlap.a)->OnOverlap(overlap.b); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
-
-            switch(overlap.b->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)overlap.b)->OnOverlap(overlap.a); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
+            overlap.a->DoOverlap(overlap.b);
+            overlap.b->DoOverlap(overlap.a);
         }
 
         vector_const<Hit, 128> hitList;
@@ -180,17 +171,8 @@ void Game::Update() {
             hit.hitter->hitlag_ = hit.hitter->hitbox_.hitlag;
             hit.hitter->initHitlag_ = true;
 
-            switch(hit.target->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.target)->OnHurt({hit.hitter}); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
-
-            switch(hit.hitter->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)hit.hitter)->OnHit({hit.target}); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
+            hit.target->DoHurt({hit.hitter});
+            hit.hitter->DoHit({hit.target});
 
             if (!hit.target->GetFlag(Entity::EF_RecieveKnockback))
                 continue;
@@ -248,48 +230,23 @@ void Game::Update() {
                 push.a->transform_.position -= push.collision.resolution * 0.5f;
                 push.b->transform_.position += push.collision.resolution * 0.5f;
 
-                switch(push.a->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR, ID) \
-                    case ID: ((TYPE*)push.a)->OnPush(-push.collision.resolution * 0.5f); break;
-                    EXPANDENTITIES
-                    #undef ENTITYEXP
-                }
-
-                switch(push.b->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR, ID) \
-                    case ID: ((TYPE*)push.b)->OnPush(push.collision.resolution * 0.5f); break;
-                    EXPANDENTITIES
-                    #undef ENTITYEXP
-                }
+                push.a->DoPush(-push.collision.resolution * 0.5f);
+                push.b->DoPush(push.collision.resolution * 0.5f);
             }
             else if (push.sendA && push.recieveB) {
                 push.b->transform_.position += push.collision.resolution * 1.0f;
-                switch(push.b->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR, ID) \
-                    case ID: ((TYPE*)push.b)->OnPush(push.collision.resolution * 1.0f); break;
-                    EXPANDENTITIES
-                    #undef ENTITYEXP
-                }
+                push.b->DoPush(push.collision.resolution * 1.0f);
             }
             else if (push.sendB && push.recieveA) {
                 push.a->transform_.position -= push.collision.resolution * 1.0f;
-                switch(push.a->typeId_) {
-                    #define ENTITYEXP(TYPE, VAR, ID) \
-                    case ID: ((TYPE*)push.a)->OnPush(-push.collision.resolution * 1.0f); break;
-                    EXPANDENTITIES
-                    #undef ENTITYEXP
-                }
+                push.a->DoPush(-push.collision.resolution * 1.0f);
             }
         }
 
         for (int i = 0; i < 128; i++) {
             if (!entities_[i].alive_) continue;
             if (entities_[i].hitlag_ == 0) {
-                switch(rawEntities_[i].entity.typeId_) {
-                    #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.Update(); break;
-                    EXPANDENTITIES
-                    #undef ENTITYEXP
-                }
+                rawEntities_[i].entity.DoUpdate();
             }
             entities_[i].BaseUpdate();
         }
@@ -301,11 +258,7 @@ void Game::Update() {
     for (int i = 0; i < 128; i++) {
         if (!entities_[i].alive_) continue;
         entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
-        switch(rawEntities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.RenderUpdate(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
+        entities_[i].DoRenderUpdate();
     }
     seedManager_.GetCaptures(entities_);
     seedManager_.CalculatePositions(terrain_);

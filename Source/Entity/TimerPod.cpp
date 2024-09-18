@@ -3,13 +3,13 @@
 #include "Seed/SeedManager.h"
 using namespace glm;
 
-EntityDependendies TimerPod::GetDeps() {
+EntityDependendies TimerPod::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
-EntityProperties TimerPod::GetProperties() {
+EntityProperties TimerPod::GetStaticProperties() {
     return {
         {
 
@@ -24,8 +24,6 @@ EntityProperties TimerPod::GetProperties() {
 }
 
 void TimerPod::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

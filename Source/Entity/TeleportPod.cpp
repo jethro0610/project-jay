@@ -8,15 +8,13 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-EntityDependendies TeleportPod::GetDeps() {
+EntityDependendies TeleportPod::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void TeleportPod::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     shouldTeleport_ = false;
     teleportScaleTicks_ = 0.0f;
     scaleBeforeTeleport_ = vec3(0.0f);

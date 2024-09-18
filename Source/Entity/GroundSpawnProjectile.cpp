@@ -3,13 +3,13 @@
 #include "EntityList.h"
 using namespace glm;
 
-EntityDependendies GroundSpawnProjectile::GetDeps() {
+EntityDependendies GroundSpawnProjectile::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
-EntityProperties GroundSpawnProjectile::GetProperties() {
+EntityProperties GroundSpawnProjectile::GetStaticProperties() {
     return {
         {
 
@@ -24,8 +24,6 @@ EntityProperties GroundSpawnProjectile::GetProperties() {
 }
 
 void GroundSpawnProjectile::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_GroundCheck, true);
 

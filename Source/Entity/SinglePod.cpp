@@ -4,15 +4,13 @@
 #include "EntityList.h"
 using namespace glm;
 
-EntityDependendies SinglePod::GetDeps() {
+EntityDependendies SinglePod::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void SinglePod::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

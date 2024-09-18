@@ -6,14 +6,13 @@
 #include "Helpers/Random.h"
 using namespace glm;
 
-EntityDependendies Comet::GetDeps() {
+EntityDependendies Comet::GetStaticDependencies() {
     return {
         "st_comet"
     };
 }
 
 void Comet::Init(Entity::InitArgs args) {
-    Entity::Init(args);
     SetFlag(EF_UseVelocity, true);
 
     ResourceManager& resourceManager = args.resourceManager;

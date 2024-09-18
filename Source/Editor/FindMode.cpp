@@ -35,7 +35,7 @@ ConfirmBehavior FindMode::OnConfirm() {
         int e = (i + lastFindIndex_ + 1) % 128;
         if (!entities_[e].alive_ || entities_[i].DBG_persistView_) continue;
         
-        if (entities_[e].DBG_name_ == entityName) {
+        if (entities_[e].GetName() == entityName) {
             lastFindIndex_ = e;
             target_.SetEntity(&entities_[e]);
             camera_.transform_.position = 

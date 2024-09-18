@@ -5,13 +5,13 @@
 #include "TimedHitbox.h"
 using namespace glm;
 
-EntityDependendies HeadSpitter::GetDeps() {
+EntityDependendies HeadSpitter::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
-EntityProperties HeadSpitter::GetProperties() {
+EntityProperties HeadSpitter::GetStaticProperties() {
     return {
         {
 
@@ -26,8 +26,6 @@ EntityProperties HeadSpitter::GetProperties() {
 }
 
 void HeadSpitter::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");

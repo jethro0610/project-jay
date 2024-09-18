@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_teleportpod"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_teleportpod"; }
+    static EntityDependendies GetStaticDependencies();
 
     static constexpr int MAX_TELEPORT_SCALE_TICKS = 15;
 

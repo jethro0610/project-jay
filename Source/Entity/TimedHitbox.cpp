@@ -2,13 +2,13 @@
 #include "Resource/ResourceManager.h"
 using namespace glm;
 
-EntityDependendies TimedHitbox::GetDeps() {
+EntityDependendies TimedHitbox::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
-EntityProperties TimedHitbox::GetProperties() {
+EntityProperties TimedHitbox::GetStaticProperties() {
     return {
         {
             {"p_horizontalkb", &hitbox_.knocback.x},
@@ -24,8 +24,6 @@ EntityProperties TimedHitbox::GetProperties() {
 }
 
 void TimedHitbox::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_SendHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

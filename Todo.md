@@ -1,4 +1,4 @@
-- Jump bonk system
+- Switch inheritance
 - Objective tokens: Complete an objective in level grants permanent range boost
 - Double jumping?
 - Light volume texture

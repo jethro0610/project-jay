@@ -70,6 +70,14 @@ void Entity::Init(
     DBG_collider_.bottom = 1.0f;
     DBG_persistView_ = false;
     #endif
+
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->Init(args); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
 }
 
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
@@ -156,8 +164,11 @@ void Entity::BaseUpdate() {
         transitionTime_ += GlobalTime::TIMESTEP;
     }
 
-    if (hitlag_ != 0)
+    if (hitlag_ != 0) {
         hitlag_--;
+        if (hitlag_ == 0)
+            DoHitlagEnd();
+    }
 
     if (hitlag_ == 0 && hurtCooldown_ > 0)
         hurtCooldown_--;
@@ -214,19 +225,8 @@ void Entity::ChangeAnimation(int index, float transitionLength) {
 void Entity::CopyProperties(Entity* from) {
     ASSERT((typeId_ == from->typeId_), "Attempted to copy from entity with different type");
 
-    EntityProperties properties;
-    switch(typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)this)->GetProperties(); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
-
-    EntityProperties fromProperties;
-    switch(from->typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: fromProperties = ((TYPE*)from)->GetProperties(); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
+    EntityProperties properties = GetProperties();
+    EntityProperties fromProperties = from->GetProperties();
 
     for (int i = 0; i < properties.floats.size(); i++)
         *properties.floats[i].second = *fromProperties.floats[i].second;
@@ -238,12 +238,148 @@ void Entity::CopyProperties(Entity* from) {
         *properties.bools[i].second = *fromProperties.bools[i].second;
 }
 
+const char* Entity::GetName() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return TYPE::GetStaticName(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+
+        default:
+            return "e_base";
+    }
+}
+
+EntityDependendies Entity::GetDependencies() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return TYPE::GetStaticDependencies(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+
+        default:
+            return {};
+    }
+}
+
+EntityDependendies Entity::GetDependencies(Entity::TypeID typeId) {
+    switch(typeId) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return TYPE::GetStaticDependencies(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+
+        default:
+            return {};
+    }
+}
+
 void Entity::AssignProperties(EntityPropertiesAssigner& assigner) {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     EntityProperties properties;
     switch(typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)this)->GetProperties(); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: properties = ((TYPE*)this)->GetStaticProperties(); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }
     properties.AssignProperties(assigner);
+}
+
+EntityProperties Entity::GetProperties() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    EntityProperties returnProps;
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: returnProps = ((TYPE*)this)->GetStaticProperties(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return returnProps;
+}
+
+Entity::TypeID Entity::GetTypeIDFromName(const std::string& name) {
+    Entity::TypeID typeId = -1;
+    #define ENTITYEXP(TYPE, VAR, ID) if (name == TYPE::GetStaticName()) typeId = ID;
+    EXPANDENTITIES
+    #undef ENTITYEXP
+
+    return typeId;
+}
+
+void Entity::DoUpdate() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->Update(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoRenderUpdate() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->RenderUpdate(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoHit(HitArgs args) {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnHit(args); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoHurt(HurtArgs args) {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnHurt(args); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoPush(glm::vec3 pushVec) {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnPush(pushVec); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoOverlap(Entity* overlappedEntity) {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnOverlap(overlappedEntity); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoHitlagEnd() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnHitlagEnd(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoCaptureSeed() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnCaptureSeed(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoDestroy() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnDestroy(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
 }

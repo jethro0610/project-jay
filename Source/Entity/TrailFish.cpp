@@ -8,14 +8,13 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-EntityDependendies TrailFish::GetDeps() {
+EntityDependendies TrailFish::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void TrailFish::Init(Entity::InitArgs args) {
-    Entity::Init(args);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_AlignToGround, true);

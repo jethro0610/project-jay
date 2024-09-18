@@ -2,15 +2,13 @@
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
 
-EntityDependendies TPillar::GetDeps() {
+EntityDependendies TPillar::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void TPillar::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_SendPush, true);
 
     ResourceManager& resourceManager = args.resourceManager;

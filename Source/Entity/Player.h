@@ -19,8 +19,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_player"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_player"; }
+    static EntityDependendies GetStaticDependencies();
 
     PlayerMoveMode moveMode_;
     float speed_;
@@ -59,6 +59,7 @@ public:
     void OnDestroy();
     void OnPush(glm::vec3 pushVec);
     void OnOverlap(Entity* overlappedEntity) {};
+    void OnHitlagEnd() {};
 
     void UseItem();
     void EndHoming();

@@ -6,9 +6,9 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_groundspawnproj"; }
-    static EntityDependendies GetDeps();
-    EntityProperties GetProperties();
+    static const char* GetStaticName() { return "e_groundspawnproj"; }
+    static EntityDependendies GetStaticDependencies();
+    EntityProperties GetStaticProperties();
 
     float gravity_;
     TypeID spawn_;

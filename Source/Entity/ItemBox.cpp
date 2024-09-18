@@ -5,15 +5,13 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-EntityDependendies ItemBox::GetDeps() {
+EntityDependendies ItemBox::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void ItemBox::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_RecieveHits, true);
 
     ResourceManager& resourceManager = args.resourceManager;

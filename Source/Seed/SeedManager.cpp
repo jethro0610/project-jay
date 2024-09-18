@@ -4,7 +4,6 @@
 #include "Logging/Logger.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityList.h"
-#include "Entity//EntityTypes.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -81,11 +80,7 @@ void SeedManager::CalculatePositions(
 
         timeSinceCapture *= 2.0f;
         if (timeSinceCapture >= 1.0f) {
-            switch(seed.targetEntity->typeId_) {
-                #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)seed.targetEntity)->OnCaptureSeed(); break;
-                EXPANDENTITIES
-                #undef ENTITYEXP
-            }
+            seed.targetEntity->DoCaptureSeed();
             seeds_.remove(i--);
             continue;
         }

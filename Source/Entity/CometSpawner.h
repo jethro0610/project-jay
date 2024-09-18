@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_cometspawner"; }
-    static EntityDependendies GetDeps(); 
+    static const char* GetStaticName() { return "e_cometspawner"; }
+    static EntityDependendies GetStaticDependencies(); 
 
     int timer_;
     int interval_;

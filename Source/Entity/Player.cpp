@@ -60,7 +60,7 @@ static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLD
 static constexpr float MIN_HOMING_VERTICAL_DELTA= 30;
 static constexpr float MAX_HOMING_DISTANCE = 150;
 
-EntityDependendies Player::GetDeps() {
+EntityDependendies Player::GetStaticDependencies() {
     return {
         "sk_char",
         {
@@ -70,8 +70,6 @@ EntityDependendies Player::GetDeps() {
 }
 
 void Player::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     moveMode_ = MM_Default;
     speed_ = MIN_SPEED;
     tilt_ = 0.0f;

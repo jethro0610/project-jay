@@ -7,15 +7,13 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-EntityDependendies MultiHitPod::GetDeps() {
+EntityDependendies MultiHitPod::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void MultiHitPod::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     disableCollision_ = false;
     cooldown_ = 0;
 

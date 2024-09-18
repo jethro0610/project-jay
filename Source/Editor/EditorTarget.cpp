@@ -43,7 +43,7 @@ void EditorTarget::SetEntity(Entity* target) {
     entity_ = target;
 
     entity_->DBG_selected_ = true;
-    name_ = std::string(entity_->DBG_name_) + '(' + std::to_string(target->DBG_index_) + ')';
+    name_ = std::string(entity_->GetName()) + '(' + std::to_string(target->DBG_index_) + ')';
 }
 
 void EditorTarget::SetBubble(TerrainBubble* target) {

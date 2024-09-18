@@ -9,7 +9,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
-EntityDependendies BumpRat::GetDeps() {
+EntityDependendies BumpRat::GetStaticDependencies() {
     return {
         "sk_bumprat",
         {
@@ -24,7 +24,6 @@ EntityDependendies BumpRat::GetDeps() {
 }
 
 void BumpRat::Init(Entity::InitArgs args) {
-    Entity::Init(args);
     SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);

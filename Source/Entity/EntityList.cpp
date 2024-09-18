@@ -37,11 +37,7 @@ void EntityList::Reset() {
     for (int i = 0; i < 128; i++) {
         available_[i] = i;
         rawEntities_[i].entity.alive_ = false;
-        switch(rawEntities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.OnDestroy(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
+        rawEntities_[i].entity.DoDestroy();
     }
     availablePos_ = 0;
 }
@@ -51,12 +47,7 @@ void EntityList::DestroyFlaggedEntities() {
         if (!rawEntities_[i].entity.alive_) continue;
         if (!rawEntities_[i].entity.destroy_) continue;
 
-        switch(rawEntities_[i].entity.typeId_) {
-            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[i].VAR.OnDestroy(); break;
-            EXPANDENTITIES
-            #undef ENTITYEXP
-        }
-
+        rawEntities_[i].entity.DoDestroy();
         rawEntities_[i].entity.alive_ = false;
         availablePos_--;
         available_[availablePos_] = i;
@@ -69,21 +60,8 @@ Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transfo
     availablePos_++;
 
     rawEntities_[entityId].entity.transform_ = transform;
-
-    switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Init({particleManager_, resourceManager_}); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
-
-    #ifdef _DEBUG
-    switch(typeId) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: strncpy(rawEntities_[entityId].entity.DBG_name_, TYPE::GetName(), Entity::MAX_NAME); break;
-        EXPANDENTITIES
-        #undef ENTITYEXP
-    }
-    #endif
     rawEntities_[entityId].entity.typeId_ = typeId;
+    rawEntities_[entityId].entity.Init({particleManager_, resourceManager_});
     return rawEntities_[entityId].entity;
 }   
 

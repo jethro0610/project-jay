@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_trailfish"; }
-    static EntityDependendies GetDeps();
+    static const char* GetStaticName() { return "e_trailfish"; }
+    static EntityDependendies GetStaticDependencies();
 
     static constexpr float SPEED = 80.0f;
     static constexpr float FRICTION = 0.05f;

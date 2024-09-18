@@ -1,16 +1,14 @@
 #include "Bomb.h"
 #include "Resource/ResourceManager.h"
-#include "Particle/ParticleManager.h"
 using namespace glm;
 
-EntityDependendies Bomb::GetDeps() {
+EntityDependendies Bomb::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void Bomb::Init(Entity::InitArgs args) {
-    Entity::Init(args);
     SetFlag(EF_SendPush, true);
 
     lifeTimer_ = 0;

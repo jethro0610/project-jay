@@ -7,15 +7,13 @@
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
-EntityDependendies CometSpawner::GetDeps() {
+EntityDependendies CometSpawner::GetStaticDependencies() {
     return {
         "st_comet"
     };
 }
 
 void CometSpawner::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_default");
 

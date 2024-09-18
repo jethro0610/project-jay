@@ -6,15 +6,13 @@
 #include "EntityList.h"
 using namespace glm;
 
-EntityDependendies Mower::GetDeps() {
+EntityDependendies Mower::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
 void Mower::Init(Entity::InitArgs args) {
-    Entity::Init(args);
-
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_AlignToGround, true);

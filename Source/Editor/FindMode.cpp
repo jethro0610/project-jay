@@ -4,6 +4,7 @@
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
+#include "Entity/Entity.h"
 
 FindMode::FindMode(EditorModeArgs args):
 EditorMode(args) {

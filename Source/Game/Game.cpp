@@ -10,7 +10,7 @@ using namespace glm;
 
 using namespace std::chrono;
 
-#define ENTITYEXP(TYPE, VAR, ID) Entity::TypeID TYPE::TYPEID = ID;
+#define ENTITYEXP(TYPE, VAR, ID) TypeID TYPE::TYPEID = ID;
 EXPANDENTITIES
 #undef ENTITYEXP
 

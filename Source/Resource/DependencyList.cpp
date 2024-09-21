@@ -3,7 +3,7 @@
 #include "Entity/Entity.h"
 #include <nlohmann/json.hpp>
 
-void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDepList) {
+void DependencyList::GetFromEntity(TypeID typeId, DependencyList& outDepList) {
     EntityDependendies deps = Entity::GetDependencies(typeId);
     if (deps.hasModel)
         outDepList.models.insert(deps.model);
@@ -14,7 +14,7 @@ void DependencyList::GetFromEntity(Entity::TypeID typeId, DependencyList& outDep
 void DependencyList::GetFromLevelJson(nlohmann::json& levelData, DependencyList& outDepList) {
     auto& entitiesData = levelData["entities"];
     for (auto& entityData : entitiesData) {
-        Entity::TypeID typeId;
+        TypeID typeId;
         if (!entityData.contains("type_id")) {
             typeId = Entity::GetTypeIDFromName(entityData["name"]);
         }

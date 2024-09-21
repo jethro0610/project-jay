@@ -18,13 +18,7 @@ public:
     Mode mode_;
 
     void Update(); 
-    void RenderUpdate() {};
-    void OnHit(HitArgs args) {};
-    void OnHurt(HurtArgs args) {};
-    void OnCaptureSeed() {};
     void OnDestroy();
-    void OnPush(glm::vec3 pushVec) {}
-    void OnOverlap(Entity* overlappedEntity) {};
 
     void SetMode(Mode mode);
     void ToggleMode();

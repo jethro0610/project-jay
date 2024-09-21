@@ -1,7 +1,15 @@
 #pragma once
-#include "Entity.h"
+#include "Entity/TypeID.h"
+#include "Types/Transform.h"
 #include <vector_holed.h>
 
+class Entity;
+class Camera;
+struct Inputs;
+class Level;
+class SeedManager;
+class SpreadManager;
+class Terrain;
 struct EntityUnion;
 class ParticleManager;
 class ResourceManager;
@@ -21,7 +29,7 @@ public:
     );
 
     Entity& operator[](int index);
-    Entity& CreateEntity(Entity::TypeID type, const Transform& transform = Transform());
+    Entity& CreateEntity(TypeID type, const Transform& transform = Transform());
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

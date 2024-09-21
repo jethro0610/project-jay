@@ -3,6 +3,7 @@
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
 #include "Entity/EntityList.h"
+#include "Entity/Entity.h"
 #include "EditorTarget.h"
 using namespace glm;
 

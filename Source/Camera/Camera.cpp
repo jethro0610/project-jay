@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Time/Time.h"
+#include "Entity/Entity.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 

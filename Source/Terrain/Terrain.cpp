@@ -3,6 +3,7 @@
 #include "Level/LevelProperties.h"
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
+#include "Entity/Entity.h"
 #include "Helpers/Ease.h"
 #include "Helpers/Assert.h"
 #include "Helpers/LoadHelpers.h"

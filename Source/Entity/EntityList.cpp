@@ -54,7 +54,7 @@ void EntityList::DestroyFlaggedEntities() {
     }
 }
 
-Entity& EntityList::CreateEntity(Entity::TypeID typeId, const Transform& transform) {
+Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
     availablePos_++;

@@ -7,6 +7,7 @@
 #include "EditorTarget.h"
 #include "Terrain/Terrain.h"
 #include "EditorVisibility.h"
+#include "Entity/Entity.h"
 using namespace glm;
 
 DefaultMode::DefaultMode(EditorModeArgs args):

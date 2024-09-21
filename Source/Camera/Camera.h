@@ -3,7 +3,9 @@
 #include <glm/mat4x4.hpp>
 #include "Types/Transform.h"
 #include "Types/Inputs.h"
-#include "Entity/EntityList.h"
+
+class Entity;
+class EntityList;
 class TransformComponent;
 
 class Camera {

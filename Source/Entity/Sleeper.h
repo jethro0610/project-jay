@@ -9,12 +9,5 @@ public:
     static const char* GetStaticName() { return "e_sleeper"; }
     static EntityDependendies GetStaticDependencies();
 
-    void Update() {}; 
-    void RenderUpdate() {};
-    void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args);
-    void OnCaptureSeed() {};
-    void OnDestroy() {};
-    void OnPush(glm::vec3 pushVec) {}
-    void OnOverlap(Entity* overlappedEntity) {};
 };

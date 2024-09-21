@@ -7,6 +7,7 @@
 #include "Rendering/Skeleton.h"
 #include "Rendering/Material.h"
 #include "Entity/EntityProperties.h"
+#include "TypeID.h"
 #include <vector>
 #include <inttypes.h>
 #include <cstring>
@@ -61,7 +62,6 @@ public:
     };
 
     static constexpr int MAX_NAME = 32;
-    typedef int TypeID;
 
     struct InitArgs {
         ParticleManager& particleManager;

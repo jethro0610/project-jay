@@ -262,7 +262,7 @@ EntityDependendies Entity::GetDependencies() {
     }
 }
 
-EntityDependendies Entity::GetDependencies(Entity::TypeID typeId) {
+EntityDependendies Entity::GetDependencies(TypeID typeId) {
     switch(typeId) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: return TYPE::GetStaticDependencies(); break;
         EXPANDENTITIES
@@ -295,8 +295,8 @@ EntityProperties Entity::GetProperties() {
     return returnProps;
 }
 
-Entity::TypeID Entity::GetTypeIDFromName(const std::string& name) {
-    Entity::TypeID typeId = -1;
+TypeID Entity::GetTypeIDFromName(const std::string& name) {
+    TypeID typeId = -1;
     #define ENTITYEXP(TYPE, VAR, ID) if (name == TYPE::GetStaticName()) typeId = ID;
     EXPANDENTITIES
     #undef ENTITYEXP

@@ -8,6 +8,7 @@
 #include "EditorTextInput.h"
 #include "EditorTarget.h"
 #include "EditorNotification.h"
+#include "Entity/Entity.h"
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
@@ -55,7 +56,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
         return CB_Default;
     }
 
-    Entity::TypeID typeId = Entity::GetTypeIDFromName(name);
+    TypeID typeId = Entity::GetTypeIDFromName(name);
 
     if (typeId == -1) {
         notificaiton_.Set(name + " does not exist");

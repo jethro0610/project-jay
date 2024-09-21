@@ -1,5 +1,4 @@
 #pragma once
-#include "Entity/Entity.h"
 #include "LevelProperties.h"
 #include <string>
 #include <nlohmann/json.hpp>

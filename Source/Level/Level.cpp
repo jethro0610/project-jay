@@ -5,6 +5,7 @@
 #include "Seed/SeedManager.h"
 #include "Terrain/Terrain.h"
 #include "Logging/Logger.h"
+#include "Entity/Entity.h"
 #include "Entity/EntityList.h"
 #include "Particle/ParticleManager.h"
 #include "Resource/ResourceManager.h"
@@ -121,7 +122,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         #ifndef _DEBUG
         entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         #else
-        Entity::TypeID typeIdFromName = entity->GetTypeIDFromName(entityData["name"]);
+        TypeID typeIdFromName = entity->GetTypeIDFromName(entityData["name"]);
         if (entityData.contains("type_id"))
             entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
         else if (typeIdFromName != -1)

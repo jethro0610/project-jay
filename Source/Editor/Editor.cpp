@@ -4,9 +4,8 @@
 #include "Rendering/Renderer.h"
 #include "Terrain/Terrain.h"
 #include "Particle/ParticleManager.h"
-#include "Entity/EntityTypes.h"
-#include "Collision/Ray.h"
-#include "Entity/Player.h"
+#include "Entity/EntityList.h"
+#include "Entity/Entity.h"
 #include <GLFW/glfw3.h>
 using namespace glm;
 

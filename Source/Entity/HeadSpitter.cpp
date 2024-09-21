@@ -3,6 +3,7 @@
 #include "EntityList.h"
 #include "GroundSpawnProjectile.h"
 #include "TimedHitbox.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 EntityDependendies HeadSpitter::GetStaticDependencies() {
@@ -43,21 +44,22 @@ void HeadSpitter::Init(Entity::InitArgs args) {
 void HeadSpitter::Update() {
     timer_++;
 
-    if (timer_ >= 30) {
+    if (timer_ >= 120) {
         GroundSpawnProjectile* projectile = (GroundSpawnProjectile*)&entities_->CreateEntity(GroundSpawnProjectile::TYPEID);
 
         projectile->spawn_ = TimedHitbox::TYPEID;
-        projectile->spawnProperties_.SetFloat("p_horizontalkb", 60);
-        projectile->spawnProperties_.SetFloat("p_verticalkb", 20);
+        projectile->spawnProperties_.SetFloat("p_horizontalkb", 20);
+        projectile->spawnProperties_.SetFloat("p_verticalkb", 60);
         projectile->spawnProperties_.SetInt("p_lifespan", 5);
 
         projectile->transform_.position = transform_.position + vec3(0.0f, 5.0f, 0.0f);
         projectile->spawnScale_.x = 25.0f;
         projectile->spawnScale_.y = 50.0f;
         projectile->spawnScale_.z = 25.0f;
+        projectile->gravity_ = 3.0f;
 
-        projectile->velocity_.y = 20.0f;
-        projectile->velocity_.x = 20.0f;
+        projectile->velocity_ = RandomVectorPlanar(20.0f, 120.0f);
+        projectile->velocity_.y = RandomFloatRange(100.0f, 150.0f);
 
         timer_ = 0;
     }

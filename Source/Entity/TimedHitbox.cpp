@@ -36,10 +36,9 @@ void TimedHitbox::Init(Entity::InitArgs args) {
     hitbox_.top = 1.0f;
     hitbox_.bottom = 1.0f;
     hitbox_.radius = 1.0f;
-    hitbox_.knocback.x = 20.0f;
-    hitbox_.knocback.y = 20.0f;
     hitbox_.diStrength = 1.0f;
     hitbox_.active = true;
+    hitbox_.forwardRange = -1.0f;
 
     timer_ = 0;
     lifespan_ = 0;
@@ -47,7 +46,6 @@ void TimedHitbox::Init(Entity::InitArgs args) {
 
 void TimedHitbox::Update() {
     timer_++;
-    if (timer_ >= lifespan_) {
+    if (timer_ >= lifespan_)
         destroy_ = true;
-    }
 }

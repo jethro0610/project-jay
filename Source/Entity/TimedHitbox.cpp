@@ -1,5 +1,6 @@
 #include "TimedHitbox.h"
 #include "Resource/ResourceManager.h"
+#include "Spread/SpreadManager.h"
 using namespace glm;
 
 EntityDependendies TimedHitbox::GetStaticDependencies() {
@@ -12,13 +13,13 @@ EntityProperties TimedHitbox::GetStaticProperties() {
     return {
         {
             {"p_horizontalkb", &hitbox_.knocback.x},
-            {"p_verticalkb", &hitbox_.knocback.y}
+            {"p_verticalkb", &hitbox_.knocback.y},
+            {"p_spreadradius", &spreadRadius_}
         },
         {
-            {"p_lifespan", &lifespan_}
+            {"p_lifespan", &lifespan_},
         },
         {
-
         }
     };
 }
@@ -48,4 +49,7 @@ void TimedHitbox::Update() {
     timer_++;
     if (timer_ >= lifespan_)
         destroy_ = true;
+
+    int intSpreadRadius = (spreadRadius_ * max(transform_.scale.x, transform_.scale.z)) / SpreadManager::SPREAD_DIST;
+    spreadManager_->RemoveSpread(transform_.position, intSpreadRadius);
 }

@@ -52,8 +52,6 @@ void GroundSpawnProjectile::Update() {
 
 void GroundSpawnProjectile::OnDestroy() {
     Entity* spawnedEntity = &entities_->CreateEntity(spawn_); 
-    EntityProperties properties;
-
     spawnedEntity->AssignProperties(spawnProperties_);
     spawnedEntity->transform_.position = transform_.position;
     spawnedEntity->transform_.scale = spawnScale_;

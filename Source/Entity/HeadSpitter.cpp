@@ -48,8 +48,9 @@ void HeadSpitter::Update() {
         GroundSpawnProjectile* projectile = (GroundSpawnProjectile*)&entities_->CreateEntity(GroundSpawnProjectile::TYPEID);
 
         projectile->spawn_ = TimedHitbox::TYPEID;
-        projectile->spawnProperties_.SetFloat("p_horizontalkb", 20);
-        projectile->spawnProperties_.SetFloat("p_verticalkb", 60);
+        projectile->spawnProperties_.SetFloat("p_horizontalkb", 20.0f);
+        projectile->spawnProperties_.SetFloat("p_verticalkb", 60.0f);
+        projectile->spawnProperties_.SetFloat("p_spreadradius", 1.0f);
         projectile->spawnProperties_.SetInt("p_lifespan", 5);
 
         projectile->transform_.position = transform_.position + vec3(0.0f, 5.0f, 0.0f);
@@ -58,7 +59,7 @@ void HeadSpitter::Update() {
         projectile->spawnScale_.z = 25.0f;
         projectile->gravity_ = 3.0f;
 
-        projectile->velocity_ = RandomVectorPlanar(20.0f, 120.0f);
+        projectile->velocity_ = RandomVectorPlanar(20.0f, 20.0f);
         projectile->velocity_.y = RandomFloatRange(100.0f, 150.0f);
 
         timer_ = 0;

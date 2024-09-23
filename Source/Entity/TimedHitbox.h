@@ -12,6 +12,7 @@ public:
 
     int timer_;
     int lifespan_;
+    float spreadRadius_;
 
     void Update();
 };

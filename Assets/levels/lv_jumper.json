@@ -218,64 +218,6 @@
                 }
             },
             "type_id": 18
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_horizontalkb": 60.0,
-                "p_verticalkb": 20.0
-            },
-            "int_properties": {
-                "p_lifespan": 5
-            },
-            "name": "e_timedhitbox",
-            "transform": {
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 25.0,
-                    "y": 50.0,
-                    "z": 25.0
-                }
-            },
-            "type_id": 17
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_horizontalkb": 60.0,
-                "p_verticalkb": 20.0
-            },
-            "int_properties": {
-                "p_lifespan": 5
-            },
-            "name": "e_timedhitbox",
-            "transform": {
-                "position": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 25.0,
-                    "y": 50.0,
-                    "z": 25.0
-                }
-            },
-            "type_id": 17
         }
     ],
     "landmap": "lm_jumper"

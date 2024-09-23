@@ -171,6 +171,15 @@ int SpreadManager::RemoveSpread(
     return count;
 }
 
+int SpreadManager::RemoveSpread(
+    const vec3& position, 
+    float radius, 
+    Entity* remover
+) {
+    int intRadius = (radius) / SpreadManager::SPREAD_DIST;
+    return RemoveSpread(position, intRadius, remover);
+}
+
 
 void SpreadManager::Reset() {
     for (int x = 0; x < KEY_LENGTH; x++) {

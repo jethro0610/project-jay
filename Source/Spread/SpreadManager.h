@@ -55,6 +55,11 @@ public:
         int radius, 
         Entity* remover = nullptr
     ); 
+    int RemoveSpread(
+        const glm::vec3& position, 
+        float radius, 
+        Entity* remover = nullptr
+    ); 
     void UpdateRenderData_P();
 
     void* GetSpreadData() { return spreadData_.data(); }

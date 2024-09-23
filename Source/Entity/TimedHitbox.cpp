@@ -50,6 +50,5 @@ void TimedHitbox::Update() {
     if (timer_ >= lifespan_)
         destroy_ = true;
 
-    int intSpreadRadius = (spreadRadius_ * max(transform_.scale.x, transform_.scale.z)) / SpreadManager::SPREAD_DIST;
-    spreadManager_->RemoveSpread(transform_.position, intSpreadRadius);
+    spreadManager_->RemoveSpread(transform_.position, spreadRadius_ * max(transform_.scale.x, transform_.scale.z));
 }

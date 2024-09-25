@@ -7,7 +7,7 @@
 #include "Player.h"
 using namespace glm;
 
-EntityDependendies JumpPad::GetDeps() {
+EntityDependendies JumpPad::GetStaticDependencies() {
     return {
         "st_tpillar"
     };

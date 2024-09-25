@@ -4,21 +4,23 @@
 #include "BumpRat.h"
 #include "Comet.h"
 #include "CometSpawner.h"
-#include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
-#include "ItemBox.h"
-#include "JumpPad.h"
 #include "Mower.h"
-#include "MultiHitPod.h"
 #include "Player.h"
 #include "RabbitPole.h"
+#include "TPillar.h"
+#include "TrailFish.h"
+#include "ItemBox.h"
+#include "MultiHitPod.h"
 #include "SinglePod.h"
 #include "Sleeper.h"
 #include "TeleportPod.h"
-#include "TimedHitbox.h"
 #include "TimerPod.h"
-#include "TPillar.h"
-#include "TrailFish.h"
+#include "GroundSpawnProjectile.h"
+#include "TimedHitbox.h"
+#include "JumpPad.h"
+#include "Mole.h"
+#include "RisePillar.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -40,4 +42,6 @@
 	ENTITYEXP(JumpPad, jumppad, 16) \
 	ENTITYEXP(TimedHitbox, timedhitbox, 17) \
 	ENTITYEXP(HeadSpitter, headspitter, 18) \
-	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19)
+	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19) \
+	ENTITYEXP(Mole, mole, 20) \
+	ENTITYEXP(RisePillar, risepillar, 21)

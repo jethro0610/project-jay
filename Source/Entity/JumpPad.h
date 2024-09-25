@@ -6,8 +6,8 @@ public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static constexpr const char* GetName() { return "e_jumppad"; }
-    static EntityDependendies GetDeps();
+    static constexpr const char* GetStaticName() { return "e_jumppad"; }
+    static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
     int numSeeds_;

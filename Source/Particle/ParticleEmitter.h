@@ -20,8 +20,15 @@ struct Particle {
 };
 
 struct EmitterProperties {
+    enum EmissionType {
+        ET_Default,
+        ET_PlanarDisc,
+        ET_Sphere,
+    };
+
     USE_DEBUG_NAME;
     EmitterProperties() {
+        emissionType = ET_Default;
         material = {};
         localSpace = false;
         spawnInterval = 0.0f;
@@ -33,10 +40,13 @@ struct EmitterProperties {
         spawnRadius = 0.0f;
         minVelocity = {};
         maxVelocity = {};
+        damping = {};
         acceleration = {};
         startColor = {};
         endColor = {};
+        terrainCollision = false;
     }
+    EmissionType emissionType;
     Material material;
     bool localSpace;
     float spawnInterval;
@@ -51,11 +61,14 @@ struct EmitterProperties {
 
     glm::vec4 minVelocity;
     glm::vec4 maxVelocity;
+    glm::vec4 damping;
 
     glm::vec4 acceleration;
 
     glm::vec4 startColor;
     glm::vec4 endColor;
+
+    bool terrainCollision;
 };
 
 struct ParticleEmitter {

@@ -137,6 +137,14 @@ vec3 Terrain::GetNormal(const vec3& position, TerrainAccuracy accuracy) const {
     return GetNormal(vec2(position.x, position.z), accuracy);
 }
 
+vec3 Terrain::GetDistanceNormal(const vec2& position, TerrainAccuracy accuracy) const {
+    return getDistanceNormal(position, *this, accuracy);
+}
+
+vec3 Terrain::GetDistanceNormal(const vec3& position, TerrainAccuracy accuracy) const {
+    return getDistanceNormal(vec2(position.x, position.z), *this, accuracy);
+}
+
 #ifdef _DEBUG
 template <const int RES>
 float SampleAdditiveMap(float x, float y, uint8_t additiveMap[RES][RES]) {

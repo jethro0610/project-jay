@@ -44,7 +44,7 @@ void HeadSpitter::Init(Entity::InitArgs args) {
 void HeadSpitter::Update() {
     timer_++;
 
-    if (timer_ >= 120) {
+    if (timer_ >= 50) {
         GroundSpawnProjectile* projectile = (GroundSpawnProjectile*)&entities_->CreateEntity(GroundSpawnProjectile::TYPEID);
 
         projectile->spawn_ = TimedHitbox::TYPEID;
@@ -59,7 +59,7 @@ void HeadSpitter::Update() {
         projectile->spawnScale_.z = 25.0f;
         projectile->gravity_ = 3.0f;
 
-        projectile->velocity_ = RandomVectorPlanar(20.0f, 20.0f);
+        projectile->velocity_ = RandomVectorPlanar(20.0f, 120.0f);
         projectile->velocity_.y = RandomFloatRange(100.0f, 150.0f);
 
         timer_ = 0;

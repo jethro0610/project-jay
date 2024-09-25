@@ -1,4 +1,4 @@
-- Switch inheritance
+- Head spitter should probably just remove spread itself since its clearer
 - Objective tokens: Complete an objective in level grants permanent range boost
 - Double jumping?
 - Light volume texture

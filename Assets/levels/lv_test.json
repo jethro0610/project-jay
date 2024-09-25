@@ -1,0 +1,61 @@
+{
+    "bubbles": [
+        {
+            "w": 136.30001831054688,
+            "x": 2.520857810974121,
+            "y": 23.590038299560547,
+            "z": -3.7982616424560547
+        }
+    ],
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_player",
+            "transform": {
+                "position": {
+                    "x": -4.512841701507568,
+                    "y": 23.463119506835938,
+                    "z": -1.6864261627197266
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_risepillar",
+            "transform": {
+                "position": {
+                    "x": -10.51406478881836,
+                    "y": 23.135881423950195,
+                    "z": -8.922506332397461
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 2.9000000953674316,
+                    "y": 2.9000000953674316,
+                    "z": 2.9000000953674316
+                }
+            },
+            "type_id": 21
+        }
+    ],
+    "landmap": "lm_default"
+}

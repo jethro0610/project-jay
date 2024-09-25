@@ -3,13 +3,13 @@
 #include <array>
 #include <deque>
 
-class Renderer;
+class Terrain;
 
 const int MAX_EMITTERS = 64;
 
 class ParticleManager {
 public:
-    ParticleManager();
+    ParticleManager(Terrain& terrain);
     std::array<ParticleEmitter, MAX_EMITTERS> emitters_; 
     std::deque<int> usableEmitters_;
     
@@ -18,4 +18,7 @@ public:
     void Update(float deltaTime);
 
     void Reset();
+
+private:
+    Terrain& terrain_;
 };

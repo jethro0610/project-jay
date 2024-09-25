@@ -11,7 +11,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int aciton, int mods
 Game::Game():
     timeAccumlulator_(0.0f),
     resourceManager_(),
-    particleManager_(),
+    particleManager_(terrain_),
     terrain_(level_.properties_, resourceManager_),
     level_(
         entities_,

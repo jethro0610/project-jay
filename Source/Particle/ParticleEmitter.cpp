@@ -1,6 +1,7 @@
 #include "ParticleEmitter.h"
 #include "Helpers/Random.h"
 #include "Helpers/Assert.h"
+#include "Terrain/Terrain.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -20,6 +21,15 @@ void ParticleEmitter::Update(float deltaTime) {
         particle.velocity.w = glm::lerp(particle.velocity.w, 0.0f, 1.0f - std::exp(-properties_.damping.w * deltaTime));
         particle.position += particle.velocity * deltaTime;
         particle.scale = mix(particle.initialScale, properties_.endScale, particle.time);
+    }
+
+    if (properties_.terrainCollision) {
+        for (int i = 0; i < particles_.size(); i++) {
+            Particle& particle = particles_[i];
+            float ground = terrain_->GetHeight(vec3(particle.position), TA_Low);
+            if (particle.position.y < ground)
+                particle.position.y = ground;
+        }
     }
 
     if (active_)

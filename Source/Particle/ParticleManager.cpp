@@ -2,8 +2,13 @@
 #include "Helpers/Assert.h"
 #include <nlohmann/json.hpp>
 
-ParticleManager::ParticleManager() {
+ParticleManager::ParticleManager(Terrain& terrain):
+terrain_(terrain)
+{
     usableEmitters_.push_front(0);
+    for (int i = 0; i < MAX_EMITTERS; i++) {
+        emitters_[i].terrain_ = &terrain;
+    }
 }
 
 ParticleEmitter* ParticleManager::RequestEmitter() {

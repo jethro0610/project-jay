@@ -7,6 +7,7 @@
 #include <glm/vec2.hpp>
 #include <vector_contig.h>
 
+class Terrain;
 const int MAX_PARTICLES = 2048;
 
 struct Particle {
@@ -95,4 +96,6 @@ struct ParticleEmitter {
     void Update(float deltaTime);
     void Emmit();
     void Reset();
+
+    Terrain* terrain_;
 };

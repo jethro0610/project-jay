@@ -36,12 +36,12 @@
             "bool_properties": null,
             "float_properties": null,
             "int_properties": null,
-            "name": "e_risepillar",
+            "name": "e_mole",
             "transform": {
                 "position": {
-                    "x": -10.51406478881836,
-                    "y": 23.135881423950195,
-                    "z": -8.922506332397461
+                    "x": 0.6255236864089966,
+                    "y": 23.23013687133789,
+                    "z": 7.50360631942749
                 },
                 "rotation": {
                     "x": 0.0,
@@ -49,12 +49,12 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 2.9000000953674316,
-                    "y": 2.9000000953674316,
-                    "z": 2.9000000953674316
+                    "x": 2.0,
+                    "y": 2.0,
+                    "z": 2.0
                 }
             },
-            "type_id": 21
+            "type_id": 20
         }
     ],
     "landmap": "lm_default"

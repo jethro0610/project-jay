@@ -6,9 +6,11 @@
 #include "Terrain/Terrain.h"
 using namespace glm;
 
-static constexpr int INIT_TIME = 20;
-static constexpr int RISE_TIME = 15;
+static constexpr int INIT_TIME = 60;
+static constexpr int RISE_TIME = 10;
 static constexpr int END_TIME = INIT_TIME + RISE_TIME;
+static constexpr float DIG_HEIGHT = 3.0f;
+static constexpr float EXTEND_HEIGHT = 1.0f;
 
 EntityDependendies RisePillar::GetStaticDependencies() {
     return {
@@ -57,8 +59,8 @@ void RisePillar::Init(Entity::InitArgs args) {
     shootEm_->properties_.minScale = 1.0f;
     shootEm_->properties_.maxScale = 1.5f;
     shootEm_->properties_.endScale = 4.0f;
-    shootEm_->properties_.minVelocity = vec4(50.0f, -10.0f, 0.0f, 0.0f);
-    shootEm_->properties_.maxVelocity = vec4(70.0f, -10.0f, 0.0f, 0.0f);
+    shootEm_->properties_.minVelocity = vec4(80.0f, -10.0f, 0.0f, 0.0f);
+    shootEm_->properties_.maxVelocity = vec4(100.0f, -10.0f, 0.0f, 0.0f);
     shootEm_->properties_.damping = vec4(4.0f, 0.0f, 4.0f, 0.0f);
     shootEm_->properties_.startColor = vec4(1.0f, 1.0f, 1.0f, 0.75f);
     shootEm_->properties_.endColor = vec4(1.0f, 1.0f, 1.0f, 0.0f);
@@ -74,8 +76,8 @@ void RisePillar::Init(Entity::InitArgs args) {
     burstEm_->properties_.minScale = 0.5f;
     burstEm_->properties_.maxScale = 1.0f;
     burstEm_->properties_.endScale = 0.0f;
-    burstEm_->properties_.minVelocity = vec4(60.0f, 100.0f, 0.0f, 0.0f);
-    burstEm_->properties_.maxVelocity = vec4(90.0f, 120.0f, 0.0f, 0.0f);
+    burstEm_->properties_.minVelocity = vec4(80.0f, 120.0f, 0.0f, 0.0f);
+    burstEm_->properties_.maxVelocity = vec4(110.0f, 140.0f, 0.0f, 0.0f);
     burstEm_->properties_.acceleration = vec4(0.0f, -400.0f, 0.0f, 0.0f);
     burstEm_->properties_.damping = vec4(4.0f, 0.0f, 4.0f, 0.0f);
     burstEm_->properties_.startColor = vec4(1.0f, 1.0f, 1.0f, 0.75f);
@@ -89,11 +91,11 @@ void RisePillar::Update() {
     timer_++;
 
     if (timer_ < INIT_TIME)
-        transform_.position.y = std::lerp(initialY_, initialY_ + 2.0f, timer_ / (float)INIT_TIME);
+        transform_.position.y = std::lerp(initialY_, initialY_ + DIG_HEIGHT, timer_ / (float)INIT_TIME);
 
     if (timer_ >= INIT_TIME && timer_ <= END_TIME) { 
         float t = EaseInOutCubic((timer_ - INIT_TIME) / (float)RISE_TIME);
-        transform_.position.y = std::lerp(initialY_ + 2.0f, initialY_ + 20.0f, t);
+        transform_.position.y = std::lerp(initialY_ + DIG_HEIGHT, initialY_ + EXTEND_HEIGHT * transform_.scale.y, t);
     }
 }
 

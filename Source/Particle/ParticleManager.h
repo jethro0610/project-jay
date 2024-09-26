@@ -5,7 +5,7 @@
 
 class Terrain;
 
-const int MAX_EMITTERS = 64;
+const int MAX_EMITTERS = 256;
 
 class ParticleManager {
 public:

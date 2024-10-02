@@ -34,28 +34,15 @@ void Mole::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
-    for (int i = 0; i < 5; i++) {
-        vec2 terrainDistance;
-        vec3 spawnPos;
-        vec3 scale = BASE_PILLAR_SCALE * RandomFloatRange(0.75f, 1.25f);
-        do {
-            spawnPos = transform_.position + RandomVectorPlanar(200.0f);
-            terrainDistance = terrain_->GetDistance(spawnPos);
-            spawnPos.y = terrainDistance.y - scale.y;
-        }
-        while(terrainDistance.x > -20.0f || entities_->IsAnyOverlapping(*this));
-
-        Transform spawnTransform;
-        spawnTransform.position = spawnPos;
-        spawnTransform.scale = scale;
-        RisePillar& entity = (RisePillar&)entities_->CreateEntity(RisePillar::TYPEID, spawnTransform);
-    }
+    for (int i = 0; i < NUM_PILLARS; i++)
+        pillars_[i] = nullptr;
 }
 
 void Mole::Update() {
-    return;
-    timer_++;
-    if (timer_ > 120) {
+    for (int i = 0; i < NUM_PILLARS; i++) {
+        if (pillars_[i] != nullptr)
+            continue;
+
         vec2 terrainDistance;
         vec3 spawnPos;
         vec3 scale = BASE_PILLAR_SCALE * RandomFloatRange(0.75f, 1.25f);
@@ -64,13 +51,30 @@ void Mole::Update() {
             terrainDistance = terrain_->GetDistance(spawnPos);
             spawnPos.y = terrainDistance.y - scale.y;
         }
-        while(terrainDistance.x > -20.0f || entities_->IsAnyOverlapping(*this));
+        while(terrainDistance.x > -20.0f || !DistantFromPillars(spawnPos));
 
         Transform spawnTransform;
         spawnTransform.position = spawnPos;
         spawnTransform.scale = scale;
         RisePillar& entity = (RisePillar&)entities_->CreateEntity(RisePillar::TYPEID, spawnTransform);
-
-        timer_ = 0;
+        pillars_[i] = &entity;
     }
+}
+
+bool Mole::DistantFromPillars(vec3 pos) {
+    bool distant = true;
+    for (int i = 0; i < 128; i++) {
+        if (!(*entities_)[i].alive_)
+            continue;
+
+        Entity& entity = (*entities_)[i];
+
+        vec3 planarPillar = vec3(entity.transform_.position.x, 0.0f, entity.transform_.position.z);
+        vec3 planarPos = vec3(pos.x, 0.0f, pos.z);
+        if (distance(planarPillar, planarPos) < 50.0f) {
+            distant = false;
+            break;
+        }
+    }
+    return distant;
 }

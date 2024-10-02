@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 
+class RisePillar;
+
 class Mole : public Entity {
 public:
     void Init(InitArgs args);
@@ -8,7 +10,10 @@ public:
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_mole"; }
     static EntityDependendies GetStaticDependencies();
+    static constexpr int NUM_PILLARS = 8;
 
     void Update();
-    int timer_;
+    RisePillar* pillars_[NUM_PILLARS];
+
+    bool DistantFromPillars(glm::vec3 pos);
 };

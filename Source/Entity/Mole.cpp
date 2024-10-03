@@ -19,9 +19,9 @@ EntityDependendies Mole::GetStaticDependencies() {
 }
 
 void Mole::Init(Entity::InitArgs args) {
-    SetFlag(EF_Targetable, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
+    SetFlag(EF_SendPush, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -39,6 +39,14 @@ void Mole::Init(Entity::InitArgs args) {
 }
 
 void Mole::Update() {
+    for (int i = 0; i < NUM_PILLARS; i++) {
+        if (pillars_[i] == nullptr)
+            continue;
+
+        if (!pillars_[i]->alive_)
+            pillars_[i] = nullptr;
+    }
+
     for (int i = 0; i < NUM_PILLARS; i++) {
         if (pillars_[i] != nullptr)
             continue;

@@ -4,6 +4,7 @@
 #include "Helpers/Ease.h"
 #include "Particle/ParticleManager.h"
 #include "Terrain/Terrain.h"
+#include "Player.h"
 using namespace glm;
 
 static constexpr int INIT_TIME = 60;
@@ -19,6 +20,11 @@ EntityDependendies RisePillar::GetStaticDependencies() {
 }
 
 void RisePillar::Init(Entity::InitArgs args) {
+    SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_Overlap, true); 
+    SetFlag(EF_Targetable, true);
+
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
@@ -26,9 +32,17 @@ void RisePillar::Init(Entity::InitArgs args) {
     materials_[0].castShadows = true;
     materials_[0].properties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
 
-    pushbox_.top = 1.0f;
+    pushbox_.top = 0.75f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    hurtbox_.top = 1.0f;
+    hurtbox_.bottom = 1.0f;
+    hurtbox_.radius = 1.15f;
+
+    overlapbox_.top = 1.5f;
+    overlapbox_.bottom = -0.75f;
+    overlapbox_.radius = 1.5f;
 
     ParticleManager& particleManager = args.particleManager;
     burrowEm_ = particleManager.RequestEmitter();
@@ -134,4 +148,31 @@ void RisePillar::OnDestroy() {
     burrowEm_->release_ = true;
     shootEm_->release_ = true;
     burstEm_->release_ = true;
+}
+
+void RisePillar::OnHitlagEnd() {
+    destroy_ = true;
+}
+
+void RisePillar::OnOverlap(Entity* overlappedEntity) {
+    Player* player = nullptr;
+    if (overlappedEntity->typeId_ == Player::TYPEID)
+        player = (Player*)overlappedEntity;
+
+    bool homing = false;
+    if (player != nullptr && player->homingTarget_ == nullptr)
+        homing = true;
+
+    if (overlappedEntity->velocity_.y > 0.0f && !homing)
+        return;
+
+    overlappedEntity->skipGroundCheck_ = true;
+    overlappedEntity->velocity_.y = 70.0f;
+
+    if (player != nullptr)
+        player->EndHoming();
+}
+
+vec3 RisePillar::GetTargetPoint() {
+    return transform_.position + vec3(0.0f, transform_.scale.y, 0.0f);
 }

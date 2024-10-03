@@ -383,3 +383,12 @@ void Entity::DoDestroy() {
         #undef ENTITYEXP
     }
 }
+
+vec3 Entity::GetTarget() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->GetTargetPoint(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return vec3(0.0f);
+}

@@ -73,18 +73,12 @@ void JumpPad::OnOverlap(Entity* overlappedEntity) {
     overlappedEntity->velocity_.y = jumpStregth_;
     timer_ = cooldown_;
 
-    hitlag_ = 2;
-    initHitlag_ = true;
-
-    overlappedEntity->hitlag_ = 2;
-    overlappedEntity->initHitlag_ = true;
-
     if (overlappedEntity->typeId_ == Player::TYPEID)
         ((Player*)overlappedEntity)->EndHoming();
 
     lastOverlappedEntity_ = overlappedEntity;
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 20.0f, lastOverlappedEntity_, vec3(0.0f, 30.0f, 0.0f));
 }
 
 void JumpPad::OnHitlagEnd() {
-    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 20.0f, lastOverlappedEntity_, vec3(0.0f, 30.0f, 0.0f));
 }

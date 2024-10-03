@@ -177,6 +177,8 @@ public:
     void DoCaptureSeed();
     void DoDestroy();
 
+    glm::vec3 GetTarget();
+
     Camera* camera_;
     EntityList* entities_;
     Inputs* inputs_;
@@ -195,6 +197,7 @@ private:
     void OnHitlagEnd() {}
     void OnCaptureSeed() {};
     void OnDestroy() {};
+    glm::vec3 GetTargetPoint() { return transform_.position; };
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

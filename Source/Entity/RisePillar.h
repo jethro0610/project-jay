@@ -12,6 +12,9 @@ public:
     void Update();
     void RenderUpdate();
     void OnDestroy();
+    void OnHitlagEnd();
+    void OnOverlap(Entity* overlappedEntity);
+    glm::vec3 GetTargetPoint();
 
     int timer_;
     float initialY_;

@@ -238,13 +238,14 @@ void Player::Update() {
 
                 if (!entity->GetFlag(EF_Targetable))
                     continue;
+                vec3 target = entity->GetTarget();
 
-                float verticalDelta = transform_.position.y - entity->transform_.position.y;
+                float verticalDelta = transform_.position.y - target.y;
                 if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
                     continue;
 
                 vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
-                vec3 entityPlanarPosition = vec3(entity->transform_.position.x, 0.0f, entity->transform_.position.z);
+                vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
                 vec3 planarCameraForward = camera_->transform_.GetForwardVector();
                 planarCameraForward.y = 0.0f;
                 planarCameraForward = normalize(planarCameraForward);
@@ -270,7 +271,7 @@ void Player::Update() {
         homingTarget_ = nullptr;
 
     if (homingTarget_ != nullptr) {
-        vec3 vectorToTarget = normalize(homingTarget_->transform_.position - transform_.position);
+        vec3 vectorToTarget = normalize(homingTarget_->GetTarget() - transform_.position);
         velocity_ = vectorToTarget * 500.0f;
     }
 
@@ -638,7 +639,7 @@ void Player::RenderUpdate() {
 }
 
 void Player::OnHit(HitArgs args) {
-    DEBUGLOG("player hit");
+
 }
 
 void Player::OnHurt(HurtArgs args) {

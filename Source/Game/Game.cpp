@@ -92,6 +92,13 @@ void Game::Update() {
             entities_[i].lastTransform_ = entities_[i].transform_;
         }
 
+        spreadManager_.ClearTramples();
+
+        for (int i = 0; i < 128; i++) {
+            if (!entities_[i].alive_) continue;
+            rawEntities_[i].entity.DoPreUpdate();
+        }
+
         vector_const<Overlap, 128> overlapList;
         for (int a = 0; a < 128; a++) {
             if (!entities_[a].alive_) continue;

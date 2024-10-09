@@ -162,6 +162,7 @@ public:
     void BaseUpdate();
     void BaseRenderUpdate(float interpTime);
 
+    void DoPreUpdate();
     void DoUpdate();
     void DoRenderUpdate();
 
@@ -188,6 +189,7 @@ public:
     Terrain* terrain_;
 
 private:
+    void PreUpdate() {};
     void Update() {};
     void RenderUpdate() {};
     void OnHit(HitArgs args) {};

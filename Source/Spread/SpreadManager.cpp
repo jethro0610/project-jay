@@ -45,6 +45,8 @@ bool SpreadManager::SpreadIsActive(const vec3& position) const {
 bool SpreadManager::AddSpread(const ivec2& key, bool weed) {
     if (keys_[key.x][key.y].index != -1)
         return false;
+    if (tramples_[key.x][key.y] == true)
+        return false;
 
     const float offset = SPREAD_DIST / 2.0f;
 
@@ -88,7 +90,7 @@ bool SpreadManager::AddSpread(const glm::vec3& position, bool weed) {
     return AddSpread(GetKey(position), weed);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, int amount, bool weed) {
+AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, float density, bool weed) {
     radius--;
     ivec2 origin = GetKey(position);
     int count = 0;
@@ -98,6 +100,10 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
         float distance = sqrtf(x*x + z*z);
         if (distance > radius)
             continue;
+
+        float rand = RandomFloatRange(0.0, 1.0f);
+        if (rand > density)
+            continue;
         
         ivec2 key = origin + ivec2(x, z);
         if (AddSpread(key, weed))
@@ -106,6 +112,12 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, in
 
     return AddSpreadInfo{count, origin};
 }
+
+AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, float radius, float density, bool weed) {
+    int intRadius = (radius) / SpreadManager::SPREAD_DIST;
+    return AddSpread(position, intRadius, density, weed);
+}
+
 
 bool SpreadManager::RemoveSpread(
     const SpreadKey& key, 
@@ -130,6 +142,8 @@ bool SpreadManager::RemoveSpread(
     if (indexToRemove >= data.size())
         return true;
 
+    if (keys_[key.x][key.y].index != -1)
+        return false;
     // ...and get the key of the spread that
     // replaced that index...
     vec3 swappedPosition = data[indexToRemove].modelMatrix[3];
@@ -178,6 +192,35 @@ int SpreadManager::RemoveSpread(
 ) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
     return RemoveSpread(position, intRadius, remover);
+}
+
+void SpreadManager::ClearTramples() {
+    memset(tramples_, 0, sizeof(bool) * KEY_LENGTH * KEY_LENGTH);
+}
+
+bool SpreadManager::Trample(const SpreadKey& key, Entity* trampler) {
+    tramples_[key.x][key.y] = true;
+    return RemoveSpread(key, trampler);
+}
+
+bool SpreadManager::Trample(const vec3& position, Entity* trampler) {
+    return Trample(GetKey(position));
+}
+
+int SpreadManager::Trample(const vec3& position, float radius, Entity* trampler) {
+    int intRadius = (radius) / SpreadManager::SPREAD_DIST;
+
+    int count = 0;
+    ivec2 origin = GetKey(position);
+    for (int x = -intRadius; x <= intRadius; x++) {
+    for (int z = -intRadius; z <= intRadius; z++) {
+        if (sqrt(x*x + z*z) > intRadius)
+            continue;
+        if (Trample(origin + ivec2(x, z), trampler))
+            count++;
+    } }
+    DEBUGLOG(intRadius);
+    return count;
 }
 
 

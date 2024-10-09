@@ -1,7 +1,6 @@
 #include "Entity.h"
 #include "Time/Time.h"
 #include "Terrain/Terrain.h"
-#include "Logging/Logger.h"
 #include "EntityTypes.h"
 #include "Helpers/Assert.h"
 #include <glm/gtx/compatibility.hpp>
@@ -302,6 +301,15 @@ TypeID Entity::GetTypeIDFromName(const std::string& name) {
     #undef ENTITYEXP
 
     return typeId;
+}
+
+void Entity::DoPreUpdate() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->PreUpdate(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
 }
 
 void Entity::DoUpdate() {

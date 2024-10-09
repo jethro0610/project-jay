@@ -3,14 +3,15 @@
 #include "Time/Time.h"
 #include "Helpers/Ease.h"
 #include "Particle/ParticleManager.h"
+#include "Spread/SpreadManager.h"
 #include "Terrain/Terrain.h"
 #include "Player.h"
 using namespace glm;
 
-static constexpr int INIT_TIME = 60;
+static constexpr int INIT_TIME = 60 * 3;
 static constexpr int RISE_TIME = 10;
 static constexpr int END_TIME = INIT_TIME + RISE_TIME;
-static constexpr float DIG_HEIGHT = 3.0f;
+static constexpr float DIG_HEIGHT = 8.0f;
 static constexpr float EXTEND_HEIGHT = 1.0f;
 
 EntityDependendies RisePillar::GetStaticDependencies() {
@@ -99,10 +100,12 @@ void RisePillar::Init(Entity::InitArgs args) {
 
     timer_ = 0;
     initialY_ = transform_.position.y;
+
 }
 
 void RisePillar::Update() {
-    timer_++;
+    if (timer_ <= END_TIME)
+        timer_++;
 
     if (timer_ < INIT_TIME)
         transform_.position.y = std::lerp(initialY_, initialY_ + DIG_HEIGHT, timer_ / (float)INIT_TIME);
@@ -110,6 +113,11 @@ void RisePillar::Update() {
     if (timer_ >= INIT_TIME && timer_ <= END_TIME) { 
         float t = EaseInOutCubic((timer_ - INIT_TIME) / (float)RISE_TIME);
         transform_.position.y = std::lerp(initialY_ + DIG_HEIGHT, initialY_ + EXTEND_HEIGHT * transform_.scale.y, t);
+    }
+
+    if (timer_ == END_TIME) {
+        float spreadRadius = pushbox_.radius * max(transform_.scale.x, transform_.scale.z) * 5.0f;
+        spreadManager_->AddSpread(transform_.position, spreadRadius, 0.35f, true);
     }
 }
 

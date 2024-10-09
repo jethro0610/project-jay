@@ -3,7 +3,6 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
-#include <unordered_set>
 #include <vector_contig.h>
 
 class Entity;
@@ -40,7 +39,8 @@ public:
 
     bool AddSpread(const glm::vec3& position, bool weed = false); 
     bool AddSpread(const SpreadKey& key, bool weed); 
-    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, int amount = INT_MAX, bool weed = false);
+    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, float density = 1.0f, bool weed = false);
+    AddSpreadInfo AddSpread(const glm::vec3& position, float radius, float density = INT_MAX, bool weed = false);
 
     bool RemoveSpread(
         const SpreadKey& key,
@@ -60,6 +60,12 @@ public:
         float radius, 
         Entity* remover = nullptr
     ); 
+
+    void ClearTramples();
+    bool Trample(const SpreadKey& key, Entity* trampler = nullptr);
+    bool Trample(const glm::vec3& position, Entity* trampler = nullptr);
+    int Trample(const glm::vec3& position, float radius, Entity* trampler = nullptr);
+
     void UpdateRenderData_P();
 
     void* GetSpreadData() { return spreadData_.data(); }
@@ -84,6 +90,7 @@ private:
     Terrain& terrain_;
     SeedManager& seedManager_;
 
+    bool tramples_[KEY_LENGTH][KEY_LENGTH];
     vector_contig<RenderData, MAX_SPREAD> spreadData_;
     vector_contig<RenderData, MAX_SPREAD> weedData_;
     KeyIndex keys_[KEY_LENGTH][KEY_LENGTH];

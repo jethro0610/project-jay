@@ -1,3 +1,7 @@
+- Jump on rises to send damage to mole
+- gather cut objects at top area, hit attack to use them
+- top area should have lots of holes to jump over
+
 - Head spitter should probably just remove spread itself since its clearer
 - Objective tokens: Complete an objective in level grants permanent range boost
 - Double jumping?

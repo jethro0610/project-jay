@@ -10,7 +10,7 @@ public:
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_mole"; }
     static EntityDependendies GetStaticDependencies();
-    static constexpr int NUM_PILLARS = 8;
+    static constexpr int NUM_PILLARS = 16;
 
     void Update();
     RisePillar* pillars_[NUM_PILLARS];

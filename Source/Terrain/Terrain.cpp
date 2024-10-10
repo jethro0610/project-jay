@@ -467,3 +467,62 @@ vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
     }
     return vec3(0.0f);
 }
+
+bool Terrain::PointIsInSameIsland(vec3 origin, vec3 point, float edgeDistance) {
+    enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT,
+        NONE = -1
+    };
+
+    origin.y = 0.0f;
+    point.y = 0.0f;
+
+    if (GetDistance(origin).x > 0.0f)
+        return false;
+
+    if (GetDistance(point).x > edgeDistance)
+        return false;
+    
+    float STEP_X = 10.0f;
+    float STEP_Z = 10.0f;
+
+    int lastDirection = NONE;
+    vec3 directionVectors[4];
+    vec3 searcher = origin;
+    for (int i = 0; i < 128; i++) {
+        if (distance(searcher, point) < 20.0f)
+            return true;
+
+        directionVectors[UP] = searcher + vec3(0.0f, 0.0f, 1.0f) * STEP_Z;
+        directionVectors[DOWN] = searcher + vec3(0.0f, 0.0f, -1.0f) * STEP_Z;
+        directionVectors[LEFT] = searcher + vec3(-1.0f, 0.0f, 0.0f) * STEP_X;
+        directionVectors[RIGHT] = searcher + vec3(1.0f, 0.0f, 0.0f) * STEP_X;
+
+        int shortestDirection = NONE;
+        float shortestDistance = INFINITY;
+        for (int d = 0; d < 4; d++) {
+            if (d != lastDirection && d % 2 == lastDirection % 2 && lastDirection != NONE)
+                continue;
+
+            if (GetDistance(directionVectors[d]).x > 0.0f)
+                continue;
+
+            float dist = distance(directionVectors[d], point);
+            if (dist < shortestDistance) {
+                shortestDirection = d;
+                shortestDistance = dist;
+            }
+        }
+
+        if (shortestDirection == NONE)
+            break;
+
+        lastDirection = shortestDirection;
+        searcher = directionVectors[shortestDirection];
+    }
+
+    return false;
+}

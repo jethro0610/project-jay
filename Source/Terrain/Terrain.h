@@ -57,6 +57,7 @@ public:
     void GenerateTerrainDistances(EntityList* entities = nullptr);
     void ReloadTerrainDistances(EntityList* entities = nullptr);
     glm::vec3 RaycastTerrain(glm::vec3 origin, glm::vec3 direction);
+    bool PointIsInSameIsland(glm::vec3 origin, glm::vec3 point, float edgeDistance = 0.0f);
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;

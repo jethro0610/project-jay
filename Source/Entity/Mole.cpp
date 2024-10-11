@@ -54,11 +54,10 @@ void Mole::Update() {
         vec3 spawnPos;
         vec3 scale = BASE_PILLAR_SCALE * RandomFloatRange(0.25f, 1.25f);
         do {
-            spawnPos = transform_.position + RandomVectorPlanar(500.0f);
-            float terrianHeight = terrain_->GetHeight(spawnPos);
-            spawnPos.y = terrianHeight - scale.y;
+            spawnPos = terrain_->GetRandomPointInSameIsland(transform_.position);
+            spawnPos.y -= scale.y;
         }
-        while(!terrain_->PointIsInSameIsland(transform_.position, spawnPos) || !DistantFromPillars(spawnPos));
+        while(!DistantFromPillars(spawnPos));
 
         Transform spawnTransform;
         spawnTransform.position = spawnPos;

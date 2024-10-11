@@ -8,6 +8,8 @@
 #include "Helpers/Assert.h"
 #include "Helpers/LoadHelpers.h"
 #include "Level/Level.h"
+#include "Helpers/Random.h"
+#include "Helpers/Assert.h"
 #include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
@@ -137,12 +139,12 @@ vec3 Terrain::GetNormal(const vec3& position, TerrainAccuracy accuracy) const {
     return GetNormal(vec2(position.x, position.z), accuracy);
 }
 
-vec3 Terrain::GetDistanceNormal(const vec2& position, TerrainAccuracy accuracy) const {
-    return getDistanceNormal(position, *this, accuracy);
+vec3 Terrain::GetDirectionToEdge(const vec2& position, TerrainAccuracy accuracy) const {
+    return getDirectionToEdge(position, *this, accuracy);
 }
 
-vec3 Terrain::GetDistanceNormal(const vec3& position, TerrainAccuracy accuracy) const {
-    return getDistanceNormal(vec2(position.x, position.z), *this, accuracy);
+vec3 Terrain::GetDirectionToEdge(const vec3& position, TerrainAccuracy accuracy) const {
+    return getDirectionToEdge(vec2(position.x, position.z), *this, accuracy);
 }
 
 #ifdef _DEBUG
@@ -450,7 +452,7 @@ void Terrain::ReloadTerrainDistances(EntityList* entities) {
 }
 #endif
 
-vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
+vec3 Terrain::RaycastTerrain(const vec3& origin, const vec3& direction) {
     vec3 curOrigin = origin; 
     float curHeight = GetHeight(curOrigin);
 
@@ -468,7 +470,7 @@ vec3 Terrain::RaycastTerrain(vec3 origin, vec3 direction) {
     return vec3(0.0f);
 }
 
-bool Terrain::PointIsInSameIsland(vec3 origin, vec3 point, float edgeDistance) {
+bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float edgeDistance) {
     enum Direction {
         UP,
         DOWN,
@@ -477,13 +479,13 @@ bool Terrain::PointIsInSameIsland(vec3 origin, vec3 point, float edgeDistance) {
         NONE = -1
     };
 
-    origin.y = 0.0f;
-    point.y = 0.0f;
+    vec3 planarOrigin = vec3(origin.x, 0.0f, origin.z);
+    vec3 planarPoint = vec3(point.x, 0.0f, point.z);
 
-    if (GetDistance(origin).x > 0.0f)
+    if (GetDistance(planarOrigin).x > 0.0f)
         return false;
 
-    if (GetDistance(point).x > edgeDistance)
+    if (GetDistance(planarPoint).x > edgeDistance)
         return false;
     
     float STEP_X = 10.0f;
@@ -491,9 +493,9 @@ bool Terrain::PointIsInSameIsland(vec3 origin, vec3 point, float edgeDistance) {
 
     int lastDirection = NONE;
     vec3 directionVectors[4];
-    vec3 searcher = origin;
+    vec3 searcher = planarOrigin;
     for (int i = 0; i < 128; i++) {
-        if (distance(searcher, point) < 20.0f)
+        if (distance(searcher, planarPoint) < 20.0f)
             return true;
 
         directionVectors[UP] = searcher + vec3(0.0f, 0.0f, 1.0f) * STEP_Z;
@@ -525,4 +527,33 @@ bool Terrain::PointIsInSameIsland(vec3 origin, vec3 point, float edgeDistance) {
     }
 
     return false;
+}
+
+vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin) {
+    vec3 planarOrigin = vec3(origin.x, 0.0f, origin.z);
+
+    vec3 searcher = planarOrigin;
+    vec3 direction = RandomVectorPlanar();
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 16; j++) {
+            float distanceToEdge = GetDistance(searcher).x;
+            ASSERT((distanceToEdge < 0.0f), distanceToEdge);
+            if (distanceToEdge > -5.0f)
+                break;
+
+            searcher += direction * distanceToEdge;
+        }
+        quat randomRotation = quatLookAtRH(RandomVectorPlanar(), Transform::worldUp);
+        quat directionRotation = quatLookAtRH(direction, Transform::worldUp);
+        direction = randomRotation * Transform::worldForward;
+    }
+
+    vec3 point;
+    vec2 dist;
+        float t = RandomFloatRange(0.0f, 1.0f);
+        point = lerp(searcher, planarOrigin, t);
+        dist = GetDistance(point);
+        point.y += dist.y;
+
+    return point;
 }

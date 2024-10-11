@@ -52,6 +52,15 @@ vec4 RandomVec4(const glm::vec4& min, const glm::vec4& max) {
     return vec4(x, y, z, w);
 }
 
+vec3 RandomVectorPlanar() {
+    float x = RandomFloatRange(-1.0f, 1.0f);
+    float z = RandomFloatRange(-1.0f, 1.0f);
+
+    vec2 direction = normalize(vec2(x, z));
+
+    return vec3(direction.x, 0.0f, direction.y);
+}
+
 vec3 RandomVectorPlanar(float maxDist) {
     float x = RandomFloatRange(-1.0f, 1.0f);
     float z = RandomFloatRange(-1.0f, 1.0f);

@@ -38,8 +38,8 @@ public:
 
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
-    glm::vec3 GetDistanceNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
-    glm::vec3 GetDistanceNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec3 GetDirectionToEdge(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec3 GetDirectionToEdge(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
     int area_;
 
 private:
@@ -56,8 +56,9 @@ public:
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
     void GenerateTerrainDistances(EntityList* entities = nullptr);
     void ReloadTerrainDistances(EntityList* entities = nullptr);
-    glm::vec3 RaycastTerrain(glm::vec3 origin, glm::vec3 direction);
-    bool PointIsInSameIsland(glm::vec3 origin, glm::vec3 point, float edgeDistance = 0.0f);
+    glm::vec3 RaycastTerrain(const glm::vec3& origin, const glm::vec3& direction);
+    bool PointIsInSameIsland(const glm::vec3& origin, const glm::vec3& point, float edgeDistance = 0.0f);
+    glm::vec3 GetRandomPointInSameIsland(const glm::vec3& origin);
 
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;

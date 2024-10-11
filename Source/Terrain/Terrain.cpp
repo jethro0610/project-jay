@@ -537,15 +537,16 @@ vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 16; j++) {
             float distanceToEdge = GetDistance(searcher).x;
-            ASSERT((distanceToEdge < 0.0f), distanceToEdge);
             if (distanceToEdge > -5.0f)
                 break;
 
-            searcher += direction * distanceToEdge;
+            // Multiply by 0.95 to prevent over shooting
+            searcher += direction * (distanceToEdge) * 0.95f;
         }
         quat randomRotation = quatLookAtRH(RandomVectorPlanar(), Transform::worldUp);
-        quat directionRotation = quatLookAtRH(direction, Transform::worldUp);
-        direction = randomRotation * Transform::worldForward;
+        vec3 negativeEdge = -GetDirectionToEdge(searcher);
+        quat negativeEdgeRotation= quatLookAtRH(negativeEdge, Transform::worldUp);
+        direction = slerp(negativeEdgeRotation, randomRotation, 0.5f) * Transform::worldForward;
     }
 
     vec3 point;

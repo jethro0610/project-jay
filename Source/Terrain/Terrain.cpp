@@ -510,7 +510,7 @@ bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float e
             if (d != lastDirection && d % 2 == lastDirection % 2 && lastDirection != NONE)
                 continue;
 
-            if (GetDistance(directionVectors[d]).x > 0.0f)
+            if (GetDistance(directionVectors[d], TA_Low).x > 0.0f)
                 continue;
 
             float dist = distance(directionVectors[d], point);
@@ -522,11 +522,11 @@ bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float e
 
         for (int d = 0; d < 4; d++) {
             if (d == shortestDirection)
-                momentums[d] += 0.25f;
+                momentums[d] += 0.1f;
             else
-                momentums[d] -= 0.1f;
+                momentums[d] -= 0.05f;
 
-            momentums[d] = max(1.0f, momentums[d]);
+            momentums[d] = clamp(momentums[d], 1.0f, 1.5f);
         }
 
         if (shortestDirection == NONE)
@@ -546,7 +546,7 @@ vec3 Terrain::GetRandomPointInSameIslandFast(const vec3& origin) {
     vec3 direction = RandomVectorPlanar();
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 16; j++) {
-            float distanceToEdge = GetDistance(searcher).x;
+            float distanceToEdge = GetDistance(searcher, TA_Low).x;
             if (distanceToEdge > -5.0f)
                 break;
 

@@ -401,6 +401,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 
     // Generate the low resolution distance field
     const int scaleFactor = RESOLUTION / RESOLUTION_LOW;
+    #pragma omp parallel for
     for (int y = 0; y < RESOLUTION_LOW; y++) {
     for (int x = 0; x < RESOLUTION_LOW; x++) {
         float averageDist = 0.0f;
@@ -419,6 +420,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     additiveMapFile.close();
 
     // Generate the low resolution additive map
+    #pragma omp parallel for
     for (int y = 0; y < RESOLUTION_LOW; y++) {
     for (int x = 0; x < RESOLUTION_LOW; x++) {
         uint32_t average = 0;

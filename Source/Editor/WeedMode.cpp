@@ -47,7 +47,7 @@ void WeedMode::Update() {
 
     int spreadRadius = terrainCursor_.radius / SpreadManager::SPREAD_DIST;
     if (platform_.heldKeys_[LEFT_MOUSE_KEY] || platform_.heldKeys_[GLFW_KEY_Q])
-        spreadManager_.AddSpread(terrainCursor_.position, spreadRadius, 1.0f, true);
+        spreadManager_.AddSpread(terrainCursor_.position, spreadRadius, 1.0f, SpreadManager::AD_Constant, true);
 
     if (platform_.heldKeys_[RIGHT_MOUSE_KEY] || platform_.heldKeys_[GLFW_KEY_E])
         spreadManager_.RemoveSpread(terrainCursor_.position, spreadRadius);

@@ -90,7 +90,13 @@ bool SpreadManager::AddSpread(const glm::vec3& position, bool weed) {
     return AddSpread(GetKey(position), weed);
 }
 
-AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, float density, bool weed) {
+AddSpreadInfo SpreadManager::AddSpread(
+    const glm::vec3& position, 
+    int radius, 
+    float density, 
+    AddSpreadDistribution distribution,
+    bool weed
+) {
     radius--;
     ivec2 origin = GetKey(position);
     int count = 0;
@@ -101,8 +107,12 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, fl
         if (distance > radius)
             continue;
 
+        float t = 1.0f;
+        if (distribution == AD_Feather)
+            t = 1.0f - (distance / radius);
+
         float rand = RandomFloatRange(0.0, 1.0f);
-        if (rand > density)
+        if (rand > density * t)
             continue;
         
         ivec2 key = origin + ivec2(x, z);
@@ -113,9 +123,15 @@ AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, int radius, fl
     return AddSpreadInfo{count, origin};
 }
 
-AddSpreadInfo SpreadManager::AddSpread(const glm::vec3& position, float radius, float density, bool weed) {
+AddSpreadInfo SpreadManager::AddSpread(
+    const glm::vec3& position, 
+    float radius, 
+    float density, 
+    AddSpreadDistribution distribution,
+    bool weed
+) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
-    return AddSpread(position, intRadius, density, weed);
+    return AddSpread(position, intRadius, density, distribution, weed);
 }
 
 

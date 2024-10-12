@@ -23,6 +23,11 @@ public:
         float time;
     };
 
+    enum AddSpreadDistribution {
+        AD_Constant,
+        AD_Feather
+    };
+
     static constexpr float SPREAD_DIST = 2.0f;
     static constexpr int MAX_SPREAD = 32768;
     static constexpr int KEY_LENGTH = 1024;
@@ -39,8 +44,20 @@ public:
 
     bool AddSpread(const glm::vec3& position, bool weed = false); 
     bool AddSpread(const SpreadKey& key, bool weed); 
-    AddSpreadInfo AddSpread(const glm::vec3& position, int radius, float density = 1.0f, bool weed = false);
-    AddSpreadInfo AddSpread(const glm::vec3& position, float radius, float density = INT_MAX, bool weed = false);
+    AddSpreadInfo AddSpread(
+        const glm::vec3& position, 
+        int radius, 
+        float density = 1.0f, 
+        AddSpreadDistribution distribution = AD_Constant, 
+        bool weed = false
+    );
+    AddSpreadInfo AddSpread(
+        const glm::vec3& position, 
+        float radius, 
+        float density = INT_MAX, 
+        AddSpreadDistribution distribution = AD_Constant, 
+        bool weed = false
+    );
 
     bool RemoveSpread(
         const SpreadKey& key,

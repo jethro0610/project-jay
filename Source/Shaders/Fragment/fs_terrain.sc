@@ -20,7 +20,7 @@ void main() {
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
     float fade = max(v_edgeDistance, 0.0f);
-    fade *= 0.05f;
+    fade *= 0.1f;
     DITHERDISCARD(fade);
 
     vec3 color = texture2D(s_color, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;

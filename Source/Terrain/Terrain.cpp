@@ -493,15 +493,16 @@ bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float e
 
     int lastDirection = NONE;
     vec3 directionVectors[4];
+    float momentums[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     vec3 searcher = planarOrigin;
     for (int i = 0; i < 128; i++) {
         if (distance(searcher, planarPoint) < 20.0f)
             return true;
 
-        directionVectors[UP] = searcher + vec3(0.0f, 0.0f, 1.0f) * STEP_Z;
-        directionVectors[DOWN] = searcher + vec3(0.0f, 0.0f, -1.0f) * STEP_Z;
-        directionVectors[LEFT] = searcher + vec3(-1.0f, 0.0f, 0.0f) * STEP_X;
-        directionVectors[RIGHT] = searcher + vec3(1.0f, 0.0f, 0.0f) * STEP_X;
+        directionVectors[UP] = searcher + vec3(0.0f, 0.0f, 1.0f) * STEP_Z * momentums[UP];
+        directionVectors[DOWN] = searcher + vec3(0.0f, 0.0f, -1.0f) * STEP_Z * momentums[DOWN];
+        directionVectors[LEFT] = searcher + vec3(-1.0f, 0.0f, 0.0f) * STEP_X * momentums[LEFT];
+        directionVectors[RIGHT] = searcher + vec3(1.0f, 0.0f, 0.0f) * STEP_X * momentums[RIGHT];
 
         int shortestDirection = NONE;
         float shortestDistance = INFINITY;
@@ -519,6 +520,15 @@ bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float e
             }
         }
 
+        for (int d = 0; d < 4; d++) {
+            if (d == shortestDirection)
+                momentums[d] += 0.25f;
+            else
+                momentums[d] -= 0.1f;
+
+            momentums[d] = max(1.0f, momentums[d]);
+        }
+
         if (shortestDirection == NONE)
             break;
 
@@ -529,7 +539,7 @@ bool Terrain::PointIsInSameIsland(const vec3& origin, const vec3& point, float e
     return false;
 }
 
-vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin) {
+vec3 Terrain::GetRandomPointInSameIslandFast(const vec3& origin) {
     vec3 planarOrigin = vec3(origin.x, 0.0f, origin.z);
 
     vec3 searcher = planarOrigin;
@@ -543,18 +553,28 @@ vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin) {
             // Multiply by 0.95 to prevent over shooting
             searcher += direction * (distanceToEdge) * 0.95f;
         }
-        quat randomRotation = quatLookAtRH(RandomVectorPlanar(), Transform::worldUp);
+        float pi = glm::pi<float>();
+        quat randomRotation = quat(vec3(0.0f, lerp(-pi / 2, pi / 2, RandomFloatRange(0.0f, 1.0f)), 0.0f));
         vec3 negativeEdge = -GetDirectionToEdge(searcher);
-        quat negativeEdgeRotation= quatLookAtRH(negativeEdge, Transform::worldUp);
-        direction = slerp(negativeEdgeRotation, randomRotation, 0.5f) * Transform::worldForward;
+        direction = rotate(randomRotation, negativeEdge);
     }
 
     vec3 point;
     vec2 dist;
-        float t = RandomFloatRange(0.0f, 1.0f);
+        float t = RandomFloatRange(0.0f, 0.25f);
         point = lerp(searcher, planarOrigin, t);
         dist = GetDistance(point);
         point.y += dist.y;
 
+    return point;
+}
+
+vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin, float minDist, float maxDist) {
+    vec3 point;
+    do {
+        point = origin + RandomVectorPlanar(minDist, maxDist);
+    }
+    while (!PointIsInSameIsland(origin, point));
+    point.y = GetHeight(point);
     return point;
 }

@@ -54,7 +54,7 @@ void Mole::Update() {
         vec3 spawnPos;
         vec3 scale = BASE_PILLAR_SCALE * RandomFloatRange(0.25f, 1.25f);
         do {
-            spawnPos = terrain_->GetRandomPointInSameIsland(transform_.position);
+            spawnPos = terrain_->GetRandomPointInSameIsland(transform_.position, 0.0f, 500.0f);
             spawnPos.y -= scale.y;
         }
         while(!DistantFromPillars(spawnPos));
@@ -75,9 +75,11 @@ bool Mole::DistantFromPillars(vec3 pos) {
 
         Entity& entity = (*entities_)[i];
 
+        float dist = entity.typeId_ == RisePillar::TYPEID ? 50.0f : 5.0f;
+
         vec3 planarPillar = vec3(entity.transform_.position.x, 0.0f, entity.transform_.position.z);
         vec3 planarPos = vec3(pos.x, 0.0f, pos.z);
-        if (distance(planarPillar, planarPos) < 50.0f) {
+        if (distance(planarPillar, planarPos) < dist) {
             distant = false;
             break;
         }

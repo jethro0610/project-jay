@@ -203,7 +203,6 @@ void Entity::BaseRenderUpdate(float interpTime) {
         }
     }
 
-    
     if (hitlag_ > 0 && stun_) {
         renderTransform_.position.x += pow(sin(GlobalTime::GetTime() * 100.0f + 8.0f), 2.0f) * 0.5f;
         renderTransform_.position.y += pow(sin(GlobalTime::GetTime() * 100.0f + 16.0f), 2.0f) * 0.5f;

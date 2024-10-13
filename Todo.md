@@ -1,3 +1,10 @@
+- Overterrains -> Terrain dither w/depth test no write -> Terrain depth only -> Behindterrains -> Translucents? 
+    - Cant do this, since objects clipped by terrain NOT underneath (ie behind) would not render
+
+- Terrain w/discard dither -> Anything with alpha rendered with depth & Opaques
+- Non edge terrains no discard -> Edge terrains with discard -> Opaques -> 
+  Terrain clipped alphas with depth -> Alpha objects z-sorted no depth
+
 - Jump on rises to send damage to mole
 - gather cut objects at top area, hit attack to use them
 - top area should have lots of holes to jump over

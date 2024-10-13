@@ -11,6 +11,13 @@ enum TriangleType {
     TWO_SIDED_NEGATIVE_BACK
 };
 
+enum TranparencyType {
+    TRANSPARENCY_NONE,
+    TRANSPARENCY_UNORDERED,
+    TRANSPARENCY_ADDITIVE,
+    TRANSPARENCY_ADDITIVE_BRIGHT
+};
+
 struct MaterialProperties {
     glm::vec4 color; 
 
@@ -56,6 +63,7 @@ struct Material {
         shader = nullptr;
         shadowShader = nullptr;
         castShadows = false;
+        transparencyType = TRANSPARENCY_NONE;
         triangleType = TriangleType::ONE_SIDED;
 
         numTextures = 0;
@@ -71,6 +79,7 @@ struct Material {
     int numTextures;
     Texture* textures[MAX_TEXTURES];
     bool castShadows;
+    TranparencyType transparencyType;
     TriangleType triangleType;
     MaterialProperties properties;
 };

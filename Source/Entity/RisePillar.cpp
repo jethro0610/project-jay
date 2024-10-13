@@ -28,7 +28,8 @@ void RisePillar::Init(Entity::InitArgs args) {
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
-    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
+    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color_terrainclipped");
+    materials_[0].transparencyType = TRANSPARENCY_UNORDERED;
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
     materials_[0].properties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
@@ -48,6 +49,7 @@ void RisePillar::Init(Entity::InitArgs args) {
     ParticleManager& particleManager = args.particleManager;
     burrowEm_ = particleManager.RequestEmitter();
     burrowEm_->properties_.material.shader = resourceManager.GetShader("vs_particle", "fs_particle");
+    burrowEm_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     burrowEm_->properties_.material.castShadows = false;
     burrowEm_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     burrowEm_->properties_.spawnInterval = 0.005f;
@@ -66,6 +68,7 @@ void RisePillar::Init(Entity::InitArgs args) {
     shootEm_->properties_.emissionType = EmitterProperties::ET_PlanarDisc;
     shootEm_->properties_.terrainCollision = true;
     shootEm_->properties_.material.shader = resourceManager.GetShader("vs_particle", "fs_particle");
+    shootEm_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     shootEm_->properties_.material.castShadows = false;
     shootEm_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     shootEm_->properties_.spawnCount = 40;
@@ -83,6 +86,7 @@ void RisePillar::Init(Entity::InitArgs args) {
     burstEm_ = particleManager.RequestEmitter();
     burstEm_->properties_.emissionType = EmitterProperties::ET_PlanarDisc;
     burstEm_->properties_.material.shader = resourceManager.GetShader("vs_particle_stretch", "fs_particle");
+    burstEm_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     burstEm_->properties_.material.castShadows = false;
     burstEm_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     burstEm_->properties_.spawnCount = 40;

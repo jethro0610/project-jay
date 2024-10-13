@@ -19,9 +19,11 @@
 using namespace glm;
 
 const int SHADOW_VIEW = 0;
-const int RENDER_VIEW = 1;
-const int POSTROCESS_VIEW = 2;
-const int UI_VIEW = 3;
+const int TERRAIN_VIEW = 1;
+const int RENDER_VIEW = 2;
+const int TRANSPARENCY_VIEW = 3;
+const int POSTROCESS_VIEW = 4;
+const int UI_VIEW = 5;
 
 Renderer::Renderer(ResourceManager& resourceManager) {
     renderWidth_ = 1920;
@@ -208,6 +210,30 @@ void Renderer::RenderMesh(
     int curFace = 0;
     
     for (int n = 0; n < numOfRenders; n++) {
+        uint64_t state = BGFX_STATE_DEFAULT;
+        int view = RENDER_VIEW;
+        switch (material->transparencyType) {
+            case TRANSPARENCY_UNORDERED:
+                state = state | BGFX_STATE_BLEND_ALPHA;
+                break;
+
+            case TRANSPARENCY_ADDITIVE:
+                state = state & ~BGFX_STATE_WRITE_Z;
+                state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+                state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
+                break;
+
+            case TRANSPARENCY_ADDITIVE_BRIGHT:
+                state = state & ~BGFX_STATE_WRITE_Z;
+                state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
+                state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
+                break;
+
+            default:
+                break;
+        }
+
+
         bgfx::setUniform(u_mProps_, &material->properties, 4);
         if (pose != nullptr)
             bgfx::setUniform(u_pose_, pose->data(), Bone::MAX_BONES);
@@ -215,9 +241,8 @@ void Renderer::RenderMesh(
             bgfx::setTransform(modelMatrix);
 
         if (curFace == 1) {
-            bgfx::setState(
-                BGFX_STATE_DEFAULT & ~BGFX_STATE_CULL_CW | BGFX_STATE_CULL_CCW
-            );
+            state = state & ~BGFX_STATE_CULL_CW;
+            state = state | BGFX_STATE_CULL_CCW;
             normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;
             normalMult.y = -1.0f;
         }
@@ -267,6 +292,7 @@ void Renderer::RenderMesh(
         if (instanceBuffer != nullptr)
             bgfx::setInstanceDataBuffer(instanceBuffer);
 
+        bgfx::setState(state);
         bgfx::setVertexBuffer(0, mesh->vertexBuffer);
         bgfx::setIndexBuffer(mesh->indexBuffer);
         bgfx::submit(view, shaderHandle);

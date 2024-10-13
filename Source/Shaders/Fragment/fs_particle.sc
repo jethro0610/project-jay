@@ -10,6 +10,6 @@ void main() {
         discard;
 
     vec4 color = lerp(PART_STARTCOL, PART_ENDCOL, v_time);
-    DITHERDISCARD(1.0f - color.w);
+    color.a *= 0.5f;
     gl_FragColor = color;
 }

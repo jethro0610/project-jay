@@ -140,6 +140,7 @@ void Player::Init(Entity::InitArgs args) {
     ParticleManager& particleManager = args.particleManager;
     speedEmtter_ = particleManager.RequestEmitter();
     speedEmtter_->properties_.material.shader = resourceManager.GetShader("vs_particle_stretch", "fs_particle");
+    speedEmtter_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     speedEmtter_->properties_.material.castShadows = false;
     speedEmtter_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     speedEmtter_->properties_.spawnInterval = 0.005f;
@@ -156,6 +157,7 @@ void Player::Init(Entity::InitArgs args) {
 
     spinEmitter_ = particleManager.RequestEmitter();
     spinEmitter_->properties_.material.shader = resourceManager.GetShader("vs_particle_stretch", "fs_particle");
+    spinEmitter_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     spinEmitter_->properties_.material.castShadows = false;
     spinEmitter_->properties_.material.triangleType = TriangleType::TWO_SIDED;
     spinEmitter_->properties_.localSpace = true;
@@ -174,6 +176,7 @@ void Player::Init(Entity::InitArgs args) {
 
     slopeEmitter_ = particleManager.RequestEmitter();
     slopeEmitter_->properties_.material.shader = resourceManager.GetShader("vs_particle", "fs_particle");
+    slopeEmitter_->properties_.material.transparencyType = TRANSPARENCY_ADDITIVE;
     slopeEmitter_->properties_.material.castShadows = false;
     slopeEmitter_->properties_.spawnInterval = 0.1f;
     slopeEmitter_->properties_.spawnCount = 25;

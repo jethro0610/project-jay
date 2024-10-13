@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "Time/Time.h"
 #include "Collision/Collision.h"
-#include "Logging/Logger.h"
 #include <glm/vec3.hpp>
 #include <glm/gtx/string_cast.hpp>
 #include <ctime>

@@ -132,6 +132,9 @@ void Renderer::InitRenderBuffer(Texture* renderColorTexture, Texture* renderDept
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
     bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
+
+    bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
+    bgfx::setViewRect(TRANSPARENCY_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
 void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
@@ -152,6 +155,7 @@ void Renderer::InitUIBuffer() {
 void Renderer::StartFrame() {
     viewMatrix_ = camera_->GetViewMatrix();
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
+    bgfx::setViewTransform(TRANSPARENCY_VIEW, &viewMatrix_, &projectionMatrix_);
 
     vec3 forward = camera_->transform_.GetForwardVector();
     forward.y = 0.0f;
@@ -221,12 +225,14 @@ void Renderer::RenderMesh(
                 state = state & ~BGFX_STATE_WRITE_Z;
                 state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
                 state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
+                view = TRANSPARENCY_VIEW;
                 break;
 
             case TRANSPARENCY_ADDITIVE_BRIGHT:
                 state = state & ~BGFX_STATE_WRITE_Z;
                 state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
                 state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
+                view = TRANSPARENCY_VIEW;
                 break;
 
             default:
@@ -252,10 +258,8 @@ void Renderer::RenderMesh(
         }
         bgfx::setUniform(u_normalMult_, &normalMult);
 
-        int view;
         bgfx::ProgramHandle shaderHandle;
         if (curPass == 0) {
-            view = RENDER_VIEW;
             #ifndef _DEBUG
             shaderHandle = material->shader->handle;
             #else

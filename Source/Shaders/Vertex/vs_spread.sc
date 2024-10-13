@@ -4,11 +4,10 @@ $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_col
 
 uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
-uniform vec4 u_timeResolution;
+uniform vec4 u_time;
 
 #define i_color i_data4.xyz
 #define i_time i_data4.w
-#define u_time u_timeResolution.x
 
 static const float TIME_FOR_MAX_SIZE = 0.25f;
 static const float c1 = 4.0f;
@@ -31,7 +30,7 @@ void main() {
 
     v_tbn = mat3(v_tangent, v_bitangent, v_normal);
 
-    float time = min(1.0f, (u_time - i_time) / TIME_FOR_MAX_SIZE);
+    float time = min(1.0f, (u_time.x - i_time) / TIME_FOR_MAX_SIZE);
     time = 1.0f + c3 * CUBE(time - 1.0f) + c1 * SQR(time - 1.0f);
 
     v_texcoord0 = a_texcoord0;

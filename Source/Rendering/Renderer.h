@@ -128,7 +128,7 @@ private:
     UniformHandle u_particleProps_;
     UniformHandle u_normalMult_;
     UniformHandle u_lightDirection_;
-    UniformHandle u_timeResolution_;
+    UniformHandle u_time_;
     UniformHandle u_cameraPosition_;
     UniformHandle u_cameraUp_;
     UniformHandle u_cameraRight_;

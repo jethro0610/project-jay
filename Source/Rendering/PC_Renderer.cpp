@@ -50,7 +50,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_particleProps_ = bgfx::createUniform("u_particleProps", bgfx::UniformType::Mat4);
     u_normalMult_ = bgfx::createUniform("u_normalMult", bgfx::UniformType::Vec4);
     u_lightDirection_ = bgfx::createUniform("u_lightDirection", bgfx::UniformType::Vec4);
-    u_timeResolution_ = bgfx::createUniform("u_timeResolution", bgfx::UniformType::Vec4);
+    u_time_ = bgfx::createUniform("u_time", bgfx::UniformType::Vec4);
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
@@ -167,13 +167,13 @@ void Renderer::StartFrame() {
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
     bgfx::setViewTransform(SHADOW_VIEW, &shadowViewMatrix_, &shadowProjectionMatrix_);
 
-    vec4 timeResolution = vec4(GlobalTime::GetTime(), width_, height_, 0.0f);
+    vec4 time = vec4(GlobalTime::GetTime(), 0.0f, 0.0f, 0.0f);
     vec4 cameraPosition = vec4(camera_->transform_.position, 0.0f);
     vec4 cameraUp = vec4(camera_->transform_.GetUpVector(), 0.0f);
     vec4 cameraRight = vec4(camera_->transform_.GetRightVector(), 0.0f);
     vec4 randomVec = vec4(rand());
 
-    bgfx::setUniform(u_timeResolution_, &timeResolution);
+    bgfx::setUniform(u_time_, &time);
     bgfx::setUniform(u_cameraPosition_, &cameraPosition);
     bgfx::setUniform(u_cameraUp_, &cameraUp);
     bgfx::setUniform(u_cameraRight_, &cameraRight);

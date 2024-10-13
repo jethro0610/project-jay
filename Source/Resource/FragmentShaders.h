@@ -21,10 +21,10 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_selected_front",
 	"fs_selected_unshaded",
 	"fs_terraincursor",
-	"fs_terrain",
 	"fs_dfsa_color",
 	"fs_dfsa_color_terrainclipped",
 	"fs_flower_test",
 	"fs_particle",
 	"fs_seed_test",
+	"fs_terrain",
 };

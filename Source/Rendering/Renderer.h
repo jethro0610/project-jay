@@ -60,6 +60,13 @@ public:
     glm::mat4 GetProjectionMatrix() const { return projectionMatrix_; };
 
 private:
+    static constexpr int SHADOW_VIEW = 0;
+    static constexpr int TERRAIN_VIEW = 1;
+    static constexpr int RENDER_VIEW = 2;
+    static constexpr int TRANSPARENCY_VIEW = 3;
+    static constexpr int POSTROCESS_VIEW = 4;
+    static constexpr int UI_VIEW = 5;
+
     int width_;
     int height_;
     int renderWidth_;
@@ -158,6 +165,7 @@ private:
         InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
         GPUPose* pose = nullptr,
+        int defaultView = RENDER_VIEW,
         DebugShaderType debugShader = DS_Default
     );
     void RenderTerrainBubbles(

@@ -18,13 +18,6 @@
 
 using namespace glm;
 
-const int SHADOW_VIEW = 0;
-const int TERRAIN_VIEW = 1;
-const int RENDER_VIEW = 2;
-const int TRANSPARENCY_VIEW = 3;
-const int POSTROCESS_VIEW = 4;
-const int UI_VIEW = 5;
-
 Renderer::Renderer(ResourceManager& resourceManager) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
@@ -129,8 +122,11 @@ void Renderer::InitRenderBuffer(Texture* renderColorTexture, Texture* renderDept
     TextureHandle handles[] = { renderBufferTextures_[0]->handle, renderBufferTextures_[1]->handle };
     renderBuffer_ = bgfx::createFrameBuffer(2, handles);
 
+    bgfx::setViewFrameBuffer(TERRAIN_VIEW, renderBuffer_);
+    bgfx::setViewRect(TERRAIN_VIEW, 0, 0, renderWidth_, renderHeight_);
+    bgfx::setViewClear(TERRAIN_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+
     bgfx::setViewFrameBuffer(RENDER_VIEW, renderBuffer_);
-    bgfx::setViewClear(RENDER_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(RENDER_VIEW, 0, 0, renderWidth_, renderHeight_);
 
     bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
@@ -154,6 +150,7 @@ void Renderer::InitUIBuffer() {
 
 void Renderer::StartFrame() {
     viewMatrix_ = camera_->GetViewMatrix();
+    bgfx::setViewTransform(TERRAIN_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(TRANSPARENCY_VIEW, &viewMatrix_, &projectionMatrix_);
 
@@ -200,6 +197,7 @@ void Renderer::RenderMesh(
     InstanceBufferHandle* instanceBuffer, 
     glm::mat4* modelMatrix,
     GPUPose* pose,
+    int defaultView,
     DebugShaderType debugShaderType 
 ) {
     vec4 normalMult;
@@ -215,7 +213,7 @@ void Renderer::RenderMesh(
     
     for (int n = 0; n < numOfRenders; n++) {
         uint64_t state = BGFX_STATE_DEFAULT;
-        int view = RENDER_VIEW;
+        int view = defaultView;
         switch (material->transparencyType) {
             case TRANSPARENCY_UNORDERED:
                 state = state | BGFX_STATE_BLEND_ALPHA;
@@ -323,7 +321,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     for (int y = -radius; y < radius; y++) { 
         vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
         bgfx::setUniform(u_terrainMeshOffset_, &offset);
-        RenderMesh(terrain_, material);
+        RenderMesh(terrain_, material, nullptr, nullptr, nullptr, TERRAIN_VIEW);
     };
 }
 
@@ -360,7 +358,7 @@ void Renderer::RenderEntitiesS(
                 debugShaderType = DS_Selected;
             else if (entity.DBG_persistView_)
                 debugShaderType = DS_Persist;
-            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, debugShaderType);
+            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, RENDER_VIEW, debugShaderType);
             #endif 
         }
     }
@@ -577,6 +575,7 @@ void Renderer::RenderTerrainBubbles(Terrain& terrain) {
             nullptr,
             &bubbleMatrix,
             nullptr,
+            RENDER_VIEW,
             bubble.DBG_selected_ ? DS_SelectedUnshaded : DS_Default
         );
     }
@@ -601,7 +600,7 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
             vec4 curvePos = curve.GetPosition(i / 64.0f);
             curveTransform.position = curvePos;
             curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveMaterial_, nullptr, &curveMatrix, nullptr, shaderType);
+            RenderMesh(&terrain.DBG_nodeModel_->meshes[0], &terrain.DBG_curveMaterial_, nullptr, &curveMatrix, nullptr, RENDER_VIEW, shaderType);
         }
 
         curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
@@ -632,6 +631,7 @@ void Renderer::RenderTerrainCurves(Terrain& terrain) {
             nullptr, 
             &curveMatrix, 
             nullptr, 
+            RENDER_VIEW,
             curve.DBG_selectedPoint_ == 2 ? DS_SelectedFront : DS_Default
         );
         curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);

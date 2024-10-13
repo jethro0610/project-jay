@@ -6,10 +6,11 @@ $input v_sposition, v_texcoord0, v_time
 
 void main() {
     vec2 origin = (0.5f, 0.5f);
-    if (distance(origin, v_texcoord0) > 0.5)
-        discard;
 
     vec4 color = lerp(PART_STARTCOL, PART_ENDCOL, v_time);
     color.a *= 0.5f;
+    if (distance(origin, v_texcoord0) > 0.5)
+        color.a = 0.0f;
+
     gl_FragColor = color;
 }

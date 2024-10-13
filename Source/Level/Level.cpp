@@ -42,6 +42,7 @@ terrain_(terrain)
 
     properties_.seedMaterial.shader = resourceManager.GetShader("vs_inst_billboard", "fs_seed_test");
     properties_.seedMaterial.castShadows = false;
+    properties_.seedMaterial.transparencyType = TRANSPARENCY_ADDITIVE_BRIGHT;
 
     properties_.spreadModel = resourceManager.GetModel("st_flower_test");
     properties_.weedModel_ = resourceManager.GetModel("st_flower_test");

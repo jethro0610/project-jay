@@ -7,7 +7,6 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_leaves_strand",
 	"fs_text",
 	"fs_postprocess",
-	"fs_seed_test",
 	"fs_selected",
 	"fs_aura",
 	"fs_color_masked",
@@ -27,4 +26,5 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_dfsa_color_terrainclipped",
 	"fs_flower_test",
 	"fs_particle",
+	"fs_seed_test",
 };

@@ -344,9 +344,88 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     }
 }
 
+#define INDEX(xVal, yVal) ((yVal) * RESOLUTION + (xVal))
+
+void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray, bool inverted) {
+    #pragma omp parallel for
+    for (int y = 0; y < RESOLUTION; y++) {
+    for (int x = 0; x < RESOLUTION; x++) {
+        int i = y * RESOLUTION + x;
+
+        if (!source[i])
+            yArray[i] = inverted ? RESOLUTION * RESOLUTION : 0;
+        else
+            yArray[i] = inverted ? 0 : RESOLUTION * RESOLUTION;
+    }}
+
+    #pragma omp parallel for
+    for (int x = 0; x < RESOLUTION; x++) {
+        for (int y = 1; y < RESOLUTION; y++) {
+            int val = yArray[INDEX(x, y - 1)] + 1;
+            yArray[INDEX(x, y)] = std::min(val, yArray[INDEX(x, y)]);
+        }
+
+        for (int y = RESOLUTION - 1; y <= 0; y++) {
+            int val = yArray[INDEX(x, y + 1)] + 1;
+            yArray[INDEX(x, y)] = std::min(val, yArray[INDEX(x, y)]);
+        }
+    }
+
+    #pragma omp parallel for
+    for (int y = 0; y < RESOLUTION; y++) {
+        int vertices[RESOLUTION];
+        int intersections[RESOLUTION];
+
+        int lastVertIdx = 0;
+        vertices[0] = 0;
+        intersections[0] = -(RESOLUTION * RESOLUTION);
+        intersections[1] = RESOLUTION * RESOLUTION;
+
+        for (int vertX = 1; vertX < RESOLUTION - 1; vertX++) {
+            int vertY = yArray[INDEX(vertX, y)];
+
+            while(true) {
+                int lastVertX = vertices[lastVertIdx];
+                int lastVertY = yArray[INDEX(lastVertX, y)];
+                if (vertX == lastVertX)
+                    DEBUGLOG(vertX);
+                int intersection = 
+                    ((vertY * vertY + vertX * vertX) - (lastVertY * lastVertY + lastVertX * lastVertX)) /
+                    (2 * vertX - 2 * lastVertX);
+
+                if (intersection > intersections[lastVertIdx]) {
+                    lastVertIdx++;
+                    vertices[lastVertIdx] = vertX;
+                    intersections[lastVertIdx] = intersection;    
+                    intersections[lastVertIdx + 1] = RESOLUTION * RESOLUTION;    
+                    break;
+                }
+                else
+                    lastVertIdx--;
+            }
+        }
+
+        int vertIdx = 0;
+        for (int x = 0; x < RESOLUTION; x++) {
+            while(intersections[vertIdx + 1] < x)
+                vertIdx++;
+
+            int vertX = vertices[vertIdx];
+            int vertY = yArray[INDEX(vertX, y)];
+
+            int diff = x - vertX;
+            outArray[INDEX(x, y)] = sqrt(diff * diff + vertY * vertY);
+        }
+    }
+}
 
 void Terrain::GenerateTerrainDistances(EntityList* entities) {
     DEBUGLOG("Generating terrain distances...");
+    uint8_t* landMap = new uint8_t[RESOLUTION * RESOLUTION];
+    int* yArray = new int[RESOLUTION * RESOLUTION];
+    float* positive = new float[RESOLUTION * RESOLUTION];
+    float* negative = new float[RESOLUTION * RESOLUTION];
+
     // Determine which entities are on the ground before regenerating
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
@@ -360,46 +439,17 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }
 
     // Load the landmap
-    uint8_t* landMap = new uint8_t[RESOLUTION * RESOLUTION];
     std::ifstream landMapFile("./landmaps/" + DBG_landMapName_ + ".lmp", std::ios::binary);
     ASSERT(landMapFile.is_open(), "Tried generating from invalid landmap " + DBG_landMapName_);
     landMapFile.read((char*)landMap, RESOLUTION * RESOLUTION * sizeof(uint8_t));
     landMapFile.close();
 
-    // Determine the edges
-    DEBUGLOG("Getting edges...");
-    std::vector<glm::ivec2> edges;
-    edges.reserve(RESOLUTION * RESOLUTION);
-    area_ = 0;
+    GenerateUnsignedDistanceField(landMap, yArray, positive, false);
+    GenerateUnsignedDistanceField(landMap, yArray, negative, true);
+
     for (int y = 0; y < RESOLUTION; y++) {
     for (int x = 0; x < RESOLUTION; x++) {
-        if (!landMap[y * RESOLUTION + x])
-            continue;
-        area_++;
-
-        if (!landMap[y * RESOLUTION + max(x - 1, 0)])
-            edges.push_back({x, y});
-        else if (!landMap[y * RESOLUTION + min(x + 1, RESOLUTION - 1)])
-            edges.push_back({x, y});
-        else if (!landMap[max(y - 1, 0) * RESOLUTION + x])
-            edges.push_back({x, y});
-        else if (!landMap[min(y + 1, RESOLUTION - 1) * RESOLUTION + x])
-            edges.push_back({x, y});
-    }}
-
-    // Generate the the distance field
-    DEBUGLOG("Creating distance field for " << edges.size() << " edges...");
-    #pragma omp parallel for
-    for (int y = 0; y < RESOLUTION; y++) {
-    for (int x = 0; x < RESOLUTION; x++) {
-        float distance = INFINITY;
-        float multiplier = landMap[y * RESOLUTION + x] ? -1.0f : 1.0f;
-        for (const glm::ivec2& edge : edges) {
-            float dx = edge.x - x;
-            float dy = edge.y - y;
-            distance = std::min(dx * dx + dy * dy, distance);
-        }
-        terrainMap_[y][x].x = sqrt(distance) * multiplier;
+        terrainMap_[y][x].x = negative[INDEX(x, y)] - positive[INDEX(x, y)];
     }}
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 
@@ -444,13 +494,16 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }
 
     delete[] landMap;
+    delete[] yArray;
+    delete[] positive;
+    delete[] negative;
 }
 
 void Terrain::ReloadTerrainDistances(EntityList* entities) {
     std::string landmapXCF = "../Assets/landmaps/" + DBG_landMapName_ + ".xcf";
     std::string output = "./landmaps/" + DBG_landMapName_;
-    std::string landmapCommand = "magick " + landmapXCF + " -flatten -resize 1024x1024 -channel B -separate " + " GRAY:" + output + ".lmp";
-    std::string additiveCommand = "magick " + landmapXCF + " -flatten -resize 1024x1024 -channel R -separate " + " GRAY:" + output + ".amp";
+    std::string landmapCommand = "magick " + landmapXCF + " -flatten -resize 4096x4096 -channel B -separate " + " GRAY:" + output + ".lmp";
+    std::string additiveCommand = "magick " + landmapXCF + " -flatten -resize 4096x4096 -channel R -separate " + " GRAY:" + output + ".amp";
     system(landmapCommand.c_str());
     system(additiveCommand.c_str());
     GenerateTerrainDistances(entities);

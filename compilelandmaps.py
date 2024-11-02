@@ -8,8 +8,8 @@ if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
 def compile_landmap(input_path, landmap_path, additive_path):
-    landmap_command = 'magick ' + input_path + ' -flatten -resize 2048x2048 -channel B -separate' + ' GRAY:' + landmap_path 
-    additive_command = 'magick ' + input_path + ' -flatten -resize 2048x2048 -channel R -separate' + ' GRAY:' + additive_path
+    landmap_command = 'magick ' + input_path + ' -flatten -resize 4096x4096 -channel B -separate' + ' GRAY:' + landmap_path 
+    additive_command = 'magick ' + input_path + ' -flatten -resize 4096x4096 -channel R -separate' + ' GRAY:' + additive_path
     print(colored("Compiling landmap %s..." % input_path, "yellow"))
     subprocess.run(landmap_command, shell = True)
     subprocess.run(additive_command, shell = True)

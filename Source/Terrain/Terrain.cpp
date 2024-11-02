@@ -353,9 +353,9 @@ void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray
         int i = y * RESOLUTION + x;
 
         if (!source[i])
-            yArray[i] = inverted ? RESOLUTION * RESOLUTION : 0;
+            yArray[i] = inverted ? RESOLUTION : 0;
         else
-            yArray[i] = inverted ? 0 : RESOLUTION * RESOLUTION;
+            yArray[i] = inverted ? 0 : RESOLUTION;
     }}
 
     #pragma omp parallel for
@@ -365,7 +365,7 @@ void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray
             yArray[INDEX(x, y)] = std::min(val, yArray[INDEX(x, y)]);
         }
 
-        for (int y = RESOLUTION - 1; y <= 0; y++) {
+        for (int y = RESOLUTION - 2; y >= 0; y--) {
             int val = yArray[INDEX(x, y + 1)] + 1;
             yArray[INDEX(x, y)] = std::min(val, yArray[INDEX(x, y)]);
         }

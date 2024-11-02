@@ -24,7 +24,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1280;
     height_ = 720;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 2048.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 4096.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 
@@ -321,17 +321,30 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     std::vector<vec4> offsets;
     offsets.reserve(radius * 2 * radius * 2);
 
+    vec3 cameraForward = camera_->transform_.GetForwardVector();
+    cameraForward.y = 0.0f;
+    cameraForward = normalize(cameraForward);
+    vec3 cameraPlanar = camera_->transform_.position - cameraForward * TerrainConsts::MESH_SIZE * 2.0f;
+    cameraPlanar.y = 0.0f;
+    float dist = 4096.0f + TerrainConsts::MESH_SIZE * 2.0f;
+    dist *= dist;
+
     for (int x = -radius; x < radius; x++)
-    for (int y = -radius; y < radius; y++) { 
-        vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
-        offsets.push_back(offset);
+    for (int z = -radius; z < radius; z++) { 
+        vec3 offset = vec3(x * TerrainConsts::MESH_SIZE, 0.0f, z * TerrainConsts::MESH_SIZE);
+        vec3 vectorToOffset = normalize(offset - cameraPlanar);
+
+        float dot = glm::dot(cameraForward, vectorToOffset);
+        if (dot > 0.5f && distance2(cameraPlanar, offset) < dist)
+            offsets.push_back(vec4(offset, 0.0f));
     };
 
-    bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets.size(), sizeof(vec4));
-    memcpy(instanceBuffer.data, offsets.data(), sizeof(vec4) * offsets.size());
-
-    RenderMesh(terrain_, material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
+    if (offsets.size() > 0) {
+        bgfx::InstanceDataBuffer instanceBuffer;
+        bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets.size(), sizeof(vec4));
+        memcpy(instanceBuffer.data, offsets.data(), sizeof(vec4) * offsets.size());
+        RenderMesh(terrain_, material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
+    }
 }
 
 

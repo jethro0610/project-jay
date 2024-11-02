@@ -19,7 +19,7 @@ void Renderer::Render(
 ) {
     StartFrame();
 
-    RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
@@ -45,7 +45,7 @@ void Renderer::RenderEdit(
     DBG_lowResTerrain_ = terrain.DBG_lowRes_;
     StartFrame();
 
-    RenderTerrain(terrain, &levelProperties.terrainMaterial, 500.0f);
+    RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_TerrainControlsOnly) {
         RenderTerrainBubbles(terrain);
         RenderTerrainCurves(terrain);

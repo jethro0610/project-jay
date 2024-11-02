@@ -24,7 +24,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1280;
     height_ = 720;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 1000.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 2048.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 
@@ -317,12 +317,21 @@ void Renderer::RenderMesh(
 void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadius) {
     int radius = maxRadius / TerrainConsts::MESH_SIZE;
     radius += 1;
+
+    std::vector<vec4> offsets;
+    offsets.reserve(radius * 2 * radius * 2);
+
     for (int x = -radius; x < radius; x++)
     for (int y = -radius; y < radius; y++) { 
         vec4 offset = vec4(x * TerrainConsts::MESH_SIZE, 0.0f, y * TerrainConsts::MESH_SIZE, 0.0f);
-        bgfx::setUniform(u_terrainMeshOffset_, &offset);
-        RenderMesh(terrain_, material, nullptr, nullptr, nullptr, TERRAIN_VIEW);
+        offsets.push_back(offset);
     };
+
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets.size(), sizeof(vec4));
+    memcpy(instanceBuffer.data, offsets.data(), sizeof(vec4) * offsets.size());
+
+    RenderMesh(terrain_, material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
 }
 
 

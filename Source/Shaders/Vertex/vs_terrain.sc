@@ -1,4 +1,4 @@
-$input a_position, a_normal
+$input a_position, i_data0
 $output v_wposition, v_sposition, v_edgeDistance, v_normal, v_tangent, v_bitangent, v_tbn
 #include <bgfx_shader.sh>
 #include <noise.sh>
@@ -10,8 +10,10 @@ uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
 uniform vec4 u_time;
 
+#define i_offset i_data0.xyz
+
 void main() {
-    a_position += u_terrainMeshOffset;
+    a_position += i_offset;
     vec2 position2d = a_position.xz;
     vec2 terrainDistance = getTerrainDistance(position2d);
 

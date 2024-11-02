@@ -13,7 +13,6 @@ using namespace glm;
 
 #else
 #include <Shared_TerrainConstants.h>
-uniform vec4 u_terrainMeshOffset;
 uniform vec4 u_terrainHoles[8];
 SAMPLER2D(s_terrainMap, 15);
 

@@ -66,9 +66,9 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
     switch (accuracy) {
         case TA_Normal: {
             x *= WORLD_TO_TERRAIN_SCALAR;
-            x += HALF_RESOLUTION;
+            x += HALF_RESOLUTION - 0.5f;
             y *= WORLD_TO_TERRAIN_SCALAR;
-            y += HALF_RESOLUTION;
+            y += HALF_RESOLUTION - 0.5f;
 
             int sX = std::clamp((int)x, 0, RESOLUTION);
             int sY = std::clamp((int)y, 0, RESOLUTION);
@@ -303,6 +303,7 @@ void TemplateGenerateTerrainHeights(
 }
 
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
+    DEBUGLOG("Generating terrain height...");
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {
@@ -345,6 +346,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
 
 
 void Terrain::GenerateTerrainDistances(EntityList* entities) {
+    DEBUGLOG("Generating terrain distances...");
     // Determine which entities are on the ground before regenerating
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
@@ -365,6 +367,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     landMapFile.close();
 
     // Determine the edges
+    DEBUGLOG("Getting edges...");
     std::vector<glm::ivec2> edges;
     edges.reserve(RESOLUTION * RESOLUTION);
     area_ = 0;
@@ -385,6 +388,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     }}
 
     // Generate the the distance field
+    DEBUGLOG("Creating distance field for " << edges.size() << " edges...");
     #pragma omp parallel for
     for (int y = 0; y < RESOLUTION; y++) {
     for (int x = 0; x < RESOLUTION; x++) {

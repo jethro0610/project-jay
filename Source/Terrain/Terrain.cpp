@@ -414,7 +414,7 @@ void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray
             int vertY = yArray[INDEX(vertX, y)];
 
             int diff = x - vertX;
-            outArray[INDEX(x, y)] = sqrt(diff * diff + vertY * vertY);
+            outArray[INDEX(x, y)] = sqrt(diff * diff + vertY * vertY) / TerrainConsts::WORLD_TO_TERRAIN_SCALAR;
         }
     }
 }

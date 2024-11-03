@@ -29,12 +29,10 @@ void main() {
     );
     noiseVal = (noiseVal + 1.0f) * 0.5f;
 
-
     // OPTIMIZATION: This check is run on every terrain chunk, but we
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
-    float fade = max(v_edgeDistance, 0.0f);
-    fade *= 0.075f;
+    float fade = v_edgeDistance / 32.0f;
     fade = clamp(fade, 0.0f, 1.0f);
     fade += fade * mix(0.0f, 0.5f, noiseVal);
     DITHERDISCARD(fade);

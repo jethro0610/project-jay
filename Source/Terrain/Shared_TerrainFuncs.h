@@ -34,7 +34,7 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
     float t = pos.x / 32.0f;
     t = clamp(t, 0.0f, 1.0f);
 
-    pos.y -= (t * t) * 128.0f;
+    pos.y -= (t * t) * 256.0f;
     return pos;
 }
 

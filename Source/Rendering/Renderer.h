@@ -81,7 +81,7 @@ private:
     #endif
 
     Mesh* quad_;
-    Mesh* terrain_;
+    Model* terrainLODs_;
     Mesh* terrainCursor_;
 
     Material barMaterial_;

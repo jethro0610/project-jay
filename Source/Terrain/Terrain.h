@@ -42,6 +42,8 @@ public:
     glm::vec3 GetDirectionToEdge(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
     int area_;
 
+    static constexpr int NUM_LODS = 4;
+
 private:
     ResourceManager& resourceManager_;
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];

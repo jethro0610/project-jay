@@ -72,7 +72,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     DBG_terrainMapTextureLow_ = resourceManager.GetTexture("t_terrainmap_low");
     #endif
 
-    terrain_ = &resourceManager.GetModel("st_terrainsheet")->meshes[0];
+    terrainLODs_ = resourceManager.GetModel("st_terrainsheet");
     terrainCursor_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
@@ -315,35 +315,44 @@ void Renderer::RenderMesh(
 }
 
 void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadius) {
+    const float MAX_DIST_TO_CAMERA = 6144.0f;
     int radius = maxRadius / TerrainConsts::MESH_SIZE;
     radius += 1;
 
-    std::vector<vec4> offsets;
-    offsets.reserve(radius * 2 * radius * 2);
+    std::vector<vec4> offsets[TerrainConsts::NUM_LODS];
+    for (int i = 0; i < TerrainConsts::NUM_LODS; i++) {
+        offsets[i].reserve(4096);
+    }
 
     vec3 cameraForward = camera_->transform_.GetForwardVector();
     cameraForward.y = 0.0f;
     cameraForward = normalize(cameraForward);
     vec3 cameraPlanar = camera_->transform_.position - cameraForward * TerrainConsts::MESH_SIZE * 2.0f;
     cameraPlanar.y = 0.0f;
-    float dist = 4096.0f + TerrainConsts::MESH_SIZE * 2.0f;
-    dist *= dist;
 
     for (int x = -radius; x < radius; x++)
     for (int z = -radius; z < radius; z++) { 
         vec3 offset = vec3(x * TerrainConsts::MESH_SIZE, 0.0f, z * TerrainConsts::MESH_SIZE);
         vec3 vectorToOffset = normalize(offset - cameraPlanar);
-
         float dot = glm::dot(cameraForward, vectorToOffset);
-        if (dot > 0.5f && distance2(cameraPlanar, offset) < dist)
-            offsets.push_back(vec4(offset, 0.0f));
+        if (dot < 0.5f)
+            continue;
+
+        float distanceToCamera = distance(cameraPlanar, offset);
+        if (distanceToCamera >= MAX_DIST_TO_CAMERA)
+            continue;
+
+        int lodLevel = TerrainConsts::NUM_LODS * std::pow(distanceToCamera / MAX_DIST_TO_CAMERA, 0.75f);
+        offsets[lodLevel].push_back(vec4(offset, 0.0f));
     };
 
-    if (offsets.size() > 0) {
-        bgfx::InstanceDataBuffer instanceBuffer;
-        bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets.size(), sizeof(vec4));
-        memcpy(instanceBuffer.data, offsets.data(), sizeof(vec4) * offsets.size());
-        RenderMesh(terrain_, material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
+    for (int i = 0; i < TerrainConsts::NUM_LODS; i++) {
+        if (offsets[i].size() > 0) {
+            bgfx::InstanceDataBuffer instanceBuffer;
+            bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets[i].size(), sizeof(vec4));
+            memcpy(instanceBuffer.data, offsets[i].data(), sizeof(vec4) * offsets[i].size());
+            RenderMesh(&terrainLODs_->meshes[i], material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
+        }
     }
 }
 

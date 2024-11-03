@@ -177,7 +177,7 @@ void ResourceManager::LoadGlobalQuad() {
 void ResourceManager::LoadGlobalTerrain() {
     Model& terrainModel = models_.Add("st_terrainsheet");
     ASSIGN_DEBUG_NAME(terrainModel, "st_terrainsheet");
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < TerrainConsts::NUM_LODS; i++) {
         Mesh& terrainMesh = terrainModel.meshes.push_back();
 
         float meshDensity = powf(0.5f, i + 1);

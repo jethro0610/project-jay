@@ -194,8 +194,9 @@ TerrainNoise* Terrain::AddNoise(vec3 position) {
     int noiseIdx = DBG_noises_.push_back({
         FastNoiseLite(),
         vec2(position), 
-        50.0f,
+        200.0f,
         0.0f,
+        20.0f,
         1.0f,
         false, 
         false

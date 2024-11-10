@@ -22,6 +22,18 @@ std::string ScaleMode::GetName() {
         case SS_Vertical:
             return "Vertical Scale";
 
+        case SS_X:
+            return "X Scale";
+
+        case SS_Y:
+            return "Y Scale";
+
+        case SS_Z:
+            return "Z Scale";
+
+        case SS_W:
+            return "W Scale";
+
         default:
             return "Scale";
     }
@@ -60,16 +72,22 @@ void ScaleMode::Update() {
         fromZero_ = !fromZero_;
     }
 
-    if (target_.IsEntity()) {
-        if (platform_.pressedKeys_['P'])
-            SetSubmode(SS_Planar);
-        else if (platform_.pressedKeys_['V'])
-            SetSubmode(SS_Vertical);
-        else if (platform_.pressedKeys_['U'])
-            SetSubmode(SS_Uniform);
-    }
+    if (platform_.pressedKeys_['P'])
+        SetSubmode(SS_Planar);
+    else if (platform_.pressedKeys_['V'])
+        SetSubmode(SS_Vertical);
+    else if (platform_.pressedKeys_['U'])
+        SetSubmode(SS_Uniform);
+    else if (platform_.pressedKeys_['X'])
+        SetSubmode(SS_X);
+    else if (platform_.pressedKeys_['Y'])
+        SetSubmode(SS_Y);
+    else if (platform_.pressedKeys_['Z'])
+        SetSubmode(SS_Z);
+    else if (platform_.pressedKeys_['W'])
+        SetSubmode(SS_W);
 
-    vec3 referenceScale = fromZero_ ? vec3(1.0f) : startScale_;
+    vec4 referenceScale = fromZero_ ? vec4(1.0f) : startScale_;
 
     switch (submode_) {
         case SS_Uniform: {
@@ -86,6 +104,22 @@ void ScaleMode::Update() {
 
         case SS_Vertical:
             referenceScale.y += delta;
+            break;
+
+        case SS_X:
+            referenceScale.x += delta;
+            break;
+
+        case SS_Y:
+            referenceScale.y += delta;
+            break;
+
+        case SS_Z:
+            referenceScale.z += delta;
+            break;
+
+        case SS_W:
+            referenceScale.w += delta;
             break;
     }
     target_.SetScale(referenceScale);

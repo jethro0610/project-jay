@@ -13,6 +13,7 @@ public:
     float radius_;
     float minHeight_;
     float maxHeight_;
+    float frequency_;
     bool destroy_;
     #ifdef _DEBUG
     bool DBG_selected_;

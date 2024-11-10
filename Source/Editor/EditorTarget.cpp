@@ -104,28 +104,32 @@ void EditorTarget::SetPosition(glm::vec3 pos) {
         noise_->position_ = glm::vec2(pos.x, pos.z);
 }
 
-glm::vec3 EditorTarget::GetScale() {
+glm::vec4 EditorTarget::GetScale() {
     if (entity_ != nullptr)
-        return entity_->transform_.scale;
+        return glm::vec4(entity_->transform_.scale, 0.0f);
     else if (bubble_ != nullptr)
-        return glm::vec3(bubble_->position.w);
+        return glm::vec4(bubble_->position.w);
     else if (curve_ != nullptr)
-        return glm::vec3(curve_->points[curvePoint_].w);
+        return glm::vec4(curve_->points[curvePoint_].w);
     else if (noise_!= nullptr)
-        return glm::vec3(noise_->radius_);
+        return glm::vec4(noise_->radius_, noise_->maxHeight_, noise_->frequency_, noise_->minHeight_);
     else
-        return glm::vec3(0.0f);
+        return glm::vec4(0.0f);
 }
 
-void EditorTarget::SetScale(glm::vec3 scale) {
+void EditorTarget::SetScale(glm::vec4 scale) {
     if (entity_ != nullptr)
         entity_->transform_.scale = scale;
     else if (bubble_ != nullptr)
         bubble_->position.w = scale.x;
     else if (curve_ != nullptr)
         curve_->points[curvePoint_].w = scale.x;
-    else if (noise_ != nullptr)
+    else if (noise_ != nullptr) {
         noise_->radius_ = scale.x;
+        noise_->minHeight_ = scale.w;
+        noise_->maxHeight_ = scale.y;
+        noise_->frequency_ = scale.z;
+    }
 }
 
 glm::quat EditorTarget::GetRotation() {

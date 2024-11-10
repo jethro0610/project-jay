@@ -5,6 +5,7 @@
 #include "Rendering/Material.h"
 #include "TerrainCurve.h"
 #include "TerrainBubble.h"
+#include "TerrainNoise.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
@@ -53,6 +54,7 @@ private:
 public:
     TerrainBubble* AddBubble(glm::vec3 position);
     TerrainCurve* AddCurve(glm::vec3 position);
+    TerrainNoise* AddNoise(glm::vec3 position);
     bool DestroyControls();
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
@@ -66,11 +68,13 @@ public:
     std::string DBG_landMapName_;
     vector_contig<TerrainBubble, TerrainBubble::MAX> DBG_bubbles_;
     vector_contig<TerrainCurve, TerrainCurve::MAX> DBG_curves_;
+    vector_contig<TerrainNoise, TerrainNoise::MAX> DBG_noises_;
 
     Model* DBG_nodeModel_;
     Material DBG_bubbleMaterial_;
     Material DBG_curveMaterial_;
     Material DBG_curveControlMaterial_;
+    Material DBG_noiseMaterial_;
     bool DBG_lowRes_;
 
 private:

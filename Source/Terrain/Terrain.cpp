@@ -46,6 +46,9 @@ resourceManager_(resourceManager)
     DBG_curveMaterial_.properties.color = vec4(0.0f, 0.0f, 1.0f, 0.5f);
     DBG_curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
     DBG_curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
+
+    DBG_noiseMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
+    DBG_noiseMaterial_.properties.color = vec4(1.0f, 0.0f, 0.0f, 0.5f);
     #endif
 }
 
@@ -187,6 +190,19 @@ TerrainCurve* Terrain::AddCurve(vec3 position) {
     return &DBG_curves_[curveIdx];
 }
 
+TerrainNoise* Terrain::AddNoise(vec3 position) {
+    int noiseIdx = DBG_noises_.push_back({
+        FastNoiseLite(),
+        vec2(position), 
+        50.0f,
+        0.0f,
+        1.0f,
+        false, 
+        false
+    });
+    return &DBG_noises_[noiseIdx];
+}
+
 bool Terrain::DestroyControls() {
     bool destroyed = false;
     int i = 0;
@@ -223,7 +239,8 @@ void TemplateGenerateTerrainHeights(
     uint32_t affectMap[RES][RES],
     uint8_t additiveMap[RES][RES],
     vector_contig<TerrainBubble, TerrainBubble::MAX>& bubbles,
-    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves
+    vector_contig<TerrainCurve, TerrainCurve::MAX>& curves,
+    vector_contig<TerrainNoise, TerrainNoise::MAX>& noises
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
@@ -242,7 +259,6 @@ void TemplateGenerateTerrainHeights(
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
         float additiveHeight = additiveMap[y][x];
-        terrainMap[y][x].y = additiveHeight;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -250,6 +266,13 @@ void TemplateGenerateTerrainHeights(
         wY /= WORLD_TO_TERRAIN;
         vec2 pos = vec2(wX, wY);
         pos += vec2((1.0f / WORLD_TO_TERRAIN) * 0.5f);
+
+        for (int i = 0; i < noises.size(); i++) {
+            if (noises[i].InRange(pos))
+                additiveHeight += noises[i].GetHeight(pos);
+        }
+
+        terrainMap[y][x].y = additiveHeight;
 
         vector_const<InverseInfluence, TerrainBubble::MAX + TerrainCurve::MAX> inverseInfluences;
         bool onPoint = false;
@@ -321,7 +344,8 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
             DBG_affectMapLow_, 
             DBG_additiveMapLow_,
             DBG_bubbles_, 
-            DBG_curves_
+            DBG_curves_,
+            DBG_noises_
         );
         DBG_lowRes_ = true;
         resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
@@ -332,7 +356,8 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
             DBG_affectMap_, 
             DBG_additiveMap_,
             DBG_bubbles_, 
-            DBG_curves_
+            DBG_curves_,
+            DBG_noises_
         );
         resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
         DBG_lowRes_ = false;

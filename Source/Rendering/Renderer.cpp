@@ -49,6 +49,7 @@ void Renderer::RenderEdit(
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_TerrainControlsOnly) {
         RenderTerrainBubbles(terrain);
         RenderTerrainCurves(terrain);
+        RenderTerrainNoises(terrain);
     }
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
         RenderEntitiesS(entities);

@@ -174,6 +174,9 @@ private:
     void RenderTerrainCurves(
         Terrain& terrain
     );
+    void RenderTerrainNoises(
+        Terrain& terrain
+    );
     void RenderEditor(Editor& editor);
     void RenderTerrainCursor(TerrainCursor& terrainCursor);
     #endif

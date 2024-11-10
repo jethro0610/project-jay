@@ -55,6 +55,11 @@ ConfirmBehavior SpawnMode::OnConfirm() {
         terrain_.GenerateTerrainHeights(false, &entities_);
         return CB_Default;
     }
+    else if (name == "e_noise") {
+        TerrainNoise* noise = terrain_.AddNoise(scanPosition);
+        terrain_.GenerateTerrainHeights(false, &entities_);
+        return CB_Default;
+    }
 
     TypeID typeId = Entity::GetTypeIDFromName(name);
 

@@ -133,6 +133,19 @@ void DefaultMode::CursorUpdate() {
                     target_.SetCurve(&terrain_.DBG_curves_[i], j);
                 }
             }}
+
+            for (int i = 0; i < terrain_.DBG_noises_.size(); i++) {
+                vec2 noisePos = terrain_.DBG_noises_[i].position_;
+                vec3 pos = vec3(noisePos.x, terrain_.GetHeight(noisePos), noisePos.y);
+                float dist = distance(camera_.transform_.position, pos);
+                if (
+                    Ray::RayHitSphere(camera_.transform_.position, mouseRay, pos, 4.0f) &&
+                    dist < maxDist
+                ) {
+                    maxDist = dist;
+                    target_.SetNoise(&terrain_.DBG_noises_[i]);
+                }
+            }
         }
 
         if (visibility_ == EV_All || visibility_ == EV_EntitiesOnly) {

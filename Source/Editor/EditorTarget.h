@@ -6,6 +6,7 @@
 class Entity;
 class TerrainBubble;
 class TerrainCurve;
+class TerrainNoise;
 class EntityList;
 
 class EditorTarget {
@@ -15,10 +16,11 @@ public:
     void SetEntity(Entity* target);
     void SetCurve(TerrainCurve* target, int point);
     void SetBubble(TerrainBubble* target);
+    void SetNoise(TerrainNoise* noise);
     void Destroy();
     bool IsEntity() { return entity_ != nullptr; }
-    bool IsTerrainControl() { return bubble_ != nullptr || curve_ != nullptr; }
-    bool HasTarget() { return entity_ != nullptr | bubble_ != nullptr | curve_ != nullptr; }; 
+    bool IsTerrainControl() { return bubble_ != nullptr || curve_ != nullptr || noise_ != nullptr; }
+    bool HasTarget() { return entity_ != nullptr || bubble_ != nullptr || curve_ != nullptr || noise_ != nullptr; }; 
 
     Entity* GetEntity() { return entity_; };
     
@@ -37,5 +39,6 @@ private:
     Entity* entity_; 
     TerrainBubble* bubble_;
     TerrainCurve* curve_;
+    TerrainNoise* noise_;
     int curvePoint_;
 };

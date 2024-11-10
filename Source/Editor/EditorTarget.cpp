@@ -2,6 +2,7 @@
 #include "Entity/Entity.h"
 #include "Terrain/TerrainBubble.h"
 #include "Terrain/TerrainCurve.h"
+#include "Terrain/TerrainNoise.h"
 
 EditorTarget::EditorTarget() {
     entity_ = nullptr;
@@ -17,11 +18,14 @@ void EditorTarget::Untarget() {
         bubble_->DBG_selected_ = false;
     if (curve_ != nullptr)
         curve_->DBG_selectedPoint_ = -1;
+    if (noise_ != nullptr)
+        noise_->DBG_selected_ = false;
 
     entity_ = nullptr;
     bubble_ = nullptr;
     curve_ = nullptr;
     curvePoint_ = -1;
+    noise_ = nullptr;
 
     name_ = "";
 }
@@ -33,6 +37,8 @@ void EditorTarget::Destroy() {
         bubble_->destroy_ = true;
     else if (curve_ != nullptr)
         curve_->destroy_ = true;
+    else if (noise_ != nullptr)
+        noise_->destroy_ = true;
 
     Untarget();
 }
@@ -65,6 +71,15 @@ void EditorTarget::SetCurve(TerrainCurve* target, int point) {
     name_ = "e_curve";
 }
 
+void EditorTarget::SetNoise(TerrainNoise* target) {
+    assert(target != nullptr);
+    Untarget();
+    noise_ = target;
+
+    noise_->DBG_selected_ = true;
+    name_ = "e_noise";
+}
+
 glm::vec3 EditorTarget::GetPosition() {
     if (entity_ != nullptr)
         return entity_->transform_.position;
@@ -72,6 +87,8 @@ glm::vec3 EditorTarget::GetPosition() {
         return bubble_->position;
     else if (curve_ != nullptr)
         return curve_->points[curvePoint_];
+    else if (noise_ != nullptr)
+        return glm::vec3(noise_->position_.x, 0.0f, noise_->position_.y);
     else
         return glm::vec3(0.0f);
 }
@@ -83,6 +100,8 @@ void EditorTarget::SetPosition(glm::vec3 pos) {
         bubble_->position = glm::vec4(pos, bubble_->position.w);
     else if (curve_ != nullptr)
         curve_->points[curvePoint_] = glm::vec4(pos, curve_->points[curvePoint_].w);
+    else if (noise_ != nullptr)
+        noise_->position_ = glm::vec2(pos.x, pos.z);
 }
 
 glm::vec3 EditorTarget::GetScale() {
@@ -92,6 +111,8 @@ glm::vec3 EditorTarget::GetScale() {
         return glm::vec3(bubble_->position.w);
     else if (curve_ != nullptr)
         return glm::vec3(curve_->points[curvePoint_].w);
+    else if (noise_!= nullptr)
+        return glm::vec3(noise_->radius_);
     else
         return glm::vec3(0.0f);
 }
@@ -103,6 +124,8 @@ void EditorTarget::SetScale(glm::vec3 scale) {
         bubble_->position.w = scale.x;
     else if (curve_ != nullptr)
         curve_->points[curvePoint_].w = scale.x;
+    else if (noise_ != nullptr)
+        noise_->radius_ = scale.x;
 }
 
 glm::quat EditorTarget::GetRotation() {

@@ -1,0 +1,29 @@
+{
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_player",
+            "transform": {
+                "position": {
+                    "x": 52.81492614746094,
+                    "y": 0.0,
+                    "z": 38.21736145019531
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        }
+    ],
+    "landmap": "lm_dawn2"
+}

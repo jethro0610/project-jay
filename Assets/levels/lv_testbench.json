@@ -1,0 +1,37 @@
+{
+    "bubbles": [
+        {
+            "w": 124.70000457763672,
+            "x": -20.16898536682129,
+            "y": 31.707904815673828,
+            "z": -5.927654266357422
+        }
+    ],
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_player",
+            "transform": {
+                "position": {
+                    "x": -20.16898536682129,
+                    "y": 31.699886322021484,
+                    "z": -5.927654266357422
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        }
+    ],
+    "landmap": "lm_default"
+}

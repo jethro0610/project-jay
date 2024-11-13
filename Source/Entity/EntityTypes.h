@@ -1,5 +1,4 @@
 #pragma once
-#include "Entity.h"
 #include "Bomb.h"
 #include "BumpRat.h"
 #include "Comet.h"
@@ -19,8 +18,10 @@
 #include "GroundSpawnProjectile.h"
 #include "TimedHitbox.h"
 #include "JumpPad.h"
-#include "Mole.h"
+#include "Entity.h"
 #include "RisePillar.h"
+#include "Mole.h"
+#include "MeteorBox.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -44,4 +45,5 @@
 	ENTITYEXP(HeadSpitter, headspitter, 18) \
 	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19) \
 	ENTITYEXP(Mole, mole, 20) \
-	ENTITYEXP(RisePillar, risepillar, 21)
+	ENTITYEXP(RisePillar, risepillar, 21) \
+	ENTITYEXP(MeteorBox, meteorbox, 22)

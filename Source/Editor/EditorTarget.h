@@ -28,7 +28,7 @@ public:
     void SetPosition(glm::vec3 pos);
 
     glm::vec4 GetScale();
-    void SetScale(glm::vec4 scale);
+    void SetScale(glm::vec4 scale, glm::vec4 delta);
 
     glm::quat GetRotation();
     void SetRotation(glm::quat rotation);

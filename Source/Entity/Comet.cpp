@@ -60,5 +60,5 @@ void Comet::RenderUpdate() {
 
 void Comet::OnDestroy() {
     cometTrail_->release_ = true;
-    seedManager_->CreateMultipleSeed(transform_.position, 50, 10.0f); 
+    seedManager_->CreateMultipleSeed(transform_.position, 200, 15.0f); 
 }

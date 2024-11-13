@@ -117,18 +117,18 @@ glm::vec4 EditorTarget::GetScale() {
         return glm::vec4(0.0f);
 }
 
-void EditorTarget::SetScale(glm::vec4 scale) {
+void EditorTarget::SetScale(glm::vec4 reference, glm::vec4 delta) {
     if (entity_ != nullptr)
-        entity_->transform_.scale = scale;
+        entity_->transform_.scale = reference + delta;
     else if (bubble_ != nullptr)
-        bubble_->position.w = scale.x;
+        bubble_->position.w = reference.x + delta.x;
     else if (curve_ != nullptr)
-        curve_->points[curvePoint_].w = scale.x;
+        curve_->points[curvePoint_].w = reference.x + delta.x;
     else if (noise_ != nullptr) {
-        noise_->radius_ = scale.x;
-        noise_->minHeight_ = scale.w;
-        noise_->maxHeight_ = scale.y;
-        noise_->frequency_ = scale.z;
+        noise_->radius_ = reference.x + delta.x;
+        noise_->minHeight_ = reference.w + delta.w;
+        noise_->maxHeight_ = reference.y + delta.y;
+        noise_->frequency_ = reference.z + delta.z * 0.01f;
     }
 }
 

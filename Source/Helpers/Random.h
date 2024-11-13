@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
+int RandomInt();
 float RandomFloatRange(float min, float max);
 glm::vec3 RandomVector(float maxDist);
 glm::vec3 RandomVector(const glm::vec3& min, const glm::vec3& max);

@@ -111,6 +111,18 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             }
             terrain_.DBG_curves_.push_back(curve);
         }
+
+        for (auto& noiseData: levelData["noises"]) {
+            TerrainNoise noise = TerrainNoise(
+                noiseData["seed"],
+                GetVec2(noiseData["position"]),
+                noiseData["radius"],
+                noiseData["min_height"],
+                noiseData["max_height"],
+                noiseData["frequency"]
+            );
+            terrain_.DBG_noises_.push_back(noise);
+        }
         terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
     }
@@ -233,6 +245,25 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         levelData["curves"].push_back(curveData);
     }
 
+    for (int i = 0; i < terrain_.DBG_noises_.size(); i++) {
+        TerrainNoise& noise = terrain_.DBG_noises_[i];
+        nlohmann::json noiseData;
+        nlohmann::json positionData;
+
+        noiseData["seed"] = noise.seed_;
+
+        positionData["x"] = noise.position_.x;
+        positionData["y"] = noise.position_.y;
+        noiseData["position"] = positionData; 
+
+        noiseData["radius"] = noise.radius_;
+        noiseData["min_height"] = noise.minHeight_;
+        noiseData["max_height"] = noise.maxHeight_;
+        noiseData["frequency"] = noise.frequency_;
+
+        levelData["noises"].push_back(noiseData);
+    }
+
     std::vector<glm::ivec2> weedLocations;
     spreadManager_.GetWeedLocations(weedLocations);
     for (auto& weed : weedLocations) {
@@ -264,6 +295,7 @@ void Level::Clear(bool clearTerrain) {
     if (clearTerrain) {
         terrain_.DBG_bubbles_.clear();
         terrain_.DBG_curves_.clear();
+        terrain_.DBG_noises_.clear();
         terrain_.GenerateTerrainHeights();
     }
     #endif 

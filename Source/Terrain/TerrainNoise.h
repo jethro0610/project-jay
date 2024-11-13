@@ -8,7 +8,12 @@
 class TerrainNoise {
 public:
     static constexpr int MAX = 16;
+
+    TerrainNoise();
+    TerrainNoise(int seed, glm::vec2 position, float radius, float minHeight, float maxHeight, float frequency);
+
     FastNoiseLite noise_;
+    int seed_;
     glm::vec2 position_;
     float radius_;
     float minHeight_;

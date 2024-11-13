@@ -39,6 +39,7 @@ resourceManager_(resourceManager)
     DBG_lowRes_ = true;
     DBG_bubbles_.clear();
     DBG_curves_.clear();
+    DBG_noises_.clear();
     DBG_nodeModel_ = resourceManager.GetModel("st_default");
     DBG_bubbleMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     DBG_bubbleMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
@@ -191,16 +192,14 @@ TerrainCurve* Terrain::AddCurve(vec3 position) {
 }
 
 TerrainNoise* Terrain::AddNoise(vec3 position) {
-    int noiseIdx = DBG_noises_.push_back({
-        FastNoiseLite(),
-        vec2(position), 
+    int noiseIdx = DBG_noises_.push_back(TerrainNoise(
+        RandomInt(),
+        vec2(position.x, position.z), 
         200.0f,
         0.0f,
         20.0f,
-        1.0f,
-        false, 
-        false
-    });
+        0.1f
+    ));
     return &DBG_noises_[noiseIdx];
 }
 
@@ -222,6 +221,16 @@ bool Terrain::DestroyControls() {
             destroyed = true;
             DBG_curves_[i].destroy_ = false;
             DBG_curves_.remove(i);
+        }
+        i++;
+    }
+
+    i = 0;
+    while(i < DBG_noises_.size()) {
+        while (i < DBG_noises_.size() && DBG_noises_[i].destroy_) {
+            destroyed = true;
+            DBG_noises_[i].destroy_ = false;
+            DBG_noises_.remove(i);
         }
         i++;
     }

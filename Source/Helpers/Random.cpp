@@ -1,6 +1,10 @@
 #include "Random.h"
 using namespace glm;
 
+int RandomInt() {
+    return rand();
+}
+
 float RandomFloatRange(float min, float max) {
     if (min == max)
         return min;

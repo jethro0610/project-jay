@@ -1,7 +1,6 @@
 #include "CometSpawner.h"
 #include "Comet.h"
 #include "Resource/ResourceManager.h"
-#include "Particle/ParticleManager.h"
 #include "Entity/EntityList.h"
 #include "Helpers/Random.h"
 #include <glm/gtx/string_cast.hpp>
@@ -13,6 +12,20 @@ EntityDependendies CometSpawner::GetStaticDependencies() {
     };
 }
 
+EntityProperties CometSpawner::GetStaticProperties() {
+    return {
+        {
+            {"p_radius", &spawnRadius_}
+        },
+        {
+            {"p_min_interval", &minInterval_},
+            {"p_max_interval", &maxInterval_},
+        },
+        {}
+    };
+}
+
+
 void CometSpawner::Init(Entity::InitArgs args) {
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_default");
@@ -23,21 +36,21 @@ void CometSpawner::Init(Entity::InitArgs args) {
     materials_[0].numTextures = 0;
 
     timer_ = 0;
+    minInterval_ = 20;
+    maxInterval_ = 60;
     interval_ = 0;
 }
 
 void CometSpawner::Update() {
-    static float spawnRadius = 120.0f;
-
     timer_++;
     if (timer_ >= interval_) {
         timer_ = 0;
-        interval_ = RandomFloatRange(20, 60);
+        interval_ = RandomFloatRange(minInterval_, maxInterval_);
 
         Transform cometTransform;
 
         cometTransform.position = transform_.position;
-        vec2 offset = RandomVector2D(spawnRadius);
+        vec2 offset = RandomVector2D(spawnRadius_);
         cometTransform.position.x += offset.x;
         cometTransform.position.z += offset.y;
 

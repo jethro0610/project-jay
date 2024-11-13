@@ -50,7 +50,7 @@ void ScaleMode::OnStart() {
 }
 
 void ScaleMode::OnCancel() {
-    target_.SetScale(startScale_);
+    target_.SetScale(startScale_, vec4(0.0f));
 }
 
 void ScaleMode::SetSubmode(ScaleSubmode submode) {
@@ -88,39 +88,40 @@ void ScaleMode::Update() {
         SetSubmode(SS_W);
 
     vec4 referenceScale = fromZero_ ? vec4(1.0f) : startScale_;
+    vec4 deltaScale = vec4(0.0f);
 
     switch (submode_) {
         case SS_Uniform: {
-            referenceScale.x += delta;
-            referenceScale.y += delta;
-            referenceScale.z += delta;
+            deltaScale.x += delta;
+            deltaScale.y += delta;
+            deltaScale.z += delta;
             break;
         }
 
         case SS_Planar:
-            referenceScale.x += delta;
-            referenceScale.z += delta;
+            deltaScale.x += delta;
+            deltaScale.z += delta;
             break;
 
         case SS_Vertical:
-            referenceScale.y += delta;
+            deltaScale.y += delta;
             break;
 
         case SS_X:
-            referenceScale.x += delta;
+            deltaScale.x += delta;
             break;
 
         case SS_Y:
-            referenceScale.y += delta;
+            deltaScale.y += delta;
             break;
 
         case SS_Z:
-            referenceScale.z += delta;
+            deltaScale.z += delta;
             break;
 
         case SS_W:
-            referenceScale.w += delta;
+            deltaScale.w += delta;
             break;
     }
-    target_.SetScale(referenceScale);
+    target_.SetScale(referenceScale, deltaScale);
 }

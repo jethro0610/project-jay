@@ -147,16 +147,28 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         EntityProperties properties = entity->GetProperties();
 
         if (entityData.contains("float_properties") && !entityData["float_properties"].is_null()) {
-            for (auto& pair : properties.floats)
+            for (auto& pair : properties.floats) {
+                if (entityData["float_properties"][pair.first].is_null())
+                    continue;
+
                 *pair.second = entityData["float_properties"][pair.first];
+            }
         }
         if (entityData.contains("int_properties") && !entityData["int_properties"].is_null()) {
-            for (auto& pair : properties.ints)
+            for (auto& pair : properties.ints) {
+                if (entityData["float_properties"][pair.first].is_null())
+                    continue;
+
                 *pair.second = entityData["int_properties"][pair.first];
+            }
         }
         if (entityData.contains("bool_properties") && !entityData["bool_properties"].is_null()) {
-            for (auto& pair : properties.bools)
+            for (auto& pair : properties.bools) {
+                if (entityData["float_properties"][pair.first].is_null())
+                    continue;
+
                 *pair.second = entityData["bool_properties"][pair.first];
+            }
         }
     }
 

@@ -11,8 +11,11 @@ public:
     EntityProperties GetStaticProperties();
 
     int timer_;
+    int cooldown_;
     int seedAmount_;
+    bool hitOnly_;
 
     void Update(); 
     void OnHurt(HurtArgs args);
+    void OnOverlap(Entity* overlappedEntity);
 };

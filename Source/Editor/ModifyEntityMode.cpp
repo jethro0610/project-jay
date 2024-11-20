@@ -91,7 +91,7 @@ bool ModifyEntityMode::SetSelectedProperty(const std::string& property) {
     }
 
     bool* propBool = properties_.GetBool(property);
-    if (propBool_ != nullptr) {
+    if (propBool != nullptr) {
         property_ = property;
         propBool_ = propBool;
         return true;

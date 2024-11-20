@@ -55,7 +55,7 @@ void EntityProperties::AssignProperties(EntityPropertiesAssigner& assigner) {
         *GetInt(assigner.intStrings[i]) = assigner.ints[i]; 
 
     for (int i = 0; i < assigner.numBools; i++)
-        *GetInt(assigner.boolStrings[i]) = assigner.bools[i]; 
+        *GetBool(assigner.boolStrings[i]) = assigner.bools[i]; 
 }
 
 void EntityPropertiesAssigner::SetInt(const std::string& property, int value) {

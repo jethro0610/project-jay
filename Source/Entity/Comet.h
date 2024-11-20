@@ -10,6 +10,7 @@ public:
     static EntityDependendies GetStaticDependencies(); 
 
     ParticleEmitter* cometTrail_;
+    int seeds_;
 
     void Update(); 
     void RenderUpdate();

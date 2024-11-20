@@ -20,6 +20,7 @@ EntityProperties CometSpawner::GetStaticProperties() {
         {
             {"p_min_interval", &minInterval_},
             {"p_max_interval", &maxInterval_},
+            {"p_seeds", &seeds_},
         },
         {}
     };
@@ -38,6 +39,7 @@ void CometSpawner::Init(Entity::InitArgs args) {
     timer_ = 0;
     minInterval_ = 20;
     maxInterval_ = 60;
+    seeds_ = 100;
     interval_ = 0;
 }
 
@@ -54,6 +56,7 @@ void CometSpawner::Update() {
         cometTransform.position.x += offset.x;
         cometTransform.position.z += offset.y;
 
-        entities_->CreateEntity(Comet::TYPEID, cometTransform);
+        Comet& comet = (Comet&)entities_->CreateEntity(Comet::TYPEID, cometTransform);
+        comet.seeds_ = seeds_;
     }
 }

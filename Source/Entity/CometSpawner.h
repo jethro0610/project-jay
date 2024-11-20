@@ -15,6 +15,7 @@ public:
     int interval_;
     int minInterval_;
     int maxInterval_;
+    int seeds_;
 
     void Update(); 
 };

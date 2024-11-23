@@ -156,7 +156,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         }
         if (entityData.contains("int_properties") && !entityData["int_properties"].is_null()) {
             for (auto& pair : properties.ints) {
-                if (entityData["float_properties"][pair.first].is_null())
+                if (entityData["int_properties"][pair.first].is_null())
                     continue;
 
                 *pair.second = entityData["int_properties"][pair.first];
@@ -164,9 +164,11 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         }
         if (entityData.contains("bool_properties") && !entityData["bool_properties"].is_null()) {
             for (auto& pair : properties.bools) {
-                if (entityData["float_properties"][pair.first].is_null())
+                if (entityData["bool_properties"][pair.first].is_null())
                     continue;
 
+                DEBUGLOG(entityData["type_id"]);
+                DEBUGLOG(entityData["bool_properties"][pair.first]);
                 *pair.second = entityData["bool_properties"][pair.first];
             }
         }

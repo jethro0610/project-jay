@@ -92,7 +92,7 @@
         },
         {
             "bool_properties": {
-                "p_hitonly": false
+                "p_hitonly": true
             },
             "float_properties": null,
             "int_properties": {
@@ -121,7 +121,7 @@
         },
         {
             "bool_properties": {
-                "p_hitonly": false
+                "p_hitonly": true
             },
             "float_properties": null,
             "int_properties": {
@@ -326,6 +326,30 @@
                 }
             },
             "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_speedboost",
+            "transform": {
+                "position": {
+                    "x": -367.5116271972656,
+                    "y": -26.488006591796875,
+                    "z": -27.353103637695313
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.799999713897705,
+                    "y": 3.799999713897705,
+                    "z": 3.799999713897705
+                }
+            },
+            "type_id": 23
         }
     ],
     "landmap": "lm_dawn2",

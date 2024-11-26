@@ -71,6 +71,7 @@ EntityDependendies Player::GetStaticDependencies() {
 
 void Player::Init(Entity::InitArgs args) {
     moveMode_ = MM_Default;
+    bonus_ = 0.0f;
     speed_ = MIN_SPEED;
     tilt_ = 0.0f;
     meter_ = 0.0f;
@@ -419,7 +420,9 @@ void Player::Update() {
     float acceleration = ((speed_ / speedDecay) - speed_);
 
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
-    speed_ = min(MAX_SPEED, length(planarVelocity));
+    if (length(planarVelocity) > 0.0f)
+        velocity_ -= normalize(planarVelocity) * bonus_;
+    speed_ = length(planarVelocity) - bonus_;
 
     if (moveMode_ == MM_Spin)
         spinTime_ += 1;
@@ -505,7 +508,9 @@ void Player::Update() {
             vec3 direction = rotation * Transform::worldForward;
             float boost = 
                 (SLOPE_ACCELERATION + (1 - groundNormal_.y) * SLOPE_DOWN_SCALING) *
-                dot(direction, vec3(groundNormal_.x, 0.0f, groundNormal_.z)) * (speed_ / MAX_SPEED);
+                dot(direction, vec3(groundNormal_.x, 0.0f, groundNormal_.z)) * 
+                max(speed_ / MAX_SPEED, 0.01f);
+
             float multiplier = 1.0f;
             if (boost >= 0.0f) {
                 multiplier = (MAX_SPEED - min(speed_, MAX_SPEED)) / MAX_SPEED;
@@ -515,7 +520,7 @@ void Player::Update() {
                 multiplier = SLOPE_UP_SCALING;
 
             speed_ += boost * multiplier;
-            speed_ = clamp(speed_, 0.0f, MAX_SPEED);
+            speed_ = max(speed_, 0.0f);
 
             velocity_.x = direction.x * speed_;
             velocity_.z = direction.z * speed_;
@@ -564,6 +569,11 @@ void Player::Update() {
         case MM_Target:
             break;
     }
+    planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+    bonus_ = bonus_ * 0.985f;
+    if (length(planarVelocity) > 0.0f)
+        velocity_ += normalize(planarVelocity) * bonus_;
+    
 
     if (onGround_ && meter_ > 0 && itemTimer_ <= 0) {
         spreadManager_->AddSpread(transform_.position, 3);
@@ -571,7 +581,6 @@ void Player::Update() {
         meter_ = max(0.0f, meter_);
     }
 
-    planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.975f;
         hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
@@ -628,6 +637,8 @@ void Player::Update() {
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(jumpCharge_));
     SCREENLINE(3, std::to_string(spinTime_));
+    SCREENLINE(4, std::to_string(bonus_));
+    SCREENLINE(5, std::to_string(length(velocity_)));
 }
 
 void Player::RenderUpdate() {
@@ -725,4 +736,10 @@ void Player::EndHoming() {
     vec3 planarDir = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
     planarDir *= planarVelocityBeforeHoming_;
     velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
+}
+
+void Player::Boost(float boost, float retention) {
+    vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+    velocity_ += normalize(planarVelocity) * boost;
+    bonus_ = boost * (1.0f - retention);
 }

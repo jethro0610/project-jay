@@ -1,8 +1,6 @@
 #pragma once
 #include "Bomb.h"
 #include "BumpRat.h"
-#include "Comet.h"
-#include "CometSpawner.h"
 #include "HeadSpitter.h"
 #include "Mower.h"
 #include "Player.h"
@@ -14,7 +12,6 @@
 #include "SinglePod.h"
 #include "Sleeper.h"
 #include "TeleportPod.h"
-#include "TimerPod.h"
 #include "GroundSpawnProjectile.h"
 #include "TimedHitbox.h"
 #include "JumpPad.h"
@@ -22,6 +19,10 @@
 #include "RisePillar.h"
 #include "Mole.h"
 #include "MeteorBox.h"
+#include "TimerPod.h"
+#include "CometSpawner.h"
+#include "Comet.h"
+#include "SpeedBoost.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -46,4 +47,5 @@
 	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19) \
 	ENTITYEXP(Mole, mole, 20) \
 	ENTITYEXP(RisePillar, risepillar, 21) \
-	ENTITYEXP(MeteorBox, meteorbox, 22)
+	ENTITYEXP(MeteorBox, meteorbox, 22) \
+	ENTITYEXP(SpeedBoost, speedboost, 23)

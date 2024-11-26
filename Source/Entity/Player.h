@@ -24,6 +24,7 @@ public:
 
     PlayerMoveMode moveMode_;
     float speed_;
+    float bonus_;
     float tilt_;
 
     float meter_;
@@ -61,4 +62,5 @@ public:
 
     void UseItem();
     void EndHoming();
+    void Boost(float boost, float retention = 0.0f);
 };

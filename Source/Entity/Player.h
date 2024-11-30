@@ -28,6 +28,7 @@ public:
     float tilt_;
 
     float meter_;
+    float spreadRadius_;
     int spinTime_;
 
     bool charging_;

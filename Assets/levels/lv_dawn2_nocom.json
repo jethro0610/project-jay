@@ -247,40 +247,11 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_jump_strength": 100.0
-            },
-            "int_properties": {
-                "p_cooldown": 0,
-                "p_num_seeds": 0
-            },
-            "name": "e_jumppad",
-            "transform": {
-                "position": {
-                    "x": -282.0597839355469,
-                    "y": -34.9703483581543,
-                    "z": -177.35267639160156
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 11.099996566772461,
-                    "y": 31.400001525878906,
-                    "z": 11.099996566772461
-                }
-            },
-            "type_id": 16
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
                 "p_radius": 500.0
             },
             "int_properties": {
-                "p_max_interval": 60,
-                "p_min_interval": 20,
+                "p_max_interval": 300,
+                "p_min_interval": 180,
                 "p_seeds": 100
             },
             "name": "e_cometspawner",

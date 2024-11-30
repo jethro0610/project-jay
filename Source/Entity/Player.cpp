@@ -576,10 +576,14 @@ void Player::Update() {
     
 
     if (onGround_ && meter_ > 0 && itemTimer_ <= 0) {
-        spreadManager_->AddSpread(transform_.position, 3);
-        meter_ -= 0.0015f;
+        spreadRadius_ = lerp(spreadRadius_, 4.0f + meter_ * 12.0f, 0.05f);
+        meter_ -= 0.0005f;
         meter_ = max(0.0f, meter_);
     }
+    else {
+        spreadRadius_ = lerp(spreadRadius_, 0.0f, 0.05f);
+    }
+    spreadManager_->AddSpread(transform_.position, int(spreadRadius_));
 
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.975f;
@@ -639,6 +643,8 @@ void Player::Update() {
     SCREENLINE(3, std::to_string(spinTime_));
     SCREENLINE(4, std::to_string(bonus_));
     SCREENLINE(5, std::to_string(length(velocity_)));
+    SCREENLINE(6, std::to_string(meter_));
+    SCREENLINE(7, std::to_string(spreadRadius_));
 }
 
 void Player::RenderUpdate() {
@@ -663,7 +669,7 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
-    meter_ += 0.001f;
+    meter_ += 0.0005f;
     meter_ = min(1.0f, meter_);
 }
 

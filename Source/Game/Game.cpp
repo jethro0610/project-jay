@@ -70,7 +70,6 @@ struct Overlap {
 };
 
 void Game::Update() {
-    SCREENLINE(8, std::to_string(spreadManager_.GetCoverage()));
     // if (spreadManager_.GetCoverage() > 0.33f) {
     //     editor_.StartEditing();
     //     return;

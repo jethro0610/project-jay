@@ -22,7 +22,7 @@ Game::Game():
         terrain_
     ),
     renderer_(resourceManager_),
-    camera_(18.0f),
+    camera_(32.0f),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     entities_(

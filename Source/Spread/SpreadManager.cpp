@@ -4,6 +4,7 @@
 #include "Terrain/Terrain.h"
 #include "Types/Transform.h"
 #include "Helpers/Random.h"
+#include "Entity/Entity.h"
 #include <math.h>
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
@@ -31,6 +32,13 @@ SpreadKey SpreadManager::GetKey(const vec2& position) const {
 
 SpreadKey SpreadManager::GetKey(const vec3& position) const {
     return GetKey(vec2(position.x, position.z));
+}
+
+vec2 SpreadManager::KeyToPosition(const SpreadKey& key) const {
+    vec2 position = vec2(key - ivec2(KEY_LENGTH / 2)) * SPREAD_DIST;
+    vec2 offset = RandomVector2D(SPREAD_DIST / 2.0f);
+    position += offset;
+    return position + offset;
 }
 
 bool SpreadManager::SpreadIsActive(const vec2& position) const {
@@ -167,10 +175,8 @@ bool SpreadManager::RemoveSpread(
     // ...then the index to the key
     keys_[swapKey.x][swapKey.y].index = indexToRemove;
 
-    vec2 position = vec2(key - ivec2(KEY_LENGTH / 2)) * SPREAD_DIST;
-    vec2 offset = RandomVector2D(SPREAD_DIST / 2.0f);
-    position += offset;
-    seedManager_.CreateSeed(vec3(position.x, 0.0f, position.y), nullptr, vec3(0.0f, 1.0f, 0.0f));
+    vec2 position = KeyToPosition(key);
+    seedManager_.CreateSeed(vec3(position.x, terrain_.GetHeight(position, TA_Low), position.y), remover, vec3(0.0f, 8.0f, 0.0f));
 
     return true;
 }
@@ -207,6 +213,28 @@ int SpreadManager::RemoveSpread(
 ) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
     return RemoveSpread(position, intRadius, remover);
+}
+
+int SpreadManager::RemoveSpread(
+    Cone& cone, 
+    Entity* remover
+) {
+    int radius = (cone.distance) / SpreadManager::SPREAD_DIST;
+    int count = 0;
+    ivec2 origin = GetKey(cone.position);
+    vec2 normConeDir = normalize(vec2(cone.direction.x, cone.direction.z));
+    for (int x = -radius; x <= radius; x++) {
+    for (int z = -radius; z <= radius; z++) {
+        if (sqrt(x*x + z*z) > radius)
+            continue;
+        ivec2 offset = ivec2(x, z);
+        vec2 normOffset = normalize(vec2(offset));
+        if (dot(normConeDir, normOffset) < cone.angle)
+            continue;
+        if (RemoveSpread(origin + offset, remover))
+            count++;
+    }}
+    return count;
 }
 
 void SpreadManager::ClearTramples() {

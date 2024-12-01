@@ -61,6 +61,8 @@ static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLD
 static constexpr float MIN_HOMING_VERTICAL_DELTA= 30;
 static constexpr float MAX_HOMING_DISTANCE = 150;
 
+static constexpr float FAST_THRESHOLD = 60.0f;
+
 EntityDependendies Player::GetStaticDependencies() {
     return {
         "sk_char",
@@ -227,7 +229,7 @@ void Player::Update() {
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
     vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
 
-    speedEmtter_->active_ = speed_ > 35.0f && onGround_;
+    speedEmtter_->active_ = speed_ > FAST_THRESHOLD && onGround_;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
@@ -626,6 +628,20 @@ void Player::Update() {
         traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.0f);
     else
         traceDistance_ = 10.0f;
+
+    if (speed_ > FAST_THRESHOLD) {
+        Cone removeCone;
+        removeCone.direction = normalize(-velocity_);
+        removeCone.position = transform_.position;
+
+        removeCone.distance = (speed_ / MAX_SPEED) * 32.0f;
+
+        float removeAngleRatio = (speed_ - FAST_THRESHOLD) / MAX_SPEED + 50.0f;
+        removeAngleRatio = clamp(removeAngleRatio, 0.0f, 1.0f);
+        removeCone.angle = lerp(1.0f, 0.85f, removeAngleRatio);
+
+        spreadManager_->RemoveSpread(removeCone, this);
+    }
 
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(jumpCharge_));

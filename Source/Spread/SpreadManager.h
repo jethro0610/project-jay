@@ -1,6 +1,7 @@
 #pragma once
 #include "SpreadKey.h"
 #include "SpreadType.h"
+#include "Types/Cone.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
@@ -86,6 +87,10 @@ public:
         float radius, 
         Entity* remover = nullptr
     ); 
+    int RemoveSpread(
+        Cone& cone, 
+        Entity* remover = nullptr
+    ); 
 
     void ClearTramples();
     bool Trample(const SpreadKey& key, Entity* trampler = nullptr);
@@ -96,6 +101,7 @@ public:
 
     SpreadKey GetKey(const glm::vec2& position) const;
     SpreadKey GetKey(const glm::vec3& position) const;
+    glm::vec2 KeyToPosition(const SpreadKey& key) const;
 
     void Reset();
     int GetCount(SpreadType type) const { return spreadData_[type].size(); }

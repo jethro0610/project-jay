@@ -6,6 +6,7 @@
 #include "Material.h"
 #include "Entity/EntityList.h"
 #include "Text/Text.h"
+#include "Spread/SpreadType.h"
 #include <array>
 #include <glm/mat4x4.hpp>
 
@@ -85,7 +86,6 @@ private:
     Mesh* terrainCursor_;
 
     Material barMaterial_;
-    Material coverageBarMaterial_;
     Material blitMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
@@ -191,12 +191,7 @@ private:
     void RenderSpread(
         SpreadManager& spreadManager, 
         Model* model, 
-        std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
-    );
-    void RenderWeed(
-        SpreadManager& spreadManager,
-        Model* model,
-        std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
+        std::array<Material, Model::MAX_MESHES_PER_MODEL> materials[SpreadType_Num]
     );
     void RenderSeed(SeedManager& seedManagerm, Material* material);
     void RenderParticles(ParticleManager& particleManager);

@@ -2,6 +2,7 @@
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
 #include "Player.h"
+#include "Time/Time.h"
 using namespace glm;
 
 EntityDependendies TimerPod::GetStaticDependencies() {
@@ -64,7 +65,7 @@ void TimerPod::Update() {
 
 void TimerPod::OnHurt(HurtArgs args) {
     SetFlag(EF_RecieveHits, false);
-    seedManager_->CreateMultipleSeed(transform_.position, seedAmount_, 16.0f, args.attacker);
+    seedManager_->CreateMultipleSeed(transform_.position, seedAmount_, 32.0f, args.attacker, args.attacker->velocity_ * 0.25f);
     timer_ = 0;
 }
 

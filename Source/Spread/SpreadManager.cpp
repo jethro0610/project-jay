@@ -20,7 +20,7 @@ SpreadManager::SpreadManager(
 { 
     for (int i = 0; i < KEY_LENGTH; i++) {
     for (int j = 0; j < KEY_LENGTH; j++) {
-        keys_[i][j] = {-1, false};
+        keys_[i][j] = {-1, SpreadType_Flower};
     }}
 }
 
@@ -42,7 +42,7 @@ bool SpreadManager::SpreadIsActive(const vec3& position) const {
     return SpreadIsActive(vec2(position.x, position.z));
 }
 
-bool SpreadManager::AddSpread(const ivec2& key, bool weed) {
+bool SpreadManager::AddSpread(const ivec2& key, SpreadType type) {
     if (keys_[key.x][key.y].index != -1)
         return false;
     if (tramples_[key.x][key.y] == true)
@@ -79,15 +79,15 @@ bool SpreadManager::AddSpread(const ivec2& key, bool weed) {
     renderData.color.b = RandomFloatRange(0.65f, 0.75f);
     renderData.time = GlobalTime::GetTime();
 
-    int addIndex = weed ? weedData_.push_back(renderData) : spreadData_.push_back(renderData);
+    int addIndex = spreadData_[type].push_back(renderData);
     keys_[key.x][key.y].index = addIndex;
-    keys_[key.x][key.y].weed = weed;
+    keys_[key.x][key.y].type = type;
 
     return true;
 }
 
-bool SpreadManager::AddSpread(const glm::vec3& position, bool weed) {
-    return AddSpread(GetKey(position), weed);
+bool SpreadManager::AddSpread(const glm::vec3& position, SpreadType type) {
+    return AddSpread(GetKey(position), type);
 }
 
 AddSpreadInfo SpreadManager::AddSpread(
@@ -95,7 +95,7 @@ AddSpreadInfo SpreadManager::AddSpread(
     int radius, 
     float density, 
     AddSpreadDistribution distribution,
-    bool weed
+    SpreadType type
 ) {
     radius--;
     ivec2 origin = GetKey(position);
@@ -116,7 +116,7 @@ AddSpreadInfo SpreadManager::AddSpread(
             continue;
         
         ivec2 key = origin + ivec2(x, z);
-        if (AddSpread(key, weed))
+        if (AddSpread(key, type))
             count++;
     } }
 
@@ -128,10 +128,10 @@ AddSpreadInfo SpreadManager::AddSpread(
     float radius, 
     float density, 
     AddSpreadDistribution distribution,
-    bool weed
+    SpreadType type
 ) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
-    return AddSpread(position, intRadius, density, distribution, weed);
+    return AddSpread(position, intRadius, density, distribution, type);
 }
 
 
@@ -145,24 +145,23 @@ bool SpreadManager::RemoveSpread(
     if (keys_[key.x][key.y].index == -1)
         return false;
 
-    vector_contig<RenderData, MAX_SPREAD>& data = keys_[key.x][key.y].weed ? weedData_ : spreadData_;
-
     // Get the index of the spread to delete 
     int indexToRemove = keys_[key.x][key.y].index;
+    SpreadType type = keys_[key.x][key.y].type;
 
     // Remove the element at the index...
-    data.remove(indexToRemove);
+    spreadData_[type].remove(indexToRemove);
     keys_[key.x][key.y].index = -1;
 
     // Skip swapping if the last element was removed
-    if (indexToRemove >= data.size())
+    if (indexToRemove >= spreadData_[type].size())
         return true;
 
     if (keys_[key.x][key.y].index != -1)
         return false;
     // ...and get the key of the spread that
     // replaced that index...
-    vec3 swappedPosition = data[indexToRemove].modelMatrix[3];
+    vec3 swappedPosition = spreadData_[type][indexToRemove].modelMatrix[3];
     SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 
     // ...then the index to the key
@@ -243,26 +242,9 @@ int SpreadManager::Trample(const vec3& position, float radius, Entity* trampler)
 void SpreadManager::Reset() {
     for (int x = 0; x < KEY_LENGTH; x++) {
     for (int y = 0; y < KEY_LENGTH; y++) {
-        keys_[x][y] = {-1, false};
+        keys_[x][y] = {-1, SpreadType_Flower};
     }}
-    spreadData_.clear();
-    weedData_.clear();
-}
-
-float SpreadManager::GetCoverage() {
-    float terrainUnitArea = (1.0f / TerrainConsts::WORLD_TO_TERRAIN_SCALAR); 
-    terrainUnitArea *= terrainUnitArea;
-    float spreadUnitArea = SpreadManager::SPREAD_DIST * SpreadManager::SPREAD_DIST;
-
-    float terrainArea = terrain_.area_ * terrainUnitArea;
-    int maxSpread = terrainArea / spreadUnitArea; 
-    return (GetCount() - GetWeedCount()) / (float)maxSpread;
-}
-
-void SpreadManager::GetWeedLocations(std::vector<ivec2>& locations) {
-    for (int x = 0; x < KEY_LENGTH; x++) {
-    for (int y = 0; y < KEY_LENGTH; y++) {
-        if (keys_[x][y].index != -1 && keys_[x][y].weed)
-            locations.push_back(ivec2(x,y)); 
-    }}
+    for (int i = 0; i < SpreadType_Num; i++) {
+        spreadData_[i].clear();
+    }
 }

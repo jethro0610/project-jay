@@ -6,6 +6,7 @@
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
 #include "Spread/SpreadManager.h"
+#include "Seed/SeedManager.h"
 #include "Logging/Logger.h"
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
@@ -36,7 +37,7 @@ static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
 static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
 static constexpr float JUMP_CHARGE_ROTATION_SPEED = 0.015f;
 static constexpr float AIR_ROTATION_SPEED = 0.015f;
-static constexpr float SLOPE_ACCELERATION = 4.0f;
+static constexpr float SLOPE_ACCELERATION = 2.0f;
 static constexpr float SLOPE_DOWN_SCALING = 4.0f;
 static constexpr float SLOPE_UP_SCALING = 1.5f;
 static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.15f;
@@ -332,7 +333,6 @@ void Player::Update() {
                 break;
 
             case Item::Radius:
-                spreadManager_->AddSpread(transform_.position, 8);
                 break;
 
             case Item::NumItems:
@@ -574,17 +574,6 @@ void Player::Update() {
     if (length(planarVelocity) > 0.0f)
         velocity_ += normalize(planarVelocity) * bonus_;
     
-
-    if (onGround_ && meter_ > 0 && itemTimer_ <= 0) {
-        spreadRadius_ = lerp(spreadRadius_, 4.0f + meter_ * 12.0f, 0.05f);
-        meter_ -= 0.0005f;
-        meter_ = max(0.0f, meter_);
-    }
-    else {
-        spreadRadius_ = lerp(spreadRadius_, 0.0f, 0.05f);
-    }
-    spreadManager_->AddSpread(transform_.position, int(spreadRadius_));
-
     if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.975f;
         hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);

@@ -77,7 +77,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
     barMaterial_.shader = resourceManager.GetShader("vs_uibar", "fs_uibar");
-    coverageBarMaterial_.shader = resourceManager.GetShader("vs_coveragebar", "fs_coveragebar");
 
     blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
     blitMaterial_.numTextures = 1;
@@ -398,40 +397,22 @@ void Renderer::RenderEntitiesS(
 void Renderer::RenderSpread(
     SpreadManager& spreadManager, 
     Model* model,
-    std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
+    std::array<Material, Model::MAX_MESHES_PER_MODEL> materials[SpreadType_Num] 
 ) {
-    uint32_t count = spreadManager.GetSpreadCount();
-    if (count == 0)
-        return;
+    for (int i = 0; i < SpreadType_Num; i++) {
+        uint32_t count = spreadManager.spreadData_[i].size();
+        if (count == 0)
+            return;
 
-    bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
-    memcpy(instanceBuffer.data, spreadManager.GetSpreadData(), sizeof(SpreadManager::RenderData) * count);
+        bgfx::InstanceDataBuffer instanceBuffer;
+        bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
+        memcpy(instanceBuffer.data, spreadManager.spreadData_[i].data(), sizeof(SpreadManager::RenderData) * count);
 
-    for (int m = 0; m < model->meshes.size(); m++) {
-        Mesh* mesh = &model->meshes[m];
-        Material* material = &materials[m];
-        RenderMesh(mesh, material, &instanceBuffer);
-    }
-}
-
-void Renderer::RenderWeed(
-    SpreadManager& spreadManager, 
-    Model* model,
-    std::array<Material, Model::MAX_MESHES_PER_MODEL>& materials
-) {
-    uint32_t count = spreadManager.GetWeedCount();
-    if (count == 0)
-        return;
-
-    bgfx::InstanceDataBuffer instanceBuffer;
-    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
-    memcpy(instanceBuffer.data, spreadManager.GetWeedData(), sizeof(SpreadManager::RenderData) * count);
-
-    for (int m = 0; m < model->meshes.size(); m++) {
-        Mesh* mesh = &model->meshes[m];
-        Material* material = &materials[m];
-        RenderMesh(mesh, material, &instanceBuffer);
+        for (int m = 0; m < model->meshes.size(); m++) {
+            Mesh* mesh = &model->meshes[m];
+            Material* material = &materials[i][m];
+            RenderMesh(mesh, material, &instanceBuffer);
+        }
     }
 }
 
@@ -501,13 +482,6 @@ void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
-
-    meter = vec4(spreadManager.GetCoverage() / 0.45f, 0.0f, 0.0f, 0.0f); 
-    bgfx::setUniform(u_meter_, &meter);
-
-    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
-    bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, coverageBarMaterial_.shader->handle);
 
     Text itemText;
     itemText.properties_.scale = 80.0f;

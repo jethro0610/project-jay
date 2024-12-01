@@ -22,7 +22,6 @@ void Renderer::Render(
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
-    RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
     RenderPostProcess();
@@ -54,7 +53,6 @@ void Renderer::RenderEdit(
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
         RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
-    RenderWeed(spreadManager, levelProperties.weedModel_, levelProperties.weedMaterials);
     RenderTerrainCursor(terrainCursor);
     RenderPostProcess();
     RenderBlit();

@@ -7,7 +7,6 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_screenquad",
 	"vs_static_s",
 	"vs_uibar",
-	"vs_inst_billboard",
 	"vs_skeletal_s",
 	"vs_particle_stretch",
 	"vs_particle_trail",
@@ -16,8 +15,9 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_skeletal",
 	"vs_coveragebar",
 	"vs_static",
-	"vs_terraincursor",
 	"vs_spread",
 	"vs_terrain_s",
 	"vs_terrain",
+	"vs_inst_billboard",
+	"vs_terraincursor",
 };

@@ -121,7 +121,7 @@ void RisePillar::Update() {
 
     if (timer_ == END_TIME) {
         float spreadRadius = pushbox_.radius * max(transform_.scale.x, transform_.scale.z) * 5.0f;
-        spreadManager_->AddSpread(transform_.position, spreadRadius, 0.65f, SpreadManager::AD_Feather, true);
+        spreadManager_->AddSpread(transform_.position, spreadRadius, 0.65f, SpreadManager::AD_Feather, SpreadType_Weed);
     }
 }
 

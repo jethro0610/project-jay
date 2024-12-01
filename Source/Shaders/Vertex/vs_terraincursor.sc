@@ -23,7 +23,9 @@ void main() {
     v_wposition = mul(u_model[0], vec4(a_position, 1.0f)).xyz;
 
     vec2 terrainDistance = getTerrainDistance(v_wposition.xz);
-    v_wposition.y = terrainDistance.y + 0.1f;
+    vec3 terrainNormal = getTerrainNormal(v_wposition.xz);
+    v_wposition.y = terrainDistance.y;
+    v_wposition += terrainNormal * 0.5f;
 
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

@@ -40,36 +40,37 @@ terrain_(terrain)
     properties_.terrainMaterial.properties.fresnelScale = 1.0f;
     properties_.terrainMaterial.properties.fresnelBrightness = 1.0f;
 
-    properties_.seedMaterial.shader = resourceManager.GetShader("vs_inst_billboard", "fs_seed_test");
-    properties_.seedMaterial.castShadows = false;
-    properties_.seedMaterial.transparencyType = TRANSPARENCY_ADDITIVE_BRIGHT;
+    properties_.seedMaterial.shader = resourceManager.GetShader("vs_inst_billboard", "fs_seed");
+    properties_.seedMaterial.shadowShader = resourceManager.GetShader("vs_inst_billboard_s", "fs_seed_s");
+    properties_.seedMaterial.castShadows = true;
+    properties_.seedMaterial.transparencyType = TRANSPARENCY_UNORDERED;
 
     properties_.spreadModel = resourceManager.GetModel("st_flower_test");
     properties_.weedModel_ = resourceManager.GetModel("st_flower_test");
 
-    properties_.spreadMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
-    properties_.spreadMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
-    properties_.spreadMaterials[0].castShadows = true;
-    properties_.spreadMaterials[0].numTextures = 1;
-    properties_.spreadMaterials[0].textures[0] = resourceManager.GetTexture("t_flower_m");
-    properties_.spreadMaterials[0].triangleType = TriangleType::TWO_SIDED;
+    properties_.spreadMaterials[SpreadType_Flower][0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
+    properties_.spreadMaterials[SpreadType_Flower][0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[SpreadType_Flower][0].castShadows = true;
+    properties_.spreadMaterials[SpreadType_Flower][0].numTextures = 1;
+    properties_.spreadMaterials[SpreadType_Flower][0].textures[0] = resourceManager.GetTexture("t_flower_m");
+    properties_.spreadMaterials[SpreadType_Flower][0].triangleType = TriangleType::TWO_SIDED;
 
-    properties_.spreadMaterials[1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
-    properties_.spreadMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
-    properties_.spreadMaterials[1].numTextures = 0;
-    properties_.spreadMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
+    properties_.spreadMaterials[SpreadType_Flower][1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
+    properties_.spreadMaterials[SpreadType_Flower][1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.spreadMaterials[SpreadType_Flower][1].numTextures = 0;
+    properties_.spreadMaterials[SpreadType_Flower][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 
-    properties_.weedMaterials[0].shader = resourceManager.GetShader("vs_spread", "fs_dfsa");
-    properties_.weedMaterials[0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
-    properties_.weedMaterials[0].castShadows = true;
-    properties_.weedMaterials[0].numTextures = 1;
-    properties_.weedMaterials[0].textures[0] = resourceManager.GetTexture("t_flower_m");
-    properties_.weedMaterials[0].triangleType = TriangleType::TWO_SIDED;
+    properties_.spreadMaterials[SpreadType_Weed][0].shader = resourceManager.GetShader("vs_spread", "fs_dfsa");
+    properties_.spreadMaterials[SpreadType_Weed][0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[SpreadType_Weed][0].castShadows = true;
+    properties_.spreadMaterials[SpreadType_Weed][0].numTextures = 1;
+    properties_.spreadMaterials[SpreadType_Weed][0].textures[0] = resourceManager.GetTexture("t_flower_m");
+    properties_.spreadMaterials[SpreadType_Weed][0].triangleType = TriangleType::TWO_SIDED;
 
-    properties_.weedMaterials[1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
-    properties_.weedMaterials[1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
-    properties_.weedMaterials[1].numTextures = 0;
-    properties_.weedMaterials[1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
+    properties_.spreadMaterials[SpreadType_Weed][1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
+    properties_.spreadMaterials[SpreadType_Weed][1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.spreadMaterials[SpreadType_Weed][1].numTextures = 0;
+    properties_.spreadMaterials[SpreadType_Weed][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {
@@ -174,10 +175,11 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         }
     }
 
-    for (auto& weedData : levelData["weeds"]) {
-        int x = weedData[0];
-        int y = weedData[1];
-        spreadManager_.AddSpread(glm::ivec2(x, y), true);
+    for (auto& spreadData : levelData["spread"]) {
+        int x = spreadData[0];
+        int y = spreadData[1];
+        SpreadType type = spreadData[2];
+        spreadManager_.AddSpread(glm::ivec2(x, y), type);
     }
 
     loaded_ = true;
@@ -278,14 +280,17 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         levelData["noises"].push_back(noiseData);
     }
 
-    std::vector<glm::ivec2> weedLocations;
-    spreadManager_.GetWeedLocations(weedLocations);
-    for (auto& weed : weedLocations) {
-        nlohmann::json weedData;
-        weedData.push_back(weed.x);
-        weedData.push_back(weed.y);
-        levelData["weeds"].push_back(weedData);
-    }
+    for (int x = 0; x < spreadManager_.KEY_LENGTH; x++) {
+    for (int y = 0; y < spreadManager_.KEY_LENGTH; y++) {
+        nlohmann::json spreadData;
+        if (spreadManager_.keys_[x][y].index == -1)
+            continue;
+
+        spreadData.push_back(x);
+        spreadData.push_back(y);
+        spreadData.push_back(spreadManager_.keys_[x][y].type);
+        levelData["spread"].push_back(spreadData);
+    }}
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
     assetLevelFile << std::setw(4) << levelData << std::endl;

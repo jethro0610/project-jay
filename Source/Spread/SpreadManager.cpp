@@ -82,10 +82,11 @@ bool SpreadManager::AddSpread(const ivec2& key, SpreadType type) {
         return false;
     }
 
-    renderData.color.r = RandomFloatRange(0.95f, 1.0f);
-    renderData.color.g = RandomFloatRange(0.85f, 0.95f);
-    renderData.color.b = RandomFloatRange(0.65f, 0.75f);
+    //renderData.color.r = RandomFloatRange(0.95f, 1.0f);
+    //renderData.color.g = RandomFloatRange(0.85f, 0.95f);
+    //renderData.color.b = RandomFloatRange(0.65f, 0.75f);
     renderData.time = GlobalTime::GetTime();
+    renderData.active = RenderData::ACTIVE_SPREAD;
 
     int addIndex = spreadData_[type].push_back(renderData);
     keys_[key.x][key.y].index = addIndex;
@@ -145,7 +146,8 @@ AddSpreadInfo SpreadManager::AddSpread(
 
 bool SpreadManager::RemoveSpread(
     const SpreadKey& key, 
-    Entity* remover
+    Entity* remover,
+    bool deactivate
 ) {
     if (key.x < 0 || key.y < 0 || key.x >= KEY_LENGTH || key.y >= KEY_LENGTH)
         return false;
@@ -157,23 +159,31 @@ bool SpreadManager::RemoveSpread(
     int indexToRemove = keys_[key.x][key.y].index;
     SpreadType type = keys_[key.x][key.y].type;
 
-    // Remove the element at the index...
-    spreadData_[type].remove(indexToRemove);
-    keys_[key.x][key.y].index = -1;
-
-    // Skip swapping if the last element was removed
-    if (indexToRemove >= spreadData_[type].size())
-        return true;
-
-    if (keys_[key.x][key.y].index != -1)
+    if (spreadData_[type][indexToRemove].active == RenderData::INACTIVE_SPREAD)
         return false;
-    // ...and get the key of the spread that
-    // replaced that index...
-    vec3 swappedPosition = spreadData_[type][indexToRemove].modelMatrix[3];
-    SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
 
-    // ...then the index to the key
-    keys_[swapKey.x][swapKey.y].index = indexToRemove;
+    if (deactivate) {
+        spreadData_[type][indexToRemove].active = RenderData::INACTIVE_SPREAD;
+    }
+    else {
+        // Remove the element at the index...
+        spreadData_[type].remove(indexToRemove);
+        keys_[key.x][key.y].index = -1;
+
+        // Skip swapping if the last element was removed
+        if (indexToRemove >= spreadData_[type].size())
+            return true;
+
+        if (keys_[key.x][key.y].index != -1)
+            return false;
+        // ...and get the key of the spread that
+        // replaced that index...
+        vec3 swappedPosition = spreadData_[type][indexToRemove].modelMatrix[3];
+        SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
+
+        // ...then the index to the key
+        keys_[swapKey.x][swapKey.y].index = indexToRemove;
+    }
 
     vec2 position = KeyToPosition(key);
     seedManager_.CreateSeed(vec3(position.x, terrain_.GetHeight(position, TA_Low), position.y), remover, vec3(0.0f, 8.0f, 0.0f));
@@ -183,16 +193,18 @@ bool SpreadManager::RemoveSpread(
 
 bool SpreadManager::RemoveSpread(
     const vec3& position, 
-    Entity* remover
+    Entity* remover,
+    bool deactivate
 ) {
     SpreadKey key = GetKey(position);
-    return RemoveSpread(key, remover);
+    return RemoveSpread(key, remover, deactivate);
 }
 
 int SpreadManager::RemoveSpread(
     const vec3& position, 
     int radius, 
-    Entity* remover
+    Entity* remover,
+    bool deactivate
 ) {
     int count = 0;
     ivec2 origin = GetKey(position);
@@ -200,7 +212,7 @@ int SpreadManager::RemoveSpread(
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z), remover))
+        if (RemoveSpread(origin + ivec2(x, z), remover, deactivate))
             count++;
     } }
     return count;
@@ -209,7 +221,8 @@ int SpreadManager::RemoveSpread(
 int SpreadManager::RemoveSpread(
     const vec3& position, 
     float radius, 
-    Entity* remover
+    Entity* remover,
+    bool deactivate
 ) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
     return RemoveSpread(position, intRadius, remover);
@@ -217,7 +230,8 @@ int SpreadManager::RemoveSpread(
 
 int SpreadManager::RemoveSpread(
     Cone& cone, 
-    Entity* remover
+    Entity* remover,
+    bool deactivate
 ) {
     int radius = (cone.distance) / SpreadManager::SPREAD_DIST;
     int count = 0;
@@ -231,7 +245,7 @@ int SpreadManager::RemoveSpread(
         vec2 normOffset = normalize(vec2(offset));
         if (dot(normConeDir, normOffset) < cone.angle)
             continue;
-        if (RemoveSpread(origin + offset, remover))
+        if (RemoveSpread(origin + offset, remover, deactivate))
             count++;
     }}
     return count;

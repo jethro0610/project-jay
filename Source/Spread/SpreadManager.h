@@ -24,9 +24,13 @@ public:
         SpreadType type;
     };
     struct RenderData {
+        static constexpr float ACTIVE_SPREAD = 1.0f;
+        static constexpr float INACTIVE_SPREAD = -1.0f;
         glm::mat4 modelMatrix;
-        glm::vec3 color;
+
         float time;
+        float active;
+        glm::vec2 padding;
     };
 
     enum AddSpreadDistribution {
@@ -71,25 +75,30 @@ public:
 
     bool RemoveSpread(
         const SpreadKey& key,
-        Entity* remover = nullptr
+        Entity* remover = nullptr,
+        bool deactivate = false
     );
     bool RemoveSpread(
         const glm::vec3& position, 
-        Entity* remover = nullptr 
+        Entity* remover = nullptr,
+        bool deactivate = false
     );
     int RemoveSpread(
         const glm::vec3& position, 
         int radius, 
-        Entity* remover = nullptr
+        Entity* remover = nullptr,
+        bool deactivate = false
     ); 
     int RemoveSpread(
         const glm::vec3& position, 
         float radius, 
-        Entity* remover = nullptr
+        Entity* remover = nullptr,
+        bool deactivate = false
     ); 
     int RemoveSpread(
         Cone& cone, 
-        Entity* remover = nullptr
+        Entity* remover = nullptr,
+        bool deactivate = false
     ); 
 
     void ClearTramples();

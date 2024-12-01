@@ -1,4 +1,4 @@
-$input a_position, a_normal, a_tangent, a_bitangent, a_texcoord0, i_data0, i_data1, i_data2, i_data3, i_data4 
+$input a_position, a_normal, a_tangent, a_bitangent, a_texcoord0, i_data0, i_data1, i_data2, i_data3, i_data4
 $output v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_color, v_texcoord0
 #include <bgfx_shader.sh>
 
@@ -6,8 +6,7 @@ uniform vec4 u_normalMult;
 uniform mat4 u_shadowMatrix;
 uniform vec4 u_time;
 
-#define i_color i_data4.xyz
-#define i_time i_data4.w
+#define i_time i_data4.x
 
 static const float TIME_FOR_MAX_SIZE = 0.25f;
 static const float c1 = 4.0f;
@@ -37,7 +36,7 @@ void main() {
     v_wposition = mul(modelMatrix, vec4(a_position * time, 1.0f)).xyz;
     v_sposition = mul(u_shadowMatrix, vec4(v_wposition, 1.0f));
 
-    v_color = vec4(i_color, 1.0f);
+    v_color = vec4(0.8f, 0.8f, 0.8f, 1.0f);
 
     gl_Position = mul(u_viewProj, vec4(v_wposition, 1.0f));
 }

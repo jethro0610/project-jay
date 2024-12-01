@@ -640,7 +640,7 @@ void Player::Update() {
         removeAngleRatio = clamp(removeAngleRatio, 0.0f, 1.0f);
         removeCone.angle = lerp(1.0f, 0.85f, removeAngleRatio);
 
-        spreadManager_->RemoveSpread(removeCone, this);
+        spreadManager_->RemoveSpread(removeCone, this, true);
     }
 
     SCREENLINE(1, std::to_string(speed_));

@@ -48,27 +48,27 @@ terrain_(terrain)
     properties_.spreadModel = resourceManager.GetModel("st_flower_test");
     properties_.weedModel_ = resourceManager.GetModel("st_flower_test");
 
-    properties_.spreadMaterials[SpreadType_Flower][0].shader = resourceManager.GetShader("vs_spread", "fs_flower_test");
-    properties_.spreadMaterials[SpreadType_Flower][0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[SpreadType_Flower][0].shader = resourceManager.GetShader("vs_spread_activeonly", "fs_flower_test");
+    properties_.spreadMaterials[SpreadType_Flower][0].shadowShader = resourceManager.GetShader("vs_spread_activeonly_s", "fs_depth_masked_s");
     properties_.spreadMaterials[SpreadType_Flower][0].castShadows = true;
     properties_.spreadMaterials[SpreadType_Flower][0].numTextures = 1;
     properties_.spreadMaterials[SpreadType_Flower][0].textures[0] = resourceManager.GetTexture("t_flower_m");
     properties_.spreadMaterials[SpreadType_Flower][0].triangleType = TriangleType::TWO_SIDED;
 
     properties_.spreadMaterials[SpreadType_Flower][1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
-    properties_.spreadMaterials[SpreadType_Flower][1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.spreadMaterials[SpreadType_Flower][1].shadowShader = resourceManager.GetShader("vs_spread_s", "fs_depth_s");
     properties_.spreadMaterials[SpreadType_Flower][1].numTextures = 0;
     properties_.spreadMaterials[SpreadType_Flower][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 
     properties_.spreadMaterials[SpreadType_Weed][0].shader = resourceManager.GetShader("vs_spread", "fs_dfsa");
-    properties_.spreadMaterials[SpreadType_Weed][0].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_masked_s");
+    properties_.spreadMaterials[SpreadType_Weed][0].shadowShader = resourceManager.GetShader("vs_spread_s", "fs_depth_masked_s");
     properties_.spreadMaterials[SpreadType_Weed][0].castShadows = true;
     properties_.spreadMaterials[SpreadType_Weed][0].numTextures = 1;
     properties_.spreadMaterials[SpreadType_Weed][0].textures[0] = resourceManager.GetTexture("t_flower_m");
     properties_.spreadMaterials[SpreadType_Weed][0].triangleType = TriangleType::TWO_SIDED;
 
     properties_.spreadMaterials[SpreadType_Weed][1].shader = resourceManager.GetShader("vs_spread", "fs_dfsa_color");
-    properties_.spreadMaterials[SpreadType_Weed][1].shadowShader = resourceManager.GetShader("vs_inst_s", "fs_depth_s");
+    properties_.spreadMaterials[SpreadType_Weed][1].shadowShader = resourceManager.GetShader("vs_spread_s", "fs_depth_s");
     properties_.spreadMaterials[SpreadType_Weed][1].numTextures = 0;
     properties_.spreadMaterials[SpreadType_Weed][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 }

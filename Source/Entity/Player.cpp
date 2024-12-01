@@ -99,6 +99,7 @@ void Player::Init(Entity::InitArgs args) {
     SetFlag(EF_RecieveKnockback, true);
     SetFlag(EF_HurtFaceForward, true);
     SetFlag(EF_CaptureSeed, true);
+    SetFlag(EF_UseTrail, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("sk_char");

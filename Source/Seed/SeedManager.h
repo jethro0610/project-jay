@@ -10,6 +10,7 @@ class EntityList;
 
 struct Seed {
     glm::vec3 position;
+    float scale;
     glm::vec3 offset;
     float gravityOffset;
     Entity* targetEntity;

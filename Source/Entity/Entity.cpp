@@ -34,6 +34,7 @@ void Entity::Init(
     lastTransform_ = transform_;
     renderTransform_ = transform_;
     velocity_ = {};
+    trail_ = nullptr;
 
     traceDistance_ = 1.0f;
     onGround_ = false;
@@ -173,6 +174,18 @@ void Entity::BaseUpdate() {
         hurtCooldown_--;
 
     initHitlag_ = false;
+
+    if (GetFlag(EF_UseTrail)) {
+        if (trail_ == nullptr) {
+            trail_ = new vec3[MAX_TRAIL_SIZE];
+            for (int i = 0; i < MAX_TRAIL_SIZE; i++)
+                trail_[i] = transform_.position;
+        }
+
+        for (int i = 0; i < MAX_TRAIL_SIZE - 1; i++)
+            trail_[i] = trail_[i + 1];
+        trail_[MAX_TRAIL_SIZE - 1] = transform_.position;
+    }
 }
 
 void Entity::CalculateBasePose() {
@@ -218,6 +231,18 @@ void Entity::ChangeAnimation(int index, float transitionLength) {
 
     transitionLength_ = transitionLength;
     transitionTime_ = 0.0f;
+}
+
+vec3 Entity::GetTrailPosition(float t) {
+    ASSERT(GetFlag(EF_UseTrail), "Attempted to get trail from entity with no trail");
+    if (trail_ == nullptr)
+        return transform_.position;
+
+    t = clamp(t, 0.0f, 1.0f);
+    int i = floor(t * MAX_TRAIL_SIZE);
+    float interp = t * MAX_TRAIL_SIZE - i;
+    interp = clamp(interp, 0.0f, 1.0f);
+    return lerp(trail_[i - 1], trail_[i], interp);
 }
 
 void Entity::CopyProperties(Entity* from) {
@@ -384,6 +409,9 @@ void Entity::DoCaptureSeed() {
 }
 
 void Entity::DoDestroy() {
+    if (trail_ != nullptr)
+        delete[] trail_;
+
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnDestroy(); break;
         EXPANDENTITIES

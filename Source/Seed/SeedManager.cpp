@@ -4,6 +4,7 @@
 #include "Logging/Logger.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityList.h"
+#include "Helpers/Ease.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -11,7 +12,7 @@ constexpr float SEED_GRAVITY_SCALE = 24.0f;
 constexpr float SEED_EASE_SPEED = 16.0f;
 constexpr float SEED_FALL_SPEED = 1.0f;
 constexpr float MIN_CAPTURE_TIME = 0.15f;
-constexpr float CAPTURE_LENGTH = 0.75f;
+constexpr float CAPTURE_LENGTH = 1.5f;
 
 void SeedManager::RemoveOldest() {
     int oldest = -1;
@@ -34,6 +35,7 @@ void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 off
 
     Seed seed {
         vec4(position, 0.0f),
+        RandomFloatRange(0.15, 0.6),
         offset,
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
         capturer,
@@ -71,7 +73,7 @@ void SeedManager::CalculatePositions(
         physicsOffset.x = seed.offset.x * 2 / logisitic - seed.offset.x;
         physicsOffset.y = seed.offset.y * 2 / logisitic - seed.offset.y - timeSinceStart * SEED_FALL_SPEED;
         physicsOffset.z = seed.offset.z * 2 / logisitic - seed.offset.z;
-        positions_[i] = vec4(seed.position + physicsOffset, 0.0f);
+        positions_[i] = vec4(seed.position + physicsOffset, seed.scale * easeStartTime);
 
         float height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z), TA_Low) + 2.0f * easeStartTime;
         if (positions_[i].y < height)
@@ -91,12 +93,22 @@ void SeedManager::CalculatePositions(
             seeds_.remove(i--);
             continue;
         }
+        float easeT = EaseInOutQuad(t);
         vec3 initialPosition = seed.position;
-        vec4 targetPosition = vec4(seed.targetEntity->transform_.position, 0.0f);
-        t = std::pow(t, 2.0f);
-        positions_[i] = lerp(positions_[i], targetPosition, t); 
+        vec4 targetPosition = seed.targetEntity->trail_ == nullptr ?
+            vec4(seed.targetEntity->transform_.position, 0.0f) :
+            vec4(seed.targetEntity->GetTrailPosition(easeT), 0.0f);
+        positions_[i] = lerp(positions_[i], targetPosition, easeT); 
 
-        height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z), TA_Low) + 2.0f;
+        float scaleT = (t - 0.9f) / 0.1f;
+        scaleT = clamp(scaleT, 0.0f, 1.0f);
+        positions_[i].w = lerp(seed.scale, 0.0f, scaleT * easeStartTime);
+
+        positions_[i].x += sin(GlobalTime::GetTime() + seed.jitterOffset.x) * 1.0f;
+        positions_[i].y += sin(GlobalTime::GetTime() + seed.jitterOffset.y) * 1.0f;
+        positions_[i].z += sin(GlobalTime::GetTime() + seed.jitterOffset.z) * 1.0f;
+
+        height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z), TA_Low) + 2.0f * easeStartTime;
         if (positions_[i].y < height)
             positions_[i].y = height;
     }

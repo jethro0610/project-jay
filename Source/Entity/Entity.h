@@ -54,6 +54,7 @@ struct EntityDependendies {
 
 class Entity {
 public:
+    static constexpr int MAX_TRAIL_SIZE = 256;
     struct HitArgs {
         Entity* target;
     };
@@ -85,6 +86,7 @@ public:
         EF_HurtFaceBack,
         EF_CaptureSeed,
         EF_Targetable,
+        EF_UseTrail,
         EF_Count
     };
 
@@ -117,6 +119,7 @@ public:
     Transform lastTransform_;
     Transform renderTransform_;
     glm::vec3 velocity_;
+    glm::vec3* trail_;
 
     float traceDistance_;
     bool onGround_;
@@ -179,6 +182,7 @@ public:
     void DoDestroy();
 
     glm::vec3 GetTarget();
+    glm::vec3 GetTrailPosition(float t);
 
     Camera* camera_;
     EntityList* entities_;

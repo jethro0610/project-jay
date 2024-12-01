@@ -17,7 +17,6 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_static",
 	"vs_terrain_s",
 	"vs_terrain",
-	"vs_inst_billboard",
 	"vs_terraincursor",
 	"vs_spread_activeonly",
 	"vs_spread",
@@ -25,4 +24,5 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_spread_activeonly_s",
 	"vs_spread_inactiveonly_s",
 	"vs_spread_inactiveonly",
+	"vs_inst_billboard",
 };

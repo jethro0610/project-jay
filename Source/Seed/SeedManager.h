@@ -20,6 +20,7 @@ struct Seed {
     glm::vec3 jitterOffset;
     float jitterRange;
     float heightOffset;
+    float startTrail;
 };
 
 class SeedManager {

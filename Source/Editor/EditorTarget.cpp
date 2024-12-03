@@ -8,6 +8,7 @@ EditorTarget::EditorTarget() {
     entity_ = nullptr;
     bubble_ = nullptr;
     curve_ = nullptr;
+    noise_ = nullptr;
     curvePoint_ = -1;
 }
 

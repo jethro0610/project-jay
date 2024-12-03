@@ -54,7 +54,7 @@ struct EntityDependendies {
 
 class Entity {
 public:
-    static constexpr int MAX_TRAIL_SIZE = 256;
+    static constexpr int MAX_TRAIL_SIZE = 512;
     struct HitArgs {
         Entity* target;
     };

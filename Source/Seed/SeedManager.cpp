@@ -47,7 +47,8 @@ void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 off
             vec3(60.0f, 60.0f, 60.0f)
         ),
         RandomFloatRange(0.25f, 1.0f),
-        RandomFloatRange(0.0f, 2.0f)
+        RandomFloatRange(0.0f, 2.0f),
+        1.0f
     };
     seeds_.push_back(seed);
 }
@@ -87,17 +88,27 @@ void SeedManager::CalculatePositions(
         if (seed.targetEntity == nullptr || timeSinceCapture < 0.0f)
             continue;
 
+
         float t = timeSinceCapture / (CAPTURE_LENGTH + seed.captureTimeOffset);
         if (t >= 1.0f) {
             seed.targetEntity->DoCaptureSeed();
             seeds_.remove(i--);
             continue;
         }
-        float easeT = EaseInOutQuad(t);
+        float easeT = EaseInQuadOutCubic(t);
+        seed.startTrail -= ((GlobalTime::GetDeltaTime() / GlobalTime::TIMESTEP) / Entity::MAX_TRAIL_SIZE);
+        seed.startTrail = max(0.0f, seed.startTrail);
+        float startTrail = lerp(seed.startTrail, 0.0f, easeT);
+
         vec3 initialPosition = seed.position;
-        vec4 targetPosition = seed.targetEntity->trail_ == nullptr ?
-            vec4(seed.targetEntity->transform_.position, 0.0f) :
-            vec4(seed.targetEntity->GetTrailPosition(easeT), 0.0f);
+        vec4 targetPosition;
+        if (seed.targetEntity->trail_ == nullptr)
+            targetPosition = vec4(seed.targetEntity->renderTransform_.position, 0.0f);
+        else {
+            float trailTRange = 1.0 - startTrail;
+            float trailT = t * trailTRange + startTrail;
+            targetPosition = vec4(seed.targetEntity->GetTrailPosition(trailT), 0.0f);
+        }
         positions_[i] = lerp(positions_[i], targetPosition, easeT); 
 
         float scaleT = (t - 0.9f) / 0.1f;

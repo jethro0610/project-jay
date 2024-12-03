@@ -14,7 +14,7 @@ GlobalTime::GlobalTime() {
 void GlobalTime::UpdateTime() {
     float cummulativeDelta = 0.0f;
 
-    while (cummulativeDelta < 1/60.0f) {
+    while (cummulativeDelta < 1/90.0f) {
         time_->lastTimeUSec_ = time_->currentTimeUSec_;
         time_->currentTimeUSec_ = duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         float curDeltaTime = (time_->currentTimeUSec_ - time_->lastTimeUSec_) * 0.000001f;

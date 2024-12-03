@@ -22,6 +22,7 @@ void Entity::Construct(
     seedManager_ = &seedManager;
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;
+    trail_ = nullptr;
 }
 
 void Entity::Init(

@@ -264,6 +264,9 @@ void Game::Update() {
         if (!entities_[i].alive_) continue;
         entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
         entities_[i].DoRenderUpdate();
+
+        if (entities_[i].GetFlag(Entity::EF_UseTrail))
+            entities_[i].RecordTrail();
     }
     seedManager_.GetCaptures(entities_);
     seedManager_.CalculatePositions(terrain_);

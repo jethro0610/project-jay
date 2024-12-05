@@ -54,12 +54,16 @@ struct EntityDependendies {
 
 class Entity {
 public:
-    static constexpr int MAX_TRAIL_SIZE = 256;
     struct HitArgs {
         Entity* target;
     };
     struct HurtArgs {
         Entity* attacker;
+    };
+    static constexpr int TRAIL_SIZE = 2048;
+    struct TrailPoint {
+        float time;
+        glm::vec3 position;
     };
 
     static constexpr int MAX_NAME = 32;
@@ -119,7 +123,7 @@ public:
     Transform lastTransform_;
     Transform renderTransform_;
     glm::vec3 velocity_;
-    glm::vec3* trail_;
+    TrailPoint* trail_;
 
     float traceDistance_;
     bool onGround_;
@@ -183,6 +187,8 @@ public:
 
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
+
+    void RecordTrail();
 
     Camera* camera_;
     EntityList* entities_;

@@ -95,7 +95,6 @@ void SeedManager::CalculatePositions(
         }
         float easeT = EaseInOutQuad(t);
         float trailTime = lerp(seed.captureTime, GlobalTime::GetTime(), t);
-        vec3 initialPosition = seed.position;
         vec4 targetPosition = seed.targetEntity->trail_ == nullptr ?
             vec4(seed.targetEntity->renderTransform_.position, 0.0f) :
             vec4(seed.targetEntity->GetTrailPosition(trailTime), 0.0f);

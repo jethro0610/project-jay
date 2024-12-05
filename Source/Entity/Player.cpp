@@ -655,10 +655,10 @@ void Player::Update() {
 
 void Player::RenderUpdate() {
     speedEmtter_->transform_ = renderTransform_;
-    speedEmtter_->transform_.position += velocity_ * GlobalTime::TIMESTEP;
+    speedEmtter_->transform_.position += velocity_ * GlobalTime::GetDeltaTime();
     spinEmitter_->transform_ = renderTransform_;
     slopeEmitter_->transform_ = renderTransform_;
-    slopeEmitter_->transform_.position += velocity_ * GlobalTime::TIMESTEP;
+    slopeEmitter_->transform_.position += velocity_ * GlobalTime::GetDeltaTime();
 
     vec3 tiltUp = mix(Transform::worldUp, transform_.GetRightVector(), tilt_);
     tiltUp = normalize(tiltUp);

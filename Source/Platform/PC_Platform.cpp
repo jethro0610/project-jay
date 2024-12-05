@@ -1,11 +1,8 @@
 #ifdef __linux__ 
     #define GLFW_EXPOSE_NATIVE_WAYLAND
-    #define GETHANDLE(window) (void*)(uintptr_t)glfwGetX11Window(window)
-    #define GETDISPLAY() (void*)glfwGetX11Display();
+    #include <wayland-egl.h>
 #elif _WIN32
     #define GLFW_EXPOSE_NATIVE_WIN32
-    #define GETHANDLE(window) glfwGetWin32Window(window)
-    #define GETDISPLAY() nullptr
 #endif
 
 #include "PC_Platform.h"
@@ -17,7 +14,6 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <bgfx/bgfx.h>
-#include <wayland-egl.h>
 
 Platform* Platform::platform_ = nullptr;
 
@@ -54,13 +50,17 @@ Platform::Platform() {
     init.resolution.height = 720;
     init.resolution.reset = BGFX_RESET_NONE;
 
+
+    #ifdef __linux__ 
     wl_surface* surface = glfwGetWaylandWindow(window_);
     wl_egl_window* egl_window = wl_egl_window_create(surface, 1280, 720);
     glfwSetWindowUserPointer(window_, egl_window);
-
     init.platformData.nwh = egl_window;
     init.platformData.ndt = glfwGetWaylandDisplay();
-    init.platformData.type = bgfx::NativeWindowHandleType::Wayland;
+    #elif _WIN32
+    init.platformData.nwh = glfwGetWin32Window(window_);
+    init.platformData.ndt = glfwGetWin32Window(window_);
+    #endif
 
     bgfx::init(init);
     DEBUGLOG("Succesfully started BGFX");

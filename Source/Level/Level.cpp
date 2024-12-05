@@ -168,8 +168,6 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
                 if (entityData["bool_properties"][pair.first].is_null())
                     continue;
 
-                DEBUGLOG(entityData["type_id"]);
-                DEBUGLOG(entityData["bool_properties"][pair.first]);
                 *pair.second = entityData["bool_properties"][pair.first];
             }
         }

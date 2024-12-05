@@ -57,6 +57,7 @@ Platform::Platform() {
     glfwSetWindowUserPointer(window_, egl_window);
     init.platformData.nwh = egl_window;
     init.platformData.ndt = glfwGetWaylandDisplay();
+    init.platformData.type = bgfx::NativeWindowHandleType::Wayland;
     #elif _WIN32
     init.platformData.nwh = glfwGetWin32Window(window_);
     init.platformData.ndt = glfwGetWin32Window(window_);

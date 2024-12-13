@@ -106,6 +106,7 @@ public:
     void Init(
         InitArgs args
     );
+    void Start() {};
 
     static TypeID TYPEID;
     const char* GetName();

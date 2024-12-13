@@ -1,28 +1,30 @@
 #pragma once
 #include "Bomb.h"
 #include "BumpRat.h"
+#include "Comet.h"
+#include "CometSpawner.h"
+#include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
+#include "ItemBox.h"
+#include "JumpPad.h"
+#include "MeteorBox.h"
 #include "Mower.h"
+#include "MultiHitPod.h"
 #include "Player.h"
 #include "RabbitPole.h"
-#include "TPillar.h"
-#include "TrailFish.h"
-#include "ItemBox.h"
-#include "MultiHitPod.h"
+#include "RisePillar.h"
 #include "SinglePod.h"
 #include "Sleeper.h"
-#include "TeleportPod.h"
-#include "GroundSpawnProjectile.h"
-#include "TimedHitbox.h"
-#include "JumpPad.h"
-#include "Entity.h"
-#include "RisePillar.h"
-#include "Mole.h"
-#include "MeteorBox.h"
-#include "TimerPod.h"
-#include "CometSpawner.h"
-#include "Comet.h"
 #include "SpeedBoost.h"
+#include "TPillar.h"
+#include "TeleportPod.h"
+#include "TimedHitbox.h"
+#include "TimerPod.h"
+#include "TrailFish.h"
+#include "Mole.h"
+#include "Apple.h"
+#include "Entity.h"
+#include "Tree.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -48,4 +50,6 @@
 	ENTITYEXP(Mole, mole, 20) \
 	ENTITYEXP(RisePillar, risepillar, 21) \
 	ENTITYEXP(MeteorBox, meteorbox, 22) \
-	ENTITYEXP(SpeedBoost, speedboost, 23)
+	ENTITYEXP(SpeedBoost, speedboost, 23) \
+	ENTITYEXP(Apple, apple, 24) \
+	ENTITYEXP(Tree, tree, 25)

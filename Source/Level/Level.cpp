@@ -73,7 +73,7 @@ terrain_(terrain)
     properties_.spreadMaterials[SpreadType_Weed][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
 }
 
-bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain) {
+bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain, bool editorLoad) {
     std::ifstream inFile("levels/" + name + suffix + ".json");
     if (!inFile.is_open())
         return false;
@@ -134,13 +134,13 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         Transform entityTransform = GetTransform(entityData, "transform");
 
         #ifndef _DEBUG
-        entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
+        entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, editorLoad);
         #else
         TypeID typeIdFromName = entity->GetTypeIDFromName(entityData["name"]);
         if (entityData.contains("type_id"))
-            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform);
+            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, editorLoad);
         else if (typeIdFromName != -1)
-            entity = &entities_.CreateEntity(typeIdFromName, entityTransform);
+            entity = &entities_.CreateEntity(typeIdFromName, entityTransform, editorLoad);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif

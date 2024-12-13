@@ -54,7 +54,7 @@ void EntityList::DestroyFlaggedEntities() {
     }
 }
 
-Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform) {
+Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform, bool skipStart) {
     int entityId = available_[availablePos_];
     available_[availablePos_] = -1;
     availablePos_++;
@@ -62,6 +62,13 @@ Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform) {
     rawEntities_[entityId].entity.transform_ = transform;
     rawEntities_[entityId].entity.typeId_ = typeId;
     rawEntities_[entityId].entity.Init({particleManager_, resourceManager_});
+    if (!skipStart) {
+        switch(typeId) {
+            #define ENTITYEXP(TYPE, VAR, ID) case ID: rawEntities_[entityId].VAR.Start(); break;
+            EXPANDENTITIES
+            #undef ENTITYEXP
+        }
+    }
     return rawEntities_[entityId].entity;
 }   
 

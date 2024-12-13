@@ -20,7 +20,7 @@ public:
         SpreadManager& spreadManager,
         Terrain& terrain
     );
-    bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true);
+    bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true, bool editorLoad = false);
     void Clear(bool clearTerrain = false);
     LevelProperties properties_;
     bool loaded_;

@@ -41,7 +41,7 @@ void CloneMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
 
-    Entity& createdEntity = entities_.CreateEntity(original_->typeId_);
+    Entity& createdEntity = entities_.CreateEntity(original_->typeId_, Transform(), true);
     createdEntity.transform_ = originalTransform_;
     createdEntity.CopyProperties(original_);
     target_.SetEntity(&createdEntity);
@@ -90,7 +90,7 @@ void CloneMode::Update() {
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    Entity& createdEntity = entities_.CreateEntity(target_.GetEntity()->typeId_);
+    Entity& createdEntity = entities_.CreateEntity(target_.GetEntity()->typeId_, Transform(), true);
     createdEntity.transform_ = target_.GetEntity()->transform_;
     createdEntity.CopyProperties(original_);
 

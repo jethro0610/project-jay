@@ -50,8 +50,8 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
 }
 
 glm::vec3 EditorMode::GetMouseRay() {
-    float mouseX = platform_.mouseX_ / (1280  * 0.5f) - 1.0f;
-    float mouseY = platform_.mouseY_ / (720 * 0.5f) - 1.0f;
+    float mouseX = platform_.mouseX_ / (1920 * 0.5f) - 1.0f;
+    float mouseY = platform_.mouseY_ / (1080 * 0.5f) - 1.0f;
 
     glm::mat4 invVP = glm::inverse(renderer_.GetProjectionMatrix() * camera_.GetViewOnlyMatrix());
     glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);

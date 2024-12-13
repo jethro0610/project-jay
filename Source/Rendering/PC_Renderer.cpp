@@ -21,8 +21,8 @@ using namespace glm;
 Renderer::Renderer(ResourceManager& resourceManager) {
     renderWidth_ = 1920;
     renderHeight_ = 1080;
-    width_ = 1280;
-    height_ = 720;
+    width_ = 1920;
+    height_ = 1080;
 
     projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 4096.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(

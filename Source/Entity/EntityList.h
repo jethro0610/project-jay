@@ -29,7 +29,7 @@ public:
     );
 
     Entity& operator[](int index);
-    Entity& CreateEntity(TypeID type, const Transform& transform = Transform());
+    Entity& CreateEntity(TypeID type, const Transform& transform = Transform(), bool skipStart = false);
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

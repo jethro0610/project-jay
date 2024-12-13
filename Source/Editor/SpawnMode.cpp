@@ -74,7 +74,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
 
     Transform transform;
     transform.position = scanPosition;
-    Entity& entity = entities_.CreateEntity(typeId, transform);
+    Entity& entity = entities_.CreateEntity(typeId, transform, true);
     target_.SetEntity(&entity);
 
     return CB_Default;

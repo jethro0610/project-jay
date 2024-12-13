@@ -108,7 +108,7 @@ void Editor::StartEditing() {
 
     // Reload the level once we start editing again
     if (level_.loaded_)
-        level_.Load(level_.DBG_name_, "_autosave", false);
+        level_.Load(level_.DBG_name_, "_autosave", false, true);
 }
 
 void Editor::StopEditing() {
@@ -121,7 +121,7 @@ void Editor::StopEditing() {
 
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
-    level_.Load(level_.DBG_name_, "_autosave", false);
+    level_.Load(level_.DBG_name_, "_autosave", false, false);
 }
 
 void Editor::SetMode(EditorMode* mode) {

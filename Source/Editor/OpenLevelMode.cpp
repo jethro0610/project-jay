@@ -31,7 +31,7 @@ ConfirmBehavior OpenLevelMode::OnConfirm() {
 
 ConfirmBehavior OpenLevelMode::PostConfirm() {
     std::string levelName = "lv_" + textInput_.Get();
-    level_.Load(levelName);
+    level_.Load(levelName, "", true, true);
     notificaiton_.Set("Loaded " + levelName); 
     return CB_Default;
 }

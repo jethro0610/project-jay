@@ -1,5 +1,7 @@
 #include "Apple.h"
 #include "Resource/ResourceManager.h"
+#include "Tree.h"
+#include "Seed/SeedManager.h"
 using namespace glm;
 
 EntityDependendies Apple::GetStaticDependencies() {
@@ -13,6 +15,7 @@ void Apple::Init(Entity::InitArgs args) {
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_Interpolate, true);
+    SetFlag(EF_Overlap, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -24,10 +27,15 @@ void Apple::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
-    active_ = true;
 
+    overlapbox_.radius = 2.5f;
+    overlapbox_.top = 1.25f;
+    overlapbox_.bottom = 1.25f;
+
+    active_ = true;
     initialScale_ = transform_.scale;
     growth_ = 1.0f;
+    overlappedEntity_ = nullptr;
 }
 
 static constexpr float GROWTH_RATE = 0.01f;
@@ -45,4 +53,25 @@ void Apple::Update() {
             velocity_ = vec3(0.0f);
         }
     }
+}
+
+static constexpr int HITLAG = 4;
+void Apple::OnOverlap(Entity* overlappedEntity) {
+    if (
+        overlappedEntity_ != nullptr ||
+        overlappedEntity->typeId_ == Tree::TYPEID ||
+        overlappedEntity->typeId_ == Apple::TYPEID
+    ) 
+        return;
+
+    overlappedEntity_ = overlappedEntity;
+    hitlag_ = HITLAG;
+    stun_ = true;
+    overlappedEntity->hitlag_ = HITLAG;
+}
+
+static constexpr int SEEDS = 500;
+void Apple::OnHitlagEnd() {
+    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 24.0f, overlappedEntity_);
+    destroy_ = true;
 }

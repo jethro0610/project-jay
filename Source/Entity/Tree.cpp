@@ -50,7 +50,6 @@ void Tree::Update() {
 
 }
 
-static constexpr float APPLE_Y = 80.0f;
 void Tree::OnHurt(HurtArgs args) {
     for (int i = 0; i < MAX_APPLES; i++) {
         if (apples_[i] == nullptr)
@@ -63,10 +62,11 @@ void Tree::OnHurt(HurtArgs args) {
 
         // Quadratic equation to get airtime
         static constexpr float A = -0.5 * Apple::GRAVITY * GlobalTime::TIMESTEP;
-        static constexpr float B = APPLE_Y * GlobalTime::TIMESTEP;
-        static constexpr float BSQR = B * B;
+        float jumpStrength = RandomFloatRange(30.0f, 100.0f);
+        float b = jumpStrength * GlobalTime::TIMESTEP;
+        float bSqr = b * b;
         float c = applePosition.y - point.y;
-        float airtime = ((-B - sqrt(BSQR - 4 * A * c)) / (2 * A)) * GlobalTime::TIMESTEP;
+        float airtime = ((-b - sqrt(bSqr- 4 * A * c)) / (2 * A)) * GlobalTime::TIMESTEP;
 
         // Get the direction and distance to the point
         vec3 planarApplePosition = applePosition;
@@ -79,7 +79,7 @@ void Tree::OnHurt(HurtArgs args) {
         // Then get the required magnitude based on the airtime
         float magToPoint = (distanceToPoint / airtime);
 
-        apples_[i]->velocity_ = directionToPoint * magToPoint + vec3(0.0f, APPLE_Y, 0.0f);
+        apples_[i]->velocity_ = directionToPoint * magToPoint + vec3(0.0f, jumpStrength, 0.0f);
         apples_[i] = nullptr;
     }
 }

@@ -10,7 +10,7 @@ public:
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_tree"; }
     static EntityDependendies GetStaticDependencies();
-    static constexpr int MAX_APPLES = 8;
+    static constexpr int MAX_APPLES = 20;
 
     Apple* apples_[MAX_APPLES];
     void Start();

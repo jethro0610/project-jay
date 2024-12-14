@@ -13,5 +13,8 @@ public:
     float growth_;
     bool active_;
     glm::vec3 initialScale_;
+    Entity* overlappedEntity_;
     void Update();
+    void OnOverlap(Entity* overlappedEntity);
+    void OnHitlagEnd();
 };

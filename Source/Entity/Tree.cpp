@@ -5,7 +5,6 @@
 #include "Helpers/Random.h"
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
-#include "TPillar.h"
 using namespace glm;
 
 EntityDependendies Tree::GetStaticDependencies() {
@@ -39,9 +38,10 @@ void Tree::Start() {
             vec3(0.0f, transform_.scale.y + 5.0f, 0.0f) + 
             RandomVector(2.0f, 4.0f) * transform_.scale.x;
 
-        appleTransform.scale = vec3(5.0f);
+        appleTransform.scale = vec3(RandomFloatRange(4.0, 6.0));
         apples_[i] = (Apple*)&entities_->CreateEntity(Apple::TYPEID, appleTransform);
         apples_[i]->active_ = false;
+        apples_[i]->growth_ = 0.0f;
     }
 }
 
@@ -59,14 +59,14 @@ void Tree::OnHurt(HurtArgs args) {
         const vec3& applePosition = apples_[i]->transform_.position;
 
         vec3 point = terrain_->GetRandomPointInSameIsland(transform_.position, 50.0f, 800.0f);
+        float jumpStrength = RandomFloatRange(10.0f, 30.0f);
 
         // Quadratic equation to get airtime
         static constexpr float A = -0.5 * Apple::GRAVITY * GlobalTime::TIMESTEP;
-        float jumpStrength = RandomFloatRange(30.0f, 100.0f);
         float b = jumpStrength * GlobalTime::TIMESTEP;
         float bSqr = b * b;
         float c = applePosition.y - point.y;
-        float airtime = ((-b - sqrt(bSqr- 4 * A * c)) / (2 * A)) * GlobalTime::TIMESTEP;
+        float airtime = ((-b - sqrt(bSqr - 4 * A * c)) / (2 * A)) * GlobalTime::TIMESTEP;
 
         // Get the direction and distance to the point
         vec3 planarApplePosition = applePosition;
@@ -81,5 +81,19 @@ void Tree::OnHurt(HurtArgs args) {
 
         apples_[i]->velocity_ = directionToPoint * magToPoint + vec3(0.0f, jumpStrength, 0.0f);
         apples_[i] = nullptr;
+    }
+
+    for (int i = 0; i < MAX_APPLES; i++) {
+        if (apples_[i] != nullptr)
+            continue;
+
+        for (int j = i + 1; j < MAX_APPLES; j++) {
+            if (apples_[j] == nullptr)
+                continue;
+
+            apples_[i] = apples_[j];
+            apples_[j] = nullptr;
+            break;
+        }
     }
 }

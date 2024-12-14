@@ -5,6 +5,10 @@ int RandomInt() {
     return rand();
 }
 
+int RandomIntRange(int min, int max) {
+    return (rand() % ((max - min) + 1)) + min;
+}
+
 float RandomFloatRange(float min, float max) {
     if (min == max)
         return min;

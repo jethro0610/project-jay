@@ -8,7 +8,7 @@ public:
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_apple"; }
     static EntityDependendies GetStaticDependencies();
-    static constexpr float GRAVITY = 2.0f;
+    static constexpr float GRAVITY = 0.5f;
 
     float growth_;
     bool active_;

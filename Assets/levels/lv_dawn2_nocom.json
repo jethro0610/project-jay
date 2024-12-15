@@ -197,6 +197,78 @@
                 }
             },
             "type_id": 25
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_pig",
+            "transform": {
+                "position": {
+                    "x": -211.6238555908203,
+                    "y": 12.139995574951172,
+                    "z": 65.23280334472656
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999475479126,
+                    "y": 5.59999942779541,
+                    "z": 3.299999475479126
+                }
+            },
+            "type_id": 26
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_pig",
+            "transform": {
+                "position": {
+                    "x": -239.9628143310547,
+                    "y": 14.880744934082031,
+                    "z": 95.44047546386719
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999475479126,
+                    "y": 5.59999942779541,
+                    "z": 3.299999475479126
+                }
+            },
+            "type_id": 26
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_pig",
+            "transform": {
+                "position": {
+                    "x": -209.6973876953125,
+                    "y": 16.68549919128418,
+                    "z": 95.94338989257813
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999475479126,
+                    "y": 5.59999942779541,
+                    "z": 3.299999475479126
+                }
+            },
+            "type_id": 26
         }
     ],
     "landmap": "lm_dawn2",

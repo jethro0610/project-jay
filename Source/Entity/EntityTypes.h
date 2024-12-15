@@ -22,9 +22,10 @@
 #include "TimerPod.h"
 #include "TrailFish.h"
 #include "Mole.h"
-#include "Apple.h"
 #include "Entity.h"
 #include "Tree.h"
+#include "Apple.h"
+#include "Pig.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -52,4 +53,5 @@
 	ENTITYEXP(MeteorBox, meteorbox, 22) \
 	ENTITYEXP(SpeedBoost, speedboost, 23) \
 	ENTITYEXP(Apple, apple, 24) \
-	ENTITYEXP(Tree, tree, 25)
+	ENTITYEXP(Tree, tree, 25) \
+	ENTITYEXP(Pig, pig, 26)

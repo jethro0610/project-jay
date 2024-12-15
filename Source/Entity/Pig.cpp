@@ -1,0 +1,138 @@
+#include "Pig.h"
+#include "Resource/ResourceManager.h"
+#include "EntityList.h"
+#include "Apple.h"
+#include "Terrain/Terrain.h"
+#include "Seed/SeedManager.h"
+using namespace glm;
+
+EntityDependendies Pig::GetStaticDependencies() {
+    return {
+        "st_tpillar"
+    };
+}
+
+void Pig::Init(Entity::InitArgs args) {
+    SetFlag(EF_GroundCheck, true);
+    SetFlag(EF_StickToGround, true);
+    SetFlag(EF_AlignToGround, true);
+    SetFlag(EF_Interpolate, true);
+    SetFlag(EF_UseVelocity, true);
+    SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_RecieveKnockback, true);
+    SetFlag(EF_HurtFaceForward, true);
+    SetFlag(EF_SendHits, true);
+    SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecievePush, true);
+
+    ResourceManager& resourceManager = args.resourceManager;
+    model_ = resourceManager.GetModel("st_tpillar");
+    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
+    materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
+    materials_[0].castShadows = true;
+    materials_[0].properties.color = vec4(0.75f, 0.75f, 0.5f, 1.0f);
+
+    pushbox_.top = 1.0f;
+    pushbox_.bottom = 1.0f;
+    pushbox_.radius = 1.0f;
+
+    hitbox_.top = 1.0f;
+    hitbox_.bottom = 1.0f;
+    hitbox_.radius = 1.25f;
+
+    hurtbox_.top = 1.5f;
+    hurtbox_.bottom = 1.5f;
+    hurtbox_.radius = 1.75f;
+
+    target_ = nullptr;
+    seeds_ = 0;
+}
+
+static constexpr float SPEED = 100.0f;
+static constexpr float FRICTION = 0.15f;
+static constexpr float SPEED_DECAY = 1.0f - FRICTION;
+static constexpr float ACCELERATION = ((SPEED / SPEED_DECAY) - SPEED);
+void Pig::Update() {
+    if (target_ != nullptr && !target_->alive_)
+        target_ = nullptr;
+
+    vec3 desiredMovement = vec3(0.0f);
+    velocity_.y -= 1.0f;
+    if (onGround_)
+        stun_ = false;
+
+    if (target_ == nullptr)
+        FindTargetApple();
+
+    if (target_ != nullptr)
+        desiredMovement = normalize(target_->transform_.position - transform_.position);
+
+    if (!stun_) {
+        velocity_.x += desiredMovement.x * ACCELERATION;
+        velocity_.z += desiredMovement.z * ACCELERATION;
+        velocity_.x *= SPEED_DECAY;
+        velocity_.z *= SPEED_DECAY;
+    }
+
+    if (stun_)
+        SetFlag(EF_SendPush, false);
+    else
+        SetFlag(EF_SendPush, true);
+}
+
+void Pig::FindTargetApple() {
+    float closestTargetDist = INFINITY;
+    Apple* target = nullptr;
+    for (int i = 0; i < 128; i++) {
+        Entity* entity = &(*entities_)[i];
+        if (!entity->alive_)
+            continue;
+
+        if (entity->typeId_ != Apple::TYPEID)
+            continue;
+
+        Apple* apple = (Apple*)entity;
+        if (!apple->active_)
+            continue;
+        if (!apple->onGround_)
+            continue;
+
+        bool appleAlreadyTargeted = false;
+        for (int j = 0; j < 128; j++) {
+            if (j == i)
+                continue;
+            Entity* possiblePig = &(*entities_)[j];
+            if (!possiblePig->alive_)
+                continue;
+            if (possiblePig->typeId_ != Pig::TYPEID)
+                continue;
+
+            Pig* pig = (Pig*)possiblePig;
+            if (pig->target_ == apple)
+                appleAlreadyTargeted = true;
+        }
+        if (appleAlreadyTargeted)
+            continue;
+
+        if (!terrain_->PointIsInSameIsland(transform_.position, apple->transform_.position))
+            continue;
+
+        float dist = distance(transform_.position, entity->transform_.position);
+        if (dist < closestTargetDist) {
+            target = apple;
+            closestTargetDist = dist;
+        }
+    }
+    target_ = target;
+}
+
+void Pig::OnCaptureSeed() {
+    seeds_++;
+}
+
+static constexpr int NUM_SEEDS_ON_HIT = 75;
+void Pig::OnHurt(HurtArgs args) {
+    int numSeeds = min(NUM_SEEDS_ON_HIT, seeds_);
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds, 12.0f, args.attacker);
+    seeds_ -= numSeeds;
+}

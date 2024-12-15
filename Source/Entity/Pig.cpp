@@ -4,6 +4,7 @@
 #include "Apple.h"
 #include "Terrain/Terrain.h"
 #include "Seed/SeedManager.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 EntityDependendies Pig::GetStaticDependencies() {
@@ -12,6 +13,8 @@ EntityDependendies Pig::GetStaticDependencies() {
     };
 }
 
+static constexpr int MIN_WANDER_WAIT = 30;
+static constexpr int MAX_WANDER_WAIT = 90;
 void Pig::Init(Entity::InitArgs args) {
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -46,30 +49,60 @@ void Pig::Init(Entity::InitArgs args) {
 
     target_ = nullptr;
     seeds_ = 0;
+    origin_ = transform_.position;
+    wanderTarget_ = vec3(0.0f);
+    wandering_ = false;
+    wanderTimer_ = RandomIntRange(MIN_WANDER_WAIT, MAX_WANDER_WAIT);
 }
 
 static constexpr float SPEED = 100.0f;
+static constexpr float WANDER_SPEED = 20.0f;
 static constexpr float FRICTION = 0.15f;
 static constexpr float SPEED_DECAY = 1.0f - FRICTION;
 static constexpr float ACCELERATION = ((SPEED / SPEED_DECAY) - SPEED);
+static constexpr float WANDER_ACCELERATION = ((WANDER_SPEED / SPEED_DECAY) - WANDER_SPEED);
+
 void Pig::Update() {
+    vec3 desiredMovement = vec3(0.0f);
     if (target_ != nullptr && !target_->alive_)
         target_ = nullptr;
 
-    vec3 desiredMovement = vec3(0.0f);
     velocity_.y -= 1.0f;
     if (onGround_)
         stun_ = false;
 
-    if (target_ == nullptr)
+    // Start wandering once done waiting for wander
+    if (wanderTimer_ <= 0 && !wandering_) {
+        wandering_ = true;
+        wanderTarget_ = terrain_->GetRandomPointInSameIsland(origin_, 20.0f, 160.0f);
+    }
+
+    // Move towards target if wandering, or tick the timer down
+    if (wandering_ == true)
+        desiredMovement = normalize(wanderTarget_ - transform_.position);
+    else
+        wanderTimer_--;
+
+    // Start wander waiting once we get to the target
+    if (distance(transform_.position, wanderTarget_) < 5.0f && wandering_) {
+        wandering_ = false;
+        wanderTimer_ = RandomIntRange(MIN_WANDER_WAIT, MAX_WANDER_WAIT);
+    }
+
+    if (target_ == nullptr) {
         FindTargetApple();
-
-    if (target_ != nullptr)
+    }
+    else {
+        wanderTimer_ = 0;
+        wandering_ = false;
         desiredMovement = normalize(target_->transform_.position - transform_.position);
+    }
 
+
+    float acceleration = target_ == nullptr ? WANDER_ACCELERATION : ACCELERATION;
     if (!stun_) {
-        velocity_.x += desiredMovement.x * ACCELERATION;
-        velocity_.z += desiredMovement.z * ACCELERATION;
+        velocity_.x += desiredMovement.x * acceleration;
+        velocity_.z += desiredMovement.z * acceleration;
         velocity_.x *= SPEED_DECAY;
         velocity_.z *= SPEED_DECAY;
     }
@@ -130,7 +163,7 @@ void Pig::OnCaptureSeed() {
     seeds_++;
 }
 
-static constexpr int NUM_SEEDS_ON_HIT = 75;
+static constexpr int NUM_SEEDS_ON_HIT = 150;
 void Pig::OnHurt(HurtArgs args) {
     int numSeeds = min(NUM_SEEDS_ON_HIT, seeds_);
     seedManager_->CreateMultipleSeed(transform_.position, numSeeds, 12.0f, args.attacker);

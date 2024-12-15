@@ -11,8 +11,12 @@ public:
     static const char* GetStaticName() { return "e_pig"; }
     static EntityDependendies GetStaticDependencies();
 
+    glm::vec3 origin_;
+    glm::vec3 wanderTarget_;
+    bool wandering_;
     Apple* target_;
     int seeds_;
+    int wanderTimer_ = 0;
 
     void Update();
     void FindTargetApple();

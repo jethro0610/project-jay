@@ -1,11 +1,11 @@
 #pragma once
-#include "SpreadKey.h"
 #include "SpreadType.h"
 #include "Types/Cone.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
 #include <vector_contig.h>
+#include <unordered_map>
 
 class Entity;
 class Terrain;
@@ -14,15 +14,17 @@ class TransformComponent;
 
 struct AddSpreadInfo {
     int count;
-    SpreadKey key;
+    glm::ivec2 spreadSpacePos;
 };
 
 class SpreadManager {
 public:
-    struct KeyIndex {
-        int index;
-        SpreadType type;
-    };
+    static constexpr int CHUNK_SIZE = 64;
+    static constexpr float SPREAD_DIST = 2.0f;
+    static constexpr float CHUNK_LENGTH = CHUNK_SIZE * SPREAD_DIST;
+    static constexpr int MAX_SPREAD = 1048576; // 2^20
+    static constexpr int NUM_CHUNKS = MAX_SPREAD / (CHUNK_LENGTH * CHUNK_LENGTH);
+
     struct RenderData {
         static constexpr float ACTIVE_SPREAD = 1.0f;
         static constexpr float INACTIVE_SPREAD = -1.0f;
@@ -32,20 +34,20 @@ public:
         float active;
         glm::vec2 padding;
     };
-
-    enum AddSpreadDistribution {
-        AD_Constant,
-        AD_Feather
+    struct Chunk {
+        bool active;
+        glm::vec2 origin;
+        vector_contig<RenderData, CHUNK_SIZE * CHUNK_SIZE> renderData[SpreadType_Num];
+        int indexes[CHUNK_SIZE][CHUNK_SIZE];
+        SpreadType types[CHUNK_SIZE][CHUNK_SIZE];
+    };
+    struct ChunkSpacePosition {
+        glm::ivec2 chunk;
+        glm::ivec2 spread;
     };
 
-    static constexpr float SPREAD_DIST = 2.0f;
-    static constexpr int MAX_SPREAD = 32768;
-    static constexpr int KEY_LENGTH = 1024;
-    static constexpr int MAX_SPREAD_PARTICLES = 4096;
-
-    bool tramples_[KEY_LENGTH][KEY_LENGTH];
-    vector_contig<RenderData, MAX_SPREAD> spreadData_[SpreadType_Num];
-    KeyIndex keys_[KEY_LENGTH][KEY_LENGTH];
+    Chunk chunks_[NUM_CHUNKS];
+    std::unordered_map<glm::ivec2, int> chunkIndexes_;
 
     SpreadManager(
         SeedManager& seedManager,
@@ -53,20 +55,28 @@ public:
     );
     SpreadManager(const SpreadManager&) = delete;
 
-    bool SpreadIsActive(const glm::vec2& position) const;
-    bool SpreadIsActive(const glm::vec3& position) const;
+    static glm::ivec2 WorldSpaceToSpreadSpace(const glm::vec3& worldSpacePos);
+    static ChunkSpacePosition SpreadSpaceToChunkSpace(const glm::ivec2& spreadSpacePos);
+    static glm::ivec2 ChunkSpaceToSpreadSpace(const ChunkSpacePosition& chunkSpacePos);
+    static glm::vec3 SpreadSpaceToWorldSpace(const glm::ivec2& spreadSpacePos);
 
-    bool AddSpread(const glm::vec3& position, SpreadType type = SpreadType_Flower); 
-    bool AddSpread(const SpreadKey& key, SpreadType type = SpreadType_Flower); 
+    //bool HasSpread(const glm::vec3& worldSpacePos) const;
+
+    enum AddSpreadDistribution {
+        AD_Constant,
+        AD_Feather
+    };
+    bool AddSpread(const glm::ivec2& spreadSpacePos, SpreadType type = SpreadType_Flower); 
+    bool AddSpread(const glm::vec3& worldSpacePos, SpreadType type = SpreadType_Flower); 
     AddSpreadInfo AddSpread(
-        const glm::vec3& position, 
+        const glm::vec3& worldSpacePos, 
         int radius, 
         float density = 1.0f, 
         AddSpreadDistribution distribution = AD_Constant, 
         SpreadType type = SpreadType_Flower
     );
     AddSpreadInfo AddSpread(
-        const glm::vec3& position, 
+        const glm::vec3& worldSpacePos, 
         float radius, 
         float density = INT_MAX, 
         AddSpreadDistribution distribution = AD_Constant, 
@@ -74,23 +84,23 @@ public:
     );
 
     bool RemoveSpread(
-        const SpreadKey& key,
+        const glm::ivec2& spreadSpacePos,
         Entity* remover = nullptr,
         bool deactivate = false
     );
     bool RemoveSpread(
-        const glm::vec3& position, 
+        const glm::vec3& worldSpacePos, 
         Entity* remover = nullptr,
         bool deactivate = false
     );
     int RemoveSpread(
-        const glm::vec3& position, 
+        const glm::vec3& worldSpacePos, 
         int radius, 
         Entity* remover = nullptr,
         bool deactivate = false
     ); 
     int RemoveSpread(
-        const glm::vec3& position, 
+        const glm::vec3& worldSpacePos, 
         float radius, 
         Entity* remover = nullptr,
         bool deactivate = false
@@ -102,18 +112,13 @@ public:
     ); 
 
     void ClearTramples();
-    bool Trample(const SpreadKey& key, Entity* trampler = nullptr);
-    bool Trample(const glm::vec3& position, Entity* trampler = nullptr);
-    int Trample(const glm::vec3& position, float radius, Entity* trampler = nullptr);
+    bool Trample(const glm::ivec2& spreadSpacePos, Entity* trampler = nullptr);
+    bool Trample(const glm::vec3& worldSpacePos, Entity* trampler = nullptr);
+    int Trample(const glm::vec3& worldSpacePos, float radius, Entity* trampler = nullptr);
 
     void UpdateRenderData_P();
 
-    SpreadKey GetKey(const glm::vec2& position) const;
-    SpreadKey GetKey(const glm::vec3& position) const;
-    glm::vec2 KeyToPosition(const SpreadKey& key) const;
-
     void Reset();
-    int GetCount(SpreadType type) const { return spreadData_[type].size(); }
 
 private:
     Terrain& terrain_;

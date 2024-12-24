@@ -19,52 +19,52 @@ SpreadManager::SpreadManager(
     seedManager_(seedManager),
     terrain_(terrain)
 { 
-    for (int i = 0; i < KEY_LENGTH; i++) {
-    for (int j = 0; j < KEY_LENGTH; j++) {
-        keys_[i][j] = {-1, SpreadType_Flower};
-    }}
 }
 
-SpreadKey SpreadManager::GetKey(const vec2& position) const {
-    SpreadKey key = ivec2(floor(position / SPREAD_DIST)) + ivec2(KEY_LENGTH / 2);
-    return key;
+ivec2 SpreadManager::WorldSpaceToSpreadSpace(const glm::vec3& position) {
+    return ivec2(floor(position.x / SPREAD_DIST), floor(position.z / SPREAD_DIST));
 }
 
-SpreadKey SpreadManager::GetKey(const vec3& position) const {
-    return GetKey(vec2(position.x, position.z));
+SpreadManager::ChunkSpacePosition SpreadManager::SpreadSpaceToChunkSpace(const glm::ivec2& spreadSpacePos) {
+    glm::ivec2 chunkPos = ivec2(
+        floor(spreadSpacePos.x / (float)CHUNK_SIZE), 
+        floor(spreadSpacePos.y / (float)CHUNK_SIZE)
+    );
+    glm::ivec2 spreadPos = spreadSpacePos - (chunkPos * CHUNK_SIZE);
+    return { chunkPos, spreadPos };
 }
 
-vec2 SpreadManager::KeyToPosition(const SpreadKey& key) const {
-    vec2 position = vec2(key - ivec2(KEY_LENGTH / 2)) * SPREAD_DIST;
-    vec2 offset = RandomVector2D(SPREAD_DIST / 2.0f);
-    position += offset;
-    return position + offset;
+glm::ivec2 SpreadManager::ChunkSpaceToSpreadSpace(const SpreadManager::ChunkSpacePosition& chunkSpacePos) {
+    return chunkSpacePos.chunk * CHUNK_SIZE + chunkSpacePos.spread;
 }
 
-bool SpreadManager::SpreadIsActive(const vec2& position) const {
-    SpreadKey key = GetKey(position);
-    return keys_[key.x][key.y].index != -1;
+glm::vec3 SpreadManager::SpreadSpaceToWorldSpace(const glm::ivec2& position) {
+    return glm::vec3(position.x * SPREAD_DIST, 0.0f, position.y * SPREAD_DIST);
 }
 
-bool SpreadManager::SpreadIsActive(const vec3& position) const {
-    return SpreadIsActive(vec2(position.x, position.z));
-}
+bool SpreadManager::AddSpread(const ivec2& spreadSpacePos, SpreadType type) {
+    ChunkSpacePosition chunkSpacePos = SpreadSpaceToChunkSpace(spreadSpacePos);
+    if (!chunkIndexes_.contains(chunkSpacePos.chunk)) {
+        for (int i = 0; i < NUM_CHUNKS; i++) {
+            if (chunks_[i].active)
+                continue;
 
-bool SpreadManager::AddSpread(const ivec2& key, SpreadType type) {
-    if (keys_[key.x][key.y].index != -1)
+            chunkIndexes_[chunkSpacePos.chunk] = i; 
+            chunks_[i].active = true;
+            break;
+        }
+    }
+    int chunkIndex = chunkIndexes_[chunkSpacePos.chunk];
+    Chunk& chunk = chunks_[chunkIndex];
+
+    if (chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] != -1)
         return false;
-    if (tramples_[key.x][key.y] == true)
-        return false;
+    // if (tramples_[key.x][key.y] == true)
+    //     return false;
 
     const float offset = SPREAD_DIST / 2.0f;
-
     Transform transform;
-
-    transform.position = vec3(
-        (key.x - KEY_LENGTH * 0.5f) * SPREAD_DIST + offset, 
-        0.0f, 
-        (key.y - KEY_LENGTH * 0.5f) * SPREAD_DIST + offset 
-    );
+    transform.position = SpreadSpaceToWorldSpace(spreadSpacePos);
     vec2 randOffset = RandomVector2D(1.0f);
     transform.position.x += randOffset.x;
     transform.position.z += randOffset.y;
@@ -88,26 +88,26 @@ bool SpreadManager::AddSpread(const ivec2& key, SpreadType type) {
     renderData.time = GlobalTime::GetTime();
     renderData.active = RenderData::ACTIVE_SPREAD;
 
-    int addIndex = spreadData_[type].push_back(renderData);
-    keys_[key.x][key.y].index = addIndex;
-    keys_[key.x][key.y].type = type;
+    int addIndex = chunk.renderData[type].push_back(renderData);
+    chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = addIndex;
+    chunk.types[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = type;
 
     return true;
 }
 
-bool SpreadManager::AddSpread(const glm::vec3& position, SpreadType type) {
-    return AddSpread(GetKey(position), type);
+bool SpreadManager::AddSpread(const glm::vec3& worldSpacePos, SpreadType type) {
+    return AddSpread(WorldSpaceToSpreadSpace(worldSpacePos), type);
 }
 
 AddSpreadInfo SpreadManager::AddSpread(
-    const glm::vec3& position, 
+    const glm::vec3& worldSpacePos, 
     int radius, 
     float density, 
     AddSpreadDistribution distribution,
     SpreadType type
 ) {
     radius--;
-    ivec2 origin = GetKey(position);
+    ivec2 spreadSpaceOrigin = WorldSpaceToSpreadSpace(worldSpacePos);
     int count = 0;
 
     for (int x = -radius; x <= radius; x++) {
@@ -124,95 +124,96 @@ AddSpreadInfo SpreadManager::AddSpread(
         if (rand > density * t)
             continue;
         
-        ivec2 key = origin + ivec2(x, z);
-        if (AddSpread(key, type))
+        ivec2 position = spreadSpaceOrigin + ivec2(x, z);
+        if (AddSpread(position, type))
             count++;
     } }
-
-    return AddSpreadInfo{count, origin};
+    return AddSpreadInfo{count, spreadSpaceOrigin};
 }
 
 AddSpreadInfo SpreadManager::AddSpread(
-    const glm::vec3& position, 
+    const glm::vec3& worldSpacePos, 
     float radius, 
     float density, 
     AddSpreadDistribution distribution,
     SpreadType type
 ) {
     int intRadius = (radius) / SpreadManager::SPREAD_DIST;
-    return AddSpread(position, intRadius, density, distribution, type);
+    return AddSpread(worldSpacePos, intRadius, density, distribution, type);
 }
 
 
 bool SpreadManager::RemoveSpread(
-    const SpreadKey& key, 
+    const ivec2& spreadSpacePos, 
     Entity* remover,
     bool deactivate
 ) {
-    if (key.x < 0 || key.y < 0 || key.x >= KEY_LENGTH || key.y >= KEY_LENGTH)
+    ChunkSpacePosition chunkSpacePos = SpreadSpaceToChunkSpace(spreadSpacePos);
+    if (!chunkIndexes_.contains(chunkSpacePos.chunk))
         return false;
 
-    if (keys_[key.x][key.y].index == -1)
+    int chunkIndex = chunkIndexes_[chunkSpacePos.chunk];
+    Chunk& chunk = chunks_[chunkIndex];
+    if (chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] == -1)
         return false;
 
     // Get the index of the spread to delete 
-    int indexToRemove = keys_[key.x][key.y].index;
-    SpreadType type = keys_[key.x][key.y].type;
+    int indexToRemove = chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y];
+    SpreadType type = chunk.types[chunkSpacePos.spread.x][chunkSpacePos.spread.y];
 
-    if (spreadData_[type][indexToRemove].active == RenderData::INACTIVE_SPREAD)
+    if (chunk.renderData[type][indexToRemove].active == RenderData::INACTIVE_SPREAD)
         return false;
 
     if (deactivate) {
-        spreadData_[type][indexToRemove].active = RenderData::INACTIVE_SPREAD;
+        chunk.renderData[type][indexToRemove].active = RenderData::INACTIVE_SPREAD;
     }
     else {
         // Remove the element at the index...
-        spreadData_[type].remove(indexToRemove);
-        keys_[key.x][key.y].index = -1;
+        chunk.renderData[type].remove(indexToRemove);
+        chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = -1;
 
         // Skip swapping if the last element was removed
-        if (indexToRemove >= spreadData_[type].size())
+        if (indexToRemove >= chunk.renderData[type].size())
             return true;
 
-        if (keys_[key.x][key.y].index != -1)
-            return false;
-        // ...and get the key of the spread that
+        // ...and get the position of the spread that
         // replaced that index...
-        vec3 swappedPosition = spreadData_[type][indexToRemove].modelMatrix[3];
-        SpreadKey swapKey = GetKey(vec2(swappedPosition.x, swappedPosition.z));
+        vec3 swappedWorldSpacePos = chunk.renderData[type][indexToRemove].modelMatrix[3];
+        ivec2 swappedSpreadSpacePos = WorldSpaceToSpreadSpace(swappedWorldSpacePos);
+        ChunkSpacePosition swappedChunkSpacePos = SpreadSpaceToChunkSpace(swappedSpreadSpacePos);
 
         // ...then the index to the key
-        keys_[swapKey.x][swapKey.y].index = indexToRemove;
+        chunk.indexes[swappedChunkSpacePos.spread.x][swappedChunkSpacePos.spread.y] = indexToRemove;
     }
 
-    vec2 position = KeyToPosition(key);
-    seedManager_.CreateSeed(vec3(position.x, terrain_.GetHeight(position, TA_Low), position.y), remover, vec3(0.0f, 8.0f, 0.0f));
+    vec3 seedPosition = SpreadSpaceToWorldSpace(spreadSpacePos);
+    seedPosition.y = terrain_.GetHeight(seedPosition, TA_Low);
+    seedManager_.CreateSeed(seedPosition, remover, vec3(0.0f, 8.0f, 0.0f));
 
     return true;
 }
 
 bool SpreadManager::RemoveSpread(
-    const vec3& position, 
+    const vec3& worldSpacePos, 
     Entity* remover,
     bool deactivate
 ) {
-    SpreadKey key = GetKey(position);
-    return RemoveSpread(key, remover, deactivate);
+    return RemoveSpread(WorldSpaceToSpreadSpace(worldSpacePos), remover, deactivate);
 }
 
 int SpreadManager::RemoveSpread(
-    const vec3& position, 
+    const vec3& worldSpacePos, 
     int radius, 
     Entity* remover,
     bool deactivate
 ) {
     int count = 0;
-    ivec2 origin = GetKey(position);
+    ivec2 spreadSpaceOrigin = WorldSpaceToSpreadSpace(worldSpacePos);
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
         if (sqrt(x*x + z*z) > radius)
             continue;
-        if (RemoveSpread(origin + ivec2(x, z), remover, deactivate))
+        if (RemoveSpread(spreadSpaceOrigin + ivec2(x, z), remover, deactivate))
             count++;
     } }
     return count;
@@ -235,7 +236,7 @@ int SpreadManager::RemoveSpread(
 ) {
     int radius = (cone.distance) / SpreadManager::SPREAD_DIST;
     int count = 0;
-    ivec2 origin = GetKey(cone.position);
+    ivec2 spreadSpaceOrigin = WorldSpaceToSpreadSpace(cone.position);
     vec2 normConeDir = normalize(vec2(cone.direction.x, cone.direction.z));
     for (int x = -radius; x <= radius; x++) {
     for (int z = -radius; z <= radius; z++) {
@@ -245,48 +246,52 @@ int SpreadManager::RemoveSpread(
         vec2 normOffset = normalize(vec2(offset));
         if (dot(normConeDir, normOffset) < cone.angle)
             continue;
-        if (RemoveSpread(origin + offset, remover, deactivate))
+        if (RemoveSpread(spreadSpaceOrigin + offset, remover, deactivate))
             count++;
     }}
     return count;
 }
 
 void SpreadManager::ClearTramples() {
-    memset(tramples_, 0, sizeof(bool) * KEY_LENGTH * KEY_LENGTH);
+    //memset(tramples_, 0, sizeof(bool) * KEY_LENGTH * KEY_LENGTH);
 }
 
-bool SpreadManager::Trample(const SpreadKey& key, Entity* trampler) {
-    tramples_[key.x][key.y] = true;
-    return RemoveSpread(key, trampler);
+bool SpreadManager::Trample(const glm::ivec2& spreadSpacePos, Entity* trampler) {
+    return false;
+    // tramples_[key.x][key.y] = true;
+    // return RemoveSpread(key, trampler);
 }
 
 bool SpreadManager::Trample(const vec3& position, Entity* trampler) {
-    return Trample(GetKey(position));
+    return false;
+    // return Trample(GetKey(position));
 }
 
 int SpreadManager::Trample(const vec3& position, float radius, Entity* trampler) {
-    int intRadius = (radius) / SpreadManager::SPREAD_DIST;
+    return false;
 
-    int count = 0;
-    ivec2 origin = GetKey(position);
-    for (int x = -intRadius; x <= intRadius; x++) {
-    for (int z = -intRadius; z <= intRadius; z++) {
-        if (sqrt(x*x + z*z) > intRadius)
-            continue;
-        if (Trample(origin + ivec2(x, z), trampler))
-            count++;
-    } }
-    DEBUGLOG(intRadius);
-    return count;
+    // int intRadius = (radius) / SpreadManager::SPREAD_DIST;
+    //
+    // int count = 0;
+    // ivec2 origin = GetKey(position);
+    // for (int x = -intRadius; x <= intRadius; x++) {
+    // for (int z = -intRadius; z <= intRadius; z++) {
+    //     if (sqrt(x*x + z*z) > intRadius)
+    //         continue;
+    //     if (Trample(origin + ivec2(x, z), trampler))
+    //         count++;
+    // } }
+    // DEBUGLOG(intRadius);
+    // return count;
 }
 
 
 void SpreadManager::Reset() {
-    for (int x = 0; x < KEY_LENGTH; x++) {
-    for (int y = 0; y < KEY_LENGTH; y++) {
-        keys_[x][y] = {-1, SpreadType_Flower};
-    }}
-    for (int i = 0; i < SpreadType_Num; i++) {
-        spreadData_[i].clear();
-    }
+    // for (int x = 0; x < KEY_LENGTH; x++) {
+    // for (int y = 0; y < KEY_LENGTH; y++) {
+    //     keys_[x][y] = {-1, SpreadType_Flower};
+    // }}
+    // for (int i = 0; i < SpreadType_Num; i++) {
+    //     spreadData_[i].clear();
+    // }
 }

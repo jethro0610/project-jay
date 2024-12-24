@@ -278,17 +278,25 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         levelData["noises"].push_back(noiseData);
     }
 
-    for (int x = 0; x < spreadManager_.KEY_LENGTH; x++) {
-    for (int y = 0; y < spreadManager_.KEY_LENGTH; y++) {
+    for (int i = 0; i < SpreadManager::NUM_CHUNKS; i++) {
         nlohmann::json spreadData;
-        if (spreadManager_.keys_[x][y].index == -1)
+        SpreadManager::Chunk& chunk = spreadManager_.chunks_[i];
+        if (!chunk.active)
             continue;
 
-        spreadData.push_back(x);
-        spreadData.push_back(y);
-        spreadData.push_back(spreadManager_.keys_[x][y].type);
-        levelData["spread"].push_back(spreadData);
-    }}
+        for (int x = 0; x < SpreadManager::CHUNK_SIZE; x++) {
+        for (int y = 0; y < SpreadManager::CHUNK_SIZE; y++) {
+            if (chunk.indexes[x][y] == -1)
+                continue;
+            
+            SpreadManager::ChunkSpacePosition chunkSpacePos(chunk.origin, glm::ivec2(x, y));
+            glm::ivec2 spreadSpacePos = spreadManager_.ChunkSpaceToSpreadSpace(chunkSpacePos);
+            spreadData.push_back(spreadSpacePos.x);    
+            spreadData.push_back(spreadSpacePos.y);    
+            spreadData.push_back(chunk.types[x][y]);    
+            levelData["spread"].push_back(spreadData);
+        }}
+    }
 
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
     assetLevelFile << std::setw(4) << levelData << std::endl;

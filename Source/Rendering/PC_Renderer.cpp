@@ -399,19 +399,25 @@ void Renderer::RenderSpread(
     Model* model,
     std::array<Material, Model::MAX_MESHES_PER_MODEL> materials[SpreadType_Num] 
 ) {
-    for (int i = 0; i < SpreadType_Num; i++) {
-        uint32_t count = spreadManager.spreadData_[i].size();
-        if (count == 0)
-            return;
+    for (int c = 0; c < SpreadManager::NUM_CHUNKS; c++) {
+        SpreadManager::Chunk& chunk = spreadManager.chunks_[c];
+        if (!chunk.active)
+            continue;
 
-        bgfx::InstanceDataBuffer instanceBuffer;
-        bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
-        memcpy(instanceBuffer.data, spreadManager.spreadData_[i].data(), sizeof(SpreadManager::RenderData) * count);
+        for (int t = 0; t < SpreadType_Num; t++) {
+            uint32_t count = chunk.renderData[t].size();
+            if (count == 0)
+                return;
 
-        for (int m = 0; m < model->meshes.size(); m++) {
-            Mesh* mesh = &model->meshes[m];
-            Material* material = &materials[i][m];
-            RenderMesh(mesh, material, &instanceBuffer);
+            bgfx::InstanceDataBuffer instanceBuffer;
+            bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
+            memcpy(instanceBuffer.data, chunk.renderData[t].data(), sizeof(SpreadManager::RenderData) * count);
+
+            for (int m = 0; m < model->meshes.size(); m++) {
+                Mesh* mesh = &model->meshes[m];
+                Material* material = &materials[t][m];
+                RenderMesh(mesh, material, &instanceBuffer);
+            }
         }
     }
 }

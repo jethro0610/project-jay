@@ -279,7 +279,6 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     }
 
     for (int i = 0; i < SpreadManager::NUM_CHUNKS; i++) {
-        nlohmann::json spreadData;
         SpreadManager::Chunk& chunk = spreadManager_.chunks_[i];
         if (!chunk.active)
             continue;
@@ -289,8 +288,9 @@ void Level::Save(const std::string& name, const std::string& suffix) {
             if (chunk.indexes[x][y] == -1)
                 continue;
             
+            nlohmann::json spreadData;
             SpreadManager::ChunkSpacePosition chunkSpacePos(chunk.origin, glm::ivec2(x, y));
-            glm::ivec2 spreadSpacePos = spreadManager_.ChunkSpaceToSpreadSpace(chunkSpacePos);
+            glm::ivec2 spreadSpacePos = SpreadManager::ChunkSpaceToSpreadSpace(chunkSpacePos);
             spreadData.push_back(spreadSpacePos.x);    
             spreadData.push_back(spreadSpacePos.y);    
             spreadData.push_back(chunk.types[x][y]);    

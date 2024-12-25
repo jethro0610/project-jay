@@ -22,7 +22,7 @@ public:
     static constexpr int CHUNK_SIZE = 64;
     static constexpr float SPREAD_DIST = 2.0f;
     static constexpr float CHUNK_LENGTH = CHUNK_SIZE * SPREAD_DIST;
-    static constexpr int MAX_SPREAD = 1048576; // 2^20
+    static constexpr int MAX_SPREAD = 16777216; // 2^20
     static constexpr int NUM_CHUNKS = MAX_SPREAD / (CHUNK_LENGTH * CHUNK_LENGTH);
 
     struct RenderData {
@@ -37,6 +37,7 @@ public:
     struct Chunk {
         bool active;
         glm::vec2 origin;
+        int count;
         vector_contig<RenderData, CHUNK_SIZE * CHUNK_SIZE> renderData[SpreadType_Num];
         int indexes[CHUNK_SIZE][CHUNK_SIZE];
         SpreadType types[CHUNK_SIZE][CHUNK_SIZE];

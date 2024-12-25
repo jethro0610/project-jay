@@ -24,7 +24,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1920;
     height_ = 1080;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 0.5f, 4096.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 4.0f, 4096.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 
@@ -407,7 +407,7 @@ void Renderer::RenderSpread(
         for (int t = 0; t < SpreadType_Num; t++) {
             uint32_t count = chunk.renderData[t].size();
             if (count == 0)
-                return;
+                continue;
 
             bgfx::InstanceDataBuffer instanceBuffer;
             bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));

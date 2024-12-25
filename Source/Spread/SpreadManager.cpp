@@ -19,6 +19,15 @@ SpreadManager::SpreadManager(
     seedManager_(seedManager),
     terrain_(terrain)
 { 
+    for (int c = 0; c < NUM_CHUNKS; c++) {
+        Chunk& chunk = chunks_[c];
+        chunk.active = false;
+
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+        for (int y = 0; y < CHUNK_SIZE; y++) {
+            chunk.indexes[x][y] = -1; 
+        }}
+    }
 }
 
 ivec2 SpreadManager::WorldSpaceToSpreadSpace(const glm::vec3& position) {
@@ -51,6 +60,8 @@ bool SpreadManager::AddSpread(const ivec2& spreadSpacePos, SpreadType type) {
 
             chunkIndexes_[chunkSpacePos.chunk] = i; 
             chunks_[i].active = true;
+            chunks_[i].origin = chunkSpacePos.chunk;
+            DEBUGLOG("activated chunk " << i << " at " << to_string(chunkSpacePos.chunk));
             break;
         }
     }
@@ -91,6 +102,7 @@ bool SpreadManager::AddSpread(const ivec2& spreadSpacePos, SpreadType type) {
     int addIndex = chunk.renderData[type].push_back(renderData);
     chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = addIndex;
     chunk.types[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = type;
+    chunk.count++;
 
     return true;
 }
@@ -189,6 +201,10 @@ bool SpreadManager::RemoveSpread(
     vec3 seedPosition = SpreadSpaceToWorldSpace(spreadSpacePos);
     seedPosition.y = terrain_.GetHeight(seedPosition, TA_Low);
     seedManager_.CreateSeed(seedPosition, remover, vec3(0.0f, 8.0f, 0.0f));
+    chunk.count--;
+
+    if (chunk.count <= 0)
+        chunk.active = false;
 
     return true;
 }
@@ -287,11 +303,17 @@ int SpreadManager::Trample(const vec3& position, float radius, Entity* trampler)
 
 
 void SpreadManager::Reset() {
-    // for (int x = 0; x < KEY_LENGTH; x++) {
-    // for (int y = 0; y < KEY_LENGTH; y++) {
-    //     keys_[x][y] = {-1, SpreadType_Flower};
-    // }}
-    // for (int i = 0; i < SpreadType_Num; i++) {
-    //     spreadData_[i].clear();
-    // }
+    chunkIndexes_.clear();
+    for (int c = 0; c < NUM_CHUNKS; c++) {
+        DEBUGLOG(c);
+        Chunk& chunk = chunks_[c];
+        chunk.active = false;
+        for (int t = 0; t < SpreadType_Num; t++)
+            chunk.renderData[t].clear();
+
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+        for (int y = 0; y < CHUNK_SIZE; y++) {
+            chunk.indexes[x][y] = -1; 
+        }}
+    }
 }

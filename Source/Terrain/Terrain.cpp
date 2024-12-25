@@ -268,7 +268,7 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
-        float additiveHeight = additiveMap[y][x];
+        float additiveHeight = additiveMap[y][x] * 5;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -551,7 +551,7 @@ vec3 Terrain::RaycastTerrain(const vec3& origin, const vec3& direction) {
     float curHeight = GetHeight(curOrigin);
 
     for (int i = 0; i < 512; i++) {
-        vec2 distance = GetDistance(curOrigin, TA_Low);
+        vec2 distance = GetDistance(curOrigin, TA_Normal);
         if (distance.x < 0.0f)
             curHeight = distance.y;
 

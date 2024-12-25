@@ -44,7 +44,7 @@ SpreadManager::ChunkSpacePosition SpreadManager::SpreadSpaceToChunkSpace(const g
 }
 
 glm::ivec2 SpreadManager::ChunkSpaceToSpreadSpace(const SpreadManager::ChunkSpacePosition& chunkSpacePos) {
-    return chunkSpacePos.chunk * CHUNK_SIZE + chunkSpacePos.spread;
+    return chunkSpacePos.chunk * CHUNK_SIZE + ivec2(chunkSpacePos.spread.x, chunkSpacePos.spread.y);
 }
 
 glm::vec3 SpreadManager::SpreadSpaceToWorldSpace(const glm::ivec2& position) {
@@ -61,7 +61,6 @@ bool SpreadManager::AddSpread(const ivec2& spreadSpacePos, SpreadType type) {
             chunkIndexes_[chunkSpacePos.chunk] = i; 
             chunks_[i].active = true;
             chunks_[i].origin = chunkSpacePos.chunk;
-            DEBUGLOG("activated chunk " << i << " at " << to_string(chunkSpacePos.chunk));
             break;
         }
     }
@@ -166,11 +165,10 @@ bool SpreadManager::RemoveSpread(
 
     int chunkIndex = chunkIndexes_[chunkSpacePos.chunk];
     Chunk& chunk = chunks_[chunkIndex];
-    if (chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] == -1)
+    int indexToRemove = chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y];
+    if (indexToRemove == -1)
         return false;
 
-    // Get the index of the spread to delete 
-    int indexToRemove = chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y];
     SpreadType type = chunk.types[chunkSpacePos.spread.x][chunkSpacePos.spread.y];
 
     if (chunk.renderData[type][indexToRemove].active == RenderData::INACTIVE_SPREAD)
@@ -180,6 +178,16 @@ bool SpreadManager::RemoveSpread(
         chunk.renderData[type][indexToRemove].active = RenderData::INACTIVE_SPREAD;
     }
     else {
+        glm::vec<2, uint8_t> swapChunkSpacePos;
+        for (int x = 0; x < CHUNK_SIZE; x++) {
+        for (int y = 0; y < CHUNK_SIZE; y++) {
+            if (chunk.indexes[x][y] == chunk.renderData[type].size() - 1) {
+                swapChunkSpacePos.x = x;
+                swapChunkSpacePos.y = y;
+                break;
+            }
+        }}
+
         // Remove the element at the index...
         chunk.renderData[type].remove(indexToRemove);
         chunk.indexes[chunkSpacePos.spread.x][chunkSpacePos.spread.y] = -1;
@@ -188,14 +196,8 @@ bool SpreadManager::RemoveSpread(
         if (indexToRemove >= chunk.renderData[type].size())
             return true;
 
-        // ...and get the position of the spread that
-        // replaced that index...
-        vec3 swappedWorldSpacePos = chunk.renderData[type][indexToRemove].modelMatrix[3];
-        ivec2 swappedSpreadSpacePos = WorldSpaceToSpreadSpace(swappedWorldSpacePos);
-        ChunkSpacePosition swappedChunkSpacePos = SpreadSpaceToChunkSpace(swappedSpreadSpacePos);
-
         // ...then the index to the key
-        chunk.indexes[swappedChunkSpacePos.spread.x][swappedChunkSpacePos.spread.y] = indexToRemove;
+        chunk.indexes[swapChunkSpacePos.x][swapChunkSpacePos.y] = indexToRemove;
     }
 
     vec3 seedPosition = SpreadSpaceToWorldSpace(spreadSpacePos);
@@ -305,7 +307,6 @@ int SpreadManager::Trample(const vec3& position, float radius, Entity* trampler)
 void SpreadManager::Reset() {
     chunkIndexes_.clear();
     for (int c = 0; c < NUM_CHUNKS; c++) {
-        DEBUGLOG(c);
         Chunk& chunk = chunks_[c];
         chunk.active = false;
         for (int t = 0; t < SpreadType_Num; t++)

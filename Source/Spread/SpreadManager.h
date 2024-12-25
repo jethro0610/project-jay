@@ -39,12 +39,12 @@ public:
         glm::vec2 origin;
         int count;
         vector_contig<RenderData, CHUNK_SIZE * CHUNK_SIZE> renderData[SpreadType_Num];
-        int indexes[CHUNK_SIZE][CHUNK_SIZE];
+        int16_t indexes[CHUNK_SIZE][CHUNK_SIZE];
         SpreadType types[CHUNK_SIZE][CHUNK_SIZE];
     };
     struct ChunkSpacePosition {
         glm::ivec2 chunk;
-        glm::ivec2 spread;
+        glm::vec<2, uint8_t> spread;
     };
 
     Chunk chunks_[NUM_CHUNKS];
@@ -60,8 +60,6 @@ public:
     static ChunkSpacePosition SpreadSpaceToChunkSpace(const glm::ivec2& spreadSpacePos);
     static glm::ivec2 ChunkSpaceToSpreadSpace(const ChunkSpacePosition& chunkSpacePos);
     static glm::vec3 SpreadSpaceToWorldSpace(const glm::ivec2& spreadSpacePos);
-
-    //bool HasSpread(const glm::vec3& worldSpacePos) const;
 
     enum AddSpreadDistribution {
         AD_Constant,

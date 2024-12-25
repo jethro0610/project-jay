@@ -1,6 +1,6 @@
 #pragma once
 
-enum SpreadType {
+enum SpreadType : char {
     SpreadType_Flower,
     SpreadType_Weed,
     SpreadType_Num

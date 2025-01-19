@@ -77,6 +77,7 @@ public:
         EF_Interpolate,
         EF_GroundCheck,
         EF_StickToGround,
+        EF_DownStickOnly,
         EF_AlignToGround,
         EF_UseVelocity,
         EF_UseSkeleton,
@@ -124,6 +125,7 @@ public:
     Transform lastTransform_;
     Transform renderTransform_;
     glm::vec3 velocity_;
+    glm::vec3 desiredUp_;
     TrailPoint* trail_;
 
     float traceDistance_;

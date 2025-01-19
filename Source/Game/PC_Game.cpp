@@ -72,17 +72,9 @@ void Game::UpdateInputs_P() {
         platform_.gamepad_.releasedButtons_[Gamepad::Y] || 
         platform_.gamepad_.releasedButtons_[Gamepad::RSHOULDER];
 
-    inputs_.startJump = 
-        platform_.pressedKeys_['E'] || 
-        platform_.gamepad_.pressedButtons_[Gamepad::A];
-
-    inputs_.releaseJump = 
-        platform_.releasedKeys_['E'] || 
-        platform_.gamepad_.releasedButtons_[Gamepad::A];
-
-    inputs_.useItem = 
-        platform_.pressedKeys_['R'] || 
-        platform_.gamepad_.pressedButtons_[Gamepad::X];
+    inputs_.noStick = 
+        platform_.heldKeys_[GLFW_KEY_SPACE] ||
+        platform_.gamepad_.heldButtons_[Gamepad::A];
 
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])

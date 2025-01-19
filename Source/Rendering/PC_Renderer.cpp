@@ -158,7 +158,7 @@ void Renderer::StartFrame() {
     forward = normalize(forward);
 
     vec3 cameraPos = camera_->transform_.position;
-    cameraPos.y = 0.0f;
+    //cameraPos.y = 0.0f;
 
     vec3 lookPosition = cameraPos + forward * ShadowConstants::SHADOW_FORWARD;
     vec3 lightPosition = -lightDirection_ * ShadowConstants::SHADOW_DISTANCE * 0.75f + lookPosition;
@@ -488,39 +488,6 @@ void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
-
-    Text itemText;
-    itemText.properties_.scale = 80.0f;
-    itemText.properties_.hAlignment = Text::CENTER_ALIGN;
-    itemText.properties_.vAlignment = Text::TOP_ALIGN;
-    itemText.properties_.hAnchor = Text::CENTER_ALIGN;
-    itemText.properties_.vAnchor = Text::TOP_ALIGN;
-
-    switch (player->item_) {
-        case Item::None:
-            itemText = "";
-            break;
-
-        case Item::Boost:
-            itemText = "Boost";
-            break;
-
-        case Item::Cut:
-            itemText = "Cut";
-            break;
-
-        case Item::Radius:
-            itemText = "Radius";
-            break;
-
-        case Item::NumItems:
-            itemText = "Cut";
-            break;
-
-        default:
-            break;
-    }
-    RenderText(itemText);
 }
 
 void Renderer::RenderText(Text& text) {

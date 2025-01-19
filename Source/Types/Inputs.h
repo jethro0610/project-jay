@@ -11,10 +11,8 @@ struct Inputs {
     bool startAttack;
     bool releaseAttack;
 
-    bool startJump;
-    bool releaseJump;
+    bool noStick;
 
-    bool useItem;
     bool shift;
 
     Inputs() {

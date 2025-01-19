@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include "Item.h"
 
 class Player : public Entity {
 public:
@@ -12,7 +11,6 @@ public:
         MM_JumpCharge,
         MM_Stun,
         MM_Air,
-        MM_Item,
         MM_Target
     };
 
@@ -29,7 +27,6 @@ public:
 
     float meter_;
     float spreadRadius_;
-    int spinTime_;
 
     bool charging_;
     int attackActiveTimer_;
@@ -45,10 +42,6 @@ public:
     Entity* homingTarget_;
     float planarVelocityBeforeHoming_;
 
-    Item item_;
-    int itemTimer_;
-    int itemMoveTimer_;
-
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;
     ParticleEmitter* slopeEmitter_;
@@ -61,7 +54,6 @@ public:
     void OnDestroy();
     void OnPush(glm::vec3 pushVec);
 
-    void UseItem();
     void EndHoming();
     void Boost(float boost, float retention = 0.0f);
 };

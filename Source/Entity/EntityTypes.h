@@ -5,12 +5,10 @@
 #include "CometSpawner.h"
 #include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
-#include "ItemBox.h"
 #include "JumpPad.h"
 #include "MeteorBox.h"
 #include "Mower.h"
 #include "MultiHitPod.h"
-#include "Player.h"
 #include "RabbitPole.h"
 #include "RisePillar.h"
 #include "SinglePod.h"
@@ -22,10 +20,11 @@
 #include "TimerPod.h"
 #include "TrailFish.h"
 #include "Mole.h"
-#include "Entity.h"
-#include "Tree.h"
 #include "Apple.h"
 #include "Pig.h"
+#include "Tree.h"
+#include "Entity.h"
+#include "Player.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -43,7 +42,6 @@
 	ENTITYEXP(Sleeper, sleeper, 12) \
 	ENTITYEXP(TimerPod, timerpod, 13) \
 	ENTITYEXP(SinglePod, singlepod, 14) \
-	ENTITYEXP(ItemBox, itembox, 15) \
 	ENTITYEXP(JumpPad, jumppad, 16) \
 	ENTITYEXP(TimedHitbox, timedhitbox, 17) \
 	ENTITYEXP(HeadSpitter, headspitter, 18) \

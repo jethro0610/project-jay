@@ -84,7 +84,6 @@ void Player::Init(Entity::InitArgs args) {
     lastAttackCharge_ = 0;
     chargingJump_ = false;
     jumpCharge_ = 0;
-    spinTime_ = 0;
 
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
@@ -214,7 +213,6 @@ void Player::Init(Entity::InitArgs args) {
     #endif
 
     meter_ = 0.0f;
-    item_ = Item::Boost;
     homingTarget_ = nullptr;
 }
 
@@ -234,9 +232,11 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    if (inputs_->startJump && !charging_) {
+    bool jumpInput = inputs_->ski && inputs_->flow;
+    if (jumpInput && !charging_) {
         if (onGround_)
             chargingJump_= true; 
+        /*
         else {
             float closestDistance = INFINITY;
             for (int i = 0; i < 128; i++) {
@@ -273,6 +273,7 @@ void Player::Update() {
             }
             planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
         }
+        */
     }
 
     if (onGround_)
@@ -300,9 +301,9 @@ void Player::Update() {
             greatestYVel = jumpBuffer_[i];
     }
 
-    if (inputs_->releaseJump) {
+    if (!jumpInput) {
         chargingJump_ = false;
-        if (coyoteAirTime_ <= MAX_COYOTE_TIME) {
+        if (jumpCharge_ > MAX_JUMP_CHARGE * 0.25f && coyoteAirTime_ <= MAX_COYOTE_TIME) {
             float chargeRatio = std::lerp(MIN_JUMP_VEL_RATIO, MAX_JUMP_VEL_RATIO, jumpCharge_ / MAX_JUMP_CHARGE);
             chargeRatio = greatestYVel < 0.0f ? 1.0f - chargeRatio : chargeRatio;
             float jumpAdd = std::lerp(MIN_JUMP_ADD, MAX_JUMP_ADD, jumpCharge_ / MAX_JUMP_CHARGE);
@@ -310,44 +311,13 @@ void Player::Update() {
 
             velocity_.y = max(jumpVelocity, jumpAdd);
             skipGroundCheck_ = true;
-            jumpCharge_ = 0.0f;
         }
+        jumpCharge_ = 0.0f;
     }
     if (chargingJump_)
         jumpCharge_ += JUMP_CHARGE_SPEED;
 
     jumpCharge_ = min(jumpCharge_, MAX_JUMP_CHARGE);
-
-    if (inputs_->useItem)
-        UseItem();
-
-    if (itemTimer_ > 0) {
-        itemTimer_--;
-
-        switch(item_) {
-            case Item::None:
-                break;
-
-            case Item::Boost:
-                break;
-
-            case Item::Cut:
-                spreadManager_->RemoveSpread(transform_.position, 6, nullptr);
-                break;
-
-            case Item::Radius:
-                break;
-
-            case Item::NumItems:
-                break;
-        }
-
-        if (itemTimer_ == 0)
-            item_ = Item::None;
-    }
-
-    if (itemMoveTimer_ > 0)
-        itemMoveTimer_--;
 
     if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
@@ -386,9 +356,6 @@ void Player::Update() {
     else if (!onGround_) {
         moveMode_ = MM_Air;
     }
-    else if (itemMoveTimer_ > 0) {
-        moveMode_ = MM_Item;
-    }
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
@@ -426,12 +393,6 @@ void Player::Update() {
     if (length(planarVelocity) > 0.0f)
         velocity_ -= normalize(planarVelocity) * bonus_;
     speed_ = length(planarVelocity) - bonus_;
-
-    if (moveMode_ == MM_Spin)
-        spinTime_ += 1;
-    else
-        spinTime_ -= 2;
-    spinTime_ = clamp(spinTime_, 0, 120);
 
     if (homingTarget_ == nullptr)
         velocity_.y -= 2.0f;
@@ -475,21 +436,6 @@ void Player::Update() {
             if (length(desiredMovement) > 0.001f) 
                 rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
             transform_.rotation = slerp(transform_.rotation, rotation, SPIN_ROTATION_SPEED);
-            vec3 direction = transform_.rotation * Transform::worldForward;
-            
-            if (spinTime_ >= 120)
-                speed_ *= 0.99f;
-
-            velocity_.x = direction.x * speed_;
-            velocity_.z = direction.z * speed_;
-            break;
-        }
-
-        case MM_Item: {
-            quat rotation = transform_.rotation;
-            if (length(desiredMovement) > 0.001f) 
-                rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-            transform_.rotation = slerp(transform_.rotation, rotation, ITEM_ROTATION_SPEED);
             vec3 direction = transform_.rotation * Transform::worldForward;
             
             velocity_.x = direction.x * speed_;
@@ -606,7 +552,7 @@ void Player::Update() {
     }
     else if (attackCharge_ > 0) 
         animation = 5;
-    else if (moveMode_ == MM_Spin || moveMode_ == MM_Item)
+    else if (moveMode_ == MM_Spin)
         animation = 3;
     else if (moveMode_ == MM_Slope)
         animation = 2;
@@ -645,12 +591,7 @@ void Player::Update() {
     }
 
     SCREENLINE(1, std::to_string(speed_));
-    SCREENLINE(2, std::to_string(jumpCharge_));
-    SCREENLINE(3, std::to_string(spinTime_));
-    SCREENLINE(4, std::to_string(bonus_));
-    SCREENLINE(5, std::to_string(length(velocity_)));
-    SCREENLINE(6, std::to_string(meter_));
-    SCREENLINE(7, std::to_string(spreadRadius_));
+    SCREENLINE(2, std::to_string(length(velocity_)));
 }
 
 void Player::RenderUpdate() {
@@ -701,43 +642,6 @@ void Player::OnPush(vec3 pushVec) {
         skipGroundCheck_ = true;
         onGround_ = false;
         ChangeAnimation(7, 0.0f);
-    }
-}
-
-void Player::UseItem() {
-    if (item_ == Item::None || itemTimer_ > 0)
-        return;
-
-    static constexpr int CUT_TIME = 4 * 60;
-    static constexpr int CUT_MOVE_TIME = 4 * 60;
-
-    static constexpr int RADIUS_TIME = 3 * 60;
-    static constexpr int RADIUS_MOVE_TIME = 30;
-
-    switch (item_) {
-        case Item::None:
-            break;
-
-        case Item::NumItems:
-            break;
-
-        case Item::Boost: {
-            velocity_ = transform_.GetForwardVector() * 60.0f;
-            item_ = Item::None;
-            break;
-        }
-
-        case Item::Cut: {
-            itemTimer_ = CUT_TIME;
-            itemMoveTimer_ = CUT_MOVE_TIME;
-            break;
-        }
-        
-        case Item::Radius: {
-            itemTimer_ = RADIUS_TIME;
-            itemMoveTimer_ = RADIUS_MOVE_TIME;
-            break;
-        }
     }
 }
 

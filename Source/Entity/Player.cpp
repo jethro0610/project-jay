@@ -233,7 +233,8 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    bool jumpInput = inputs_->ski && inputs_->flow;
+    // Disable jumping for now
+    bool jumpInput = false; //inputs_->ski && inputs_->flow;
     if (jumpInput && !charging_) {
         if (onGround_)
             chargingJump_= true; 

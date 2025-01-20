@@ -206,7 +206,7 @@ void Entity::BaseRenderUpdate(float interpTime) {
             if (onGround_)
                 desiredUp_ = lerp(lastGroundNormal_, groundNormal_, interpTime);
             else
-                desiredUp_ = lerp(desiredUp_, Transform::worldUp, 1.0f - expf(-8.0 * GlobalTime::GetDeltaTime()));
+                desiredUp_ = lerp(desiredUp_, Transform::worldUp, 1.0f - expf(-4.0 * GlobalTime::GetDeltaTime()));
 
             quat delta = rotation(Transform::worldUp, desiredUp_);
             renderTransform_.rotation = delta * renderTransform_.rotation;

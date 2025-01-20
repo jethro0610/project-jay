@@ -21,9 +21,9 @@
 #include "TrailFish.h"
 #include "Mole.h"
 #include "Apple.h"
+#include "Entity.h"
 #include "Pig.h"
 #include "Tree.h"
-#include "Entity.h"
 #include "Player.h"
 
 #define EXPANDENTITIES \

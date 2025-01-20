@@ -3,6 +3,7 @@
 #include "Terrain/Terrain.h"
 #include "EntityTypes.h"
 #include "Helpers/Assert.h"
+#include "Logging/ScreenText.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -109,8 +110,17 @@ void Entity::BaseUpdate() {
 
         if (GetFlag(EF_StickToGround)) {
             if (!skipGroundCheck_ && onGround_) {
-                if (useVelocity) 
-                    velocity_.y = -distanceToSurface / GlobalTime::TIMESTEP;
+                if (useVelocity) {
+                    float stickVel = -distanceToSurface / GlobalTime::TIMESTEP;
+                    if (GetFlag(EF_DownStickOnly)) {
+                        if (groundHeight_ - transform_.position.y > 5.0f)
+                            transform_.position.y = groundHeight_;
+                        else if (stickVel > velocity_.y || velocity_.y < 0.0)
+                            velocity_.y = stickVel;
+                    }
+                    else
+                        velocity_.y = stickVel;
+                }
                 else
                     transform_.position.y = groundHeight_;
             }
@@ -185,15 +195,20 @@ void Entity::CalculateBasePose() {
 
 void Entity::BaseRenderUpdate(float interpTime) {
     if (GetFlag(EF_Interpolate)) {
+        // This zeroes out the renderTransform_ rotation
         renderTransform_ = Transform::Lerp(
             lastTransform_,
             transform_,
             interpTime
         );
 
-        if (onGround_ && GetFlag(EF_AlignToGround)) {
-            vec3 up = lerp(lastGroundNormal_, groundNormal_, interpTime);
-            quat delta = rotation(Transform::worldUp, up);
+        if (GetFlag(EF_AlignToGround)) {
+            if (onGround_)
+                desiredUp_ = lerp(lastGroundNormal_, groundNormal_, interpTime);
+            else
+                desiredUp_ = lerp(desiredUp_, Transform::worldUp, 1.0f - expf(-8.0 * GlobalTime::GetDeltaTime()));
+
+            quat delta = rotation(Transform::worldUp, desiredUp_);
             renderTransform_.rotation = delta * renderTransform_.rotation;
         }
     }

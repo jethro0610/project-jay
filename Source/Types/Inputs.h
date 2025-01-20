@@ -11,7 +11,6 @@ struct Inputs {
     bool startAttack;
     bool releaseAttack;
 
-    bool useItem;
     bool shift;
 
     Inputs() {

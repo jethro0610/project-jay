@@ -89,6 +89,7 @@ void Player::Init(Entity::InitArgs args) {
     SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
+    SetFlag(EF_DownStickOnly, true);
     SetFlag(EF_AlignToGround, true);
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_UseSkeleton, true);
@@ -321,9 +322,8 @@ void Player::Update() {
 
     if (inputs_->startAttack && !chargingJump_)
         charging_ = true;
-    if (inputs_->releaseAttack)
-        charging_ = false;
-    if (attackCharge_ > MAX_CHARGE)
+
+    if (inputs_->releaseAttack || attackCharge_ > MAX_CHARGE)
         charging_ = false;
 
     if (charging_ && attackActiveTimer_ == ATTACK_TIME) {
@@ -359,11 +359,11 @@ void Player::Update() {
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
-    else if (chargingJump_) {
-        moveMode_ = MM_JumpCharge;
-    }
     else if (attackCharge_ != 0) {
         moveMode_ = MM_Attack;
+    }
+    else if (chargingJump_) {
+        moveMode_ = MM_Jump;
     }
     else if (inputs_->flow) {
         spinEmitter_->active_ = true;
@@ -394,8 +394,14 @@ void Player::Update() {
         velocity_ -= normalize(planarVelocity) * bonus_;
     speed_ = length(planarVelocity) - bonus_;
 
-    if (homingTarget_ == nullptr)
-        velocity_.y -= 2.0f;
+    if (homingTarget_ == nullptr) {
+        if (!onGround_)
+            velocity_.y -= 2.0f;
+        else if (moveMode_ == MM_Attack)
+            velocity_.y -= 16.0f;
+        else
+            velocity_.y -= 4.0f;
+    }
 
     switch (moveMode_) {
         case MM_Default: {
@@ -413,29 +419,23 @@ void Player::Update() {
             break;
         }
 
-        case MM_JumpCharge: {
-            quat initialRotation = transform_.rotation;
-            if (length(planarVelocity) > 0.1f)
-                initialRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
-
-            quat desiredRotation = initialRotation;
-
-            if (length(desiredMovement) > 0.001f) 
-               desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-
-            transform_.rotation = slerp(transform_.rotation, desiredRotation, JUMP_CHARGE_ROTATION_SPEED);
-            vec3 travelDirection = slerp(initialRotation, desiredRotation, JUMP_CHARGE_ROTATION_SPEED) * Transform::worldForward;
-            
-            velocity_.x = travelDirection.x * speed_;
-            velocity_.z = travelDirection.z * speed_;
-            break;
-        }
-
         case MM_Spin: {
             quat rotation = transform_.rotation;
             if (length(desiredMovement) > 0.001f) 
                 rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
             transform_.rotation = slerp(transform_.rotation, rotation, SPIN_ROTATION_SPEED);
+            vec3 direction = transform_.rotation * Transform::worldForward;
+            
+            velocity_.x = direction.x * speed_;
+            velocity_.z = direction.z * speed_;
+            break;
+        }
+
+        case MM_Jump: {
+            quat rotation = transform_.rotation;
+            if (length(desiredMovement) > 0.001f) 
+                rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+            transform_.rotation = slerp(transform_.rotation, rotation, JUMP_CHARGE_ROTATION_SPEED);
             vec3 direction = transform_.rotation * Transform::worldForward;
             
             velocity_.x = direction.x * speed_;
@@ -571,10 +571,7 @@ void Player::Update() {
     else
         tilt_ = 0.0f;
 
-    if (!onGround_)
-        traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.0f);
-    else
-        traceDistance_ = 10.0f;
+    traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.25f);
 
     if (speed_ > FAST_THRESHOLD) {
         Cone removeCone;
@@ -632,6 +629,10 @@ void Player::OnPush(vec3 pushVec) {
 
     if (attackActiveTimer_ != ATTACK_TIME) {
         velocity_ = -planarVelocity * velocityLen;
+        if (!onGround_)
+            velocity_.y = 120.0f;
+        else
+            velocity_.y = 30.0f;
         transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
     }
     else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.75f) {

@@ -158,7 +158,7 @@ void Renderer::StartFrame() {
     forward = normalize(forward);
 
     vec3 cameraPos = camera_->transform_.position;
-    cameraPos.y = 0.0f;
+    //cameraPos.y = 0.0f;
 
     vec3 lookPosition = cameraPos + forward * ShadowConstants::SHADOW_FORWARD;
     vec3 lightPosition = -lightDirection_ * ShadowConstants::SHADOW_DISTANCE * 0.75f + lookPosition;

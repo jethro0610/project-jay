@@ -588,6 +588,9 @@ void Player::Update() {
         spreadManager_->RemoveSpread(removeCone, this, true);
     }
 
+    if (!onGround_)
+        seedManager_->CreateSeed(transform_.position, this);
+
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(length(velocity_)));
 }

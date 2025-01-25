@@ -3,7 +3,7 @@
 #include "Entity/EntityList.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 #include "Entity/Entity.h"
 
 FindMode::FindMode(EditorModeArgs args):
@@ -32,17 +32,18 @@ ConfirmBehavior FindMode::OnConfirm() {
     std::string entityName = "e_" + textInput_.Get();
 
     bool found = false;
-    for (int i = 0; i < 128; i++) {
-        int e = (i + lastFindIndex_ + 1) % 128;
-        if (!entities_[e].alive_ || entities_[i].DBG_persistView_) continue;
+    for (int i = 0; i < targets_.size(); i++) {
+        int t = (i + lastFindIndex_ + 1) % 128;
+        if (!targets_[t]->Selectable()) continue;
         
-        if (entities_[e].GetName() == entityName) {
-            lastFindIndex_ = e;
-            target_.SetEntity(&entities_[e]);
+        if (targets_[t]->GetName() == entityName) {
+            target_.Select(targets_[t]);
             camera_.transform_.position = 
-                entities_[e].transform_.position - 
+                target_.GetPosition() - 
                 camera_.transform_.GetForwardVector() * 35.0f;
+
             found = true;
+            lastFindIndex_ = t;
             break;
         }
     }

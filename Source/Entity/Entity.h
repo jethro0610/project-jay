@@ -8,6 +8,7 @@
 #include "Rendering/Material.h"
 #include "Entity/EntityProperties.h"
 #include "TypeID.h"
+#include "Editor/EditorTarget.h"
 #include <vector>
 #include <inttypes.h>
 #include <cstring>
@@ -54,6 +55,36 @@ struct EntityDependendies {
 
 class Entity {
 public:
+    class ETarget : public EditorTarget {
+    private:
+        friend Entity;
+        Entity* entity_;
+
+    public:
+        ETarget(Entity* entity) : entity_(entity) {}
+        std::string GetName() override;
+
+        glm::vec3 GetPosition() override;
+        void SetPosition(const glm::vec3 &pos) override;
+
+        glm::quat GetRotation() override;
+        void SetRotation(const glm::quat &rot) override;
+
+        glm::vec4 GetScale() override;
+        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
+
+        EntityProperties GetProperties() override { return entity_->GetProperties(); }
+
+        bool TerrainAlignable() override { return true; }
+        bool Selectable() override { return entity_->alive_; }
+        bool IsEntity() override { return true; }
+        bool Clonable() override { return true; }
+
+        bool RayHit(const Ray& ray, Terrain& terrain) override;
+        EditorTarget* Clone() override;
+        void Destroy() override;
+    };
+
     struct HitArgs {
         Entity* target;
     };
@@ -157,9 +188,9 @@ public:
     int hitlag_;
     int hurtCooldown_;
 
+    EditorTarget* editorTarget_;
+
     #ifdef _DEBUG
-    Collider DBG_collider_;
-    bool DBG_selected_;
     int DBG_index_;
     bool DBG_persistView_;
     #endif

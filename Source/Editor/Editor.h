@@ -1,6 +1,7 @@
 #pragma once
 #include "EditorNotification.h"
 #include "EditorTarget.h"
+#include "EditorTargetController.h"
 #include "EditorTextInput.h"
 #include "Modes.h"
 #include "ExpandModes.h"
@@ -36,8 +37,8 @@ public:
         Terrain& terrain,
         bool& running
     );
+    EditorTargetController target_;
     EditorNotification notification_;
-    EditorTarget target_;
     EditorTextInput textInput_;
     Text modeText_;
     EditorVisibility visibility_;
@@ -56,6 +57,7 @@ private:
     EditorMode* postConfirmMode_;
 
     std::vector<EditorMode*> modes_;
+    std::vector<EditorTarget*> targets_;
 
     Camera& camera_;
     EntityList& entities_;

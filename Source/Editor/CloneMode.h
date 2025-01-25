@@ -27,6 +27,5 @@ private:
     float deltaX_;
     float deltaY_;
 
-    Entity* original_;    
-    Transform originalTransform_;
+    EditorTarget* original_;
 };

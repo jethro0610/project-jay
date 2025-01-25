@@ -93,39 +93,6 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             terrain_.DBG_landMapName_ = levelData["landmap"];
         else
             terrain_.DBG_landMapName_ = "lm_default";
-        
-        for (auto& bubbleData : levelData["bubbles"]) {
-            TerrainBubble bubble;
-            bubble.destroy_ = false;
-            bubble.DBG_selected_ = false;
-            bubble.position = GetVec4(bubbleData);
-            terrain_.DBG_bubbles_.push_back(bubble);
-        }
-
-        for (auto& curveData: levelData["curves"]) {
-            TerrainCurve curve;
-            curve.destroy_ = false;
-            curve.DBG_selectedPoint_ = -1;
-
-            for (int i = 0; i < 4; i++) {
-                curve.points[i] = GetVec4(curveData[i]);
-            }
-            terrain_.DBG_curves_.push_back(curve);
-        }
-
-        for (auto& noiseData: levelData["noises"]) {
-            TerrainNoise noise = TerrainNoise(
-                noiseData["seed"],
-                GetVec2(noiseData["position"]),
-                noiseData["radius"],
-                noiseData["min_height"],
-                noiseData["max_height"],
-                noiseData["frequency"]
-            );
-            terrain_.DBG_noises_.push_back(noise);
-        }
-        terrain_.GenerateTerrainDistances();
-        terrain_.GenerateTerrainHeights();
     }
     #endif
 
@@ -233,51 +200,6 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         levelData["entities"].push_back(entityData);
     }
 
-    for (int i = 0; i < terrain_.DBG_bubbles_.size(); i++) {
-        TerrainBubble& bubble = terrain_.DBG_bubbles_[i];
-        nlohmann::json bubbleData;
-
-        bubbleData["x"] = bubble.position.x;
-        bubbleData["y"] = bubble.position.y;
-        bubbleData["z"] = bubble.position.z;
-        bubbleData["w"] = bubble.position.w;
-        levelData["bubbles"].push_back(bubbleData);
-    }
-
-    for (int i = 0; i < terrain_.DBG_curves_.size(); i++) {
-        TerrainCurve& curve = terrain_.DBG_curves_[i];
-        nlohmann::json curveData;
-
-        for (int j = 0; j < 4; j++) {
-            nlohmann::json pointData;
-            pointData["x"] = curve.points[j].x;
-            pointData["y"] = curve.points[j].y;
-            pointData["z"] = curve.points[j].z;
-            pointData["w"] = curve.points[j].w;
-            curveData.push_back(pointData);
-        }
-        levelData["curves"].push_back(curveData);
-    }
-
-    for (int i = 0; i < terrain_.DBG_noises_.size(); i++) {
-        TerrainNoise& noise = terrain_.DBG_noises_[i];
-        nlohmann::json noiseData;
-        nlohmann::json positionData;
-
-        noiseData["seed"] = noise.seed_;
-
-        positionData["x"] = noise.position_.x;
-        positionData["y"] = noise.position_.y;
-        noiseData["position"] = positionData; 
-
-        noiseData["radius"] = noise.radius_;
-        noiseData["min_height"] = noise.minHeight_;
-        noiseData["max_height"] = noise.maxHeight_;
-        noiseData["frequency"] = noise.frequency_;
-
-        levelData["noises"].push_back(noiseData);
-    }
-
     for (int i = 0; i < SpreadManager::NUM_CHUNKS; i++) {
         SpreadManager::Chunk& chunk = spreadManager_.chunks_[i];
         if (!chunk.active)
@@ -318,9 +240,6 @@ void Level::Clear(bool clearTerrain) {
 
     #ifdef _DEBUG
     if (clearTerrain) {
-        terrain_.DBG_bubbles_.clear();
-        terrain_.DBG_curves_.clear();
-        terrain_.DBG_noises_.clear();
         terrain_.GenerateTerrainHeights();
     }
     #endif 

@@ -49,6 +49,7 @@ args_({
     modeText_,
     notification_,
     target_, 
+    targets_,
     textInput_,
     visibility_
 }),
@@ -93,12 +94,15 @@ EXPANDMODES
     notification_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
     notification_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
     notification_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+
+    for (int i = 0; i < 128; i++)
+        targets_.push_back(entities_[i].editorTarget_);
 }
 
 void Editor::StartEditing() {
     visibility_ = EV_EntitiesOnly;
     active_ = true;
-    target_.Untarget();
+    target_.Deselect();
     SetMode(defaultMode_);
     defaultMode_.SetSubmode(DS_Camera);
     postConfirmMode_ = nullptr;
@@ -115,7 +119,7 @@ void Editor::StopEditing() {
     mode_->OnCancel();
     mode_->OnEnd();
     active_ = false;
-    target_.Untarget();
+    target_.Deselect();
     camera_.target_ = &entities_[0];
     platform_.SetMouseVisible(false);
 
@@ -126,8 +130,8 @@ void Editor::StopEditing() {
 
 void Editor::SetMode(EditorMode* mode) {
     if (mode_ == mode) return;
-    if ((mode->requiresTarget_ || mode->requiresEntity_) && !target_.HasTarget()) return;
-    if (mode->requiresEntity_ && !target_.IsEntity()) return;
+    if (mode->requiresTarget_ && !target_.HasTarget()) return;
+    if (mode->requiresClone_ && !target_.Clonable()) return;
 
     if (mode_ != nullptr)
         mode_->OnEnd();
@@ -194,13 +198,13 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.loaded_) {
-        bool terrainDestroyed = terrain_.DestroyControls();
+        bool modifiersDestroyed = terrain_.DestroyPendingModifiers();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
-        if (target_.IsTerrainControl() && isTransformMode)
+        if (target_.UpdateTerrain() && isTransformMode)
             terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.DBG_lowRes_)
             terrain_.GenerateTerrainHeights(false, &entities_);
-        else if (terrainDestroyed)
+        else if (modifiersDestroyed)
             terrain_.GenerateTerrainHeights(false, &entities_);
 
         for (int i = 0; i < 128; i++) {

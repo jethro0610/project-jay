@@ -4,7 +4,7 @@
 #include "Terrain/Terrain.h"
 #include "Entity/EntityList.h"
 #include "Entity/Entity.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 using namespace glm;
 
 CloneMode::CloneMode(EditorModeArgs args):
@@ -12,7 +12,7 @@ EditorMode(args)
 {
     mouseVisibile_ = false;
     requiresTarget_ = true;
-    requiresEntity_ = true;
+    requiresClone_ = true;
 }
 
 std::string CloneMode::GetName() {
@@ -36,25 +36,21 @@ void CloneMode::SetSubmode(CloneMode::CloneSubmode submode) {
 
 void CloneMode::OnStart() {
     EditorMode::OnStart();
-    original_ = target_.GetEntity();
-    originalTransform_ = original_->transform_;
+    original_ = target_.GetTarget();
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
 
-    Entity& createdEntity = entities_.CreateEntity(original_->typeId_, Transform(), true);
-    createdEntity.transform_ = originalTransform_;
-    createdEntity.CopyProperties(original_);
-    target_.SetEntity(&createdEntity);
+    EditorTarget* cloned = original_->Clone();
+    target_.Select(cloned);
 }
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    target_.GetEntity()->destroy_ = true;
-    target_.SetEntity(original_);
+    target_.Destroy();
+    target_.Select(original_);
 }
 
 void CloneMode::Update() {
-    Entity* entity = target_.GetEntity(); 
     deltaX_ += platform_.deltaMouseX_ * 0.1f;
     deltaY_ -= platform_.deltaMouseY_ * 0.1f;
 
@@ -73,26 +69,25 @@ void CloneMode::Update() {
 
     switch (submode_) {
         case CS_Planar:
-            entity->transform_.position =
-                originalTransform_.position +
+            target_.SetPosition(
+                original_->GetPosition() +
                 planarCameraForward * deltaY_ +
-                planarCameraRight * deltaX_;
+                planarCameraRight * deltaX_
+            );
             break;
 
         case CS_Terrain:
-            entity->transform_.position =
-                originalTransform_.position +
+            vec3 pos =
+                original_->GetPosition() +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
-            entity->transform_.position.y = terrain_.GetHeight(vec2(entity->transform_.position.x, entity->transform_.position.z));
+            pos.y = terrain_.GetHeight(pos);
+            target_.SetPosition(pos);
             break;
     }
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    Entity& createdEntity = entities_.CreateEntity(target_.GetEntity()->typeId_, Transform(), true);
-    createdEntity.transform_ = target_.GetEntity()->transform_;
-    createdEntity.CopyProperties(original_);
-
+    target_.Clone();
     return CB_Stay;
 }

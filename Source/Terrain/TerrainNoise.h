@@ -3,11 +3,29 @@
 #include <glm/vec2.hpp>
 #include <math.h>
 #include <FastNoiseLite.h>
-#include "Shared_TerrainConstants.h"
+#include <glm/gtx/norm.hpp>
+#include "StaticTerrainModifier.h"
+#include "Editor/EditorTarget.h"
 
-class TerrainNoise {
+class TerrainNoise : public StaticTerrainModifier {
 public:
-    static constexpr int MAX = 16;
+    class ETarget : public EditorTarget {
+    private:
+        friend TerrainNoise;
+        TerrainNoise* noise_;
+
+    public:
+        std::string GetName() override { return "e_noise"; }
+
+        glm::vec3 GetPosition() override;
+        void SetPosition(const glm::vec3 &pos) override;
+
+        glm::vec4 GetScale() override;
+        void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
+
+        bool UpdateTerrain() override { return true; }
+        bool RayHit(const Ray &ray, Terrain& terrain) override;
+    };
 
     TerrainNoise();
     TerrainNoise(int seed, glm::vec2 position, float radius, float minHeight, float maxHeight, float frequency);
@@ -19,11 +37,9 @@ public:
     float minHeight_;
     float maxHeight_;
     float frequency_;
-    bool destroy_;
-    #ifdef _DEBUG
-    bool DBG_selected_;
-    #endif
 
-    float GetHeight(glm::vec2& pos) const;
-    bool InRange(glm::vec2& pos) const;
+    ETarget editorTarget_;
+
+    bool InRange(const glm::vec2& pos) override;
+    float GetHeight(const glm::vec2& pos) override;
 };

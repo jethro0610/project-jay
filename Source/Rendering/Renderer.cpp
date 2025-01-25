@@ -46,9 +46,7 @@ void Renderer::RenderEdit(
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_TerrainControlsOnly) {
-        RenderTerrainBubbles(terrain);
-        RenderTerrainCurves(terrain);
-        RenderTerrainNoises(terrain);
+        // Render terrain shtuff
     }
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
         RenderEntitiesS(entities);

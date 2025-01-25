@@ -3,12 +3,10 @@
 #include "Logging/Logger.h"
 using namespace glm;
 
-bool Ray::RayHitCollider(
-    glm::vec3 origin,
-    glm::vec3 direction,
-    const Transform& transform,
-    const Collider& collider
-) {
+bool Ray::HitCollider(
+    const Collider& collider,
+    const Transform& transform
+) const {
     float scale = (transform.scale.x + transform.scale.z) * 0.5f;
 
     vec3 vectorToCollider = transform.position - origin; 
@@ -31,12 +29,10 @@ bool Ray::RayHitCollider(
     return true;
 }
 
-bool Ray::RayHitSphere(
-    glm::vec3 origin,
-    glm::vec3 direction,
-    glm::vec3 sphereOrigin,
+bool Ray::HitSphere(
+    const glm::vec3& sphereOrigin,
     float radius
-) {
+) const {
     vec3 vectorToSphere = sphereOrigin - origin; 
 
     vec3 projected = glm::proj(vectorToSphere, direction);

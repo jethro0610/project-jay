@@ -2,25 +2,23 @@
 #include "Entity/Entity.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 
 ModifyEntityMode::ModifyEntityMode(EditorModeArgs args):
 EditorMode(args) {
-    requiresEntity_ = true;
     requiresLevel_ = true;
     mouseVisibile_ = false;
     ctrl_ = false;
 }
 
 void ModifyEntityMode::OnStart() {
-    entity_ = target_.GetEntity();
     property_ = "";
 
     propFloat_ = nullptr;
     propInt_ = nullptr;
     propBool_ = nullptr;
 
-    properties_ = entity_->GetProperties();
+    properties_ = target_.GetProperties();
 
     modeText_ = "Modify Entity";
     textInput_.SetLabel("Select property: p_");

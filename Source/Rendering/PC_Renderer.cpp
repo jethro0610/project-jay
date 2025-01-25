@@ -384,7 +384,7 @@ void Renderer::RenderEntitiesS(
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr);
             #else
             DebugShaderType debugShaderType = DS_Default;
-            if (entity.DBG_selected_)
+            if (entity.editorTarget_->Selected())
                 debugShaderType = DS_Selected;
             else if (entity.DBG_persistView_)
                 debugShaderType = DS_Persist;
@@ -538,126 +538,6 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.target_.name_);
     RenderText(editor.textInput_.text_);
     RenderText(editor.notification_.text_);
-}
-
-void Renderer::RenderTerrainBubbles(Terrain& terrain) {
-    Transform bubbleTransform;
-    bubbleTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-    mat4 bubbleMatrix;
-    for (TerrainBubble& bubble : terrain.DBG_bubbles_) {
-        bubbleTransform.position = bubble.position;
-        bubbleMatrix = bubbleTransform.ToMatrix();
-        RenderMesh(
-            &terrain.DBG_nodeModel_->meshes[0],
-            &terrain.DBG_bubbleMaterial_,
-            nullptr,
-            &bubbleMatrix,
-            nullptr,
-            RENDER_VIEW,
-            bubble.DBG_selected_ ? DS_SelectedUnshaded : DS_Default
-        );
-    }
-}
-
-void Renderer::RenderTerrainCurves(Terrain& terrain) {
-    Transform curveTransform;
-    curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-    mat4 curveMatrix;
-    for (TerrainCurve& curve : terrain.DBG_curves_) {
-        for (int i = 0; i < 65; i++) {
-            DebugShaderType shaderType = DS_Default;
-            if (i == 0 || i == 64) {
-                curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-                if (curve.DBG_selectedPoint_ == (i / 64) * 3)
-                    shaderType = DS_SelectedUnshaded;
-            }
-            else {
-                curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
-            }
-
-            vec4 curvePos = curve.GetPosition(i / 64.0f);
-            curveTransform.position = curvePos;
-            curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(
-                &terrain.DBG_nodeModel_->meshes[0], 
-                &terrain.DBG_curveMaterial_, 
-                nullptr,
-                &curveMatrix, 
-                nullptr, 
-                RENDER_VIEW, 
-                shaderType
-            );
-        }
-
-        curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-        curveTransform.position = curve.points[1];
-        curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(
-            &terrain.DBG_nodeModel_->meshes[0], 
-            &terrain.DBG_curveControlMaterial_, 
-            nullptr, 
-            &curveMatrix, 
-            nullptr, 
-            RENDER_VIEW,
-            curve.DBG_selectedPoint_ == 1 ? DS_SelectedFront : DS_Default
-        );
-        curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
-        for (int i = 1; i < 32; i++) {
-            vec4 pos = mix(curve.points[0], curve.points[1], i / 32.0f);
-            curveTransform.position = pos;
-            curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(
-                &terrain.DBG_nodeModel_->meshes[0], 
-                &terrain.DBG_curveControlMaterial_, 
-                nullptr, 
-                &curveMatrix
-            );
-        }
-
-        curveTransform.scale = vec3(2.0f, 4.0f, 2.0f);
-        curveTransform.position = curve.points[2];
-        curveMatrix = curveTransform.ToMatrix();
-        RenderMesh(
-            &terrain.DBG_nodeModel_->meshes[0], 
-            &terrain.DBG_curveControlMaterial_, 
-            nullptr, 
-            &curveMatrix, 
-            nullptr, 
-            RENDER_VIEW,
-            curve.DBG_selectedPoint_ == 2 ? DS_SelectedFront : DS_Default
-        );
-        curveTransform.scale = vec3(1.0f, 1.0f, 1.0f);
-        for (int i = 1; i < 32; i++) {
-            vec4 pos = mix(curve.points[2], curve.points[3], i / 32.0f);
-            curveTransform.position = pos;
-            curveMatrix = curveTransform.ToMatrix();
-            RenderMesh(
-                &terrain.DBG_nodeModel_->meshes[0], 
-                &terrain.DBG_curveControlMaterial_, 
-                nullptr, 
-                &curveMatrix
-            );
-        }
-    }
-}
-
-void Renderer::RenderTerrainNoises(Terrain& terrain) {
-    Transform transform;
-    transform.scale = vec3(2.0f, 4.0f, 2.0f);
-    mat4 matrix;
-    for (TerrainNoise& noise : terrain.DBG_noises_) {
-        transform.position = vec3(noise.position_.x, terrain.GetHeight(noise.position_), noise.position_.y);
-        matrix = transform.ToMatrix();
-        RenderMesh(
-            &terrain.DBG_nodeModel_->meshes[0],
-            &terrain.DBG_noiseMaterial_,
-            nullptr,
-            &matrix,
-            nullptr,
-            RENDER_VIEW,
-            noise.DBG_selected_ ? DS_SelectedUnshaded : DS_Default
-        );
-    }
 }
 
 void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {

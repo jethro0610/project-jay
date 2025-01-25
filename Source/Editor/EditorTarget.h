@@ -1,44 +1,46 @@
 #pragma once
-#include "Text/Text.h"
-#include <glm/vec3.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <string>
+#include "Entity/EntityProperties.h"
 
 class Entity;
-class TerrainBubble;
-class TerrainCurve;
-class TerrainNoise;
-class EntityList;
+class EditorTargetController;
+class Ray;
+class Terrain;
 
 class EditorTarget {
-public:
-    EditorTarget();
-    void Untarget();
-    void SetEntity(Entity* target);
-    void SetCurve(TerrainCurve* target, int point);
-    void SetBubble(TerrainBubble* target);
-    void SetNoise(TerrainNoise* noise);
-    void Destroy();
-    bool IsEntity() { return entity_ != nullptr; }
-    bool IsTerrainControl() { return bubble_ != nullptr || curve_ != nullptr || noise_ != nullptr; }
-    bool HasTarget() { return entity_ != nullptr || bubble_ != nullptr || curve_ != nullptr || noise_ != nullptr; }; 
-
-    Entity* GetEntity() { return entity_; };
-    
-    glm::vec3 GetPosition();
-    void SetPosition(glm::vec3 pos);
-
-    glm::vec4 GetScale();
-    void SetScale(glm::vec4 scale, glm::vec4 delta);
-
-    glm::quat GetRotation();
-    void SetRotation(glm::quat rotation);
-
-    Text name_;
-
 private:
-    Entity* entity_; 
-    TerrainBubble* bubble_;
-    TerrainCurve* curve_;
-    TerrainNoise* noise_;
-    int curvePoint_;
+    friend EditorTargetController;
+
+protected:
+    bool selected_;
+
+public:
+    EditorTarget() : selected_(false) {}
+    virtual std::string GetName() = 0;
+
+    virtual glm::vec3 GetPosition() { return glm::vec3(0.0f); };
+    virtual void SetPosition(const glm::vec3& pos) {};
+
+    virtual glm::quat GetRotation() { return glm::quat(0.0f, 0.0f, 0.0f, 0.0f); };
+    virtual void SetRotation(const glm::quat& rot) {};
+
+    virtual glm::vec4 GetScale() { return glm::vec4(0.0f); }
+    virtual void SetScale(const glm::vec4& ref, const glm::vec4& delta) {};
+
+    virtual EntityProperties GetProperties() { return EntityProperties(); };
+
+    virtual bool RayHit(const Ray& ray, Terrain& terrain) = 0;
+
+    virtual EditorTarget* Clone() { return nullptr; };
+
+    virtual void Destroy() {};
+
+    virtual bool TerrainAlignable() { return false; }
+    virtual bool IsEntity() { return false; }
+    virtual bool UpdateTerrain() { return false; }
+    virtual bool Selectable() { return true; }
+    virtual bool Clonable() { return false; }
+    bool Selected() { return selected_; }
 };

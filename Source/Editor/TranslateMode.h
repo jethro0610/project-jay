@@ -1,6 +1,6 @@
 #pragma once
 #include "EditorMode.h"
-#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 enum TranslateSubmode {
     TS_Planar,

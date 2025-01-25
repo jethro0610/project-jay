@@ -209,9 +209,6 @@ void Player::Init(Entity::InitArgs args) {
     overlapbox_.top = 2.0f;
     overlapbox_.radius = 1.0f;
     overlapbox_.bottom = 1.0f;
-    #ifdef _DEBUG
-    DBG_collider_ = pushbox_;
-    #endif
 
     meter_ = 0.0f;
     homingTarget_ = nullptr;

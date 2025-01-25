@@ -3,7 +3,7 @@
 #include "Entity/EntityList.h"
 #include "Platform/PC_Platform.h"
 #include "Terrain/Terrain.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 using namespace glm;
 
 TranslateMode::TranslateMode(EditorModeArgs args):
@@ -62,7 +62,7 @@ void TranslateMode::Update() {
         SetSubmode(TS_Planar);
     else if (platform_.pressedKeys_['V'])
         SetSubmode(TS_Vertical);
-    if (platform_.pressedKeys_['T'] && target_.IsEntity())
+    if (platform_.pressedKeys_['T'] && target_.TerrainAlignable())
         SetSubmode(TS_Terrain);
 
     vec3 planarCameraForward = camera_.transform_.GetForwardVector();

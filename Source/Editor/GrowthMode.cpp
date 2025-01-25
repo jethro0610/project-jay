@@ -59,7 +59,7 @@ void GrowthMode::Update() {
 
     terrainCursor_.radius = std::max(1.0f, terrainCursor_.radius);
 
-    terrainCursor_.position = terrain_.RaycastTerrain(camera_.transform_.position, GetMouseRay());
+    terrainCursor_.position = terrain_.RaycastTerrain(camera_.transform_.position, GetMouseDirection());
     if (terrainCursor_.position == vec3(0.0f)) {
         terrainCursor_.visible = false;
         return;

@@ -3,6 +3,7 @@
 #include "ConfirmBehavior.h"
 #include <glm/vec3.hpp>
 #include <string>
+#include <vector>
 
 class Camera;
 class EntityList;
@@ -17,6 +18,7 @@ class TerrainCursor;
 class Text;
 
 class EditorNotification;
+class EditorTargetController;
 class EditorTarget;
 class EditorTextInput;
 
@@ -33,7 +35,8 @@ struct EditorModeArgs {
     TerrainCursor& terrainCursor;
     Text& modeText;
     EditorNotification& notificaiton;
-    EditorTarget& target;
+    EditorTargetController& target;
+    std::vector<EditorTarget*>& targets;
     EditorTextInput& textInput;
     EditorVisibility& visibility;
 };
@@ -49,14 +52,14 @@ public:
     virtual void Update() { };
     virtual std::string GetName() { return "Error"; }
     virtual int GetBinding() { return '`'; }
-    bool requiresEntity_;
     bool requiresTarget_;
     bool requiresLevel_;
+    bool requiresClone_;
     bool ctrl_;
     bool mouseVisibile_;
 
     bool CanSwitch(bool holdingCtrl) const;
-    glm::vec3 GetMouseRay();
+    glm::vec3 GetMouseDirection();
 
 protected:
     Camera& camera_;
@@ -72,7 +75,8 @@ protected:
     Text& modeText_;
     Level& level_;
     EditorNotification& notificaiton_;
-    EditorTarget& target_;
+    EditorTargetController& target_;
+    std::vector<EditorTarget*>& targets_;
     EditorTextInput& textInput_;
     EditorVisibility& visibility_;
 };

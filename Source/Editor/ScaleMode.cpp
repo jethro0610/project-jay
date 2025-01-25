@@ -1,7 +1,6 @@
 #include "ScaleMode.h"
-#include "Entity/EntityList.h"
 #include "Platform/PC_Platform.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 using namespace glm;
 
 ScaleMode::ScaleMode(EditorModeArgs args):

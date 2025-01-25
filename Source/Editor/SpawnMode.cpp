@@ -6,7 +6,7 @@
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
 #include "EditorTextInput.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 #include "EditorNotification.h"
 #include "Entity/Entity.h"
 #include <glm/gtx/string_cast.hpp>
@@ -43,24 +43,6 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     if (distanceFromGround > 0.5f || any(isnan(scanPosition)))
         scanPosition = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
 
-    if (name == "e_bubble") {
-        TerrainBubble* bubble = terrain_.AddBubble(scanPosition);
-        target_.SetBubble(bubble);
-        terrain_.GenerateTerrainHeights(false, &entities_);
-        return CB_Default;
-    }
-    else if (name == "e_curve") {
-        TerrainCurve* curve = terrain_.AddCurve(scanPosition);
-        target_.SetCurve(curve, 0);
-        terrain_.GenerateTerrainHeights(false, &entities_);
-        return CB_Default;
-    }
-    else if (name == "e_noise") {
-        TerrainNoise* noise = terrain_.AddNoise(scanPosition);
-        terrain_.GenerateTerrainHeights(false, &entities_);
-        return CB_Default;
-    }
-
     TypeID typeId = Entity::GetTypeIDFromName(name);
 
     if (typeId == -1) {
@@ -75,7 +57,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     Transform transform;
     transform.position = scanPosition;
     Entity& entity = entities_.CreateEntity(typeId, transform, true);
-    target_.SetEntity(&entity);
+    target_.Select(entity.editorTarget_);
 
     return CB_Default;
 }

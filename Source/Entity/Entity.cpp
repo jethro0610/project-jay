@@ -4,6 +4,9 @@
 #include "EntityTypes.h"
 #include "Helpers/Assert.h"
 #include "Logging/ScreenText.h"
+#include "Collision/Ray.h"
+#include "Logging/Logger.h"
+#include "EntityList.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -24,6 +27,8 @@ void Entity::Construct(
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;
     trail_ = nullptr;
+
+    editorTarget_ = new ETarget(this);
 }
 
 void Entity::Init(
@@ -66,10 +71,6 @@ void Entity::Init(
     hurtCooldown_ = 0;
 
     #ifdef _DEBUG
-    DBG_selected_ = false;
-    DBG_collider_.radius = 1.0f;
-    DBG_collider_.top = 1.0f;
-    DBG_collider_.bottom = 1.0f;
     DBG_persistView_ = false;
     #endif
 
@@ -461,4 +462,52 @@ vec3 Entity::GetTarget() {
         #undef ENTITYEXP
     }
     return vec3(0.0f);
+}
+
+std::string Entity::ETarget::GetName() {
+    DEBUGLOG("Getting name in etarget");
+    return entity_->GetName();
+}
+
+vec3 Entity::ETarget::GetPosition() {
+    return entity_->transform_.position;
+}
+
+void Entity::ETarget::SetPosition(const glm::vec3& pos) {
+    entity_->transform_.position.x = pos.x;
+    entity_->transform_.position.y = pos.y;
+    entity_->transform_.position.z = pos.z;
+}
+
+quat Entity::ETarget::GetRotation() {
+    return entity_->transform_.rotation;
+}
+
+void Entity::ETarget::SetRotation(const glm::quat& rot) {
+    entity_->transform_.rotation = rot; 
+}
+
+vec4 Entity::ETarget::GetScale() {
+    return vec4(entity_->transform_.scale, 0.0f);
+}
+
+void Entity::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
+    entity_->transform_.scale.x = ref.x + delta.x;
+    entity_->transform_.scale.y = ref.y + delta.y;
+    entity_->transform_.scale.z = ref.z + delta.z;
+}
+
+bool Entity::ETarget::RayHit(const Ray& ray, Terrain& terrain) {
+    return ray.HitCollider(entity_->pushbox_, entity_->transform_);
+}
+
+EditorTarget* Entity::ETarget::Clone() {
+    Entity& createdEntity = entity_->entities_->CreateEntity(entity_->typeId_, Transform(), true);
+    createdEntity.transform_ = entity_->transform_;
+    createdEntity.CopyProperties(entity_);
+    return createdEntity.editorTarget_;
+}
+
+void Entity::ETarget::Destroy() {
+    entity_->destroy_ = true;
 }

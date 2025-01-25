@@ -2,14 +2,13 @@
 #include "Camera/Camera.h"
 #include "Entity/EntityList.h"
 #include "Platform/PC_Platform.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 using namespace glm;
 
 RotateMode::RotateMode(EditorModeArgs args):
 EditorMode(args) {
     mouseVisibile_ = false;
     requiresTarget_ = true;
-    requiresEntity_ = true;
 }
 
 std::string RotateMode::GetName() { 

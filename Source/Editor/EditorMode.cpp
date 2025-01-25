@@ -1,29 +1,30 @@
 #include "EditorMode.h"
 #include "Platform/PC_Platform.h"
 #include "Text/Text.h"
-#include "EditorTarget.h"
+#include "EditorTargetController.h"
 #include "Level/Level.h"
 #include "Camera/Camera.h"
 #include "Rendering/Renderer.h"
 
 EditorMode::EditorMode(EditorModeArgs args):
-camera_(args.camera),
-entities_(args.entities),
-inputs_(args.inputs),
-platform_(args.platform),
-renderer_(args.renderer),
-resourceManager_(args.resourceManager),
-spreadManager_(args.spreadManager),
-terrain_(args.terrain),
-terrainCursor_(args.terrainCursor),
-modeText_(args.modeText),
-level_(args.level),
-notificaiton_(args.notificaiton),
-target_(args.target),
-textInput_(args.textInput),
-visibility_(args.visibility)
+    camera_(args.camera),
+    entities_(args.entities),
+    inputs_(args.inputs),
+    platform_(args.platform),
+    renderer_(args.renderer),
+    resourceManager_(args.resourceManager),
+    spreadManager_(args.spreadManager),
+    terrain_(args.terrain),
+    terrainCursor_(args.terrainCursor),
+    modeText_(args.modeText),
+    level_(args.level),
+    notificaiton_(args.notificaiton),
+    target_(args.target),
+    targets_(args.targets),
+    textInput_(args.textInput),
+    visibility_(args.visibility)
 {
-    requiresEntity_ = false;
+    requiresClone_ = false;
     requiresLevel_ = true;
     ctrl_ = false;
 }
@@ -37,7 +38,7 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
     if (requiresTarget_ && !target_.HasTarget())
         return false;
 
-    if (requiresEntity_ && !target_.IsEntity())
+    if (requiresClone_ && !target_.Clonable())
         return false;
 
     if (requiresLevel_ && !level_.loaded_)
@@ -49,7 +50,7 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
     return true;
 }
 
-glm::vec3 EditorMode::GetMouseRay() {
+glm::vec3 EditorMode::GetMouseDirection() {
     float mouseX = platform_.mouseX_ / (1920 * 0.5f) - 1.0f;
     float mouseY = platform_.mouseY_ / (1080 * 0.5f) - 1.0f;
 

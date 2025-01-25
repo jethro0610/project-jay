@@ -25,7 +25,6 @@ public:
 private:
     EntityProperties properties_;
     ModifyState state_;
-    Entity* entity_;
     std::string property_;
 
     float* propFloat_;

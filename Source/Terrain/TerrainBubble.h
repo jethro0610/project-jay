@@ -1,38 +1,40 @@
 #pragma once
 #include <glm/vec4.hpp>
 #include <glm/vec2.hpp>
-#include "TerrainInfluence.h"
-#include "Shared_TerrainConstants.h"
+#include <math.h>
+#include <FastNoiseLite.h>
+#include <glm/gtx/norm.hpp>
+#include "StaticTerrainModifier.h"
+#include "Editor/EditorTarget.h"
 
-class TerrainBubble {
+class TerrainBubble : public StaticTerrainModifier {
 public:
-    static constexpr int MAX = 16;
-    glm::vec4 position;
-    bool destroy_;
-    #ifdef _DEBUG
-    bool DBG_selected_;
-    #endif
+    class ETarget : public EditorTarget {
+    private:
+        friend TerrainBubble;
+        TerrainBubble* bubble_;
 
-    TerrainInfluence GetInfluence(glm::vec2& pos, float offset = 0.0f) const;
+    public:
+        std::string GetName() override { return "e_bubble"; }
 
-    template<const int RES>
-    void WriteAffect(uint32_t affectMap[RES][RES], int index) const {
-        const int HALF_RES = RES * 0.5f;
-        const float WORLD_TO_TERRAIN = RES / TerrainConsts::RANGE;
-        int mapX = position.x * WORLD_TO_TERRAIN;
-        mapX += HALF_RES;
-        int mapY = position.z * WORLD_TO_TERRAIN;
-        mapY += HALF_RES;
-        int range = (position.w + 10.0f) * WORLD_TO_TERRAIN;
-        
-        int startX = std::max(mapX - range, 0);
-        int endX = std::min(mapX + range, RES - 1);
-        int startY = std::max(mapY - range, 0);
-        int endY = std::min(mapY + range, RES - 1);
+        glm::vec3 GetPosition() override;
+        void SetPosition(const glm::vec3 &pos) override;
 
-        for (int y = startY; y <= endY; y++) {
-        for (int x = startX; x <= endX; x++) {
-            affectMap[y][x] |= 1UL << index;
-        }}
-    }
+        glm::vec4 GetScale() override;
+        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
+
+        bool UpdateTerrain() override { return true; }
+        bool RayHit(const Ray &ray, Terrain& terrain) override;
+    };
+    TerrainBubble();
+    TerrainBubble(glm::vec2 position, float radius, float height);
+
+    glm::vec2 position_;
+    float radius_;
+    float height_;
+
+    ETarget editorTarget_;
+
+    float GetHeight(const glm::vec2 &pos) override;
+    bool InRange(const glm::vec2 &pos) override;
 };

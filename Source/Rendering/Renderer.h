@@ -168,15 +168,6 @@ private:
         int defaultView = RENDER_VIEW,
         DebugShaderType debugShader = DS_Default
     );
-    void RenderTerrainBubbles(
-        Terrain& terrain
-    );
-    void RenderTerrainCurves(
-        Terrain& terrain
-    );
-    void RenderTerrainNoises(
-        Terrain& terrain
-    );
     void RenderEditor(Editor& editor);
     void RenderTerrainCursor(TerrainCursor& terrainCursor);
     #endif

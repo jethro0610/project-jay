@@ -49,7 +49,7 @@ INLINE vec3 getTerrainNormal(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT
     return normalize(vec3(gradX, 1.0f, gradZ));
 }
 
-INLINE vec3 getDirectionToEdge(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
+INLINE vec2 getDirectionToEdge(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 dX = position - vec2(1.0f, 0.0f);
     vec2 dZ = position - vec2(0.0f, 1.0f);
 
@@ -57,5 +57,5 @@ INLINE vec3 getDirectionToEdge(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
     float gradX = getTerrainDistance(dX, terrain, accuracy).x - origin;
     float gradZ = getTerrainDistance(dZ, terrain, accuracy).x - origin;
 
-    return normalize(vec3(gradX, 0.0f, gradZ));
+    return normalize(vec2(gradX, gradZ));
 }

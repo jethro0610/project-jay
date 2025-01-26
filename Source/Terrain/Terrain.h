@@ -37,11 +37,11 @@ public:
 
     float GetHeight(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     float GetHeight(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
-    float GetNearestHeight(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
+    float GetRawHeight(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
 
     glm::vec3 GetNormal(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
-    glm::vec3 GetDirectionToEdge(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec2 GetDirectionToEdge(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetDirectionToEdge(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
     int area_;
 

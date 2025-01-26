@@ -23,6 +23,7 @@ public:
         static constexpr int MAX = 64;
         Transform transform;
         bool selected;
+        glm::vec4 color;
     };
 
     float GetHeight(const glm::vec2& pos);

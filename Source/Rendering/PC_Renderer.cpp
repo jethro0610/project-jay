@@ -472,10 +472,11 @@ void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
         modifier->WriteRenderNodes(nodes, terrain);
         for (StaticTerrainModifier::RenderNode& node : nodes) {
             material = terrain.modifierMaterial_;
+            material.properties.color = node.color;
             matrix = node.transform.ToMatrix();
             RenderMesh(
                 &terrain.DBG_nodeModel_->meshes[0],
-                &terrain.modifierMaterial_,
+                &material,
                 nullptr,
                 &matrix,
                 nullptr,

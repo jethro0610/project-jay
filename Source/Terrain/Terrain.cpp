@@ -41,7 +41,7 @@ resourceManager_(resourceManager)
     DBG_lowRes_ = true;
     DBG_nodeModel_ = resourceManager.GetModel("st_default");
     modifierMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
-    modifierMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
+    modifierMaterial_.properties.color = vec4(0.0f, 0.0f, 0.0f, 0.5f);
     modifierMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     #endif
 
@@ -157,19 +157,8 @@ float Terrain::GetHeight(const vec3& position, TerrainAccuracy accuracy) const {
     return height;
 }
 
-float Terrain::GetNearestHeight(const glm::vec2& position, TerrainAccuracy accuracy) const {
-    vec2 curPos = position;
-    for (int i = 0; i < 8; i++) {
-        vec2 dist = GetDistance(curPos, accuracy);
-
-        if (dist.x < 0.0)
-            return dist.y;
-
-        vec3 dir = GetDirectionToEdge(curPos, accuracy);
-        curPos += vec2(dir.x, dir.z) * dist.x;
-    }
-
-    return 0.0f;
+float Terrain::GetRawHeight(const glm::vec2& position, TerrainAccuracy accuracy) const {
+    return SampleTerrainMap(position).y;
 }
 
 vec3 Terrain::GetNormal(const vec2& position, TerrainAccuracy accuracy) const {
@@ -180,12 +169,13 @@ vec3 Terrain::GetNormal(const vec3& position, TerrainAccuracy accuracy) const {
     return GetNormal(vec2(position.x, position.z), accuracy);
 }
 
-vec3 Terrain::GetDirectionToEdge(const vec2& position, TerrainAccuracy accuracy) const {
+vec2 Terrain::GetDirectionToEdge(const vec2& position, TerrainAccuracy accuracy) const {
     return getDirectionToEdge(position, *this, accuracy);
 }
 
 vec3 Terrain::GetDirectionToEdge(const vec3& position, TerrainAccuracy accuracy) const {
-    return getDirectionToEdge(vec2(position.x, position.z), *this, accuracy);
+    vec2 dir = getDirectionToEdge(vec2(position.x, position.z), *this, accuracy);
+    return vec3(dir.x, 0.0f, dir.y);
 }
 
 #ifdef _DEBUG

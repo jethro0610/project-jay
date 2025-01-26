@@ -14,13 +14,27 @@ public:
     TerrainNoise();
 
     FastNoiseLite noise_;
-    int seed_;
+    glm::vec2 position_;
     float radius_;
+    int seed_;
     float minHeight_;
     float maxHeight_;
     float frequency_;
 
     void Init(const glm::vec3& pos = glm::vec3(0.0f));
+    inline bool InRange(const glm::vec2& pos) {
+        if (pos.x > position_.x + radius_)
+            return false;
+        if (pos.x < position_.x - radius_)
+            return false;
+        if (pos.y > position_.y + radius_)
+            return false;
+        if (pos.y < position_.y - radius_)
+            return false;
+
+        float dist = glm::distance2(pos, position_);
+        return dist <= radius_ * radius_;
+    }
     float GetHeight(const glm::vec2& pos);
     void WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain);
 

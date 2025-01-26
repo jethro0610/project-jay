@@ -14,6 +14,18 @@ float StaticTerrainModifier::GetHeight(const glm::vec2& pos) {
     }
 }
 
+bool StaticTerrainModifier::InRange(const glm::vec2& pos) {
+    ASSERT((id_ != 0), "Unassigned terrain modifier ID");
+    switch (id_) {
+        #define TERRAINMOD(TYPE, ARR) case TYPE::ID: return ((TYPE*)this)->InRange(pos); break;
+        EXPANDTERRAINMODS 
+        #undef TERRAINMOD
+        
+        default:
+            return false;
+    }
+}
+
 void StaticTerrainModifier::Save(nlohmann::json& json) {
     ASSERT((id_ != 0), "Unassigned terrain modifier ID");
     switch (id_) {

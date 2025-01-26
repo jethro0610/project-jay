@@ -14,9 +14,24 @@ public:
     static constexpr std::string NAME = "e_bubble";
     TerrainBubble();
 
+    glm::vec2 position_;
+    float radius_;
     float height_;
 
     void Init(const glm::vec3& pos = glm::vec3(0.0f));
+    inline bool InRange(const glm::vec2& pos) {
+        if (pos.x > position_.x + radius_)
+            return false;
+        if (pos.x < position_.x - radius_)
+            return false;
+        if (pos.y > position_.y + radius_)
+            return false;
+        if (pos.y < position_.y - radius_)
+            return false;
+
+        float dist = glm::distance2(pos, position_);
+        return dist <= radius_ * radius_;
+    }
     float GetHeight(const glm::vec2 &pos);
 
     void Save(nlohmann::json &json);

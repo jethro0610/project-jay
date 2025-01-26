@@ -398,7 +398,7 @@ void Player::Update() {
         else if (moveMode_ == MM_Attack)
             velocity_.y -= 16.0f;
         else
-            velocity_.y -= 4.0f;
+            velocity_.y -= 6.0f;
     }
 
     switch (moveMode_) {

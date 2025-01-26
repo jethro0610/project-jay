@@ -1,12 +1,4 @@
 {
-    "bubbles": [
-        {
-            "w": 124.70000457763672,
-            "x": -20.16898536682129,
-            "y": 31.707904815673828,
-            "z": -5.927654266357422
-        }
-    ],
     "entities": [
         {
             "bool_properties": null,
@@ -33,5 +25,6 @@
             "type_id": 1
         }
     ],
-    "landmap": "lm_default"
+    "landmap": "lm_default",
+    "terrain_modifiers": []
 }

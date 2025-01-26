@@ -25,5 +25,6 @@
             "type_id": 1
         }
     ],
-    "landmap": "lm_dawn2"
+    "landmap": "lm_dawn2",
+    "terrain_modifiers": []
 }

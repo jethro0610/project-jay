@@ -96,6 +96,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         else
             terrain_.DBG_landMapName_ = "lm_default";
 
+        for (auto& modifierJson : levelData["terrain_modifiers"]) {
+            int id = modifierJson["id"];
+            StaticTerrainModifier& modifier = terrain_.CreateStaticModifier(id);
+            modifier.Load(modifierJson);
+        }
+
         terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
     }
@@ -202,6 +208,18 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         entityData["bool_properties"] = boolProperties;
 
         levelData["entities"].push_back(entityData);
+    }
+
+
+    for (StaticTerrainModifier* modifier : terrain_.modifiers_) {
+        if (!modifier->active_)
+            continue;
+
+        nlohmann::json modifierJson;
+        modifierJson["id"] = modifier->id_;
+        modifierJson["name"] = modifier->GetName();
+        modifier->Save(modifierJson);
+        levelData["terrain_modifiers"].push_back(modifierJson);
     }
 
     for (int i = 0; i < SpreadManager::NUM_CHUNKS; i++) {

@@ -15,19 +15,17 @@ public:
 
     FastNoiseLite noise_;
     int seed_;
-    glm::vec2 position_;
     float radius_;
     float minHeight_;
     float maxHeight_;
     float frequency_;
 
     void Init(const glm::vec3& pos = glm::vec3(0.0f));
-    bool InRange(const glm::vec2& pos);
     float GetHeight(const glm::vec2& pos);
     void WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain);
 
-    void Save(nlohmann::json& json) {};
-    void Load(const nlohmann::json& json) {};
+    void Save(nlohmann::json& json);
+    void Load(const nlohmann::json& json);
 
     class ETarget : public EditorTarget {
     private:

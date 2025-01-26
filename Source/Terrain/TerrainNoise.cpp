@@ -3,6 +3,7 @@
 #include "Helpers/Ease.h"
 #include "Terrain.h"
 #include "Collision/Ray.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 TerrainNoise::TerrainNoise() {
@@ -19,11 +20,8 @@ void TerrainNoise::Init(const glm::vec3& pos) {
     minHeight_ = 0.0f;
     radius_ = 20.0f;
     frequency_ = 0.5f;
-}
-
-bool TerrainNoise::InRange(const glm::vec2& pos) {
-    float dist = glm::distance2(pos, position_);
-    return dist <= radius_ * radius_;
+    seed_ = RandomInt();
+    noise_.SetSeed(seed_);
 }
 
 float TerrainNoise::GetHeight(const glm::vec2& pos) {
@@ -38,7 +36,7 @@ float TerrainNoise::GetHeight(const glm::vec2& pos) {
 
 void TerrainNoise::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
     RenderNode node;
-    float height = terrain.GetHeight(position_) + 10.0f;
+    float height = terrain.GetNearestHeight(position_) + 10.0f;
     node.transform.position = vec3(position_.x, height, position_.y);
     node.selected = editorTarget_.selected_;
     node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
@@ -46,7 +44,7 @@ void TerrainNoise::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& n
 }
 
 vec3 TerrainNoise::ETarget::GetPosition() {
-    float height = noise_->terrain_->GetHeight(noise_->position_) + 10.0f;
+    float height = noise_->terrain_->GetNearestHeight(noise_->position_) + 10.0f;
     return vec4(noise_->position_.x, height, noise_->position_.y, 0.0f);
 }
 
@@ -62,11 +60,32 @@ glm::vec4 TerrainNoise::ETarget::GetScale() {
 void TerrainNoise::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
     noise_->radius_ = ref.x + delta.x;
     noise_->maxHeight_ = ref.y + delta.y;
-    noise_->frequency_ = ref.z + delta.z * 0.05f;
     noise_->minHeight_ = ref.w + delta.w;
+    noise_->frequency_ = ref.z + delta.z * 0.05f;
 };
 
 bool TerrainNoise::ETarget::RayHit(const Ray& ray) {
-    float height = noise_->terrain_->GetHeight(noise_->position_) + 10.0f;
+    float height = noise_->terrain_->GetNearestHeight(noise_->position_) + 10.0f;
     return ray.HitSphere(vec3(noise_->position_.x, height, noise_->position_.y), 5.0f);
+}
+
+void TerrainNoise::Save(nlohmann::json &json) {
+    json["x"] = position_.x;
+    json["y"] = position_.y;
+    json["radius"] = radius_;
+    json["max_height"] = maxHeight_;
+    json["min_height"] = minHeight_;
+    json["frequency"] = frequency_;
+    json["seed"] = seed_;
+}
+
+void TerrainNoise::Load(const nlohmann::json &json) {
+    position_.x = json["x"];
+    position_.y = json["y"];
+    radius_ = json["radius"];
+    maxHeight_ = json["max_height"];
+    minHeight_ = json["min_height"];
+    frequency_ = json["frequency"];
+    seed_ = json["seed"];
+    noise_.SetSeed(seed_);
 }

@@ -14,16 +14,13 @@ public:
     static constexpr std::string NAME = "e_bubble";
     TerrainBubble();
 
-    glm::vec2 position_;
-    float radius_;
     float height_;
 
     void Init(const glm::vec3& pos = glm::vec3(0.0f));
     float GetHeight(const glm::vec2 &pos);
-    bool InRange(const glm::vec2 &pos);
 
-    void Save(nlohmann::json &json) {}
-    void Load(const nlohmann::json &json) {}
+    void Save(nlohmann::json &json);
+    void Load(const nlohmann::json &json);
     void WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain);
 
     class ETarget : public EditorTarget {

@@ -18,11 +18,6 @@ void TerrainBubble::Init(const glm::vec3& pos) {
     radius_ = 20.0f;
 }
 
-bool TerrainBubble::InRange(const glm::vec2& pos) {
-    float dist = glm::distance2(pos, position_);
-    return dist <= radius_ * radius_;
-}
-
 float TerrainBubble::GetHeight(const vec2& pos) {
     float dist = distance(pos, position_);
     float t = EaseInOutQuad(1.0f - (dist / radius_));
@@ -31,7 +26,7 @@ float TerrainBubble::GetHeight(const vec2& pos) {
 
 void TerrainBubble::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
     RenderNode node;
-    float height = terrain.GetHeight(position_) + 10.0f;
+    float height = terrain.GetNearestHeight(position_) + 10.0f;
     node.transform.position = vec3(position_.x, height, position_.y);
     node.selected = editorTarget_.selected_;
     node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
@@ -39,7 +34,7 @@ void TerrainBubble::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& 
 }
 
 vec3 TerrainBubble::ETarget::GetPosition() {
-    float height = bubble_->terrain_->GetHeight(bubble_->position_) + 10.0f;
+    float height = bubble_->terrain_->GetNearestHeight(bubble_->position_) + 10.0f;
     return vec3(bubble_->position_.x, height, bubble_->position_.y);
 }
 
@@ -58,6 +53,20 @@ void TerrainBubble::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& del
 };
 
 bool TerrainBubble::ETarget::RayHit(const Ray& ray) {
-    float height = bubble_->terrain_->GetHeight(bubble_->position_) + 10.0f;
+    float height = bubble_->terrain_->GetNearestHeight(bubble_->position_) + 10.0f;
     return ray.HitSphere(vec3(bubble_->position_.x, height, bubble_->position_.y), 5.0f);
+}
+
+void TerrainBubble::Save(nlohmann::json &json) {
+    json["x"] = position_.x;
+    json["y"] = position_.y;
+    json["height"] = height_;
+    json["radius"] = radius_;
+}
+
+void TerrainBubble::Load(const nlohmann::json &json) {
+    position_.x = json["x"];
+    position_.y = json["y"];
+    height_ = json["height"];
+    radius_ = json["radius"];
 }

@@ -88,16 +88,17 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
     #ifdef _DEBUG
     DBG_name_ = name;
+    #endif
+
     if (loadTerrain) {
         if (levelData.contains("landmap"))
             terrain_.DBG_landMapName_ = levelData["landmap"];
         else
             terrain_.DBG_landMapName_ = "lm_default";
-    }
-    #endif
 
-    terrain_.GenerateTerrainDistances();
-    terrain_.GenerateTerrainHeights();
+        terrain_.GenerateTerrainDistances();
+        terrain_.GenerateTerrainHeights();
+    }
 
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
@@ -242,8 +243,7 @@ void Level::Clear(bool clearTerrain) {
     seedManager_.Reset();
 
     #ifdef _DEBUG
-    if (clearTerrain) {
-        terrain_.GenerateTerrainHeights();
-    }
+    if (clearTerrain)
+        terrain_.Reset();
     #endif 
 }

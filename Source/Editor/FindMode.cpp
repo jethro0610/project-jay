@@ -33,7 +33,7 @@ ConfirmBehavior FindMode::OnConfirm() {
 
     bool found = false;
     for (int i = 0; i < targets_.size(); i++) {
-        int t = (i + lastFindIndex_ + 1) % 128;
+        int t = (i + lastFindIndex_ + 1) % targets_.size();
         if (!targets_[t]->Selectable()) continue;
         
         if (targets_[t]->GetName() == entityName) {

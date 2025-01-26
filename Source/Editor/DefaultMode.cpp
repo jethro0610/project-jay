@@ -108,7 +108,7 @@ void DefaultMode::CursorUpdate() {
         Ray ray(camera_.transform_.position, GetMouseDirection());
 
         for (EditorTarget* target : targets_) {
-            if (target->Selectable() && target->RayHit(ray, terrain_)) {
+            if (target->Selectable() && target->RayHit(ray)) {
                 target_.Select(target);
                 break;
             }

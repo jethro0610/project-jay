@@ -44,7 +44,7 @@ resourceManager_(resourceManager)
     modifierMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     #endif
 
-    #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 64; i++) modifiers_.push_back(&ARR[i]);
+    #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 64; i++) { ARR[i].terrain_ = this; modifiers_.push_back(&ARR[i]); }
     EXPANDTERRAINMODS 
     #undef TERRAINMOD
 }
@@ -170,10 +170,6 @@ float SampleAdditiveMap(float x, float y, uint8_t additiveMap[RES][RES]) {
         b * a * additiveMap[sY1][sX1];
 }
 
-bool Terrain::DestroyPendingModifiers() {
-    return false;
-}
-
 struct InverseInfluence {
     float inverseWeight;
     float height;
@@ -249,7 +245,6 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
 #define INDEX(xVal, yVal) ((yVal) * RESOLUTION + (xVal))
 
 void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray, bool inverted) {
-    DEBUGLOG("DF");
     #pragma omp parallel for
     for (int y = 0; y < RESOLUTION; y++) {
     for (int x = 0; x < RESOLUTION; x++) {
@@ -565,4 +560,22 @@ StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec3
         #undef TERRAINMOD
     }
     ASSERT(false, "Out of available modifiers");
+}
+
+bool Terrain::DestroyPendingModifiers() {
+    bool destroy = false;
+    for (StaticTerrainModifier* modifier : modifiers_) {
+        if (!modifier->active_) continue;
+        if (!modifier->destroy_) continue;
+
+        modifier->active_ = false;
+        modifier->destroy_ = false;
+        destroy = true;
+    }
+    return destroy;
+}
+
+void Terrain::Reset() {
+    for (StaticTerrainModifier* modifier : modifiers_)
+        modifier->active_ = false;
 }

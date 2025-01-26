@@ -28,7 +28,6 @@ public:
         ResourceManager& resourceManager
     );
 
-    bool DestroyPendingModifiers();
 
     glm::vec2 SampleTerrainMap(float x, float y, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec2 SampleTerrainMap(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
@@ -55,6 +54,8 @@ public:
 
     static int GetIDFromName(const std::string& name);
     StaticTerrainModifier& CreateStaticModifier(int typeId, const glm::vec3& pos = glm::vec3(0.0f));
+    bool DestroyPendingModifiers();
+    void Reset();
 
     std::string DBG_landMapName_;
 

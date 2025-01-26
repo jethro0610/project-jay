@@ -465,7 +465,6 @@ vec3 Entity::GetTarget() {
 }
 
 std::string Entity::ETarget::GetName() {
-    DEBUGLOG("Getting name in etarget");
     return entity_->GetName();
 }
 
@@ -497,7 +496,7 @@ void Entity::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
     entity_->transform_.scale.z = ref.z + delta.z;
 }
 
-bool Entity::ETarget::RayHit(const Ray& ray, Terrain& terrain) {
+bool Entity::ETarget::RayHit(const Ray& ray) {
     return ray.HitCollider(entity_->pushbox_, entity_->transform_);
 }
 

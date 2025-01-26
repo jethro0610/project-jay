@@ -38,7 +38,7 @@ float TerrainNoise::GetHeight(const glm::vec2& pos) {
 
 void TerrainNoise::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
     RenderNode node;
-    float height = terrain.GetHeight(position_);
+    float height = terrain.GetHeight(position_) + 10.0f;
     node.transform.position = vec3(position_.x, height, position_.y);
     node.selected = editorTarget_.selected_;
     node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
@@ -46,7 +46,8 @@ void TerrainNoise::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& n
 }
 
 vec3 TerrainNoise::ETarget::GetPosition() {
-    return vec4(noise_->position_.x, 0.0, noise_->position_.y, 0.0f);
+    float height = noise_->terrain_->GetHeight(noise_->position_) + 10.0f;
+    return vec4(noise_->position_.x, height, noise_->position_.y, 0.0f);
 }
 
 void TerrainNoise::ETarget::SetPosition(const glm::vec3 &pos) {
@@ -65,6 +66,7 @@ void TerrainNoise::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delt
     noise_->minHeight_ = ref.w + delta.w;
 };
 
-bool TerrainNoise::ETarget::RayHit(const Ray& ray, Terrain& terrain) {
-    return ray.HitSphere(vec3(noise_->position_.x, terrain.GetHeight(noise_->position_), noise_->position_.y), 5.0f);
+bool TerrainNoise::ETarget::RayHit(const Ray& ray) {
+    float height = noise_->terrain_->GetHeight(noise_->position_) + 10.0f;
+    return ray.HitSphere(vec3(noise_->position_.x, height, noise_->position_.y), 5.0f);
 }

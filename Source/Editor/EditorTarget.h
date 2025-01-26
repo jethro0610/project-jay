@@ -31,7 +31,7 @@ public:
 
     virtual EntityProperties GetProperties() { return EntityProperties(); };
 
-    virtual bool RayHit(const Ray& ray, Terrain& terrain) = 0;
+    virtual bool RayHit(const Ray& ray) = 0;
 
     virtual EditorTarget* Clone() { return nullptr; };
 

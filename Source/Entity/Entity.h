@@ -80,7 +80,7 @@ public:
         bool IsEntity() override { return true; }
         bool Clonable() override { return true; }
 
-        bool RayHit(const Ray& ray, Terrain& terrain) override;
+        bool RayHit(const Ray& ray) override;
         EditorTarget* Clone() override;
         void Destroy() override;
     };

@@ -17,6 +17,7 @@ public:
     bool active_;
     bool destroy_;
     vector_const<EditorTarget*, 8> editorTargets_;
+    Terrain* terrain_;
 
     struct RenderNode {
         static constexpr int MAX = 64;

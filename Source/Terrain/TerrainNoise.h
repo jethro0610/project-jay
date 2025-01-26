@@ -44,7 +44,7 @@ public:
         void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
 
         bool UpdateTerrain() override { return true; }
-        bool RayHit(const Ray &ray, Terrain& terrain) override;
+        bool RayHit(const Ray &ray) override;
 
         void Destroy() override { noise_->destroy_ = true; }
     };

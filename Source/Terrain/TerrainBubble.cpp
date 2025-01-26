@@ -31,7 +31,7 @@ float TerrainBubble::GetHeight(const vec2& pos) {
 
 void TerrainBubble::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
     RenderNode node;
-    float height = terrain.GetHeight(position_);
+    float height = terrain.GetHeight(position_) + 10.0f;
     node.transform.position = vec3(position_.x, height, position_.y);
     node.selected = editorTarget_.selected_;
     node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
@@ -39,7 +39,8 @@ void TerrainBubble::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& 
 }
 
 vec3 TerrainBubble::ETarget::GetPosition() {
-    return vec3(bubble_->position_.x, 0.0, bubble_->position_.y);
+    float height = bubble_->terrain_->GetHeight(bubble_->position_) + 10.0f;
+    return vec3(bubble_->position_.x, height, bubble_->position_.y);
 }
 
 void TerrainBubble::ETarget::SetPosition(const glm::vec3 &pos) {
@@ -56,6 +57,7 @@ void TerrainBubble::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& del
     bubble_->height_ = ref.y + delta.y;
 };
 
-bool TerrainBubble::ETarget::RayHit(const Ray& ray, Terrain& terrain) {
-    return ray.HitSphere(vec3(bubble_->position_.x, terrain.GetHeight(bubble_->position_), bubble_->position_.y), 5.0f);
+bool TerrainBubble::ETarget::RayHit(const Ray& ray) {
+    float height = bubble_->terrain_->GetHeight(bubble_->position_) + 10.0f;
+    return ray.HitSphere(vec3(bubble_->position_.x, height, bubble_->position_.y), 5.0f);
 }

@@ -41,7 +41,7 @@ public:
         void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
 
         bool UpdateTerrain() override { return true; }
-        bool RayHit(const Ray &ray, Terrain& terrain) override;
+        bool RayHit(const Ray &ray) override;
         void Destroy() override { bubble_->destroy_ = true; }
     };
     ETarget editorTarget_;

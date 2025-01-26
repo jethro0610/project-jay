@@ -6,26 +6,19 @@
 using namespace glm;
 
 TerrainNoise::TerrainNoise() {
+    id_ = TerrainNoise::ID;
     editorTarget_.noise_ = this;
+    editorTargets_.push_back(&editorTarget_);
 }
 
-TerrainNoise::TerrainNoise(
-    int seed, 
-    glm::vec2 position, 
-    float radius, 
-    float minHeight, 
-    float maxHeight, 
-    float frequency
-) :
-    seed_(seed),
-    noise_(seed),
-    position_(position),
-    radius_(radius),
-    minHeight_(minHeight),
-    maxHeight_(maxHeight),
-    frequency_(frequency)
-{
-    editorTarget_.noise_ = this;
+void TerrainNoise::Init(const glm::vec3& pos) {
+    active_ = true;
+    position_.x = pos.x;
+    position_.y = pos.z;
+    maxHeight_ = 30.0f;
+    minHeight_ = 0.0f;
+    radius_ = 20.0f;
+    frequency_ = 0.5f;
 }
 
 bool TerrainNoise::InRange(const glm::vec2& pos) {
@@ -41,6 +34,15 @@ float TerrainNoise::GetHeight(const glm::vec2& pos) {
 
     sampleVal = (sampleVal + 1.0f) * 0.5f;
     return lerp(minHeight_, maxHeight_, sampleVal) * t;
+}
+
+void TerrainNoise::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
+    RenderNode node;
+    float height = terrain.GetHeight(position_);
+    node.transform.position = vec3(position_.x, height, position_.y);
+    node.selected = editorTarget_.selected_;
+    node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
+    nodes.push_back(node);
 }
 
 vec3 TerrainNoise::ETarget::GetPosition() {
@@ -59,7 +61,7 @@ glm::vec4 TerrainNoise::ETarget::GetScale() {
 void TerrainNoise::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
     noise_->radius_ = ref.x + delta.x;
     noise_->maxHeight_ = ref.y + delta.y;
-    noise_->frequency_ = ref.z + delta.z;
+    noise_->frequency_ = ref.z + delta.z * 0.05f;
     noise_->minHeight_ = ref.w + delta.w;
 };
 

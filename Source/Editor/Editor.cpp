@@ -97,6 +97,12 @@ EXPANDMODES
 
     for (int i = 0; i < 128; i++)
         targets_.push_back(entities_[i].editorTarget_);
+
+    for (StaticTerrainModifier* modifier : terrain.modifiers_) {
+        for (EditorTarget* target : modifier->editorTargets_) {
+            targets_.push_back(target);
+        }
+    }
 }
 
 void Editor::StartEditing() {

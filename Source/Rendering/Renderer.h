@@ -176,6 +176,9 @@ private:
         Material* material,
         float maxRadius
     );
+    void RenderStaticTerrainModifiers(
+        Terrain& terrain
+    );
     void RenderEntitiesS(
         EntityList& entities
     );

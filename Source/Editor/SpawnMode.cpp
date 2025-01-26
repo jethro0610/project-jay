@@ -43,21 +43,28 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     if (distanceFromGround > 0.5f || any(isnan(scanPosition)))
         scanPosition = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
 
-    TypeID typeId = Entity::GetTypeIDFromName(name);
+    TypeID entityId = Entity::GetTypeIDFromName(name);
+    int modifierId = Terrain::GetIDFromName(name);
 
-    if (typeId == -1) {
+    if (entityId != - 1) {
+        DependencyList deps;
+        DependencyList::GetFromEntity(entityId, deps);
+        resourceManager_.LoadDependencies(deps);
+
+        Transform transform;
+        transform.position = scanPosition;
+        Entity& entity = entities_.CreateEntity(entityId, transform, true);
+        target_.Select(entity.editorTarget_);
+    }
+    else if (modifierId != -1) {
+        StaticTerrainModifier& modifier = terrain_.CreateStaticModifier(modifierId, scanPosition);
+        target_.Select(modifier.editorTargets_[0]);
+        terrain_.GenerateTerrainHeights(false, &entities_);
+    }
+    else {
         notificaiton_.Set(name + " does not exist");
         return CB_Stay;
     }
-
-    DependencyList deps;
-    DependencyList::GetFromEntity(typeId, deps);
-    resourceManager_.LoadDependencies(deps);
-
-    Transform transform;
-    transform.position = scanPosition;
-    Entity& entity = entities_.CreateEntity(typeId, transform, true);
-    target_.Select(entity.editorTarget_);
 
     return CB_Default;
 }

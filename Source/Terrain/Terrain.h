@@ -3,6 +3,8 @@
 #include "Rendering/Texture.h"
 #include "Rendering/Model.h"
 #include "Rendering/Material.h"
+#include "TerrainBubble.h"
+#include "TerrainNoise.h"
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtx/hash.hpp>
@@ -51,14 +53,18 @@ public:
     glm::vec3 GetRandomPointInSameIslandFast(const glm::vec3& origin);
     glm::vec3 GetRandomPointInSameIsland(const glm::vec3& origin, float minDist, float maxDist);
 
+    static int GetIDFromName(const std::string& name);
+    StaticTerrainModifier& CreateStaticModifier(int typeId, const glm::vec3& pos = glm::vec3(0.0f));
+
     std::string DBG_landMapName_;
 
     Model* DBG_nodeModel_;
-    Material DBG_bubbleMaterial_;
-    Material DBG_curveMaterial_;
-    Material DBG_curveControlMaterial_;
-    Material DBG_noiseMaterial_;
     bool DBG_lowRes_;
+
+    TerrainBubble bubbles_[64];
+    TerrainNoise noises_[64];
+    vector_const<StaticTerrainModifier*, 128> modifiers_;
+    Material modifierMaterial_;
 
 private:
     ResourceManager& resourceManager_;

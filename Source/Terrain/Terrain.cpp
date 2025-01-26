@@ -10,6 +10,7 @@
 #include "Level/Level.h"
 #include "Helpers/Random.h"
 #include "Helpers/Assert.h"
+#include "TerrainModifiers.h"
 #include <fstream>
 #include <FastNoiseLite.h>
 #include <glm/gtx/compatibility.hpp>
@@ -38,16 +39,14 @@ resourceManager_(resourceManager)
     DBG_landMapName_ = "lm_default";
     DBG_lowRes_ = true;
     DBG_nodeModel_ = resourceManager.GetModel("st_default");
-    DBG_bubbleMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
-    DBG_bubbleMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
-    DBG_curveMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
-    DBG_curveMaterial_.properties.color = vec4(0.0f, 0.0f, 1.0f, 0.5f);
-    DBG_curveControlMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color_front");
-    DBG_curveControlMaterial_.properties.color = vec4(0.5f, 0.0f, 1.0f, 0.5f);
-
-    DBG_noiseMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
-    DBG_noiseMaterial_.properties.color = vec4(1.0f, 0.0f, 0.0f, 0.5f);
+    modifierMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
+    modifierMaterial_.properties.color = vec4(0.0f, 1.0f, 0.0f, 0.5f);
+    modifierMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     #endif
+
+    #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 64; i++) modifiers_.push_back(&ARR[i]);
+    EXPANDTERRAINMODS 
+    #undef TERRAINMOD
 }
 
 glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) const {
@@ -183,7 +182,8 @@ struct InverseInfluence {
 template <const int RES>
 void TemplateGenerateTerrainHeights(
     glm::vec2 terrainMap[RES][RES],
-    uint8_t additiveMap[RES][RES]
+    uint8_t additiveMap[RES][RES],
+    vector_const<StaticTerrainModifier*, 128>& modifiers
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
@@ -191,7 +191,7 @@ void TemplateGenerateTerrainHeights(
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
     for (int x = 0; x < RES; x++) {
-        float additiveHeight = additiveMap[y][x] * 5;
+         float height = additiveMap[y][x] * 5;
 
         float wX = x - HALF_RES;
         wX /= WORLD_TO_TERRAIN;
@@ -200,7 +200,11 @@ void TemplateGenerateTerrainHeights(
         vec2 pos = vec2(wX, wY);
         pos += vec2((1.0f / WORLD_TO_TERRAIN) * 0.5f);
 
-        terrainMap[y][x].y = additiveHeight;
+        for (StaticTerrainModifier* modifier : modifiers) {
+            if (modifier->active_ && modifier->InRange(pos))
+                height += modifier->GetHeight(pos);
+        }
+        terrainMap[y][x].y = height;
     }}
 }
 
@@ -220,7 +224,8 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     if (lowRes) {
         TemplateGenerateTerrainHeights<RESOLUTION_LOW>(
             DBG_terrainMapLow_, 
-            DBG_additiveMapLow_
+            DBG_additiveMapLow_,
+            modifiers_
         );
         DBG_lowRes_ = true;
         resourceManager_.UpdateTerrainMapTextureLow((glm::vec2*)DBG_terrainMapLow_);
@@ -228,7 +233,8 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     else {
         TemplateGenerateTerrainHeights<RESOLUTION>(
             terrainMap_, 
-            DBG_additiveMap_
+            DBG_additiveMap_,
+            modifiers_
         );
         resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
         DBG_lowRes_ = false;
@@ -243,6 +249,7 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
 #define INDEX(xVal, yVal) ((yVal) * RESOLUTION + (xVal))
 
 void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray, bool inverted) {
+    DEBUGLOG("DF");
     #pragma omp parallel for
     for (int y = 0; y < RESOLUTION; y++) {
     for (int x = 0; x < RESOLUTION; x++) {
@@ -532,4 +539,30 @@ vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin, float minDist, floa
     while (!PointIsInSameIsland(origin, point));
     point.y = GetHeight(point);
     return point;
+}
+
+int Terrain::GetIDFromName(const std::string& name) {
+    #define TERRAINMOD(TYPE, ARR) if (name == TYPE::NAME) return TYPE::ID;
+    EXPANDTERRAINMODS 
+    #undef TERRAINMOD
+    return -1;
+}
+
+StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec3& pos) {
+    switch (typeId) {
+        #define TERRAINMOD(TYPE, ARR)           \
+        case TYPE::ID: {                        \
+            for (int i = 0; i < 64; i++) {      \
+                if (ARR[i].active_)             \
+                    continue;                   \
+                                                \
+                ARR[i].Init(pos);               \
+                return ARR[i];                  \
+            }                                   \
+            break;                              \
+        }
+        EXPANDTERRAINMODS 
+        #undef TERRAINMOD
+    }
+    ASSERT(false, "Out of available modifiers");
 }

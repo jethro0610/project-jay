@@ -355,7 +355,6 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     }
 }
 
-
 void Renderer::RenderEntitiesS(
     EntityList& entities
 ) {
@@ -459,6 +458,32 @@ void Renderer::RenderParticles(ParticleManager& particleManager) {
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
         memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
         RenderMesh(quad_, &emitter.properties_.material, &instanceBuffer);
+    }
+}
+
+void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
+    mat4 matrix;
+    Material material; 
+    vector_const<StaticTerrainModifier::RenderNode, StaticTerrainModifier::RenderNode::MAX> nodes;
+    for (StaticTerrainModifier* modifier : terrain.modifiers_) {
+        if (!modifier->active_)
+            continue;
+
+        modifier->WriteRenderNodes(nodes, terrain);
+        for (StaticTerrainModifier::RenderNode& node : nodes) {
+            material = terrain.modifierMaterial_;
+            matrix = node.transform.ToMatrix();
+            RenderMesh(
+                &terrain.DBG_nodeModel_->meshes[0],
+                &terrain.modifierMaterial_,
+                nullptr,
+                &matrix,
+                nullptr,
+                RENDER_VIEW,
+                node.selected ? DS_SelectedUnshaded : DS_Default
+            );
+        }
+        nodes.clear();
     }
 }
 

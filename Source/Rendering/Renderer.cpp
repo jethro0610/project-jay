@@ -45,9 +45,7 @@ void Renderer::RenderEdit(
     StartFrame();
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
-    if (editor.visibility_ == EV_All || editor.visibility_ == EV_TerrainControlsOnly) {
-        // Render terrain shtuff
-    }
+    RenderStaticTerrainModifiers(terrain);
     if (editor.visibility_ == EV_All || editor.visibility_ == EV_EntitiesOnly)
         RenderEntitiesS(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);

@@ -96,6 +96,9 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     }
     #endif
 
+    terrain_.GenerateTerrainDistances();
+    terrain_.GenerateTerrainHeights();
+
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
         Transform entityTransform = GetTransform(entityData, "transform");

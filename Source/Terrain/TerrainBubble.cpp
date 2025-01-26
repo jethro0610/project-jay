@@ -5,19 +5,17 @@
 using namespace glm;
 
 TerrainBubble::TerrainBubble() {
+    id_ = TerrainBubble::ID;
     editorTarget_.bubble_ = this;
+    editorTargets_.push_back(&editorTarget_);
 }
 
-TerrainBubble::TerrainBubble(
-    glm::vec2 position, 
-    float radius, 
-    float height
-) :
-    position_(position),
-    radius_(radius),
-    height_(height)
-{
-    editorTarget_.bubble_ = this;    
+void TerrainBubble::Init(const glm::vec3& pos) {
+    active_ = true;
+    position_.x = pos.x;
+    position_.y = pos.z;
+    height_ = 30.0f;
+    radius_ = 20.0f;
 }
 
 bool TerrainBubble::InRange(const glm::vec2& pos) {
@@ -29,6 +27,15 @@ float TerrainBubble::GetHeight(const vec2& pos) {
     float dist = distance(pos, position_);
     float t = EaseInOutQuad(1.0f - (dist / radius_));
     return height_ * t;
+}
+
+void TerrainBubble::WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain) {
+    RenderNode node;
+    float height = terrain.GetHeight(position_);
+    node.transform.position = vec3(position_.x, height, position_.y);
+    node.selected = editorTarget_.selected_;
+    node.transform.scale = vec3(3.0f, 6.0f, 3.0f);
+    nodes.push_back(node);
 }
 
 vec3 TerrainBubble::ETarget::GetPosition() {

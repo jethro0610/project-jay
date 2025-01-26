@@ -9,26 +9,9 @@
 
 class TerrainNoise : public StaticTerrainModifier {
 public:
-    class ETarget : public EditorTarget {
-    private:
-        friend TerrainNoise;
-        TerrainNoise* noise_;
-
-    public:
-        std::string GetName() override { return "e_noise"; }
-
-        glm::vec3 GetPosition() override;
-        void SetPosition(const glm::vec3 &pos) override;
-
-        glm::vec4 GetScale() override;
-        void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
-
-        bool UpdateTerrain() override { return true; }
-        bool RayHit(const Ray &ray, Terrain& terrain) override;
-    };
-
+    static constexpr int ID = 2;
+    static constexpr std::string NAME = "e_noise";
     TerrainNoise();
-    TerrainNoise(int seed, glm::vec2 position, float radius, float minHeight, float maxHeight, float frequency);
 
     FastNoiseLite noise_;
     int seed_;
@@ -38,8 +21,32 @@ public:
     float maxHeight_;
     float frequency_;
 
-    ETarget editorTarget_;
+    void Init(const glm::vec3& pos = glm::vec3(0.0f));
+    bool InRange(const glm::vec2& pos);
+    float GetHeight(const glm::vec2& pos);
+    void WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain);
 
-    bool InRange(const glm::vec2& pos) override;
-    float GetHeight(const glm::vec2& pos) override;
+    void Save(nlohmann::json& json) {};
+    void Load(const nlohmann::json& json) {};
+
+    class ETarget : public EditorTarget {
+    private:
+        friend TerrainNoise;
+        TerrainNoise* noise_;
+
+    public:
+        std::string GetName() override { return TerrainNoise::NAME; }
+
+        glm::vec3 GetPosition() override;
+        void SetPosition(const glm::vec3 &pos) override;
+
+        glm::vec4 GetScale() override;
+        void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
+
+        bool UpdateTerrain() override { return true; }
+        bool RayHit(const Ray &ray, Terrain& terrain) override;
+
+        void Destroy() override { noise_->destroy_ = true; }
+    };
+    ETarget editorTarget_;
 };

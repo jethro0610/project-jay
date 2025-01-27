@@ -260,8 +260,6 @@ void Level::Clear(bool clearTerrain) {
     spreadManager_.Reset();
     seedManager_.Reset();
 
-    #ifdef _DEBUG
     if (clearTerrain)
         terrain_.Reset();
-    #endif 
 }

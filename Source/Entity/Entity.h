@@ -169,6 +169,9 @@ public:
     void DoPreUpdate();
     void DoUpdate();
     void DoRenderUpdate();
+    #ifdef _DEBUG
+    void DoEditorUpdate();
+    #endif
 
     void CalculateBasePose();
     void ChangeAnimation(int index, float transitionLength);
@@ -232,6 +235,9 @@ private:
     void PreUpdate() {};
     void Update() {};
     void RenderUpdate() {};
+    #ifdef _DEBUG
+    void EditorUpdate() {};
+    #endif
     void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args) {};
     void OnPush(glm::vec3 pushVec) {}

@@ -19,7 +19,7 @@
 #include <glm/gtx/string_cast.hpp>
 
 #ifdef _DEBUG
-#include "TerrainModifiers.h"
+#include "GenerateStaticTerrainModifiers.h"
 #endif
 
 using namespace glm;
@@ -567,6 +567,13 @@ vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin, float minDist, floa
     return point;
 }
 
+void Terrain::Reset() {
+    #ifdef _DEBUG
+    for (StaticTerrainModifier* modifier : DBG_modifiers_)
+        modifier->active_ = false;
+    #endif
+}
+
 #ifdef _DEBUG
 StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec3& pos) {
     switch (typeId) {
@@ -598,10 +605,5 @@ bool Terrain::DestroyPendingModifiers() {
         destroy = true;
     }
     return destroy;
-}
-
-void Terrain::Reset() {
-    for (StaticTerrainModifier* modifier : DBG_modifiers_)
-        modifier->active_ = false;
 }
 #endif

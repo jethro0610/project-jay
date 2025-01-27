@@ -386,6 +386,17 @@ void Entity::DoRenderUpdate() {
     }
 }
 
+#ifdef _DEBUG
+void Entity::DoEditorUpdate() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->EditorUpdate(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+#endif
+
 void Entity::DoHit(HitArgs args) {
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     switch(typeId_) {

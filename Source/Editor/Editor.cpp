@@ -215,6 +215,7 @@ void Editor::Update() {
             if (entities_[i].alive_) {
                 entities_[i].CalculateBasePose();
                 entities_[i].renderTransform_ = entities_[i].transform_;
+                entities_[i].DoEditorUpdate();
             }
         }
         entities_.DestroyFlaggedEntities();

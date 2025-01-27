@@ -1,6 +1,8 @@
 #include "TPillar.h"
 #include "Resource/ResourceManager.h"
 #include "Particle/ParticleManager.h"
+#include "Terrain/Terrain.h"
+#include <glm/gtx/string_cast.hpp>
 
 EntityDependendies TPillar::GetStaticDependencies() {
     return {
@@ -22,4 +24,19 @@ void TPillar::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    bubble_ = terrain_->CreateBubble();
+    DYN_MOD_RADIUS((*bubble_)) = 50.0f;
+    DYN_MOD_VALUE((*bubble_)) = 50.0f;
+    DYN_MOD_POS_X((*bubble_)) = transform_.position.x; 
+    DYN_MOD_POS_Y((*bubble_)) = transform_.position.z; 
+}
+
+void TPillar::EditorUpdate() {
+    DYN_MOD_POS_X((*bubble_)) = transform_.position.x; 
+    DYN_MOD_POS_Y((*bubble_)) = transform_.position.z; 
+}
+
+void TPillar::OnDestroy() {
+    terrain_->FreeBubble(bubble_);
 }

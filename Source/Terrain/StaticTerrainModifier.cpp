@@ -1,5 +1,5 @@
 #include "StaticTerrainModifier.h"
-#include "TerrainModifiers.h"
+#include "GenerateStaticTerrainModifiers.h"
 #include "Helpers/Assert.h"
 
 float StaticTerrainModifier::GetHeight(const glm::vec2& pos) {

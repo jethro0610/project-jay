@@ -1,5 +1,6 @@
 #pragma once
 #include "Shared_TerrainConstants.h"
+#include "DynamicTerrainModifierContainer.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Model.h"
 #include "Rendering/Material.h"
@@ -45,7 +46,6 @@ public:
     glm::vec3 GetNormal(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec2 GetDirectionToEdge(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec3 GetDirectionToEdge(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
-    int area_;
 
     void GenerateTerrainHeights(bool lowRes = false, EntityList* entities = nullptr);
     void GenerateTerrainDistances(EntityList* entities = nullptr);
@@ -54,11 +54,11 @@ public:
     bool PointIsInSameIsland(const glm::vec3& origin, const glm::vec3& point, float edgeDistance = 0.0f);
     glm::vec3 GetRandomPointInSameIslandFast(const glm::vec3& origin);
     glm::vec3 GetRandomPointInSameIsland(const glm::vec3& origin, float minDist, float maxDist);
+    void Reset();
 
     #ifdef _DEBUG
     StaticTerrainModifier& CreateStaticModifier(int typeId, const glm::vec3& pos = glm::vec3(0.0f));
     bool DestroyPendingModifiers();
-    void Reset();
 
     std::string DBG_landMapName_;
     Model* DBG_modifierNodeModel_;
@@ -69,6 +69,14 @@ public:
     TerrainNoise DBG_noises_[64];
     vector_const<StaticTerrainModifier*, 128> DBG_modifiers_;
     #endif
+
+    DynamicTerrainModifierContainer dynamicTerrainBubbles_;
+    DynamicTerrainModifier* CreateBubble() { 
+        return dynamicTerrainBubbles_.RequestAvailableModifier(); 
+    }
+    void FreeBubble(DynamicTerrainModifier* bubble) {
+        dynamicTerrainBubbles_.FreeModifier(bubble);
+    }
 
 private:
     ResourceManager& resourceManager_;

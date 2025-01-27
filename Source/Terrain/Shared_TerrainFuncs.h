@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Terrain/Terrain.h"
+#include "Shared_DynamicTerrainModifier.h"
 
 #define TERRAIN_TYPE const Terrain&
 #define TERRAIN_DEFAULT
@@ -9,11 +10,13 @@
 #define ACCURACY_DEFAULT = TA_Normal 
 #define SAMPLETERRAINMAP(pos, accuracy) terrain.SampleTerrainMap(pos, accuracy)
 #define INLINE inline
+#define DYN_BUBBLES terrain.dynamicTerrainBubbles_
 using namespace glm;
 
 #else
 #include <Shared_TerrainConstants.h>
-uniform vec4 u_terrainHoles[8];
+#include <Shared_DynamicTerrainModifier.h>
+uniform mat4 u_dynamicTerrainBubbles[DYN_MOD_MAX];
 SAMPLER2D(s_terrainMap, 15);
 
 #define TERRAIN_TYPE int
@@ -22,14 +25,22 @@ SAMPLER2D(s_terrainMap, 15);
 #define ACCURACY_DEFAULT = 0
 #define SAMPLETERRAINMAP(pos, accuracy) texture2DLod(s_terrainMap, pos / TERRAIN_RANGE + vec2(0.5f, 0.5f), 0)
 #define INLINE 
-
+#define DYN_BUBBLES u_dynamicTerrainBubbles
 #endif
-INLINE float Ease(float x) {
-    return x < 0.5 ? 2 * x * x : 1 - pow(-2 * x + 2, 2) / 2;
-}
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
+
+    #pragma unroll
+    for (int i = 0; i < DYN_MOD_MAX; i++) {
+        if (!DYN_MOD_ACTIVE(DYN_BUBBLES[i])) continue;
+
+        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Y(DYN_BUBBLES[i]));
+        float dist = distance(dynModPos, position);
+        float dScalar = 1.0f - min(dist / DYN_MOD_RADIUS(DYN_BUBBLES[i]), 1.0f);
+        if (dist < DYN_MOD_RADIUS(DYN_BUBBLES[i]))
+        pos.y += dScalar * DYN_MOD_VALUE(DYN_BUBBLES[i]);
+    }
 
     float t = pos.x / 32.0f;
     t = clamp(t, 0.0f, 1.0f);

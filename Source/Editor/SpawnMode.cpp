@@ -44,7 +44,7 @@ ConfirmBehavior SpawnMode::OnConfirm() {
         scanPosition = camera_.transform_.position + camera_.transform_.GetForwardVector() * 20.0f;
 
     TypeID entityId = Entity::GetTypeIDFromName(name);
-    int modifierId = Terrain::GetIDFromName(name);
+    int modifierId = StaticTerrainModifier::GetIDFromName(name);
 
     if (entityId != - 1) {
         DependencyList deps;

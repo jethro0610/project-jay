@@ -95,7 +95,6 @@ private:
     Shader* selectedShader_;
     Shader* selectedFrontShader_;
     Shader* selectedUnshadedShader_;
-    Shader* persistShader_;
     #endif
 
     glm::vec3 lightDirection_;
@@ -156,8 +155,7 @@ private:
         DS_Default,
         DS_Selected,
         DS_SelectedUnshaded,
-        DS_SelectedFront,
-        DS_Persist 
+        DS_SelectedFront
     };
     void RenderMesh(
         Mesh* mesh, 
@@ -170,16 +168,17 @@ private:
     );
     void RenderEditor(Editor& editor);
     void RenderTerrainCursor(TerrainCursor& terrainCursor);
+    void RenderStaticTerrainModifiers(
+        Terrain& terrain
+    );
+    void RenderScreenText();
     #endif
     void RenderTerrain(
         Terrain& terrain, 
         Material* material,
         float maxRadius
     );
-    void RenderStaticTerrainModifiers(
-        Terrain& terrain
-    );
-    void RenderEntitiesS(
+    void RenderEntities(
         EntityList& entities
     );
     void RenderSpread(
@@ -193,9 +192,6 @@ private:
     void RenderBlit();
     void RenderUI(EntityList& entities, SpreadManager& spreadManager);
     void RenderText(Text& text);
-    #ifdef _DEBUG
-    void RenderScreenText();
-    #endif
     void PresentFrame();
 };
 

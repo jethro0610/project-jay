@@ -31,5 +31,6 @@ public:
     void Save(nlohmann::json& json);
     void Load(const nlohmann::json& json);
     void WriteRenderNodes(vector_const<RenderNode, RenderNode::MAX>& nodes, Terrain& terrain);
+    static int GetIDFromName(const std::string& name);
     std::string GetName();
 };

@@ -55,36 +55,6 @@ struct EntityDependendies {
 
 class Entity {
 public:
-    class ETarget : public EditorTarget {
-    private:
-        friend Entity;
-        Entity* entity_;
-
-    public:
-        ETarget(Entity* entity) : entity_(entity) {}
-        std::string GetName() override;
-
-        glm::vec3 GetPosition() override;
-        void SetPosition(const glm::vec3 &pos) override;
-
-        glm::quat GetRotation() override;
-        void SetRotation(const glm::quat &rot) override;
-
-        glm::vec4 GetScale() override;
-        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
-
-        EntityProperties GetProperties() override { return entity_->GetProperties(); }
-
-        bool TerrainAlignable() override { return true; }
-        bool Selectable() override { return entity_->alive_; }
-        bool IsEntity() override { return true; }
-        bool Clonable() override { return true; }
-
-        bool RayHit(const Ray& ray) override;
-        EditorTarget* Clone() override;
-        void Destroy() override;
-    };
-
     struct HitArgs {
         Entity* target;
     };
@@ -188,13 +158,6 @@ public:
     int hitlag_;
     int hurtCooldown_;
 
-    EditorTarget* editorTarget_;
-
-    #ifdef _DEBUG
-    int DBG_index_;
-    bool DBG_persistView_;
-    #endif
-
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
     void CopyProperties(Entity* from);
@@ -231,6 +194,39 @@ public:
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;
+
+    #ifdef _DEBUG
+    class ETarget : public EditorTarget {
+    private:
+        friend Entity;
+        Entity* entity_;
+
+    public:
+        ETarget(Entity* entity) : entity_(entity) {}
+        std::string GetName() override;
+
+        glm::vec3 GetPosition() override;
+        void SetPosition(const glm::vec3 &pos) override;
+
+        glm::quat GetRotation() override;
+        void SetRotation(const glm::quat &rot) override;
+
+        glm::vec4 GetScale() override;
+        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
+
+        EntityProperties GetProperties() override { return entity_->GetProperties(); }
+
+        bool TerrainAlignable() override { return true; }
+        bool Selectable() override { return entity_->alive_; }
+        bool IsEntity() override { return true; }
+        bool Clonable() override { return true; }
+
+        bool RayHit(const Ray& ray) override;
+        EditorTarget* Clone() override;
+        void Destroy() override;
+    };
+    EditorTarget* editorTarget_;
+    #endif
 
 private:
     void PreUpdate() {};

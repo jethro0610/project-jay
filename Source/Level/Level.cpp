@@ -88,7 +88,6 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
     #ifdef _DEBUG
     DBG_name_ = name;
-    #endif
 
     if (loadTerrain) {
         if (levelData.contains("landmap"))
@@ -105,6 +104,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
     }
+    #endif
 
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
@@ -170,7 +170,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
     for (int i = 0; i < 128; i++) {
         Entity& entity = entities_[i];
-        if (!entity.alive_ || entity.DBG_persistView_) continue;
+        if (!entity.alive_) continue;
         
         nlohmann::json entityData; 
         entityData["name"] = entity.GetName();
@@ -211,7 +211,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     }
 
 
-    for (StaticTerrainModifier* modifier : terrain_.modifiers_) {
+    for (StaticTerrainModifier* modifier : terrain_.DBG_modifiers_) {
         if (!modifier->active_)
             continue;
 

@@ -277,7 +277,7 @@ void ResourceManager::LoadAllShaders() {
 
         std::string name = std::string(VERTEX_SHADERS[v]) + "." + std::string(FRAGMENT_SHADERS[f]);
         Shader& shader = shaders_.Add(name);
-        shader.DBG_name = name;
+        ASSIGN_DEBUG_NAME(shader, name);
         shader.handle = handle;
     } }
 }

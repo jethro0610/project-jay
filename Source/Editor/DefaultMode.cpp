@@ -5,7 +5,6 @@
 #include "Rendering/Renderer.h"
 #include "EditorTarget.h"
 #include "EditorTargetController.h"
-#include "EditorVisibility.h"
 #include "Entity/Entity.h"
 using namespace glm;
 
@@ -55,15 +54,6 @@ void DefaultMode::SetSubmode(DefaultSubmode submode) {
 }
 
 void DefaultMode::Update() {
-    if (platform_.pressedKeys_['V']) {
-        target_.Deselect();
-        visibility_ = EV_All;
-    }
-    if (platform_.pressedKeys_['E']) {
-        target_.Deselect();
-        visibility_ = EV_EntitiesOnly;
-    }
-
     if (platform_.pressedKeys_[GetBinding()]) {
         switch(submode_) {
             case DS_Camera:

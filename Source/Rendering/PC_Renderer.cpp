@@ -98,7 +98,6 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
     selectedUnshadedShader_ = resourceManager.GetShader("vs_static", "fs_selected_unshaded");
     selectedFrontShader_ = resourceManager.GetShader("vs_static", "fs_selected_front");
-    persistShader_ = resourceManager.GetShader("vs_static", "fs_persist");
     #endif
 }
 
@@ -276,10 +275,6 @@ void Renderer::RenderMesh(
                 case DS_SelectedFront:
                     shaderHandle = selectedFrontShader_->handle;
                     break;
-
-                case DS_Persist:
-                    shaderHandle = persistShader_->handle;
-                    break;
             }
             #endif
             SetTexturesFromMaterial(material, true);
@@ -355,7 +350,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     }
 }
 
-void Renderer::RenderEntitiesS(
+void Renderer::RenderEntities(
     EntityList& entities
 ) {
     GPUPose pose;
@@ -385,8 +380,6 @@ void Renderer::RenderEntitiesS(
             DebugShaderType debugShaderType = DS_Default;
             if (entity.editorTarget_->Selected())
                 debugShaderType = DS_Selected;
-            else if (entity.DBG_persistView_)
-                debugShaderType = DS_Persist;
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, RENDER_VIEW, debugShaderType);
             #endif 
         }
@@ -461,21 +454,22 @@ void Renderer::RenderParticles(ParticleManager& particleManager) {
     }
 }
 
+#ifdef _DEBUG
 void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
     mat4 matrix;
     Material material; 
     vector_const<StaticTerrainModifier::RenderNode, StaticTerrainModifier::RenderNode::MAX> nodes;
-    for (StaticTerrainModifier* modifier : terrain.modifiers_) {
+    for (StaticTerrainModifier* modifier : terrain.DBG_modifiers_) {
         if (!modifier->active_)
             continue;
 
         modifier->WriteRenderNodes(nodes, terrain);
         for (StaticTerrainModifier::RenderNode& node : nodes) {
-            material = terrain.modifierMaterial_;
+            material = terrain.DBG_modifierNodeMaterial_;
             material.properties.color = node.color;
             matrix = node.transform.ToMatrix();
             RenderMesh(
-                &terrain.DBG_nodeModel_->meshes[0],
+                &terrain.DBG_modifierNodeModel_->meshes[0],
                 &material,
                 nullptr,
                 &matrix,
@@ -487,6 +481,7 @@ void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
         nodes.clear();
     }
 }
+#endif
 
 void Renderer::RenderPostProcess() {
     SetTexturesFromMaterial(&postProcessMaterial_, false);

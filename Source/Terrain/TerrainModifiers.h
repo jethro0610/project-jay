@@ -3,5 +3,5 @@
 #include "TerrainNoise.h"
 
 #define EXPANDTERRAINMODS\
-	TERRAINMOD(TerrainBubble, bubbles_) \
-	TERRAINMOD(TerrainNoise, noises_)
+	TERRAINMOD(TerrainBubble, DBG_bubbles_) \
+	TERRAINMOD(TerrainNoise, DBG_noises_)

@@ -21,9 +21,6 @@ resourceManager_(resourceManager)
     for (int i = 0; i < 128; i++) {
         rawEntities[i].entity.Construct(camera, *this, inputs, level, seedManager, spreadManager, terrain);
         available_[i] = i;
-        #ifdef _DEBUG
-        rawEntities_[i].entity.DBG_index_ = i;
-        #endif
     }
 
     availablePos_ = 0;

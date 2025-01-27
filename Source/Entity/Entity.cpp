@@ -70,10 +70,6 @@ void Entity::Init(
     hitlag_ = 0;
     hurtCooldown_ = 0;
 
-    #ifdef _DEBUG
-    DBG_persistView_ = false;
-    #endif
-
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
 
     switch(typeId_) {
@@ -464,6 +460,7 @@ vec3 Entity::GetTarget() {
     return vec3(0.0f);
 }
 
+#ifdef _DEBUG
 std::string Entity::ETarget::GetName() {
     return entity_->GetName();
 }
@@ -510,3 +507,4 @@ EditorTarget* Entity::ETarget::Clone() {
 void Entity::ETarget::Destroy() {
     entity_->destroy_ = true;
 }
+#endif

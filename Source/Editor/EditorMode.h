@@ -1,5 +1,4 @@
 #pragma once
-#include "EditorVisibility.h"
 #include "ConfirmBehavior.h"
 #include <glm/vec3.hpp>
 #include <string>
@@ -38,7 +37,6 @@ struct EditorModeArgs {
     EditorTargetController& target;
     std::vector<EditorTarget*>& targets;
     EditorTextInput& textInput;
-    EditorVisibility& visibility;
 };
 
 class EditorMode {
@@ -78,5 +76,4 @@ protected:
     EditorTargetController& target_;
     std::vector<EditorTarget*>& targets_;
     EditorTextInput& textInput_;
-    EditorVisibility& visibility_;
 };

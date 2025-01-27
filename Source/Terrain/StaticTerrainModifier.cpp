@@ -62,6 +62,13 @@ void StaticTerrainModifier::WriteRenderNodes(vector_const<RenderNode, RenderNode
     }
 }
 
+int StaticTerrainModifier::GetIDFromName(const std::string& name) {
+    #define TERRAINMOD(TYPE, ARR) if (name == TYPE::NAME) return TYPE::ID;
+    EXPANDTERRAINMODS 
+    #undef TERRAINMOD
+    return -1;
+}
+
 std::string StaticTerrainModifier::GetName() {
     ASSERT((id_ != 0), "Unassigned terrain modifier ID");
     switch (id_) {

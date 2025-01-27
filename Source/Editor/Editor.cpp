@@ -50,8 +50,7 @@ args_({
     notification_,
     target_, 
     targets_,
-    textInput_,
-    visibility_
+    textInput_
 }),
 #define MODEEXPANSION(TYPE, VAR) VAR(args_),
 #define TAILMODEEXPANSION(TYPE, VAR) VAR(args_)
@@ -98,7 +97,7 @@ EXPANDMODES
     for (int i = 0; i < 128; i++)
         targets_.push_back(entities_[i].editorTarget_);
 
-    for (StaticTerrainModifier* modifier : terrain.modifiers_) {
+    for (StaticTerrainModifier* modifier : terrain.DBG_modifiers_) {
         for (EditorTarget* target : modifier->editorTargets_) {
             targets_.push_back(target);
         }
@@ -106,7 +105,6 @@ EXPANDMODES
 }
 
 void Editor::StartEditing() {
-    visibility_ = EV_EntitiesOnly;
     active_ = true;
     target_.Deselect();
     SetMode(defaultMode_);

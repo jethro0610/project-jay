@@ -21,8 +21,7 @@ EditorMode::EditorMode(EditorModeArgs args):
     notificaiton_(args.notificaiton),
     target_(args.target),
     targets_(args.targets),
-    textInput_(args.textInput),
-    visibility_(args.visibility)
+    textInput_(args.textInput)
 {
     requiresClone_ = false;
     requiresLevel_ = true;

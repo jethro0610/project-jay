@@ -5,7 +5,6 @@
 #include "EditorTextInput.h"
 #include "Modes.h"
 #include "ExpandModes.h"
-#include "EditorVisibility.h"
 #include "TerrainCursor.h"
 #include <vector>
 
@@ -41,7 +40,6 @@ public:
     EditorNotification notification_;
     EditorTextInput textInput_;
     Text modeText_;
-    EditorVisibility visibility_;
     TerrainCursor terrainCursor_;
 
     void StartEditing();

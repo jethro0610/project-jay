@@ -14,7 +14,7 @@ class CloneMode : public EditorMode {
 public:
     CloneMode(EditorModeArgs args);
     std::string GetName() override;
-    int GetBinding() override { return 'O'; }
+    int GetBinding() override { return 'D'; }
     void OnStart() override;
     void OnEnd() override;
     ConfirmBehavior OnConfirm() override;

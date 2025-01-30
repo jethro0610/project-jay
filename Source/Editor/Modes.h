@@ -12,3 +12,4 @@
 #include "SetLandmapMode.h"
 #include "SpawnMode.h"
 #include "GrowthMode.h"
+#include "GenericScalarMode.h"

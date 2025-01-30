@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
+#include <unordered_map>
 #include "Entity/EntityProperties.h"
 
 class Entity;
@@ -29,6 +30,10 @@ public:
     virtual glm::vec4 GetScale() { return glm::vec4(0.0f); }
     virtual void SetScale(const glm::vec4& ref, const glm::vec4& delta) {};
 
+    virtual float GetScalar(char id) { return 0.0f; };
+    virtual void SetScalar(char id, float value) {};
+    virtual std::unordered_map<char, std::string> GetScalarNames() { return {}; }
+
     virtual EntityProperties GetProperties() { return EntityProperties(); };
 
     virtual bool RayHit(const Ray& ray) = 0;
@@ -39,6 +44,7 @@ public:
 
     virtual bool TerrainAlignable() { return false; }
     virtual bool IsEntity() { return false; }
+    virtual bool IsModifier() { return false; }
     virtual bool UpdateTerrain() { return false; }
     virtual bool Selectable() { return true; }
     virtual bool Clonable() { return false; }

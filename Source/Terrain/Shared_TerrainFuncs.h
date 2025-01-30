@@ -2,6 +2,7 @@
 
 #pragma once
 #include "Terrain/Terrain.h"
+#include "Helpers/Shared_Ease.h"
 #include "Shared_DynamicTerrainModifier.h"
 
 #define TERRAIN_TYPE const Terrain&
@@ -16,6 +17,7 @@ using namespace glm;
 #else
 #include <Shared_TerrainConstants.h>
 #include <Shared_DynamicTerrainModifier.h>
+#include <Shared_Ease.h>
 uniform mat4 u_dynamicTerrainBubbles[DYN_MOD_MAX];
 SAMPLER2D(s_terrainMap, 15);
 
@@ -38,8 +40,9 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
         vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Y(DYN_BUBBLES[i]));
         float dist = distance(dynModPos, position);
         float dScalar = 1.0f - min(dist / DYN_MOD_RADIUS(DYN_BUBBLES[i]), 1.0f);
+        dScalar = EaseInOutCustom(dScalar, 2.0f, 0.75f);
         if (dist < DYN_MOD_RADIUS(DYN_BUBBLES[i]))
-        pos.y += dScalar * DYN_MOD_VALUE(DYN_BUBBLES[i]);
+            pos.y += dScalar * DYN_MOD_VALUE(DYN_BUBBLES[i]);
     }
 
     float t = pos.x / 32.0f;

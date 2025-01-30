@@ -49,8 +49,14 @@ public:
         glm::vec3 GetPosition() override;
         void SetPosition(const glm::vec3 &pos) override;
 
-        glm::vec4 GetScale() override;
-        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
+        float GetScalar(char id) override;
+        void SetScalar(char id, float value) override;
+        std::unordered_map<char, std::string> GetScalarNames() override {
+            return {
+                {'H', "Height"},
+                {'R', "Radius"},
+            };
+        }
 
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;

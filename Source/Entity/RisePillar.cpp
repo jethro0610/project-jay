@@ -1,7 +1,7 @@
 #include "RisePillar.h"
 #include "Resource/ResourceManager.h"
 #include "Time/Time.h"
-#include "Helpers/Ease.h"
+#include "Helpers/Shared_Ease.h"
 #include "Particle/ParticleManager.h"
 #include "Spread/SpreadManager.h"
 #include "Terrain/Terrain.h"

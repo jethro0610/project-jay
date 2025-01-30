@@ -4,7 +4,7 @@
 #include "Resource/ResourceManager.h"
 #include "Entity/EntityList.h"
 #include "Entity/Entity.h"
-#include "Helpers/Ease.h"
+#include "Helpers/Shared_Ease.h"
 #include "Helpers/Assert.h"
 #include "Helpers/LoadHelpers.h"
 #include "Level/Level.h"
@@ -236,7 +236,8 @@ void TemplateGenerateTerrainHeights(
 }
 
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
-    DEBUGLOG("Generating terrain height...");
+    if (!lowRes)
+        DEBUGLOG("Generating terrain height...");
     vector_const<int, 128> groundedEntities;
     if (entities != nullptr) {
         for (int i = 0; i < 128; i++) {

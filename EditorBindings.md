@@ -1,13 +1,11 @@
 # Default
 - Default:      Tab
 - Execute:      Ctrl+E         
-- Show All:     V
-- Show Ents:    E
 
 # Entities
-- Clone:        O
-- Find:         F
-- Spawn:        I
+- Clone:        Ctrl+D
+- Find:         Ctrl+F
+- Spawn:        Ctrl+I
 
 # Level
 - New Level:    Ctrl+N
@@ -28,5 +26,19 @@
 - Weed Mode:    G
 - Add Weeds:    Left Click or Q
 - Remove Weeds: Right Click or E
-- Up Radius:    Up Arrow
-- Down Radius:  Down Arrow
+- Up Radius:    Up Arrow or Scroll Up
+- Down Radius:  Down Arrow or Scroll Down
+
+# Modifier Scalar Bindings
+- Max Height:   H
+- Min Height:   M
+- Ease Both:    B
+- Ease Out:     V
+- Ease In:      C
+- Frequency:    F
+- Radius:       R
+
+# Modifier Mode
+- Mode Both:    Ctrl+B
+- Mode Out:     Ctrl+V
+- Mode In:      Ctrl+C

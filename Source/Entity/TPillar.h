@@ -12,5 +12,6 @@ public:
 
     DynamicTerrainModifier* bubble_;
     void OnDestroy();
+    void Update();
     void EditorUpdate();
 };

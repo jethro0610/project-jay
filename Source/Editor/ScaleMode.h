@@ -6,6 +6,7 @@ enum ScaleSubmode {
     SS_Uniform,
     SS_Vertical,
     SS_Planar,
+
     SS_X,
     SS_Y,
     SS_Z,

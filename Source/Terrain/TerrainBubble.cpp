@@ -1,5 +1,5 @@
 #include "TerrainBubble.h"
-#include "Helpers/Ease.h"
+#include "Helpers/Shared_Ease.h"
 #include "Terrain.h"
 #include "Collision/Ray.h"
 using namespace glm;
@@ -44,18 +44,32 @@ void TerrainBubble::ETarget::SetPosition(const glm::vec3 &pos) {
     bubble_->position_.y = pos.z;
 }
 
-glm::vec4 TerrainBubble::ETarget::GetScale() {
-    return vec4(bubble_->radius_, bubble_->height_, 0.0f, 0.0f);
-};
-
-void TerrainBubble::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
-    bubble_->radius_ = ref.x + delta.x;
-    bubble_->height_ = ref.y + delta.y;
-};
-
 bool TerrainBubble::ETarget::RayHit(const Ray& ray) {
     float height = bubble_->terrain_->GetRawHeight(bubble_->position_) + 10.0f;
     return ray.HitSphere(vec3(bubble_->position_.x, height, bubble_->position_.y), 5.0f);
+}
+
+float TerrainBubble::ETarget::GetScalar(char id) {
+    switch (id) {
+        case 'H':
+            return bubble_->height_;
+
+        case 'R':
+            return bubble_->radius_;
+    }
+    return 0.0;
+}
+
+void TerrainBubble::ETarget::SetScalar(char id, float value) {
+    switch (id) {
+        case 'H':
+            bubble_->height_ = value;
+            break;
+
+        case 'R':
+            bubble_->radius_ = value;
+            break;
+    }
 }
 
 void TerrainBubble::Save(nlohmann::json &json) {

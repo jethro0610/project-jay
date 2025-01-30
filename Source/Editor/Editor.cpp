@@ -172,10 +172,24 @@ void Editor::Update() {
         postConfirmMode_ = nullptr; 
     }
     else if (mode_ == &defaultMode_) {
-        for (EditorMode* mode : modes_) {
-            if (platform_.pressedKeys_[mode->GetBinding()] && mode->CanSwitch(holdingCtrl)) {
-                SetMode(mode);
-                break;
+        std::unordered_map<char, std::string> bindings = target_.GetScalarNames();
+        for (const auto& [id, name] : bindings) {
+            if (platform_.pressedKeys_[id] && !holdingCtrl) {
+                DEBUGLOG(target_.GetScalar(id));
+                genericScalarMode_.SetScalarId(id);
+                SetMode(genericScalarMode_);
+            }
+        }
+
+        if (mode_ != &genericScalarMode_) {
+            for (EditorMode* mode : modes_) {
+                if (mode == &genericScalarMode_)
+                    continue;
+
+                if (platform_.pressedKeys_[mode->GetBinding()] && mode->CanSwitch(holdingCtrl)) {
+                    SetMode(mode);
+                    break;
+                }
             }
         }
     }
@@ -203,7 +217,7 @@ void Editor::Update() {
     
     if (level_.loaded_) {
         bool modifiersDestroyed = terrain_.DestroyPendingModifiers();
-        bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_;
+        bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_ || mode_ == &genericScalarMode_;
         if (target_.UpdateTerrain() && isTransformMode)
             terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.DBG_lowRes_)

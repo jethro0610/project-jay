@@ -12,4 +12,5 @@
     MODEEXPANSION(SetLandmapMode, setLandmapMode_) \
     MODEEXPANSION(SpawnMode, spawnMode_) \
     MODEEXPANSION(GrowthMode, growthMode_) \
+    MODEEXPANSION(GenericScalarMode, genericScalarMode_) \
     TAILMODEEXPANSION(TranslateMode, translateMode_)

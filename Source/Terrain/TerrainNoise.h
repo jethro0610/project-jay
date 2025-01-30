@@ -55,6 +55,17 @@ public:
         glm::vec4 GetScale() override;
         void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
 
+        float GetScalar(char id) override;
+        void SetScalar(char id, float value) override;
+        std::unordered_map<char, std::string> GetScalarNames() override {
+            return {
+                {'H', "Max Height"},
+                {'M', "Min Height"},
+                {'R', "Radius"},
+                {'F', "Frequency"},
+            };
+        }
+
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;
 

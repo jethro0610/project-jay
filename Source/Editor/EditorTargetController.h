@@ -72,6 +72,27 @@ public:
         target_->SetRotation(rot); 
     }
 
+    float GetScalar(char id) {
+        if (target_ == nullptr)
+            return 0.0f;
+
+        return target_->GetScalar(id);
+    }
+
+    void SetScalar(char id, float value) {
+        if (target_ == nullptr)
+            return;
+
+        target_->SetScalar(id, value);
+    }
+
+    std::unordered_map<char, std::string> GetScalarNames() {
+        if (target_ == nullptr)
+            return {};
+
+        return target_->GetScalarNames();
+    }
+
     EntityProperties GetProperties() {
         if (target_ == nullptr)
             return EntityProperties();
@@ -91,6 +112,13 @@ public:
             return false;
 
         return target_->IsEntity(); 
+    }
+
+    bool IsModifier() {
+        if (target_ == nullptr)
+            return false;
+
+        return target_->IsModifier();
     }
 
     bool Clonable() {

@@ -4,7 +4,7 @@
 #include "Logging/Logger.h"
 #include "Entity/Entity.h"
 #include "Entity/EntityList.h"
-#include "Helpers/Ease.h"
+#include "Helpers/Shared_Ease.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 

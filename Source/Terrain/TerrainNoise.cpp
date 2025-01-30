@@ -1,6 +1,6 @@
 #include <glm/gtx/compatibility.hpp>
 #include "TerrainNoise.h"
-#include "Helpers/Ease.h"
+#include "Helpers/Shared_Ease.h"
 #include "Terrain.h"
 #include "Collision/Ray.h"
 #include "Helpers/Random.h"
@@ -68,6 +68,43 @@ void TerrainNoise::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delt
 bool TerrainNoise::ETarget::RayHit(const Ray& ray) {
     float height = noise_->terrain_->GetRawHeight(noise_->position_) + 10.0f;
     return ray.HitSphere(vec3(noise_->position_.x, height, noise_->position_.y), 5.0f);
+}
+
+float TerrainNoise::ETarget::GetScalar(char id) {
+    switch (id) {
+        case 'H':
+            return noise_->maxHeight_;
+
+        case 'M':
+            return noise_->minHeight_;
+
+        case 'R':
+            return noise_->radius_;
+
+        case 'F':
+            return noise_->frequency_;
+    }
+    return 0.0;
+}
+
+void TerrainNoise::ETarget::SetScalar(char id, float value) {
+    switch (id) {
+        case 'H':
+            noise_->maxHeight_ = value;
+            break;
+
+        case 'M':
+            noise_->minHeight_ = value;
+            break;
+
+        case 'R':
+            noise_->radius_ = value;
+            break;
+
+        case 'F':
+            noise_->frequency_ = value;
+            break;
+    }
 }
 
 void TerrainNoise::Save(nlohmann::json &json) {

@@ -13,7 +13,6 @@ EditorMode(args)
     mouseVisibile_ = false;
     requiresTarget_ = true;
     requiresClone_ = true;
-    ctrl_ = true;
 }
 
 std::string CloneMode::GetName() {

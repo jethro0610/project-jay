@@ -11,7 +11,6 @@ EditorMode(args) {
     requiresTarget_ = false;
     requiresLevel_ = true;
     mouseVisibile_ = false;
-    ctrl_ = true;
 }
 
 void FindMode::OnStart() {

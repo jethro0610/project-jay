@@ -52,23 +52,17 @@ public:
         glm::vec3 GetPosition() override;
         void SetPosition(const glm::vec3 &pos) override;
 
-        glm::vec4 GetScale() override;
-        void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
-
         float GetScalar(char id) override;
         float GetScalarDelta(char id) override;
         void SetScalar(char id, float value) override;
         std::unordered_map<char, std::string> GetScalarNames() override {
             return {
-                {'H', "Max Height"},
-                {'M', "Min Height"},
-                {'R', "Radius"},
-                {'F', "Frequency"},
-                {'I', "Ease In Power"},
-                {'O', "Ease Out Power"},
+                {'1', "Radius"},
+                {'2', "Frequency"},
+                {'3', "Max Height"},
+                {'4', "Min Height"},
             };
         }
-        void SetEasing(int easeMode) override { noise_->easeMode_ = (EaseMode)easeMode; }
 
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;

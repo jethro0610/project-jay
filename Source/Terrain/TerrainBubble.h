@@ -18,6 +18,10 @@ public:
     float radius_;
     float height_;
 
+    bool customEasing_;
+    float inPower_;
+    float outPower_;
+
     void Init(const glm::vec3& pos = glm::vec3(0.0f));
     inline bool InRange(const glm::vec2& pos) {
         if (pos.x > position_.x + radius_)
@@ -53,15 +57,21 @@ public:
         float GetScalarDelta(char id) override;
         void SetScalar(char id, float value) override;
         std::unordered_map<char, std::string> GetScalarNames() override {
-            return {
-                {'H', "Height"},
-                {'R', "Radius"},
-                {'I', "Ease In Power"},
-                {'O', "Ease Out Power"},
-            };
+            if (!bubble_->customEasing_)
+                return {
+                    {'1', "Radius"},
+                    {'2', "Height"}
+                };
+            else
+                return {
+                    {'1', "Radius"},
+                    {'2', "Height"},
+                    {'3', "Ease In Power"},
+                    {'4', "Ease Out Power"},
+                };
         }
-
-        void SetEasing(int easeMode) override { bubble_->easeMode_ = (EaseMode)easeMode; }
+        void SetFlag(char id) override;
+        std::vector<char> GetFlagIDs() override { return {',', '.'}; }
 
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;

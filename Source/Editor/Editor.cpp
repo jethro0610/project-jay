@@ -166,15 +166,12 @@ void Editor::Update() {
         return;
     }
 
-    if (target_.IsModifier()) {
-        if (holdingCtrl && platform_.pressedKeys_[',']) {
-            target_.SetEasing(StaticTerrainModifier::EM_Default);        
-            terrain_.GenerateTerrainHeights(false, &entities_);
-        }
-
-        if (holdingCtrl && platform_.pressedKeys_['.']) {
-            target_.SetEasing(StaticTerrainModifier::EM_Custom);        
-            terrain_.GenerateTerrainHeights(false, &entities_);
+    std::vector<char> flagIds = target_.GetFlagIDs();
+    for (char id : flagIds) {
+        if (holdingCtrl && platform_.pressedKeys_[id]) {
+            target_.SetFlag(id);
+            if (target_.IsModifier())
+                terrain_.GenerateTerrainHeights(false, &entities_);
         }
     }
 

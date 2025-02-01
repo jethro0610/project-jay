@@ -28,15 +28,7 @@ float TerrainNoise::GetHeight(const glm::vec2& pos) {
     float dist = distance(pos, position_);
     float t = 1.0f - dist / radius_;
     t = clamp(t, 0.0f, 1.0f);
-    switch (easeMode_) {
-        case StaticTerrainModifier::EM_Default:
-            t = EaseQuad(t);
-            break;
-
-        case StaticTerrainModifier::EM_Custom:
-            t = EaseInOut(t, inPower_, outPower_);
-            break;
-    }
+    t = EaseQuad(t);
 
     vec2 samplePos = (pos - position_) * frequency_;
     float sampleVal = noise_.GetNoise(samplePos.x, samplePos.y);
@@ -65,17 +57,6 @@ void TerrainNoise::ETarget::SetPosition(const glm::vec3 &pos) {
     noise_->position_.y = pos.z;
 }
 
-glm::vec4 TerrainNoise::ETarget::GetScale() {
-    return vec4(noise_->radius_, noise_->maxHeight_, noise_->frequency_, noise_->minHeight_);
-};
-
-void TerrainNoise::ETarget::SetScale(const glm::vec4& ref, const glm::vec4& delta) {
-    noise_->radius_ = ref.x + delta.x;
-    noise_->maxHeight_ = ref.y + delta.y;
-    noise_->minHeight_ = ref.w + delta.w;
-    noise_->frequency_ = ref.z + delta.z * 0.05f;
-};
-
 bool TerrainNoise::ETarget::RayHit(const Ray& ray) {
     float height = noise_->terrain_->GetRawHeight(noise_->position_) + 10.0f;
     return ray.HitSphere(vec3(noise_->position_.x, height, noise_->position_.y), 5.0f);
@@ -83,65 +64,44 @@ bool TerrainNoise::ETarget::RayHit(const Ray& ray) {
 
 float TerrainNoise::ETarget::GetScalar(char id) {
     switch (id) {
-        case 'H':
-            return noise_->maxHeight_;
-
-        case 'M':
-            return noise_->minHeight_;
-
-        case 'R':
+        case '1':
             return noise_->radius_;
 
-        case 'F':
+        case '2':
+            return noise_->maxHeight_;
+
+        case '3':
             return noise_->frequency_;
 
-        case 'I':
-            return noise_->inPower_;
-
-        case 'O':
-            return noise_->outPower_;
+        case '4':
+            return noise_->minHeight_;
     }
     return 0.0;
 }
 
 float TerrainNoise::ETarget::GetScalarDelta(char id) {
-    switch (id) {
-        case 'F':
-            return 0.01f;
-
-        case 'I':
-            return 0.1f;
-
-        case 'O':
-            return 0.1f;
-    }
-    return 1.0f;
+    if (id == '1')
+        return 0.01f;
+    else 
+        return 1.0f;
 }
 
 void TerrainNoise::ETarget::SetScalar(char id, float value) {
     switch (id) {
-        case 'H':
-            noise_->maxHeight_ = value;
-            break;
-
-        case 'M':
-            noise_->minHeight_ = value;
-            break;
-
-        case 'R':
+        case '1':
             noise_->radius_ = value;
             break;
 
-        case 'F':
+        case '2':
+            noise_->maxHeight_ = value;
+            break;
+
+        case '3':
             noise_->frequency_ = value;
             break;
 
-        case 'I':
-            noise_->inPower_ = value;
-            break;
-
-        case 'O':
-            noise_->outPower_ = value;
+        case '4':
+            noise_->minHeight_ = value;
             break;
     }
 }

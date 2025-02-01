@@ -35,7 +35,8 @@ public:
     virtual void SetScalar(char id, float value) {};
     virtual std::unordered_map<char, std::string> GetScalarNames() { return {}; }
 
-    virtual void SetEasing(int easeMode) {};
+    virtual void SetFlag(char id) {};
+    virtual std::vector<char> GetFlagIDs() { return {}; }
 
     virtual EntityProperties GetProperties() { return EntityProperties(); };
 

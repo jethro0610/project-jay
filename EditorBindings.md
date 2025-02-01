@@ -3,9 +3,9 @@
 - Execute:      Ctrl+E         
 
 # Entities
-- Clone:        Ctrl+D
-- Find:         Ctrl+F
-- Spawn:        Ctrl+I
+- Clone:        C
+- Find:         F
+- Spawn:        I
 
 # Level
 - New Level:    Ctrl+N
@@ -29,15 +29,12 @@
 - Up Radius:    Up Arrow or Scroll Up
 - Down Radius:  Down Arrow or Scroll Down
 
-# Modifier Scalar Bindings
-- Max Height:   H
-- Min Height:   M
-- Ease Both:    B
-- Ease Out:     O
-- Ease In:      I
-- Frequency:    F
-- Radius:       R
-
-# Modifier Mode
-- Mode Default: Ctrl+.
-- Mode Custom:  Ctrl+,
+# Modifier Bindings
+- Radius:       1
+- Max Height:   2
+- Frequency:    3
+- Min Height:   4
+- Ease In:      3
+- Ease Out:     4
+- Mode Default: Ctrl+,
+- Mode Custom:  Ctrl+.

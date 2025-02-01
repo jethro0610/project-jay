@@ -17,7 +17,6 @@ EditorMode(args)
 {
     mouseVisibile_ = false;
     requiresTarget_ = false;
-    ctrl_ = true;
 }
 
 void SpawnMode::OnStart() {

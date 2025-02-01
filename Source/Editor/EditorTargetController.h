@@ -86,6 +86,20 @@ public:
         return target_->GetScalarDelta(id);
     }
 
+    std::vector<char> GetFlagIDs() {
+        if (target_ == nullptr)
+            return {};
+
+        return target_->GetFlagIDs();
+    }
+
+    void SetFlag(char id) {
+        if (target_ == nullptr)
+            return;
+
+        target_->SetFlag(id);
+    }
+
     void SetScalar(char id, float value) {
         if (target_ == nullptr)
             return;
@@ -105,13 +119,6 @@ public:
             return EntityProperties();
 
         return target_->GetProperties();
-    }
-
-    void SetEasing(int easeMode) {
-        if (target_ == nullptr)
-            return;
-
-        target_->SetEasing(easeMode);
     }
 
     EditorTarget* Clone() {

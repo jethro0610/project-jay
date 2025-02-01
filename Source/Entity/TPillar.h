@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include "Terrain/Shared_DynamicTerrainModifier.h"
 
 class TPillar : public Entity {
 public:
@@ -9,9 +8,4 @@ public:
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_tpillar"; }
     static EntityDependendies GetStaticDependencies();
-
-    DynamicTerrainModifier* bubble_;
-    void OnDestroy();
-    void Update();
-    void EditorUpdate();
 };

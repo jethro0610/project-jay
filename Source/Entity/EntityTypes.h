@@ -14,17 +14,18 @@
 #include "SinglePod.h"
 #include "Sleeper.h"
 #include "SpeedBoost.h"
-#include "TPillar.h"
 #include "TeleportPod.h"
 #include "TimedHitbox.h"
 #include "TimerPod.h"
 #include "TrailFish.h"
 #include "Mole.h"
 #include "Apple.h"
-#include "Entity.h"
 #include "Pig.h"
 #include "Tree.h"
 #include "Player.h"
+#include "Entity.h"
+#include "TPillar.h"
+#include "Ramp.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -42,6 +43,7 @@
 	ENTITYEXP(Sleeper, sleeper, 12) \
 	ENTITYEXP(TimerPod, timerpod, 13) \
 	ENTITYEXP(SinglePod, singlepod, 14) \
+	ENTITYEXP(Ramp, ramp, 15) \
 	ENTITYEXP(JumpPad, jumppad, 16) \
 	ENTITYEXP(TimedHitbox, timedhitbox, 17) \
 	ENTITYEXP(HeadSpitter, headspitter, 18) \

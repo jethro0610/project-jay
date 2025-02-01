@@ -56,6 +56,7 @@ public:
         void SetScale(const glm::vec4& ref, const glm::vec4 &scale) override;
 
         float GetScalar(char id) override;
+        float GetScalarDelta(char id) override;
         void SetScalar(char id, float value) override;
         std::unordered_map<char, std::string> GetScalarNames() override {
             return {
@@ -63,13 +64,16 @@ public:
                 {'M', "Min Height"},
                 {'R', "Radius"},
                 {'F', "Frequency"},
+                {'I', "Ease In Power"},
+                {'O', "Ease Out Power"},
             };
         }
+        void SetEasing(int easeMode) override { noise_->easeMode_ = (EaseMode)easeMode; }
 
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;
-
         void Destroy() override { noise_->destroy_ = true; }
+        bool IsModifier() override { return true; }
     };
     ETarget editorTarget_;
 };

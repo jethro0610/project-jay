@@ -33,12 +33,11 @@
 - Max Height:   H
 - Min Height:   M
 - Ease Both:    B
-- Ease Out:     V
-- Ease In:      C
+- Ease Out:     O
+- Ease In:      I
 - Frequency:    F
 - Radius:       R
 
 # Modifier Mode
-- Mode Both:    Ctrl+B
-- Mode Out:     Ctrl+V
-- Mode In:      Ctrl+C
+- Mode Default: Ctrl+.
+- Mode Custom:  Ctrl+,

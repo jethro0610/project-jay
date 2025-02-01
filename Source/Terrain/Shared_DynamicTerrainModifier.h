@@ -14,3 +14,5 @@ typedef glm::mat4 DynamicTerrainModifier;
 #define DYN_MOD_VALUE(modifier) modifier[0][3]
 #define DYN_MOD_ACTIVE(modifier) (modifier[1][0] > 0.0f)
 #define DYN_MOD_SET_ACTIVE(modifier, acc) (modifier[1][0] = acc ? 1.0f : 0.0f)
+#define DYN_MOD_IN_POWER(modifier) modifier[1][1]
+#define DYN_MOD_OUT_POWER(modifier) modifier[1][2]

@@ -26,7 +26,18 @@ void TerrainNoise::Init(const glm::vec3& pos) {
 
 float TerrainNoise::GetHeight(const glm::vec2& pos) {
     float dist = distance(pos, position_);
-    float t = EaseInOutQuad(1.0f - (dist / radius_));
+    float t = 1.0f - dist / radius_;
+    t = clamp(t, 0.0f, 1.0f);
+    switch (easeMode_) {
+        case StaticTerrainModifier::EM_Default:
+            t = EaseQuad(t);
+            break;
+
+        case StaticTerrainModifier::EM_Custom:
+            t = EaseInOut(t, inPower_, outPower_);
+            break;
+    }
+
     vec2 samplePos = (pos - position_) * frequency_;
     float sampleVal = noise_.GetNoise(samplePos.x, samplePos.y);
 
@@ -83,8 +94,28 @@ float TerrainNoise::ETarget::GetScalar(char id) {
 
         case 'F':
             return noise_->frequency_;
+
+        case 'I':
+            return noise_->inPower_;
+
+        case 'O':
+            return noise_->outPower_;
     }
     return 0.0;
+}
+
+float TerrainNoise::ETarget::GetScalarDelta(char id) {
+    switch (id) {
+        case 'F':
+            return 0.01f;
+
+        case 'I':
+            return 0.1f;
+
+        case 'O':
+            return 0.1f;
+    }
+    return 1.0f;
 }
 
 void TerrainNoise::ETarget::SetScalar(char id, float value) {
@@ -103,6 +134,14 @@ void TerrainNoise::ETarget::SetScalar(char id, float value) {
 
         case 'F':
             noise_->frequency_ = value;
+            break;
+
+        case 'I':
+            noise_->inPower_ = value;
+            break;
+
+        case 'O':
+            noise_->outPower_ = value;
             break;
     }
 }

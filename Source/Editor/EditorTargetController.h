@@ -79,6 +79,13 @@ public:
         return target_->GetScalar(id);
     }
 
+    float GetScalarDelta(char id) {
+        if (target_ == nullptr)
+            return 0.0f;
+
+        return target_->GetScalarDelta(id);
+    }
+
     void SetScalar(char id, float value) {
         if (target_ == nullptr)
             return;
@@ -98,6 +105,13 @@ public:
             return EntityProperties();
 
         return target_->GetProperties();
+    }
+
+    void SetEasing(int easeMode) {
+        if (target_ == nullptr)
+            return;
+
+        target_->SetEasing(easeMode);
     }
 
     EditorTarget* Clone() {

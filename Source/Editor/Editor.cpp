@@ -166,6 +166,18 @@ void Editor::Update() {
         return;
     }
 
+    if (target_.IsModifier()) {
+        if (holdingCtrl && platform_.pressedKeys_[',']) {
+            target_.SetEasing(StaticTerrainModifier::EM_Default);        
+            terrain_.GenerateTerrainHeights(false, &entities_);
+        }
+
+        if (holdingCtrl && platform_.pressedKeys_['.']) {
+            target_.SetEasing(StaticTerrainModifier::EM_Custom);        
+            terrain_.GenerateTerrainHeights(false, &entities_);
+        }
+    }
+
     if (postConfirmMode_ != nullptr) {
         if (postConfirmMode_->PostConfirm() == CB_Default)
             SetMode(defaultMode_);

@@ -31,8 +31,11 @@ public:
     virtual void SetScale(const glm::vec4& ref, const glm::vec4& delta) {};
 
     virtual float GetScalar(char id) { return 0.0f; };
+    virtual float GetScalarDelta(char id) { return 1.0f; };
     virtual void SetScalar(char id, float value) {};
     virtual std::unordered_map<char, std::string> GetScalarNames() { return {}; }
+
+    virtual void SetEasing(int easeMode) {};
 
     virtual EntityProperties GetProperties() { return EntityProperties(); };
 

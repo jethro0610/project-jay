@@ -115,7 +115,7 @@ void RisePillar::Update() {
         transform_.position.y = std::lerp(initialY_, initialY_ + DIG_HEIGHT, timer_ / (float)INIT_TIME);
 
     if (timer_ >= INIT_TIME && timer_ <= END_TIME) { 
-        float t = EaseInOutCubic((timer_ - INIT_TIME) / (float)RISE_TIME);
+        float t = EaseQuad((timer_ - INIT_TIME) / (float)RISE_TIME);
         transform_.position.y = std::lerp(initialY_ + DIG_HEIGHT, initialY_ + EXTEND_HEIGHT * transform_.scale.y, t);
     }
 
@@ -131,7 +131,7 @@ void RisePillar::RenderUpdate() {
     burstEm_ ->active_ = false;
 
     if (timer_ >= INIT_TIME && timer_ <= END_TIME) {
-        float t = 1.0f - EaseInOutCubic((timer_ - INIT_TIME) / (float)RISE_TIME);
+        float t = 1.0f - EaseCubic((timer_ - INIT_TIME) / (float)RISE_TIME);
         renderTransform_.position.x += pow(sin(GlobalTime::GetTime() * 40.0f + 8.0f), 2.0f) * 0.5f * t;
         renderTransform_.position.y += pow(sin(GlobalTime::GetTime() * 40.0f + 16.0f), 2.0f) * 0.5f * t;
         renderTransform_.position.z += pow(sin(GlobalTime::GetTime() * 40.0f + 32.0f), 2.0f) * 0.5f * t;

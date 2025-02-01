@@ -20,7 +20,17 @@ void TerrainBubble::Init(const glm::vec3& pos) {
 
 float TerrainBubble::GetHeight(const vec2& pos) {
     float dist = distance(pos, position_);
-    float t = EaseInOutQuad(1.0f - (dist / radius_));
+    float t = 1.0f - dist / radius_;
+    t = clamp(t, 0.0f, 1.0f);
+    switch (easeMode_) {
+        case StaticTerrainModifier::EM_Default:
+            t = EaseQuad(t);
+            break;
+
+        case StaticTerrainModifier::EM_Custom:
+            t = EaseInOut(t, inPower_, outPower_);
+            break;
+    }
     return height_ * t;
 }
 
@@ -56,8 +66,25 @@ float TerrainBubble::ETarget::GetScalar(char id) {
 
         case 'R':
             return bubble_->radius_;
+
+        case 'I':
+            return bubble_->inPower_;
+
+        case 'O':
+            return bubble_->outPower_;
     }
     return 0.0;
+}
+
+float TerrainBubble::ETarget::GetScalarDelta(char id) {
+    switch (id) {
+        case 'I':
+            return 0.1f;
+
+        case 'O':
+            return 0.1f;
+    }
+    return 1.0f;
 }
 
 void TerrainBubble::ETarget::SetScalar(char id, float value) {
@@ -68,6 +95,14 @@ void TerrainBubble::ETarget::SetScalar(char id, float value) {
 
         case 'R':
             bubble_->radius_ = value;
+            break;
+
+        case 'I':
+            bubble_->inPower_ = value;
+            break;
+
+        case 'O':
+            bubble_->outPower_ = value;
             break;
     }
 }

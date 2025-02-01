@@ -50,17 +50,23 @@ public:
         void SetPosition(const glm::vec3 &pos) override;
 
         float GetScalar(char id) override;
+        float GetScalarDelta(char id) override;
         void SetScalar(char id, float value) override;
         std::unordered_map<char, std::string> GetScalarNames() override {
             return {
                 {'H', "Height"},
                 {'R', "Radius"},
+                {'I', "Ease In Power"},
+                {'O', "Ease Out Power"},
             };
         }
+
+        void SetEasing(int easeMode) override { bubble_->easeMode_ = (EaseMode)easeMode; }
 
         bool UpdateTerrain() override { return true; }
         bool RayHit(const Ray &ray) override;
         void Destroy() override { bubble_->destroy_ = true; }
+        bool IsModifier() override { return true; }
     };
     ETarget editorTarget_;
 };

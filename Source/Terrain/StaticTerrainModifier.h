@@ -5,12 +5,20 @@
 
 class StaticTerrainModifier {
 public:
+    enum EaseMode {
+        EM_Default,
+        EM_Custom,
+    };
+
     static constexpr int ID = 0;
     StaticTerrainModifier() {
         id_ = StaticTerrainModifier::ID;
         active_ = false;
         destroy_ = false;
         editorTargets_.clear();
+        easeMode_ = EM_Default;
+        inPower_ = 2.0;
+        outPower_ = 2.4;
     }
 
     int id_;
@@ -18,6 +26,10 @@ public:
     bool destroy_;
     vector_const<EditorTarget*, 8> editorTargets_;
     Terrain* terrain_;
+
+    EaseMode easeMode_;
+    float inPower_;
+    float outPower_;
 
     struct RenderNode {
         static constexpr int MAX = 64;

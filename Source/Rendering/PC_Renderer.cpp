@@ -80,7 +80,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     terrainCursor_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
-    uiBarShader_ = resourceManager.GetShader("vs_uibar", "fs_uibar");
+    uiBarShader_ = resourceManager.GetShader("vs_uirect", "fs_uibar");
 
     blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
     blitMaterial_.numTextures = 1;

@@ -14,6 +14,7 @@ Game::Game():
     particleManager_(terrain_),
     terrain_(level_.properties_, resourceManager_),
     level_(
+        currency_,
         entities_,
         particleManager_, 
         resourceManager_, 

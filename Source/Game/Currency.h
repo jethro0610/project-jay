@@ -16,9 +16,13 @@ public:
             return; 
 
         percent_ += amount; 
-        if (percent_ >= PERCENT_TILL_STOCK) {
-            percent_ = 0;
+        while (percent_ >= PERCENT_TILL_STOCK) {
+            percent_ -= PERCENT_TILL_STOCK;
             stocks_++;
         }
+    }
+
+    void Reset() {
+        *this = Currency();
     }
 };

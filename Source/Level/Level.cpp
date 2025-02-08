@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "Game/Currency.h"
 #include "Helpers/LoadHelpers.h"
 #include "Helpers/MapCheck.h"
 #include "Spread/SpreadManager.h"
@@ -14,6 +15,7 @@
 #endif
 
 Level::Level(
+    Currency& currency,
     EntityList& entities,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
@@ -21,12 +23,13 @@ Level::Level(
     SpreadManager& spreadManager,
     Terrain& terrain
 ) :
-entities_(entities),
-particleManager_(particleManager),
-resourceManager_(resourceManager),
-seedManager_(seedManager),
-spreadManager_(spreadManager),
-terrain_(terrain)
+    currency_(currency),
+    entities_(entities),
+    particleManager_(particleManager),
+    resourceManager_(resourceManager),
+    seedManager_(seedManager),
+    spreadManager_(spreadManager),
+    terrain_(terrain)
 {
     loaded_ = false;
 
@@ -256,6 +259,7 @@ void Level::Clear(bool clearTerrain) {
     particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
+    currency_.Reset();
 
     if (clearTerrain)
         terrain_.Reset();

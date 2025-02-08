@@ -3,6 +3,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
+class Currency;
 class EntityList;
 class ParticleManager;
 class ResourceManager;
@@ -13,6 +14,7 @@ class Terrain;
 class Level {
 public:
     Level(
+        Currency& currency,
         EntityList& entities,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
@@ -33,6 +35,7 @@ public:
     #endif
 
 private:
+    Currency& currency_;
     EntityList& entities_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;

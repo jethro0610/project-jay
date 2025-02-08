@@ -28,7 +28,7 @@ void Sleeper::Init(Entity::InitArgs args) {
 }
 
 void Sleeper::OnHurt(HurtArgs args) {
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         Entity* entity = &(*entities_)[i];
         if (entity->typeId_ == Mower::TYPEID) {
             Mower* mower = (Mower*)entity;

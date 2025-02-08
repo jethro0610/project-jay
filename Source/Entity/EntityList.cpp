@@ -18,7 +18,7 @@ particleManager_(particleManager),
 resourceManager_(resourceManager)
 {
     rawEntities_ = rawEntities;
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         rawEntities[i].entity.Construct(camera, *this, inputs, level, seedManager, spreadManager, terrain);
         available_[i] = i;
     }
@@ -31,7 +31,7 @@ Entity& EntityList::operator[](int index) {
 }
 
 void EntityList::Reset() {
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         available_[i] = i;
         rawEntities_[i].entity.alive_ = false;
         rawEntities_[i].entity.DoDestroy();
@@ -40,7 +40,7 @@ void EntityList::Reset() {
 }
 
 void EntityList::DestroyFlaggedEntities() {
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         if (!rawEntities_[i].entity.alive_) continue;
         if (!rawEntities_[i].entity.destroy_) continue;
 
@@ -70,7 +70,7 @@ Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform, bool
 }   
 
 bool EntityList::IsAnyOverlapping(Entity& entity) {
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         Entity& target = rawEntities_[i].entity;
         if (!target.alive_) continue;
         if (&entity == &target) continue;

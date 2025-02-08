@@ -10,7 +10,6 @@ public:
         MM_Attack,
         MM_Stun,
         MM_Air,
-        MM_Jump,
         MM_Target
     };
 
@@ -25,19 +24,10 @@ public:
     float bonus_;
     float tilt_;
 
-    float meter_;
-    float spreadRadius_;
-
-    static constexpr int JUMP_BUFFER_FRAMES = 5;
-    float jumpBuffer_[JUMP_BUFFER_FRAMES];
-    int coyoteAirTime_;
-    float jumpCharge_;
-    bool chargingJump_;
-
-    bool charging_;
+    bool chargingAttack_;
     int attackActiveTimer_;
-    int attackCharge_;
-    int lastAttackCharge_;
+    int attackChargeAmount_;
+    int lastAttackChargeAmount_;
 
     Entity* homingTarget_;
     float planarVelocityBeforeHoming_;

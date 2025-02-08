@@ -39,7 +39,7 @@ private:
     SeedManager seedManager_;
     SpreadManager spreadManager_;
 
-    EntityUnion rawEntities_[128];
+    EntityUnion rawEntities_[Entity::MAX];
     EntityList entities_;
 
     #ifdef _DEBUG

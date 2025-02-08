@@ -77,13 +77,7 @@ void Player::Init(Entity::InitArgs args) {
     bonus_ = 0.0f;
     speed_ = MIN_SPEED;
     tilt_ = 0.0f;
-    meter_ = 0.0f;
-    charging_ = false;
     attackActiveTimer_ = ATTACK_TIME;
-    attackCharge_ = 0;
-    lastAttackCharge_ = 0;
-    chargingJump_ = false;
-    jumpCharge_ = 0;
 
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
@@ -210,7 +204,6 @@ void Player::Init(Entity::InitArgs args) {
     overlapbox_.radius = 1.0f;
     overlapbox_.bottom = 1.0f;
 
-    meter_ = 0.0f;
     homingTarget_ = nullptr;
 }
 
@@ -230,50 +223,42 @@ void Player::Update() {
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    // Disable jumping for now
-    bool jumpInput = false; //inputs_->ski && inputs_->flow;
-    if (jumpInput && !charging_) {
-        if (onGround_)
-            chargingJump_= true; 
-        /*
-        else {
-            float closestDistance = INFINITY;
-            for (int i = 0; i < 128; i++) {
-                Entity* entity = &((*entities_)[i]);
-                if (entity == this)
-                    continue;
+    /* Homing
+    float closestDistance = INFINITY;
+    for (int i = 0; i < 128; i++) {
+        Entity* entity = &((*entities_)[i]);
+        if (entity == this)
+            continue;
 
-                if (!entity->GetFlag(EF_Targetable))
-                    continue;
-                vec3 target = entity->GetTarget();
+        if (!entity->GetFlag(EF_Targetable))
+            continue;
+        vec3 target = entity->GetTarget();
 
-                float verticalDelta = transform_.position.y - target.y;
-                if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
-                    continue;
+        float verticalDelta = transform_.position.y - target.y;
+        if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
+            continue;
 
-                vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
-                vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
-                vec3 planarCameraForward = camera_->transform_.GetForwardVector();
-                planarCameraForward.y = 0.0f;
-                planarCameraForward = normalize(planarCameraForward);
+        vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
+        vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
+        vec3 planarCameraForward = camera_->transform_.GetForwardVector();
+        planarCameraForward.y = 0.0f;
+        planarCameraForward = normalize(planarCameraForward);
 
-                float planarDist = distance(planarPosition, entityPlanarPosition);
-                if (planarDist > MAX_HOMING_DISTANCE)
-                    continue;
+        float planarDist = distance(planarPosition, entityPlanarPosition);
+        if (planarDist > MAX_HOMING_DISTANCE)
+            continue;
 
-                vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
-                if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
-                    continue;
+        vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
+        if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
+            continue;
 
-                if (planarDist < closestDistance) {
-                    homingTarget_ = entity;
-                    closestDistance = planarDist;
-                }
-            }
-            planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
+        if (planarDist < closestDistance) {
+            homingTarget_ = entity;
+            closestDistance = planarDist;
         }
-        */
     }
+    planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
+    */
 
     if (onGround_)
         homingTarget_ = nullptr;
@@ -283,53 +268,18 @@ void Player::Update() {
         velocity_ = vectorToTarget * 500.0f;
     }
 
-    if (onGround_) 
-        coyoteAirTime_ = 0;
-    else if (coyoteAirTime_ <= MAX_COYOTE_TIME)
-        coyoteAirTime_++;
+    if (inputs_->startAttack)
+        chargingAttack_ = true;
 
-    if (onGround_) {
-        for (int i = 1; i < JUMP_BUFFER_FRAMES; i++)
-            jumpBuffer_[i] = jumpBuffer_[i - 1]; 
-        jumpBuffer_[0] = velocity_.y;
+    if (inputs_->releaseAttack || attackChargeAmount_ > MAX_CHARGE)
+        chargingAttack_ = false;
+
+    if (chargingAttack_ && attackActiveTimer_ == ATTACK_TIME) {
+        attackChargeAmount_++;
     }
-
-    float greatestYVel = -INFINITY;
-    for (int i = 0; i < JUMP_BUFFER_FRAMES; i++) {
-        if (jumpBuffer_[i] > greatestYVel)
-            greatestYVel = jumpBuffer_[i];
-    }
-
-    if (!jumpInput) {
-        chargingJump_ = false;
-        if (jumpCharge_ > MAX_JUMP_CHARGE * 0.25f && coyoteAirTime_ <= MAX_COYOTE_TIME) {
-            float chargeRatio = std::lerp(MIN_JUMP_VEL_RATIO, MAX_JUMP_VEL_RATIO, jumpCharge_ / MAX_JUMP_CHARGE);
-            chargeRatio = greatestYVel < 0.0f ? 1.0f - chargeRatio : chargeRatio;
-            float jumpAdd = std::lerp(MIN_JUMP_ADD, MAX_JUMP_ADD, jumpCharge_ / MAX_JUMP_CHARGE);
-            float jumpVelocity = greatestYVel * chargeRatio + jumpAdd;
-
-            velocity_.y = max(jumpVelocity, jumpAdd);
-            skipGroundCheck_ = true;
-        }
-        jumpCharge_ = 0.0f;
-    }
-    if (chargingJump_)
-        jumpCharge_ += JUMP_CHARGE_SPEED;
-
-    jumpCharge_ = min(jumpCharge_, MAX_JUMP_CHARGE);
-
-    if (inputs_->startAttack && !chargingJump_)
-        charging_ = true;
-
-    if (inputs_->releaseAttack || attackCharge_ > MAX_CHARGE)
-        charging_ = false;
-
-    if (charging_ && attackActiveTimer_ == ATTACK_TIME) {
-        attackCharge_++;
-    }
-    else if (attackCharge_ != 0) {
-        lastAttackCharge_ = attackCharge_;
-        attackCharge_ = 0;
+    else if (attackChargeAmount_ != 0) {
+        lastAttackChargeAmount_ = attackChargeAmount_;
+        attackChargeAmount_ = 0;
         attackActiveTimer_ = 0;
     }
 
@@ -357,11 +307,8 @@ void Player::Update() {
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
     }
-    else if (attackCharge_ != 0) {
+    else if (attackChargeAmount_ != 0) {
         moveMode_ = MM_Attack;
-    }
-    else if (chargingJump_) {
-        moveMode_ = MM_Jump;
     }
     else if (inputs_->flow) {
         spinEmitter_->active_ = true;
@@ -422,18 +369,6 @@ void Player::Update() {
             if (length(desiredMovement) > 0.001f) 
                 rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
             transform_.rotation = slerp(transform_.rotation, rotation, SPIN_ROTATION_SPEED);
-            vec3 direction = transform_.rotation * Transform::worldForward;
-            
-            velocity_.x = direction.x * speed_;
-            velocity_.z = direction.z * speed_;
-            break;
-        }
-
-        case MM_Jump: {
-            quat rotation = transform_.rotation;
-            if (length(desiredMovement) > 0.001f) 
-                rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-            transform_.rotation = slerp(transform_.rotation, rotation, JUMP_CHARGE_ROTATION_SPEED);
             vec3 direction = transform_.rotation * Transform::worldForward;
             
             velocity_.x = direction.x * speed_;
@@ -521,7 +456,7 @@ void Player::Update() {
     if (length(planarVelocity) > 0.0f)
         velocity_ += normalize(planarVelocity) * bonus_;
     
-    if (lastAttackCharge_ < STRONG_CHARGE_THRESH) {
+    if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.975f;
         hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
         hitbox_.hitlag = 4;
@@ -548,7 +483,7 @@ void Player::Update() {
         animation = 4;
         transitionLength = 0.0f;
     }
-    else if (attackCharge_ > 0) 
+    else if (attackChargeAmount_ > 0) 
         animation = 5;
     else if (moveMode_ == MM_Spin)
         animation = 3;
@@ -614,8 +549,6 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
-    meter_ += 0.0005f;
-    meter_ = min(1.0f, meter_);
 }
 
 void Player::OnPush(vec3 pushVec) {

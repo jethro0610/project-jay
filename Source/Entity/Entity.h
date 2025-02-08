@@ -55,19 +55,20 @@ struct EntityDependendies {
 
 class Entity {
 public:
+    static constexpr int MAX = 1024;
+    static constexpr int TRAIL_SIZE = 2048;
+    static constexpr int MAX_NAME = 32;
+
     struct HitArgs {
         Entity* target;
     };
     struct HurtArgs {
         Entity* attacker;
     };
-    static constexpr int TRAIL_SIZE = 2048;
     struct TrailPoint {
         float time;
         glm::vec3 position;
     };
-
-    static constexpr int MAX_NAME = 32;
 
     struct InitArgs {
         ParticleManager& particleManager;

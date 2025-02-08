@@ -210,7 +210,7 @@ template <const int RES>
 void TemplateGenerateTerrainHeights(
     glm::vec2 terrainMap[RES][RES],
     uint8_t additiveMap[RES][RES],
-    vector_const<StaticTerrainModifier*, 128>& modifiers
+    vector_const<StaticTerrainModifier*, StaticTerrainModifier::MAX>& modifiers
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
@@ -238,9 +238,9 @@ void TemplateGenerateTerrainHeights(
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     if (!lowRes)
         DEBUGLOG("Generating terrain height...");
-    vector_const<int, 128> groundedEntities;
+    vector_const<int, Entity::MAX> groundedEntities;
     if (entities != nullptr) {
-        for (int i = 0; i < 128; i++) {
+        for (int i = 0; i < Entity::MAX; i++) {
             Entity& entity = (*entities)[i];
             if (!entity.alive_) continue;
 
@@ -357,9 +357,9 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     float* negative = new float[RESOLUTION * RESOLUTION];
 
     // Determine which entities are on the ground before regenerating
-    vector_const<int, 128> groundedEntities;
+    vector_const<int, Entity::MAX> groundedEntities;
     if (entities != nullptr) {
-        for (int i = 0; i < 128; i++) {
+        for (int i = 0; i < Entity::MAX; i++) {
             Entity& entity = (*entities)[i];
             if (!entity.alive_) continue;
 

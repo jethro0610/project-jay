@@ -168,7 +168,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     nlohmann::json levelData;
     levelData["landmap"] = terrain_.DBG_landMapName_;
 
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         Entity& entity = entities_[i];
         if (!entity.alive_) continue;
         

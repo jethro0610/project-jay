@@ -363,7 +363,7 @@ void Renderer::RenderEntities(
     GPUPose pose;
     mat4 matrix;
 
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         if (!entities[i].alive_) continue;
         Entity& entity = entities[i];
         matrix = entity.renderTransform_.ToMatrix();
@@ -506,16 +506,7 @@ void Renderer::RenderBlit() {
 }
 
 void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
-    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
-
-    Player* player = (Player*)&entities[0];
-
-    vec4 meter = vec4(player->meter_, 0.0f, 0.0f, 0.0f); 
-    bgfx::setUniform(u_meter_, &meter);
-
-    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
-    bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
+    return;
 }
 
 void Renderer::RenderText(Text& text) {

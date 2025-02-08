@@ -118,7 +118,7 @@ void SeedManager::GetCaptures(
     EntityList& entities
 ) {
     float time = GlobalTime::GetTime();
-    for (int i = 0; i < 128; i++) {
+    for (int i = 0; i < Entity::MAX; i++) {
         if (!entities[i].alive_) continue;
         if (!entities[i].GetFlag(Entity::EF_CaptureSeed)) continue;
 

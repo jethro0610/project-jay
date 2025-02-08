@@ -5,6 +5,7 @@
 
 class StaticTerrainModifier {
 public:
+    static constexpr int MAX = 128;
     static constexpr int ID = 0;
     StaticTerrainModifier() {
         id_ = StaticTerrainModifier::ID;

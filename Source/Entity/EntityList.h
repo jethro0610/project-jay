@@ -1,9 +1,9 @@
 #pragma once
 #include "Entity/TypeID.h"
+#include "Entity.h"
 #include "Types/Transform.h"
 #include <vector_holed.h>
 
-class Entity;
 class Camera;
 struct Inputs;
 class Level;
@@ -35,7 +35,7 @@ public:
     bool IsAnyOverlapping(Entity& entity);
 
 private:
-    int available_[128];
+    int available_[Entity::MAX];
     int availablePos_;
     
     EntityUnion* rawEntities_;

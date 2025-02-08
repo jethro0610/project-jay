@@ -7,6 +7,7 @@
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
 #include "Camera/Camera.h"
+#include "Game/Currency.h"
 #include "Resource/ResourceManager.h"
 #include "Editor/Editor.h"
 #include "Entity/Player.h"
@@ -55,7 +56,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
-    u_meter_ = bgfx::createUniform("u_meter", bgfx::UniformType::Vec4);
+    u_percentBar_ = bgfx::createUniform("u_percentBar", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
 
@@ -506,6 +507,12 @@ void Renderer::RenderBlit() {
 }
 
 void Renderer::RenderUI(Currency& currency) {
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
+    vec4 percentBar = vec4(currency.amount_, currency.curMax_, 0.0f, 0.0f); 
+    bgfx::setUniform(u_percentBar_, &percentBar);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
     return;
 }
 

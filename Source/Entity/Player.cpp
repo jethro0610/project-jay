@@ -11,6 +11,7 @@
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
 #include "EntityList.h"
+#include "Game/Currency.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -520,9 +521,6 @@ void Player::Update() {
         spreadManager_->RemoveSpread(removeCone, this, true);
     }
 
-    if (!onGround_)
-        seedManager_->CreateSeed(transform_.position, this);
-
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(length(velocity_)));
 }
@@ -549,6 +547,7 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
+    currency_->Add();
 }
 
 void Player::OnPush(vec3 pushVec) {

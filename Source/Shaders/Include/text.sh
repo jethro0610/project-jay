@@ -1,7 +1,7 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-uniform mat4 u_textProps;
+uniform vec4 u_textProps[3];
 
 #define TEXT_POSITION_X u_textProps[0][0]
 #define TEXT_POSITION_Y u_textProps[0][1]

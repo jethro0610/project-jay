@@ -18,10 +18,12 @@ enum TranparencyType {
     TRANSPARENCY_ADDITIVE_BRIGHT
 };
 
-struct MaterialProperties {
-    glm::vec4 color; 
-
+struct BaseMaterialProprties {
+    glm::vec4 color;
     glm::vec2 texScale;
+};
+
+struct SpecularFresnelProperties : BaseMaterialProprties {
     float specularPower;
     float specularThreshold;
 
@@ -30,12 +32,27 @@ struct MaterialProperties {
     float fresnelScale;
     float fresnelBrightness;
 
+    static SpecularFresnelProperties Default() {
+        return {
+            glm::vec4(1.0f),
+            glm::vec2(1.0f),
+            32.0f,
+            0.3f,
+            1.5f,
+            4.0f,
+            1.0f,
+            1.0f,
+        };
+    }
+};
+
+struct VariationProperties : SpecularFresnelProperties {
     float variationFrequency;
     float variationMin;
     float variationMax;
     float variationPower;
-        
-    static MaterialProperties Default() {
+    
+    static VariationProperties Default() {
         return {
             glm::vec4(1.0f),
             glm::vec2(1.0f),
@@ -48,9 +65,9 @@ struct MaterialProperties {
             1.0f,
             0.0f,
             1.0f,
-            1.0f
+            1.0f,
         };
-    }
+    };
 };
 
 struct Material {
@@ -70,7 +87,8 @@ struct Material {
         for(int i = 0; i < MAX_TEXTURES; i++)
             textures[i] = nullptr;
 
-        properties = {};
+        padding[0] = {};
+        padding[1] = {};
     }
 
     Shader* shader;
@@ -81,5 +99,11 @@ struct Material {
     bool castShadows;
     TranparencyType transparencyType;
     TriangleType triangleType;
-    MaterialProperties properties;
+
+    union {
+        BaseMaterialProprties properties;
+        SpecularFresnelProperties specularProperties;
+        VariationProperties variationProperties;
+        glm::vec4 padding[2];
+    };
 };

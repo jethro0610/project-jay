@@ -2,7 +2,6 @@
 const int NUM_VERTEX_SHADERS = 24;
 const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_coveragebar",
-	"vs_glyph",
 	"vs_inst",
 	"vs_inst_billboard_s",
 	"vs_inst_s",
@@ -16,7 +15,6 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_static_s",
 	"vs_terrain",
 	"vs_terrain_s",
-	"vs_uibar",
 	"vs_inst_billboard",
 	"vs_spread",
 	"vs_spread_activeonly",
@@ -25,4 +23,6 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_spread_inactiveonly_s",
 	"vs_spread_s",
 	"vs_terraincursor",
+	"vs_glyph",
+	"vs_uibar",
 };

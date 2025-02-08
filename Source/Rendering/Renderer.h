@@ -25,6 +25,7 @@ class TerrainCursor;
 class ParticleManager;
 class Player;
 class ResourceManager;
+class UIElement;
 
 class Renderer {
 public:
@@ -87,7 +88,8 @@ private:
     Model* terrainLODs_;
     Mesh* terrainCursor_;
 
-    Material barMaterial_;
+    Shader* uiBarShader_;
+
     Material blitMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
@@ -134,9 +136,10 @@ private:
     UniformHandle u_cameraUp_;
     UniformHandle u_cameraRight_;
     UniformHandle u_randomVec_;
-    UniformHandle u_percentBar_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_textProps_;
+    UniformHandle u_textCount_;
+    UniformHandle u_uiElement_;
 
     UniformHandle u_dynamicTerrainBubbles_;
 
@@ -195,6 +198,7 @@ private:
     void RenderPostProcess();
     void RenderBlit();
     void RenderUI(Currency& currency);
+    void RenderUIElement(UIElement& element, Shader* shader);
     void RenderText(Text& text);
     void PresentFrame();
 };

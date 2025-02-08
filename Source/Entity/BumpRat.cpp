@@ -40,7 +40,7 @@ void BumpRat::Init(Entity::InitArgs args) {
     model_ = resourceManager.GetModel("sk_bumprat");
     skeleton_ = resourceManager.GetSkeleton("sk_bumprat");
     for (int i = 0; i < 7; i++)
-        materials_[i].properties = MaterialProperties::Default();
+        materials_[i].variationProperties = VariationProperties::Default();
 
     materials_[BACK].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
     materials_[BACK].castShadows = false;
@@ -52,7 +52,7 @@ void BumpRat::Init(Entity::InitArgs args) {
     materials_[BODY].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
     materials_[BODY].castShadows = true;
     materials_[BODY].properties.color = BODYCOLOR;
-    materials_[BODY].properties.fresnelPower = 0.15f;
+    materials_[BODY].variationProperties.fresnelPower = 0.15f;
 
     materials_[FRONTEARS].shader = resourceManager.GetShader("vs_skeletal", "fs_color_masked");
     materials_[FRONTEARS].castShadows = false;

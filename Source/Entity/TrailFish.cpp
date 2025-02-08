@@ -30,7 +30,6 @@ void TrailFish::Init(Entity::InitArgs args) {
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
     materials_[0].properties.color = glm::vec4(0.5f);
-    materials_[0].properties.fresnelBrightness = 0.15f;
 
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;

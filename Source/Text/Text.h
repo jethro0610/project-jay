@@ -15,10 +15,14 @@ struct TextProperties {
     glm::vec2 position;
     float scale;
     float kerning;
+
     float hAlignment;
     float vAlignment;
     float hAnchor;
     float vAnchor;
+
+    float count;
+    glm::vec3 padding;
 };
 
 class Text {

@@ -9,6 +9,7 @@
 #include "Camera/Camera.h"
 #include "Game/Currency.h"
 #include "Resource/ResourceManager.h"
+#include "UI/UIElement.h"
 #include "Editor/Editor.h"
 #include "Entity/Player.h"
 #include <glm/vec3.hpp>
@@ -56,9 +57,9 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
-    u_percentBar_ = bgfx::createUniform("u_percentBar", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
-    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Mat4);
+    u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4, 3);
+    u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
 
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
     SetLightDirection(normalize(vec3(0.75f, -1.0f, 0.75f)));
@@ -79,7 +80,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     terrainCursor_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
-    barMaterial_.shader = resourceManager.GetShader("vs_uibar", "fs_uibar");
+    uiBarShader_ = resourceManager.GetShader("vs_uibar", "fs_uibar");
 
     blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
     blitMaterial_.numTextures = 1;
@@ -507,13 +508,34 @@ void Renderer::RenderBlit() {
 }
 
 void Renderer::RenderUI(Currency& currency) {
+    UIElement stockPercentBar = {};
+    stockPercentBar.hAlignment = UIElement::CENTER_ALIGN;
+    stockPercentBar.vAlignment = UIElement::TOP_ALIGN;
+    stockPercentBar.hAnchor = UIElement::CENTER_ALIGN;
+    stockPercentBar.vAnchor = UIElement::TOP_ALIGN;
+    stockPercentBar.percent = (float)currency.percent_ / currency.PERCENT_TILL_STOCK;
+    stockPercentBar.size.y = 30.0f;
+    stockPercentBar.size.x = 800.0f;
+    stockPercentBar.position.y = 10.0f;
+    RenderUIElement(stockPercentBar, uiBarShader_);
+
+    Text stocks;
+    stocks.properties_.scale = 50.0f;
+    stocks.properties_.position.y = 40.0f;
+    stocks.properties_.hAlignment = Text::CENTER_ALIGN;
+    stocks.properties_.vAlignment = Text::TOP_ALIGN;
+    stocks.properties_.hAnchor = Text::CENTER_ALIGN;
+    stocks.properties_.vAnchor = Text::TOP_ALIGN;
+    stocks = std::to_string(currency.stocks_) + "/" + std::to_string(currency.maxStocks_);
+    RenderText(stocks);
+}
+
+void Renderer::RenderUIElement(UIElement& element, Shader* shader) {
     bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB);
-    vec4 percentBar = vec4(currency.amount_, currency.curMax_, 0.0f, 0.0f); 
-    bgfx::setUniform(u_percentBar_, &percentBar);
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(UI_VIEW, barMaterial_.shader->handle);
-    return;
+    bgfx::setUniform(u_uiElement_, &element, 4);
+    bgfx::submit(UI_VIEW, shader->handle);
 }
 
 void Renderer::RenderText(Text& text) {
@@ -522,19 +544,8 @@ void Renderer::RenderText(Text& text) {
     if (count == 0)
         return;
     
-    mat4 textProps;
-    textProps[0][0] = text.properties_.position.x;
-    textProps[0][1] = text.properties_.position.y;
-    textProps[0][2] = text.properties_.scale;
-    textProps[0][3] = text.properties_.kerning;
-    textProps[1][0] = text.properties_.hAlignment;
-    textProps[1][1] = text.properties_.vAlignment;
-    textProps[1][2] = text.properties_.hAnchor;
-    textProps[1][3] = text.properties_.vAnchor;
-    textProps[2][0] = (float)text.length_;
-    textProps = transpose(textProps);
-
-    bgfx::setUniform(u_textProps_, &textProps);
+    text.properties_.count = text.length_;
+    bgfx::setUniform(u_textProps_, &text.properties_, 3);
     
     bgfx::InstanceDataBuffer instanceBuffer;
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));

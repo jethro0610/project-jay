@@ -36,9 +36,6 @@ terrain_(terrain)
     properties_.terrainMaterial.textures[0] = resourceManager.GetTexture("t_grass_c");
     properties_.terrainMaterial.textures[1] = resourceManager.GetTexture("t_grass_n");
     properties_.terrainMaterial.textures[2] = resourceManager.GetTexture("t_marble_c");
-    properties_.terrainMaterial.properties.fresnelPower = 16.0f;
-    properties_.terrainMaterial.properties.fresnelScale = 1.0f;
-    properties_.terrainMaterial.properties.fresnelBrightness = 1.0f;
 
     properties_.seedMaterial.shader = resourceManager.GetShader("vs_inst_billboard", "fs_seed");
     properties_.seedMaterial.shadowShader = resourceManager.GetShader("vs_inst_billboard_s", "fs_seed_s");

@@ -103,7 +103,7 @@ void Player::Init(Entity::InitArgs args) {
     for (int i = 0; i < 8; i++) {
         materials_[i].shadowShader = resourceManager.GetShader("vs_skeletal_s", "fs_depth_s");
         materials_[i].castShadows = true;
-        materials_[i].properties = MaterialProperties::Default();
+        materials_[i].specularProperties = SpecularFresnelProperties::Default();
     }
     materials_[BAND].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[BAND].properties.color = vec4(0.85f);
@@ -129,7 +129,7 @@ void Player::Init(Entity::InitArgs args) {
     materials_[SHIRT].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[SHIRT].properties.color = vec4(0.9f, 0.8f, 0.65f, 1.0f);
     materials_[SHIRT].triangleType = TriangleType::TWO_SIDED;
-    materials_[SHIRT].properties.specularBrightness = 0.0f;
+    materials_[SHIRT].specularProperties.specularBrightness = 0.0f;
 
     materials_[SLIPPERS].shader = resourceManager.GetShader("vs_skeletal", "fs_dfsa_color");
     materials_[SLIPPERS].properties.color = vec4(0.85f);
@@ -547,7 +547,7 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
-    currency_->Add();
+    currency_->AddPercent();
 }
 
 void Player::OnPush(vec3 pushVec) {

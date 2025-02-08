@@ -23,12 +23,12 @@ void RabbitPole::Init(Entity::InitArgs args) {
     materials_[0].numTextures = 2;
     materials_[0].textures[0] = resourceManager.GetTexture("t_granite_c");
     materials_[0].textures[1] = resourceManager.GetTexture("t_granite_n");
-    materials_[0].properties.fresnelBrightness = 0.25f;
-    materials_[0].properties.specularBrightness = 0.15f;
-    materials_[0].properties.variationFrequency = 6.0f;
-    materials_[0].properties.variationMin = 0.65f;
-    materials_[0].properties.variationMax = 1.25f;
-    materials_[0].properties.variationPower = 0.5f;
+    materials_[0].variationProperties.fresnelBrightness = 0.25f;
+    materials_[0].variationProperties.specularBrightness = 0.15f;
+    materials_[0].variationProperties.variationFrequency = 6.0f;
+    materials_[0].variationProperties.variationMin = 0.65f;
+    materials_[0].variationProperties.variationMax = 1.25f;
+    materials_[0].variationProperties.variationPower = 0.5f;
     materials_[0].properties.texScale = glm::vec2(2.0f);
 
     pushbox_.top = 1.0f;

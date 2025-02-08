@@ -116,7 +116,7 @@ void Pig::Update() {
 void Pig::FindTargetApple() {
     float closestTargetDist = INFINITY;
     Apple* target = nullptr;
-    for (int i = 0; i < Entity::MAX; i++) {
+    for (int i = 0; i < EntityList::MAX; i++) {
         Entity* entity = &(*entities_)[i];
         if (!entity->alive_)
             continue;
@@ -131,7 +131,7 @@ void Pig::FindTargetApple() {
             continue;
 
         bool appleAlreadyTargeted = false;
-        for (int j = 0; j < Entity::MAX; j++) {
+        for (int j = 0; j < EntityList::MAX; j++) {
             if (j == i)
                 continue;
             Entity* possiblePig = &(*entities_)[j];

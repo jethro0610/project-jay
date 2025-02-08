@@ -15,6 +15,7 @@
 #endif
 
 class Camera;
+class Currency;
 class Editor;
 class LevelProperties;
 class SeedManager;
@@ -33,6 +34,7 @@ public:
     Camera* camera_;
 
     void Render(
+        Currency& currency,
         EntityList& entities,
         LevelProperties& levelProperties,
         ParticleManager& particleManager,
@@ -192,7 +194,7 @@ private:
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();
-    void RenderUI(EntityList& entities, SpreadManager& spreadManager);
+    void RenderUI(Currency& currency);
     void RenderText(Text& text);
     void PresentFrame();
 };

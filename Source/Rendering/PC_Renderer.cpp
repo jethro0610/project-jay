@@ -363,7 +363,7 @@ void Renderer::RenderEntities(
     GPUPose pose;
     mat4 matrix;
 
-    for (int i = 0; i < Entity::MAX; i++) {
+    for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities[i].alive_) continue;
         Entity& entity = entities[i];
         matrix = entity.renderTransform_.ToMatrix();
@@ -505,7 +505,7 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
 }
 
-void Renderer::RenderUI(EntityList& entities, SpreadManager& spreadManager) {
+void Renderer::RenderUI(Currency& currency) {
     return;
 }
 

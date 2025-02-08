@@ -70,7 +70,7 @@ void Mole::Update() {
 
 bool Mole::DistantFromPillars(vec3 pos) {
     bool distant = true;
-    for (int i = 0; i < Entity::MAX; i++) {
+    for (int i = 0; i < EntityList::MAX; i++) {
         if (!(*entities_)[i].alive_)
             continue;
 

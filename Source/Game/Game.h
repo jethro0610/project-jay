@@ -1,5 +1,6 @@
 #pragma once
 #include "Camera/Camera.h"
+#include "Currency.h"
 #include "Types/Inputs.h"
 #include "Particle/ParticleManager.h"
 #include "Seed/SeedManager.h"
@@ -36,10 +37,11 @@ private:
     Level level_;
     Renderer renderer_;
     Camera camera_;
+    Currency currency_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
 
-    EntityUnion rawEntities_[Entity::MAX];
+    EntityUnion rawEntities_[EntityList::MAX];
     EntityList entities_;
 
     #ifdef _DEBUG

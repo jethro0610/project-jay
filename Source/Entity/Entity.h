@@ -14,6 +14,7 @@
 #include <cstring>
 
 class Camera;
+class Currency;
 class EntityList;
 struct Inputs;
 class Level;
@@ -55,7 +56,6 @@ struct EntityDependendies {
 
 class Entity {
 public:
-    static constexpr int MAX = 1024;
     static constexpr int TRAIL_SIZE = 2048;
     static constexpr int MAX_NAME = 32;
 
@@ -99,6 +99,7 @@ public:
 
     void Construct(
         Camera& camera,
+        Currency& currency,
         EntityList& entities,
         Inputs& inputs,
         Level& level,
@@ -192,6 +193,7 @@ public:
     void RecordTrail();
 
     Camera* camera_;
+    Currency* currency_;
     EntityList* entities_;
     Inputs* inputs_;
     Level* level_;

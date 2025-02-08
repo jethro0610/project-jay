@@ -85,24 +85,24 @@ void Game::Update() {
         }
         #endif
 
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
             entities_[i].lastTransform_ = entities_[i].transform_;
         }
 
         spreadManager_.ClearTramples();
 
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
             rawEntities_[i].entity.DoPreUpdate();
         }
 
-        vector_const<Overlap, Entity::MAX> overlapList;
-        for (int a = 0; a < Entity::MAX; a++) {
+        vector_const<Overlap, EntityList::MAX> overlapList;
+        for (int a = 0; a < EntityList::MAX; a++) {
             if (!entities_[a].alive_) continue;
             bool overlapA = entities_[a].GetFlag(Entity::EF_Overlap);
 
-            for (int b = a + 1; b < Entity::MAX; b++) {
+            for (int b = a + 1; b < EntityList::MAX; b++) {
                 if (a == b)
                     continue;
 
@@ -127,8 +127,8 @@ void Game::Update() {
             overlap.b->DoOverlap(overlap.a);
         }
 
-        vector_const<Hit, Entity::MAX> hitList;
-        for (int h = 0; h < Entity::MAX; h++) {
+        vector_const<Hit, EntityList::MAX> hitList;
+        for (int h = 0; h < EntityList::MAX; h++) {
             if (!entities_[h].alive_) continue;
             if (!entities_[h].GetFlag(Entity::EF_SendHits)) continue;
             if (!entities_[h].hitbox_.active) continue;
@@ -136,7 +136,7 @@ void Game::Update() {
             if (entities_[h].stun_) continue;
             Entity& hitter = entities_[h];
 
-            for (int t = 0; t < Entity::MAX; t++) {
+            for (int t = 0; t < EntityList::MAX; t++) {
                 if (h == t) continue;
                 if (!entities_[t].alive_) continue;
                 if (!entities_[t].GetFlag(Entity::EF_RecieveHits)) continue;
@@ -201,15 +201,15 @@ void Game::Update() {
                 hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
         }
 
-        vector_const<Push, Entity::MAX> pushList;
-        for (int a = 0; a < Entity::MAX; a++) {
+        vector_const<Push, EntityList::MAX> pushList;
+        for (int a = 0; a < EntityList::MAX; a++) {
             if (!entities_[a].alive_) continue;
             bool sendA = entities_[a].GetFlag(Entity::EF_SendPush);
             bool recieveA = entities_[a].GetFlag(Entity::EF_RecievePush);
             if (!sendA && !recieveA) continue;
             Entity& entityA = entities_[a];
 
-            for (int b = a + 1; b < Entity::MAX; b++) {
+            for (int b = a + 1; b < EntityList::MAX; b++) {
                 if (a == b) continue;
                 if (!entities_[b].alive_) continue;
                 bool sendB = entities_[b].GetFlag(Entity::EF_SendPush);
@@ -248,7 +248,7 @@ void Game::Update() {
             }
         }
 
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
             if (entities_[i].hitlag_ == 0) {
                 rawEntities_[i].entity.DoUpdate();
@@ -260,7 +260,7 @@ void Game::Update() {
     }
     camera_.Update(entities_, inputs_);
 
-    for (int i = 0; i < Entity::MAX; i++) {
+    for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities_[i].alive_) continue;
         entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
         entities_[i].DoRenderUpdate();
@@ -274,6 +274,7 @@ void Game::Update() {
     entities_.DestroyFlaggedEntities();
 
     renderer_.Render(
+        currency_,
         entities_, 
         level_.properties_,
         particleManager_,

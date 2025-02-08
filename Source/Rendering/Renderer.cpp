@@ -10,6 +10,7 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 }
 
 void Renderer::Render(
+    Currency& currency,
     EntityList& entities,
     LevelProperties& levelProperties,
     ParticleManager& particleManager, 
@@ -26,7 +27,7 @@ void Renderer::Render(
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(entities, spreadManager);
+    RenderUI(currency);
     RenderScreenText();
 
     PresentFrame();

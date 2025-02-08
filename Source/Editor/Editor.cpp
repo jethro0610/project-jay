@@ -94,7 +94,7 @@ EXPANDMODES
     notification_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
     notification_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
 
-    for (int i = 0; i < Entity::MAX; i++)
+    for (int i = 0; i < EntityList::MAX; i++)
         targets_.push_back(entities_[i].editorTarget_);
 
     for (StaticTerrainModifier* modifier : terrain.DBG_modifiers_) {
@@ -234,7 +234,7 @@ void Editor::Update() {
         else if (modifiersDestroyed)
             terrain_.GenerateTerrainHeights(false, &entities_);
 
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             if (entities_[i].alive_) {
                 entities_[i].CalculateBasePose();
                 entities_[i].renderTransform_ = entities_[i].transform_;

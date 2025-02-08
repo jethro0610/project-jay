@@ -15,6 +15,8 @@ ScreenText screenText;
 
 int main() {
     DEBUGLOG("Starting Project Jay...");
+    DEBUGLOG("Entity union size: " << sizeof(EntityUnion) << "B");
+    DEBUGLOG("Total entity size: " << (sizeof(EntityUnion) * EntityList::MAX) / 1024 / 1024 << "MB");
     // No clue why but this new call prevents vertices from uninitializing
     // looking into this...
     Game* game = new Game(); 

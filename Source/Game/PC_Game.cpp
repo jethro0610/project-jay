@@ -30,6 +30,7 @@ Game::Game():
         particleManager_, 
         resourceManager_, 
         camera_, 
+        currency_,
         inputs_, 
         level_,
         seedManager_, 

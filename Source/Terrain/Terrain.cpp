@@ -238,9 +238,9 @@ void TemplateGenerateTerrainHeights(
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     if (!lowRes)
         DEBUGLOG("Generating terrain height...");
-    vector_const<int, Entity::MAX> groundedEntities;
+    vector_const<int, EntityList::MAX> groundedEntities;
     if (entities != nullptr) {
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = (*entities)[i];
             if (!entity.alive_) continue;
 
@@ -357,9 +357,9 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     float* negative = new float[RESOLUTION * RESOLUTION];
 
     // Determine which entities are on the ground before regenerating
-    vector_const<int, Entity::MAX> groundedEntities;
+    vector_const<int, EntityList::MAX> groundedEntities;
     if (entities != nullptr) {
-        for (int i = 0; i < Entity::MAX; i++) {
+        for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = (*entities)[i];
             if (!entity.alive_) continue;
 

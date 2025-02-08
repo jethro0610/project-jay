@@ -1,10 +1,11 @@
 #pragma once
 #include "Entity/TypeID.h"
-#include "Entity.h"
 #include "Types/Transform.h"
 #include <vector_holed.h>
 
 class Camera;
+class Currency;
+class Entity;
 struct Inputs;
 class Level;
 class SeedManager;
@@ -16,11 +17,13 @@ class ResourceManager;
 
 class EntityList {
 public:
+    static constexpr int MAX = 1024;
     EntityList(
         EntityUnion* rawEntities,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         Camera& camera,
+        Currency& currency,
         Inputs& inputs,
         Level& level,
         SeedManager& seedManager,
@@ -35,7 +38,7 @@ public:
     bool IsAnyOverlapping(Entity& entity);
 
 private:
-    int available_[Entity::MAX];
+    int available_[MAX];
     int availablePos_;
     
     EntityUnion* rawEntities_;

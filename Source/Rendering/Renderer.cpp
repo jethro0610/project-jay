@@ -38,7 +38,7 @@ void Renderer::Render(
     text.properties_.position = entities[0].renderTransform_.position + vec3(0.0f, 5.0f, 0.0f);
     text.properties_.size = 2.0f;
     text.properties_.hAlignment = Alignment::CENTER;
-    text = "Testing";
+    text = "Player";
     RenderWorldText(text);
 
     PresentFrame();

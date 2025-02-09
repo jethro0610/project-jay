@@ -10,6 +10,7 @@
 #include "Game/Currency.h"
 #include "Resource/ResourceManager.h"
 #include "UI/UIElement.h"
+#include "Text/WorldText.h"
 #include "Editor/Editor.h"
 #include "Entity/Player.h"
 #include <glm/vec3.hpp>
@@ -59,6 +60,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4, 3);
+    u_worldText_ = bgfx::createUniform("u_worldText", bgfx::UniformType::Vec4, 2);
     u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
 
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
@@ -93,6 +95,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     textMaterial_.shader = resourceManager.GetShader("vs_glyph", "fs_text");
     textMaterial_.numTextures = 1;
     textMaterial_.textures[0] = resourceManager.GetTexture("t_font");
+
+    worldTextShader_ = resourceManager.GetShader("vs_worldtext", "fs_text");
 
     terrainCursorMaterial_.shader = resourceManager.GetShader("vs_terraincursor", "fs_terraincursor");
     terrainCursorMaterial_.numTextures = 0;
@@ -509,10 +513,10 @@ void Renderer::RenderBlit() {
 
 void Renderer::RenderUI(Currency& currency) {
     UIElement stockPercentBar = {};
-    stockPercentBar.hAlignment = UIElement::CENTER_ALIGN;
-    stockPercentBar.vAlignment = UIElement::TOP_ALIGN;
-    stockPercentBar.hAnchor = UIElement::CENTER_ALIGN;
-    stockPercentBar.vAnchor = UIElement::TOP_ALIGN;
+    stockPercentBar.hAlignment = Alignment::CENTER;
+    stockPercentBar.vAlignment = Alignment::TOP;
+    stockPercentBar.hAnchor = Alignment::CENTER;
+    stockPercentBar.vAnchor = Alignment::TOP;
     stockPercentBar.percent = (float)currency.percent_ / currency.PERCENT_TILL_STOCK;
     stockPercentBar.size.y = 30.0f;
     stockPercentBar.size.x = 800.0f;
@@ -522,10 +526,10 @@ void Renderer::RenderUI(Currency& currency) {
     Text stocks;
     stocks.properties_.scale = 50.0f;
     stocks.properties_.position.y = 40.0f;
-    stocks.properties_.hAlignment = Text::CENTER_ALIGN;
-    stocks.properties_.vAlignment = Text::TOP_ALIGN;
-    stocks.properties_.hAnchor = Text::CENTER_ALIGN;
-    stocks.properties_.vAnchor = Text::TOP_ALIGN;
+    stocks.properties_.hAlignment = Alignment::CENTER;
+    stocks.properties_.vAlignment = Alignment::TOP;
+    stocks.properties_.hAnchor = Alignment::CENTER;
+    stocks.properties_.vAnchor = Alignment::TOP;
     stocks = std::to_string(currency.stocks_) + "/" + std::to_string(currency.maxStocks_);
     RenderText(stocks);
 }
@@ -558,6 +562,27 @@ void Renderer::RenderText(Text& text) {
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, textMaterial_.shader->handle);
+}
+
+void Renderer::RenderWorldText(WorldText& text) {
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
+    uint32_t count = text.length_;
+    if (count == 0)
+        return;
+    
+    bgfx::setUniform(u_worldText_, &text.properties_, 2);
+    
+    bgfx::InstanceDataBuffer instanceBuffer;
+    bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
+    memcpy(instanceBuffer.data, text.glyphs_.data(), sizeof(vec4) * count);
+    bgfx::setInstanceDataBuffer(&instanceBuffer);
+
+    // TODO: Move text material to Text class?
+    bgfx::setTexture(0, samplers_[0], textMaterial_.textures[0]->handle);
+
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(TRANSPARENCY_VIEW, worldTextShader_->handle);
 }
 
 void Renderer::RenderScreenText() {

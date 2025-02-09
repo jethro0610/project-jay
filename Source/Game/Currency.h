@@ -4,9 +4,9 @@ public:
     Currency() {
         percent_ = 0;
         stocks_ = 0;
-        maxStocks_ = 1;
+        maxStocks_ = 2;
     }
-    static constexpr int PERCENT_TILL_STOCK = 1024 * 32;
+    static constexpr int PERCENT_TILL_STOCK = 1024 * 16;
     int percent_;
     int stocks_;
     int maxStocks_;

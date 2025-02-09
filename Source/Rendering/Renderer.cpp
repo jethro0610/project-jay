@@ -3,6 +3,10 @@
 #include "Level/LevelProperties.h"
 #include "Editor/Editor.h"
 #include "Terrain/Terrain.h"
+
+#include "Text/WorldText.h"
+#include "Entity/EntityList.h"
+#include "Entity/Entity.h"
 using namespace glm;
 
 mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
@@ -29,6 +33,13 @@ void Renderer::Render(
     RenderBlit();
     RenderUI(currency);
     RenderScreenText();
+
+    WorldText text;
+    text.properties_.position = entities[0].renderTransform_.position + vec3(0.0f, 5.0f, 0.0f);
+    text.properties_.size = 2.0f;
+    text.properties_.hAlignment = Alignment::CENTER;
+    text = "Testing";
+    RenderWorldText(text);
 
     PresentFrame();
 }

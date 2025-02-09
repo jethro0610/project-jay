@@ -3,12 +3,6 @@
 #include <glm/vec4.hpp>
 
 struct UIElement {
-    static constexpr float LEFT_ALIGN = 0.0f;
-    static constexpr float RIGHT_ALIGN = 1.0f;
-    static constexpr float TOP_ALIGN = 0.0f;
-    static constexpr float BOTTOM_ALIGN = 1.0f;
-    static constexpr float CENTER_ALIGN = 0.5f;
-
     // vec4 += 2
     glm::vec2 position;
     glm::vec2 size;

@@ -26,6 +26,7 @@ class ParticleManager;
 class Player;
 class ResourceManager;
 class UIElement;
+class WorldText;
 
 class Renderer {
 public:
@@ -89,6 +90,7 @@ private:
     Mesh* terrainCursor_;
 
     Shader* uiBarShader_;
+    Shader* worldTextShader_;
 
     Material blitMaterial_;
     Material postProcessMaterial_;
@@ -138,6 +140,7 @@ private:
     UniformHandle u_randomVec_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_textProps_;
+    UniformHandle u_worldText_;
     UniformHandle u_textCount_;
     UniformHandle u_uiElement_;
 
@@ -199,6 +202,7 @@ private:
     void RenderBlit();
     void RenderUI(Currency& currency);
     void RenderUIElement(UIElement& element, Shader* shader);
+    void RenderWorldText(WorldText& text);
     void RenderText(Text& text);
     void PresentFrame();
 };

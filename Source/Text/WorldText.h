@@ -1,43 +1,38 @@
 #pragma once
-#include "Logging/Logger.h"
-#include "Types/Alignment.h"
 #include "Glyph.h"
-#include <array>
+#include "Types/Alignment.h"
 #include <string>
-#include <glm/vec2.hpp>
+#include <array>
 #include <glm/vec3.hpp>
 
-struct TextProperties {
-    glm::vec2 position;
-    float scale;
-    float kerning;
 
-    float hAlignment;
-    float vAlignment;
-    float hAnchor;
-    float vAnchor;
-
-    float count;
-    glm::vec3 padding;
-};
-
-class Text {
+class WorldText {
 public:
     static constexpr int MAX_CHARS = 64;
-
-    Text(const glm::vec2& position, float scale, float kerning);
-    Text();
-    TextProperties properties_;
+    WorldText();
     std::array<Glyph, MAX_CHARS> glyphs_;
     int length_;
+
+    struct RenderProperties {
+        glm::vec3 position;
+        float size;
+
+        float length;
+        float hAlignment;
+        float vAlignment;
+        float padding;
+    };
+    RenderProperties properties_;
 
     void RemoveLast() {
         if (length_ == 0) return;
         length_--;
+        properties_.length = length_;
     }
 
     void Clear() {
         length_ = 0;
+        properties_.length = 0;
     }
 
     std::string ToString() {
@@ -59,6 +54,7 @@ public:
         assert(length_ + 1 <= MAX_CHARS);
         glyphs_[length_].character = chr - 32;
         length_++;
+        properties_.length = length_;
     }
 
     void operator=(const std::string& str) { 
@@ -69,5 +65,6 @@ public:
                 glyphs_[i].character = (float)' ' - 32;
         }
         length_ = str.length();
+        properties_.length = length_;
     }
 };

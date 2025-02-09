@@ -1,5 +1,5 @@
 #pragma once
-const int NUM_VERTEX_SHADERS = 24;
+const int NUM_VERTEX_SHADERS = 25;
 const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_coveragebar",
 	"vs_inst",
@@ -25,4 +25,5 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_terraincursor",
 	"vs_glyph",
 	"vs_uirect",
+	"vs_worldtext",
 };

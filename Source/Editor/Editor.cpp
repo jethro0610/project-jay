@@ -68,31 +68,31 @@ EXPANDMODES
     active_ = false;
 
     modeText_.properties_.scale = 40.0f;
-    modeText_.properties_.hAlignment = Text::RIGHT_ALIGN;
-    modeText_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    modeText_.properties_.hAnchor = Text::RIGHT_ALIGN;
-    modeText_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    modeText_.properties_.hAlignment = Alignment::RIGHT;
+    modeText_.properties_.vAlignment = Alignment::BOTTOM;
+    modeText_.properties_.hAnchor = Alignment::RIGHT;
+    modeText_.properties_.vAnchor = Alignment::BOTTOM;
 
     target_.name_.properties_.scale = 40.0f;
     target_.name_.properties_.position.y -= 40.0f;
-    target_.name_.properties_.hAlignment = Text::RIGHT_ALIGN;
-    target_.name_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    target_.name_.properties_.hAnchor = Text::RIGHT_ALIGN;
-    target_.name_.properties_.vAnchor = Text::BOTTOM_ALIGN;
-    target_.name_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    target_.name_.properties_.hAlignment = Alignment::RIGHT;
+    target_.name_.properties_.vAlignment = Alignment::BOTTOM;
+    target_.name_.properties_.hAnchor = Alignment::RIGHT;
+    target_.name_.properties_.vAnchor = Alignment::BOTTOM;
+    target_.name_.properties_.vAnchor = Alignment::BOTTOM;
 
     textInput_.text_.properties_.scale = 40.0f;
-    textInput_.text_.properties_.hAlignment = Text::LEFT_ALIGN;
-    textInput_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    textInput_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
-    textInput_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    textInput_.text_.properties_.hAlignment = Alignment::LEFT;
+    textInput_.text_.properties_.vAlignment = Alignment::BOTTOM;
+    textInput_.text_.properties_.hAnchor = Alignment::LEFT;
+    textInput_.text_.properties_.vAnchor = Alignment::BOTTOM;
 
     notification_.text_.properties_.scale = 40.0f;
     notification_.text_.properties_.position.y -= 40.0f;
-    notification_.text_.properties_.hAlignment = Text::LEFT_ALIGN;
-    notification_.text_.properties_.vAlignment = Text::BOTTOM_ALIGN;
-    notification_.text_.properties_.hAnchor = Text::LEFT_ALIGN;
-    notification_.text_.properties_.vAnchor = Text::BOTTOM_ALIGN;
+    notification_.text_.properties_.hAlignment = Alignment::LEFT;
+    notification_.text_.properties_.vAlignment = Alignment::BOTTOM;
+    notification_.text_.properties_.hAnchor = Alignment::LEFT;
+    notification_.text_.properties_.vAnchor = Alignment::BOTTOM;
 
     for (int i = 0; i < EntityList::MAX; i++)
         targets_.push_back(entities_[i].editorTarget_);

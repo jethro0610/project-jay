@@ -24,6 +24,7 @@ void main() {
     float vAnchorOffset = (1.0f / u_viewTexel.y) * TEXT_V_ANCHOR;
 
     a_position.x += (hAnchorOffset + TEXT_POSITION_X - hAlignOffset + TEXT_SCALE * TEXT_KERNING * index) * u_viewTexel.x * 2.0f;
+    a_position.x += (TEXT_SCALE * TEXT_H_ALIGN) * u_viewTexel.x * 1.0f;
     a_position.y -= (vAnchorOffset + TEXT_POSITION_Y - vAlignOffset) * u_viewTexel.y * 2.0f;
     gl_Position = vec4(a_position.x, a_position.y, 0.0f, 1.0f);
 

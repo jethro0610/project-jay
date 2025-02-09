@@ -70,7 +70,8 @@ private:
     static constexpr int RENDER_VIEW = 2;
     static constexpr int TRANSPARENCY_VIEW = 3;
     static constexpr int POSTROCESS_VIEW = 4;
-    static constexpr int UI_VIEW = 5;
+    static constexpr int WORLD_TEXT_VIEW = 5;
+    static constexpr int UI_VIEW = 6;
 
     int width_;
     int height_;
@@ -113,11 +114,13 @@ private:
     void InitShadowBuffer(Texture* shadowBufferTexture);
     void InitRenderBuffer(Texture* renderColorTexture, Texture* renderDepthTexture);
     void InitPostProcessBuffer(Texture* postProcessTexture);
+    void InitIgnoreKuwaharaBuffers(Texture* postProcessTexture, Texture* renderDepthTexture);
     void InitUIBuffer();
 
     FrameBufferHandle backBuffer_;
     FrameBufferHandle shadowBuffer_;
     FrameBufferHandle renderBuffer_;
+    FrameBufferHandle ignoreKuwaharaBuffer_;
     FrameBufferHandle postProcessBuffer_;
 
     TextureSamplerHandle samplers_[Material::MAX_TEXTURES];

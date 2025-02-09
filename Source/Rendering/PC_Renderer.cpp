@@ -41,9 +41,9 @@ Renderer::Renderer(ResourceManager& resourceManager) {
         std::string samplerName = "s_sampler" + std::to_string(i);
         samplers_[i] = bgfx::createUniform(samplerName.c_str(), bgfx::UniformType::Sampler);
     }
+
     shadowSampler_ = bgfx::createUniform("s_samplerShadow", bgfx::UniformType::Sampler);
     terrainMapSampler_ = bgfx::createUniform("s_samplerTerrainMap", bgfx::UniformType::Sampler);
-
     u_shadowMatrix_ = bgfx::createUniform("u_shadowMatrix", bgfx::UniformType::Mat4);
     u_shadowResolution_ = bgfx::createUniform("u_shadowResolution", bgfx::UniformType::Vec4);
     u_shadowUp_ = bgfx::createUniform("u_shadowUp", bgfx::UniformType::Vec4);
@@ -62,8 +62,8 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4, 3);
     u_worldText_ = bgfx::createUniform("u_worldText", bgfx::UniformType::Vec4, 2);
     u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
-
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
+
     SetLightDirection(normalize(vec3(0.75f, -1.0f, 0.75f)));
 
     backBuffer_ = BGFX_INVALID_HANDLE;
@@ -71,6 +71,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     InitShadowBuffer(resourceManager.GetTexture("t_shadowmap"));
     InitRenderBuffer(resourceManager.GetTexture("t_render_c"), resourceManager.GetTexture("t_render_d"));
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
+    InitIgnoreKuwaharaBuffers(resourceManager.GetTexture("t_post_c"), resourceManager.GetTexture("t_render_d"));
     InitUIBuffer();
 
     terrainMapTexture_ = resourceManager.GetTexture("t_terrainmap");
@@ -147,11 +148,18 @@ void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
     bgfx::setViewRect(POSTROCESS_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
+void Renderer::InitIgnoreKuwaharaBuffers(Texture* postProcessTexture, Texture* renderDepthTexture) {
+    TextureHandle handles[] = { postProcessTexture->handle, renderDepthTexture->handle };
+    ignoreKuwaharaBuffer_ = bgfx::createFrameBuffer(2, handles);
+
+    bgfx::setViewFrameBuffer(WORLD_TEXT_VIEW, ignoreKuwaharaBuffer_);
+    bgfx::setViewRect(WORLD_TEXT_VIEW, 0, 0, renderWidth_, renderHeight_);
+}
+
 void Renderer::InitUIBuffer() {
     bgfx::setViewFrameBuffer(UI_VIEW, backBuffer_);
-    bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000FF, 1.0f, 0);
+    bgfx::setViewClear(UI_VIEW, BGFX_CLEAR_COLOR, 0x000000FF, 1.0f, 0);
     bgfx::setViewRect(UI_VIEW, 0, 0, width_, height_);
-    bgfx::setViewMode(UI_VIEW, bgfx::ViewMode::Sequential);
 }
 
 void Renderer::StartFrame() {
@@ -159,6 +167,8 @@ void Renderer::StartFrame() {
     bgfx::setViewTransform(TERRAIN_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(TRANSPARENCY_VIEW, &viewMatrix_, &projectionMatrix_);
+    bgfx::setViewTransform(POSTROCESS_VIEW, &viewMatrix_, &projectionMatrix_);
+    bgfx::setViewTransform(WORLD_TEXT_VIEW, &viewMatrix_, &projectionMatrix_);
 
     vec3 forward = camera_->transform_.GetForwardVector();
     forward.y = 0.0f;
@@ -530,6 +540,7 @@ void Renderer::RenderUI(Currency& currency) {
     stocks.properties_.vAlignment = Alignment::TOP;
     stocks.properties_.hAnchor = Alignment::CENTER;
     stocks.properties_.vAnchor = Alignment::TOP;
+    stocks.properties_.kerning = 0.35f;
     stocks = std::to_string(currency.stocks_) + "/" + std::to_string(currency.maxStocks_);
     RenderText(stocks);
 }
@@ -543,11 +554,11 @@ void Renderer::RenderUIElement(UIElement& element, Shader* shader) {
 }
 
 void Renderer::RenderText(Text& text) {
-    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
     uint32_t count = text.length_;
     if (count == 0)
         return;
-    
+
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
     text.properties_.count = text.length_;
     bgfx::setUniform(u_textProps_, &text.properties_, 3);
     
@@ -565,11 +576,11 @@ void Renderer::RenderText(Text& text) {
 }
 
 void Renderer::RenderWorldText(WorldText& text) {
-    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA);
     uint32_t count = text.length_;
     if (count == 0)
         return;
     
+    bgfx::setState(BGFX_STATE_CULL_CW | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_DEPTH_TEST_LESS);
     bgfx::setUniform(u_worldText_, &text.properties_, 2);
     
     bgfx::InstanceDataBuffer instanceBuffer;
@@ -582,7 +593,7 @@ void Renderer::RenderWorldText(WorldText& text) {
 
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
-    bgfx::submit(TRANSPARENCY_VIEW, worldTextShader_->handle);
+    bgfx::submit(WORLD_TEXT_VIEW, worldTextShader_->handle);
 }
 
 void Renderer::RenderScreenText() {

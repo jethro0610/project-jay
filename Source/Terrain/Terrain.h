@@ -61,8 +61,6 @@ public:
     bool DestroyPendingModifiers();
 
     std::string DBG_landMapName_;
-    Model* DBG_modifierNodeModel_;
-    Material DBG_modifierNodeMaterial_;
     bool DBG_lowRes_;
 
     TerrainBubble DBG_bubbles_[64];

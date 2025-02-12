@@ -68,10 +68,10 @@ float TerrainNoise::ETarget::GetScalar(char id) {
             return noise_->radius_;
 
         case '2':
-            return noise_->maxHeight_;
+            return noise_->frequency_;
 
         case '3':
-            return noise_->frequency_;
+            return noise_->maxHeight_;
 
         case '4':
             return noise_->minHeight_;
@@ -80,7 +80,7 @@ float TerrainNoise::ETarget::GetScalar(char id) {
 }
 
 float TerrainNoise::ETarget::GetScalarDelta(char id) {
-    if (id == '1')
+    if (id == '2')
         return 0.01f;
     else 
         return 1.0f;
@@ -93,11 +93,11 @@ void TerrainNoise::ETarget::SetScalar(char id, float value) {
             break;
 
         case '2':
-            noise_->maxHeight_ = value;
+            noise_->frequency_= value;
             break;
 
         case '3':
-            noise_->frequency_ = value;
+            noise_->maxHeight_ = value;
             break;
 
         case '4':

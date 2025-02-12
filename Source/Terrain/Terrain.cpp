@@ -44,10 +44,6 @@ resourceManager_(resourceManager)
     #ifdef _DEBUG
     DBG_landMapName_ = "lm_default";
     DBG_lowRes_ = true;
-    DBG_modifierNodeModel_ = resourceManager.GetModel("st_default");
-    DBG_modifierNodeMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
-    DBG_modifierNodeMaterial_.properties.color = vec4(0.0f, 0.0f, 0.0f, 0.5f);
-    DBG_modifierNodeMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
 
     #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 64; i++) { ARR[i].terrain_ = this; DBG_modifiers_.push_back(&ARR[i]); }
     EXPANDTERRAINMODS 

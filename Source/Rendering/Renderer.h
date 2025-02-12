@@ -86,9 +86,13 @@ private:
     Texture* DBG_terrainMapTextureLow_;
     #endif
 
+
     Mesh* quad_;
     Model* terrainLODs_;
     Mesh* terrainCursor_;
+    #ifdef _DEBUG
+    Model* DBG_nodeModel_;
+    #endif
 
     Shader* uiBarShader_;
     Shader* worldTextShader_;
@@ -97,6 +101,9 @@ private:
     Material postProcessMaterial_;
     Material textMaterial_;
     Material terrainCursorMaterial_;
+    #ifdef _DEBUG
+    Material DBG_nodeMaterial_;
+    #endif
 
     #ifdef _DEBUG
     Shader* selectedShader_;
@@ -184,6 +191,7 @@ private:
     void RenderStaticTerrainModifiers(
         Terrain& terrain
     );
+    void RenderEntityPositionRadiusNodes(EntityList& entities);
     void RenderScreenText();
     #endif
     void RenderTerrain(

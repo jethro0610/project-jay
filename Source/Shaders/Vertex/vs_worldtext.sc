@@ -5,7 +5,7 @@ $output v_texcoord0
 
 static const int MAP_CHARS = 16;
 static const float CHAR_SIZE = 1.0f / float(MAP_CHARS);
-static const float KERNING = 0.45;
+static const float KERNING = 0.4f;
 
 uniform vec4 u_cameraUp;
 uniform vec4 u_cameraRight;

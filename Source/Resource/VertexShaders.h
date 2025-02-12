@@ -24,6 +24,6 @@ const char VERTEX_SHADERS[NUM_VERTEX_SHADERS][32] = {
 	"vs_spread_s",
 	"vs_terraincursor",
 	"vs_uirect",
-	"vs_worldtext",
 	"vs_glyph",
+	"vs_worldtext",
 };

@@ -34,13 +34,6 @@ void Renderer::Render(
     RenderUI(currency);
     RenderScreenText();
 
-    WorldText text;
-    text.properties_.position = entities[0].renderTransform_.position + vec3(0.0f, 5.0f, 0.0f);
-    text.properties_.size = 2.0f;
-    text.properties_.hAlignment = Alignment::CENTER;
-    text = "Player";
-    RenderWorldText(text);
-
     PresentFrame();
 }
 
@@ -58,6 +51,7 @@ void Renderer::RenderEdit(
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     RenderStaticTerrainModifiers(terrain);
+    RenderEntityPositionRadiusNodes(entities);
     RenderEntities(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderTerrainCursor(terrainCursor);

@@ -1,6 +1,7 @@
 #include "Ramp.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
+#include "Text/WorldText.h"
 using namespace glm;
 
 EntityDependendies Ramp::GetStaticDependencies() {
@@ -15,7 +16,12 @@ EntityProperties Ramp::GetStaticProperties() {
             {"p_radius", &DYN_MOD_RADIUS((*bubble_))},
             {"p_height", &DYN_MOD_VALUE((*bubble_))},
             {"p_in", &DYN_MOD_IN_POWER((*bubble_))},
-            {"p_out", &DYN_MOD_OUT_POWER((*bubble_))}
+            {"p_out", &DYN_MOD_OUT_POWER((*bubble_))},
+            {"p_activate_x", &activator_.position.x},
+            {"p_activate_y", &activator_.position.y},
+            {"p_activate_z", &activator_.position.z},
+            {"p_activate_radius", &activator_.radius},
+            // TODO: make this implicit to entities
         },
         {
 
@@ -28,6 +34,7 @@ EntityProperties Ramp::GetStaticProperties() {
 
 void Ramp::Init(Entity::InitArgs args) {
     ResourceManager& resourceManager = args.resourceManager;
+    SetFlag(EF_Interpolate, true);
     model_ = resourceManager.GetModel("st_tpillar");
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
@@ -47,18 +54,32 @@ void Ramp::Init(Entity::InitArgs args) {
     DYN_MOD_IN_POWER((*bubble_)) = 2.0f;
     DYN_MOD_OUT_POWER((*bubble_)) = 0.5f;
     DYN_MOD_VALUE((*bubble_)) = 30.0f;
+
+    activator_.requiredStocks = 2;
+    activator_.radius = 32.0f;
+    activator_.position = transform_.position + vec3(0.0f, 32.0f, 0.0f);
+
+    // TODO:: implicit
+    *positionRadiusTargets_[0] = PositionRadiusTarget(&activator_.position, &activator_.radius, "ramp_activate_point");
 }
 
 void Ramp::OnDestroy() {
     terrain_->FreeBubble(bubble_);
+    *positionRadiusTargets_[0] = PositionRadiusTarget();
 }
 
-void Ramp::Update() {
+void Ramp::PreUpdate() {
+    transform_.position.z += 1.0f;
     DYN_MOD_POS_X((*bubble_)) = transform_.position.x;
     DYN_MOD_POS_Y((*bubble_)) = transform_.position.z;
+}
+
+void Ramp::RenderUpdate() {
+    // DYN_MOD_POS_X((*bubble_)) = renderTransform_.position.x;
+    // DYN_MOD_POS_Y((*bubble_)) = renderTransform_.position.z;
 }
 
 void Ramp::EditorUpdate() {
-    DYN_MOD_POS_X((*bubble_)) = transform_.position.x;
-    DYN_MOD_POS_Y((*bubble_)) = transform_.position.z;
+    DYN_MOD_POS_X((*bubble_)) = renderTransform_.position.x;
+    DYN_MOD_POS_Y((*bubble_)) = renderTransform_.position.z;
 }

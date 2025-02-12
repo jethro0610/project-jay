@@ -107,6 +107,11 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     selectedShader_ = resourceManager.GetShader("vs_static", "fs_selected");
     selectedUnshadedShader_ = resourceManager.GetShader("vs_static", "fs_selected_unshaded");
     selectedFrontShader_ = resourceManager.GetShader("vs_static", "fs_selected_front");
+
+    DBG_nodeModel_ = resourceManager.GetModel("st_default");
+    DBG_nodeMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
+    DBG_nodeMaterial_.properties.color = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+    DBG_nodeMaterial_.shader = resourceManager.GetShader("vs_static", "fs_color");
     #endif
 }
 
@@ -406,6 +411,15 @@ void Renderer::RenderEntities(
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, RENDER_VIEW, debugShaderType);
             #endif 
         }
+
+        if (entity.activator_.requiredStocks > 0) {
+            WorldText text(
+                "Required Points: " + std::to_string(entity.activator_.requiredStocks),
+                entity.activator_.position + vec3(0.0f, 8.0f, 0.0f),
+                4.0f
+            );
+            RenderWorldText(text);
+        }
     }
 }
 
@@ -488,11 +502,11 @@ void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
 
         modifier->WriteRenderNodes(nodes, terrain);
         for (StaticTerrainModifier::RenderNode& node : nodes) {
-            material = terrain.DBG_modifierNodeMaterial_;
+            material = DBG_nodeMaterial_;
             material.properties.color = node.color;
             matrix = node.transform.ToMatrix();
             RenderMesh(
-                &terrain.DBG_modifierNodeModel_->meshes[0],
+                &DBG_nodeModel_->meshes[0],
                 &material,
                 nullptr,
                 &matrix,
@@ -611,6 +625,36 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.target_.name_);
     RenderText(editor.textInput_.text_);
     RenderText(editor.notification_.text_);
+}
+
+void Renderer::RenderEntityPositionRadiusNodes(EntityList& entities) {
+    Transform transform;
+    transform.scale = vec3(4.0f);
+    mat4 matrix;
+    Material material; 
+
+    for (int i = 0; i < EntityList::MAX; i++) {
+        if (!entities[i].alive_) continue;
+        Entity& entity = entities[i];
+
+        for (int j = 0; j < Entity::NUM_POS_RAD_TARGETS; j++) {
+            if (!entity.positionRadiusTargets_[j]->Selectable()) continue;
+            transform.position = entity.positionRadiusTargets_[j]->GetPosition();
+
+            material = DBG_nodeMaterial_;
+            material.properties.color = vec4(1.0f, 0.0f, 1.0f, 0.75f);
+            matrix = transform.ToMatrix();
+            RenderMesh(
+                &DBG_nodeModel_->meshes[0],
+                &material,
+                nullptr,
+                &matrix,
+                nullptr,
+                RENDER_VIEW,
+                entity.positionRadiusTargets_[j]->Selected() ? DS_SelectedUnshaded : DS_Default
+            );
+        }
+    }
 }
 
 void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {

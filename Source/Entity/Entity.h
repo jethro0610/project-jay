@@ -9,6 +9,8 @@
 #include "Entity/EntityProperties.h"
 #include "TypeID.h"
 #include "Editor/EditorTarget.h"
+#include "Editor/PositionRadiusTarget.h"
+#include "Text/WorldText.h"
 #include <vector>
 #include <inttypes.h>
 #include <cstring>
@@ -23,6 +25,7 @@ class ResourceManager;
 class SeedManager;
 class SpreadManager;
 class Terrain;
+class WorldText;
 
 class ParticleEmitter;
 
@@ -68,6 +71,11 @@ public:
     struct TrailPoint {
         float time;
         glm::vec3 position;
+    };
+    struct Activator {
+        glm::vec3 position;
+        float radius;
+        int requiredStocks;
     };
 
     struct InitArgs {
@@ -159,6 +167,7 @@ public:
     bool initHitlag_;
     int hitlag_;
     int hurtCooldown_;
+    Activator activator_;
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
@@ -201,13 +210,34 @@ public:
     SpreadManager* spreadManager_;
     Terrain* terrain_;
 
+private:
+    void PreUpdate() {};
+    void Update() {};
+    void RenderUpdate() {};
     #ifdef _DEBUG
+    void EditorUpdate() {};
+    #endif
+    void OnHit(HitArgs args) {};
+    void OnHurt(HurtArgs args) {};
+    void OnPush(glm::vec3 pushVec) {}
+    void OnOverlap(Entity* overlappedEntity) {}
+    void OnHitlagEnd() {}
+    void OnCaptureSeed() {};
+    void OnDestroy() {};
+    glm::vec3 GetTargetPoint() { return transform_.position; };
+
+    static EntityDependendies GetStaticDependencies() { return {}; }
+    static const char* GetStaticName() { return "e_base"; }
+    EntityProperties GetStaticProperties() { return {}; }
+
+    #ifdef _DEBUG
+    public:
     class ETarget : public EditorTarget {
-    private:
+        private:
         friend Entity;
         Entity* entity_;
 
-    public:
+        public:
         ETarget(Entity* entity) : entity_(entity) {}
         std::string GetName() override;
 
@@ -231,26 +261,8 @@ public:
         EditorTarget* Clone() override;
         void Destroy() override;
     };
+    static constexpr int NUM_POS_RAD_TARGETS = 8;
     EditorTarget* editorTarget_;
+    PositionRadiusTarget* positionRadiusTargets_[NUM_POS_RAD_TARGETS];
     #endif
-
-private:
-    void PreUpdate() {};
-    void Update() {};
-    void RenderUpdate() {};
-    #ifdef _DEBUG
-    void EditorUpdate() {};
-    #endif
-    void OnHit(HitArgs args) {};
-    void OnHurt(HurtArgs args) {};
-    void OnPush(glm::vec3 pushVec) {}
-    void OnOverlap(Entity* overlappedEntity) {}
-    void OnHitlagEnd() {}
-    void OnCaptureSeed() {};
-    void OnDestroy() {};
-    glm::vec3 GetTargetPoint() { return transform_.position; };
-
-    static EntityDependendies GetStaticDependencies() { return {}; }
-    static const char* GetStaticName() { return "e_base"; }
-    EntityProperties GetStaticProperties() { return {}; }
 };

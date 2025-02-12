@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
+#include <string.h>
 #include <unordered_map>
 #include "Entity/EntityProperties.h"
 
@@ -54,3 +55,4 @@ public:
     virtual bool Clonable() { return false; }
     bool Selected() { return selected_; }
 };
+

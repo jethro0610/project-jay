@@ -94,8 +94,12 @@ EXPANDMODES
     notification_.text_.properties_.hAnchor = Alignment::LEFT;
     notification_.text_.properties_.vAnchor = Alignment::BOTTOM;
 
-    for (int i = 0; i < EntityList::MAX; i++)
+    for (int i = 0; i < EntityList::MAX; i++) {
         targets_.push_back(entities_[i].editorTarget_);
+        for (int j = 0; j < Entity::NUM_POS_RAD_TARGETS; j++) {
+            targets_.push_back(entities_[i].positionRadiusTargets_[j]);
+        }
+    }
 
     for (StaticTerrainModifier* modifier : terrain.DBG_modifiers_) {
         for (EditorTarget* target : modifier->editorTargets_) {

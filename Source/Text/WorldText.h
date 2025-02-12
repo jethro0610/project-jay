@@ -10,6 +10,13 @@ class WorldText {
 public:
     static constexpr int MAX_CHARS = 64;
     WorldText();
+    WorldText(
+        const std::string& str, 
+        const glm::vec3& position, 
+        float size = 1.0f, 
+        float hAlignment = Alignment::CENTER, 
+        float vAlignment = Alignment::CENTER
+    );
     std::array<Glyph, MAX_CHARS> glyphs_;
     int length_;
 
@@ -27,6 +34,17 @@ public:
     void RemoveLast() {
         if (length_ == 0) return;
         length_--;
+        properties_.length = length_;
+    }
+
+    void SetString(const std::string& str) {
+        for (int i = 0; i < MAX_CHARS; i++) {
+            if (i < str.length())
+                glyphs_[i].character = (float)str[i] - 32;
+            else
+                glyphs_[i].character = (float)' ' - 32;
+        }
+        length_ = str.length();
         properties_.length = length_;
     }
 
@@ -58,13 +76,6 @@ public:
     }
 
     void operator=(const std::string& str) { 
-        for (int i = 0; i < MAX_CHARS; i++) {
-            if (i < str.length())
-                glyphs_[i].character = (float)str[i] - 32;
-            else
-                glyphs_[i].character = (float)' ' - 32;
-        }
-        length_ = str.length();
-        properties_.length = length_;
+        SetString(str);
     }
 };

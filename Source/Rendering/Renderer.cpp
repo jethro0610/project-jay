@@ -51,7 +51,7 @@ void Renderer::RenderEdit(
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     RenderStaticTerrainModifiers(terrain);
-    RenderEntityPositionRadiusNodes(entities);
+    RenderEntityEditorNodes(entities);
     RenderEntities(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderTerrainCursor(terrainCursor);

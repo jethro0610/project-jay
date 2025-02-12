@@ -627,7 +627,7 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.notification_.text_);
 }
 
-void Renderer::RenderEntityPositionRadiusNodes(EntityList& entities) {
+void Renderer::RenderEntityEditorNodes(EntityList& entities) {
     Transform transform;
     transform.scale = vec3(4.0f);
     mat4 matrix;
@@ -637,23 +637,21 @@ void Renderer::RenderEntityPositionRadiusNodes(EntityList& entities) {
         if (!entities[i].alive_) continue;
         Entity& entity = entities[i];
 
-        for (int j = 0; j < Entity::NUM_POS_RAD_TARGETS; j++) {
-            if (!entity.positionRadiusTargets_[j]->Selectable()) continue;
-            transform.position = entity.positionRadiusTargets_[j]->GetPosition();
+        if (!entity.activatorTarget_->Selectable()) continue;
+        transform.position = entity.activatorTarget_->GetPosition();
 
-            material = DBG_nodeMaterial_;
-            material.properties.color = vec4(1.0f, 0.0f, 1.0f, 0.75f);
-            matrix = transform.ToMatrix();
-            RenderMesh(
-                &DBG_nodeModel_->meshes[0],
-                &material,
-                nullptr,
-                &matrix,
-                nullptr,
-                RENDER_VIEW,
-                entity.positionRadiusTargets_[j]->Selected() ? DS_SelectedUnshaded : DS_Default
-            );
-        }
+        material = DBG_nodeMaterial_;
+        material.properties.color = vec4(1.0f, 0.0f, 1.0f, 0.75f);
+        matrix = transform.ToMatrix();
+        RenderMesh(
+            &DBG_nodeModel_->meshes[0],
+            &material,
+            nullptr,
+            &matrix,
+            nullptr,
+            RENDER_VIEW,
+            entity.activatorTarget_->Selected() ? DS_SelectedUnshaded : DS_Default
+        );
     }
 }
 

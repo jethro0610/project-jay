@@ -191,7 +191,7 @@ private:
     void RenderStaticTerrainModifiers(
         Terrain& terrain
     );
-    void RenderEntityPositionRadiusNodes(EntityList& entities);
+    void RenderEntityEditorNodes(EntityList& entities);
     void RenderScreenText();
     #endif
     void RenderTerrain(

@@ -58,14 +58,10 @@ void Ramp::Init(Entity::InitArgs args) {
     activator_.requiredStocks = 2;
     activator_.radius = 32.0f;
     activator_.position = transform_.position + vec3(0.0f, 32.0f, 0.0f);
-
-    // TODO:: implicit
-    *positionRadiusTargets_[0] = PositionRadiusTarget(&activator_.position, &activator_.radius, "ramp_activate_point");
 }
 
 void Ramp::OnDestroy() {
     terrain_->FreeBubble(bubble_);
-    *positionRadiusTargets_[0] = PositionRadiusTarget();
 }
 
 void Ramp::PreUpdate() {

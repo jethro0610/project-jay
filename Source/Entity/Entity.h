@@ -9,8 +9,7 @@
 #include "Entity/EntityProperties.h"
 #include "TypeID.h"
 #include "Editor/EditorTarget.h"
-#include "Editor/PositionRadiusTarget.h"
-#include "Text/WorldText.h"
+#include "Collision/Ray.h"
 #include <vector>
 #include <inttypes.h>
 #include <cstring>
@@ -261,8 +260,26 @@ private:
         EditorTarget* Clone() override;
         void Destroy() override;
     };
-    static constexpr int NUM_POS_RAD_TARGETS = 8;
+    class ActivatorTarget : public EditorTarget {
+        private:
+        Entity* entity_; 
+        Activator* activator_;
+
+        public:
+        ActivatorTarget(Entity* entity, Activator* activator) : entity_(entity), activator_(activator) {}
+        std::string GetName() override { return std::string(entity_->GetName()) + "_activator"; }
+
+        glm::vec3 GetPosition() override { return activator_->position; }
+        void SetPosition(const glm::vec3& pos) override { activator_->position = pos; }
+
+        glm::vec4 GetScale() override { return glm::vec4(activator_->radius); }
+        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override { activator_->radius = ref.x + delta.x; }
+
+        bool TerrainAlignable() override { return true; }
+        bool Selectable() override { return activator_->requiredStocks > 0; }
+        bool RayHit(const Ray &ray) override { return ray.HitSphere(activator_->position, 4.0f); }
+    };
     EditorTarget* editorTarget_;
-    PositionRadiusTarget* positionRadiusTargets_[NUM_POS_RAD_TARGETS];
+    EditorTarget* activatorTarget_;
     #endif
 };

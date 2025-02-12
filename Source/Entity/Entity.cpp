@@ -31,9 +31,7 @@ void Entity::Construct(
     trail_ = nullptr;
 
     editorTarget_ = new ETarget(this);
-    for (int i = 0; i < NUM_POS_RAD_TARGETS; i++) {
-        positionRadiusTargets_[i] = new PositionRadiusTarget();
-    }
+    activatorTarget_ = new ActivatorTarget(this, &activator_);
 }
 
 void Entity::Init(

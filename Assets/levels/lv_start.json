@@ -28,9 +28,9 @@
             "bool_properties": null,
             "float_properties": {
                 "p_activate_radius": 0.0,
-                "p_activate_x": -109.42186737060547,
-                "p_activate_y": -76.25747680664063,
-                "p_activate_z": 1187.5516357421875,
+                "p_activate_x": -106.23517608642578,
+                "p_activate_y": -72.6452407836914,
+                "p_activate_z": 1196.202880859375,
                 "p_height": 100.0,
                 "p_in": 2.0,
                 "p_out": 0.5,

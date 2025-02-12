@@ -86,10 +86,9 @@ private:
     Texture* DBG_terrainMapTextureLow_;
     #endif
 
-
     Mesh* quad_;
     Model* terrainLODs_;
-    Mesh* terrainCursor_;
+    Mesh* terrainQuad_;
     #ifdef _DEBUG
     Model* DBG_nodeModel_;
     #endif
@@ -101,6 +100,7 @@ private:
     Material postProcessMaterial_;
     Material textMaterial_;
     Material terrainCursorMaterial_;
+    Material activatorMaterial_;
     #ifdef _DEBUG
     Material DBG_nodeMaterial_;
     #endif

@@ -194,6 +194,7 @@ public:
 
     void DoCaptureSeed();
     void DoDestroy();
+    void DoActivate();
 
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
@@ -223,6 +224,7 @@ private:
     void OnHitlagEnd() {}
     void OnCaptureSeed() {};
     void OnDestroy() {};
+    void OnActivate() {};
     glm::vec3 GetTargetPoint() { return transform_.position; };
 
     static EntityDependendies GetStaticDependencies() { return {}; }

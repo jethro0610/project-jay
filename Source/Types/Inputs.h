@@ -10,6 +10,8 @@ struct Inputs {
 
     bool startAttack;
     bool releaseAttack;
+    bool startActivate;
+    bool releaseActivate;
 
     bool shift;
 

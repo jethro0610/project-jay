@@ -466,6 +466,14 @@ void Entity::DoDestroy() {
     }
 }
 
+void Entity::DoActivate() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnActivate(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
 vec3 Entity::GetTarget() {
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->GetTargetPoint(); break;

@@ -521,6 +521,18 @@ void Player::Update() {
         spreadManager_->RemoveSpread(removeCone, this, true);
     }
 
+    if (inputs_->releaseActivate) {
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = (*entities_)[i];
+            if (!entity.alive_) continue;
+            if (entity.activator_.requiredStocks <= 0) continue;
+
+            float distance = distance2(transform_.position, entity.activator_.position);
+            if (distance < entity.activator_.radius * entity.activator_.radius)
+                entity.DoActivate();
+        }
+    }
+
     SCREENLINE(1, std::to_string(speed_));
     SCREENLINE(2, std::to_string(length(velocity_)));
 }

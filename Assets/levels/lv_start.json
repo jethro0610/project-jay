@@ -36,7 +36,8 @@
             },
             "bool_properties": null,
             "float_properties": {
-                "p_height": 100.0,
+                "p_active_height": 100.0,
+                "p_height": 0.0,
                 "p_in": 2.0,
                 "p_out": 0.5,
                 "p_radius": 200.0

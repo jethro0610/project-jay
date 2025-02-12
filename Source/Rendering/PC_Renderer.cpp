@@ -80,7 +80,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     #endif
 
     terrainLODs_ = resourceManager.GetModel("st_terrainsheet");
-    terrainCursor_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
+    terrainQuad_ = &resourceManager.GetModel("st_terraincursor")->meshes[0];
     quad_ = &resourceManager.GetModel("st_quad")->meshes[0];
 
     uiBarShader_ = resourceManager.GetShader("vs_uirect", "fs_uibar");
@@ -99,7 +99,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     worldTextShader_ = resourceManager.GetShader("vs_worldtext", "fs_text");
 
-    terrainCursorMaterial_.shader = resourceManager.GetShader("vs_terraincursor", "fs_terraincursor");
+    terrainCursorMaterial_.shader = resourceManager.GetShader("vs_terrainaligned", "fs_terraincursor");
     terrainCursorMaterial_.numTextures = 0;
     terrainCursorMaterial_.castShadows = false;
 
@@ -413,12 +413,18 @@ void Renderer::RenderEntities(
         }
 
         if (entity.activator_.requiredStocks > 0) {
+            Transform activatorTransform;
+            activatorTransform.position = entity.activator_.position;
+            activatorTransform.scale = vec3(entity.activator_.radius);
+            matrix = activatorTransform.ToMatrix();
+
             WorldText text(
                 "Required Points: " + std::to_string(entity.activator_.requiredStocks),
                 entity.activator_.position + vec3(0.0f, 4.0f, 0.0f),
                 4.0f
             );
             RenderWorldText(text);
+            RenderMesh(terrainQuad_, &terrainCursorMaterial_, nullptr, &matrix);
         }
     }
 }
@@ -663,7 +669,7 @@ void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {
     cursorTransform.position = terrainCursor.position;
     cursorTransform.scale = vec3(terrainCursor.radius);
     mat4 cursorMatrix = cursorTransform.ToMatrix();
-    RenderMesh(terrainCursor_, &terrainCursorMaterial_, nullptr, &cursorMatrix);
+    RenderMesh(terrainQuad_, &terrainCursorMaterial_, nullptr, &cursorMatrix);
 }
 #endif
 

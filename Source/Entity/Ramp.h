@@ -13,8 +13,11 @@ public:
     void OnDestroy();
 
     DynamicTerrainModifier* bubble_;
+    bool active_;
+    float activeHeight_;
+    int riseTimer_;
 
     void PreUpdate();
-    void RenderUpdate();
     void EditorUpdate();
+    void OnActivate();
 };

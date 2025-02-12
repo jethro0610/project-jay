@@ -1,7 +1,6 @@
 #include "Ramp.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
-#include "Text/WorldText.h"
 using namespace glm;
 
 EntityDependendies Ramp::GetStaticDependencies() {
@@ -16,12 +15,7 @@ EntityProperties Ramp::GetStaticProperties() {
             {"p_radius", &DYN_MOD_RADIUS((*bubble_))},
             {"p_height", &DYN_MOD_VALUE((*bubble_))},
             {"p_in", &DYN_MOD_IN_POWER((*bubble_))},
-            {"p_out", &DYN_MOD_OUT_POWER((*bubble_))},
-            {"p_activate_x", &activator_.position.x},
-            {"p_activate_y", &activator_.position.y},
-            {"p_activate_z", &activator_.position.z},
-            {"p_activate_radius", &activator_.radius},
-            // TODO: make this implicit to entities
+            {"p_out", &DYN_MOD_OUT_POWER((*bubble_))}
         },
         {
 

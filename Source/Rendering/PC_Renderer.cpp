@@ -415,7 +415,7 @@ void Renderer::RenderEntities(
         if (entity.activator_.requiredStocks > 0) {
             WorldText text(
                 "Required Points: " + std::to_string(entity.activator_.requiredStocks),
-                entity.activator_.position + vec3(0.0f, 8.0f, 0.0f),
+                entity.activator_.position + vec3(0.0f, 4.0f, 0.0f),
                 4.0f
             );
             RenderWorldText(text);

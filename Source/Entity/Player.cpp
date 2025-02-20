@@ -37,7 +37,7 @@ static constexpr float ITEM_ROTATION_SPEED = 0.1f;
 static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
 static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
 static constexpr float JUMP_CHARGE_ROTATION_SPEED = 0.015f;
-static constexpr float AIR_ROTATION_SPEED = 0.015f;
+static constexpr float AIR_ROTATION_SPEED = 0.01f;
 static constexpr float SLOPE_ACCELERATION = 4.0f;
 static constexpr float SLOPE_DOWN_SCALING = 4.0f;
 static constexpr float SLOPE_UP_SCALING = 1.5f;
@@ -52,14 +52,19 @@ static constexpr float DOWN_VEL_JUMP_MULT = 0.25f;
 static constexpr float JUMP_CHARGE_SPEED = 1.0f;
 static constexpr int MAX_COYOTE_TIME = 20;
 
-static constexpr int MAX_CHARGE = 75;
+static constexpr int MAX_ATTACK_CHARGE = 75;
 static constexpr int STRONG_CHARGE_THRESH = 15;
 static constexpr int ATTACK_STARTUP = 2;
 static constexpr int ATTACK_ACTIVE = 13;
 static constexpr int ATTACK_COOLDOWN = 10;
 static constexpr int ATTACK_TIME = ATTACK_STARTUP + ATTACK_ACTIVE + ATTACK_COOLDOWN;
 
-static constexpr float MIN_HOMING_VERTICAL_DELTA= 30;
+static constexpr int ACTIVATE_COOLDOWN_LENGTH = 35;
+static constexpr float ACTIVATE_ROTATION_SPEED = 0.015f;
+static constexpr float ACTIVATE_END_MAX_ROTATION_SPEED = 0.25f;
+static constexpr float ACTIVATE_END_MIN_ROTATION_SPEED = 0.006f;
+
+static constexpr float MIN_HOMING_VERTICAL_DELTA = 30;
 static constexpr float MAX_HOMING_DISTANCE = 150;
 
 static constexpr float FAST_THRESHOLD = 60.0f;
@@ -206,6 +211,10 @@ void Player::Init(Entity::InitArgs args) {
     overlapbox_.bottom = 1.0f;
 
     homingTarget_ = nullptr;
+
+    chargingActivate_ = false;
+    activateCooldown_ = 0;
+    activateChargeAmount_ = 0;
 }
 
 void Player::OnDestroy() {
@@ -218,13 +227,24 @@ void Player::Update() {
     quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
+
+    // Desired movement
     vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
+    float moveLength = length(desiredMovement);
+    if (moveLength < 0.1f) {
+        moveLength = 0.0f;
+        desiredMovement = vec3(0.0f);
+    }
+    else if (moveLength > 1.0f) {
+        moveLength = 1.0f;
+        desiredMovement = normalize(desiredMovement);
+    }
 
     speedEmtter_->active_ = speed_ > FAST_THRESHOLD && onGround_;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    /* Homing
+    /* Homing attack search
     float closestDistance = INFINITY;
     for (int i = 0; i < 128; i++) {
         Entity* entity = &((*entities_)[i]);
@@ -261,6 +281,7 @@ void Player::Update() {
     planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
     */
 
+    // Homing attack movement
     if (onGround_)
         homingTarget_ = nullptr;
 
@@ -269,15 +290,60 @@ void Player::Update() {
         velocity_ = vectorToTarget * 500.0f;
     }
 
-    if (inputs_->startAttack)
+    // Activation charge, cooldown, and use
+    if (inputs_->startActivate && !chargingAttack_)
+        chargingActivate_ = true;
+
+    if (inputs_->releaseActivate)
+        chargingActivate_ = false;
+
+    if (chargingActivate_)
+        activateChargeAmount_++;
+    else if (activateChargeAmount_ != 0) {
+        bool activated = false;
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = (*entities_)[i];
+            if (!entity.alive_) continue;
+            if (entity.activator_.requiredStocks <= 0) continue;
+            if (currency_->stocks_ < entity.activator_.requiredStocks) continue;
+
+            float distance = distance2(transform_.position, entity.activator_.position);
+            if (distance < entity.activator_.radius * entity.activator_.radius) {
+                entity.DoActivate();
+                activated = true;
+                currency_->stocks_ -= entity.activator_.requiredStocks;
+                break;
+            }
+        }
+        if (moveLength > 0.0f) {
+            if (speed_ < MAX_SPEED * 0.6f)
+                speed_ = MAX_SPEED * 0.6f;
+
+            // float yVel = velocity_.y;
+            // velocity_ = desiredMovement * speed_;
+            // velocity_.y = yVel;
+            // transform_.rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+        }
+        if (!activated)
+            currency_->stocks_--; 
+        if (onGround_)
+            velocity_.y -= 100.0f;
+        activateChargeAmount_ = 0;
+        activateCooldown_ = ACTIVATE_COOLDOWN_LENGTH;
+    }
+
+    if (activateCooldown_ > 0)
+        activateCooldown_--;
+
+    // Attack charge and hitbox timing
+    if (inputs_->startAttack && !chargingActivate_)
         chargingAttack_ = true;
 
-    if (inputs_->releaseAttack || attackChargeAmount_ > MAX_CHARGE)
+    if (inputs_->releaseAttack || attackChargeAmount_ > MAX_ATTACK_CHARGE)
         chargingAttack_ = false;
 
-    if (chargingAttack_ && attackActiveTimer_ == ATTACK_TIME) {
+    if (chargingAttack_ && attackActiveTimer_ == ATTACK_TIME)
         attackChargeAmount_++;
-    }
     else if (attackChargeAmount_ != 0) {
         lastAttackChargeAmount_ = attackChargeAmount_;
         attackChargeAmount_ = 0;
@@ -295,6 +361,7 @@ void Player::Update() {
     else
         hitbox_.active = false;
 
+    // MoveMode determination
     moveMode_ = MM_Default;
     if (stun_) {
         moveMode_ = MM_Stun;
@@ -302,8 +369,14 @@ void Player::Update() {
     else if (homingTarget_ != nullptr) {
         moveMode_ = MM_Target;
     }
+    else if (activateCooldown_ > 0) {
+        moveMode_ = MM_ActivateEnd;
+    }
     else if (!onGround_) {
         moveMode_ = MM_Air;
+    }
+    else if (chargingActivate_) {
+        moveMode_ = MM_Activate;
     }
     else if (attackActiveTimer_ < ATTACK_TIME) {
         moveMode_ = MM_Attack;
@@ -320,35 +393,31 @@ void Player::Update() {
         moveMode_ = MM_Slope;
     }
 
-    float moveLength = length(desiredMovement);
-    if (moveLength < 0.1f) {
-        moveLength = 0.0f;
-        desiredMovement = vec3(0.0f);
-    }
-    else if (moveLength > 1.0f) {
-        moveLength = 1.0f;
-        desiredMovement = normalize(desiredMovement);
-    }
-
+    // Friction and acceleration
     float frictionLerp = 1.0f - (min(speed_, FRICTION_CAP) - MIN_SPEED) / (FRICTION_CAP - MIN_SPEED);
     float friction = lerp(MIN_FRICTION, MAX_FRICTION, frictionLerp);
     float speedDecay = 1.0f - friction;
     float acceleration = ((speed_ / speedDecay) - speed_);
 
+    // Bonus speed calculation
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     if (length(planarVelocity) > 0.0f)
         velocity_ -= normalize(planarVelocity) * bonus_;
     speed_ = length(planarVelocity) - bonus_;
 
+    // Grounded-stick velocity
     if (homingTarget_ == nullptr) {
         if (!onGround_)
             velocity_.y -= 2.0f;
         else if (moveMode_ == MM_Attack)
             velocity_.y -= 16.0f;
+        else if (moveMode_ == MM_Activate)
+            velocity_.y -= 24.0f;
         else
             velocity_.y -= 6.0f;
     }
 
+    // Movement calculation
     switch (moveMode_) {
         case MM_Default: {
             velocity_.x += desiredMovement.x * acceleration;
@@ -410,6 +479,46 @@ void Player::Update() {
             break;
         }
 
+        case MM_Activate: {
+            quat initialRotation = transform_.rotation;
+            if (length(planarVelocity) > 0.1f)
+                initialRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
+
+            quat desiredRotation = initialRotation;
+
+            if (length(desiredMovement) > 0.001f) 
+               desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
+            transform_.rotation= slerp(transform_.rotation, desiredRotation, ACTIVATE_ROTATION_SPEED);
+            vec3 travelDirection = slerp(initialRotation, desiredRotation, ACTIVATE_ROTATION_SPEED) * Transform::worldForward;
+            
+            velocity_.x = travelDirection.x * speed_;
+            velocity_.z = travelDirection.z * speed_;
+            break;
+        }
+
+        case MM_ActivateEnd: {
+            float endTime = (float)activateCooldown_ / ACTIVATE_COOLDOWN_LENGTH; 
+            float rotationSpeed = lerp(ACTIVATE_END_MIN_ROTATION_SPEED, ACTIVATE_END_MAX_ROTATION_SPEED, endTime);
+            quat initialRotation = transform_.rotation;
+            if (length(planarVelocity) > 0.1f)
+                initialRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
+
+            quat desiredRotation = initialRotation;
+
+            if (length(desiredMovement) > 0.001f) 
+               desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+
+            transform_.rotation= slerp(transform_.rotation, desiredRotation, rotationSpeed);
+            vec3 travelDirection = slerp(initialRotation, desiredRotation, rotationSpeed) * Transform::worldForward;
+            
+            velocity_.x = travelDirection.x * speed_;
+            velocity_.z = travelDirection.z * speed_;
+            if (onGround_)
+                velocity_.y -= 100.0f * endTime;
+            break;
+        }
+
         case MM_Attack: {
             quat initialRotation = transform_.rotation;
             if (length(planarVelocity) > 0.1f)
@@ -453,10 +562,13 @@ void Player::Update() {
             break;
     }
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+
+    // Bonus speed decay and application
     bonus_ = bonus_ * 0.985f;
     if (length(planarVelocity) > 0.0f)
         velocity_ += normalize(planarVelocity) * bonus_;
     
+    // Attack hitbox assignemnt
     if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity * 0.975f;
         hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
@@ -470,10 +582,12 @@ void Player::Update() {
         hitbox_.diStrength = 0.25f;
     }
 
+    // Stun cancellation
     if (onGround_ && stun_) {
         stun_ = false;
     }
 
+    // Animation determination
     int animation = 0;
     float transitionLength = 0.35f;
     if (stun_) {
@@ -496,6 +610,7 @@ void Player::Update() {
     if (animation != animIndex_)
         ChangeAnimation(animation, transitionLength);
 
+    // Tilting
     float desiredTilt = 0.0f;
     if (!stun_) {
         if (moveLength > 0.001f)
@@ -505,8 +620,10 @@ void Player::Update() {
     else
         tilt_ = 0.0f;
 
+    // Ground trace distance assignment
     traceDistance_ = std::max(-velocity_.y * GlobalTime::TIMESTEP, 0.25f);
 
+    // Spread removal
     if (speed_ > FAST_THRESHOLD) {
         Cone removeCone;
         removeCone.direction = normalize(-velocity_);
@@ -519,18 +636,6 @@ void Player::Update() {
         removeCone.angle = lerp(1.0f, 0.85f, removeAngleRatio);
 
         spreadManager_->RemoveSpread(removeCone, this, true);
-    }
-
-    if (inputs_->releaseActivate) {
-        for (int i = 0; i < EntityList::MAX; i++) {
-            Entity& entity = (*entities_)[i];
-            if (!entity.alive_) continue;
-            if (entity.activator_.requiredStocks <= 0) continue;
-
-            float distance = distance2(transform_.position, entity.activator_.position);
-            if (distance < entity.activator_.radius * entity.activator_.radius)
-                entity.DoActivate();
-        }
     }
 
     SCREENLINE(1, std::to_string(speed_));

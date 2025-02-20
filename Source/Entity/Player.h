@@ -10,6 +10,8 @@ public:
         MM_Attack,
         MM_Stun,
         MM_Air,
+        MM_Activate,
+        MM_ActivateEnd,
         MM_Target
     };
 
@@ -28,6 +30,10 @@ public:
     int attackActiveTimer_;
     int attackChargeAmount_;
     int lastAttackChargeAmount_;
+    
+    bool chargingActivate_;
+    int activateChargeAmount_;
+    int activateCooldown_;
 
     Entity* homingTarget_;
     float planarVelocityBeforeHoming_;

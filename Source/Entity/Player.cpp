@@ -32,7 +32,7 @@ static constexpr float MAX_FRICTION = 0.1f;
 static constexpr float MOMENTUM_DECAY = 2.0f;
 static constexpr float FRICTION_CAP = MAX_SPEED * 0.35f;
 static constexpr float DEFAULT_ROTATION_SPEED = 0.25f;
-static constexpr float SPIN_ROTATION_SPEED = 0.06f;
+static constexpr float SPIN_ROTATION_SPEED = 0.05f;
 static constexpr float ITEM_ROTATION_SPEED = 0.1f;
 static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
 static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
@@ -291,7 +291,7 @@ void Player::Update() {
     }
 
     // Activation charge, cooldown, and use
-    if (inputs_->startActivate && !chargingAttack_)
+    if (inputs_->startActivate && !chargingAttack_ && currency_->stocks_ > 0)
         chargingActivate_ = true;
 
     if (inputs_->releaseActivate)

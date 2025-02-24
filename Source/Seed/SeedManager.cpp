@@ -52,9 +52,17 @@ void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 off
     seeds_.push_back(seed);
 }
 
-void SeedManager::CreateMultipleSeed(glm::vec3 position, int amount, float radius, Entity* capturer, glm::vec3 offset) {
+void SeedManager::CreateMultipleSeed(
+    glm::vec3 position, 
+    int amount, 
+    float radius, 
+    Entity* capturer, 
+    glm::vec3 offset,
+    float offsetDist
+) {
     for (int i = 0; i < amount; i++) {
-        CreateSeed(position, capturer, RandomVector(radius) + offset);
+        float d = 1.0f - RandomFloatRange(0.0f, offsetDist);
+        CreateSeed(position, capturer, RandomVector(radius) * max(d, 0.1f) + offset * d);
     }
 }
 
@@ -108,7 +116,7 @@ void SeedManager::CalculatePositions(
         positions_[i].y += sin(GlobalTime::GetTime() + seed.jitterOffset.y) * 1.0f;
         positions_[i].z += sin(GlobalTime::GetTime() + seed.jitterOffset.z) * 1.0f;
 
-        height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z), TA_Low) + 2.0f * easeStartTime;
+        height = terrain.GetHeight(vec2(positions_[i].x, positions_[i].z)) + 2.0f * easeStartTime;
         if (positions_[i].y < height)
             positions_[i].y = height;
     }

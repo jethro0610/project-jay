@@ -22,10 +22,11 @@
 #include "Apple.h"
 #include "Pig.h"
 #include "Tree.h"
-#include "Player.h"
-#include "Entity.h"
 #include "TPillar.h"
+#include "Entity.h"
 #include "Ramp.h"
+#include "Player.h"
+#include "Pinata.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -54,4 +55,5 @@
 	ENTITYEXP(SpeedBoost, speedboost, 23) \
 	ENTITYEXP(Apple, apple, 24) \
 	ENTITYEXP(Tree, tree, 25) \
-	ENTITYEXP(Pig, pig, 26)
+	ENTITYEXP(Pig, pig, 26) \
+	ENTITYEXP(Pinata, pinata, 27)

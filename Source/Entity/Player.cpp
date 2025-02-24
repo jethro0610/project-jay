@@ -196,7 +196,7 @@ void Player::Init(Entity::InitArgs args) {
     slopeEmitter_->properties_.startColor = vec4(1.0f, 1.0f, 1.0f, 0.75f);
     slopeEmitter_->properties_.endColor = vec4(1.0f, 1.0f, 1.0f, 0.0f);
 
-    hitbox_.radius = 3.0f;
+    hitbox_.radius = 6.0f;
     hitbox_.top = 2.0f;
     hitbox_.bottom = 2.0f;
     hitbox_.active = false;
@@ -570,16 +570,16 @@ void Player::Update() {
     
     // Attack hitbox assignemnt
     if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
-        hitbox_.knocback = planarVelocity * 0.975f;
-        hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
+        hitbox_.knocback = planarVelocity * .985f;
+        hitbox_.knocback.y = 55.0f;
         hitbox_.hitlag = 4;
-        hitbox_.diStrength = 0.5f;
+        hitbox_.diStrength = 0.15f;
     }
     else {
-        hitbox_.knocback = planarVelocity * 1.5f;
-        hitbox_.knocback.y = 35.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
+        hitbox_.knocback = planarVelocity * 1.25f;
+        hitbox_.knocback.y = 55.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
         hitbox_.hitlag = 6;
-        hitbox_.diStrength = 0.25f;
+        hitbox_.diStrength = 0.05f;
     }
 
     // Stun cancellation

@@ -31,7 +31,14 @@ public:
 
     void RemoveOldest();
     void CreateSeed(glm::vec3 position, Entity* capturer = nullptr, glm::vec3 offset = glm::vec3(0.0f));
-    void CreateMultipleSeed(glm::vec3 position, int amount, float radius = 2.0f, Entity* capturer = nullptr, glm::vec3 offset = glm::vec3(0.0f));
+    void CreateMultipleSeed(
+        glm::vec3 position, 
+        int amount, 
+        float radius = 2.0f, 
+        Entity* capturer = nullptr, 
+        glm::vec3 offset = glm::vec3(0.0f), 
+        float offsetDist = 0.0f
+    );
 
     void CalculatePositions(
         Terrain& terrain

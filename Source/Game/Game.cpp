@@ -176,29 +176,28 @@ void Game::Update() {
             hit.hitter->hitlag_ = hit.hitter->hitbox_.hitlag;
             hit.hitter->initHitlag_ = true;
 
+            if (hit.target->GetFlag(Entity::EF_RecieveKnockback)) {
+                vec3 normalizeRes = normalize(hit.collision.resolution);
+                vec3 planarKB = vec3(hit.hitter->hitbox_.knocback.x, 0.0f, hit.hitter->hitbox_.knocback.z);
+                float kbLength = length(planarKB);
+
+                quat kbQuat = quatLookAtRH(planarKB / kbLength, Transform::worldUp);
+                quat resQuat = quatLookAtRH(normalizeRes, Transform::worldUp);
+                quat finalKBQuat = slerp(kbQuat, resQuat, hit.hitter->hitbox_.diStrength);
+                
+                hit.target->velocity_ = finalKBQuat * Transform::worldForward * kbLength;
+                hit.target->velocity_.y = hit.hitter->hitbox_.knocback.y;
+
+                vec3 planarVelocity = hit.target->velocity_;
+                planarVelocity.y = 0.0f;
+                if (hit.target->GetFlag(Entity::EF_HurtFaceForward))
+                    hit.target->transform_.rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
+                else if (hit.target->GetFlag(Entity::EF_HurtFaceBack))
+                    hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
+            }
+
             hit.target->DoHurt({hit.hitter});
             hit.hitter->DoHit({hit.target});
-
-            if (!hit.target->GetFlag(Entity::EF_RecieveKnockback))
-                continue;
-
-            vec3 normalizeRes = normalize(hit.collision.resolution);
-            vec3 planarKB = vec3(hit.hitter->hitbox_.knocback.x, 0.0f, hit.hitter->hitbox_.knocback.z);
-            float kbLength = length(planarKB);
-
-            quat kbQuat = quatLookAtRH(planarKB / kbLength, Transform::worldUp);
-            quat resQuat = quatLookAtRH(normalizeRes, Transform::worldUp);
-            quat finalKBQuat = slerp(kbQuat, resQuat, hit.hitter->hitbox_.diStrength);
-            
-            hit.target->velocity_ = finalKBQuat * Transform::worldForward * kbLength;
-            hit.target->velocity_.y = hit.hitter->hitbox_.knocback.y;
-
-            vec3 planarVelocity = hit.target->velocity_;
-            planarVelocity.y = 0.0f;
-            if (hit.target->GetFlag(Entity::EF_HurtFaceForward))
-                hit.target->transform_.rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
-            else if (hit.target->GetFlag(Entity::EF_HurtFaceBack))
-                hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
         }
 
         vector_const<Push, EntityList::MAX> pushList;

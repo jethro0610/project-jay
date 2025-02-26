@@ -7,7 +7,7 @@
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
 #include "Camera/Camera.h"
-#include "Game/Currency.h"
+#include "Game/Clock.h"
 #include "Resource/ResourceManager.h"
 #include "UI/UIElement.h"
 #include "Text/WorldText.h"
@@ -541,28 +541,28 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
 }
 
-void Renderer::RenderUI(Currency& currency) {
-    UIElement stockPercentBar = {};
-    stockPercentBar.hAlignment = Alignment::CENTER;
-    stockPercentBar.vAlignment = Alignment::TOP;
-    stockPercentBar.hAnchor = Alignment::CENTER;
-    stockPercentBar.vAnchor = Alignment::TOP;
-    stockPercentBar.percent = (float)currency.percent_ / currency.PERCENT_TILL_STOCK;
-    stockPercentBar.size.y = 30.0f;
-    stockPercentBar.size.x = 800.0f;
-    stockPercentBar.position.y = 10.0f;
-    RenderUIElement(stockPercentBar, uiBarShader_);
+void Renderer::RenderUI(Clock& clock) {
+    UIElement timeBar = {};
+    timeBar.hAlignment = Alignment::CENTER;
+    timeBar.vAlignment = Alignment::TOP;
+    timeBar.hAnchor = Alignment::CENTER;
+    timeBar.vAnchor = Alignment::TOP;
+    timeBar.percent = (float)clock.time_ / clock.TIME_IN_DAY;
+    timeBar.size.y = 30.0f;
+    timeBar.size.x = 800.0f;
+    timeBar.position.y = 10.0f;
+    RenderUIElement(timeBar, uiBarShader_);
 
-    Text stocks;
-    stocks.properties_.scale = 50.0f;
-    stocks.properties_.position.y = 40.0f;
-    stocks.properties_.hAlignment = Alignment::CENTER;
-    stocks.properties_.vAlignment = Alignment::TOP;
-    stocks.properties_.hAnchor = Alignment::CENTER;
-    stocks.properties_.vAnchor = Alignment::TOP;
-    stocks.properties_.kerning = 0.35f;
-    stocks = std::to_string(currency.stocks_) + "/" + std::to_string(currency.maxStocks_);
-    RenderText(stocks);
+    Text timeOfDay;
+    timeOfDay.properties_.scale = 50.0f;
+    timeOfDay.properties_.position.y = 40.0f;
+    timeOfDay.properties_.hAlignment = Alignment::CENTER;
+    timeOfDay.properties_.vAlignment = Alignment::TOP;
+    timeOfDay.properties_.hAnchor = Alignment::CENTER;
+    timeOfDay.properties_.vAnchor = Alignment::TOP;
+    timeOfDay.properties_.kerning = 0.35f;
+    timeOfDay = clock.GetTimeOfDayString();
+    RenderText(timeOfDay);
 }
 
 void Renderer::RenderUIElement(UIElement& element, Shader* shader) {

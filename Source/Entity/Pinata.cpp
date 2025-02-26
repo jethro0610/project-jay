@@ -1,7 +1,7 @@
 #include "Pinata.h"
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
-#include "Game/Currency.h"
+#include "Game/Clock.h"
 using namespace glm;
 
 EntityDependendies Pinata::GetStaticDependencies() {
@@ -66,7 +66,7 @@ void Pinata::OnHurt(HurtArgs args) {
     if (hits_ >= hitsTillBreak_) {
         seedManager_->CreateMultipleSeed(
             transform_.position, 
-            Currency::PERCENT_TILL_STOCK * 0.5, 
+            Clock::TIME_IN_DAY_SECTION * 0.15, 
             128.0f, 
             args.attacker, 
             velocity_ * 0.25f,
@@ -77,7 +77,7 @@ void Pinata::OnHurt(HurtArgs args) {
     else
         seedManager_->CreateMultipleSeed(
             transform_.position, 
-            Currency::PERCENT_TILL_STOCK * 0.05, 
+            Clock::TIME_IN_DAY_SECTION * 0.05, 
             32.0f, 
             args.attacker, 
             velocity_ * 0.25f,

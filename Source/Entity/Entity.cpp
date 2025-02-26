@@ -12,7 +12,7 @@ using namespace glm;
 
 void Entity::Construct(
     Camera& camera,
-    Currency& currency,
+    Clock& clock,
     EntityList& entities,
     Inputs& inputs,
     Level& level,
@@ -21,7 +21,7 @@ void Entity::Construct(
     Terrain& terrain
 ) {
     camera_ = &camera;
-    currency_ = &currency;
+    clock_ = &clock;
     entities_ = &entities;
     inputs_ = &inputs;
     level_ = &level;

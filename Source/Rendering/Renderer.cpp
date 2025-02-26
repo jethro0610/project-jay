@@ -3,8 +3,6 @@
 #include "Level/LevelProperties.h"
 #include "Editor/Editor.h"
 #include "Terrain/Terrain.h"
-
-#include "Text/WorldText.h"
 #include "Entity/EntityList.h"
 #include "Entity/Entity.h"
 using namespace glm;
@@ -14,7 +12,7 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 }
 
 void Renderer::Render(
-    Currency& currency,
+    Clock& clock,
     EntityList& entities,
     LevelProperties& levelProperties,
     ParticleManager& particleManager, 
@@ -31,7 +29,7 @@ void Renderer::Render(
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(currency);
+    RenderUI(clock);
     RenderScreenText();
 
     PresentFrame();

@@ -14,7 +14,7 @@ Game::Game():
     particleManager_(terrain_),
     terrain_(level_.properties_, resourceManager_),
     level_(
-        currency_,
+        clock_,
         entities_,
         particleManager_, 
         resourceManager_, 
@@ -31,7 +31,7 @@ Game::Game():
         particleManager_, 
         resourceManager_, 
         camera_, 
-        currency_,
+        clock_,
         inputs_, 
         level_,
         seedManager_, 

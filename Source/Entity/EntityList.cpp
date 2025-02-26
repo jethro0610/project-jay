@@ -8,7 +8,7 @@ EntityList::EntityList(
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
     Camera& camera,
-    Currency& currency,
+    Clock& clock,
     Inputs& inputs,
     Level& level,
     SeedManager& seedManager,
@@ -20,7 +20,7 @@ resourceManager_(resourceManager)
 {
     rawEntities_ = rawEntities;
     for (int i = 0; i < MAX; i++) {
-        rawEntities[i].entity.Construct(camera, currency, *this, inputs, level, seedManager, spreadManager, terrain);
+        rawEntities[i].entity.Construct(camera, clock, *this, inputs, level, seedManager, spreadManager, terrain);
         available_[i] = i;
     }
 

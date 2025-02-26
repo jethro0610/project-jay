@@ -11,7 +11,7 @@
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
 #include "EntityList.h"
-#include "Game/Currency.h"
+#include "Game/Clock.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -291,6 +291,7 @@ void Player::Update() {
     }
 
     // Activation charge, cooldown, and use
+    /*
     if (inputs_->startActivate && !chargingAttack_ && currency_->stocks_ > 0)
         chargingActivate_ = true;
 
@@ -334,6 +335,7 @@ void Player::Update() {
 
     if (activateCooldown_ > 0)
         activateCooldown_--;
+        */
 
     // Attack charge and hitbox timing
     if (inputs_->startAttack && !chargingActivate_)
@@ -664,7 +666,7 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
-    currency_->AddPercent();
+    clock_->AddTime();
 }
 
 void Player::OnPush(vec3 pushVec) {

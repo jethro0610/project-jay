@@ -1,6 +1,6 @@
 #pragma once
 #include "Camera/Camera.h"
-#include "Currency.h"
+#include "Clock.h"
 #include "Types/Inputs.h"
 #include "Particle/ParticleManager.h"
 #include "Seed/SeedManager.h"
@@ -37,7 +37,7 @@ private:
     Level level_;
     Renderer renderer_;
     Camera camera_;
-    Currency currency_;
+    Clock clock_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
 

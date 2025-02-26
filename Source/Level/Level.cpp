@@ -1,5 +1,5 @@
 #include "Level.h"
-#include "Game/Currency.h"
+#include "Game/Clock.h"
 #include "Helpers/LoadHelpers.h"
 #include "Helpers/MapCheck.h"
 #include "Spread/SpreadManager.h"
@@ -15,7 +15,7 @@
 #endif
 
 Level::Level(
-    Currency& currency,
+    Clock& clock,
     EntityList& entities,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
@@ -23,7 +23,7 @@ Level::Level(
     SpreadManager& spreadManager,
     Terrain& terrain
 ) :
-    currency_(currency),
+    clock_(clock),
     entities_(entities),
     particleManager_(particleManager),
     resourceManager_(resourceManager),
@@ -272,7 +272,7 @@ void Level::Clear(bool clearTerrain) {
     particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
-    currency_.Reset();
+    clock_.Reset();
 
     if (clearTerrain)
         terrain_.Reset();

@@ -273,7 +273,7 @@ void Game::Update() {
     entities_.DestroyFlaggedEntities();
 
     renderer_.Render(
-        currency_,
+        clock_,
         entities_, 
         level_.properties_,
         particleManager_,

@@ -55,7 +55,7 @@ void Apple::Update() {
     }
 }
 
-static constexpr int HITLAG = 4;
+static constexpr int HITLAG = 3;
 void Apple::OnOverlap(Entity* overlappedEntity) {
     if (
         overlappedEntity_ != nullptr ||

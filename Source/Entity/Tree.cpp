@@ -5,6 +5,7 @@
 #include "Helpers/Random.h"
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
+#include "Helpers/PhysicsHelpers.h"
 using namespace glm;
 
 EntityDependendies Tree::GetStaticDependencies() {
@@ -61,13 +62,8 @@ void Tree::OnHurt(HurtArgs args) {
 
         vec3 point = terrain_->GetRandomPointInSameIsland(transform_.position, 50.0f, 800.0f);
         float jumpStrength = RandomFloatRange(10.0f, 30.0f);
-
-        // Quadratic equation to get airtime
-        static constexpr float A = -0.5 * Apple::GRAVITY * GlobalTime::TIMESTEP;
-        float b = jumpStrength * GlobalTime::TIMESTEP;
-        float bSqr = b * b;
-        float c = applePosition.y - point.y;
-        float airtime = ((-b - sqrt(bSqr - 4 * A * c)) / (2 * A)) * GlobalTime::TIMESTEP;
+        float airtime = GetAirtime(Apple::GRAVITY, jumpStrength, applePosition.y, point.y);
+        DEBUGLOG(airtime);
 
         // Get the direction and distance to the point
         vec3 planarApplePosition = applePosition;

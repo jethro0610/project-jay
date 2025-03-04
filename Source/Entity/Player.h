@@ -36,7 +36,7 @@ public:
     int activateCooldown_;
 
     Entity* homingTarget_;
-    float planarVelocityBeforeHoming_;
+    float planarVelMagPreHoming_;
 
     ParticleEmitter* speedEmtter_;
     ParticleEmitter* spinEmitter_;

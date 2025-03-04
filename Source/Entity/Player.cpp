@@ -12,6 +12,7 @@
 #include "Time/Time.h"
 #include "EntityList.h"
 #include "Game/Clock.h"
+#include "Helpers/PhysicsHelpers.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -270,42 +271,43 @@ void Player::Update() {
 
     // Homing attack search
     if (inputs_->startActivate && homingTarget_ == nullptr) {
+        vec3 planarPos = vec3(transform_.position.x, 0.0f, transform_.position.z);
+        vec3 planarVel = vec3(velocity_.x, 0.0f, velocity_.z);
+        float planarVelMag = length(planarVel);
         float closestDistance = INFINITY;
+        bool foundTarget = false;
         for (int i = 0; i < 128; i++) {
             Entity* entity = &((*entities_)[i]);
-            if (!entity->alive_)
-                continue;
-            if (entity == this)
-                continue;
-
-            if (!entity->GetFlag(EF_Homeable))
-                continue;
+            if (!entity->alive_) continue;
+            if (entity == this) continue;
+            if (!entity->GetFlag(EF_Homeable)) continue;
             vec3 target = entity->GetTarget();
+            vec3 targetPlanarPos = vec3(target.x, 0.0f, target.z);
 
-            float verticalDelta = transform_.position.y - target.y;
-            if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
-                continue;
+            // We get the airtime to the target...
+            float airtimeToTarget = GetAirtime(2.0f, velocity_.y, transform_.position.y, target.y);
 
-            vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
-            vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
-            vec3 planarCameraForward = camera_->transform_.GetForwardVector();
-            planarCameraForward.y = 0.0f;
-            planarCameraForward = normalize(planarCameraForward);
+            // ...and determine how far we can travel in our current velocity based
+            // on that airtime...
+            float maxDistanceForAirtime = planarVelMag * airtimeToTarget + 150.0f;
+            float maxDistanceForAirtime2 = maxDistanceForAirtime * maxDistanceForAirtime;
+            
+            // ...so we can only target entities witihn that range
+            float distToTarget2 = distance2(planarPos, targetPlanarPos);
+            if (distToTarget2 > maxDistanceForAirtime2) continue;
 
-            float planarDist = distance(planarPosition, entityPlanarPosition);
-            if (planarDist > MAX_HOMING_DISTANCE)
-                continue;
+            vec3 direction = normalize(planarVel);
+            vec3 directionToTarget = normalize(targetPlanarPos - planarPos);
+            if (dot(direction, directionToTarget) < 0.45f && distToTarget2 > 75.0f * 75.0f) continue;
 
-            vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
-            if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
-                continue;
-
-            if (planarDist < closestDistance) {
+            if (distToTarget2 < closestDistance) {
                 homingTarget_ = entity;
-                closestDistance = planarDist;
+                closestDistance = distToTarget2;
+                foundTarget = true;
             }
         }
-        planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
+        if (foundTarget)
+            planarVelMagPreHoming_ = planarVelMag; 
     }
     if (onGround_)
         homingTarget_ = nullptr;
@@ -736,7 +738,7 @@ void Player::EndHoming() {
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
     vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
     vec3 planarDir = desiredMovement;//normalize(vec3(velocity_.x, 0.0f, velocity_.z));
-    planarDir *= planarVelocityBeforeHoming_;
+    planarDir *= planarVelMagPreHoming_;
     velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
 }
 

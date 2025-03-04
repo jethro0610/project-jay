@@ -25,15 +25,6 @@
             "type_id": 1
         },
         {
-            "activator": {
-                "position": {
-                    "x": -96.01607513427734,
-                    "y": -82.62089538574219,
-                    "z": 1236.7537841796875
-                },
-                "radius": 47.0,
-                "required_stocks": 2
-            },
             "bool_properties": null,
             "float_properties": {
                 "p_active_height": 100.0,
@@ -107,7 +98,7 @@
                 },
                 "scale": {
                     "x": 6.799998760223389,
-                    "y": 38.70002746582031,
+                    "y": 66.60002136230469,
                     "z": 6.799998760223389
                 }
             },
@@ -138,6 +129,126 @@
                 }
             },
             "type_id": 27
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_bird",
+            "transform": {
+                "position": {
+                    "x": -389.51910400390625,
+                    "y": -11.068024635314941,
+                    "z": 1824.344970703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999952316284,
+                    "y": 3.299999952316284,
+                    "z": 3.299999952316284
+                }
+            },
+            "type_id": 28
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_bird",
+            "transform": {
+                "position": {
+                    "x": 226.29208374023438,
+                    "y": -70.65628051757813,
+                    "z": 1620.953857421875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999952316284,
+                    "y": 3.299999952316284,
+                    "z": 3.299999952316284
+                }
+            },
+            "type_id": 28
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_bird",
+            "transform": {
+                "position": {
+                    "x": -145.43182373046875,
+                    "y": -77.02226257324219,
+                    "z": 1243.8782958984375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999952316284,
+                    "y": 3.299999952316284,
+                    "z": 3.299999952316284
+                }
+            },
+            "type_id": 28
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_bird",
+            "transform": {
+                "position": {
+                    "x": -516.7815551757813,
+                    "y": 39.96965408325195,
+                    "z": 1464.896484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.299999952316284,
+                    "y": 3.299999952316284,
+                    "z": 3.299999952316284
+                }
+            },
+            "type_id": 28
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": -536.92626953125,
+                    "y": 40.83176040649414,
+                    "z": 1461.2969970703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.999997138977051,
+                    "y": 31.200016021728516,
+                    "z": 7.999997138977051
+                }
+            },
+            "type_id": 3
         }
     ],
     "landmap": "lm_start",
@@ -284,6 +395,17 @@
             "seed": 1128028342,
             "x": -371.8355407714844,
             "y": 1828.7391357421875
+        },
+        {
+            "frequency": 0.906999945640564,
+            "id": 2,
+            "max_height": 6.699987411499023,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 171.4000244140625,
+            "seed": 2066533229,
+            "x": -496.7074890136719,
+            "y": 1490.482177734375
         }
     ]
 }

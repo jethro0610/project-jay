@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Time/Time.h"
+#include "GlobalNoise.h"
 #include <GLFW/glfw3.h>
 
 #ifdef _DEBUG
@@ -53,6 +54,7 @@ Game::Game():
     ),
     running_(true)
 {
+    GlobalNoise::Init();
 }
 
 void Game::UpdateInputs_P() {

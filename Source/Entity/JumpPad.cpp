@@ -56,12 +56,12 @@ void JumpPad::Init(Entity::InitArgs args) {
 
 void JumpPad::Update() {
     if (timer_ > 0) {
-        SetFlag(EF_Targetable, false);
+        SetFlag(EF_Homeable, false);
         materials_[0].properties.color = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
         timer_--;
     }
     else {
-        SetFlag(EF_Targetable, true);
+        SetFlag(EF_Homeable, true);
         materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
     }
 }

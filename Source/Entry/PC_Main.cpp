@@ -1,6 +1,7 @@
 #include <GLFW/glfw3.h>
 #include "Game/Game.h"
 #include "Time/Time.h"
+#include <FastNoiseLite.h>
 
 #ifdef _DEBUG
 #include "../Logging/Logger.h"

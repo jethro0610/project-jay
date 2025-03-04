@@ -5,6 +5,7 @@ class Player : public Entity {
 public:
     enum PlayerMoveMode {
         MM_Default,
+        MM_Homing,
         MM_Spin,
         MM_Slope,
         MM_Attack,
@@ -12,7 +13,6 @@ public:
         MM_Air,
         MM_Activate,
         MM_ActivateEnd,
-        MM_Target
     };
 
     void Init(InitArgs args);

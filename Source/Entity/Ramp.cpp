@@ -1,6 +1,7 @@
 #include "Ramp.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
+#include "Game/Clock.h"
 #include "Helpers/Shared_Ease.h"
 using namespace glm;
 
@@ -52,9 +53,6 @@ void Ramp::Init(Entity::InitArgs args) {
     DYN_MOD_VALUE((*bubble_)) = 0.0f;
 
     active_ = false;
-    activator_.requiredStocks = 2;
-    activator_.radius = 32.0f;
-    activator_.position = transform_.position + vec3(0.0f, 32.0f, 0.0f);
     riseTimer_ = 0.0;
 }
 
@@ -67,6 +65,8 @@ void Ramp::OnActivate() {
 }
 
 void Ramp::PreUpdate() {
+    if (clock_->GetTimeOfDay() >= Clock::Sunrise && clock_->GetTimeOfDay() <= clock_->Sunset)
+        active_ = true;
     static constexpr int RISE_TIME = 30;
     if (active_ && riseTimer_ < RISE_TIME) {
         riseTimer_++;

@@ -53,7 +53,7 @@ static constexpr float JUMP_CHARGE_SPEED = 1.0f;
 static constexpr int MAX_COYOTE_TIME = 20;
 
 static constexpr int MAX_ATTACK_CHARGE = 75;
-static constexpr int STRONG_CHARGE_THRESH = 15;
+static constexpr int STRONG_CHARGE_THRESH = 25;
 static constexpr int ATTACK_STARTUP = 2;
 static constexpr int ATTACK_ACTIVE = 13;
 static constexpr int ATTACK_COOLDOWN = 10;
@@ -240,55 +240,75 @@ void Player::Update() {
         desiredMovement = normalize(desiredMovement);
     }
 
+    constexpr float MIN_TRACKING_DIST = 50.0f;
+    constexpr float MIN_TRACKING_DIST2 = MIN_TRACKING_DIST * MIN_TRACKING_DIST;
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = (*entities_)[i]; 
+        if (!entity.alive_) continue;
+        if (!entity.GetFlag(EF_Trackable)) continue;
+
+        float dist2 = distance2(transform_.position, entity.transform_.position);
+        if (dist2 > MIN_TRACKING_DIST2) continue;
+
+        vec3 directionToEntity = entity.transform_.position - transform_.position;
+        directionToEntity.y = 0.0f;
+        directionToEntity = normalize(directionToEntity);
+
+        quat rotation;
+        if (dot(directionToEntity, desiredMovement) > 0.5f && length(desiredMovement) > 0.001f) {
+            rotation = quatLookAtRH(desiredMovement, Transform::worldUp);
+            quat desiredTrackRotation = quatLookAtRH(directionToEntity, Transform::worldUp);
+            rotation = slerp(rotation, desiredTrackRotation, 0.25f);
+            desiredMovement = rotation * transform_.worldForward;
+            break;
+        }
+    }
+
     speedEmtter_->active_ = speed_ > FAST_THRESHOLD && onGround_;
     spinEmitter_->active_ = false;
     slopeEmitter_->active_ = false;
 
-    /* Homing attack search
-    float closestDistance = INFINITY;
-    for (int i = 0; i < 128; i++) {
-        Entity* entity = &((*entities_)[i]);
-        if (entity == this)
-            continue;
+    // Homing attack search
+    if (inputs_->startActivate && homingTarget_ == nullptr) {
+        float closestDistance = INFINITY;
+        for (int i = 0; i < 128; i++) {
+            Entity* entity = &((*entities_)[i]);
+            if (!entity->alive_)
+                continue;
+            if (entity == this)
+                continue;
 
-        if (!entity->GetFlag(EF_Targetable))
-            continue;
-        vec3 target = entity->GetTarget();
+            if (!entity->GetFlag(EF_Homeable))
+                continue;
+            vec3 target = entity->GetTarget();
 
-        float verticalDelta = transform_.position.y - target.y;
-        if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
-            continue;
+            float verticalDelta = transform_.position.y - target.y;
+            if (verticalDelta < MIN_HOMING_VERTICAL_DELTA)
+                continue;
 
-        vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
-        vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
-        vec3 planarCameraForward = camera_->transform_.GetForwardVector();
-        planarCameraForward.y = 0.0f;
-        planarCameraForward = normalize(planarCameraForward);
+            vec3 planarPosition = vec3(transform_.position.x, 0.0f, transform_.position.z);
+            vec3 entityPlanarPosition = vec3(target.x, 0.0f, target.z);
+            vec3 planarCameraForward = camera_->transform_.GetForwardVector();
+            planarCameraForward.y = 0.0f;
+            planarCameraForward = normalize(planarCameraForward);
 
-        float planarDist = distance(planarPosition, entityPlanarPosition);
-        if (planarDist > MAX_HOMING_DISTANCE)
-            continue;
+            float planarDist = distance(planarPosition, entityPlanarPosition);
+            if (planarDist > MAX_HOMING_DISTANCE)
+                continue;
 
-        vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
-        if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
-            continue;
+            vec3 planarVectorToEntity = normalize(entityPlanarPosition - planarPosition);
+            if (dot(planarCameraForward, planarVectorToEntity) < 0.75f)
+                continue;
 
-        if (planarDist < closestDistance) {
-            homingTarget_ = entity;
-            closestDistance = planarDist;
+            if (planarDist < closestDistance) {
+                homingTarget_ = entity;
+                closestDistance = planarDist;
+            }
         }
+        planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
     }
-    planarVelocityBeforeHoming_ = length(vec3(velocity_.x, 0.0f, velocity_.z));
-    */
-
-    // Homing attack movement
     if (onGround_)
         homingTarget_ = nullptr;
-
-    if (homingTarget_ != nullptr) {
-        vec3 vectorToTarget = normalize(homingTarget_->GetTarget() - transform_.position);
-        velocity_ = vectorToTarget * 500.0f;
-    }
 
     // Activation charge, cooldown, and use
     /*
@@ -369,7 +389,7 @@ void Player::Update() {
         moveMode_ = MM_Stun;
     }
     else if (homingTarget_ != nullptr) {
-        moveMode_ = MM_Target;
+        moveMode_ = MM_Homing;
     }
     else if (activateCooldown_ > 0) {
         moveMode_ = MM_ActivateEnd;
@@ -407,10 +427,12 @@ void Player::Update() {
         velocity_ -= normalize(planarVelocity) * bonus_;
     speed_ = length(planarVelocity) - bonus_;
 
-    // Grounded-stick velocity
+    // Groun stick velocity
     if (homingTarget_ == nullptr) {
         if (!onGround_)
             velocity_.y -= 2.0f;
+        else if (moveMode_ == MM_Slope)
+            velocity_.y -= 32.0f;
         else if (moveMode_ == MM_Attack)
             velocity_.y -= 16.0f;
         else if (moveMode_ == MM_Activate)
@@ -560,8 +582,13 @@ void Player::Update() {
         case MM_Stun:
             break;
 
-        case MM_Target:
+        case MM_Homing: {
+            if (homingTarget_ != nullptr) {
+                vec3 vectorToTarget = normalize(homingTarget_->GetTarget() - transform_.position);
+                velocity_ = vectorToTarget * 500.0f;
+            }
             break;
+        }
     }
     planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
 
@@ -572,16 +599,18 @@ void Player::Update() {
     
     // Attack hitbox assignemnt
     if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
-        hitbox_.knocback = planarVelocity * .985f;
-        hitbox_.knocback.y = 55.0f;
+        hitbox_.knocback = planarVelocity;
+        hitbox_.knocback.y = max(velocity_.y + 60.0f, 35.0f);
         hitbox_.hitlag = 4;
         hitbox_.diStrength = 0.15f;
+        hitbox_.hitType = Hitbox::Normal;
     }
     else {
         hitbox_.knocback = planarVelocity * 1.25f;
         hitbox_.knocback.y = 55.0f;// + clamp(velocity_.y, -10.0f, 10.0f);
         hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.05f;
+        hitbox_.hitType = Hitbox::Strong;
     }
 
     // Stun cancellation
@@ -700,9 +729,13 @@ void Player::OnPush(vec3 pushVec) {
 
 void Player::EndHoming() {
     if (homingTarget_ == nullptr) return;
-
     homingTarget_ = nullptr;
-    vec3 planarDir = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
+    
+    quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
+    vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
+    vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
+    vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
+    vec3 planarDir = desiredMovement;//normalize(vec3(velocity_.x, 0.0f, velocity_.z));
     planarDir *= planarVelocityBeforeHoming_;
     velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
 }

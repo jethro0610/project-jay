@@ -411,21 +411,6 @@ void Renderer::RenderEntities(
             RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, RENDER_VIEW, debugShaderType);
             #endif 
         }
-
-        if (entity.activator_.requiredStocks > 0) {
-            Transform activatorTransform;
-            activatorTransform.position = entity.activator_.position;
-            activatorTransform.scale = vec3(entity.activator_.radius);
-            matrix = activatorTransform.ToMatrix();
-
-            WorldText text(
-                "Required Points: " + std::to_string(entity.activator_.requiredStocks),
-                entity.activator_.position + vec3(0.0f, 6.0f, 0.0f),
-                4.0f
-            );
-            RenderWorldText(text);
-            RenderMesh(terrainQuad_, &terrainCursorMaterial_, nullptr, &matrix);
-        }
     }
 }
 
@@ -642,22 +627,6 @@ void Renderer::RenderEntityEditorNodes(EntityList& entities) {
     for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities[i].alive_) continue;
         Entity& entity = entities[i];
-
-        if (!entity.activatorTarget_->Selectable()) continue;
-        transform.position = entity.activatorTarget_->GetPosition();
-
-        material = DBG_nodeMaterial_;
-        material.properties.color = vec4(1.0f, 0.0f, 1.0f, 0.75f);
-        matrix = transform.ToMatrix();
-        RenderMesh(
-            &DBG_nodeModel_->meshes[0],
-            &material,
-            nullptr,
-            &matrix,
-            nullptr,
-            RENDER_VIEW,
-            entity.activatorTarget_->Selected() ? DS_SelectedUnshaded : DS_Default
-        );
     }
 }
 

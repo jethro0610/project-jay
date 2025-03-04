@@ -41,14 +41,17 @@ void Pinata::Init(Entity::InitArgs args) {
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_RecieveKnockback, true);
+    SetFlag(EF_Trackable, false);
 
-    hitsTillBreak_ = 3;
+    hitsTillBreak_ = 4;
     hits_ = 0;
 }
 
 void Pinata::Update() {
-    if (!onGround_)
+    if (!onGround_) {
         velocity_.y -= 2.0f;
+        SetFlag(EF_Trackable, true);
+    }
     else {
         velocity_.y = 0.0f;
         vec3 planarVelocity = velocity_;
@@ -56,17 +59,19 @@ void Pinata::Update() {
         planarVelocity *= 0.9f;
         velocity_.x = planarVelocity.x;
         velocity_.z = planarVelocity.z;
+        SetFlag(EF_Trackable, false);
     }
 
 }
 
 void Pinata::OnHurt(HurtArgs args) {
-    hits_++;
+    hits_ += args.hitType == Hitbox::Strong ? 3 : 1;
+    float mult = args.hitType == Hitbox::Strong ? 1.25f : 1.0f;
 
     if (hits_ >= hitsTillBreak_) {
         seedManager_->CreateMultipleSeed(
             transform_.position, 
-            Clock::TIME_IN_DAY_SECTION * 0.15, 
+            Clock::TIME_IN_DAY_SECTION * 0.15 * mult, 
             128.0f, 
             args.attacker, 
             velocity_ * 0.25f,
@@ -77,7 +82,7 @@ void Pinata::OnHurt(HurtArgs args) {
     else
         seedManager_->CreateMultipleSeed(
             transform_.position, 
-            Clock::TIME_IN_DAY_SECTION * 0.05, 
+            Clock::TIME_IN_DAY_SECTION * 0.05 * mult, 
             32.0f, 
             args.attacker, 
             velocity_ * 0.25f,

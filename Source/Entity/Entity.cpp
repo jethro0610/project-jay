@@ -31,7 +31,6 @@ void Entity::Construct(
     trail_ = nullptr;
 
     editorTarget_ = new ETarget(this);
-    activatorTarget_ = new ActivatorTarget(this, &activator_);
 }
 
 void Entity::Init(
@@ -72,7 +71,6 @@ void Entity::Init(
     stun_ = false;
     hitlag_ = 0;
     hurtCooldown_ = 0;
-    activator_ = {};
 
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
 

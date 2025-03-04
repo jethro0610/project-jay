@@ -50,6 +50,7 @@ struct Hit {
     Entity* hitter;
     Entity* target;
     Collision collision;
+    Hitbox::HitType hitType;
 };
 
 struct Push {
@@ -162,7 +163,7 @@ void Game::Update() {
                 vectorToTarget = normalize(vectorToTarget);
 
                 if (dot(planarForward, vectorToTarget) > hitter.hitbox_.forwardRange)
-                    hitList.push_back({&hitter, &target, collision});
+                    hitList.push_back({&hitter, &target, collision, hitter.hitbox_.hitType});
             }
         }
 
@@ -196,8 +197,8 @@ void Game::Update() {
                     hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
             }
 
-            hit.target->DoHurt({hit.hitter});
-            hit.hitter->DoHit({hit.target});
+            hit.target->DoHurt({hit.hitter, hit.hitType});
+            hit.hitter->DoHit({hit.target, hit.hitType});
         }
 
         vector_const<Push, EntityList::MAX> pushList;

@@ -96,7 +96,6 @@ EXPANDMODES
 
     for (int i = 0; i < EntityList::MAX; i++) {
         targets_.push_back(entities_[i].editorTarget_);
-        targets_.push_back(entities_[i].activatorTarget_);
     }
 
     for (StaticTerrainModifier* modifier : terrain.DBG_modifiers_) {

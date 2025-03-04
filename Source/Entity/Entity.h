@@ -63,20 +63,16 @@ public:
 
     struct HitArgs {
         Entity* target;
+        Hitbox::HitType hitType;
     };
     struct HurtArgs {
         Entity* attacker;
+        Hitbox::HitType hitType;
     };
     struct TrailPoint {
         float time;
         glm::vec3 position;
     };
-    struct Activator {
-        glm::vec3 position;
-        float radius;
-        int requiredStocks;
-    };
-
     struct InitArgs {
         ParticleManager& particleManager;
         ResourceManager& resourceManager;
@@ -84,22 +80,28 @@ public:
 
     enum Flag {
         EF_Interpolate,
+        EF_UseVelocity,
+
         EF_GroundCheck,
         EF_StickToGround,
         EF_DownStickOnly,
         EF_AlignToGround,
-        EF_UseVelocity,
+
         EF_UseSkeleton,
+
         EF_SendPush,
         EF_RecievePush,
+
         EF_SendHits,
         EF_RecieveHits,
-        EF_Overlap,
         EF_RecieveKnockback,
         EF_HurtFaceForward,
         EF_HurtFaceBack,
+
+        EF_Trackable,
+        EF_Overlap,
         EF_CaptureSeed,
-        EF_Targetable,
+        EF_Homeable,
         EF_UseTrail,
         EF_Count
     };
@@ -166,7 +168,6 @@ public:
     bool initHitlag_;
     int hitlag_;
     int hurtCooldown_;
-    Activator activator_;
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
@@ -262,26 +263,6 @@ private:
         EditorTarget* Clone() override;
         void Destroy() override;
     };
-    class ActivatorTarget : public EditorTarget {
-        private:
-        Entity* entity_; 
-        Activator* activator_;
-
-        public:
-        ActivatorTarget(Entity* entity, Activator* activator) : entity_(entity), activator_(activator) {}
-        std::string GetName() override { return std::string(entity_->GetName()) + "_activator"; }
-
-        glm::vec3 GetPosition() override { return activator_->position; }
-        void SetPosition(const glm::vec3& pos) override { activator_->position = pos; }
-
-        glm::vec4 GetScale() override { return glm::vec4(activator_->radius); }
-        void SetScale(const glm::vec4& ref, const glm::vec4& delta) override { activator_->radius = ref.x + delta.x; }
-
-        bool TerrainAlignable() override { return true; }
-        bool Selectable() override { return activator_->requiredStocks > 0; }
-        bool RayHit(const Ray &ray) override { return ray.HitSphere(activator_->position, 4.0f); }
-    };
     EditorTarget* editorTarget_;
-    EditorTarget* activatorTarget_;
     #endif
 };

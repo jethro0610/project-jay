@@ -18,6 +18,7 @@ void TPillar::Init(Entity::InitArgs args) {
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
+    materials_[0].specularProperties = SpecularFresnelProperties::Default();
     materials_[0].specularProperties.color = glm::vec4(1.0f);
     materials_[0].specularProperties.fresnelBrightness = 0.15f;
 

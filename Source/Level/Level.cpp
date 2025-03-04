@@ -148,11 +148,6 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
                 *pair.second = entityData["bool_properties"][pair.first];
             }
         }
-        if (entityData.contains("activator") && !entityData["activator"].is_null()) {
-            entity->activator_.requiredStocks = entityData["activator"]["required_stocks"];
-            entity->activator_.position = GetVec3(entityData["activator"]["position"]);
-            entity->activator_.radius = entityData["activator"]["radius"];
-        }
     }
 
     for (auto& spreadData : levelData["spread"]) {
@@ -211,14 +206,6 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         for (auto& pair : properties.bools)
             boolProperties[pair.first] = *pair.second;    
         entityData["bool_properties"] = boolProperties;
-
-        if (entity.activator_.requiredStocks > 0) {
-            entityData["activator"]["required_stocks"] = entity.activator_.requiredStocks;
-            entityData["activator"]["position"]["x"] = entity.activator_.position.x;
-            entityData["activator"]["position"]["y"] = entity.activator_.position.y;
-            entityData["activator"]["position"]["z"] = entity.activator_.position.z;
-            entityData["activator"]["radius"] = entity.activator_.radius;
-        }
 
         levelData["entities"].push_back(entityData);
     }

@@ -11,6 +11,7 @@
 #include "Terrain/Terrain.h"
 #include "Entity/EntityUnion.h"
 #include "Entity/EntityList.h"
+#include <unordered_set>
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"

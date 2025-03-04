@@ -24,7 +24,7 @@ void RisePillar::Init(Entity::InitArgs args) {
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_Overlap, true); 
-    SetFlag(EF_Targetable, true);
+    SetFlag(EF_Homeable, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");

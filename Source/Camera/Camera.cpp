@@ -32,7 +32,11 @@ mat4 Camera::GetViewOnlyMatrix() const {
 void Camera::Update(EntityList& entities, Inputs& inputs) {
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
-    lookY_ = radians(-15.0f);
+
+    // TODO: Mouse keyboard implementation
+    float targetLookY = -15.0f + 20.0f * inputs.deltaLookY;
+    lookY_ = lerp(lookY_, radians(targetLookY), 1 - powf(0.00000015f, deltaTime));
+
     vec3 trackPosition = target_->renderTransform_.position;
     smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));
     if (distance(trackPosition, smoothTrackPosition_) > 3.0f) {

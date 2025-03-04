@@ -270,7 +270,7 @@ void Player::Update() {
     slopeEmitter_->active_ = false;
 
     // Homing attack search
-    if (inputs_->startActivate && homingTarget_ == nullptr) {
+    if (inputs_->startActivate && homingTarget_ == nullptr && !onGround_) {
         vec3 planarPos = vec3(transform_.position.x, 0.0f, transform_.position.z);
         vec3 planarVel = vec3(velocity_.x, 0.0f, velocity_.z);
         float planarVelMag = length(planarVel);
@@ -286,6 +286,8 @@ void Player::Update() {
 
             // We get the airtime to the target...
             float airtimeToTarget = GetAirtime(2.0f, velocity_.y, transform_.position.y, target.y);
+            if (airtimeToTarget > 1.0f)
+                continue;
 
             // ...and determine how far we can travel in our current velocity based
             // on that airtime...

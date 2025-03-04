@@ -30,6 +30,8 @@ mat4 Camera::GetViewOnlyMatrix() const {
 }
 
 void Camera::Update(EntityList& entities, Inputs& inputs) {
+    if (target_->stun_)
+        return;
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
     lookY_ = radians(-15.0f);

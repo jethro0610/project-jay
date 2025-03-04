@@ -286,8 +286,6 @@ void Player::Update() {
 
             // We get the airtime to the target...
             float airtimeToTarget = GetAirtime(2.0f, velocity_.y, transform_.position.y, target.y);
-            if (airtimeToTarget > 1.0f)
-                continue;
 
             // ...and determine how far we can travel in our current velocity based
             // on that airtime...

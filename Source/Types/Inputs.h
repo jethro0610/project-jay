@@ -2,8 +2,11 @@
 struct Inputs {
     float forwardInput;
     float sideInput;
+    float lookX;
+    float lookY;
     float deltaLookX;
     float deltaLookY;
+    bool useLookY;
     bool ski;
     bool flow;
     bool cut;

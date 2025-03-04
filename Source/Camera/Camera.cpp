@@ -34,8 +34,10 @@ void Camera::Update(EntityList& entities, Inputs& inputs) {
     lookX_ += inputs.deltaLookX;
 
     // TODO: Mouse keyboard implementation
-    float targetLookY = -15.0f + 20.0f * inputs.deltaLookY;
-    lookY_ = lerp(lookY_, radians(targetLookY), 1 - powf(0.00000015f, deltaTime));
+
+    float aimLookY = inputs.useLookY ? 40.0f * inputs.lookY : 0.0f;
+    float targetLookY = radians(-15.0f + aimLookY);
+    lookY_ = lerp(lookY_, targetLookY, 1 - powf(0.005f, deltaTime));
 
     vec3 trackPosition = target_->renderTransform_.position;
     smoothTrackPosition_ = lerp(smoothTrackPosition_, trackPosition, 1 - powf(0.00000015f, deltaTime));

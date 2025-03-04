@@ -86,6 +86,9 @@ void Game::UpdateInputs_P() {
         platform_.gamepad_.releasedButtons_[Gamepad::A] || 
         platform_.gamepad_.releasedButtons_[Gamepad::LSHOULDER];
 
+    inputs_.useLookY =
+        platform_.gamepad_.heldButtons_[Gamepad::RTHUMB];
+
     // TODO: clamp the values to total size 1
     if (platform_.heldKeys_['W'])
         inputs_.forwardInput += 1.0f;
@@ -104,10 +107,18 @@ void Game::UpdateInputs_P() {
 
     inputs_.deltaLookX = 0.0f;
     inputs_.deltaLookY = 0.0f;
+    inputs_.lookX = 0.0f;
+    inputs_.lookY = 0.0f;
+
     inputs_.deltaLookX -= platform_.deltaMouseX_ * 0.005f;
     inputs_.deltaLookY -= platform_.deltaMouseY_ * 0.005f;
     inputs_.deltaLookX -= platform_.gamepad_.rightStickX_ * GlobalTime::GetDeltaTime() * 2.0f;
     inputs_.deltaLookY += platform_.gamepad_.rightStickY_ * GlobalTime::GetDeltaTime() * 2.0f;
+
+    inputs_.lookX -= platform_.deltaMouseX_ * 0.005f;
+    inputs_.lookY -= platform_.deltaMouseY_ * 0.005f;
+    inputs_.lookX -= platform_.gamepad_.rightStickX_;
+    inputs_.lookY += platform_.gamepad_.rightStickY_;
 }
 
 void Game::FlushInputs_P() {

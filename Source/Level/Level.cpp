@@ -109,6 +109,10 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
         Transform entityTransform = GetTransform(entityData, "transform");
+        if (entityData.contains("floor_dist")) {
+            float floorDist = entityData["floor_dist"];
+            entityTransform.position.y = terrain_.GetDistance(entityTransform.position).y + floorDist;
+        }
 
         #ifndef _DEBUG
         entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, editorLoad);
@@ -171,11 +175,15 @@ void Level::Save(const std::string& name, const std::string& suffix) {
     for (int i = 0; i < EntityList::MAX; i++) {
         Entity& entity = entities_[i];
         if (!entity.alive_) continue;
-        
+
         nlohmann::json entityData; 
         entityData["name"] = entity.GetName();
         entityData["type_id"] = entity.typeId_;
         Transform& transform = entity.transform_;
+
+        glm::vec2 terrainDist = terrain_.GetDistance(entity.transform_.position);
+        if (terrainDist.x < 0.0)
+            entityData["floor_dist"] = transform.position.y - terrainDist.y;
 
         entityData["transform"]["position"]["x"] = transform.position.x;
         entityData["transform"]["position"]["y"] = transform.position.y;

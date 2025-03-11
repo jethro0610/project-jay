@@ -42,7 +42,7 @@ static constexpr float AIR_ROTATION_SPEED = 0.01f;
 static constexpr float SLOPE_ACCELERATION = 4.0f;
 static constexpr float SLOPE_DOWN_SCALING = 4.0f;
 static constexpr float SLOPE_UP_SCALING = 1.5f;
-static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.15f;
+static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.1f;
 
 static constexpr float MAX_JUMP_CHARGE = 30.0f;
 static constexpr float MIN_JUMP_ADD = 25.0f;

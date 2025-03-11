@@ -64,7 +64,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
 
-    SetLightDirection(normalize(vec3(0.75f, -1.0f, 0.75f)));
+    SetLightDirection(normalize(vec3(0.75f, -1.0f, -0.75f)));
 
     backBuffer_ = BGFX_INVALID_HANDLE;
 

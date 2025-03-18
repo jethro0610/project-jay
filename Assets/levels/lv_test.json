@@ -3,13 +3,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_player",
             "transform": {
                 "position": {
-                    "x": -4.512841701507568,
-                    "y": 23.463119506835938,
-                    "z": -1.6864261627197266
+                    "x": -3.598306655883789,
+                    "y": 0.0,
+                    "z": -8.436017036437988
                 },
                 "rotation": {
                     "x": 0.0,
@@ -27,13 +28,16 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_mole",
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_segments": 8
+            },
+            "name": "e_snake",
             "transform": {
                 "position": {
-                    "x": 0.6255236864089966,
-                    "y": 23.23013687133789,
-                    "z": 7.50360631942749
+                    "x": 5.750509738922119,
+                    "y": 0.0,
+                    "z": -21.86338996887207
                 },
                 "rotation": {
                     "x": 0.0,
@@ -41,14 +45,38 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 2.0,
-                    "y": 2.0,
-                    "z": 2.0
+                    "x": 5.59999942779541,
+                    "y": 5.59999942779541,
+                    "z": 5.59999942779541
                 }
             },
-            "type_id": 20
+            "type_id": 30
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": 69.71748352050781,
+                    "y": 0.0,
+                    "z": -34.551517486572266
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.200000762939453,
+                    "y": 55.39999771118164,
+                    "z": 5.200000762939453
+                }
+            },
+            "type_id": 3
         }
     ],
-    "landmap": "lm_default",
-    "terrain_modifiers": []
+    "landmap": "lm_default"
 }

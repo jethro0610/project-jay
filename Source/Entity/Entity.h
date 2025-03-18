@@ -199,6 +199,7 @@ public:
 
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
+    glm::vec3 GetTrailPositionNormalized(float t);
 
     void RecordTrail();
 

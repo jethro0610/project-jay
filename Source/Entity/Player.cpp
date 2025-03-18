@@ -603,7 +603,7 @@ void Player::Update() {
     if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity;
         hitbox_.knocback.y = max(velocity_.y + 60.0f, 35.0f);
-        hitbox_.hitlag = 4;
+        hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.15f;
         hitbox_.hitType = Hitbox::Normal;
     }

@@ -279,6 +279,24 @@ vec3 Entity::GetTrailPosition(float time) {
     return lerp(pointA.position, pointB.position, t);
 }
 
+vec3 Entity::GetTrailPositionNormalized(float time) {
+    if (time >= 1.0f)
+        return trail_[TRAIL_SIZE - 1].position;
+    else if (time <= 0.0)
+        return trail_[0].position;
+
+    int target = floor(time * TRAIL_SIZE);
+    float targetTime = time / TRAIL_SIZE;
+
+    TrailPoint pointA = trail_[target];
+    TrailPoint pointB = trail_[target + 1];
+
+    float timeRange = 1.0f / TRAIL_SIZE;
+    float t = (time - targetTime) / timeRange;
+
+    return lerp(pointA.position, pointB.position, timeRange);
+}
+
 void Entity::CopyProperties(Entity* from) {
     ASSERT((typeId_ == from->typeId_), "Attempted to copy from entity with different type");
 
@@ -454,8 +472,9 @@ void Entity::DoCaptureSeed() {
 }
 
 void Entity::DoDestroy() {
-    if (trail_ != nullptr)
+    if (trail_ != nullptr) 
         delete[] trail_;
+    trail_ = nullptr;
 
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnDestroy(); break;

@@ -18,6 +18,7 @@ void SinglePod::Init(Entity::InitArgs args) {
     materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
+    materials_[0].properties = SpecularFresnelProperties::Default();
     materials_[0].properties.color = glm::vec4(0.5f, 0.5f, 1.0f, 1.0f);
 
     pushbox_.top = 1.0f;

@@ -566,10 +566,14 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
+            "float_properties": {
+                "p_dist": 32.0,
+                "p_podscale": 0.5,
+                "p_segscale": 1.0
+            },
             "floor_dist": 0.0,
             "int_properties": {
-                "p_segments": 128
+                "p_segments": 8
             },
             "name": "e_snake",
             "transform": {
@@ -584,16 +588,20 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 16.799999237060547,
-                    "y": 16.799999237060547,
-                    "z": 16.799999237060547
+                    "x": 8.400002479553223,
+                    "y": 8.400002479553223,
+                    "z": 8.400002479553223
                 }
             },
             "type_id": 30
         },
         {
             "bool_properties": null,
-            "float_properties": null,
+            "float_properties": {
+                "p_dist": 32.0,
+                "p_podscale": 0.5,
+                "p_segscale": 1.0
+            },
             "floor_dist": 0.0,
             "int_properties": {
                 "p_segments": 8
@@ -614,6 +622,37 @@
                     "x": 8.99999713897705,
                     "y": 8.99999713897705,
                     "z": 8.99999713897705
+                }
+            },
+            "type_id": 30
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_dist": 1.0,
+                "p_podscale": 0.5,
+                "p_segscale": 1.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_segments": 8
+            },
+            "name": "e_snake",
+            "transform": {
+                "position": {
+                    "x": -65.1970443725586,
+                    "y": 9.117120742797852,
+                    "z": 1955.4384765625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 3.3999996185302734,
+                    "y": 3.3999996185302734,
+                    "z": 3.3999996185302734
                 }
             },
             "type_id": 30

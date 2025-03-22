@@ -4,12 +4,16 @@
 #include "EntityList.h"
 #include "Terrain/Terrain.h"
 #include "TPillar.h"
+#include "SnakePod.h"
+#include <glm/gtx/string_cast.hpp>
 using namespace glm;
 
 EntityProperties SnakeHead::GetStaticProperties() {
     return {
         {
-
+            {"p_dist", &segmentDist_},
+            {"p_segscale", &segmentScale_},
+            {"p_podscale", &podScale_}
         },
         {
             {"p_segments", &numSegments_}
@@ -40,29 +44,49 @@ void SnakeHead::Init(Entity::InitArgs args) {
     pushbox_.radius = 1.0f;
 
     numSegments_ = 8;
-    segmentDist_ = 64.0f;
+    segmentDist_ = 32.0f;
     speed_ = 80.0f;
     velocity_ = transform_.GetForwardVector() * speed_;
     traceDistance_ = 100.0f;
 
+    segmentScale_ = 1.0f;
+    podScale_ = 0.5f;
+
     SetFlag(EF_UseVelocity, true);
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_AlignToGround, true);
     SetFlag(EF_StickToGround, true);
 }
 
 void SnakeHead::Start() {
-    Transform segTransform = transform_;
-    Entity* curTarget = this;
+    vec3 curPos = transform_.position;
+    Entity* curSegment = this;
+    Entity* prevSegment = this;
+
+    DEBUGLOG(segmentDist_);
     for (int i = 0; i < numSegments_; i++) {
-        segTransform.position -= transform_.GetForwardVector() * segmentDist_;
-        segTransform.position.y = terrain_->GetHeight(segTransform.position);
-        SnakeSegment& segment = (SnakeSegment&)entities_->CreateEntity(SnakeSegment::TYPEID, segTransform);
-        segment.dist_ = segmentDist_;
-        segment.target_ = curTarget;
-        curTarget = &segment;
+        prevSegment = curSegment;
+        Transform segmentTransform;
+        segmentTransform.scale = transform_.scale * segmentScale_;
+        curPos -= transform_.GetForwardVector() * segmentDist_;
+        curPos.y = terrain_->GetHeight(curPos);
+        segmentTransform.position = curPos;
+        SnakeSegment& segment = (SnakeSegment&)entities_->CreateEntity(SnakeSegment::TYPEID, segmentTransform);
+        segment.prevSegment_ = curSegment;
+        segment.distFromPrev_ = segmentDist_;
+        segment.head_ = this;
+        curSegment = &segment;
+
+        Transform podTransform;
+        podTransform.scale = transform_.scale * podScale_;
+        podTransform.position = (prevSegment->transform_.position + curSegment->transform_.position) * 0.5f;
+        SnakePod& pod = (SnakePod&)entities_->CreateEntity(SnakePod::TYPEID, podTransform);
+        pod.prevSegment_ = prevSegment;
+        pod.nextSegment_ = curSegment;
+        pod.head_ = this;
     }
 }
 
@@ -80,5 +104,8 @@ void SnakeHead::Update() {
         velocity_ = mix(velocity_, terrain_->GetDirectionToEdge(transform_.position) * speed_, 0.1f);
     }
     velocity_ = mix(velocity_, normalize(velocity_) * speed_, 0.25f);
-    transform_.rotation = quatLookAtRH(normalize(velocity_), Transform::worldUp);
+
+    vec3 planarVelocity = velocity_;
+    planarVelocity.y = 0.0f;
+    transform_.rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp);
 }

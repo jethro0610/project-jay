@@ -3,18 +3,19 @@
 
 class SnakeHead;
 
-class SnakeSegment : public Entity {
+class SnakePod : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_snakesegment"; }
+    static const char* GetStaticName() { return "e_snakepod"; }
     static EntityDependendies GetStaticDependencies();
-
-    Entity* prevSegment_;
-    float distFromPrev_;
-    SnakeHead* head_;
 
     void Update();
     void PreUpdate();
+    void OnHurt(HurtArgs args);
+
+    Entity* prevSegment_;
+    Entity* nextSegment_;
+    SnakeHead* head_;
 };

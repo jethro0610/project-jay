@@ -49,6 +49,7 @@ void Game::Init() {
 struct Hit {
     Entity* hitter;
     Entity* target;
+    Hitbox* hitbox;
     Collision collision;
     Hitbox::HitType hitType;
 };
@@ -163,7 +164,7 @@ void Game::Update() {
                 vectorToTarget = normalize(vectorToTarget);
 
                 if (dot(planarForward, vectorToTarget) > hitter.hitbox_.forwardRange)
-                    hitList.push_back({&hitter, &target, collision, hitter.hitbox_.hitType});
+                    hitList.push_back({&hitter, &target, &hitter.hitbox_, collision, hitter.hitbox_.hitType});
             }
         }
 
@@ -197,7 +198,7 @@ void Game::Update() {
                     hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
             }
 
-            hit.target->DoHurt({hit.hitter, hit.hitType});
+            hit.target->DoHurt({hit.hitter, hit.hitbox, hit.hitType});
             hit.hitter->DoHit({hit.target, hit.hitType});
         }
 

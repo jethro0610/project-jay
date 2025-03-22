@@ -1,5 +1,6 @@
 #include "SnakeSegment.h"
 #include "Resource/ResourceManager.h"
+#include "SnakeHead.h"
 using namespace glm;
 
 EntityDependendies SnakeSegment::GetStaticDependencies() {
@@ -24,18 +25,23 @@ void SnakeSegment::Init(Entity::InitArgs args) {
 
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_SendPush, true);
+    SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_AlignToGround, true);
     SetFlag(EF_StickToGround, true);
 }
 
+void SnakeSegment::PreUpdate() {
+    hitlag_ = head_->hitlag_;
+}
+
 void SnakeSegment::Update() { 
-    vec3 fromTargetToSelf = transform_.position - target_->transform_.position;
-    fromTargetToSelf.y = 0.0f;
-    float distTargetToSelf = length(fromTargetToSelf);
-    if (distTargetToSelf  > dist_) {
-        fromTargetToSelf /= distTargetToSelf;
-        fromTargetToSelf *= dist_;
-        transform_.position = target_->transform_.position + fromTargetToSelf;
+    vec3 fromPrevToSelf = transform_.position - prevSegment_->transform_.position;
+    fromPrevToSelf.y = 0.0f;
+    float distTargetToSelf = length(fromPrevToSelf);
+    if (distTargetToSelf  > distFromPrev_) {
+        fromPrevToSelf /= distTargetToSelf;
+        fromPrevToSelf *= distFromPrev_;
+        transform_.position = prevSegment_->transform_.position + fromPrevToSelf;
     }
 }

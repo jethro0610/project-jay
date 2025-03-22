@@ -67,6 +67,7 @@ public:
     };
     struct HurtArgs {
         Entity* attacker;
+        Hitbox* hitbox;
         Hitbox::HitType hitType;
     };
     struct TrailPoint {

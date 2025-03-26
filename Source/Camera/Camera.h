@@ -6,6 +6,7 @@
 
 class Entity;
 class EntityList;
+class Terrain;
 class TransformComponent;
 
 class Camera {
@@ -24,5 +25,6 @@ public:
     void Update(Inputs& inputs);
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetViewOnlyMatrix() const;
+    glm::vec3 GetLookPosition(Terrain& terrain);
 };
 

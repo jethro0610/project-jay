@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Time/Time.h"
+#include "Terrain/Terrain.h"
 #include "Entity/Entity.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
@@ -30,6 +31,11 @@ mat4 Camera::GetViewOnlyMatrix() const {
 }
 
 void Camera::Update(EntityList& entities, Inputs& inputs) {
+    if (target_ == nullptr) {
+        Update(inputs);
+        return;
+    }
+
     float deltaTime = GlobalTime::GetDeltaTime();
     lookX_ += inputs.deltaLookX;
 
@@ -66,4 +72,15 @@ void Camera::Update(Inputs& inputs) {
     vec3 forwardMovement = transform_.GetForwardVector() * inputs.forwardInput * 32.0f * deltaTime * shiftSpeed;
     vec3 rightMovement = transform_.GetRightVector() * inputs.sideInput * 32.0f * deltaTime * shiftSpeed;
     transform_.position += forwardMovement + rightMovement;
+}
+
+vec3 Camera::GetLookPosition(Terrain& terrain) {
+    vec3 pos = terrain.RaycastTerrain(transform_.position, transform_.rotation * Transform::worldForward);
+    if (pos == vec3(0.0f)) {
+        pos = transform_.position;
+        vec2 terrainDist = terrain.GetDistance(transform_.position);
+        if (terrainDist.x < 0.0f)
+            pos.y = terrainDist.y;
+    }
+    return pos;
 }

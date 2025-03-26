@@ -103,9 +103,12 @@ EXPANDMODES
             targets_.push_back(target);
         }
     }
+
+    lastCameraTransform_ = camera_.transform_;
 }
 
 void Editor::StartEditing() {
+    camera_.transform_ = lastCameraTransform_;
     active_ = true;
     target_.Deselect();
     SetMode(defaultMode_);
@@ -118,9 +121,12 @@ void Editor::StartEditing() {
     // Reload the level once we start editing again
     if (level_.loaded_)
         level_.Load(level_.DBG_name_, "_autosave", false, true);
+
 }
 
-void Editor::StopEditing() {
+void Editor::StopEditing(bool startAtCamera) {
+    lastCameraTransform_ = camera_.transform_;
+
     mode_->OnCancel();
     mode_->OnEnd();
     active_ = false;
@@ -131,6 +137,9 @@ void Editor::StopEditing() {
     // Save the level before we start playing
     level_.Save(level_.DBG_name_, "_autosave");
     level_.Load(level_.DBG_name_, "_autosave", false, false);
+
+    if (startAtCamera)
+        entities_[0].transform_.position = camera_.GetLookPosition(terrain_);
 }
 
 void Editor::SetMode(EditorMode* mode) {
@@ -162,7 +171,7 @@ void Editor::Update() {
     }
 
     if (holdingCtrl && platform_.pressedKeys_['E'] && level_.loaded_) {
-        StopEditing();
+        StopEditing(platform_.heldKeys_[GLFW_KEY_LEFT_SHIFT]);
         FlushInputs();
         return;
     }

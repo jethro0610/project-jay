@@ -50,6 +50,9 @@ private:
     #endif
 
     Inputs inputs_;
+    #ifdef _DEBUG
+    Inputs cameraInputs_;
+    #endif
 
     float timeAccumlulator_;
 

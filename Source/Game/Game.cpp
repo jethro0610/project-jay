@@ -13,6 +13,12 @@ using namespace std::chrono;
 EXPANDENTITIES
 #undef ENTITYEXP
 
+#ifdef _DEBUG
+#define CAMERA_INPUTS cameraInputs_
+#else
+#define CAMERA_INPUTS inputs_
+#endif
+
 void Game::Init() {
     srand(time(0));
     renderer_.camera_ = &camera_;
@@ -78,14 +84,38 @@ void Game::Update() {
     // }
 
     timeAccumlulator_ += GlobalTime::GetDeltaTime();
+    #ifdef _DEBUG
+    cameraInputs_ = inputs_;
+    #endif
     while (timeAccumlulator_ >= GlobalTime::TIMESTEP) {
-        FlushInputs_P();
         #ifdef _DEBUG
         if (editor_.IsActive()) {
             timeAccumlulator_ = 0.0f;
             return;
         }
+        if (platform_.pressedKeys_['R']) {
+            if (camera_.target_ != nullptr)
+                camera_.target_ = nullptr;
+            else
+                camera_.target_ = &entities_[0];
+        }
+        if (platform_.pressedKeys_['T'] && camera_.target_ == nullptr)
+            entities_[0].transform_.position = camera_.GetLookPosition(terrain_);
+        if (camera_.target_ == nullptr)
+            inputs_ = {};
+        if (platform_.pressedKeys_['P'] || platform_.gamepad_.pressedButtons_[Gamepad::LTHUMB])
+            rawEntities_[0].player.Boost(30.0f, 1.0f);
+        if (platform_.pressedKeys_['-'])
+            clock_.AddTime(-Clock::TIME_IN_DAY_SECTION);
+        if (platform_.pressedKeys_['='])
+            clock_.AddTime(Clock::TIME_IN_DAY_SECTION);
+        if (platform_.pressedKeys_['I']) {
+            entities_[0].transform_.position.y = terrain_.GetHeight(entities_[0].transform_.position);
+            entities_[0].velocity_.y = 0.0f;
+        }
         #endif
+
+        FlushInputs_P();
 
         for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
@@ -259,7 +289,7 @@ void Game::Update() {
 
         timeAccumlulator_ -= GlobalTime::TIMESTEP;
     }
-    camera_.Update(entities_, inputs_);
+    camera_.Update(entities_, CAMERA_INPUTS);
 
     for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities_[i].alive_) continue;

@@ -43,7 +43,7 @@ public:
     TerrainCursor terrainCursor_;
 
     void StartEditing();
-    void StopEditing();
+    void StopEditing(bool startAtCamera = false);
     bool IsActive() const { return active_; };
 
     void Update();
@@ -79,4 +79,5 @@ private:
 
     bool active_;
     bool& running_;
+    Transform lastCameraTransform_;
 };

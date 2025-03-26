@@ -66,7 +66,6 @@ void SnakeHead::Start() {
     Entity* curSegment = this;
     Entity* prevSegment = this;
 
-    DEBUGLOG(segmentDist_);
     for (int i = 0; i < numSegments_; i++) {
         prevSegment = curSegment;
         Transform segmentTransform;

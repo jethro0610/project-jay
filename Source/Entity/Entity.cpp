@@ -102,7 +102,7 @@ void Entity::BaseUpdate() {
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
-        if (distanceToSurface < traceDistance_ && !skipGroundCheck_)
+        if (distanceToSurface < traceDistance_ && distanceToSurface > -20.0f && !skipGroundCheck_)
             onGround_ = true;
         else 
             onGround_ = false;
@@ -123,7 +123,7 @@ void Entity::BaseUpdate() {
                 else
                     transform_.position.y = groundHeight_;
             }
-            else if (transform_.position.y  < groundHeight_)
+            else if (transform_.position.y < groundHeight_ && distanceToSurface > -20.0f)
                 transform_.position.y = groundHeight_;
         }
     }

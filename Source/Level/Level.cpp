@@ -109,7 +109,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
         Transform entityTransform = GetTransform(entityData, "transform");
-        if (entityData.contains("floor_dist")) {
+        if (entityData.contains("floor_dist") && !entityData["floor_dist"].is_null()) {
             float floorDist = entityData["floor_dist"];
             entityTransform.position.y = terrain_.GetDistance(entityTransform.position).y + floorDist;
         }

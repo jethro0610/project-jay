@@ -29,7 +29,7 @@ void Renderer::Render(
     RenderParticles(particleManager);
     RenderPostProcess();
     RenderBlit();
-    RenderUI(clock);
+    RenderUI(entities, clock);
     RenderScreenText();
 
     PresentFrame();

@@ -526,7 +526,9 @@ void Renderer::RenderBlit() {
     bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
 }
 
-void Renderer::RenderUI(Clock& clock) {
+void Renderer::RenderUI(EntityList& entities, Clock& clock) {
+    Player& player = (Player&)entities[0];
+
     UIElement timeBar = {};
     timeBar.hAlignment = Alignment::CENTER;
     timeBar.vAlignment = Alignment::TOP;
@@ -548,6 +550,19 @@ void Renderer::RenderUI(Clock& clock) {
     timeOfDay.properties_.kerning = 0.35f;
     timeOfDay = clock.GetTimeOfDayString();
     RenderText(timeOfDay);
+
+    Text item;
+    item.properties_.scale = 50.0f;
+    item.properties_.hAlignment = Alignment::CENTER;
+    item.properties_.vAlignment = Alignment::BOTTOM;
+    item.properties_.hAnchor = Alignment::CENTER;
+    item.properties_.vAnchor = Alignment::BOTTOM;
+    item.properties_.kerning = 0.35f;
+    std::string itemString = "Item: " + GetItemName(player.item_);
+    if (player.item_ != I_None)
+        itemString +=  + " - x" + std::to_string(player.numItem_) + " (LT to Use)";
+    item = itemString;
+    RenderText(item);
 }
 
 void Renderer::RenderUIElement(UIElement& element, Shader* shader) {

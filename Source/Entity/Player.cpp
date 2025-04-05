@@ -7,7 +7,6 @@
 #include "Particle/ParticleManager.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
-#include "Logging/Logger.h"
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
 #include "EntityList.h"
@@ -216,6 +215,9 @@ void Player::Init(Entity::InitArgs args) {
     chargingActivate_ = false;
     activateCooldown_ = 0;
     activateChargeAmount_ = 0;
+
+    item_ = I_None;
+    numItem_ = 0;
 }
 
 void Player::OnDestroy() {
@@ -270,7 +272,7 @@ void Player::Update() {
     slopeEmitter_->active_ = false;
 
     // Homing attack search
-    if (inputs_->startActivate && homingTarget_ == nullptr && !onGround_) {
+    if (item_ == I_Homing && inputs_->startActivate && homingTarget_ == nullptr && !onGround_) {
         vec3 planarPos = vec3(transform_.position.x, 0.0f, transform_.position.z);
         vec3 planarVel = vec3(velocity_.x, 0.0f, velocity_.z);
         float planarVelMag = length(planarVel);
@@ -306,8 +308,12 @@ void Player::Update() {
                 foundTarget = true;
             }
         }
-        if (foundTarget)
+        if (foundTarget) {
             planarVelMagPreHoming_ = planarVelMag; 
+            numItem_--;
+            if (numItem_ <= 0)
+                item_ = I_None;
+        }
     }
     if (onGround_)
         homingTarget_ = nullptr;

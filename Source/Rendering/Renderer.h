@@ -211,7 +211,7 @@ private:
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
     void RenderBlit();
-    void RenderUI(Clock& clock);
+    void RenderUI(EntityList& entities, Clock& clock);
     void RenderUIElement(UIElement& element, Shader* shader);
     void RenderWorldText(WorldText& text);
     void RenderText(Text& text);

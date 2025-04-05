@@ -26,11 +26,12 @@
 #include "Ramp.h"
 #include "Pinata.h"
 #include "Bird.h"
-#include "Player.h"
-#include "Entity.h"
 #include "SnakeHead.h"
+#include "Entity.h"
 #include "SnakeSegment.h"
 #include "SnakePod.h"
+#include "Player.h"
+#include "ItemContainer.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -64,4 +65,5 @@
 	ENTITYEXP(Bird, bird, 28) \
 	ENTITYEXP(SnakeSegment, snakesegment, 29) \
 	ENTITYEXP(SnakeHead, snakehead, 30) \
-	ENTITYEXP(SnakePod, snakepod, 31)
+	ENTITYEXP(SnakePod, snakepod, 31) \
+	ENTITYEXP(ItemContainer, itemcontainer, 32)

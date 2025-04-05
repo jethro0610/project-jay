@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Item.h"
 
 class Player : public Entity {
 public:
@@ -35,6 +36,8 @@ public:
     int activateChargeAmount_;
     int activateCooldown_;
 
+    Item item_;
+    int numItem_;
     Entity* homingTarget_;
     float planarVelMagPreHoming_;
 

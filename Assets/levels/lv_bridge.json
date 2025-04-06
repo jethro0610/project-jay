@@ -14,7 +14,7 @@
                 },
                 "rotation": {
                     "x": 0.0,
-                    "y": -1.0859228372573853,
+                    "y": -1.085924744606018,
                     "z": 0.0
                 },
                 "scale": {
@@ -37,9 +37,9 @@
             "name": "e_jumppad",
             "transform": {
                 "position": {
-                    "x": -2208.590576171875,
-                    "y": -131.54559326171875,
-                    "z": 928.7193603515625
+                    "x": -2274.2587890625,
+                    "y": -81.14550018310547,
+                    "z": 874.7208251953125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -57,35 +57,6 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_jump_strength": 175.0
-            },
-            "int_properties": {
-                "p_cooldown": 0,
-                "p_num_seeds": 0
-            },
-            "name": "e_jumppad",
-            "transform": {
-                "position": {
-                    "x": -3033.947265625,
-                    "y": -86.63261413574219,
-                    "z": 126.46481323242188
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 11.500007629394531,
-                    "y": 11.500007629394531,
-                    "z": 11.500007629394531
-                }
-            },
-            "type_id": 16
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
                 "p_jump_strength": 150.0
             },
             "int_properties": {
@@ -96,7 +67,7 @@
             "transform": {
                 "position": {
                     "x": -2169.873291015625,
-                    "y": -123.64561462402344,
+                    "y": -95.84559631347656,
                     "z": 611.90185546875
                 },
                 "rotation": {
@@ -124,9 +95,9 @@
             "name": "e_jumppad",
             "transform": {
                 "position": {
-                    "x": -2690.470947265625,
-                    "y": -86.63261413574219,
-                    "z": -136.4129638671875
+                    "x": -2809.2841796875,
+                    "y": -116.0325927734375,
+                    "z": -44.30982208251953
                 },
                 "rotation": {
                     "x": 0.0,
@@ -152,9 +123,9 @@
             "name": "e_itemcontainer",
             "transform": {
                 "position": {
-                    "x": -2661.7119140625,
-                    "y": -21.41058349609375,
-                    "z": 431.0306396484375
+                    "x": -2727.337158203125,
+                    "y": -28.36675262451172,
+                    "z": 429.48046875
                 },
                 "rotation": {
                     "x": 0.0,
@@ -162,12 +133,402 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 9.600008010864258,
-                    "y": 9.600008010864258,
-                    "z": 9.600008010864258
+                    "x": 3.800009250640869,
+                    "y": 3.800009250640869,
+                    "z": 3.800009250640869
                 }
             },
             "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "transform": {
+                "position": {
+                    "x": -1892.2459716796875,
+                    "y": 15.308612823486328,
+                    "z": 297.74847412109375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.400009632110596,
+                    "y": 5.400009632110596,
+                    "z": 5.400009632110596
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "transform": {
+                "position": {
+                    "x": -2380.314453125,
+                    "y": 11.09345531463623,
+                    "z": 1279.53076171875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 4.900007724761963,
+                    "y": 4.900007724761963,
+                    "z": 4.900007724761963
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "transform": {
+                "position": {
+                    "x": -3335.677734375,
+                    "y": 45.85535430908203,
+                    "z": -270.4776306152344
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 4.40000057220459,
+                    "y": 4.40000057220459,
+                    "z": 4.40000057220459
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "transform": {
+                "position": {
+                    "x": -2924.741943359375,
+                    "y": 34.55573654174805,
+                    "z": -695.3989868164063
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.999999046325684,
+                    "y": 5.999999046325684,
+                    "z": 5.999999046325684
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -2274.35009765625,
+                    "y": -53.33626174926758,
+                    "z": 875.0394897460938
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -2169.996337890625,
+                    "y": -68.83629608154297,
+                    "z": 610.9610595703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": -2099.044677734375,
+                    "y": 1.009401798248291,
+                    "z": 105.96884155273438
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 17.100000381469727,
+                    "y": 68.19999694824219,
+                    "z": 17.100000381469727
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "transform": {
+                "position": {
+                    "x": -2855.517822265625,
+                    "y": 26.954769134521484,
+                    "z": 775.371826171875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 17.100000381469727,
+                    "y": 68.19999694824219,
+                    "z": 17.100000381469727
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 150.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": -3557.6279296875,
+                    "y": -112.45030212402344,
+                    "z": -744.0399780273438
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.999985694885254,
+                    "y": 12.999985694885254,
+                    "z": 12.999985694885254
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 150.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": -3383.214111328125,
+                    "y": -112.45030212402344,
+                    "z": -958.0751342773438
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 14.74295425415039,
+                    "y": 14.74295425415039,
+                    "z": 14.74295425415039
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -2809.407470703125,
+                    "y": -90.01799011230469,
+                    "z": -44.454776763916016
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -3557.876220703125,
+                    "y": -84.3385009765625,
+                    "z": -742.9999389648438
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -3381.497802734375,
+                    "y": -83.7385025024414,
+                    "z": -957.0870971679688
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 83.5125961303711,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -2099.6689453125,
+                    "y": 84.55363464355469,
+                    "z": 106.31788635253906
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 81.73622131347656,
+            "int_properties": null,
+            "name": "e_starballoon",
+            "transform": {
+                "position": {
+                    "x": -2855.553955078125,
+                    "y": 108.68743896484375,
+                    "z": 775.3204956054688
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.199997901916504,
+                    "y": 9.199997901916504,
+                    "z": 9.199997901916504
+                }
+            },
+            "type_id": 34
         }
     ],
     "landmap": "lm_bridge",
@@ -328,14 +689,14 @@
         },
         {
             "custom_easing": false,
-            "height": -97.10002136230469,
+            "height": -74.40000915527344,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",
             "out_power": 2.4000000953674316,
             "radius": 447.4001159667969,
-            "x": -2875.64013671875,
-            "y": -36.32247543334961
+            "x": -2867.53955078125,
+            "y": -28.60005760192871
         },
         {
             "custom_easing": false,
@@ -369,6 +730,127 @@
             "radius": 521.4002685546875,
             "x": -281.14605712890625,
             "y": 1025.3199462890625
+        },
+        {
+            "custom_easing": false,
+            "height": 57.59999084472656,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 157.3999786376953,
+            "x": -2455.765869140625,
+            "y": 638.2144165039063
+        },
+        {
+            "custom_easing": false,
+            "height": 13.699999809265137,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 54.400001525878906,
+            "x": -2687.442138671875,
+            "y": 66.01842498779297
+        },
+        {
+            "custom_easing": false,
+            "height": 15.0,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 50.0,
+            "x": -2933.575927734375,
+            "y": -186.89373779296875
+        },
+        {
+            "custom_easing": false,
+            "height": 15.0,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 100.0,
+            "x": -2340.238037109375,
+            "y": 995.1566772460938
+        },
+        {
+            "custom_easing": false,
+            "height": 15.0,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 56.79999923706055,
+            "x": -2064.719482421875,
+            "y": 470.1134033203125
+        },
+        {
+            "custom_easing": false,
+            "height": -88.30001831054688,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 458.70001220703125,
+            "x": -3642.2333984375,
+            "y": -669.6177368164063
+        },
+        {
+            "custom_easing": false,
+            "height": 61.899993896484375,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 258.9000244140625,
+            "x": -3296.88623046875,
+            "y": -675.3670043945313
+        },
+        {
+            "custom_easing": false,
+            "height": 18.899988174438477,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 80.90001678466797,
+            "x": -3275.9873046875,
+            "y": -1069.947021484375
+        },
+        {
+            "custom_easing": false,
+            "height": 16.40001678466797,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 104.4999771118164,
+            "x": -3647.39501953125,
+            "y": -639.0608520507813
+        },
+        {
+            "custom_easing": false,
+            "height": -72.70001220703125,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 340.60003662109375,
+            "x": -3293.412109375,
+            "y": -1013.3517456054688
+        },
+        {
+            "custom_easing": false,
+            "height": -44.600006103515625,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 401.4998779296875,
+            "x": -3614.415283203125,
+            "y": -1334.5968017578125
         },
         {
             "frequency": -0.1150001585483551,

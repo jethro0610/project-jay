@@ -37,7 +37,7 @@ void JumpPad::Init(Entity::InitArgs args) {
     materials_[0].transparencyType = TRANSPARENCY_UNORDERED;
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
-    materials_[0].properties = SpecularFresnelProperties::Default();
+    materials_[0].specularProperties = SpecularFresnelProperties::Default();
     materials_[0].properties.color = glm::vec4(1.0f, 0.5f, 0.5f, 1.0f);
 
     pushbox_.top = 1.0f;
@@ -45,7 +45,7 @@ void JumpPad::Init(Entity::InitArgs args) {
     pushbox_.radius = 1.0f;
 
     overlapbox_.top = 2.0f;
-    overlapbox_.bottom = 0.0f;
+    overlapbox_.bottom = 2.0f;
     overlapbox_.radius = 2.0f;
 
     numSeeds_ = 0;

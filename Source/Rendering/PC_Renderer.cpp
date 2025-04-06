@@ -560,7 +560,7 @@ void Renderer::RenderUI(EntityList& entities, Clock& clock) {
     item.properties_.kerning = 0.35f;
     std::string itemString = "Item: " + GetItemName(player.item_);
     if (player.item_ != I_None)
-        itemString +=  + " - x" + std::to_string(player.numItem_) + " (LT to Use)";
+        itemString +=  + " [" + std::to_string(player.numItem_) + "/" + std::to_string(GetItemMax(player.item_)) + "] (LB to Use)";
     item = itemString;
     RenderText(item);
 }

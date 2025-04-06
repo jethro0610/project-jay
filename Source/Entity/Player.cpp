@@ -753,3 +753,16 @@ void Player::Boost(float boost, float retention) {
     velocity_ += normalize(planarVelocity) * boost;
     bonus_ = boost * (1.0f - retention);
 }
+
+void Player::AddItem(Item item, int amount) {
+    if (item != item_) {
+        item_ = item;
+        numItem_ = amount;
+    }
+    else
+        numItem_ += amount;
+
+    int max = GetItemMax(item_);
+    if (numItem_ > max)
+        numItem_ = max;
+}

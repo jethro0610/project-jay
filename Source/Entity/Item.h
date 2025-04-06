@@ -6,3 +6,4 @@ enum Item {
 };
 
 std::string GetItemName(Item item);
+int GetItemMax(Item item);

@@ -116,6 +116,11 @@ void Game::Update() {
         #endif
 
         FlushInputs_P();
+        #ifdef _DEBUG
+        // Prevent updates if the editor started editing here
+        if (editor_.IsActive())
+            continue;
+        #endif
 
         for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
@@ -132,6 +137,7 @@ void Game::Update() {
         vector_const<Overlap, EntityList::MAX> overlapList;
         for (int a = 0; a < EntityList::MAX; a++) {
             if (!entities_[a].alive_) continue;
+            if (entities_[a].hitlag_ > 0) continue;
             bool overlapA = entities_[a].GetFlag(Entity::EF_Overlap);
 
             for (int b = a + 1; b < EntityList::MAX; b++) {
@@ -139,6 +145,7 @@ void Game::Update() {
                     continue;
 
                 if (!entities_[b].alive_) continue;
+                if (entities_[b].hitlag_ > 0) continue;
                 if (!overlapA && !entities_[b].GetFlag(Entity::EF_Overlap)) continue;
 
                 Collision collision = Collision::GetCollision(

@@ -55,4 +55,5 @@ public:
 
     void EndHoming();
     void Boost(float boost, float retention = 0.0f);
+    void AddItem(Item item, int amount);
 };

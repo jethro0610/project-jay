@@ -123,7 +123,7 @@ void Entity::BaseUpdate() {
                 else
                     transform_.position.y = groundHeight_;
             }
-            else if (transform_.position.y < groundHeight_ && distanceToSurface > -20.0f)
+            else if (transform_.position.y < groundHeight_ && distanceToSurface > -2.0f)
                 transform_.position.y = groundHeight_;
         }
     }

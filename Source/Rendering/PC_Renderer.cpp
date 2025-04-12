@@ -213,12 +213,13 @@ void Renderer::PresentFrame() {
 }
 
 void Renderer::RenderMesh(
+    int defaultView,
     Mesh* mesh, 
     Material* material, 
-    InstanceBufferHandle* instanceBuffer, 
     glm::mat4* modelMatrix,
+    InstanceBufferHandle* instanceBuffer, 
+    int numInstances,
     GPUPose* pose,
-    int defaultView,
     DebugShaderType debugShaderType 
 ) {
     vec4 normalMult;
@@ -308,8 +309,9 @@ void Renderer::RenderMesh(
             SetTexturesFromMaterial(material, false);
         }
 
-        if (instanceBuffer != nullptr)
-            bgfx::setInstanceDataBuffer(instanceBuffer);
+        if (instanceBuffer != nullptr) {
+            bgfx::setInstanceDataBuffer(instanceBuffer, 0, numInstances);
+        }
 
         bgfx::setState(state);
         bgfx::setVertexBuffer(0, mesh->vertexBuffer);
@@ -373,7 +375,15 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
             bgfx::InstanceDataBuffer instanceBuffer;
             bgfx::allocInstanceDataBuffer(&instanceBuffer, offsets[i].size(), sizeof(vec4));
             memcpy(instanceBuffer.data, offsets[i].data(), sizeof(vec4) * offsets[i].size());
-            RenderMesh(&terrainLODs_->meshes[i], material, &instanceBuffer, nullptr, nullptr, TERRAIN_VIEW);
+            RenderMesh(
+                TERRAIN_VIEW,
+                &terrainLODs_->meshes[i], 
+                material, 
+                nullptr, 
+                &instanceBuffer, 
+                offsets[i].size(), 
+                nullptr
+            );
         }
     }
 }
@@ -408,7 +418,16 @@ void Renderer::RenderEntities(
             DebugShaderType debugShaderType = DS_Default;
             if (entity.editorTarget_->Selected())
                 debugShaderType = DS_Selected;
-            RenderMesh(mesh, material, nullptr, &matrix, skeletal ? &pose : nullptr, RENDER_VIEW, debugShaderType);
+            RenderMesh(
+                RENDER_VIEW, 
+                mesh, 
+                material, 
+                &matrix, 
+                nullptr, 
+                0,
+                skeletal ? &pose : nullptr, 
+                debugShaderType
+            );
             #endif 
         }
     }
@@ -429,14 +448,23 @@ void Renderer::RenderSpread(
             if (count == 0)
                 continue;
 
+            // TODO: Dynamic Vertex Buffer
             bgfx::InstanceDataBuffer instanceBuffer;
             bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(SpreadManager::RenderData));
+
             memcpy(instanceBuffer.data, chunk.renderData[t].data(), sizeof(SpreadManager::RenderData) * count);
 
             for (int m = 0; m < model->meshes.size(); m++) {
                 Mesh* mesh = &model->meshes[m];
                 Material* material = &materials[t][m];
-                RenderMesh(mesh, material, &instanceBuffer);
+                RenderMesh(
+                    RENDER_VIEW,
+                    mesh, 
+                    material, 
+                    nullptr,
+                    &instanceBuffer,
+                    count
+                );
             }
         }
     }
@@ -451,7 +479,14 @@ void Renderer::RenderSeed(SeedManager& seedManager, Material* material) {
     bgfx::allocInstanceDataBuffer(&instanceBuffer, count, sizeof(vec4));
     memcpy(instanceBuffer.data, seedManager.positions_.data(), sizeof(vec4) * count);
 
-    RenderMesh(quad_, material, &instanceBuffer);
+    RenderMesh(
+        RENDER_VIEW,
+        quad_, 
+        material, 
+        nullptr,
+        &instanceBuffer,
+        count
+    );
 }
 
 void Renderer::RenderParticles(ParticleManager& particleManager) {
@@ -478,7 +513,14 @@ void Renderer::RenderParticles(ParticleManager& particleManager) {
         bgfx::InstanceDataBuffer instanceBuffer;
         bgfx::allocInstanceDataBuffer(&instanceBuffer, emitter.particles_.size(), sizeof(Particle));
         memcpy(instanceBuffer.data, emitter.particles_.data(), sizeof(Particle) * emitter.particles_.size());
-        RenderMesh(quad_, &emitter.properties_.material, &instanceBuffer);
+        RenderMesh(
+            RENDER_VIEW,
+            quad_, 
+            &emitter.properties_.material, 
+            nullptr,
+            &instanceBuffer,
+            emitter.particles_.size()
+        );
     }
 }
 
@@ -497,12 +539,13 @@ void Renderer::RenderStaticTerrainModifiers(Terrain& terrain) {
             material.properties.color = node.color;
             matrix = node.transform.ToMatrix();
             RenderMesh(
+                RENDER_VIEW,
                 &DBG_nodeModel_->meshes[0],
                 &material,
-                nullptr,
                 &matrix,
                 nullptr,
-                RENDER_VIEW,
+                0,
+                nullptr,
                 node.selected ? DS_SelectedUnshaded : DS_Default
             );
         }
@@ -653,7 +696,7 @@ void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {
     cursorTransform.position = terrainCursor.position;
     cursorTransform.scale = vec3(terrainCursor.radius);
     mat4 cursorMatrix = cursorTransform.ToMatrix();
-    RenderMesh(terrainQuad_, &terrainCursorMaterial_, nullptr, &cursorMatrix);
+    RenderMesh(RENDER_VIEW, terrainQuad_, &terrainCursorMaterial_, &cursorMatrix);
 }
 #endif
 

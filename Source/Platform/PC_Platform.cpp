@@ -53,6 +53,7 @@ Platform::Platform() {
     init.resolution.width = 1920;
     init.resolution.height = 1080;
     init.resolution.reset = BGFX_RESET_NONE;
+    init.limits.transientVbSize = 8192 * 8192;
 
     wl_surface* surface = glfwGetWaylandWindow(window_);
     wl_egl_window* egl_window = wl_egl_window_create(surface, 1920, 1080);

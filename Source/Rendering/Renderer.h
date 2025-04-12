@@ -178,12 +178,13 @@ private:
         DS_SelectedFront
     };
     void RenderMesh(
+        int defaultView,
         Mesh* mesh, 
         Material* material, 
-        InstanceBufferHandle* instanceBuffer = nullptr, 
         glm::mat4* modelMatrix = nullptr,
+        InstanceBufferHandle* instanceBuffer = nullptr, 
+        int numInstances = 0,
         GPUPose* pose = nullptr,
-        int defaultView = RENDER_VIEW,
         DebugShaderType debugShader = DS_Default
     );
     void RenderEditor(Editor& editor);

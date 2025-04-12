@@ -16,4 +16,5 @@ public:
 
 private:
     DynamicTerrainModifier modifiers_[DYN_MOD_MAX];
+    bool modifiersInUse_[DYN_MOD_MAX];
 };

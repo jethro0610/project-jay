@@ -34,8 +34,11 @@ Entity& EntityList::operator[](int index) {
 void EntityList::Reset() {
     for (int i = 0; i < MAX; i++) {
         available_[i] = i;
-        rawEntities_[i].entity.alive_ = false;
-        rawEntities_[i].entity.DoDestroy();
+
+        if (rawEntities_[i].entity.alive_) {
+            rawEntities_[i].entity.alive_ = false;
+            rawEntities_[i].entity.DoDestroy();
+        }
     }
     availablePos_ = 0;
 }

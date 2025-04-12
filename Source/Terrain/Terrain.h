@@ -76,6 +76,14 @@ public:
         dynamicTerrainBubbles_.FreeModifier(bubble);
     }
 
+    DynamicTerrainModifierContainer dynamicTerrainNegatives_;
+    DynamicTerrainModifier* CreateNegative() {
+        return dynamicTerrainNegatives_.RequestAvailableModifier();
+    }
+    void FreeNegative(DynamicTerrainModifier* negative) {
+        dynamicTerrainNegatives_.FreeModifier(negative);
+    }
+
 private:
     ResourceManager& resourceManager_;
     glm::vec2 terrainMap_[TerrainConsts::RESOLUTION][TerrainConsts::RESOLUTION];

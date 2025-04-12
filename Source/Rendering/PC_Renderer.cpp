@@ -63,6 +63,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_worldText_ = bgfx::createUniform("u_worldText", bgfx::UniformType::Vec4, 2);
     u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
+    u_dynamicTerrainNegatives_ = bgfx::createUniform("u_dynamicTerrainNegatives", bgfx::UniformType::Mat4, DYN_MOD_MAX);
 
     SetLightDirection(normalize(vec3(0.75f, -1.0f, -0.75f)));
 
@@ -337,7 +338,11 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
     mat4 transposeModifiers[DYN_MOD_MAX];
     for (int i = 0; i < DYN_MOD_MAX; i++)
         transposeModifiers[i] = transpose(terrain.dynamicTerrainBubbles_[i]);
-    bgfx::setUniform(u_dynamicTerrainBubbles_, transposeModifiers);
+    bgfx::setUniform(u_dynamicTerrainBubbles_, transposeModifiers, DYN_MOD_MAX);
+
+    for (int i = 0; i < DYN_MOD_MAX; i++)
+        transposeModifiers[i] = transpose(terrain.dynamicTerrainNegatives_[i]);
+    bgfx::setUniform(u_dynamicTerrainNegatives_, transposeModifiers, DYN_MOD_MAX);
 
     const float MAX_DIST_TO_CAMERA = 6144.0f;
     int radius = maxRadius / TerrainConsts::MESH_SIZE;

@@ -38,6 +38,7 @@ void main() {
     DITHERDISCARD(fade);
 
     float clampEdgeDist = clamp(v_edgeDistance.x * 0.1f, 0.0f, 1.0f);
+    clampEdgeDist *= clampEdgeDist;
 
     vec3 color = texture2D(s_color, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     float macroStrength = texture2D(s_variation, vec2(v_wposition.x, v_wposition.z) * 0.001f).r;

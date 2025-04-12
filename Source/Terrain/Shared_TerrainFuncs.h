@@ -3,6 +3,7 @@
 #pragma once
 #include "Terrain/Terrain.h"
 #include "Helpers/Shared_Ease.h"
+#include "Logging/Logger.h"
 #include "Shared_DynamicTerrainModifier.h"
 
 #define TERRAIN_TYPE const Terrain&
@@ -12,6 +13,7 @@
 #define SAMPLETERRAINMAP(pos, accuracy) terrain.SampleTerrainMap(pos, accuracy)
 #define INLINE inline
 #define DYN_BUBBLES terrain.dynamicTerrainBubbles_
+#define DYN_NEGATIVES terrain.dynamicTerrainNegatives_
 using namespace glm;
 
 #else
@@ -19,6 +21,7 @@ using namespace glm;
 #include <Shared_DynamicTerrainModifier.h>
 #include <Shared_Ease.h>
 uniform mat4 u_dynamicTerrainBubbles[DYN_MOD_MAX];
+uniform mat4 u_dynamicTerrainNegatives[DYN_MOD_MAX];
 SAMPLER2D(s_terrainMap, 15);
 
 #define TERRAIN_TYPE int
@@ -28,10 +31,25 @@ SAMPLER2D(s_terrainMap, 15);
 #define SAMPLETERRAINMAP(pos, accuracy) texture2DLod(s_terrainMap, pos / TERRAIN_RANGE + vec2(0.5f, 0.5f), 0)
 #define INLINE 
 #define DYN_BUBBLES u_dynamicTerrainBubbles
+#define DYN_NEGATIVES u_dynamicTerrainNegatives
 #endif
+
+INLINE float smax(float a, float b, float k) {
+    return log(exp(k * a) + exp(k * b)) / k;
+}
 
 INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
+
+    #pragma unroll
+    for (int i = 0; i < DYN_MOD_MAX; i++) {
+        if (!DYN_MOD_ACTIVE(DYN_NEGATIVES[i])) continue;
+
+        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Y(DYN_NEGATIVES[i]));
+        float dist = distance(dynModPos, position);
+        dist -= DYN_MOD_RADIUS(DYN_NEGATIVES[i]);
+        pos.x = smax(pos.x, -dist, 0.01f);
+    }
 
     #pragma unroll
     for (int i = 0; i < DYN_MOD_MAX; i++) {
@@ -48,7 +66,7 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
     float t = pos.x / 32.0f;
     t = clamp(t, 0.0f, 1.0f);
 
-    pos.y -= (t * t) * 256.0f;
+    pos.y -= (t * t * t) * 256.0f;
     return pos;
 }
 

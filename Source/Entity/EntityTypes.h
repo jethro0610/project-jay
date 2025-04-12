@@ -5,7 +5,6 @@
 #include "CometSpawner.h"
 #include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
-#include "JumpPad.h"
 #include "MeteorBox.h"
 #include "Mower.h"
 #include "MultiHitPod.h"
@@ -27,13 +26,15 @@
 #include "Pinata.h"
 #include "Bird.h"
 #include "SnakeHead.h"
-#include "Entity.h"
 #include "SnakeSegment.h"
 #include "SnakePod.h"
 #include "ItemContainer.h"
 #include "Player.h"
 #include "ItemToken.h"
+#include "JumpPad.h"
+#include "Entity.h"
 #include "Segment.h"
+#include "Negator.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -70,4 +71,5 @@
 	ENTITYEXP(SnakePod, snakepod, 31) \
 	ENTITYEXP(ItemContainer, itemcontainer, 32) \
 	ENTITYEXP(ItemToken, itemtoken, 33) \
-	ENTITYEXP(Segment, segmentBubble, 34)
+	ENTITYEXP(Segment, segment, 34) \
+	ENTITYEXP(Negator, negator, 35)

@@ -1,7 +1,6 @@
 #include "Negator.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
-#include "Time/Time.h"
 using namespace glm;
 
 EntityDependendies Negator::GetStaticDependencies() {
@@ -14,13 +13,15 @@ EntityProperties Negator::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_radius", &DYN_MOD_RADIUS(*negativeModifier_) }
+            {"p_radius", &DYN_MOD_RADIUS(*negativeModifier_) },
+            {"p_k", &DYN_MOD_VALUE(*negativeModifier_) }
         },
         {
             // Ints
         },
         {
             // Bools
+            {"p_active", &initialActive_}
         }
     };
 }
@@ -38,29 +39,35 @@ void Negator::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    initialActive_ = false;
+
     negativeModifier_ = terrain_->CreateNegative();
     DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
     DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, false);
+    DYN_MOD_VALUE(*negativeModifier_) = 1.0f;
+    DYN_MOD_RADIUS(*negativeModifier_) = 100.0f;
 }
 
 void Negator::Start() {
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, true);
+    DYN_MOD_SET_ACTIVE(*negativeModifier_, initialActive_);
     DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
     DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
 }
 
 void Negator::Update() {
-    DYN_MOD_RADIUS(*negativeModifier_) = 100.0f + sin(GlobalTime::GetTime()) * 20.0f;
+    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
+    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
 }
+
+#ifdef _DEBUG
+void Negator::EditorUpdate() {
+    DYN_MOD_SET_ACTIVE(*negativeModifier_, DBG_preview_);
+    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
+    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
+}
+#endif
 
 void Negator::OnDestroy() {
     terrain_->FreeNegative(negativeModifier_);
-}
-
-void Negator::EditorUpdate() {
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, true);
-    DYN_MOD_VALUE(*negativeModifier_) = 20.0f;
-    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
-    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
 }

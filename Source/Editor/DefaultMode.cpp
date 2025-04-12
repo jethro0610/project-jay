@@ -85,6 +85,10 @@ void DefaultMode::Update() {
     if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.HasTarget()) {
         target_.Destroy();
     }
+
+    if (platform_.pressedKeys_['P'] && target_.IsEntity()) {
+        target_.TogglePreview();
+    }
 }
 
 void DefaultMode::CameraUpdate() {

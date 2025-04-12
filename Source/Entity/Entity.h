@@ -170,6 +170,10 @@ public:
     int hitlag_;
     int hurtCooldown_;
 
+    #ifdef _DEBUG
+    bool DBG_preview_;
+    #endif
+
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);
     void CopyProperties(Entity* from);
@@ -256,6 +260,9 @@ private:
         void SetScale(const glm::vec4& ref, const glm::vec4& delta) override;
 
         EntityProperties GetProperties() override { return entity_->GetProperties(); }
+
+        bool GetPreview() override { return entity_->DBG_preview_; }
+        void SetPreview(bool value) override { entity_->DBG_preview_ = value; }
 
         bool TerrainAlignable() override { return true; }
         bool Selectable() override { return entity_->alive_; }

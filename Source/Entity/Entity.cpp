@@ -72,6 +72,10 @@ void Entity::Init(
     hitlag_ = 0;
     hurtCooldown_ = 0;
 
+    #ifdef _DEBUG
+    DBG_preview_ = true;
+    #endif
+
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
 
     switch(typeId_) {

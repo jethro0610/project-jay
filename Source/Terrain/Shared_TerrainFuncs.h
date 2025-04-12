@@ -48,7 +48,7 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
         vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Y(DYN_NEGATIVES[i]));
         float dist = distance(dynModPos, position);
         dist -= DYN_MOD_RADIUS(DYN_NEGATIVES[i]);
-        pos.x = smax(pos.x, -dist, 0.01f);
+        pos.x = smax(pos.x, -dist, DYN_MOD_VALUE(DYN_NEGATIVES[i]));
     }
 
     #pragma unroll

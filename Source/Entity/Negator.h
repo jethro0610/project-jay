@@ -7,7 +7,6 @@ public:
     void Init(InitArgs args);
     void Start();
     void OnDestroy();
-    void EditorUpdate();
     void Update();
 
     static TypeID TYPEID;
@@ -16,4 +15,9 @@ public:
     EntityProperties GetStaticProperties();
 
     DynamicTerrainModifier* negativeModifier_;
+    bool initialActive_;
+
+    #ifdef _DEBUG
+    void EditorUpdate();
+    #endif
 };

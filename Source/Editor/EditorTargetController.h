@@ -171,4 +171,25 @@ public:
         target_ = nullptr;
         name_ = "";
     }
+
+    void SetPreview(bool value) {
+        if (target_ == nullptr)
+            return;
+
+        target_->SetPreview(value);
+    }
+
+    bool GetPreview(bool value) {
+        if (target_ == nullptr)
+            return false;
+
+        return target_->GetPreview();
+    }
+
+    void TogglePreview() {
+        if (target_ == nullptr)
+            return;
+
+        target_->TogglePreview();
+    }
 };

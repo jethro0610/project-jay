@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <string>
-#include <string.h>
 #include <unordered_map>
 #include "Entity/EntityProperties.h"
 
@@ -35,6 +34,12 @@ public:
     virtual float GetScalarDelta(char id) { return 1.0f; };
     virtual void SetScalar(char id, float value) {};
     virtual std::unordered_map<char, std::string> GetScalarNames() { return {}; }
+
+    virtual bool GetPreview() { return true; };
+    virtual void SetPreview(bool value) {};
+    void TogglePreview() {
+        SetPreview(!GetPreview());
+    };
 
     virtual void SetFlag(char id) {};
     virtual std::vector<char> GetFlagIDs() { return {}; }

@@ -16,6 +16,10 @@ public:
     float jumpStregth_;
     Entity* lastOverlappedEntity_;
 
+    int numSegments_;
+    int segmentId_;
+    int minSegments_;
+
     void Update(); 
     void OnOverlap(Entity* overlappedEntity);
     void OnHitlagEnd();

@@ -114,43 +114,40 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             entityTransform.position.y = terrain_.GetDistance(entityTransform.position).y + floorDist;
         }
 
+        EntityPropertiesAssigner assigner;
+        if (entityData.contains("float_properties") && !entityData["float_properties"].is_null()) {
+            for (const auto& floatProperty : entityData["float_properties"].items())
+                assigner.SetFloat(floatProperty.key(), floatProperty.value()); 
+        }
+        if (entityData.contains("int_properties") && !entityData["int_properties"].is_null()) {
+            for (const auto& intProperty : entityData["int_properties"].items()) {
+                assigner.SetInt(intProperty.key(), intProperty.value()); 
+            }
+        }
+        if (entityData.contains("bool_properties") && !entityData["bool_properties"].is_null()) {
+            for (const auto& boolProperty : entityData["bool_properties"].items())
+                assigner.SetBool(boolProperty.key(), boolProperty.value()); 
+        }
+
         #ifndef _DEBUG
         entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, editorLoad);
         #else
         TypeID typeIdFromName = entity->GetTypeIDFromName(entityData["name"]);
         if (entityData.contains("type_id"))
-            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, editorLoad);
+            entity = &entities_.CreateEntity(entityData["type_id"], entityTransform, true, &assigner);
         else if (typeIdFromName != -1)
-            entity = &entities_.CreateEntity(typeIdFromName, entityTransform, editorLoad);
+            entity = &entities_.CreateEntity(typeIdFromName, entityTransform, true, &assigner);
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
+    }
 
-        EntityProperties properties = entity->GetProperties();
-
-        if (entityData.contains("float_properties") && !entityData["float_properties"].is_null()) {
-            for (auto& pair : properties.floats) {
-                if (entityData["float_properties"][pair.first].is_null())
-                    continue;
-
-                *pair.second = entityData["float_properties"][pair.first];
-            }
-        }
-        if (entityData.contains("int_properties") && !entityData["int_properties"].is_null()) {
-            for (auto& pair : properties.ints) {
-                if (entityData["int_properties"][pair.first].is_null())
-                    continue;
-
-                *pair.second = entityData["int_properties"][pair.first];
-            }
-        }
-        if (entityData.contains("bool_properties") && !entityData["bool_properties"].is_null()) {
-            for (auto& pair : properties.bools) {
-                if (entityData["bool_properties"][pair.first].is_null())
-                    continue;
-
-                *pair.second = entityData["bool_properties"][pair.first];
-            }
+    if (!editorLoad) {
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = entities_[i];
+            if (!entity.alive_) 
+                continue;
+            entity.DoStart();    
         }
     }
 

@@ -120,7 +120,7 @@ public:
     void Init(
         InitArgs args
     );
-    void Start() {};
+    void DoStart();
 
     static TypeID TYPEID;
     const char* GetName();
@@ -214,6 +214,7 @@ public:
     Terrain* terrain_;
 
 private:
+    void Start() {};
     void PreUpdate() {};
     void Update() {};
     void RenderUpdate() {};

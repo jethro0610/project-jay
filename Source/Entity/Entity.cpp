@@ -81,6 +81,14 @@ void Entity::Init(
     }
 }
 
+void Entity::DoStart() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->Start(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
     uint32_t bit = 1UL << flag; 
 

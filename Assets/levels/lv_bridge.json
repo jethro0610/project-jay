@@ -32,7 +32,10 @@
             },
             "int_properties": {
                 "p_cooldown": 0,
-                "p_num_seeds": 0
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
             },
             "name": "e_jumppad",
             "transform": {
@@ -61,7 +64,10 @@
             },
             "int_properties": {
                 "p_cooldown": 0,
-                "p_num_seeds": 0
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
             },
             "name": "e_jumppad",
             "transform": {
@@ -90,7 +96,10 @@
             },
             "int_properties": {
                 "p_cooldown": 0,
-                "p_num_seeds": 0
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
             },
             "name": "e_jumppad",
             "transform": {
@@ -152,7 +161,7 @@
             "transform": {
                 "position": {
                     "x": -1892.2459716796875,
-                    "y": 15.308612823486328,
+                    "y": 15.342588424682617,
                     "z": 297.74847412109375
                 },
                 "rotation": {
@@ -255,8 +264,10 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "int_properties": {
+                "p_t_seg_id": 0
+            },
+            "name": "e_segment",
             "transform": {
                 "position": {
                     "x": -2274.35009765625,
@@ -279,8 +290,10 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "int_properties": {
+                "p_t_seg_id": 0
+            },
+            "name": "e_segment",
             "transform": {
                 "position": {
                     "x": -2169.996337890625,
@@ -309,7 +322,7 @@
             "transform": {
                 "position": {
                     "x": -2099.044677734375,
-                    "y": 1.009401798248291,
+                    "y": 0.8813794255256653,
                     "z": 105.96884155273438
                 },
                 "rotation": {
@@ -357,7 +370,10 @@
             },
             "int_properties": {
                 "p_cooldown": 0,
-                "p_num_seeds": 0
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
             },
             "name": "e_jumppad",
             "transform": {
@@ -386,7 +402,10 @@
             },
             "int_properties": {
                 "p_cooldown": 0,
-                "p_num_seeds": 0
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
             },
             "name": "e_jumppad",
             "transform": {
@@ -411,8 +430,10 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "int_properties": {
+                "p_t_seg_id": 0
+            },
+            "name": "e_segment",
             "transform": {
                 "position": {
                     "x": -2809.407470703125,
@@ -435,8 +456,10 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "int_properties": {
+                "p_t_seg_id": 0
+            },
+            "name": "e_segment",
             "transform": {
                 "position": {
                     "x": -3557.876220703125,
@@ -459,8 +482,10 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "int_properties": {
+                "p_t_seg_id": 0
+            },
+            "name": "e_segment",
             "transform": {
                 "position": {
                     "x": -3381.497802734375,
@@ -482,15 +507,23 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
-            "floor_dist": 83.5125961303711,
-            "int_properties": null,
-            "name": "e_starballoon",
+            "float_properties": {
+                "p_jump_strength": 200.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": 0,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
             "transform": {
                 "position": {
-                    "x": -2099.6689453125,
-                    "y": 84.55363464355469,
-                    "z": 106.31788635253906
+                    "x": -1842.22412109375,
+                    "y": 36.519630432128906,
+                    "z": 126.14041137695313
                 },
                 "rotation": {
                     "x": 0.0,
@@ -498,37 +531,12 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 9.199997901916504,
-                    "y": 9.199997901916504,
-                    "z": 9.199997901916504
+                    "x": 11.699997901916504,
+                    "y": 11.699997901916504,
+                    "z": 11.699997901916504
                 }
             },
-            "type_id": 34
-        },
-        {
-            "bool_properties": null,
-            "float_properties": null,
-            "floor_dist": 81.73622131347656,
-            "int_properties": null,
-            "name": "e_starballoon",
-            "transform": {
-                "position": {
-                    "x": -2855.553955078125,
-                    "y": 108.68743896484375,
-                    "z": 775.3204956054688
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 9.199997901916504,
-                    "y": 9.199997901916504,
-                    "z": 9.199997901916504
-                }
-            },
-            "type_id": 34
+            "type_id": 16
         }
     ],
     "landmap": "lm_bridge",
@@ -851,6 +859,28 @@
             "radius": 401.4998779296875,
             "x": -3614.415283203125,
             "y": -1334.5968017578125
+        },
+        {
+            "custom_easing": false,
+            "height": -31.30004119873047,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 196.00001525878906,
+            "x": -2238.1630859375,
+            "y": -19.235050201416016
+        },
+        {
+            "custom_easing": false,
+            "height": 30.900007247924805,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 181.00006103515625,
+            "x": -1840.31494140625,
+            "y": 128.67904663085938
         },
         {
             "frequency": -0.1150001585483551,

@@ -33,7 +33,7 @@
 #include "ItemContainer.h"
 #include "Player.h"
 #include "ItemToken.h"
-#include "StarBalloon.h"
+#include "Segment.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -70,4 +70,4 @@
 	ENTITYEXP(SnakePod, snakepod, 31) \
 	ENTITYEXP(ItemContainer, itemcontainer, 32) \
 	ENTITYEXP(ItemToken, itemtoken, 33) \
-	ENTITYEXP(StarBalloon, starballoon, 34)
+	ENTITYEXP(Segment, segmentBubble, 34)

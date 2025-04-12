@@ -14,6 +14,7 @@ class Terrain;
 struct EntityUnion;
 class ParticleManager;
 class ResourceManager;
+class EntityPropertiesAssigner;
 
 class EntityList {
 public:
@@ -32,7 +33,12 @@ public:
     );
 
     Entity& operator[](int index);
-    Entity& CreateEntity(TypeID type, const Transform& transform = Transform(), bool skipStart = false);
+    Entity& CreateEntity(
+        TypeID type, 
+        const Transform& transform = Transform(), 
+        bool skipStart = false, 
+        EntityPropertiesAssigner* propertiesAssigner = nullptr
+    );
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

@@ -1,13 +1,14 @@
 #pragma once
 #include "Entity.h"
 
-class StarBalloon : public Entity {
+class Segment : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_starballoon"; }
+    static const char* GetStaticName() { return "e_segment"; }
     static EntityDependendies GetStaticDependencies();
+    EntityProperties GetStaticProperties();
 
     void OnOverlap(Entity* overlappedEntity);
 
@@ -16,4 +17,7 @@ public:
     void Update();
     void Start();
     void OnHitlagEnd();
+
+    int targetSegId_;
+    int* targetSegments_;
 };

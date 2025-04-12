@@ -1,17 +1,31 @@
-#include "StarBalloon.h"
+#include "Segment.h"
 #include "Resource/ResourceManager.h"
 #include "Player.h"
 #include "Time/Time.h"
 #include "Helpers/Random.h"
+#include "EntityList.h"
 using namespace glm;
 
-EntityDependendies StarBalloon::GetStaticDependencies() {
+EntityDependendies Segment::GetStaticDependencies() {
     return {
         "st_tpillar"
     };
 }
 
-void StarBalloon::Init(Entity::InitArgs args) {
+EntityProperties Segment::GetStaticProperties() {
+    return {
+        {
+        },
+        {
+            {"p_t_seg_id", &targetSegId_},
+        },
+        {
+
+        }
+    };
+}
+
+void Segment::Init(Entity::InitArgs args) {
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_Overlap, true);
 
@@ -31,17 +45,37 @@ void StarBalloon::Init(Entity::InitArgs args) {
     overlapbox_.bottom = 2.0f;
     overlapbox_.radius = 2.0f;
     timeOffset_ = RandomFloatRange(0.0f, 60.0f);
+    targetSegments_ = nullptr;
+    targetSegId_ = -1;
 }
 
-void StarBalloon::Start() {
+void Segment::Start() {
     originalY_ = transform_.position.y;
+    if (targetSegId_ == -1)
+        return;
+
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = (*entities_)[i];
+        if (!entity.alive_) 
+            continue;
+
+        int* segId = entity.GetProperties().GetInt("p_seg_id");
+        if (segId == nullptr)
+            continue;
+        if (*segId != targetSegId_)
+            continue;
+
+        targetSegments_ = entity.GetProperties().GetInt("p_seg_count");
+        int* minSegments = entity.GetProperties().GetInt("p_seg_min");
+        (*minSegments )++;
+    }
 }
 
-void StarBalloon::Update() {
+void Segment::Update() {
     transform_.position.y = originalY_ + sin(GlobalTime::GetTime() * 1.5f + timeOffset_) * 3.0f;
 }
 
-void StarBalloon::OnOverlap(Entity* overlappedEntity) {
+void Segment::OnOverlap(Entity* overlappedEntity) {
     if (overlappedEntity->typeId_ != Player::TYPEID)
         return;
 
@@ -50,6 +84,9 @@ void StarBalloon::OnOverlap(Entity* overlappedEntity) {
     stun_ = true;
 }
 
-void StarBalloon::OnHitlagEnd() {
+void Segment::OnHitlagEnd() {
     destroy_ = true;
+
+    if (targetSegId_ != -1)
+        (*targetSegments_)++;
 }

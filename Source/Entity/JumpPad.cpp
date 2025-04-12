@@ -20,7 +20,10 @@ EntityProperties JumpPad::GetStaticProperties() {
         },
         {
             {"p_num_seeds", &numSeeds_},
-            {"p_cooldown", &cooldown_}
+            {"p_cooldown", &cooldown_},
+            {"p_seg_id", &segmentId_},
+            {"p_seg_count", &numSegments_},
+            {"p_seg_min", &minSegments_},
         },
         {
 
@@ -53,6 +56,10 @@ void JumpPad::Init(Entity::InitArgs args) {
     cooldown_ = 0;
 
     timer_ = 0;
+
+    segmentId_ = -1;
+    numSegments_ = 0;
+    minSegments_ = 0;
 }
 
 void JumpPad::Update() {
@@ -69,6 +76,8 @@ void JumpPad::Update() {
 
 void JumpPad::OnOverlap(Entity* overlappedEntity) {
     if (timer_ > 0)
+        return;
+    if (numSegments_ < minSegments_)
         return;
 
     overlappedEntity->skipGroundCheck_ = true;

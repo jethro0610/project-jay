@@ -27,7 +27,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     width_ = 1920;
     height_ = 1080;
 
-    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 4.0f, 4096.0f);
+    projectionMatrix_ = perspectiveFovRH_ZO(radians(60.0f), (float)renderWidth_, (float)renderHeight_, 4.0f, 6144.0f);
     shadowProjectionMatrix_ = orthoRH_ZO(
         -ShadowConstants::SHADOW_RANGE, 
         ShadowConstants::SHADOW_RANGE, 
@@ -344,7 +344,7 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
         transposeModifiers[i] = transpose(terrain.dynamicTerrainNegatives_[i]);
     bgfx::setUniform(u_dynamicTerrainNegatives_, transposeModifiers, DYN_MOD_MAX);
 
-    const float MAX_DIST_TO_CAMERA = 6144.0f;
+    const float MAX_DIST_TO_CAMERA = 8192.0f;
     int radius = maxRadius / TerrainConsts::MESH_SIZE;
     radius += 1;
 

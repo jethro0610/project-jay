@@ -39,6 +39,7 @@ void Renderer::Render(
 void Renderer::RenderEdit(
     EntityList& entities,
     Editor& editor,
+    Level& level,
     LevelProperties& levelProperties,
     SpreadManager& spreadManager,
     Terrain& terrain,
@@ -49,7 +50,7 @@ void Renderer::RenderEdit(
 
     RenderTerrain(terrain, &levelProperties.terrainMaterial, TerrainConsts::RANGE);
     RenderStaticTerrainModifiers(terrain);
-    RenderEntityEditorNodes(entities);
+    RenderEditorNodes(level);
     RenderEntities(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderTerrainCursor(terrainCursor);

@@ -21,6 +21,10 @@ public:
     EditorTarget() : selected_(false) {}
     virtual std::string GetName() = 0;
 
+    virtual bool CanLabel() { return false; }
+    virtual std::string GetLabel() { return ""; }
+    virtual void SetLabel(const std::string& label) { }
+
     virtual glm::vec3 GetPosition() { return glm::vec3(0.0f); };
     virtual void SetPosition(const glm::vec3& pos) {};
 
@@ -50,7 +54,10 @@ public:
 
     virtual EditorTarget* Clone() { return nullptr; };
 
-    virtual void Destroy() {};
+    void DoDestroy() {
+        selected_ = false;
+        Destroy(); 
+    }
 
     virtual bool TerrainAlignable() { return false; }
     virtual bool IsEntity() { return false; }
@@ -59,5 +66,10 @@ public:
     virtual bool Selectable() { return true; }
     virtual bool Clonable() { return false; }
     bool Selected() { return selected_; }
+
+    protected:
+    virtual void Destroy() {
+        selected_ = false;
+    };
 };
 

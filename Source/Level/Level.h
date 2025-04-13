@@ -1,5 +1,7 @@
 #pragma once
 #include "LevelProperties.h"
+#include "Editor/EditorTarget.h"
+#include "NavPoint.h"
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -28,6 +30,10 @@ public:
     bool loaded_;
 
     #ifdef _DEBUG
+    static constexpr int MAX_NAVPOINTS = 128;
+    NavPoint navpoints_[MAX_NAVPOINTS];
+    NavPoint& CreateNavpoint(const glm::vec3& position = glm::vec3(0.0f), const std::string& label = "");
+
     bool DBG_persistView_;
     std::string DBG_name_;
     void SaveGlobals(const std::string& name, const std::string& suffix = "");

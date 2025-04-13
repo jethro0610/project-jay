@@ -13,6 +13,7 @@
 #include "Text/WorldText.h"
 #include "Editor/Editor.h"
 #include "Entity/Player.h"
+#include "Level/Level.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -681,16 +682,39 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.notification_.text_);
 }
 
-void Renderer::RenderEntityEditorNodes(EntityList& entities) {
+void Renderer::RenderEditorNodes(Level& level) {
     Transform transform;
-    transform.scale = vec3(4.0f);
+    transform.scale = vec3(20.0f, 20.0f, 20.0f);
     mat4 matrix;
     Material material; 
+    material = DBG_nodeMaterial_;
+    material.properties.color = vec4(1.0f, 1.0f, 1.0f, 0.5f);
 
-    for (int i = 0; i < EntityList::MAX; i++) {
-        if (!entities[i].alive_) continue;
-        Entity& entity = entities[i];
+    for (int i = 0; i < Level::MAX_NAVPOINTS; i++) {
+        if (!level.navpoints_[i].active_)
+            continue;
+
+        transform.position = level.navpoints_[i].position_;
+        matrix = transform.ToMatrix();
+        RenderMesh(
+            RENDER_VIEW,
+            &DBG_nodeModel_->meshes[0],
+            &material,
+            &matrix,
+            nullptr,
+            0,
+            nullptr,
+            level.navpoints_[i].target_.Selected() ? DS_SelectedUnshaded : DS_Default
+        );
+        WorldText labelText;
+        labelText.SetString(level.navpoints_[i].label_);
+        labelText.properties_.position = level.navpoints_[i].position_ + vec3(0.0f, 50.0f, 0.0f);
+        labelText.properties_.size = 100.0f;
+        labelText.properties_.vAlignment = Alignment::BOTTOM;
+        labelText.properties_.hAlignment = Alignment::CENTER;
+        RenderWorldText(labelText);
     }
+
 }
 
 void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {

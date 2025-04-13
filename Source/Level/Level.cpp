@@ -2,6 +2,7 @@
 #include "Game/Clock.h"
 #include "Helpers/LoadHelpers.h"
 #include "Helpers/MapCheck.h"
+#include "Helpers/Assert.h"
 #include "Spread/SpreadManager.h"
 #include "Seed/SeedManager.h"
 #include "Terrain/Terrain.h"
@@ -71,6 +72,12 @@ Level::Level(
     properties_.spreadMaterials[SpreadType_Weed][1].shadowShader = resourceManager.GetShader("vs_spread_s", "fs_depth_s");
     properties_.spreadMaterials[SpreadType_Weed][1].numTextures = 0;
     properties_.spreadMaterials[SpreadType_Weed][1].properties.color = glm::vec4(0.85f, 1.0f, 0.5f, 1.0f);
+
+    #ifdef _DEBUG
+    for (int i = 0; i < MAX_NAVPOINTS; i++) {
+        navpoints_[i].active_ = false;
+    }
+    #endif
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain, bool editorLoad) {
@@ -103,6 +110,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
         terrain_.GenerateTerrainDistances();
         terrain_.GenerateTerrainHeights();
+    }
+
+    if (levelData.contains("navpoints")) {
+        for (auto& navpointJson : levelData["navpoints"]) {
+            NavPoint& navpoint = CreateNavpoint(GetVec3(navpointJson["position"]), navpointJson["label"]);
+        }
     }
     #endif
 
@@ -140,6 +153,13 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         else
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
+
+        #ifdef _DEBUG
+        if (entityData.contains("label") && !entityData["label"].is_null()) {
+            std::string label = entityData["label"];
+            strcpy(entity->label_, label.c_str());
+        }
+        #endif
     }
 
     if (!editorLoad) {
@@ -163,6 +183,20 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 }
 
 #ifdef _DEBUG
+NavPoint& Level::CreateNavpoint(const glm::vec3& position, const std::string& label) {
+    for (int i = 0; i < MAX_NAVPOINTS; i++) {
+        if (navpoints_[i].active_)
+            continue;
+
+        navpoints_[i].active_ = true;
+        navpoints_[i].position_ = position;
+        navpoints_[i].label_ = label;
+        return navpoints_[i];
+    }
+    ASSERT(false, "Ran out of navpoints");
+    return navpoints_[0];
+}
+
 void Level::Save(const std::string& name, const std::string& suffix) {
     DBG_name_ = name;
 
@@ -212,6 +246,9 @@ void Level::Save(const std::string& name, const std::string& suffix) {
             boolProperties[pair.first] = *pair.second;    
         entityData["bool_properties"] = boolProperties;
 
+        if (strcmp(entity.label_, "") != 0)
+            entityData["label"] = entity.label_;
+
         levelData["entities"].push_back(entityData);
     }
 
@@ -247,6 +284,19 @@ void Level::Save(const std::string& name, const std::string& suffix) {
         }}
     }
 
+    for (int i = 0; i < MAX_NAVPOINTS; i++) {
+        if (!navpoints_[i].active_)
+            continue;
+
+        nlohmann::json navpointsJson;
+
+        navpointsJson["label"] = navpoints_[i].label_;
+        navpointsJson["position"]["x"] = navpoints_[i].position_.x;
+        navpointsJson["position"]["y"] = navpoints_[i].position_.y;
+        navpointsJson["position"]["z"] = navpoints_[i].position_.z;
+        levelData["navpoints"].push_back(navpointsJson);
+    }
+
     std::ofstream assetLevelFile("../Assets/levels/" + name + suffix + ".json");
     assetLevelFile << std::setw(4) << levelData << std::endl;
     assetLevelFile.close();
@@ -260,6 +310,11 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 #endif
 
 void Level::Clear(bool clearTerrain) {
+    #ifdef _DEBUG
+    for (int i = 0; i < MAX_NAVPOINTS; i++) {
+        navpoints_[i].active_ = false;
+    }
+    #endif
     entities_.Reset();
     particleManager_.Reset();
     spreadManager_.Reset();

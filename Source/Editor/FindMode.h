@@ -6,7 +6,7 @@ class FindMode : public EditorMode {
 public:
     FindMode(EditorModeArgs args); 
     int GetBinding() override { return 'F'; }
-    std::string GetName() override { return "Find Entity"; };
+    std::string GetName() override { return "Find"; };
     void OnStart() override;
     void OnEnd() override;
     ConfirmBehavior OnConfirm() override;

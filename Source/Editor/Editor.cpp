@@ -104,6 +104,10 @@ EXPANDMODES
         }
     }
 
+    for (int i = 0; i < Level::MAX_NAVPOINTS; i++) {
+        targets_.push_back(&level.navpoints_[i].target_);
+    }
+
     lastCameraTransform_ = camera_.transform_;
 }
 
@@ -255,6 +259,7 @@ void Editor::Update() {
         renderer_.RenderEdit(
             entities_, 
             *this,
+            level_,
             level_.properties_,
             spreadManager_,
             terrain_,

@@ -50,6 +50,12 @@ public:
     public:
         std::string GetName() override { return TerrainBubble::NAME; }
 
+        bool CanLabel() override { return true; }
+        std::string GetLabel() override { return bubble_->label_; }
+        void SetLabel(const std::string& label) override { 
+            strcpy(bubble_->label_, label.c_str());
+        }
+
         glm::vec3 GetPosition() override;
         void SetPosition(const glm::vec3 &pos) override;
 

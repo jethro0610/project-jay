@@ -15,6 +15,7 @@ public:
     }
 
     int id_;
+    char label_[32];
     bool active_;
     bool destroy_;
     vector_const<EditorTarget*, 8> editorTargets_;

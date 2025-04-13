@@ -15,7 +15,7 @@ EditorMode(args) {
 
 void FindMode::OnStart() {
     lastFindIndex_ = 0;
-    textInput_.SetLabel("e_"); 
+    textInput_.SetLabel("Find Target: ");
     EditorMode::OnStart();
 }
 
@@ -28,18 +28,16 @@ void FindMode::Update() {
 }
 
 ConfirmBehavior FindMode::OnConfirm() {
-    std::string entityName = "e_" + textInput_.Get();
-
     bool found = false;
     for (int i = 0; i < targets_.size(); i++) {
         int t = (i + lastFindIndex_ + 1) % targets_.size();
         if (!targets_[t]->Selectable()) continue;
         
-        if (targets_[t]->GetName() == entityName) {
+        if (targets_[t]->GetName() == textInput_.Get() || targets_[t]->GetLabel() == textInput_.Get()) {
             target_.Select(targets_[t]);
             camera_.transform_.position = 
                 target_.Get().GetPosition() - 
-                camera_.transform_.GetForwardVector() * 35.0f;
+                camera_.transform_.GetForwardVector() * 100.0f;
 
             found = true;
             lastFindIndex_ = t;
@@ -48,7 +46,7 @@ ConfirmBehavior FindMode::OnConfirm() {
     }
 
     if (!found)
-        notificaiton_.Set(entityName + " not found");
+        notificaiton_.Set(textInput_.Get() + " not found");
 
     return CB_Stay;
 }

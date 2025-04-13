@@ -83,7 +83,7 @@ void DefaultMode::Update() {
     }
 
     if (platform_.pressedKeys_[GLFW_KEY_DELETE] && target_.HasTarget()) {
-        target_.Get().Destroy();
+        target_.Get().DoDestroy();
     }
 
     if (platform_.pressedKeys_['P'] && target_.Get().IsEntity()) {

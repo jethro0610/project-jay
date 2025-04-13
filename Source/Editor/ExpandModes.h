@@ -3,6 +3,7 @@
     MODEEXPANSION(CloneMode, cloneMode_) \
     MODEEXPANSION(DefaultMode, defaultMode_) \
     MODEEXPANSION(FindMode, findMode_) \
+    MODEEXPANSION(LabelMode, labelMode_) \
     MODEEXPANSION(ModifyEntityMode, modifyEntityMode_) \
     MODEEXPANSION(NewLevelMode, newLevelMode_) \
     MODEEXPANSION(OpenLevelMode, openLevelMode_) \

@@ -46,7 +46,11 @@ ConfirmBehavior SpawnMode::OnConfirm() {
     TypeID entityId = Entity::GetTypeIDFromName(name);
     int modifierId = StaticTerrainModifier::GetIDFromName(name);
 
-    if (entityId != - 1) {
+    if (name == "e_navpoint") {
+        NavPoint& navpoint = level_.CreateNavpoint(scanPosition);
+        target_.Select(&navpoint.target_);
+    }
+    else if (entityId != - 1) {
         DependencyList deps;
         DependencyList::GetFromEntity(entityId, deps);
         resourceManager_.LoadDependencies(deps);

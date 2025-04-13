@@ -129,6 +129,7 @@ public:
     EntityProperties GetProperties();
     static TypeID GetTypeIDFromName(const std::string& name);
 
+    char label_[32];
     TypeID typeId_;
     bool alive_;
     bool destroy_;
@@ -249,6 +250,12 @@ private:
         public:
         ETarget(Entity* entity) : entity_(entity) {}
         std::string GetName() override;
+        
+        bool CanLabel() override { return true; }
+        std::string GetLabel() override { return entity_->label_; }
+        void SetLabel(const std::string& label) override { 
+            strcpy(entity_->label_, label.c_str());
+        }
 
         glm::vec3 GetPosition() override;
         void SetPosition(const glm::vec3 &pos) override;

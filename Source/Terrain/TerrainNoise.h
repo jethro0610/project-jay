@@ -49,6 +49,12 @@ public:
     public:
         std::string GetName() override { return TerrainNoise::NAME; }
 
+        bool CanLabel() override { return true; }
+        std::string GetLabel() override { return noise_->label_; }
+        void SetLabel(const std::string& label) override { 
+            strcpy(noise_->label_, label.c_str());
+        }
+
         glm::vec3 GetPosition() override;
         void SetPosition(const glm::vec3 &pos) override;
 

@@ -518,6 +518,7 @@
                 "p_seg_id": 0,
                 "p_seg_min": 0
             },
+            "label": "segpad",
             "name": "e_jumppad",
             "transform": {
                 "position": {
@@ -551,6 +552,7 @@
                 "p_seg_id": -1,
                 "p_seg_min": 0
             },
+            "label": "firstpad",
             "name": "e_jumppad",
             "transform": {
                 "position": {
@@ -783,6 +785,24 @@
         }
     ],
     "landmap": "lm_bridge",
+    "navpoints": [
+        {
+            "label": "island1",
+            "position": {
+                "x": -785.459716796875,
+                "y": 201.69078063964844,
+                "z": 830.3916015625
+            }
+        },
+        {
+            "label": "island2",
+            "position": {
+                "x": -2762.85693359375,
+                "y": 74.8651351928711,
+                "z": 45.438331604003906
+            }
+        }
+    ],
     "terrain_modifiers": [
         {
             "custom_easing": true,

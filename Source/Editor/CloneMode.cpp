@@ -46,7 +46,7 @@ void CloneMode::OnStart() {
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    target_.Get().Destroy();
+    target_.Get().DoDestroy();
     target_.Select(original_);
 }
 

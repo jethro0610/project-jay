@@ -49,6 +49,7 @@ public:
     void RenderEdit(
         EntityList& entities,
         Editor& editor,
+        Level& level,
         LevelProperties& levelProperties,
         SpreadManager& spreadManager,
         Terrain& terrain,
@@ -193,7 +194,7 @@ private:
     void RenderStaticTerrainModifiers(
         Terrain& terrain
     );
-    void RenderEntityEditorNodes(EntityList& entities);
+    void RenderEditorNodes(Level& level);
     void RenderScreenText();
     #endif
     void RenderTerrain(

@@ -37,7 +37,7 @@ bool EditorMode::CanSwitch(bool holdingCtrl) const {
     if (requiresTarget_ && !target_.HasTarget())
         return false;
 
-    if (requiresClone_ && !target_.Clonable())
+    if (requiresClone_ && !target_.Get().Clonable())
         return false;
 
     if (requiresLevel_ && !level_.loaded_)

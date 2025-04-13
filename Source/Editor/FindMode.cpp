@@ -38,7 +38,7 @@ ConfirmBehavior FindMode::OnConfirm() {
         if (targets_[t]->GetName() == entityName) {
             target_.Select(targets_[t]);
             camera_.transform_.position = 
-                target_.GetPosition() - 
+                target_.Get().GetPosition() - 
                 camera_.transform_.GetForwardVector() * 35.0f;
 
             found = true;

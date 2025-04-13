@@ -38,12 +38,12 @@ void RotateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     fromZero_ = false;
-    startRotation_ = target_.GetRotation();
+    startRotation_ = target_.Get().GetRotation();
     EditorMode::OnStart();
 }
 
 void RotateMode::OnCancel() {
-    target_.SetRotation(startRotation_);
+    target_.Get().SetRotation(startRotation_);
     EditorMode::OnCancel();
 }
 
@@ -81,23 +81,23 @@ void RotateMode::Update() {
 
     switch(submode_) {
         case RS_Free:
-            target_.SetRotation(angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation);
+            target_.Get().SetRotation(angleAxis(deltaX_, planarCameraForward) * angleAxis(deltaY_, planarCameraRight) * referenceRotation);
             break;
 
         case RS_X:
-            target_.SetRotation(angleAxis(deltaX_, planarCameraForward) * referenceRotation);
+            target_.Get().SetRotation(angleAxis(deltaX_, planarCameraForward) * referenceRotation);
             break;
 
         case RS_Y:
-            target_.SetRotation(angleAxis(deltaX_, Transform::worldUp) * referenceRotation);
+            target_.Get().SetRotation(angleAxis(deltaX_, Transform::worldUp) * referenceRotation);
             break;
 
         case RS_Z:
-            target_.SetRotation(angleAxis(deltaY_, planarCameraRight) * referenceRotation);
+            target_.Get().SetRotation(angleAxis(deltaY_, planarCameraRight) * referenceRotation);
             break;
 
         case RS_Roll:
-            target_.SetRotation(angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation);
+            target_.Get().SetRotation(angleAxis(deltaX_, referenceRotation * Transform::worldUp) * referenceRotation);
             break;
     }
 }

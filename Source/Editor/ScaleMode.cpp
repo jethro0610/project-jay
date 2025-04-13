@@ -43,13 +43,13 @@ void ScaleMode::OnStart() {
     deltaY_ = 0.0f;
     submode_ = SS_Uniform;
     fromZero_ = false;
-    startScale_ = target_.GetScale();
+    startScale_ = target_.Get().GetScale();
 
     EditorMode::OnStart();
 }
 
 void ScaleMode::OnCancel() {
-    target_.SetScale(startScale_, vec4(0.0f));
+    target_.Get().SetScale(startScale_, vec4(0.0f));
 }
 
 void ScaleMode::SetSubmode(ScaleSubmode submode) {
@@ -122,5 +122,5 @@ void ScaleMode::Update() {
             deltaScale.w += delta;
             break;
     }
-    target_.SetScale(referenceScale, deltaScale);
+    target_.Get().SetScale(referenceScale, deltaScale);
 }

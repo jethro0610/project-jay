@@ -145,7 +145,7 @@ void Editor::StopEditing(bool startAtCamera) {
 void Editor::SetMode(EditorMode* mode) {
     if (mode_ == mode) return;
     if (mode->requiresTarget_ && !target_.HasTarget()) return;
-    if (mode->requiresClone_ && !target_.Clonable()) return;
+    if (mode->requiresClone_ && !target_.Get().Clonable()) return;
 
     if (mode_ != nullptr)
         mode_->OnEnd();
@@ -176,11 +176,11 @@ void Editor::Update() {
         return;
     }
 
-    std::vector<char> flagIds = target_.GetFlagIDs();
+    std::vector<char> flagIds = target_.Get().GetFlagIDs();
     for (char id : flagIds) {
         if (holdingCtrl && platform_.pressedKeys_[id]) {
-            target_.SetFlag(id);
-            if (target_.IsModifier())
+            target_.Get().SetFlag(id);
+            if (target_.Get().IsModifier())
                 terrain_.GenerateTerrainHeights(false, &entities_);
         }
     }
@@ -191,10 +191,9 @@ void Editor::Update() {
         postConfirmMode_ = nullptr; 
     }
     else if (mode_ == &defaultMode_) {
-        std::unordered_map<char, std::string> bindings = target_.GetScalarNames();
+        std::unordered_map<char, std::string> bindings = target_.Get().GetScalarNames();
         for (const auto& [id, name] : bindings) {
             if (platform_.pressedKeys_[id] && !holdingCtrl) {
-                DEBUGLOG(target_.GetScalar(id));
                 genericScalarMode_.SetScalarId(id);
                 SetMode(genericScalarMode_);
             }
@@ -237,7 +236,7 @@ void Editor::Update() {
     if (level_.loaded_) {
         bool modifiersDestroyed = terrain_.DestroyPendingModifiers();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_ || mode_ == &genericScalarMode_;
-        if (target_.UpdateTerrain() && isTransformMode)
+        if (target_.Get().UpdateTerrain() && isTransformMode)
             terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.DBG_lowRes_)
             terrain_.GenerateTerrainHeights(false, &entities_);

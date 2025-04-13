@@ -18,7 +18,7 @@ void ModifyEntityMode::OnStart() {
     propInt_ = nullptr;
     propBool_ = nullptr;
 
-    properties_ = target_.GetProperties();
+    properties_ = target_.Get().GetProperties();
 
     modeText_ = "Modify Entity";
     textInput_.SetLabel("Select property: p_");

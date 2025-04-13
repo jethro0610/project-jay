@@ -16,16 +16,16 @@ std::string GenericScalarMode::GetName() {
 }
 
 void GenericScalarMode::OnStart() {
-    scalarNames_ = target_.GetScalarNames();
+    scalarNames_ = target_.Get().GetScalarNames();
     delta_ = 0.0f;
-    originalValue_ = target_.GetScalar(curScalarId_);
+    originalValue_ = target_.Get().GetScalar(curScalarId_);
     textInput_.SetLabel(scalarNames_[curScalarId_] + ": ");
 
     EditorMode::OnStart();
 }
 
 void GenericScalarMode::OnCancel() {
-    target_.SetScalar(curScalarId_, originalValue_);
+    target_.Get().SetScalar(curScalarId_, originalValue_);
 }
 
 void GenericScalarMode::OnEnd() {
@@ -37,12 +37,12 @@ void GenericScalarMode::Update() {
     textInput_.ReadInput();
     try {
         float val = std::stof(textInput_.Get());
-        target_.SetScalar(curScalarId_, val);
+        target_.Get().SetScalar(curScalarId_, val);
     }
     catch (...) {
-        float scalarDelta = target_.GetScalarDelta(curScalarId_);
+        float scalarDelta = target_.Get().GetScalarDelta(curScalarId_);
         delta_ += platform_.deltaMouseX_ * 0.1f * scalarDelta;
         delta_ -= platform_.deltaMouseY_ * 0.1f * scalarDelta;
-        target_.SetScalar(curScalarId_, originalValue_ + delta_);
+        target_.Get().SetScalar(curScalarId_, originalValue_ + delta_);
     }
 }

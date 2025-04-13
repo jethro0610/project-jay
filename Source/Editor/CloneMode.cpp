@@ -36,7 +36,7 @@ void CloneMode::SetSubmode(CloneMode::CloneSubmode submode) {
 
 void CloneMode::OnStart() {
     EditorMode::OnStart();
-    original_ = target_.GetTarget();
+    original_ = &target_.Get();
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
 
@@ -46,7 +46,7 @@ void CloneMode::OnStart() {
 
 void CloneMode::OnEnd() {
     EditorMode::OnEnd();
-    target_.Destroy();
+    target_.Get().Destroy();
     target_.Select(original_);
 }
 
@@ -69,7 +69,7 @@ void CloneMode::Update() {
 
     switch (submode_) {
         case CS_Planar:
-            target_.SetPosition(
+            target_.Get().SetPosition(
                 original_->GetPosition() +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_
@@ -82,12 +82,12 @@ void CloneMode::Update() {
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_;
             pos.y = terrain_.GetHeight(pos);
-            target_.SetPosition(pos);
+            target_.Get().SetPosition(pos);
             break;
     }
 }
 
 ConfirmBehavior CloneMode::OnConfirm() {
-    target_.Clone();
+    target_.Get().Clone();
     return CB_Stay;
 }

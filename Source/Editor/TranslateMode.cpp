@@ -33,13 +33,13 @@ void TranslateMode::OnStart() {
     deltaX_ = 0.0f;
     deltaY_ = 0.0f;
     submode_ = TS_Planar;
-    startPosition_ = target_.GetPosition();
+    startPosition_ = target_.Get().GetPosition();
 
     EditorMode::OnStart();
 }
 
 void TranslateMode::OnCancel() {
-    target_.SetPosition(startPosition_);
+    target_.Get().SetPosition(startPosition_);
 }
 
 void TranslateMode::SetSubmode(TranslateSubmode submode) {
@@ -62,7 +62,7 @@ void TranslateMode::Update() {
         SetSubmode(TS_Planar);
     else if (platform_.pressedKeys_['V'])
         SetSubmode(TS_Vertical);
-    if (platform_.pressedKeys_['T'] && target_.TerrainAlignable())
+    if (platform_.pressedKeys_['T'] && target_.Get().TerrainAlignable())
         SetSubmode(TS_Terrain);
 
     vec3 planarCameraForward = camera_.transform_.GetForwardVector();
@@ -75,7 +75,7 @@ void TranslateMode::Update() {
 
     switch (submode_) {
         case TS_Planar:
-            target_.SetPosition(
+            target_.Get().SetPosition(
                 startPosition_ +
                 planarCameraForward * deltaY_ +
                 planarCameraRight * deltaX_
@@ -83,7 +83,7 @@ void TranslateMode::Update() {
             break;
 
         case TS_Vertical:
-            target_.SetPosition(startPosition_ + Transform::worldUp * deltaY_);
+            target_.Get().SetPosition(startPosition_ + Transform::worldUp * deltaY_);
             break;
 
         case TS_Terrain:
@@ -94,7 +94,7 @@ void TranslateMode::Update() {
             float height = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
             if (height > -INFINITY)
                 terrainPos.y = terrain_.GetHeight(vec2(terrainPos.x, terrainPos.z));
-            target_.SetPosition(terrainPos);
+            target_.Get().SetPosition(terrainPos);
             break;
     }
 }

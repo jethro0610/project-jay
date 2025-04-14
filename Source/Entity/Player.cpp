@@ -200,6 +200,7 @@ void Player::Init(Entity::InitArgs args) {
     hitbox_.top = 2.0f;
     hitbox_.bottom = 2.0f;
     hitbox_.active = false;
+    hitbox_.forwardRange = -1.0f;
 
     hurtbox_.radius = 2.0f;
     hurtbox_.top = 1.0f;
@@ -391,6 +392,21 @@ void Player::Update() {
     else
         hitbox_.active = false;
 
+    // Hit pivoting
+    if (moveMode_ != MM_Attack) {
+        hasHit_ = false;
+        hasPivoted_ = false;
+    }
+    if (hasHit_ && !hasPivoted_ && dot(directionWhenHit_, desiredMovement) < 0.25f && length(desiredMovement) > 0.9f) {
+        vec3 planarVel = velocity_;
+        planarVel.y = 0.0f;
+        float planarVelLength = length(planarVel);
+        vec3 normalizedMovement = normalize(desiredMovement);
+        velocity_ = normalizedMovement * planarVelLength;
+        transform_.rotation = quatLookAtRH(normalizedMovement, Transform::worldUp);
+        hasPivoted_ = true;
+    }
+
     // MoveMode determination
     moveMode_ = MM_Default;
     if (stun_) {
@@ -435,10 +451,12 @@ void Player::Update() {
         velocity_ -= normalize(planarVelocity) * bonus_;
     speed_ = length(planarVelocity) - bonus_;
 
-    // Groun stick velocity
+    // Ground stick velocity / gravity
     if (homingTarget_ == nullptr) {
         if (!onGround_)
             velocity_.y -= 2.0f;
+        else if (hasPivoted_)
+            velocity_.y -= 16.0f;
         else if (moveMode_ == MM_Slope)
             velocity_.y -= 32.0f;
         else if (moveMode_ == MM_Attack)
@@ -467,11 +485,13 @@ void Player::Update() {
         }
 
         case MM_Spin: {
-            quat rotation = transform_.rotation;
-            if (length(desiredMovement) > 0.001f) 
-                rotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
-            transform_.rotation = slerp(transform_.rotation, rotation, SPIN_ROTATION_SPEED);
-            vec3 direction = transform_.rotation * Transform::worldForward;
+            quat rotation = quatLookAtRH(normalize(vec3(velocity_.x, 0.0f, velocity_.z)), Transform::worldUp);
+            if (length(desiredMovement) > 0.001f)  {
+                quat desiredRotation = quatLookAtRH(normalize(desiredMovement), Transform::worldUp);
+                rotation = slerp(rotation, desiredRotation, SPIN_ROTATION_SPEED);
+                transform_.rotation = slerp(transform_.rotation, rotation, DEFAULT_ROTATION_SPEED);
+            }
+            vec3 direction = rotation * Transform::worldForward;
             
             velocity_.x = direction.x * speed_;
             velocity_.z = direction.z * speed_;
@@ -695,7 +715,11 @@ void Player::RenderUpdate() {
 }
 
 void Player::OnHit(HitArgs args) {
-
+    hasHit_= true;
+    hasPivoted_ = false;
+    directionWhenHit_ = velocity_;
+    directionWhenHit_.y = 0.0f;
+    directionWhenHit_ = normalize(directionWhenHit_);
 }
 
 void Player::OnHurt(HurtArgs args) {
@@ -742,9 +766,17 @@ void Player::EndHoming() {
     quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;
+
     vec3 desiredMovement = cameraPlanarForward * inputs_->forwardInput + cameraPlanarRight * inputs_->sideInput;
-    vec3 planarDir = desiredMovement;//normalize(vec3(velocity_.x, 0.0f, velocity_.z));
-    planarDir *= planarVelMagPreHoming_;
+    float lengthMovement = length(desiredMovement);
+    if (lengthMovement < 0.001f)
+        desiredMovement = normalize(vec3(velocity_.x, 0.0f, velocity_.z));
+    else {
+        desiredMovement /= lengthMovement;
+        transform_.rotation = quatLookAtRH(desiredMovement, Transform::worldUp);
+    }
+
+    vec3 planarDir = desiredMovement * planarVelMagPreHoming_;
     velocity_ = vec3(planarDir.x, velocity_.y, planarDir.z);
 }
 

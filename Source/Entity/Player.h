@@ -45,6 +45,10 @@ public:
     ParticleEmitter* spinEmitter_;
     ParticleEmitter* slopeEmitter_;
 
+    glm::vec3 directionWhenHit_;
+    bool hasPivoted_;
+    bool hasHit_;
+
     void Update(); 
     void RenderUpdate();
     void OnHit(HitArgs args);

@@ -17,6 +17,7 @@ struct Inputs {
     bool releaseActivate;
 
     bool shift;
+    bool space;
 
     Inputs() {
         forwardInput = 0.0f;

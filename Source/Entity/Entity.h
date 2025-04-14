@@ -243,11 +243,11 @@ private:
     #ifdef _DEBUG
     public:
     class ETarget : public EditorTarget {
-        private:
+    private:
         friend Entity;
         Entity* entity_;
 
-        public:
+    public:
         ETarget(Entity* entity) : entity_(entity) {}
         std::string GetName() override;
         

@@ -582,6 +582,7 @@
                 "p_radius": 400.0
             },
             "int_properties": null,
+            "label": "nbridge1",
             "name": "e_negator",
             "transform": {
                 "position": {
@@ -734,6 +735,7 @@
                 "p_radius": 400.0
             },
             "int_properties": null,
+            "label": "nbridge3",
             "name": "e_negator",
             "transform": {
                 "position": {
@@ -763,6 +765,7 @@
                 "p_radius": 400.0
             },
             "int_properties": null,
+            "label": "nbridge2",
             "name": "e_negator",
             "transform": {
                 "position": {
@@ -800,6 +803,22 @@
                 "x": -2762.85693359375,
                 "y": 74.8651351928711,
                 "z": 45.438331604003906
+            }
+        },
+        {
+            "label": "island4",
+            "position": {
+                "x": 2588.52783203125,
+                "y": 592.791748046875,
+                "z": -2190.271240234375
+            }
+        },
+        {
+            "label": "island3",
+            "position": {
+                "x": -1133.9818115234375,
+                "y": 292.4902038574219,
+                "z": -1350.25439453125
             }
         }
     ],

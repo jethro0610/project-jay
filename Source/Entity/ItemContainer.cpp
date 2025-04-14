@@ -40,9 +40,9 @@ void ItemContainer::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
-    hitbox_.top = 1.0f;
-    hitbox_.bottom = 1.0f;
-    hitbox_.radius = 1.5f;
+    hurtbox_.top = 1.0f;
+    hurtbox_.bottom = 1.0f;
+    hurtbox_.radius = 1.5f;
 
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_StickToGround, true);

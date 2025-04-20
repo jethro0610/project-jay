@@ -29,12 +29,13 @@
 #include "SnakeSegment.h"
 #include "SnakePod.h"
 #include "ItemContainer.h"
-#include "Player.h"
 #include "ItemToken.h"
 #include "JumpPad.h"
-#include "Entity.h"
 #include "Segment.h"
 #include "Negator.h"
+#include "Player.h"
+#include "Entity.h"
+#include "PillarPad.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -72,4 +73,5 @@
 	ENTITYEXP(ItemContainer, itemcontainer, 32) \
 	ENTITYEXP(ItemToken, itemtoken, 33) \
 	ENTITYEXP(Segment, segment, 34) \
-	ENTITYEXP(Negator, negator, 35)
+	ENTITYEXP(Negator, negator, 35) \
+	ENTITYEXP(PillarPad, pillarpad, 36)

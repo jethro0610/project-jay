@@ -15,7 +15,8 @@ void TPillar::Init(Entity::InitArgs args) {
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
-    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color");
+    materials_[0].shader = resourceManager.GetShader("vs_static", "fs_dfsa_color_terrainclipped");
+    materials_[0].transparencyType = TRANSPARENCY_UNORDERED;
     materials_[0].shadowShader = resourceManager.GetShader("vs_static_s", "fs_depth_s");
     materials_[0].castShadows = true;
     materials_[0].specularProperties = SpecularFresnelProperties::Default();

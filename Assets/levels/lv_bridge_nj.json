@@ -797,7 +797,7 @@
             "transform": {
                 "position": {
                     "x": -890.335205078125,
-                    "y": 92.40350341796875,
+                    "y": 93.84535217285156,
                     "z": -2201.24267578125
                 },
                 "rotation": {
@@ -812,6 +812,39 @@
                 }
             },
             "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump_strength": 125.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "transform": {
+                "position": {
+                    "x": -798.01806640625,
+                    "y": 229.42489624023438,
+                    "z": -2647.736572265625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 21.500001907348633,
+                    "y": 9.300002098083496,
+                    "z": 21.500001907348633
+                }
+            },
+            "type_id": 16
         },
         {
             "bool_properties": null,
@@ -900,7 +933,7 @@
             "float_properties": {
                 "p_strength": 100.0
             },
-            "floor_dist": -8.460922241210938,
+            "floor_dist": -8.489181518554688,
             "int_properties": null,
             "name": "e_pillarpad",
             "transform": {
@@ -1083,35 +1116,6 @@
                 }
             },
             "type_id": 36
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 0.05000000074505806,
-                "p_radius": 100.0
-            },
-            "int_properties": null,
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": -551.3272705078125,
-                    "y": 40.89873504638672,
-                    "z": 974.042236328125
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 1.0,
-                    "y": 1.0,
-                    "z": 1.0
-                }
-            },
-            "type_id": 35
         }
     ],
     "landmap": "lm_bridge",
@@ -1596,15 +1600,15 @@
             "y": -2210.8974609375
         },
         {
-            "custom_easing": true,
-            "height": 71.89997863769531,
+            "custom_easing": false,
+            "height": 98.79997253417969,
             "id": 1,
-            "in_power": 4.649999141693115,
+            "in_power": 2.5999999046325684,
             "name": "e_bubble",
             "out_power": 6.430006980895996,
-            "radius": 361.2001037597656,
-            "x": -764.207763671875,
-            "y": -2517.157958984375
+            "radius": 506.7002868652344,
+            "x": -798.5126342773438,
+            "y": -2655.463134765625
         },
         {
             "custom_easing": false,
@@ -1619,7 +1623,7 @@
         },
         {
             "custom_easing": false,
-            "height": 49.00000762939453,
+            "height": 66.80000305175781,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",

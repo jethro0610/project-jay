@@ -33,6 +33,7 @@ void PillarPad::Init(Entity::InitArgs args) {
     materials_[0].castShadows = true;
     materials_[0].specularProperties = SpecularFresnelProperties::Default();
     materials_[0].specularProperties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    materials_[0].specularProperties.color = vec4(0.5f, 1.0f, 0.5f, 1.0f);
 
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
@@ -46,12 +47,12 @@ void PillarPad::Init(Entity::InitArgs args) {
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 1.15f;
 
-    SetFlag(EF_Homeable, false);
+    SetFlag(EF_Homeable, true);
     SetFlag(EF_Overlap, true);
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecieveHits, true);
 
-    activated_ = false;
+    activated_ = true;
     jumpStrength_ = 100.0f;
 }
 
@@ -65,17 +66,17 @@ void PillarPad::OnOverlap(Entity* overlappedEntity) {
     if (overlappedEntity->typeId_ == Player::TYPEID)
         ((Player*)overlappedEntity)->EndHoming();
 
-    SetFlag(EF_Homeable, false);
-    activated_ = false;
-    materials_[0].specularProperties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    //SetFlag(EF_Homeable, false);
+    //activated_ = false;
+    //materials_[0].specularProperties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
     //lastOverlappedEntity_ = overlappedEntity;
     //seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 20.0f, lastOverlappedEntity_, vec3(0.0f, 30.0f, 0.0f));
 }
 
 void PillarPad::OnHurt(HurtArgs args) {
-    SetFlag(EF_Homeable, true);
-    activated_ = true;
-    materials_[0].specularProperties.color = vec4(0.5f, 1.0f, 0.5f, 1.0f);
+    //SetFlag(EF_Homeable, true);
+    //activated_ = true;
+    //materials_[0].specularProperties.color = vec4(0.5f, 1.0f, 0.5f, 1.0f);
 }
 
 vec3 PillarPad::GetTargetPoint() {

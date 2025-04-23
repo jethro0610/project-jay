@@ -19,5 +19,5 @@ public:
 
     void PreUpdate();
     void EditorUpdate();
-    void OnActivate();
+    void OnTrigger();
 };

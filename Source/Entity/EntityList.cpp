@@ -67,6 +67,11 @@ Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform, bool
         rawEntities_[entityId].entity.AssignProperties(*propertiesAssigner);
     if (!skipStart)
         rawEntities_[entityId].entity.DoStart();
+
+    #ifdef _DEBUG
+    rawEntities_[entityId].entity.DBG_id_ = entityId;
+    #endif
+
     return rawEntities_[entityId].entity;
 }   
 

@@ -71,3 +71,8 @@ void Negator::EditorUpdate() {
 void Negator::OnDestroy() {
     terrain_->FreeNegative(negativeModifier_);
 }
+
+void Negator::OnTrigger() {
+    bool active = DYN_MOD_ACTIVE(*negativeModifier_);
+    DYN_MOD_SET_ACTIVE(*negativeModifier_, !active);
+}

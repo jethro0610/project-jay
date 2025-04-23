@@ -1,22 +1,16 @@
 #pragma once
 #include "Entity.h"
 
-class Segment : public Entity {
+class AttackSegment : public Entity {
 public:
     void Init(InitArgs args);
-
-    static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_segment"; }
-    static EntityDependendies GetStaticDependencies();
-    EntityProperties GetStaticProperties();
-
-    void OnOverlap(Entity* overlappedEntity);
-
-    float originalY_;
-    float timeOffset_;
-    void Update();
     void Start();
     void OnHitlagEnd();
+
+    static TypeID TYPEID;
+    static const char* GetStaticName() { return "e_atkseg"; }
+    static EntityDependendies GetStaticDependencies();
+    EntityProperties GetStaticProperties();
 
     int targetSegId_;
     int* targetSegCount_;

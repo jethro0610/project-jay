@@ -173,6 +173,7 @@ public:
 
     #ifdef _DEBUG
     bool DBG_preview_;
+    int DBG_id_;
     #endif
 
     void SetFlag(Flag flag, bool enable);
@@ -201,7 +202,7 @@ public:
 
     void DoCaptureSeed();
     void DoDestroy();
-    void DoActivate();
+    void DoTrigger();
 
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
@@ -233,8 +234,8 @@ private:
     void OnHitlagEnd() {}
     void OnCaptureSeed() {};
     void OnDestroy() {};
-    void OnActivate() {};
     glm::vec3 GetTargetPoint() { return transform_.position; };
+    void OnTrigger() {};
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

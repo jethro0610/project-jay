@@ -60,7 +60,7 @@ void Ramp::OnDestroy() {
     terrain_->FreeBubble(bubble_);
 }
 
-void Ramp::OnActivate() {
+void Ramp::OnTrigger() {
     active_ = true;
 }
 

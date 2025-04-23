@@ -824,14 +824,14 @@
             "float_properties": {
                 "p_strength": 100.0
             },
-            "floor_dist": 0.0,
+            "floor_dist": -7.521087646484375,
             "int_properties": null,
             "name": "e_pillarpad",
             "transform": {
                 "position": {
-                    "x": -1365.5970458984375,
+                    "x": -1356.5594482421875,
                     "y": 151.87384033203125,
-                    "z": -1949.6580810546875
+                    "z": -2121.619873046875
                 },
                 "rotation": {
                     "x": 0.0,
@@ -839,9 +839,9 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 12.399991989135742,
-                    "y": 157.7999725341797,
-                    "z": 12.399991989135742
+                    "x": 30.899991989135742,
+                    "y": 168.8999786376953,
+                    "z": 30.899991989135742
                 }
             },
             "type_id": 36
@@ -873,6 +873,384 @@
                 }
             },
             "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": -4.80126953125,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1074.7882080078125,
+                    "y": 193.04530334472656,
+                    "z": -2159.1337890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 21.19998550415039,
+                    "y": 201.69998168945313,
+                    "z": 21.19998550415039
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1299.080810546875,
+                    "y": 151.45635986328125,
+                    "z": -2398.44091796875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 24.499988555908203,
+                    "y": 193.39996337890625,
+                    "z": 24.499988555908203
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -810.2291870117188,
+                    "y": 167.30775451660156,
+                    "z": -2292.009033203125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 21.599987030029297,
+                    "y": 162.8999786376953,
+                    "z": 21.599987030029297
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -798.849365234375,
+                    "y": 163.45550537109375,
+                    "z": -2549.858642578125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 26.19998550415039,
+                    "y": 132.49996948242188,
+                    "z": 26.19998550415039
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0333404541015625,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -977.8529663085938,
+                    "y": 200.2920379638672,
+                    "z": -2643.960693359375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 20.99998664855957,
+                    "y": 162.699951171875,
+                    "z": 20.99998664855957
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": -0.65576171875,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1069.189208984375,
+                    "y": 174.70977783203125,
+                    "z": -2858.836669921875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 22.299983978271484,
+                    "y": 145.8999786376953,
+                    "z": 22.299983978271484
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1457.7203369140625,
+                    "y": 188.02911376953125,
+                    "z": -2721.9462890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 27.599994659423828,
+                    "y": 133.8999786376953,
+                    "z": 27.599994659423828
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1063.16162109375,
+                    "y": 168.5949249267578,
+                    "z": -2427.67041015625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 21.899986267089844,
+                    "y": 184.49998474121094,
+                    "z": 21.899986267089844
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -607.8614501953125,
+                    "y": 159.35647583007813,
+                    "z": -2392.592041015625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 28.699993133544922,
+                    "y": 211.0999755859375,
+                    "z": 28.699993133544922
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1247.518798828125,
+                    "y": 151.9069366455078,
+                    "z": -1945.8516845703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 22.899986267089844,
+                    "y": 163.19996643066406,
+                    "z": 22.899986267089844
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1479.15966796875,
+                    "y": 171.76480102539063,
+                    "z": -2512.491943359375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 27.599994659423828,
+                    "y": 133.8999786376953,
+                    "z": 27.599994659423828
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -804.79833984375,
+                    "y": 153.35093688964844,
+                    "z": -2831.689453125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 20.99998664855957,
+                    "y": 127.29997253417969,
+                    "z": 20.99998664855957
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -861.705322265625,
+                    "y": 165.7735595703125,
+                    "z": -3028.12646484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 20.99998664855957,
+                    "y": 127.29997253417969,
+                    "z": 20.99998664855957
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 100.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "transform": {
+                "position": {
+                    "x": -1242.9617919921875,
+                    "y": 174.7809600830078,
+                    "z": -2599.68115234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 24.499988555908203,
+                    "y": 130.7999725341797,
+                    "z": 24.499988555908203
+                }
+            },
+            "type_id": 36
         }
     ],
     "landmap": "lm_bridge",

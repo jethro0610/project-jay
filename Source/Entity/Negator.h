@@ -8,6 +8,7 @@ public:
     void Start();
     void OnDestroy();
     void Update();
+    void OnTrigger();
 
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_negator"; }

@@ -495,9 +495,9 @@ void Entity::DoDestroy() {
     }
 }
 
-void Entity::DoActivate() {
+void Entity::DoTrigger() {
     switch(typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnActivate(); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnTrigger(); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }
@@ -509,12 +509,12 @@ vec3 Entity::GetTarget() {
         EXPANDENTITIES
         #undef ENTITYEXP
     }
-    return vec3(0.0f);
+    return vec3(transform_.position);
 }
 
 #ifdef _DEBUG
 std::string Entity::ETarget::GetName() {
-    return entity_->GetName();
+    return std::string(entity_->GetName()) + " [" + std::to_string(entity_->DBG_id_) + "]";
 }
 
 vec3 Entity::ETarget::GetPosition() {

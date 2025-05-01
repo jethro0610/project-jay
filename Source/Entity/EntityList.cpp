@@ -104,3 +104,5 @@ int EntityList::FindEntitiesByType(TypeID id, Entity** outEntities, int outCount
     }
     return outIndex;
 }
+
+    

@@ -40,6 +40,7 @@ public:
         EntityPropertiesAssigner* propertiesAssigner = nullptr
     );
     int FindEntitiesByType(TypeID typeId, Entity** outEntities, int outCount);
+    Entity* FindEntityById(int id);
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

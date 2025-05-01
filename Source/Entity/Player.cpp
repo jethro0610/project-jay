@@ -25,8 +25,8 @@ static constexpr int RIBBON = 5;
 static constexpr int SHIRT = 6;
 static constexpr int SLIPPERS = 7;
 
-static constexpr float MIN_SPEED = 12.0f;
-static constexpr float MAX_SPEED = 160.0f;
+static constexpr float MIN_SPEED = 30.0f;
+static constexpr float MAX_SPEED = 800.0f;
 static constexpr float MIN_FRICTION = 0.015f;
 static constexpr float MAX_FRICTION = 0.1f;
 static constexpr float MOMENTUM_DECAY = 2.0f;
@@ -38,8 +38,8 @@ static constexpr float SLOPE_ROTATION_SPEED = 0.02f;
 static constexpr float ATTACK_ROTATION_SPEED = 0.025f;
 static constexpr float JUMP_CHARGE_ROTATION_SPEED = 0.015f;
 static constexpr float AIR_ROTATION_SPEED = 0.01f;
-static constexpr float SLOPE_ACCELERATION = 4.0f;
-static constexpr float SLOPE_DOWN_SCALING = 4.0f;
+static constexpr float SLOPE_ACCELERATION = 1.0f;
+static constexpr float SLOPE_DOWN_SCALING = 16.0f;
 static constexpr float SLOPE_UP_SCALING = 1.5f;
 static constexpr float MIN_SLOPE_ACCELERATION_SCALING = 0.1f;
 
@@ -511,17 +511,14 @@ void Player::Update() {
 
             vec3 direction = rotation * Transform::worldForward;
             float boost = 
-                (SLOPE_ACCELERATION + (1 - groundNormal_.y) * SLOPE_DOWN_SCALING) *
-                dot(direction, vec3(groundNormal_.x, 0.0f, groundNormal_.z)) * 
-                max(speed_ / MAX_SPEED, 0.01f);
+                ((1 - groundNormal_.y) * SLOPE_DOWN_SCALING) *
+                dot(direction, vec3(groundNormal_.x, 0.0f, groundNormal_.z));
 
             float multiplier = 1.0f;
             if (boost >= 0.0f) {
                 multiplier = (MAX_SPEED - min(speed_, MAX_SPEED)) / MAX_SPEED;
-                multiplier = max(multiplier, MIN_SLOPE_ACCELERATION_SCALING);
+                //multiplier = max(multiplier, MIN_SLOPE_ACCELERATION_SCALING);
             }
-            else
-                multiplier = SLOPE_UP_SCALING;
 
             speed_ += boost * multiplier;
             speed_ = max(speed_, 0.0f);

@@ -203,6 +203,7 @@ public:
     void DoCaptureSeed();
     void DoDestroy();
     void DoTrigger();
+    bool IsTriggered();
 
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
@@ -236,6 +237,7 @@ private:
     void OnDestroy() {};
     glm::vec3 GetTargetPoint() { return transform_.position; };
     void OnTrigger() {};
+    bool GetIsTriggered() { return false; };
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

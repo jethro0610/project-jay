@@ -39,6 +39,7 @@ public:
         bool skipStart = false, 
         EntityPropertiesAssigner* propertiesAssigner = nullptr
     );
+    int FindEntitiesByType(TypeID typeId, Entity** outEntities, int outCount);
     void DestroyFlaggedEntities();
     void Reset();
     bool IsAnyOverlapping(Entity& entity);

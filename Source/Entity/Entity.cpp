@@ -503,6 +503,15 @@ void Entity::DoTrigger() {
     }
 }
 
+bool Entity::IsTriggered() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->GetIsTriggered(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return false;
+}
+
 vec3 Entity::GetTarget() {
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->GetTargetPoint(); break;

@@ -1,23 +1,22 @@
 #pragma once
 #include "Entity.h"
 
-class ACrystal : public Entity {
+class TriggerCrystal : public Entity {
 public:
     void Init(InitArgs args);
     void Start();
-    void Update();
+    void OnHurt(HurtArgs args);
 
     static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_acrystal"; }
+    static const char* GetStaticName() { return "e_tcrystal"; }
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
-    bool hasTriggered_;
-
-    int numSegments_;
-    int segmentId_;
-    int minSegments_;
-
     int triggerEntityId_;
     Entity* triggerEntity_;
+    bool oneWay_;
+    bool inverted_;
+
+    glm::vec3 colorOff_;
+    glm::vec3 colorOn_;
 };

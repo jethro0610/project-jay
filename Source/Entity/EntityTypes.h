@@ -22,7 +22,6 @@
 #include "Pig.h"
 #include "Tree.h"
 #include "TPillar.h"
-#include "Ramp.h"
 #include "Pinata.h"
 #include "Bird.h"
 #include "SnakeHead.h"
@@ -36,9 +35,13 @@
 #include "Peg.h"
 #include "Segment.h"
 #include "AttackSegment.h"
-#include "ACrystal.h"
-#include "Negator.h"
+#include "Ramp.h"
 #include "Entity.h"
+#include "Negator.h"
+#include "TriggerCrystal.h"
+#include "Stomper.h"
+#include "HomingBossPoint.h"
+#include "HomingBoss.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -80,4 +83,7 @@
 	ENTITYEXP(PillarPad, pillarpad, 36) \
 	ENTITYEXP(Peg, peg, 37) \
 	ENTITYEXP(AttackSegment, attacksegment, 38) \
-	ENTITYEXP(ACrystal, acrystal, 39)
+	ENTITYEXP(Stomper, stomper, 39) \
+	ENTITYEXP(TriggerCrystal, triggercrystal, 40) \
+	ENTITYEXP(HomingBoss, homingboss, 41) \
+	ENTITYEXP(HomingBossPoint, homingbosspoint, 42)

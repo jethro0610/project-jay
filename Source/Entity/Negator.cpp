@@ -76,3 +76,7 @@ void Negator::OnTrigger() {
     bool active = DYN_MOD_ACTIVE(*negativeModifier_);
     DYN_MOD_SET_ACTIVE(*negativeModifier_, !active);
 }
+
+bool Negator::GetIsTriggered() {
+    return DYN_MOD_ACTIVE(*negativeModifier_);
+}

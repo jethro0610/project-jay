@@ -91,3 +91,16 @@ bool EntityList::IsAnyOverlapping(Entity& entity) {
     }
     return false;
 }
+
+int EntityList::FindEntitiesByType(TypeID id, Entity** outEntities, int outCount) {
+    int outIndex = 0;
+    for (int i = 0; i < MAX; i++) {
+        if (!rawEntities_[i].entity.alive_) continue;
+        if (rawEntities_[i].entity.typeId_ == id)
+            outEntities[outIndex++] = &rawEntities_[i].entity;
+
+        if (outIndex >= outCount)
+            return outIndex;
+    }
+    return outIndex;
+}

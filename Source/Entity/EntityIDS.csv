@@ -37,4 +37,7 @@ Negator,35
 PillarPad,36
 Peg,37
 AttackSegment,38
-ACrystal,39
+Stomper,39
+TriggerCrystal,40
+HomingBoss,41
+HomingBossPoint,42

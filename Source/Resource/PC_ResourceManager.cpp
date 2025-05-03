@@ -112,7 +112,7 @@ void ResourceManager::LoadRenderTextures() {
         ShadowConstants::SHADOW_RESOLUTION,
         false,
         1,
-        bgfx::TextureFormat::D16,
+        bgfx::TextureFormat::D32,
         BGFX_TEXTURE_RT | BGFX_SAMPLER_UVW_BORDER
     )};
     ASSIGN_DEBUG_NAME(textures_.Get("t_shadowmap"), "t_shadowmap");
@@ -133,7 +133,7 @@ void ResourceManager::LoadRenderTextures() {
         1080,
         false,
         1,
-        bgfx::TextureFormat::D16,
+        bgfx::TextureFormat::D32,
         BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
     )};
     ASSIGN_DEBUG_NAME(textures_.Get("t_render_d"), "t_render_d");

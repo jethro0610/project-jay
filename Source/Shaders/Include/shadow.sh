@@ -41,7 +41,7 @@ float getShadow(vec4 sposition) {
     }
     shadow /= KERNEL_SIZE;
 
-    float fade = distance(projected.xyz, vec3(0.5f, 0.5f, 0.5f)) * 2.0f;
+    float fade = distance(projected.xz, vec2(0.5f, 0.5f)) * 2.0f;
     fade = clamp(pow(fade, FADE_POW), 0.0f, 1.0f);
     shadow = lerp(shadow, 0.0f, fade);
 

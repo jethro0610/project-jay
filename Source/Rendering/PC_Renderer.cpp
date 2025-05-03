@@ -177,16 +177,11 @@ void Renderer::StartFrame() {
     bgfx::setViewTransform(POSTROCESS_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(WORLD_TEXT_VIEW, &viewMatrix_, &projectionMatrix_);
 
-    vec3 forward = camera_->transform_.GetForwardVector();
-    forward.y = 0.0f;
-    forward = normalize(forward);
+    vec3 cameraForward = camera_->transform_.GetForwardVector();
 
-    vec3 cameraPos = camera_->transform_.position;
-    //cameraPos.y = 0.0f;
-
-    vec3 lookPosition = cameraPos + forward * ShadowConstants::SHADOW_FORWARD;
-    vec3 lightPosition = -lightDirection_ * ShadowConstants::SHADOW_DISTANCE * 0.75f + lookPosition;
-    shadowViewMatrix_ = lookAtRH(lightPosition, lookPosition, Transform::worldUp);
+    vec3 lightLookPos = camera_->transform_.position;
+    vec3 lightPosition = lightLookPos - lightDirection_ * ShadowConstants::SHADOW_DISTANCE * 0.5f;
+    shadowViewMatrix_ = lookAtRH(lightPosition, lightLookPos , Transform::worldUp);
     shadowMatrix_ = shadowProjectionMatrix_ * shadowViewMatrix_;
     bgfx::setViewTransform(SHADOW_VIEW, &shadowViewMatrix_, &shadowProjectionMatrix_);
 

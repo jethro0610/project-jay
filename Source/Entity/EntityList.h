@@ -40,6 +40,7 @@ public:
         EntityPropertiesAssigner* propertiesAssigner = nullptr
     );
     int FindEntitiesByType(TypeID typeId, Entity** outEntities, int outCount);
+    Entity* FindEntityByType(TypeID typeId);
     Entity* FindEntityById(int id);
     void DestroyFlaggedEntities();
     void Reset();

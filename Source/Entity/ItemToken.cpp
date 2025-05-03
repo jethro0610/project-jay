@@ -4,6 +4,7 @@
 #include "Time/Time.h"
 #include "Player.h"
 #include "Helpers/Shared_Ease.h"
+#include "Helpers/Random.h"
 using namespace glm;
 
 EntityDependendies ItemToken::GetStaticDependencies() {
@@ -51,4 +52,14 @@ void ItemToken::Update() {
         player_->AddItem(item_, 1);
         destroy_ = true;
     }
+}
+
+void ItemToken::SetPlayerAndItem(Player* player, Item item, float durationOffset) {
+    vec3 playerForward = player->transform_.GetForwardVector();
+    player_ = player;
+    item_ = item;
+    duration_ = 0.75f + durationOffset;
+
+    vec3 randomPlanar = RandomVectorPlanar();
+    spokeVelocity_ = Transform::worldUp * 50.0f + playerForward * 75.0f + randomPlanar * 35.0f;
 }

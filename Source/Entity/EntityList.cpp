@@ -105,4 +105,11 @@ int EntityList::FindEntitiesByType(TypeID id, Entity** outEntities, int outCount
     return outIndex;
 }
 
-    
+Entity* EntityList::FindEntityByType(TypeID id) {
+    for (int i = 0; i < MAX; i++) {
+        if (!rawEntities_[i].entity.alive_) continue;
+        if (rawEntities_[i].entity.typeId_ == id)
+            return &rawEntities_[i].entity;
+    }
+    return nullptr;
+}

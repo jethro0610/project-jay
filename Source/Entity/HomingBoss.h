@@ -2,6 +2,8 @@
 #include "Entity.h"
 
 class HomingBossPoint;
+class HomingBossProjectile;
+class Player;
 
 class HomingBoss : public Entity {
 public:
@@ -10,6 +12,7 @@ public:
     void OnOverlap(Entity* overlappedEntity);
     void Update();
     void ActivatePoints();
+    void LaunchProjectile();
     bool AllPointsHit();
 
     static TypeID TYPEID;
@@ -22,5 +25,8 @@ public:
     int phase_;
     int damage_;
     int overlapCooldown_;
-    HomingBossPoint* points_[NUM_POINTS]; // TODO: Make these their own object
+    HomingBossPoint* points_[NUM_POINTS];
+    Player* player_;
+    HomingBossProjectile* projectile_;
+    int projectileTimer_;
 };

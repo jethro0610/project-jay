@@ -57,17 +57,11 @@ void ItemContainer::OnHurt(HurtArgs args) {
 
     float time = GlobalTime::GetTime();
     Player* player = (Player*)args.attacker;
-    vec3 playerForward = player->transform_.GetForwardVector();
     Transform tokenTransform;
     tokenTransform.position = transform_.position;
 
     for (int i = 0; i < numItem_; i++) {
         ItemToken& itemToken = (ItemToken&)entities_->CreateEntity(ItemToken::TYPEID, tokenTransform);
-        itemToken.player_ = player;
-        itemToken.item_ = item_;
-        itemToken.duration_ = 0.75f + 0.2f * i;
-
-        vec3 randomPlanar = RandomVectorPlanar();
-        itemToken.spokeVelocity_ = Transform::worldUp * 50.0f + playerForward * 75.0f + randomPlanar * 35.0f;
+        itemToken.SetPlayerAndItem(player, item_, 0.2f * i);
     }
 }

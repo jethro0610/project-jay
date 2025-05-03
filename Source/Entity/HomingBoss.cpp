@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "EntityList.h"
 #include "HomingBossPoint.h"
+#include "Helpers/PhysicsHelpers.h"
+#include "HomingBossProjectile.h"
 using namespace glm;
 
 EntityDependendies HomingBoss::GetStaticDependencies() {
@@ -46,22 +48,53 @@ void HomingBoss::Init(Entity::InitArgs args) {
     phase_ = 0;
     damage_ = 0;
     overlapCooldown_ = 0;
+    player_ = nullptr;
+    projectileTimer_ = 0;
+    projectile_ = nullptr;
 
     SetFlag(EF_Overlap, true);
     SetFlag(EF_Homeable, true);
+    SetFlag(EF_RecievePush, true);
+    SetFlag(EF_SendPush, true);
 }
 
 void HomingBoss::Start() {
     int numFound = entities_->FindEntitiesByType(HomingBossPoint::TYPEID, (Entity**)points_, NUM_POINTS);
     assert(numFound == NUM_POINTS);
+
+    player_ = (Player*)entities_->FindEntityByType(Player::TYPEID);
+    assert(player_ != nullptr);
 }
 
 void HomingBoss::Update() {
+    if (projectile_ != nullptr && !projectile_->alive_)
+        projectile_ = nullptr;
+
     if (overlapCooldown_ > 0)
         overlapCooldown_--;
+
+    if (projectile_ != nullptr)
+        projectileTimer_ = 0;
+
+    projectileTimer_++; 
+
+    if (
+        projectile_ == nullptr && 
+        projectileTimer_ >= 60 * 3 && 
+        distance(player_->transform_.position, transform_.position) < 1200.0f &&
+        player_->onGround_
+    ) {
+        LaunchProjectile();
+        projectileTimer_ = 0;
+    }
 }
 
 void HomingBoss::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity->typeId_ == Player::TYPEID)
+        ((Player*)overlappedEntity)->EndHoming();
+    else
+        return;
+
     if (overlapCooldown_ > 0)
         return;
 
@@ -69,12 +102,8 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
     overlappedEntity->skipGroundCheck_ = true;
     overlappedEntity->velocity_.y = 225.0f;
 
-    if (overlappedEntity->typeId_ == Player::TYPEID)
-        ((Player*)overlappedEntity)->EndHoming();
-
-    // Beyond phase 1, we need to hit
-    // all points before considering this
-    // a hit
+    // Beyond phase 1, we need to hit all 
+    // points before considering this a hit
     if (phase_ > 0 && !AllPointsHit())
         return;
 
@@ -105,4 +134,20 @@ bool HomingBoss::AllPointsHit() {
             return false;
     }
     return true;
+}
+
+void HomingBoss::LaunchProjectile() {
+    vec3 velocity = GetProjectileVelocityToPoint(
+        transform_.position, 
+        player_->transform_.position, 
+        HomingBossProjectile::GRAVITY, 
+        HomingBossProjectile::LAUNCH_STRENGTH
+    );
+    if (velocity != vec3(0.0f)) {
+        Transform projTransform;
+        projTransform.scale = vec3(8.0f);
+        projTransform.position = transform_.position;
+        projectile_ = (HomingBossProjectile*)(&entities_->CreateEntity(HomingBossProjectile::TYPEID, projTransform));
+        projectile_->velocity_ = velocity;
+    }
 }

@@ -28,7 +28,6 @@
 #include "SnakeSegment.h"
 #include "SnakePod.h"
 #include "ItemContainer.h"
-#include "ItemToken.h"
 #include "JumpPad.h"
 #include "Player.h"
 #include "PillarPad.h"
@@ -41,6 +40,8 @@
 #include "TriggerCrystal.h"
 #include "Stomper.h"
 #include "HomingBossPoint.h"
+#include "ItemToken.h"
+#include "HomingBossProjectile.h"
 #include "HomingBoss.h"
 
 #define EXPANDENTITIES \
@@ -86,4 +87,5 @@
 	ENTITYEXP(Stomper, stomper, 39) \
 	ENTITYEXP(TriggerCrystal, triggercrystal, 40) \
 	ENTITYEXP(HomingBoss, homingboss, 41) \
-	ENTITYEXP(HomingBossPoint, homingbosspoint, 42)
+	ENTITYEXP(HomingBossPoint, homingbosspoint, 42) \
+	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43)

@@ -143,7 +143,7 @@ void Editor::StopEditing(bool startAtCamera) {
     level_.Load(level_.DBG_name_, "_autosave", false, false);
 
     if (startAtCamera)
-        entities_[0].transform_.position = camera_.GetLookPosition(terrain_);
+        entities_[0].transform_.position = camera_.GetLookPosition();
 }
 
 void Editor::SetMode(EditorMode* mode) {

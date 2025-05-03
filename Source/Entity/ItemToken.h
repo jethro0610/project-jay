@@ -7,6 +7,7 @@ class Player;
 class ItemToken : public Entity {
 public:
     void Init(InitArgs args);
+    void SetPlayerAndItem(Player* player, Item item, float durationOffset = 0.0f);
 
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_itemtoken"; }

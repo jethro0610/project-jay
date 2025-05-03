@@ -100,7 +100,7 @@ void Game::Update() {
                 camera_.target_ = &entities_[0];
         }
         if (platform_.pressedKeys_['T'] && camera_.target_ == nullptr)
-            entities_[0].transform_.position = camera_.GetLookPosition(terrain_);
+            entities_[0].transform_.position = camera_.GetLookPosition();
         if (camera_.target_ == nullptr)
             inputs_ = {};
         if (platform_.pressedKeys_['P'] || platform_.gamepad_.pressedButtons_[Gamepad::LTHUMB])

@@ -11,11 +11,13 @@ class TransformComponent;
 
 class Camera {
 public:
-    Camera(float trackDistance, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
+    Camera(Terrain& terrain_, glm::vec3 startPosition = glm::vec3(0.0f, 0.0f, 0.0f));
     Transform transform_;
     glm::vec3 smoothTrackPosition_;
+    glm::vec3 smoothNormal_;
     
     float lookX_;
+    float smoothLookX_;
     float lookY_;
 
     Entity* target_;
@@ -25,6 +27,7 @@ public:
     void Update(Inputs& inputs);
     glm::mat4 GetViewMatrix() const;
     glm::mat4 GetViewOnlyMatrix() const;
-    glm::vec3 GetLookPosition(Terrain& terrain);
+    glm::vec3 GetLookPosition();
+    Terrain& terrain_;
 };
 

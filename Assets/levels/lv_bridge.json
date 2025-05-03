@@ -1725,34 +1725,6 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
-            "int_properties": {
-                "p_count": 6,
-                "p_item": 1
-            },
-            "name": "e_itemcontainer",
-            "transform": {
-                "position": {
-                    "x": 2169.565185546875,
-                    "y": 304.9374694824219,
-                    "z": -2468.622802734375
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 8.299996376037598,
-                    "y": 8.299996376037598,
-                    "z": 8.299996376037598
-                }
-            },
-            "type_id": 32
-        },
-        {
-            "bool_properties": null,
-            "float_properties": null,
             "int_properties": null,
             "name": "e_homingboss",
             "transform": {

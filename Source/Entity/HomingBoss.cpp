@@ -100,7 +100,7 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
 
     overlapCooldown_ = 20;
     overlappedEntity->skipGroundCheck_ = true;
-    overlappedEntity->velocity_.y = 225.0f;
+    overlappedEntity->velocity_.y = 200.0f;
 
     // Beyond phase 1, we need to hit all 
     // points before considering this a hit

@@ -5,7 +5,6 @@ DynamicTerrainModifierContainer::DynamicTerrainModifierContainer() {
     for (int i = 0; i < DYN_MOD_MAX; i++) {
         modifiers_[i] = {};
         modifiersInUse_[i] = false;
-        DYN_MOD_SET_ACTIVE(modifiers_[i], false);
     }
 }
 
@@ -14,7 +13,7 @@ DynamicTerrainModifier* DynamicTerrainModifierContainer::RequestAvailableModifie
         if (modifiersInUse_[i])
             continue;
         modifiersInUse_[i] = true;
-        return &modifiers_[i];
+        return (DynamicTerrainModifier*)&modifiers_[i];
     }
     ASSERT(false, "No modifiers available");
     return nullptr;
@@ -22,7 +21,7 @@ DynamicTerrainModifier* DynamicTerrainModifierContainer::RequestAvailableModifie
 
 void DynamicTerrainModifierContainer::FreeModifier(DynamicTerrainModifier* modifier) {
     for (int i = 0; i < DYN_MOD_MAX; i++) {
-        if (&modifiers_[i] == modifier) {
+        if (&modifiers_[i] == (glm::mat4*)modifier) {
             ASSERT(modifiersInUse_[i], "Tried to free inactive modifier");
             modifiers_[i] = {};
             modifiersInUse_[i] = false;

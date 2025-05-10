@@ -333,11 +333,11 @@ void Renderer::RenderMesh(
 void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadius) {
     mat4 transposeModifiers[DYN_MOD_MAX];
     for (int i = 0; i < DYN_MOD_MAX; i++)
-        transposeModifiers[i] = transpose(terrain.dynamicTerrainBubbles_[i]);
+        transposeModifiers[i] = terrain.dynamicTerrainBubbles_.GetRenderMatrix(i);
     bgfx::setUniform(u_dynamicTerrainBubbles_, transposeModifiers, DYN_MOD_MAX);
 
     for (int i = 0; i < DYN_MOD_MAX; i++)
-        transposeModifiers[i] = transpose(terrain.dynamicTerrainNegatives_[i]);
+        transposeModifiers[i] = terrain.dynamicTerrainNegatives_.GetRenderMatrix(i);
     bgfx::setUniform(u_dynamicTerrainNegatives_, transposeModifiers, DYN_MOD_MAX);
 
     const float MAX_DIST_TO_CAMERA = 8192.0f;

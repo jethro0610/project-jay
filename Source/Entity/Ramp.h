@@ -1,6 +1,6 @@
 #pragma once
 #include "Entity.h"
-#include "Terrain/Shared_DynamicTerrainModifier.h"
+#include "Terrain/Shared_DynamicBubble.h"
 
 class Ramp : public Entity {
 public:
@@ -12,7 +12,7 @@ public:
     EntityProperties GetStaticProperties();
     void OnDestroy();
 
-    DynamicTerrainModifier* bubble_;
+    DynamicBubble* bubble_;
     bool active_;
     float activeHeight_;
     int riseTimer_;

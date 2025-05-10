@@ -5,6 +5,8 @@
 #include "Helpers/Shared_Ease.h"
 #include "Logging/Logger.h"
 #include "Shared_DynamicTerrainModifier.h"
+#include "Shared_DynamicBubble.h"
+#include "Shared_DynamicNegative.h"
 
 #define TERRAIN_TYPE const Terrain&
 #define TERRAIN_DEFAULT
@@ -18,8 +20,10 @@ using namespace glm;
 
 #else
 #include <Shared_TerrainConstants.h>
-#include <Shared_DynamicTerrainModifier.h>
 #include <Shared_Ease.h>
+#include <Shared_DynamicTerrainModifier.h>
+#include <Shared_DynamicBubble.h>
+#include <Shared_DynamicNegative.h>
 uniform mat4 u_dynamicTerrainBubbles[DYN_MOD_MAX];
 uniform mat4 u_dynamicTerrainNegatives[DYN_MOD_MAX];
 SAMPLER2D(s_terrainMap, 15);
@@ -43,24 +47,25 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
 
     #pragma unroll
     for (int i = 0; i < DYN_MOD_MAX; i++) {
-        if (!DYN_MOD_ACTIVE(DYN_NEGATIVES[i])) continue;
+        if (!DYN_MOD_IS_ACTIVE(DYN_NEGATIVES[i])) continue;
 
-        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Y(DYN_NEGATIVES[i]));
+        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Z(DYN_NEGATIVES[i]));
         float dist = distance(dynModPos, position);
-        dist -= DYN_MOD_RADIUS(DYN_NEGATIVES[i]);
-        pos.x = smax(pos.x, -dist, DYN_MOD_VALUE(DYN_NEGATIVES[i]));
+        float outer = dist - DYN_NEG_OUTER_RADIUS(DYN_NEGATIVES[i]);
+        float inner = dist - DYN_NEG_INNER_RADIUS(DYN_NEGATIVES[i]);
+        pos.x = max(pos.x, -outer);
     }
 
     #pragma unroll
     for (int i = 0; i < DYN_MOD_MAX; i++) {
-        if (!DYN_MOD_ACTIVE(DYN_BUBBLES[i])) continue;
+        if (!DYN_MOD_IS_ACTIVE(DYN_BUBBLES[i])) continue;
 
-        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Y(DYN_BUBBLES[i]));
+        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Z(DYN_BUBBLES[i]));
         float dist = distance(dynModPos, position);
-        float dScalar = 1.0f - min(dist / DYN_MOD_RADIUS(DYN_BUBBLES[i]), 1.0f);
-        dScalar = EaseInOut(dScalar, DYN_MOD_IN_POWER(DYN_BUBBLES[i]), DYN_MOD_OUT_POWER(DYN_BUBBLES[i]));
-        if (dist < DYN_MOD_RADIUS(DYN_BUBBLES[i]))
-            pos.y += dScalar * DYN_MOD_VALUE(DYN_BUBBLES[i]);
+        float dScalar = 1.0f - min(dist / DYN_BUB_RADIUS(DYN_BUBBLES[i]), 1.0f);
+        dScalar = EaseInOut(dScalar, DYN_BUB_INPOWER(DYN_BUBBLES[i]), DYN_BUB_OUTPOWER(DYN_BUBBLES[i]));
+        if (dist < DYN_BUB_RADIUS(DYN_BUBBLES[i]))
+            pos.y += dScalar * DYN_BUB_HEIGHT(DYN_BUBBLES[i]);
     }
 
     float t = pos.x / 32.0f;

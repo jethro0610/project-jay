@@ -1,5 +1,5 @@
 #pragma once
-#include "Terrain/Shared_DynamicTerrainModifier.h"
+#include "Terrain/Shared_DynamicNegative.h"
 #include "Entity.h"
 
 class Negator : public Entity {
@@ -16,7 +16,7 @@ public:
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
-    DynamicTerrainModifier* negativeModifier_;
+    DynamicNegative* negativeModifier_;
     bool initialActive_;
 
     #ifdef _DEBUG

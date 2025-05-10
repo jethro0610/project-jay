@@ -13,8 +13,8 @@ EntityProperties Negator::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_radius", &DYN_MOD_RADIUS(*negativeModifier_) },
-            {"p_k", &DYN_MOD_VALUE(*negativeModifier_) }
+            {"p_radius", &negativeModifier_->outerRadius },
+            {"p_k", &negativeModifier_->sharpness }
         },
         {
             // Ints
@@ -43,28 +43,25 @@ void Negator::Init(Entity::InitArgs args) {
     initialActive_ = false;
 
     negativeModifier_ = terrain_->CreateNegative();
-    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
-    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
-    DYN_MOD_VALUE(*negativeModifier_) = 1.0f;
-    DYN_MOD_RADIUS(*negativeModifier_) = 100.0f;
+    negativeModifier_->position = transform_.position;
+    negativeModifier_->outerRadius = 100.0f;
+    negativeModifier_->sharpness = 1.0f;
+    negativeModifier_->innerRadius = 0.0f;
 }
 
 void Negator::Start() {
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, initialActive_);
-    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
-    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
+    negativeModifier_->active = initialActive_;
+    negativeModifier_->position = transform_.position;
 }
 
 void Negator::Update() {
-    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
-    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
+    negativeModifier_->position = transform_.position;
 }
 
 #ifdef _DEBUG
 void Negator::EditorUpdate() {
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, DBG_preview_);
-    DYN_MOD_POS_X(*negativeModifier_) = transform_.position.x;
-    DYN_MOD_POS_Y(*negativeModifier_) = transform_.position.z;
+    negativeModifier_->active = DBG_preview_;
+    negativeModifier_->position = transform_.position;
 }
 #endif
 
@@ -73,10 +70,9 @@ void Negator::OnDestroy() {
 }
 
 void Negator::OnTrigger() {
-    bool active = DYN_MOD_ACTIVE(*negativeModifier_);
-    DYN_MOD_SET_ACTIVE(*negativeModifier_, !active);
+    negativeModifier_->active = !negativeModifier_->active;
 }
 
 bool Negator::GetIsTriggered() {
-    return DYN_MOD_ACTIVE(*negativeModifier_);
+    return negativeModifier_->active;
 }

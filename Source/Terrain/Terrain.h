@@ -10,6 +10,9 @@
 #include <vector_contig.h>
 #include <nlohmann/json.hpp>
 
+#include "Shared_DynamicBubble.h"
+#include "Shared_DynamicNegative.h"
+
 #ifdef _DEBUG
 #include "TerrainBubble.h"
 #include "TerrainNoise.h"
@@ -69,16 +72,16 @@ public:
     #endif
 
     DynamicTerrainModifierContainer dynamicTerrainBubbles_;
-    DynamicTerrainModifier* CreateBubble() { 
-        return dynamicTerrainBubbles_.RequestAvailableModifier(); 
+    DynamicBubble* CreateBubble() { 
+        return (DynamicBubble*)dynamicTerrainBubbles_.RequestAvailableModifier(); 
     }
     void FreeBubble(DynamicTerrainModifier* bubble) {
         dynamicTerrainBubbles_.FreeModifier(bubble);
     }
 
     DynamicTerrainModifierContainer dynamicTerrainNegatives_;
-    DynamicTerrainModifier* CreateNegative() {
-        return dynamicTerrainNegatives_.RequestAvailableModifier();
+    DynamicNegative* CreateNegative() {
+        return (DynamicNegative*)dynamicTerrainNegatives_.RequestAvailableModifier();
     }
     void FreeNegative(DynamicTerrainModifier* negative) {
         dynamicTerrainNegatives_.FreeModifier(negative);

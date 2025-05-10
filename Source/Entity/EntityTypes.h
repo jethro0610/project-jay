@@ -41,7 +41,7 @@
 #include "Stomper.h"
 #include "HomingBossPoint.h"
 #include "ItemToken.h"
-#include "HomingBossProjectile.h"
+#include "HomingBossAttack.h"
 #include "HomingBoss.h"
 
 #define EXPANDENTITIES \
@@ -88,4 +88,4 @@
 	ENTITYEXP(TriggerCrystal, triggercrystal, 40) \
 	ENTITYEXP(HomingBoss, homingboss, 41) \
 	ENTITYEXP(HomingBossPoint, homingbosspoint, 42) \
-	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43)
+	ENTITYEXP(HomingBossAttack, homingbossattack, 44)

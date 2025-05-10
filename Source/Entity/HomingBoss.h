@@ -2,7 +2,7 @@
 #include "Entity.h"
 
 class HomingBossPoint;
-class HomingBossProjectile;
+class HomingBossAttack;
 class Player;
 
 class HomingBoss : public Entity {
@@ -12,8 +12,10 @@ public:
     void OnOverlap(Entity* overlappedEntity);
     void Update();
     void ActivatePoints();
-    void LaunchProjectile();
     bool AllPointsHit();
+    void OnAttackHit();
+    void ActivateRandomAttack();
+    bool IsValidAttack(HomingBossAttack* attack);
 
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_homingboss"; }
@@ -21,12 +23,14 @@ public:
     EntityProperties GetStaticProperties();
 
     static constexpr int NUM_POINTS = 4;
+    static constexpr int NUM_ATTACKS = 9;
 
     int phase_;
     int damage_;
     int overlapCooldown_;
     HomingBossPoint* points_[NUM_POINTS];
     Player* player_;
-    HomingBossProjectile* projectile_;
-    int projectileTimer_;
+    HomingBossAttack* attacks_[NUM_ATTACKS];
+    glm::vec3 centerPoint_;
+    float centerPointRot_;
 };

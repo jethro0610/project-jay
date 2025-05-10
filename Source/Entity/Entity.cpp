@@ -37,6 +37,7 @@ void Entity::Init(
     Entity::InitArgs args
 ) {
     alive_ = true;
+    hide_ = false;
     destroy_ = false; 
     flags_ = 0; 
     

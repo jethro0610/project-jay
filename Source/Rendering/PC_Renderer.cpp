@@ -397,6 +397,7 @@ void Renderer::RenderEntities(
 
     for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities[i].alive_) continue;
+        if (entities[i].hide_) continue;
         Entity& entity = entities[i];
         matrix = entity.renderTransform_.ToMatrix();
 

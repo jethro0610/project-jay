@@ -3,8 +3,9 @@
 #include "Player.h"
 #include "EntityList.h"
 #include "HomingBossPoint.h"
+#include "HomingBossAttack.h"
 #include "Helpers/PhysicsHelpers.h"
-#include "HomingBossProjectile.h"
+#include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
 EntityDependendies HomingBoss::GetStaticDependencies() {
@@ -49,44 +50,47 @@ void HomingBoss::Init(Entity::InitArgs args) {
     damage_ = 0;
     overlapCooldown_ = 0;
     player_ = nullptr;
-    projectileTimer_ = 0;
-    projectile_ = nullptr;
+    centerPointRot_ = 0;
 
     SetFlag(EF_Overlap, true);
     SetFlag(EF_Homeable, true);
     SetFlag(EF_RecievePush, true);
-    SetFlag(EF_SendPush, true);
+    SetFlag(EF_Interpolate, true);
 }
 
 void HomingBoss::Start() {
-    int numFound = entities_->FindEntitiesByType(HomingBossPoint::TYPEID, (Entity**)points_, NUM_POINTS);
-    assert(numFound == NUM_POINTS);
+    centerPoint_ = transform_.position;
+    int numPointsFound = entities_->FindEntitiesByType(HomingBossPoint::TYPEID, (Entity**)points_, NUM_POINTS);
+    assert(numPointsFound == NUM_POINTS);
+
+    int numAttacksFound = entities_->FindEntitiesByType(HomingBossAttack::TYPEID, (Entity**)attacks_, NUM_ATTACKS);
+    assert(numAttacksFound == NUM_ATTACKS);
 
     player_ = (Player*)entities_->FindEntityByType(Player::TYPEID);
     assert(player_ != nullptr);
+
+    for (int i = 0; i < NUM_ATTACKS; i++) {
+       attacks_[i]->homingBoss_ = this; 
+       attacks_[i]->player_ = player_;
+    }
+
+    for (int i = 0; i < 2; i++)
+        ActivateRandomAttack();
 }
 
 void HomingBoss::Update() {
-    if (projectile_ != nullptr && !projectile_->alive_)
-        projectile_ = nullptr;
-
     if (overlapCooldown_ > 0)
         overlapCooldown_--;
 
-    if (projectile_ != nullptr)
-        projectileTimer_ = 0;
+    centerPointRot_ += 0.01f;
+    vec3 rotVec = vec3(sin(centerPointRot_), 0.0f, cos(centerPointRot_));
+    float y = sin(centerPointRot_ * 2.25f) * 20.0f;
 
-    projectileTimer_++; 
+    float distT = (sin(centerPointRot_ * 1.25f) + 1.0f) * 0.5f;
+    float dist = mix(150.0f, 225.0f, distT);
 
-    if (
-        projectile_ == nullptr && 
-        projectileTimer_ >= 60 * 3 && 
-        distance(player_->transform_.position, transform_.position) < 1200.0f &&
-        player_->onGround_
-    ) {
-        LaunchProjectile();
-        projectileTimer_ = 0;
-    }
+    transform_.position = centerPoint_ + rotVec * dist;
+    transform_.position.y += y;
 }
 
 void HomingBoss::OnOverlap(Entity* overlappedEntity) {
@@ -113,7 +117,7 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
 
     damage_++;
     if (phase_ == 0) {
-        if (damage_ >= 3) {
+        if (damage_ >= 6) {
             phase_++;
             ActivatePoints();
         }
@@ -136,18 +140,31 @@ bool HomingBoss::AllPointsHit() {
     return true;
 }
 
-void HomingBoss::LaunchProjectile() {
-    vec3 velocity = GetProjectileVelocityToPoint(
-        transform_.position, 
-        player_->transform_.position, 
-        HomingBossProjectile::GRAVITY, 
-        HomingBossProjectile::LAUNCH_STRENGTH
-    );
-    if (velocity != vec3(0.0f)) {
-        Transform projTransform;
-        projTransform.scale = vec3(8.0f);
-        projTransform.position = transform_.position;
-        projectile_ = (HomingBossProjectile*)(&entities_->CreateEntity(HomingBossProjectile::TYPEID, projTransform));
-        projectile_->velocity_ = velocity;
+void HomingBoss::OnAttackHit() {
+    ActivateRandomAttack();
+}
+
+void HomingBoss::ActivateRandomAttack() {
+    int activateIndex = -1;
+    do {
+        activateIndex = rand() % NUM_ATTACKS;
     }
+    while (!IsValidAttack(attacks_[activateIndex]));
+    attacks_[activateIndex]->Activate(); 
+}
+
+bool HomingBoss::IsValidAttack(HomingBossAttack* attack) {
+    if (attack->active_)
+        return false;
+
+    // if (distance2(attack->transform_.position, player_->transform_.position) < 300.0f * 300.0f)
+    //     return false;
+
+    for (int i = 0; i < NUM_ATTACKS; i++) {
+        if (attacks_[i] == attack) continue;        
+        if (!attacks_[i]->active_) continue;
+        if (distance2(attack->transform_.position, attacks_[i]->transform_.position) < 300.0f * 300.0f)
+            return false;
+    }
+    return true;
 }

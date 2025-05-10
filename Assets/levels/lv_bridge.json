@@ -1614,7 +1614,6 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
@@ -1639,7 +1638,6 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
@@ -1664,7 +1662,6 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
@@ -1689,7 +1686,6 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
@@ -2034,6 +2030,422 @@
                 }
             },
             "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 1958.605712890625,
+                    "y": 421.98724365234375,
+                    "z": -2565.557373046875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.399995803833008,
+                    "y": 24.0999755859375,
+                    "z": 11.399995803833008
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2685.659912109375,
+                    "y": 421.7799072265625,
+                    "z": -1873.1505126953125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799996376037598,
+                    "y": 35.899940490722656,
+                    "z": 8.799996376037598
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2810.056640625,
+                    "y": 416.24896240234375,
+                    "z": -3272.6923828125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.900004386901855,
+                    "y": 28.60003662109375,
+                    "z": 11.900004386901855
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 3575.81103515625,
+                    "y": 320.3331298828125,
+                    "z": -2205.156982421875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.80000114440918,
+                    "y": 32.400108337402344,
+                    "z": 11.80000114440918
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2031.9698486328125,
+                    "y": 398.3193664550781,
+                    "z": -2299.59619140625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.399995803833008,
+                    "y": 24.0999755859375,
+                    "z": 11.399995803833008
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2201.055419921875,
+                    "y": 368.80828857421875,
+                    "z": -2526.12060546875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.399995803833008,
+                    "y": 24.0999755859375,
+                    "z": 11.399995803833008
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2706.984619140625,
+                    "y": 352.8935546875,
+                    "z": -3044.288330078125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.900004386901855,
+                    "y": 28.60003662109375,
+                    "z": 11.900004386901855
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2964.02587890625,
+                    "y": 341.7119140625,
+                    "z": -3131.78515625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.900004386901855,
+                    "y": 28.60003662109375,
+                    "z": 11.900004386901855
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 3717.59521484375,
+                    "y": 377.5160217285156,
+                    "z": -2408.70361328125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.80000114440918,
+                    "y": 32.400108337402344,
+                    "z": 11.80000114440918
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 3496.001953125,
+                    "y": 309.9823913574219,
+                    "z": -2381.746826171875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.80000114440918,
+                    "y": 32.400108337402344,
+                    "z": 11.80000114440918
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2881.669677734375,
+                    "y": 382.60552978515625,
+                    "z": -1723.8255615234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799996376037598,
+                    "y": 35.899940490722656,
+                    "z": 8.799996376037598
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_homingatk",
+            "transform": {
+                "position": {
+                    "x": 2856.768310546875,
+                    "y": 375.75408935546875,
+                    "z": -1945.8514404296875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799996376037598,
+                    "y": 35.899940490722656,
+                    "z": 8.799996376037598
+                }
+            },
+            "type_id": 44
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 1.0,
+                "p_radius": 300.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "transform": {
+                "position": {
+                    "x": 2012.566650390625,
+                    "y": 686.2021484375,
+                    "z": -1756.0169677734375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 14.20000171661377,
+                    "y": 14.20000171661377,
+                    "z": 14.20000171661377
+                }
+            },
+            "type_id": 35
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 1.0,
+                "p_radius": 300.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "transform": {
+                "position": {
+                    "x": 2139.07470703125,
+                    "y": 704.3253173828125,
+                    "z": -3295.07470703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 14.20000171661377,
+                    "y": 14.20000171661377,
+                    "z": 14.20000171661377
+                }
+            },
+            "type_id": 35
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 1.0,
+                "p_radius": 300.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "transform": {
+                "position": {
+                    "x": 3588.392578125,
+                    "y": 704.67138671875,
+                    "z": -3029.80419921875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 14.20000171661377,
+                    "y": 14.20000171661377,
+                    "z": 14.20000171661377
+                }
+            },
+            "type_id": 35
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 1.0,
+                "p_radius": 300.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "transform": {
+                "position": {
+                    "x": 3433.904541015625,
+                    "y": 697.5010375976563,
+                    "z": -1684.4312744140625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 14.20000171661377,
+                    "y": 14.20000171661377,
+                    "z": 14.20000171661377
+                }
+            },
+            "type_id": 35
         }
     ],
     "landmap": "lm_bridge",
@@ -2068,22 +2480,6 @@
                 "x": -1108.57568359375,
                 "y": 440.8901672363281,
                 "z": -2506.189208984375
-            }
-        },
-        {
-            "label": "peg here for island segments",
-            "position": {
-                "x": 17.026466369628906,
-                "y": 277.72845458984375,
-                "z": -2092.7939453125
-            }
-        },
-        {
-            "label": "need to introduce pillarpad earlier",
-            "position": {
-                "x": -1708.0635986328125,
-                "y": 330.656982421875,
-                "z": -1390.0347900390625
             }
         }
     ],

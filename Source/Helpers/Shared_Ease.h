@@ -22,6 +22,11 @@ INLINE float EaseCubic(float t) {
         return 1.0f - POW(-2.0f * t + 2.0f, 3.0f) * 0.5f;
 }
 
+INLINE float EaseOutCubic(float t) {
+    float inv = 1.0f - t;
+    return 1.0f - (inv * inv * inv);
+}
+
 INLINE float EaseInOut(float t, float inPower, float outPower) {
     return 1 - POW(1 - POW(t, inPower), outPower);
 }

@@ -46,28 +46,30 @@ void Negator::Init(Entity::InitArgs args) {
     negativeModifier_ = terrain_->CreateNegative();
     negativeModifier_->position = transform_.position;
     negativeModifier_->outerRadius = 100.0f;
-    negativeModifier_->sharpness = 1.0f;
-    negativeModifier_->innerRadius = 0.0f;
-    deactivate_ = false;
-    deactivateTimer_ = 0;
+    negativeModifier_->sharpness = 0.25f;
 
     bubbleModifier_ = terrain_->CreateBubble();
     bubbleModifier_->position = transform_.position;
     bubbleModifier_->height = 0.0f;
-    bubbleModifier_->inpower = 0.5f;
-    bubbleModifier_->outpower = 50.0f;
-    bubbleModifier_->radius = negativeModifier_->outerRadius;
-    negativeModifier_->sharpness = 1.0f;
-    negativeModifier_->innerRadius = 0.0f;
-    deactivate_ = false;
-    deactivateTimer_ = 0;
+    bubbleModifier_->inpower = 2.0f;
+    bubbleModifier_->outpower = 8.0f;
+
+    fader_ = DynamicFader();
+    fader_.deactivateLength_ = 40.0f;
+    fader_.activateLength_ = 40.0f;
 }
 
 void Negator::Start() {
-    negativeModifier_->active = initialActive_;
-    negativeModifier_->position = transform_.position;
+    bubbleModifier_->radius = negativeModifier_->outerRadius;
+    fader_.AddModifier(negativeModifier_, &negativeModifier_->innerRadius, negativeModifier_->outerRadius, 0.0f, false, -negativeModifier_->outerRadius);
+    fader_.AddModifier(bubbleModifier_, &bubbleModifier_->height, 0.0f, -200.0f, true);
 
-    bubbleModifier_->active = initialActive_;
+    if (initialActive_)
+        fader_.ActivateModifiers(true);
+    else
+        fader_.DeactivateModifiers(true);
+
+    negativeModifier_->position = transform_.position;
     bubbleModifier_->position = transform_.position;
     bubbleModifier_->radius = negativeModifier_->outerRadius;
 }
@@ -75,26 +77,7 @@ void Negator::Start() {
 void Negator::Update() {
     negativeModifier_->position = transform_.position;
     bubbleModifier_->position = transform_.position;
-
-    if (deactivate_)
-        deactivateTimer_++;
-
-    if (deactivateTimer_ > 60) {
-        negativeModifier_->active = false;
-        bubbleModifier_->active = false;
-        deactivate_ = false;
-    }
-
-    if (!deactivate_) {
-        negativeModifier_->innerRadius = -negativeModifier_->outerRadius;
-        bubbleModifier_->height = 0.0f;
-    }
-    else {
-        float t = deactivateTimer_ / 60.0f;
-        t = EaseOutCubic(t);
-        negativeModifier_->innerRadius = mix(0.0f, negativeModifier_->outerRadius - 50.0f, t);
-        bubbleModifier_->height = mix(-200.0f, 0.0f, t);
-    }
+    fader_.Update();
 }
 
 #ifdef _DEBUG
@@ -113,17 +96,9 @@ void Negator::OnDestroy() {
 }
 
 void Negator::OnTrigger() {
-    if (negativeModifier_->active) {
-        deactivate_ = true;
-        deactivateTimer_ = 0;
-    }
-    else {
-        negativeModifier_->active = false;
-        bubbleModifier_->active = false;
-        deactivate_ = false;
-    }
+    fader_.Toggle();
 }
 
 bool Negator::GetIsTriggered() {
-    return negativeModifier_->active && !deactivate_;
+    return fader_.IsActive();
 }

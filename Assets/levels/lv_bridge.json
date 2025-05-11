@@ -1386,7 +1386,7 @@
         {
             "bool_properties": {
                 "p_invert": true,
-                "p_oneway": true
+                "p_oneway": false
             },
             "float_properties": {
                 "p_b_off": 0.5,
@@ -1614,13 +1614,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
                 "position": {
-                    "x": 2090.82666015625,
-                    "y": 693.005126953125,
-                    "z": -1820.8763427734375
+                    "x": 2040.1005859375,
+                    "y": 681.185791015625,
+                    "z": -1775.000244140625
                 },
                 "rotation": {
                     "x": 0.0,
@@ -1638,13 +1639,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
                 "position": {
-                    "x": 3413.507568359375,
-                    "y": 700.1943969726563,
-                    "z": -1762.678955078125
+                    "x": 3431.217041015625,
+                    "y": 699.138671875,
+                    "z": -1717.41455078125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -1662,13 +1664,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
                 "position": {
-                    "x": 3562.300537109375,
-                    "y": 711.640625,
-                    "z": -3009.793701171875
+                    "x": 3584.778076171875,
+                    "y": 702.97998046875,
+                    "z": -3070.407470703125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -1686,13 +1689,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_homingbosspoint",
             "transform": {
                 "position": {
-                    "x": 2226.57275390625,
-                    "y": 708.921875,
-                    "z": -3249.168212890625
+                    "x": 2104.063232421875,
+                    "y": 703.1868896484375,
+                    "z": -3313.0341796875
                 },
                 "rotation": {
                     "x": 0.0,
@@ -2330,122 +2334,6 @@
                 }
             },
             "type_id": 44
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 300.0
-            },
-            "int_properties": null,
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 2012.566650390625,
-                    "y": 686.2021484375,
-                    "z": -1756.0169677734375
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 14.20000171661377,
-                    "y": 14.20000171661377,
-                    "z": 14.20000171661377
-                }
-            },
-            "type_id": 35
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 300.0
-            },
-            "int_properties": null,
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 2139.07470703125,
-                    "y": 704.3253173828125,
-                    "z": -3295.07470703125
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 14.20000171661377,
-                    "y": 14.20000171661377,
-                    "z": 14.20000171661377
-                }
-            },
-            "type_id": 35
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 300.0
-            },
-            "int_properties": null,
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 3588.392578125,
-                    "y": 704.67138671875,
-                    "z": -3029.80419921875
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 14.20000171661377,
-                    "y": 14.20000171661377,
-                    "z": 14.20000171661377
-                }
-            },
-            "type_id": 35
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 300.0
-            },
-            "int_properties": null,
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 3433.904541015625,
-                    "y": 697.5010375976563,
-                    "z": -1684.4312744140625
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 14.20000171661377,
-                    "y": 14.20000171661377,
-                    "z": 14.20000171661377
-                }
-            },
-            "type_id": 35
         }
     ],
     "landmap": "lm_bridge",

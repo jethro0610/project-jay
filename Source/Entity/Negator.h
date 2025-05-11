@@ -1,6 +1,7 @@
 #pragma once
 #include "Terrain/Shared_DynamicNegative.h"
 #include "Terrain/Shared_DynamicBubble.h"
+#include "Terrain/DynamicFader.h"
 #include "Entity.h"
 
 class Negator : public Entity {
@@ -19,9 +20,8 @@ public:
 
     DynamicNegative* negativeModifier_;
     DynamicBubble* bubbleModifier_;
+    DynamicFader fader_;
     bool initialActive_;
-    int deactivateTimer_;
-    bool deactivate_;
 
     #ifdef _DEBUG
     void EditorUpdate();

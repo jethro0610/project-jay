@@ -15,11 +15,24 @@ INLINE float EaseQuad(float t) {
         return 1.0f - POW(-2.0f * t + 2.0f, 2.0f) * 0.5f;
 }
 
+INLINE float EaseInQuad(float t) {
+    return t * t;
+}
+
+INLINE float EaseOutQuad(float t) {
+    float inv = 1.0f - t;
+    return 1.0f - (inv * inv * inv);
+}
+
 INLINE float EaseCubic(float t) {
     if (t < 0.5f)
         return 4.0f * t * t * t;
     else 
         return 1.0f - POW(-2.0f * t + 2.0f, 3.0f) * 0.5f;
+}
+
+INLINE float EaseInCubic(float t) {
+    return t * t * t;
 }
 
 INLINE float EaseOutCubic(float t) {

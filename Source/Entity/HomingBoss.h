@@ -23,7 +23,7 @@ public:
     EntityProperties GetStaticProperties();
 
     static constexpr int NUM_POINTS = 4;
-    static constexpr int NUM_ATTACKS = 9;
+    static constexpr int NUM_ATTACKS = 12;
 
     int phase_;
     int damage_;

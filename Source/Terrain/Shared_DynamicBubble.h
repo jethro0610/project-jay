@@ -10,7 +10,7 @@
 #define DYN_BUB_RADIUS(modifier) ((modifier)[1][0])
 #define DYN_BUB_HEIGHT(modifier) ((modifier)[1][1])
 #define DYN_BUB_INPOWER(modifier) ((modifier)[1][2])
-#define DYN_BUB_OUTPOWER(modifier) ((modifier)[1][2])
+#define DYN_BUB_OUTPOWER(modifier) ((modifier)[1][3])
 
 #ifndef SHARED_SHADER
 struct DynamicBubble: public DynamicTerrainModifier {

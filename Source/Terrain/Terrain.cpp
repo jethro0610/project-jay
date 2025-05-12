@@ -45,7 +45,7 @@ resourceManager_(resourceManager)
     DBG_landMapName_ = "lm_default";
     DBG_lowRes_ = true;
 
-    #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 64; i++) { ARR[i].terrain_ = this; DBG_modifiers_.push_back(&ARR[i]); }
+    #define TERRAINMOD(TYPE, ARR) for (int i = 0; i < 128; i++) { ARR[i].terrain_ = this; DBG_modifiers_.push_back(&ARR[i]); }
     EXPANDTERRAINMODS 
     #undef TERRAINMOD
     #endif
@@ -576,7 +576,7 @@ StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec3
     switch (typeId) {
         #define TERRAINMOD(TYPE, ARR)           \
         case TYPE::ID: {                        \
-            for (int i = 0; i < 64; i++) {      \
+            for (int i = 0; i < 128; i++) {     \
                 if (ARR[i].active_)             \
                     continue;                   \
                                                 \

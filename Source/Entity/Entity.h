@@ -134,6 +134,7 @@ public:
     bool alive_;
     bool destroy_;
     bool hide_;
+    bool sleep_;
     uint32_t flags_; 
 
     Transform transform_;
@@ -176,6 +177,9 @@ public:
     bool DBG_preview_;
     int DBG_id_;
     #endif
+
+    void Sleep();
+    void Wake();
 
     void SetFlag(Flag flag, bool enable);
     bool GetFlag(Flag flag);

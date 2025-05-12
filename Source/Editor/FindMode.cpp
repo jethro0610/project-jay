@@ -32,6 +32,7 @@ ConfirmBehavior FindMode::OnConfirm() {
     for (int i = 0; i < targets_.size(); i++) {
         int t = (i + lastFindIndex_ + 1) % targets_.size();
         if (!targets_[t]->Selectable()) continue;
+        DEBUGLOG(targets_[t]->GetName());
         
         if (targets_[t]->GetName() == textInput_.Get() || targets_[t]->GetLabel() == textInput_.Get()) {
             target_.Select(targets_[t]);

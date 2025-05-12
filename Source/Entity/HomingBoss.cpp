@@ -5,6 +5,8 @@
 #include "HomingBossPoint.h"
 #include "HomingBossAttack.h"
 #include "Helpers/PhysicsHelpers.h"
+#include "Helpers/Random.h"
+#include "Camera/Camera.h"
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
@@ -70,8 +72,9 @@ void HomingBoss::Start() {
     assert(player_ != nullptr);
 
     for (int i = 0; i < NUM_ATTACKS; i++) {
-       attacks_[i]->homingBoss_ = this; 
-       attacks_[i]->player_ = player_;
+        attacks_[i]->homingBoss_ = this; 
+        attacks_[i]->player_ = player_;
+        attacks_[i]->Deactivate();
     }
 
     for (int i = 0; i < 2; i++)
@@ -104,7 +107,7 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
 
     overlapCooldown_ = 20;
     overlappedEntity->skipGroundCheck_ = true;
-    overlappedEntity->velocity_.y = 200.0f;
+    overlappedEntity->velocity_.y = phase_ > 0 ? 200.0f : 125.0f;
 
     // Beyond phase 1, we need to hit all 
     // points before considering this a hit
@@ -128,8 +131,21 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
 }
 
 void HomingBoss::ActivatePoints() {
-    for (int i = 0; i < NUM_POINTS; i++)
-        points_[i]->Activate();
+    int startIndex = -1;
+    float maxDot = -INFINITY;
+    for (int i = 0; i < NUM_POINTS; i++) {
+        vec3 dirToPoint = normalize(points_[i]->transform_.position - camera_->transform_.position);
+        float d = dot(camera_->transform_.GetForwardVector(), dirToPoint);
+        if (d > maxDot) {
+            startIndex = i;
+            maxDot = d;
+        }
+    }
+
+    for (int i = 0; i < NUM_POINTS; i++) {
+        int index = (i + startIndex) % NUM_POINTS;
+        points_[i]->ActivateInTicks(30 + i * 40);
+    }
 }
 
 bool HomingBoss::AllPointsHit() {
@@ -161,7 +177,7 @@ bool HomingBoss::IsValidAttack(HomingBossAttack* attack) {
     //     return false;
 
     for (int i = 0; i < NUM_ATTACKS; i++) {
-        if (attacks_[i] == attack) continue;        
+        if (attacks_[i] == attack) continue;
         if (!attacks_[i]->active_) continue;
         if (distance2(attack->transform_.position, attacks_[i]->transform_.position) < 300.0f * 300.0f)
             return false;

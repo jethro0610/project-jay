@@ -61,7 +61,15 @@ void Negator::Init(Entity::InitArgs args) {
 
 void Negator::Start() {
     bubbleModifier_->radius = negativeModifier_->outerRadius;
-    fader_.AddModifier(negativeModifier_, &negativeModifier_->innerRadius, negativeModifier_->outerRadius, 0.0f, false, -negativeModifier_->outerRadius);
+    fader_.AddModifier(
+        negativeModifier_, 
+        &negativeModifier_->innerRadius, 
+        negativeModifier_->outerRadius, 
+        0.0f, 
+        false, 
+        EaseType::E_Quad,
+        -negativeModifier_->outerRadius
+    );
     fader_.AddModifier(bubbleModifier_, &bubbleModifier_->height, 0.0f, -200.0f, true);
 
     if (initialActive_)

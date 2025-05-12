@@ -37,6 +37,7 @@ void Entity::Init(
     Entity::InitArgs args
 ) {
     alive_ = true;
+    sleep_ = false;
     hide_ = false;
     destroy_ = false; 
     flags_ = 0; 
@@ -92,6 +93,16 @@ void Entity::DoStart() {
         EXPANDENTITIES
         #undef ENTITYEXP
     }
+}
+
+void Entity::Sleep() {
+    alive_ = false;
+    sleep_ = true;
+}
+
+void Entity::Wake() {
+    alive_ = true;
+    sleep_ = false;
 }
 
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
@@ -524,7 +535,7 @@ vec3 Entity::GetTarget() {
 
 #ifdef _DEBUG
 std::string Entity::ETarget::GetName() {
-    return std::string(entity_->GetName()) + " [" + std::to_string(entity_->DBG_id_) + "]";
+    return std::string(entity_->GetName());
 }
 
 vec3 Entity::ETarget::GetPosition() {

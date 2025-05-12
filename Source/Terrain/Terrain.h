@@ -66,9 +66,9 @@ public:
     std::string DBG_landMapName_;
     bool DBG_lowRes_;
 
-    TerrainBubble DBG_bubbles_[64];
-    TerrainNoise DBG_noises_[64];
-    vector_const<StaticTerrainModifier*, 128> DBG_modifiers_;
+    TerrainBubble DBG_bubbles_[128];
+    TerrainNoise DBG_noises_[128];
+    vector_const<StaticTerrainModifier*, StaticTerrainModifier::MAX> DBG_modifiers_;
     #endif
 
     DynamicTerrainModifierContainer dynamicTerrainBubbles_;

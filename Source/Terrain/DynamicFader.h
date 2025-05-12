@@ -1,5 +1,6 @@
 #pragma once
 #include "Shared_DynamicTerrainModifier.h"
+#include "Helpers/EaseType.h"
 class DynamicFader {
 public:
     DynamicFader();
@@ -10,6 +11,7 @@ public:
     float maxs_[MAX_MODIFIERS];
     float activeOverrides_[MAX_MODIFIERS];
     bool transitionOnly_[MAX_MODIFIERS];
+    EaseType easeTypes_[MAX_MODIFIERS];
     int numModifiers_;
 
     bool active_;
@@ -32,6 +34,7 @@ public:
         float min, 
         float max, 
         bool transitionOnly,
+        EaseType easeType = EaseType::E_Quad,
         float activeOverride_ = -INFINITY
     );
 };

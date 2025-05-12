@@ -35,7 +35,7 @@ void EntityList::Reset() {
     for (int i = 0; i < MAX; i++) {
         available_[i] = i;
 
-        if (rawEntities_[i].entity.alive_) {
+        if (rawEntities_[i].entity.alive_ || rawEntities_[i].entity.sleep_) {
             rawEntities_[i].entity.alive_ = false;
             rawEntities_[i].entity.DoDestroy();
         }

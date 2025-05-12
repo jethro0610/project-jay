@@ -16,6 +16,7 @@ public:
     void Activate();
     void Deactivate();
     void OnHurt(HurtArgs args);
+    void OnHitlagEnd();
 
     HomingBoss* homingBoss_;
     Player* player_;

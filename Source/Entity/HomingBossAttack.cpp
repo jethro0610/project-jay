@@ -44,22 +44,21 @@ void HomingBossAttack::Init(Entity::InitArgs args) {
 
     homingBoss_ = nullptr;
     player_ = nullptr;
-    active_ = false;
-    hide_ = true;
+    SetFlag(EF_RecieveHits, true);
 }
 
 void HomingBossAttack::Activate() {
     SetFlag(EF_RecieveHits, true);
     materials_[0].specularProperties.color = vec4(0.85f, 0.85f, 0.85f, 1.0f);
     active_ = true;
-    hide_ = false;
+    Wake();
 }
 
 void HomingBossAttack::Deactivate() {
     SetFlag(EF_RecieveHits, false);
     materials_[0].specularProperties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
     active_ = false;
-    hide_ = true;
+    Sleep();
 }
 
 void HomingBossAttack::OnHurt(HurtArgs args) {
@@ -69,5 +68,8 @@ void HomingBossAttack::OnHurt(HurtArgs args) {
     tokenTransform.position = transform_.position;
     ItemToken& itemToken = (ItemToken&)(entities_->CreateEntity(ItemToken::TYPEID, tokenTransform));
     itemToken.SetPlayerAndItem(player_, Item::I_Homing);
+}
+
+void HomingBossAttack::OnHitlagEnd() {
     Deactivate();
 }

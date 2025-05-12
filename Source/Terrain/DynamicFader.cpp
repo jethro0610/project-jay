@@ -1,6 +1,5 @@
 #include "DynamicFader.h"
 #include "Helpers/Shared_Ease.h"
-#include "Logging/Logger.h"
 
 DynamicFader::DynamicFader() {
     numModifiers_ = 0;
@@ -32,10 +31,9 @@ void DynamicFader::Update() {
         }
     }
 
-
     if (percentChanged) {
-        float easePercent = EaseQuad(percent_);
         for (int i = 0; i < numModifiers_; i++) {
+            float easePercent = Ease(percent_, easeTypes_[i]);
             if (transitionOnly_[i])
                 modifiers_[i]->active = true;
             if (percent_ >= 1.0f)  
@@ -99,13 +97,22 @@ void DynamicFader::DeactivateModifiers(bool initial) {
         percent_ = 0.0f;
 }
 
-void DynamicFader::AddModifier(DynamicTerrainModifier* modifier, float* value, float min, float max, bool transitionOnly, float activeOverride) {
+void DynamicFader::AddModifier(
+    DynamicTerrainModifier* modifier, 
+    float* value, 
+    float min, 
+    float max, 
+    bool transitionOnly, 
+    EaseType easeType,
+    float activeOverride
+) {
     modifiers_[numModifiers_] = modifier;
     values_[numModifiers_] = value;
     mins_[numModifiers_] = min;
     maxs_[numModifiers_] = max;
     activeOverrides_[numModifiers_] = activeOverride == -INFINITY ? max : activeOverride;
     transitionOnly_[numModifiers_] = transitionOnly;
+    easeTypes_[numModifiers_] = easeType;
     numModifiers_++;
 }
 

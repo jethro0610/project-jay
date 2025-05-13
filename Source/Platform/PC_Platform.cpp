@@ -17,7 +17,10 @@
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 #include <bgfx/bgfx.h>
+
+#ifdef __linux__
 #include <wayland-egl.h>
+#endif
 
 Platform* Platform::platform_ = nullptr;
 
@@ -55,6 +58,7 @@ Platform::Platform() {
     init.resolution.reset = BGFX_RESET_NONE;
     init.limits.transientVbSize = 8192 * 8192;
 
+#ifdef __linux__
     wl_surface* surface = glfwGetWaylandWindow(window_);
     wl_egl_window* egl_window = wl_egl_window_create(surface, 1920, 1080);
     glfwSetWindowUserPointer(window_, egl_window);
@@ -62,6 +66,11 @@ Platform::Platform() {
     init.platformData.nwh = egl_window;
     init.platformData.ndt = glfwGetWaylandDisplay();
     init.platformData.type = bgfx::NativeWindowHandleType::Wayland;
+#elif _WIN32
+    init.platformData.nwh = GETHANDLE(window_);
+    init.platformData.ndt = GETDISPLAY();
+#endif
+
 
     bgfx::init(init);
     DEBUGLOG("Succesfully started BGFX");

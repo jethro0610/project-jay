@@ -1,11 +1,11 @@
 #ifndef SHARED_SHADER
-#pragma once
-#define INLINE inline
-#include <cmath>
-#define POW powf
+    #pragma once
+    #define INLINE inline
+    #include <cmath>
+    #define POW powf
 #else
-#define INLINE
-#define POW pow
+    #define INLINE
+    #define POW pow
 #endif
 
 INLINE float EaseQuad(float t) {

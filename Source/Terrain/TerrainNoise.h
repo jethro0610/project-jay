@@ -10,7 +10,7 @@
 class TerrainNoise : public StaticTerrainModifier {
 public:
     static constexpr int ID = 2;
-    static constexpr std::string NAME = "e_noise";
+    static constexpr char NAME[] = "e_noise";
     TerrainNoise();
 
     FastNoiseLite noise_;

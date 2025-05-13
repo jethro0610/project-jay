@@ -11,7 +11,7 @@
 class TerrainBubble : public StaticTerrainModifier {
 public:
     static constexpr int ID = 1;
-    static constexpr std::string NAME = "e_bubble";
+    static constexpr char NAME[] = "e_bubble";
     TerrainBubble();
 
     glm::vec2 position_;

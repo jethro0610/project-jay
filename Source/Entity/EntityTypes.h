@@ -34,15 +34,16 @@
 #include "Peg.h"
 #include "Segment.h"
 #include "AttackSegment.h"
-#include "Ramp.h"
-#include "Entity.h"
-#include "Negator.h"
 #include "TriggerCrystal.h"
 #include "Stomper.h"
-#include "HomingBossPoint.h"
 #include "ItemToken.h"
-#include "HomingBossAttack.h"
+#include "Ramp.h"
+#include "Negator.h"
+#include "HomingBossPoint.h"
 #include "HomingBoss.h"
+#include "HomingBossAttack.h"
+#include "Entity.h"
+#include "HomingBossProjectile.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -88,4 +89,5 @@
 	ENTITYEXP(TriggerCrystal, triggercrystal, 40) \
 	ENTITYEXP(HomingBoss, homingboss, 41) \
 	ENTITYEXP(HomingBossPoint, homingbosspoint, 42) \
+	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43) \
 	ENTITYEXP(HomingBossAttack, homingbossattack, 44)

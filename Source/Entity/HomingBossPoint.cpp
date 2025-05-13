@@ -44,7 +44,6 @@ void HomingBossPoint::Init(Entity::InitArgs args) {
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 2.0f;
 
-    hit_ = false;
     negative_ = terrain_->CreateNegative();
     negative_->outerRadius = 300.0f;
     negative_->sharpness = 0.25f;
@@ -90,6 +89,9 @@ void HomingBossPoint::Start() {
             containedEntities_.push_back(&entity);
         }
     }
+}
+
+void HomingBossPoint::LateStart() {
     for (Entity* entity : containedEntities_)
         entity->Sleep();
 }
@@ -97,16 +99,7 @@ void HomingBossPoint::Start() {
 void HomingBossPoint::Activate() {
     SetFlag(EF_RecieveHits, true);
     materials_[0].specularProperties.color = vec4(1.0f, 0.5f, 1.0f, 1.0f);
-    hit_ = false;
     fader_.StartDeactivate();
-}
-
-void HomingBossPoint::OnHurt(HurtArgs args) {
-    if (args.attacker->typeId_ != Player::TYPEID)
-        return;
-    
-    hit_ = true;
-    materials_[0].specularProperties.color = vec4(0.5f, 1.0f, 1.0f, 1.0f);
 }
 
 void HomingBossPoint::OnDestroy() {

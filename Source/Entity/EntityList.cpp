@@ -65,8 +65,10 @@ Entity& EntityList::CreateEntity(TypeID typeId, const Transform& transform, bool
     rawEntities_[entityId].entity.Init({particleManager_, resourceManager_});
     if (propertiesAssigner != nullptr)
         rawEntities_[entityId].entity.AssignProperties(*propertiesAssigner);
-    if (!skipStart)
+    if (!skipStart) {
         rawEntities_[entityId].entity.DoStart();
+        rawEntities_[entityId].entity.DoLateStart();
+    }
 
     #ifdef _DEBUG
     rawEntities_[entityId].entity.DBG_id_ = entityId;

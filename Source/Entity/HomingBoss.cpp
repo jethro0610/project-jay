@@ -7,6 +7,7 @@
 #include "Helpers/PhysicsHelpers.h"
 #include "Helpers/Random.h"
 #include "Camera/Camera.h"
+#include "HomingBossProjectile.h"
 #include <glm/gtx/rotate_vector.hpp>
 using namespace glm;
 
@@ -90,7 +91,7 @@ void HomingBoss::Update() {
     float y = sin(centerPointRot_ * 2.25f) * 20.0f;
 
     float distT = (sin(centerPointRot_ * 1.25f) + 1.0f) * 0.5f;
-    float dist = mix(150.0f, 225.0f, distT);
+    float dist = mix(150.0f, 175.0f, distT);
 
     transform_.position = centerPoint_ + rotVec * dist;
     transform_.position.y += y;
@@ -99,19 +100,24 @@ void HomingBoss::Update() {
 void HomingBoss::OnOverlap(Entity* overlappedEntity) {
     if (overlappedEntity->typeId_ == Player::TYPEID)
         ((Player*)overlappedEntity)->EndHoming();
-    else
+    else if (overlappedEntity->typeId_ == HomingBossProjectile::TYPEID) {
+        guard_ = false;
+        ((HomingBossProjectile*)overlappedEntity)->Reset();
+        ((HomingBossProjectile*)overlappedEntity)->canWake_ = true;
+        overlappedEntity->Sleep();
         return;
+    }
 
     if (overlapCooldown_ > 0)
         return;
 
     overlapCooldown_ = 20;
     overlappedEntity->skipGroundCheck_ = true;
-    overlappedEntity->velocity_.y = phase_ > 0 ? 200.0f : 125.0f;
+    overlappedEntity->velocity_.y = phase_ > 0 && guard_ ? 200.0f : 125.0f;
 
     // Beyond phase 1, we need to hit all 
     // points before considering this a hit
-    if (phase_ > 0 && !AllPointsHit())
+    if (phase_ > 0 && guard_)
         return;
 
     hitlag_ = 8;
@@ -120,13 +126,15 @@ void HomingBoss::OnOverlap(Entity* overlappedEntity) {
 
     damage_++;
     if (phase_ == 0) {
-        if (damage_ >= 6) {
+        if (damage_ >= 4) {
             phase_++;
+            guard_ = true;
             ActivatePoints();
         }
     }
     else if (phase_ == 1) {
-        ActivatePoints();
+        damage_++;
+        guard_ = true;
     }
 }
 
@@ -146,14 +154,6 @@ void HomingBoss::ActivatePoints() {
         int index = (i + startIndex) % NUM_POINTS;
         points_[i]->ActivateInTicks(30 + i * 40);
     }
-}
-
-bool HomingBoss::AllPointsHit() {
-    for (int i = 0; i < NUM_POINTS; i++) {
-        if (!points_[i]->hit_) 
-            return false;
-    }
-    return true;
 }
 
 void HomingBoss::OnAttackHit() {

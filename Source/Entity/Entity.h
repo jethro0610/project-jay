@@ -121,6 +121,7 @@ public:
         InitArgs args
     );
     void DoStart();
+    void DoLateStart();
 
     static TypeID TYPEID;
     const char* GetName();
@@ -191,6 +192,7 @@ public:
 
     void DoPreUpdate();
     void DoUpdate();
+    void DoSleepUpdate();
     void DoRenderUpdate();
     #ifdef _DEBUG
     void DoEditorUpdate();
@@ -227,8 +229,10 @@ public:
 
 private:
     void Start() {};
+    void LateStart() {};
     void PreUpdate() {};
     void Update() {};
+    void SleepUpdate() {};
     void RenderUpdate() {};
     #ifdef _DEBUG
     void EditorUpdate() {};
@@ -258,6 +262,7 @@ private:
     public:
         ETarget(Entity* entity) : entity_(entity) {}
         std::string GetName() override;
+        int GetId() override { return entity_->DBG_id_; }
         
         bool CanLabel() override { return true; }
         std::string GetLabel() override { return entity_->label_; }

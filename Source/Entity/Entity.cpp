@@ -95,6 +95,14 @@ void Entity::DoStart() {
     }
 }
 
+void Entity::DoLateStart() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->LateStart(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
 void Entity::Sleep() {
     alive_ = false;
     sleep_ = true;
@@ -103,6 +111,8 @@ void Entity::Sleep() {
 void Entity::Wake() {
     alive_ = true;
     sleep_ = false;
+    renderTransform_ = transform_;
+    lastTransform_ = transform_;
 }
 
 void Entity::SetFlag(Entity::Flag flag, bool enable) {
@@ -416,6 +426,15 @@ void Entity::DoUpdate() {
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->Update(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+}
+
+void Entity::DoSleepUpdate() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->SleepUpdate(); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

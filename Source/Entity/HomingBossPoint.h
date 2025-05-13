@@ -9,7 +9,7 @@ class HomingBossPoint : public Entity {
 public:
     void Init(InitArgs args);
     void Start();
-    void OnHurt(HurtArgs args);
+    void LateStart();
     void ActivateInTicks(int ticks);
     void Activate();
     void Reset();
@@ -23,7 +23,6 @@ public:
     EntityProperties GetStaticProperties();
 
     static const int MAX_CONTAINED = 4;
-    bool hit_;
     DynamicNegative* negative_;
     DynamicBubble* bubble_;
     DynamicFader fader_;

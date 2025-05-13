@@ -20,6 +20,7 @@ protected:
 public:
     EditorTarget() : selected_(false) {}
     virtual std::string GetName() = 0;
+    virtual int GetId() { return -1; }
 
     virtual bool CanLabel() { return false; }
     virtual std::string GetLabel() { return ""; }

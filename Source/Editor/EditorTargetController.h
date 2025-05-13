@@ -26,7 +26,10 @@ public:
         Deselect();
         target_ = target;
         target_->selected_ = true;
-        name_ = target_->GetName();
+        std::string idString = target_->GetId() == - 1 ? 
+            "" : 
+            " [" + std::to_string(target_->GetId()) + "]";
+        name_ = target_->GetName() + idString;
     }
     void Deselect() {
         if (target_ == nullptr)

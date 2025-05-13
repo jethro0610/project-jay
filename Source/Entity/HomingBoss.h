@@ -12,7 +12,6 @@ public:
     void OnOverlap(Entity* overlappedEntity);
     void Update();
     void ActivatePoints();
-    bool AllPointsHit();
     void OnAttackHit();
     void ActivateRandomAttack();
     bool IsValidAttack(HomingBossAttack* attack);
@@ -33,4 +32,5 @@ public:
     HomingBossAttack* attacks_[NUM_ATTACKS];
     glm::vec3 centerPoint_;
     float centerPointRot_;
+    bool guard_;
 };

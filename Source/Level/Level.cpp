@@ -169,6 +169,13 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
                 continue;
             entity.DoStart();    
         }
+
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = entities_[i];
+            if (!entity.alive_) 
+                continue;
+            entity.DoLateStart();    
+        }
     }
 
     for (auto& spreadData : levelData["spread"]) {

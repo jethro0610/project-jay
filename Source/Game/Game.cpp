@@ -294,6 +294,11 @@ void Game::Update() {
             entities_[i].BaseUpdate();
         }
 
+        for (int i = 0; i < EntityList::MAX; i++) {
+            if (!entities_[i].sleep_) continue;
+            rawEntities_[i].entity.DoSleepUpdate();
+        }
+
         timeAccumlulator_ -= GlobalTime::TIMESTEP;
     }
     camera_.Update(entities_, CAMERA_INPUTS);

@@ -64,10 +64,12 @@ void HomingBossAttack::Deactivate() {
 void HomingBossAttack::OnHurt(HurtArgs args) {
     homingBoss_->OnAttackHit();
 
-    Transform tokenTransform;
-    tokenTransform.position = transform_.position;
-    ItemToken& itemToken = (ItemToken&)(entities_->CreateEntity(ItemToken::TYPEID, tokenTransform));
-    itemToken.SetPlayerAndItem(player_, Item::I_Homing);
+    for (int i = 0 ; i < 2; i++) {
+        Transform tokenTransform;
+        tokenTransform.position = transform_.position;
+        ItemToken& itemToken = (ItemToken&)(entities_->CreateEntity(ItemToken::TYPEID, tokenTransform));
+        itemToken.SetPlayerAndItem(player_, Item::I_Homing, i * 0.2f);
+    }
 }
 
 void HomingBossAttack::OnHitlagEnd() {

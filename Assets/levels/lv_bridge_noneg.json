@@ -574,36 +574,6 @@
             "type_id": 16
         },
         {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 400.0
-            },
-            "int_properties": null,
-            "label": "nbridge1",
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 888.165771484375,
-                    "y": 110.80976104736328,
-                    "z": 237.2510223388672
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 14.500004768371582,
-                    "y": 14.500004768371582,
-                    "z": 14.500004768371582
-                }
-            },
-            "type_id": 35
-        },
-        {
             "bool_properties": null,
             "float_properties": {
                 "p_jump_strength": 150.0
@@ -615,6 +585,7 @@
                 "p_seg_id": -1,
                 "p_seg_min": 0
             },
+            "label": "nbridge1",
             "name": "e_jumppad",
             "transform": {
                 "position": {
@@ -638,6 +609,7 @@
         {
             "bool_properties": null,
             "float_properties": null,
+            "floor_dist": 0.0,
             "int_properties": {
                 "p_count": 4,
                 "p_item": 1
@@ -699,6 +671,7 @@
             "float_properties": {
                 "p_jump_strength": 200.0
             },
+            "floor_dist": -3.68377685546875,
             "int_properties": {
                 "p_cooldown": 0,
                 "p_num_seeds": 0,
@@ -725,66 +698,6 @@
                 }
             },
             "type_id": 16
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 400.0
-            },
-            "int_properties": null,
-            "label": "nbridge3",
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 2719.0791015625,
-                    "y": 295.04083251953125,
-                    "z": -875.751953125
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 10.700004577636719,
-                    "y": 10.700004577636719,
-                    "z": 10.700004577636719
-                }
-            },
-            "type_id": 35
-        },
-        {
-            "bool_properties": {
-                "p_active": true
-            },
-            "float_properties": {
-                "p_k": 1.0,
-                "p_radius": 400.0
-            },
-            "int_properties": null,
-            "label": "nbridge2",
-            "name": "e_negator",
-            "transform": {
-                "position": {
-                    "x": 2047.931396484375,
-                    "y": 171.93035888671875,
-                    "z": -38.52837371826172
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 11.999996185302734,
-                    "y": 11.999996185302734,
-                    "z": 11.999996185302734
-                }
-            },
-            "type_id": 35
         },
         {
             "bool_properties": null,
@@ -821,6 +734,7 @@
                 "p_count": 6,
                 "p_item": 1
             },
+            "label": "nbridge3",
             "name": "e_itemcontainer",
             "transform": {
                 "position": {
@@ -848,6 +762,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": null,
+            "label": "nbridge2",
             "name": "e_pillarpad",
             "transform": {
                 "position": {
@@ -1581,114 +1496,6 @@
                 }
             },
             "type_id": 41
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_radius": 400.0
-            },
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_homingbosspoint",
-            "transform": {
-                "position": {
-                    "x": 1908.5626220703125,
-                    "y": 688.892578125,
-                    "z": -1654.649658203125
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 15.0,
-                    "y": 15.0,
-                    "z": 15.0
-                }
-            },
-            "type_id": 42
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_radius": 450.0
-            },
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_homingbosspoint",
-            "transform": {
-                "position": {
-                    "x": 3571.558349609375,
-                    "y": 698.2342529296875,
-                    "z": -1548.84130859375
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 15.0,
-                    "y": 15.0,
-                    "z": 15.0
-                }
-            },
-            "type_id": 42
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_radius": 450.0
-            },
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_homingbosspoint",
-            "transform": {
-                "position": {
-                    "x": 3812.82421875,
-                    "y": 728.7000732421875,
-                    "z": -3124.392822265625
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 15.0,
-                    "y": 15.0,
-                    "z": 15.0
-                }
-            },
-            "type_id": 42
-        },
-        {
-            "bool_properties": null,
-            "float_properties": {
-                "p_radius": 475.0
-            },
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_homingbosspoint",
-            "transform": {
-                "position": {
-                    "x": 2081.958251953125,
-                    "y": 721.9932861328125,
-                    "z": -3381.138427734375
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 15.0,
-                    "y": 15.0,
-                    "z": 15.0
-                }
-            },
-            "type_id": 42
         },
         {
             "bool_properties": null,

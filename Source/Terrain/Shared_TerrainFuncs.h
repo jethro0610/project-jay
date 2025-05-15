@@ -72,7 +72,7 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
     float t = pos.x / 32.0f;
     t = clamp(t, 0.0f, 1.0f);
 
-    pos.y -= (t * t * t) * 256.0f;
+    pos.y -= (t * t * t * t * t) * 2048.0f;
     return pos;
 }
 
@@ -84,7 +84,10 @@ INLINE vec3 getTerrainNormal(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT
     float gradX = getTerrainDistance(dX, terrain, accuracy).y - height;
     float gradZ = getTerrainDistance(dZ, terrain, accuracy).y - height;
 
-    return normalize(vec3(gradX, 1.0f, gradZ));
+    vec3 dirX = normalize(vec3(-1.0f, gradX, 0.0f));
+    vec3 dirZ = normalize(vec3(0.0f, gradZ, -1.0f));
+
+    return normalize(cross(dirZ, dirX));
 }
 
 INLINE vec2 getDirectionToEdge(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {

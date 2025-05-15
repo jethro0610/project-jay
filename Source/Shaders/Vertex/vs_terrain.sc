@@ -21,25 +21,7 @@ void main() {
     v_normal = normal;
 
     vec3 worldPos = vec3(a_position.x, terrainDistance.y, a_position.z);
-    fnl_state noise = fnlCreateState(1337);
-    noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-    float baseVal = fnlGetNoise3D(
-        noise, 
-        worldPos.x, 
-        worldPos.y, 
-        worldPos.z
-    );
-    float noiseVal = fnlGetNoise3D(
-        noise, 
-        worldPos.x + sin(u_time.x * 0.5f + 10.0f) * 20.0f, 
-        worldPos.y + sin(u_time.x * 0.2f + 20.0f) * 20.0f, 
-        worldPos.z + sin(u_time.x * 0.4f + 30.0f) * 20.0f
-    );
-    noiseVal = (noiseVal + 1.0f) * 0.5f;
-    baseVal = (baseVal + 1.0f) * 0.5f;
-    noiseVal *= max(terrainDistance.x, 0.0f) * 0.1f;
-    baseVal *= max(terrainDistance.x, 0.0f) * 0.1f;
-    v_wposition = worldPos + normal * (baseVal * 10.0f);
+    v_wposition = worldPos;
 
     v_edgeDistance = terrainDistance.x;
     

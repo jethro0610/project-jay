@@ -19,25 +19,16 @@ uniform vec4 u_time;
 void main() {
     vec3 lightDirection = u_lightDirection.xyz; 
 
-    fnl_state noise = fnlCreateState(1337);
-    noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
-    float noiseVal = fnlGetNoise3D(
-        noise, 
-        v_wposition.x + sin(u_time.x * 0.5f + 10.0f) * 50.0f, 
-        v_wposition.y + sin(u_time.x * 0.2f + 20.0f) * 50.0f, 
-        v_wposition.z + sin(u_time.x * 0.4f + 30.0f) * 50.0f
-    );
-    noiseVal = (noiseVal + 1.0f) * 0.5f;
-
+    vec2 terrainDistance = getTerrainDistance(vec2(v_wposition.x, v_wposition.z));
     // OPTIMIZATION: This check is run on every terrain chunk, but we
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
-    float fade = v_edgeDistance / 32.0f;
-    fade = clamp(fade, 0.0f, 1.0f);
-    fade += fade * mix(0.0f, 0.5f, noiseVal);
+    float fade = terrainDistance.x / 32.0f;
+    fade = clamp(fade * fade * fade, 0.0f, 1.0f);
     DITHERDISCARD(fade);
 
-    float clampEdgeDist = clamp(v_edgeDistance.x * 0.1f, 0.0f, 1.0f);
+
+    float clampEdgeDist = clamp(v_edgeDistance.x * 0.05f, 0.0f, 1.0f);
     clampEdgeDist *= clampEdgeDist;
 
     vec3 color = texture2D(s_color, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
@@ -46,7 +37,7 @@ void main() {
     float variationStrength = lerp(0.05f, 1.0f, (microStrength * macroStrength) + 0.35f);    
     color *= 1.5f;
     color *= variationStrength;
-    color = lerp(color, vec3(5.0f, 5.0f, 6.0f), clampEdgeDist * 0.25f);
+    color = lerp(color, vec3(1.0f, 1.0f, 1.0f), clampEdgeDist);
 
     vec3 normal = texture2D(s_normal, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;
     normal = normal * 2.0f - 1.0f;

@@ -464,6 +464,7 @@
             "float_properties": null,
             "floor_dist": 0.0,
             "int_properties": null,
+            "label": "segpad",
             "name": "e_tpillar",
             "transform": {
                 "position": {
@@ -486,11 +487,16 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
+            "float_properties": {
+                "p_dist": 32.0,
+                "p_podscale": 0.5,
+                "p_segscale": 1.0
+            },
             "floor_dist": 0.0,
             "int_properties": {
                 "p_segments": 8
             },
+            "label": "firstpad",
             "name": "e_snake",
             "transform": {
                 "position": {

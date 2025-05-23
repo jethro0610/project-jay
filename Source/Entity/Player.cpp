@@ -244,7 +244,7 @@ void Player::Update() {
         desiredMovement = normalize(desiredMovement);
     }
 
-    constexpr float MIN_TRACKING_DIST = 50.0f;
+    constexpr float MIN_TRACKING_DIST = 100.0f;
     constexpr float MIN_TRACKING_DIST2 = MIN_TRACKING_DIST * MIN_TRACKING_DIST;
     for (int i = 0; i < EntityList::MAX; i++) {
         Entity& entity = (*entities_)[i]; 
@@ -625,14 +625,14 @@ void Player::Update() {
     // Attack hitbox assignemnt
     if (lastAttackChargeAmount_ < STRONG_CHARGE_THRESH) {
         hitbox_.knocback = planarVelocity;
-        hitbox_.knocback.y = max(velocity_.y + 60.0f, 35.0f);
+        hitbox_.knocback.y = max(velocity_.y + 80.0f, 35.0f);
         hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.15f;
         hitbox_.hitType = Hitbox::Normal;
     }
     else {
         hitbox_.knocback = planarVelocity * 1.25f;
-        hitbox_.knocback.y = max(velocity_.y + 60.0f, 35.0f);
+        hitbox_.knocback.y = max(velocity_.y + 80.0f, 35.0f);
         hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.05f;
         hitbox_.hitType = Hitbox::Strong;

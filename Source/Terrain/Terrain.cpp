@@ -140,6 +140,14 @@ vec2 Terrain::GetDistance(const vec3& position, TerrainAccuracy accuracy) const 
     return GetDistance(vec2(position.x, position.z), accuracy);
 }
 
+vec2 Terrain::GetRawDistance(const vec2& position, TerrainAccuracy accuracy) const {
+    return getTerrainDistance(position, *this, accuracy, false);
+}
+
+vec2 Terrain::GetRawDistance(const vec3& position, TerrainAccuracy accuracy) const {
+    return GetRawDistance(vec2(position.x, position.z));
+}
+
 float Terrain::GetHeight(const vec2& position, TerrainAccuracy accuracy) const {
     vec2 worldDistance = getTerrainDistance(
         position,

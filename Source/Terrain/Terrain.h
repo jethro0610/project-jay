@@ -40,6 +40,8 @@ public:
 
     glm::vec2 GetDistance(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     glm::vec2 GetDistance(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec2 GetRawDistance(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
+    glm::vec2 GetRawDistance(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;
 
     float GetHeight(const glm::vec2& position, TerrainAccuracy accuracy = TA_Normal) const;
     float GetHeight(const glm::vec3& position, TerrainAccuracy accuracy = TA_Normal) const;

@@ -39,11 +39,12 @@
 #include "ItemToken.h"
 #include "Ramp.h"
 #include "Negator.h"
+#include "HomingBossAttack.h"
 #include "HomingBossPoint.h"
 #include "HomingBoss.h"
-#include "HomingBossAttack.h"
 #include "Entity.h"
 #include "HomingBossProjectile.h"
+#include "Chase.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -90,4 +91,5 @@
 	ENTITYEXP(HomingBoss, homingboss, 41) \
 	ENTITYEXP(HomingBossPoint, homingbosspoint, 42) \
 	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43) \
-	ENTITYEXP(HomingBossAttack, homingbossattack, 44)
+	ENTITYEXP(HomingBossAttack, homingbossattack, 44) \
+	ENTITYEXP(Chase, chase, 45)

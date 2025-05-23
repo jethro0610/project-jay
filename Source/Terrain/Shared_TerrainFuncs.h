@@ -42,7 +42,7 @@ INLINE float smax(float a, float b, float k) {
     return log(exp(k * a) + exp(k * b)) / k;
 }
 
-INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT) {
+INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT, bool doDip = true) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
 
     #pragma unroll
@@ -68,6 +68,9 @@ INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAU
         if (dist < DYN_BUB_RADIUS(DYN_BUBBLES[i]))
             pos.y += dScalar * DYN_BUB_HEIGHT(DYN_BUBBLES[i]);
     }
+
+    if (!doDip)
+        return pos;
 
     float t = pos.x / 32.0f;
     t = clamp(t, 0.0f, 1.0f);

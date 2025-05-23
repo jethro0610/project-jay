@@ -10,8 +10,13 @@ static const float BIAS = BIAS_OVERRIDE;
 #endif
 
 static const float FADE_POW = 3.0f;
-static const int PCF_SIZE = 1;
-static const float KERNEL_SIZE = (PCF_SIZE * 2 + 1) * (PCF_SIZE * 2 + 1);
+static const int POISSON_SAMPLES = 4;
+static const vec2 POISSON_DISK[4] = {
+    vec2( -0.94201624, -0.39906216 ),
+    vec2( 0.94558609, -0.76890725 ),
+    vec2( -0.094184101, -0.92938870 ),
+    vec2( 0.34495938, 0.29387760 )
+};
 
 uniform vec4 u_shadowResolution;
 
@@ -25,21 +30,12 @@ float getShadow(vec4 sposition) {
     float current = projected.z - BIAS;
     
     [unroll]
-    for (int x = -PCF_SIZE; x <= PCF_SIZE; x++) {
-        [unroll]
-        for (int y = -PCF_SIZE; y <= PCF_SIZE; y++){
-            vec2 pos = projected.xy + vec2(x, y) * texel;
-            float closest = texture2D(s_samplerShadow, pos).r;
-            shadow += step(closest, current);
-
-            // Can't figure out how to get BGFX to use white borders, using
-            // this conversion for now
-            // When closest = 1.0f(at the border) then border returns
-            // 1.0f, which will force the shadow to be 1.0f (lit)
-            // float border = step(1.0, 1.0f - closest);
-        }
+    for (int i = 0; i < POISSON_SAMPLES; i++) {
+        vec2 pos = projected.xy + POISSON_DISK[i] * texel;
+        float closest = texture2D(s_samplerShadow, pos).r;
+        shadow += step(closest, current);
     }
-    shadow /= KERNEL_SIZE;
+    shadow /= POISSON_SAMPLES;
 
     float fade = distance(projected.xyz, vec3(0.5f, 0.5f, 0.5f)) * 2.0f;
     fade = clamp(pow(fade, FADE_POW), 0.0f, 1.0f);

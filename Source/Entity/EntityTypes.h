@@ -42,9 +42,10 @@
 #include "HomingBossAttack.h"
 #include "HomingBossPoint.h"
 #include "HomingBoss.h"
-#include "Entity.h"
 #include "HomingBossProjectile.h"
 #include "Chase.h"
+#include "Entity.h"
+#include "Bumper.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -92,4 +93,5 @@
 	ENTITYEXP(HomingBossPoint, homingbosspoint, 42) \
 	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43) \
 	ENTITYEXP(HomingBossAttack, homingbossattack, 44) \
-	ENTITYEXP(Chase, chase, 45)
+	ENTITYEXP(Chase, chase, 45) \
+	ENTITYEXP(Bumper, bumper, 46)

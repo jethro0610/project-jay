@@ -632,7 +632,7 @@ void Player::Update() {
     }
     else {
         hitbox_.knocback = planarVelocity * 1.25f;
-        hitbox_.knocback.y = max(velocity_.y + 80.0f, 35.0f);
+        hitbox_.knocback.y = max(velocity_.y + 120.0f, 35.0f);
         hitbox_.hitlag = 6;
         hitbox_.diStrength = 0.05f;
         hitbox_.hitType = Hitbox::Strong;

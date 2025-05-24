@@ -28,16 +28,18 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.10000000149011612,
+                "p_friction": 0.07500000298023224,
                 "p_speed": 150.0
             },
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 1000
+            },
             "name": "e_chase",
             "transform": {
                 "position": {
                     "x": 279.55133056640625,
-                    "y": -97.36590576171875,
+                    "y": -97.95945739746094,
                     "z": -9.180801391601563
                 },
                 "rotation": {
@@ -46,12 +48,287 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 9.199991226196289,
-                    "y": 9.199991226196289,
-                    "z": 9.199991226196289
+                    "x": 7.999991416931152,
+                    "y": 7.999991416931152,
+                    "z": 7.999991416931152
                 }
             },
             "type_id": 45
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": -262.6188049316406,
+                    "y": 94.42689514160156,
+                    "z": 509.6122741699219
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.07500000298023224,
+                "p_speed": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 1000
+            },
+            "name": "e_chase",
+            "transform": {
+                "position": {
+                    "x": 190.13026428222656,
+                    "y": -101.67755126953125,
+                    "z": -8.486351013183594
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.999991416931152,
+                    "y": 7.999991416931152,
+                    "z": 7.999991416931152
+                }
+            },
+            "type_id": 45
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.07500000298023224,
+                "p_speed": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 1000
+            },
+            "name": "e_chase",
+            "transform": {
+                "position": {
+                    "x": 218.36158752441406,
+                    "y": -102.67704772949219,
+                    "z": 68.0979995727539
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.999991416931152,
+                    "y": 7.999991416931152,
+                    "z": 7.999991416931152
+                }
+            },
+            "type_id": 45
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tree",
+            "transform": {
+                "position": {
+                    "x": 980.7929077148438,
+                    "y": 168.52127075195313,
+                    "z": 685.58740234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 15.499998092651367,
+                    "y": 97.8999252319336,
+                    "z": 15.499998092651367
+                }
+            },
+            "type_id": 25
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tree",
+            "transform": {
+                "position": {
+                    "x": -1250.302978515625,
+                    "y": 367.8521728515625,
+                    "z": -1518.30029296875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 15.499998092651367,
+                    "y": 97.8999252319336,
+                    "z": 15.499998092651367
+                }
+            },
+            "type_id": 25
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.009999999776482582
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "transform": {
+                "position": {
+                    "x": -1556.7236328125,
+                    "y": 304.8081970214844,
+                    "z": -1214.2537841796875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 13.40000057220459,
+                    "y": 13.40000057220459,
+                    "z": 13.40000057220459
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.009999999776482582
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "transform": {
+                "position": {
+                    "x": 217.3753204345703,
+                    "y": -51.84849166870117,
+                    "z": -299.13006591796875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.699997901916504,
+                    "y": 9.699997901916504,
+                    "z": 9.699997901916504
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.009999999776482582
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "transform": {
+                "position": {
+                    "x": 378.459228515625,
+                    "y": -46.39375305175781,
+                    "z": -302.5746765136719
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.699997901916504,
+                    "y": 9.699997901916504,
+                    "z": 9.699997901916504
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.009999999776482582
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "transform": {
+                "position": {
+                    "x": 297.8033447265625,
+                    "y": -44.680381774902344,
+                    "z": -321.6975402832031
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.699997901916504,
+                    "y": 9.699997901916504,
+                    "z": 9.699997901916504
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_friction": 0.009999999776482582
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "transform": {
+                "position": {
+                    "x": -1449.56689453125,
+                    "y": 323.1409606933594,
+                    "z": -1144.3232421875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 13.40000057220459,
+                    "y": 13.40000057220459,
+                    "z": 13.40000057220459
+                }
+            },
+            "type_id": 46
         }
     ],
     "landmap": "lm_chase",
@@ -102,36 +379,14 @@
         },
         {
             "custom_easing": false,
-            "height": 138.10006713867188,
+            "height": 247.3000946044922,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",
             "out_power": 2.4000000953674316,
-            "radius": 411.50048828125,
-            "x": -515.3955078125,
-            "y": -1807.4429931640625
-        },
-        {
-            "custom_easing": false,
-            "height": 137.99998474121094,
-            "id": 1,
-            "in_power": 2.0,
-            "name": "e_bubble",
-            "out_power": 2.4000000953674316,
-            "radius": 337.20001220703125,
-            "x": -1645.427001953125,
-            "y": -1709.20458984375
-        },
-        {
-            "custom_easing": false,
-            "height": 127.69998931884766,
-            "id": 1,
-            "in_power": 2.0,
-            "name": "e_bubble",
-            "out_power": 2.4000000953674316,
-            "radius": 300.0,
-            "x": -1392.5531005859375,
-            "y": -800.6797485351563
+            "radius": 1323.3001708984375,
+            "x": -281.7798767089844,
+            "y": -2249.01708984375
         },
         {
             "custom_easing": false,
@@ -143,6 +398,28 @@
             "radius": 541.7000122070313,
             "x": -409.7157287597656,
             "y": -910.3032836914063
+        },
+        {
+            "custom_easing": true,
+            "height": 119.49996948242188,
+            "id": 1,
+            "in_power": 2.5799999237060547,
+            "name": "e_bubble",
+            "out_power": 1.399999976158142,
+            "radius": 227.09999084472656,
+            "x": -321.24395751953125,
+            "y": -376.0423278808594
+        },
+        {
+            "custom_easing": false,
+            "height": 31.500001907348633,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 178.20001220703125,
+            "x": -314.9967346191406,
+            "y": -821.8797607421875
         },
         {
             "frequency": 0.16799981892108917,
@@ -167,9 +444,9 @@
             "y": 650.1177978515625
         },
         {
-            "frequency": 0.07499750703573227,
+            "frequency": -0.10100249201059341,
             "id": 2,
-            "max_height": 149.90003967285156,
+            "max_height": 57.10002136230469,
             "min_height": 0.0,
             "name": "e_noise",
             "radius": 2280.99951171875,
@@ -187,6 +464,17 @@
             "seed": 488769934,
             "x": 375.37530517578125,
             "y": 816.3145141601563
+        },
+        {
+            "frequency": 0.2290000319480896,
+            "id": 2,
+            "max_height": 45.39998245239258,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 717.9000854492188,
+            "seed": 1886056744,
+            "x": -1222.2576904296875,
+            "y": -1496.52880859375
         }
     ]
 }

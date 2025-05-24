@@ -16,8 +16,11 @@ public:
     float speed_;
     Player* player_;
     bool returning_;
+    bool hopping_;
     int stunEndTimer_;
+    int walkToCenterTimer_;
     glm::vec3 spawnPoint_;
+    int numSeeds_;
 
     void Update();
     void Start();

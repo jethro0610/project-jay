@@ -69,6 +69,8 @@ public:
         Entity* attacker;
         Hitbox* hitbox;
         Hitbox::HitType hitType;
+        glm::vec3 kbVelocity;
+        glm::quat kbRotation;
     };
     struct TrailPoint {
         float time;
@@ -96,6 +98,7 @@ public:
         EF_SendHits,
         EF_RecieveHits,
         EF_RecieveKnockback,
+        EF_CustomKnockback,
         EF_HurtFaceForward,
         EF_HurtFaceBack,
 

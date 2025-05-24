@@ -215,6 +215,8 @@ void Game::Update() {
             hit.hitter->hitlag_ = hit.hitter->hitbox_.hitlag;
             hit.hitter->initHitlag_ = true;
 
+            vec3 kbVelocity = vec3(0.0f);
+            quat kbRotation;
             if (hit.target->GetFlag(Entity::EF_RecieveKnockback)) {
                 vec3 normalizeRes = normalize(hit.collision.resolution);
                 vec3 planarKB = vec3(hit.hitter->hitbox_.knocback.x, 0.0f, hit.hitter->hitbox_.knocback.z);
@@ -224,18 +226,23 @@ void Game::Update() {
                 quat resQuat = quatLookAtRH(normalizeRes, Transform::worldUp);
                 quat finalKBQuat = slerp(kbQuat, resQuat, hit.hitter->hitbox_.diStrength);
                 
-                hit.target->velocity_ = finalKBQuat * Transform::worldForward * kbLength;
-                hit.target->velocity_.y = hit.hitter->hitbox_.knocback.y;
+                kbVelocity = finalKBQuat * Transform::worldForward * kbLength;
+                kbVelocity.y = hit.hitter->hitbox_.knocback.y;
+                if (!hit.target->GetFlag(Entity::EF_CustomKnockback))
+                    hit.target->velocity_ = kbVelocity;
 
-                vec3 planarVelocity = hit.target->velocity_;
+                vec3 planarVelocity = kbVelocity;
                 planarVelocity.y = 0.0f;
                 if (hit.target->GetFlag(Entity::EF_HurtFaceForward))
-                    hit.target->transform_.rotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
+                    kbRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
                 else if (hit.target->GetFlag(Entity::EF_HurtFaceBack))
-                    hit.target->transform_.rotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
+                    kbRotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
+
+                if (!hit.target->GetFlag(Entity::EF_CustomKnockback))
+                    hit.target->transform_.rotation = kbRotation;
             }
 
-            hit.target->DoHurt({hit.hitter, hit.hitbox, hit.hitType});
+            hit.target->DoHurt({hit.hitter, hit.hitbox, hit.hitType, kbVelocity, kbRotation});
             hit.hitter->DoHit({hit.target, hit.hitType});
         }
 

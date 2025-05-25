@@ -574,6 +574,33 @@
                 }
             },
             "type_id": 13
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_speed": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_popper",
+            "transform": {
+                "position": {
+                    "x": -1323.5792236328125,
+                    "y": 157.60556030273438,
+                    "z": -766.6830444335938
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.699996948242188,
+                    "y": 11.699996948242188,
+                    "z": 11.699996948242188
+                }
+            },
+            "type_id": 50
         }
     ],
     "landmap": "lm_chase",

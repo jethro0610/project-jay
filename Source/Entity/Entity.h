@@ -24,6 +24,7 @@ class ResourceManager;
 class SeedManager;
 class SpreadManager;
 class Terrain;
+class WaterManager;
 class WorldText;
 
 class ParticleEmitter;
@@ -118,7 +119,8 @@ public:
         Level& level,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        Terrain& terrain
+        Terrain& terrain,
+        WaterManager& waterManager
     );
     void Init(
         InitArgs args
@@ -215,6 +217,8 @@ public:
     void DoTrigger();
     bool IsTriggered();
 
+    void DoWet();
+
     glm::vec3 GetTarget();
     glm::vec3 GetTrailPosition(float t);
     glm::vec3 GetTrailPositionNormalized(float t);
@@ -229,6 +233,7 @@ public:
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;
+    WaterManager* waterManager_;
 
 private:
     void Start() {};
@@ -250,6 +255,7 @@ private:
     glm::vec3 GetTargetPoint() { return transform_.position; };
     void OnTrigger() {};
     bool GetIsTriggered() { return false; };
+    void OnWet() {};
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

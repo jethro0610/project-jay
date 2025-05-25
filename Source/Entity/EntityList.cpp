@@ -13,14 +13,25 @@ EntityList::EntityList(
     Level& level,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
-    Terrain& terrain
+    Terrain& terrain,
+    WaterManager& waterManager
 ):
 particleManager_(particleManager),
 resourceManager_(resourceManager)
 {
     rawEntities_ = rawEntities;
     for (int i = 0; i < MAX; i++) {
-        rawEntities[i].entity.Construct(camera, clock, *this, inputs, level, seedManager, spreadManager, terrain);
+        rawEntities[i].entity.Construct(
+            camera, 
+            clock, 
+            *this, 
+            inputs, 
+            level, 
+            seedManager, 
+            spreadManager, 
+            terrain, 
+            waterManager
+        );
         available_[i] = i;
     }
 
@@ -92,6 +103,10 @@ bool EntityList::IsAnyOverlapping(Entity& entity) {
         ).isColliding) return true;
     }
     return false;
+}
+
+Entity* EntityList::FindEntityById(int id) {
+    return &rawEntities_[id].entity;
 }
 
 int EntityList::FindEntitiesByType(TypeID id, Entity** outEntities, int outCount) {

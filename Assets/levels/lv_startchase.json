@@ -14,7 +14,7 @@
                 },
                 "rotation": {
                     "x": 0.0,
-                    "y": 0.9700006246566772,
+                    "y": 0.9700005650520325,
                     "z": 0.0
                 },
                 "scale": {
@@ -68,9 +68,9 @@
             "name": "e_timerpod",
             "transform": {
                 "position": {
-                    "x": -262.6188049316406,
-                    "y": 94.42689514160156,
-                    "z": 509.6122741699219
+                    "x": -295.4387512207031,
+                    "y": 96.34403228759766,
+                    "z": 518.20654296875
                 },
                 "rotation": {
                     "x": 0.0,
@@ -198,7 +198,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.009999999776482582
+                "p_friction": 0.009999999776482582,
+                "p_kbmult": 1.0
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -225,7 +226,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.009999999776482582
+                "p_friction": 0.009999999776482582,
+                "p_kbmult": 1.0
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -252,7 +254,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.009999999776482582
+                "p_friction": 0.009999999776482582,
+                "p_kbmult": 1.0
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -279,7 +282,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.009999999776482582
+                "p_friction": 0.009999999776482582,
+                "p_kbmult": 1.0
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -306,7 +310,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_friction": 0.009999999776482582
+                "p_friction": 0.009999999776482582,
+                "p_kbmult": 1.0
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -329,6 +334,246 @@
                 }
             },
             "type_id": 46
+        },
+        {
+            "bool_properties": {
+                "p_active": false
+            },
+            "float_properties": {
+                "p_height": 100.0,
+                "p_in": 2.0,
+                "p_out": 1.25,
+                "p_radius": 200.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_maxwet": 2
+            },
+            "name": "e_framp",
+            "transform": {
+                "position": {
+                    "x": -298.42803955078125,
+                    "y": 9.677109718322754,
+                    "z": -344.826171875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 2.6000003814697266,
+                    "y": 11.200000762939453,
+                    "z": 2.6000003814697266
+                }
+            },
+            "type_id": 47
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 0,
+                "p_tid": 12
+            },
+            "name": "e_watergun",
+            "transform": {
+                "position": {
+                    "x": -279.0955505371094,
+                    "y": 94.33345031738281,
+                    "z": 465.9133605957031
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.899998188018799,
+                    "y": 6.899998188018799,
+                    "z": 6.899998188018799
+                }
+            },
+            "type_id": 49
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": -226.79693603515625,
+                    "y": 87.70487213134766,
+                    "z": 465.7088928222656
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": -306.6057434082031,
+                    "y": 93.23038482666016,
+                    "z": 424.9122314453125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 0,
+                "p_tid": 12
+            },
+            "name": "e_watergun",
+            "transform": {
+                "position": {
+                    "x": 742.7274780273438,
+                    "y": -1.231224775314331,
+                    "z": -18.487728118896484
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.899998188018799,
+                    "y": 6.899998188018799,
+                    "z": 6.899998188018799
+                }
+            },
+            "type_id": 49
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": 789.3228149414063,
+                    "y": -0.7595520615577698,
+                    "z": -62.4901123046875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": 710.4833374023438,
+                    "y": -20.906780242919922,
+                    "z": -65.94554901123047
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
+        },
+        {
+            "bool_properties": {
+                "p_hitonly": true
+            },
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_cooldown": 120,
+                "p_seeds": 500
+            },
+            "name": "e_timerpod",
+            "transform": {
+                "position": {
+                    "x": 741.4320678710938,
+                    "y": 3.252268075942993,
+                    "z": 32.0308723449707
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 6.5,
+                    "y": 6.5,
+                    "z": 6.5
+                }
+            },
+            "type_id": 13
         }
     ],
     "landmap": "lm_chase",
@@ -398,17 +643,6 @@
             "radius": 541.7000122070313,
             "x": -409.7157287597656,
             "y": -910.3032836914063
-        },
-        {
-            "custom_easing": true,
-            "height": 119.49996948242188,
-            "id": 1,
-            "in_power": 2.5799999237060547,
-            "name": "e_bubble",
-            "out_power": 1.399999976158142,
-            "radius": 227.09999084472656,
-            "x": -321.24395751953125,
-            "y": -376.0423278808594
         },
         {
             "custom_easing": false,

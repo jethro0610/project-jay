@@ -44,8 +44,11 @@
 #include "HomingBoss.h"
 #include "HomingBossProjectile.h"
 #include "Chase.h"
-#include "Entity.h"
 #include "Bumper.h"
+#include "Entity.h"
+#include "FlowerRamp.h"
+#include "Water.h"
+#include "WaterGun.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -94,4 +97,7 @@
 	ENTITYEXP(HomingBossProjectile, homingbossprojectile, 43) \
 	ENTITYEXP(HomingBossAttack, homingbossattack, 44) \
 	ENTITYEXP(Chase, chase, 45) \
-	ENTITYEXP(Bumper, bumper, 46)
+	ENTITYEXP(Bumper, bumper, 46) \
+	ENTITYEXP(FlowerRamp, flowerramp, 47) \
+	ENTITYEXP(Water, water, 48) \
+	ENTITYEXP(WaterGun, watergun, 49)

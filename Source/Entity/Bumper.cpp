@@ -12,7 +12,8 @@ EntityProperties Bumper::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_friction", &friction_}
+            {"p_friction", &friction_},
+            {"p_kbmult", &kbMult_}
         },
         {
             // Ints
@@ -44,6 +45,7 @@ void Bumper::Init(Entity::InitArgs args) {
     friction_ = 0.25f;
     speed_ = 5.0f;
     traceDistance_ = 20.0f;
+    kbMult_ = 1.0f;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -60,7 +62,7 @@ void Bumper::Init(Entity::InitArgs args) {
 void Bumper::Update() {
     float speedDecay = 1.0f - friction_;
     float acceleration = (speed_ / speedDecay) - speed_;
-    velocity_.y -= 4.0f;
+    velocity_.y -= 8.0f;
 
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
     planarVelocity *= speedDecay;
@@ -69,6 +71,6 @@ void Bumper::Update() {
 }
 
 void Bumper::OnHurt(HurtArgs args) {
-    velocity_ = args.kbVelocity;
+    velocity_ = args.kbVelocity * kbMult_;
     velocity_.y = 0.0f;
 }

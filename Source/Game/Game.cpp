@@ -233,12 +233,17 @@ void Game::Update() {
 
                 vec3 planarVelocity = kbVelocity;
                 planarVelocity.y = 0.0f;
-                if (hit.target->GetFlag(Entity::EF_HurtFaceForward))
+                bool useRotation = false;
+                if (hit.target->GetFlag(Entity::EF_HurtFaceForward)) {
                     kbRotation = quatLookAtRH(normalize(planarVelocity), Transform::worldUp); 
-                else if (hit.target->GetFlag(Entity::EF_HurtFaceBack))
+                    useRotation = true;
+                }
+                else if (hit.target->GetFlag(Entity::EF_HurtFaceBack)) {
                     kbRotation = quatLookAtRH(normalize(-planarVelocity), Transform::worldUp); 
+                    useRotation = true;
+                }
 
-                if (!hit.target->GetFlag(Entity::EF_CustomKnockback))
+                if (!hit.target->GetFlag(Entity::EF_CustomKnockback) && useRotation)
                     hit.target->transform_.rotation = kbRotation;
             }
 

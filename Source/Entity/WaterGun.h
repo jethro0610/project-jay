@@ -1,19 +1,19 @@
 #pragma once
 #include "Entity.h"
 
-class Bumper : public Entity {
+class WaterGun : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_bumper"; }
+    static const char* GetStaticName() { return "e_watergun"; }
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
-    float speed_;
-    float friction_;
-    float kbMult_;
+    Entity* target_;
+    int targetId_;
+    int numSeeds_;
 
-    void Update();
+    void Start();
     void OnHurt(HurtArgs args);
 };

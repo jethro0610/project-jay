@@ -18,7 +18,8 @@ void Entity::Construct(
     Level& level,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
-    Terrain& terrain
+    Terrain& terrain,
+    WaterManager& waterManager
 ) {
     camera_ = &camera;
     clock_ = &clock;
@@ -29,6 +30,7 @@ void Entity::Construct(
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;
     trail_ = nullptr;
+    waterManager_ = &waterManager;
 
     editorTarget_ = new ETarget(this);
 }
@@ -136,7 +138,8 @@ void Entity::BaseUpdate() {
         groundNormal_ = terrain_->GetNormal(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         groundHeight_ = terrain_->GetHeight(transform_.position + velocity_ * GlobalTime::TIMESTEP);
         float distanceToSurface = transform_.position.y - groundHeight_;
-        if (distanceToSurface < traceDistance_ && distanceToSurface > -20.0f && !skipGroundCheck_)
+        float distCap = useVelocity ? -20.0f : -INFINITY;
+        if (distanceToSurface < traceDistance_ && distanceToSurface > distCap && !skipGroundCheck_)
             onGround_ = true;
         else 
             onGround_ = false;
@@ -541,6 +544,14 @@ bool Entity::IsTriggered() {
         #undef ENTITYEXP
     }
     return false;
+}
+
+void Entity::DoWet() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnWet(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
 }
 
 vec3 Entity::GetTarget() {

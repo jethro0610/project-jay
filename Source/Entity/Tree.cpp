@@ -63,7 +63,6 @@ void Tree::OnHurt(HurtArgs args) {
         vec3 point = terrain_->GetRandomPointInSameIsland(transform_.position, 50.0f, 800.0f);
         float jumpStrength = RandomFloatRange(10.0f, 30.0f);
         float airtime = GetAirtime(Apple::GRAVITY, jumpStrength, applePosition.y, point.y);
-        DEBUGLOG(airtime);
 
         // Get the direction and distance to the point
         vec3 planarApplePosition = applePosition;

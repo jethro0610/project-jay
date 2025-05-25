@@ -11,6 +11,7 @@
 #include "Terrain/Terrain.h"
 #include "Entity/EntityUnion.h"
 #include "Entity/EntityList.h"
+#include "WaterManager.h"
 #include <unordered_set>
 
 #ifdef _PC
@@ -41,6 +42,7 @@ private:
     Clock clock_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
+    WaterManager waterManager_;
 
     EntityUnion rawEntities_[EntityList::MAX];
     EntityList entities_;

@@ -81,7 +81,8 @@ void DynamicFader::ActivateModifiers(bool initial) {
     for (int i = 0; i < numModifiers_; i++) {
         if (!transitionOnly_[i])
             modifiers_[i]->active = true; 
-        *values_[i] = activeOverrides_[i];
+        if (initial)
+            *values_[i] = activeOverrides_[i];
     }
     if (initial)
         percent_ = 1.0f;
@@ -92,6 +93,7 @@ void DynamicFader::DeactivateModifiers(bool initial) {
     for (int i = 0; i < numModifiers_; i++) {
         if (!transitionOnly_[i])
             modifiers_[i]->active = false; 
+        *values_[i] = mins_[i];
     }
     if (initial)
         percent_ = 0.0f;

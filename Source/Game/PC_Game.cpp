@@ -37,7 +37,8 @@ Game::Game():
         level_,
         seedManager_, 
         spreadManager_,
-        terrain_
+        terrain_,
+        waterManager_
     ),
     editor_(
         camera_, 
@@ -52,6 +53,7 @@ Game::Game():
         terrain_,
         running_
     ),
+    waterManager_(entities_),
     running_(true)
 {
     GlobalNoise::Init();

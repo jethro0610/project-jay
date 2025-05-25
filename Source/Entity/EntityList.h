@@ -11,6 +11,7 @@ class Level;
 class SeedManager;
 class SpreadManager;
 class Terrain;
+class WaterManager;
 struct EntityUnion;
 class ParticleManager;
 class ResourceManager;
@@ -29,7 +30,8 @@ public:
         Level& level,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
-        Terrain& terrain
+        Terrain& terrain,
+        WaterManager& waterManager
     );
 
     Entity& operator[](int index);

@@ -1,19 +1,17 @@
 #pragma once
 #include "Entity.h"
 
-class Bumper : public Entity {
+class Water : public Entity {
 public:
     void Init(InitArgs args);
 
     static TypeID TYPEID;
-    static const char* GetStaticName() { return "e_bumper"; }
+    static const char* GetStaticName() { return "e_water"; }
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
-    float speed_;
-    float friction_;
-    float kbMult_;
-
     void Update();
-    void OnHurt(HurtArgs args);
+    void Shoot(const glm::vec3& target);
+    void OnOverlap(Entity* overlappedEntity);
+    void OnDestroy();
 };

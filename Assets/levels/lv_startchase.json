@@ -578,10 +578,15 @@
         {
             "bool_properties": null,
             "float_properties": {
+                "p_deflate": 120.0,
+                "p_height": 50.0,
+                "p_radius": 100.0,
                 "p_speed": 150.0
             },
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_maxpop": 300
+            },
             "name": "e_popper",
             "transform": {
                 "position": {

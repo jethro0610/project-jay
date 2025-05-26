@@ -19,6 +19,9 @@ public:
     float speed_;
     float targetDistFromEdge_;
 
+    int maxPopTime_;
+    int popTime_;
+
     void Update();
     void Start();
     void OnHurt(HurtArgs args);

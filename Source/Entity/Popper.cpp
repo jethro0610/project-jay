@@ -14,10 +14,14 @@ EntityProperties Popper::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_speed", &speed_}
+            {"p_speed", &speed_},
+            {"p_height", &fader_.maxs_[0]},
+            {"p_radius", &bubble_->radius},
+            {"p_deflate", &fader_.deactivateLength_},
         },
         {
             // Ints
+            {"p_maxpop", &maxPopTime_}
         },
         {
             // Bools
@@ -50,18 +54,19 @@ void Popper::Init(Entity::InitArgs args) {
     fader_ = DynamicFader();
     fader_.activateLength_ = 30.0f;
     fader_.deactivateLength_ = 60.0f * 2.0f;
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, 50.0f, false, EaseType::E_Elastic);
     speed_ = 50.0f;
 
+    popTime_ = 0;
+    maxPopTime_ = 120;
+
     SetFlag(EF_RecieveHits, true);
-    SetFlag(EF_GroundCheck, true);
-    SetFlag(EF_StickToGround, true);
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_SendPush, true);
     traceDistance_ = 1000.0f;
 }
 
 void Popper::Start() {
-    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, 50.0f, false, EaseType::E_Elastic);
     fader_.DeactivateModifiers(true);
     targetDistFromEdge_ = -terrain_->GetDistance(transform_.position).x;
 }
@@ -70,17 +75,27 @@ void Popper::Update() {
     fader_.Update();
     bubble_->position = transform_.position;
 
-    float distFromEdge = -terrain_->GetDistance(transform_.position).x;
+    vec2 terrainDist = terrain_->GetDistance(transform_.position);
+    transform_.position.y = terrainDist.y;
+    float distFromEdge = -terrainDist.x;
     vec3 directionToEdge = terrain_->GetDirectionToEdge(transform_.position);
 
     transform_.position += vec3(directionToEdge.z, 0.0f, -directionToEdge.x) * speed_ * GlobalTime::TIMESTEP;
 
     float distScalar = targetDistFromEdge_ - distFromEdge;
     transform_.position += distScalar * 0.15f * directionToEdge * GlobalTime::TIMESTEP; 
+
+    if (fader_.IsActive()) {
+        popTime_--;
+        if (popTime_ <= 0) {
+            fader_.StartDeactivate(); 
+        }
+    }
 }
 
 void Popper::OnHurt(HurtArgs args) {
     fader_.StartActivate();
+    popTime_ = maxPopTime_;
 }
 
 void Popper::OnDestroy() {

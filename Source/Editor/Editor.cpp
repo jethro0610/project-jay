@@ -255,6 +255,8 @@ void Editor::Update() {
             }
         }
         entities_.DestroyFlaggedEntities();
+        terrain_.RecordDynamicModifiersLastTick();
+        terrain_.InterpolateDynamicModifiers(1.0f);
 
         renderer_.RenderEdit(
             entities_, 

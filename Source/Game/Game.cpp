@@ -126,6 +126,7 @@ void Game::Update() {
             if (!entities_[i].alive_) continue;
             entities_[i].lastTransform_ = entities_[i].transform_;
         }
+        terrain_.RecordDynamicModifiersLastTick();
 
         spreadManager_.ClearTramples();
 
@@ -315,9 +316,10 @@ void Game::Update() {
     }
     camera_.Update(entities_, CAMERA_INPUTS);
 
+    float interpTime = timeAccumlulator_ / GlobalTime::TIMESTEP;
     for (int i = 0; i < EntityList::MAX; i++) {
         if (!entities_[i].alive_) continue;
-        entities_[i].BaseRenderUpdate(timeAccumlulator_ / GlobalTime::TIMESTEP);
+        entities_[i].BaseRenderUpdate(interpTime);
         entities_[i].DoRenderUpdate();
 
         if (entities_[i].GetFlag(Entity::EF_UseTrail))
@@ -326,6 +328,7 @@ void Game::Update() {
     seedManager_.GetCaptures(entities_);
     seedManager_.CalculatePositions(terrain_);
     particleManager_.Update(GlobalTime::GetDeltaTime());
+    terrain_.InterpolateDynamicModifiers(interpTime); 
     entities_.DestroyFlaggedEntities();
 
     renderer_.Render(

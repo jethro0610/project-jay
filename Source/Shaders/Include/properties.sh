@@ -18,4 +18,7 @@ uniform vec4 u_mProps[4];
 #define PROP_VARIATION_MAX u_mProps[3].z
 #define PROP_VARIATION_POWER u_mProps[3].w
 
+#define PROP_RAYMARCH_ORIGIN u_mProps[0].xyz
+#define PROP_RAYMARCH_RADIUS u_mProps[0].w
+
 #endif

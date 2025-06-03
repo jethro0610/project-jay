@@ -8,7 +8,8 @@
 enum TriangleType {
     ONE_SIDED,
     TWO_SIDED,
-    TWO_SIDED_NEGATIVE_BACK
+    TWO_SIDED_NEGATIVE_BACK,
+    BACKFACE
 };
 
 enum TranparencyType {
@@ -70,6 +71,18 @@ struct VariationProperties : SpecularFresnelProperties {
     };
 };
 
+struct RaymarchVolume {
+    glm::vec3 origin;
+    float radius;
+
+    static RaymarchVolume Default() {
+        return {
+            glm::vec3(0.0f),
+            0.0f
+        };
+    }
+};
+
 struct Material {
     static constexpr int MAX_TEXTURES = 8;
     static constexpr int MAX_PROPERTIES = 16;
@@ -89,6 +102,8 @@ struct Material {
 
         padding[0] = {};
         padding[1] = {};
+        padding[2] = {};
+        padding[3] = {};
     }
 
     Shader* shader;
@@ -104,6 +119,7 @@ struct Material {
         BaseMaterialProprties properties;
         SpecularFresnelProperties specularProperties;
         VariationProperties variationProperties;
-        glm::vec4 padding[2];
+        RaymarchVolume raymarchVolume;
+        glm::vec4 padding[4];
     };
 };

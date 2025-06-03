@@ -8,9 +8,11 @@ public:
     DynamicTerrainModifierContainer();
     DynamicTerrainModifier* RequestAvailableModifier();
     void FreeModifier(DynamicTerrainModifier* modifier);
+    void Interpolate(float interpTime);
+    void RecordLastTick();
 
     inline glm::mat4 GetRenderMatrix(int index) {
-        glm::mat4 matrix = modifiers_[index];
+        glm::mat4 matrix = interpolaltedModifiers_[index];
         matrix[0][3] = matrix[0][3] != 0.0f ? 1.0f : 0.0f;
         return transpose(matrix);
     }
@@ -29,5 +31,7 @@ public:
 
 private:
     glm::mat4 modifiers_[DYN_MOD_MAX];
+    glm::mat4 modifiersLastTick_[DYN_MOD_MAX];
+    glm::mat4 interpolaltedModifiers_[DYN_MOD_MAX];
     bool modifiersInUse_[DYN_MOD_MAX];
 };

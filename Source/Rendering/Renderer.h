@@ -148,6 +148,7 @@ private:
     UniformHandle u_cameraPosition_;
     UniformHandle u_cameraUp_;
     UniformHandle u_cameraRight_;
+    UniformHandle u_cameraForward_;
     UniformHandle u_randomVec_;
     UniformHandle u_terrainMeshOffset_;
     UniformHandle u_textProps_;

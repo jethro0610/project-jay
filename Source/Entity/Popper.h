@@ -22,7 +22,10 @@ public:
     int maxPopTime_;
     int popTime_;
 
-    void Update();
+    int popDelay_;
+    int popDelayTime_;
+
+    void PreUpdate();
     void Start();
     void OnHurt(HurtArgs args);
     void OnDestroy();

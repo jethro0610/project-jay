@@ -30,3 +30,19 @@ void DynamicTerrainModifierContainer::FreeModifier(DynamicTerrainModifier* modif
     }
     ASSERT(false, "Tried to free non-existant modifier");
 }
+
+void DynamicTerrainModifierContainer::Interpolate(float interpTime) {
+    for (int i = 0; i < DYN_MOD_MAX; i++) {
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 4; k++) {
+                interpolaltedModifiers_[i][j][k] = glm::mix(modifiersLastTick_[i][j][k], modifiers_[i][j][k], interpTime);
+            }
+        }
+    }
+}
+
+void DynamicTerrainModifierContainer::RecordLastTick() {
+    for (int i = 0; i < DYN_MOD_MAX; i++) {
+        modifiersLastTick_[i] = modifiers_[i];
+    }
+}

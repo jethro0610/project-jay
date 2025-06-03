@@ -13,7 +13,7 @@ public:
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
 
-    void Update();
+    void PreUpdate();
     void Start();
     void EditorUpdate();
     void OnDestroy();

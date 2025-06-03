@@ -55,8 +55,8 @@ void Water::Update() {
         destroy_ = true;
 }
 
-void Water::Shoot(const vec3& target) {
-    velocity_ = GetProjectileVelocityToPoint(transform_.position, target, GRAVITY, 150.0f);
+void Water::Shoot(const vec3& target, float yVel) {
+    velocity_ = GetProjectileVelocityToPoint(transform_.position, target, GRAVITY, yVel);
 }
 
 void Water::OnOverlap(Entity* overlappedEntity) {

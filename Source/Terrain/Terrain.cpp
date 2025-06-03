@@ -170,6 +170,10 @@ float Terrain::GetRawHeight(const glm::vec2& position, TerrainAccuracy accuracy)
     return SampleTerrainMap(position).y;
 }
 
+float Terrain::GetRawHeight(const glm::vec3& position, TerrainAccuracy accuracy) const {
+    return SampleTerrainMap(vec2(position.x, position.z)).y;
+}
+
 vec3 Terrain::GetNormal(const vec2& position, TerrainAccuracy accuracy) const {
     return getTerrainNormal(position, *this, accuracy);
 }
@@ -612,3 +616,13 @@ bool Terrain::DestroyPendingModifiers() {
     return destroy;
 }
 #endif
+
+void Terrain::RecordDynamicModifiersLastTick() {
+    dynamicTerrainBubbles_.RecordLastTick();
+    dynamicTerrainNegatives_.RecordLastTick();
+}
+
+void Terrain::InterpolateDynamicModifiers(float interpTime) {
+    dynamicTerrainBubbles_.Interpolate(interpTime);
+    dynamicTerrainNegatives_.Interpolate(interpTime);
+}

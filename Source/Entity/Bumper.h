@@ -13,7 +13,15 @@ public:
     float speed_;
     float friction_;
     float kbMult_;
+    float gravity_;
 
+    bool respawnOnFall_;
+    int seedOnFall_;
+    glm::vec3 spawnPos_;
+
+    Entity* player_;
+
+    void Start();
     void Update();
     void OnHurt(HurtArgs args);
 };

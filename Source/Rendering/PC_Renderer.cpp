@@ -58,6 +58,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_cameraPosition_ = bgfx::createUniform("u_cameraPosition", bgfx::UniformType::Vec4);
     u_cameraUp_ = bgfx::createUniform("u_cameraUp", bgfx::UniformType::Vec4);
     u_cameraRight_ = bgfx::createUniform("u_cameraRight", bgfx::UniformType::Vec4);
+    u_cameraForward_ = bgfx::createUniform("u_cameraForward", bgfx::UniformType::Vec4);
     u_randomVec_ = bgfx::createUniform("u_randomVec", bgfx::UniformType::Vec4);
     u_terrainMeshOffset_= bgfx::createUniform("u_terrainMeshOffset", bgfx::UniformType::Vec4);
     u_textProps_ = bgfx::createUniform("u_textProps", bgfx::UniformType::Vec4, 3);
@@ -195,8 +196,13 @@ void Renderer::StartFrame() {
     bgfx::setUniform(u_cameraPosition_, &cameraPosition);
     bgfx::setUniform(u_cameraUp_, &cameraUp);
     bgfx::setUniform(u_cameraRight_, &cameraRight);
+    bgfx::setUniform(u_cameraForward_, &cameraForward);
     bgfx::setUniform(u_randomVec_, &randomVec);
     bgfx::setUniform(u_shadowMatrix_, &shadowMatrix_);
+
+    // DEBUGLOG("Forward:" << to_string(cameraForward));
+    // DEBUGLOG("Up:" << to_string(cameraUp));
+    // DEBUGLOG("Up:" << to_string(cameraForward));
 
     bgfx::touch(0);
 }
@@ -263,7 +269,7 @@ void Renderer::RenderMesh(
         if (modelMatrix != nullptr)
             bgfx::setTransform(modelMatrix);
 
-        if (curFace == 1) {
+        if (curFace == 1 || material->triangleType == BACKFACE) {
             state = state & ~BGFX_STATE_CULL_CW;
             state = state | BGFX_STATE_CULL_CCW;
             normalMult.x = material->triangleType == TWO_SIDED_NEGATIVE_BACK ? -1.0f : 1.0f;

@@ -21,7 +21,8 @@ EntityProperties Popper::GetStaticProperties() {
         },
         {
             // Ints
-            {"p_maxpop", &maxPopTime_}
+            {"p_maxpop", &maxPopTime_},
+            {"p_delay", &popDelay_}
         },
         {
             // Bools
@@ -41,7 +42,7 @@ void Popper::Init(Entity::InitArgs args) {
 
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
-    pushbox_.radius = 1.0f;
+    pushbox_.radius = 0.5f;
 
     hurtbox_.top = 1.0f;
     hurtbox_.bottom = 1.0f;
@@ -60,18 +61,22 @@ void Popper::Init(Entity::InitArgs args) {
     popTime_ = 0;
     maxPopTime_ = 120;
 
+    popDelay_ = 30;
+    popDelayTime_ = 0;
+
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_Interpolate, true);
-    SetFlag(EF_SendPush, true);
+    // SetFlag(EF_SendPush, true);
     traceDistance_ = 1000.0f;
 }
 
 void Popper::Start() {
     fader_.DeactivateModifiers(true);
+    fader_.activeOverrides_[0] = fader_.maxs_[0];
     targetDistFromEdge_ = -terrain_->GetDistance(transform_.position).x;
 }
 
-void Popper::Update() {
+void Popper::PreUpdate() {
     fader_.Update();
     bubble_->position = transform_.position;
 
@@ -91,10 +96,20 @@ void Popper::Update() {
             fader_.StartDeactivate(); 
         }
     }
+
+    if (popDelayTime_ > 0) {
+        popDelayTime_--;
+        if (popDelayTime_ <= 0) {
+            fader_.StartActivate();
+            popTime_ = maxPopTime_;
+        }
+    }
 }
 
 void Popper::OnHurt(HurtArgs args) {
-    fader_.StartActivate();
+    if (!fader_.IsActive())
+        popDelayTime_ = popDelay_;
+
     popTime_ = maxPopTime_;
 }
 

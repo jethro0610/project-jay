@@ -64,5 +64,5 @@ void WaterGun::OnHurt(HurtArgs args) {
     waterTransform.position = transform_.position;
     waterTransform.scale = vec3(3.0f);
     Water& water = (Water&)entities_->CreateEntity(Water::TYPEID, waterTransform);
-    water.Shoot(target_->transform_.position);
+    water.Shoot(target_->transform_.position, 250.0f);
 }

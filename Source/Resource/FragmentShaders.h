@@ -1,5 +1,5 @@
 #pragma once
-const int NUM_FRAGMENT_SHADERS = 27;
+const int NUM_FRAGMENT_SHADERS = 28;
 const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_aura",
 	"fs_blit",
@@ -28,4 +28,5 @@ const char FRAGMENT_SHADERS[NUM_FRAGMENT_SHADERS][32] = {
 	"fs_uibar",
 	"fs_text",
 	"fs_terrain",
+	"fs_hole",
 };

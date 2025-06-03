@@ -1,5 +1,9 @@
 #include "Bumper.h"
 #include "Resource/ResourceManager.h"
+#include "Terrain/Terrain.h"
+#include "Seed/SeedManager.h"
+#include "Entity/EntityList.h"
+#include "Player.h"
 using namespace glm;
 
 EntityDependendies Bumper::GetStaticDependencies() {
@@ -13,13 +17,16 @@ EntityProperties Bumper::GetStaticProperties() {
         {
             // Floats
             {"p_friction", &friction_},
-            {"p_kbmult", &kbMult_}
+            {"p_kbmult", &kbMult_},
+            {"p_gravity", &gravity_}
         },
         {
             // Ints
+            {"p_seed", &seedOnFall_}
         },
         {
             // Bools
+            {"p_respawn", &respawnOnFall_}
         }
     };
 }
@@ -46,6 +53,9 @@ void Bumper::Init(Entity::InitArgs args) {
     speed_ = 5.0f;
     traceDistance_ = 20.0f;
     kbMult_ = 1.0f;
+    gravity_ = 8.0f; 
+    seedOnFall_ = 0;
+    respawnOnFall_ = false;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -59,15 +69,36 @@ void Bumper::Init(Entity::InitArgs args) {
     SetFlag(EF_RecievePush, true);
 }
 
+void Bumper::Start() {
+    spawnPos_ = transform_.position;
+    player_ = entities_->FindEntityByType(Player::TYPEID);
+}
+
 void Bumper::Update() {
     float speedDecay = 1.0f - friction_;
+    float airDecay = 1.0f - friction_ * 0.25f;
     float acceleration = (speed_ / speedDecay) - speed_;
-    velocity_.y -= 8.0f;
+    velocity_.y -= gravity_;
+
+    float rawHeight = terrain_->GetRawHeight(transform_.position);
+    float groundDist = transform_.position.y - rawHeight;
 
     vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
-    planarVelocity *= speedDecay;
+    planarVelocity *= groundDist < 1.0f ? speedDecay : airDecay;
     velocity_.x = planarVelocity.x;
     velocity_.z = planarVelocity.z;
+
+    if (groundDist < -20.0f) {
+        if (respawnOnFall_) {
+            lastTransform_.position = spawnPos_;
+            transform_.position = spawnPos_;
+            velocity_ = vec3(0.0f);
+        }
+        else {
+            seedManager_->CreateMultipleSeed(transform_.position, seedOnFall_, 10.0f, player_);
+            destroy_ = true;
+        }
+    }
 }
 
 void Bumper::OnHurt(HurtArgs args) {

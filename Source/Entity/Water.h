@@ -11,7 +11,7 @@ public:
     EntityProperties GetStaticProperties();
 
     void Update();
-    void Shoot(const glm::vec3& target);
+    void Shoot(const glm::vec3& target, float yVel);
     void OnOverlap(Entity* overlappedEntity);
     void OnDestroy();
 };

@@ -70,7 +70,7 @@ void FlowerRamp::Start() {
         fader_.DeactivateModifiers(true);
 }
 
-void FlowerRamp::Update() {
+void FlowerRamp::PreUpdate() {
     fader_.Update();
     bubble_->position = transform_.position;
 }

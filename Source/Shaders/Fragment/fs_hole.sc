@@ -79,7 +79,7 @@ void main() {
             1.0f,
             0.95f,
             0.65f,
-            stepsInside * 0.0005f * 2.0f
+            stepsInside * 0.001f
         );
     }
     else

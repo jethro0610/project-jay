@@ -9,6 +9,11 @@ uniform vec4 u_cameraForward;
 uniform vec4 u_cameraUp;
 uniform vec4 u_cameraRight;
 
+vec3 project2Dto3D(vec2 a, vec3 b) {
+    vec3 a3 = vec3(a.x, 0.0f, a.y);
+    return (dot(a3, b) / dot(b, b)) * b;
+}
+
 void main() {
     gl_FragDepth = 0.0f;
 
@@ -30,33 +35,51 @@ void main() {
         rayUv.y * -u_cameraUp.xyz +
         u_cameraForward.xyz;
     rayDirection = normalize(rayDirection);
+    vec2 rayDirection2D = normalize(rayDirection.xz);
 
-    vec3 circleOrigin = PROP_RAYMARCH_ORIGIN;
-    float circleRadius = PROP_RAYMARCH_RADIUS * 0.5f;
 
     vec3 pos = u_cameraPosition.xyz;
+    for (int i = 0; i < 32; i++) {
+        float distFromVolume = distance(PROP_RAYMARCH_ORIGIN.xz, pos.xz) - PROP_RAYMARCH_RADIUS;
+        if (distFromVolume < 0.1f)
+            break;
+        pos += project2Dto3D(rayDirection2D * distFromVolume, rayDirection);
+    }
+
     bool hit = false;
     for (int i = 0; i < 32; i++) {
-        // float dist = distance(pos, circleOrigin) - circleRadius;
-        float dist = getTerrainDistance(pos.xz).x;
-        float absDist = abs(dist);
-        if (absDist < 0.1f) {
+        float dist = -getTerrainDistance(pos.xz).x;
+        if (dist < 0.25f) {
             hit = true;
             break;
         }
-        pos += rayDirection * absDist;
+        pos += project2Dto3D(rayDirection2D * dist, rayDirection);
     }
 
+    int stepsInside = 0;
     if (hit) {
+        vec3 internalStepPos = pos + project2Dto3D(rayDirection2D * 0.25f, rayDirection);
+        for (int i = 0; i < 1024; i++) {
+            float distFromVolume = distance(PROP_RAYMARCH_ORIGIN.xz, internalStepPos.xz) - PROP_RAYMARCH_RADIUS;
+            float dist = -getTerrainDistance(internalStepPos.xz).x;
+            if (distFromVolume > 0.0f)
+                break;
+            if (dist < 0.25f)
+                stepsInside++;
+            internalStepPos += project2Dto3D(rayDirection2D * 1.0f, rayDirection);
+        }
+    }
+
+    if (hit && distance(PROP_RAYMARCH_ORIGIN.xz, pos.xz) < PROP_RAYMARCH_RADIUS) {
         vec4 clipPos = mul(u_viewProj, vec4(pos, 1.0f));
         float d = clipPos.z / clipPos.w;
 
         gl_FragDepth = d;
         gl_FragColor = vec4(
-            d,
-            d,
-            d,
-            1.0f
+            1.0f,
+            0.95f,
+            0.65f,
+            stepsInside * 0.0005f * 2.0f
         );
     }
     else

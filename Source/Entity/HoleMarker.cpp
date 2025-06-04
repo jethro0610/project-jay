@@ -30,7 +30,7 @@ void HoleMarker::Init(Entity::InitArgs args) {
     materials_[0].specularProperties = SpecularFresnelProperties::Default();
     materials_[0].specularProperties.color = glm::vec4(1.0f);
     materials_[0].specularProperties.color = vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    materials_[0].triangleType = TriangleType::TWO_SIDED;
+    materials_[0].triangleType = TriangleType::BACKFACE;
     materials_[0].transparencyType = TRANSPARENCY_ADDITIVE;
     materials_[0].raymarchVolume.origin = transform_.position;
     materials_[0].raymarchVolume.radius = transform_.scale.x;

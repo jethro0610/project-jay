@@ -42,31 +42,46 @@ INLINE float smax(float a, float b, float k) {
     return log(exp(k * a) + exp(k * b)) / k;
 }
 
-INLINE vec2 getTerrainDistance(vec2 position, TERRAIN_TYPE terrain TERRAIN_DEFAULT, ACCURACY_TYPE accuracy ACCURACY_DEFAULT, bool doDip = true) {
+INLINE vec2 getTerrainDistance(
+    vec2 position, 
+    TERRAIN_TYPE terrain TERRAIN_DEFAULT, 
+    ACCURACY_TYPE accuracy ACCURACY_DEFAULT, 
+    bool doDip = true, 
+    bool heightMods = true, 
+    bool sdfMods = true
+) {
     vec2 pos = SAMPLETERRAINMAP(position, accuracy);
 
-    #pragma unroll
-    for (int i = 0; i < DYN_MOD_MAX; i++) {
-        if (!DYN_MOD_IS_ACTIVE(DYN_NEGATIVES[i])) continue;
+    if (sdfMods) {
+        #pragma unroll
+        for (int i = 0; i < DYN_MOD_MAX; i++) {
+            if (!DYN_MOD_IS_ACTIVE(DYN_NEGATIVES[i])) continue;
 
-        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Z(DYN_NEGATIVES[i]));
-        float dist = distance(dynModPos, position);
-        float outer = dist - DYN_NEG_OUTER_RADIUS(DYN_NEGATIVES[i]);
-        float inner = dist - DYN_NEG_INNER_RADIUS(DYN_NEGATIVES[i]);
-        float negativeVal = max(outer, -inner);
-        pos.x = smax(pos.x, -negativeVal, DYN_NEG_SHARPNESS(DYN_NEGATIVES[i]));
+            vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_NEGATIVES[i]), DYN_MOD_POS_Z(DYN_NEGATIVES[i]));
+            float dist = distance(dynModPos, position);
+            float outer = dist - DYN_NEG_OUTER_RADIUS(DYN_NEGATIVES[i]);
+            float inner = dist - DYN_NEG_INNER_RADIUS(DYN_NEGATIVES[i]);
+            float negativeVal = max(outer, -inner);
+            float sharpness = DYN_NEG_SHARPNESS(DYN_NEGATIVES[i]);
+            if (sharpness < 1.0f)
+                pos.x = smax(pos.x, -negativeVal, sharpness);
+            else
+                pos.x = max(pos.x, -negativeVal);
+        }
     }
 
-    #pragma unroll
-    for (int i = 0; i < DYN_MOD_MAX; i++) {
-        if (!DYN_MOD_IS_ACTIVE(DYN_BUBBLES[i])) continue;
+    if (heightMods) {
+        #pragma unroll
+        for (int i = 0; i < DYN_MOD_MAX; i++) {
+            if (!DYN_MOD_IS_ACTIVE(DYN_BUBBLES[i])) continue;
 
-        vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Z(DYN_BUBBLES[i]));
-        float dist = distance(dynModPos, position);
-        float dScalar = 1.0f - min(dist / DYN_BUB_RADIUS(DYN_BUBBLES[i]), 1.0f);
-        dScalar = EaseInOut(dScalar, DYN_BUB_INPOWER(DYN_BUBBLES[i]), DYN_BUB_OUTPOWER(DYN_BUBBLES[i]));
-        if (dist < DYN_BUB_RADIUS(DYN_BUBBLES[i]))
-            pos.y += dScalar * DYN_BUB_HEIGHT(DYN_BUBBLES[i]);
+            vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_BUBBLES[i]), DYN_MOD_POS_Z(DYN_BUBBLES[i]));
+            float dist = distance(dynModPos, position);
+            float dScalar = 1.0f - min(dist / DYN_BUB_RADIUS(DYN_BUBBLES[i]), 1.0f);
+            dScalar = EaseInOut(dScalar, DYN_BUB_INPOWER(DYN_BUBBLES[i]), DYN_BUB_OUTPOWER(DYN_BUBBLES[i]));
+            if (dist < DYN_BUB_RADIUS(DYN_BUBBLES[i]))
+                pos.y += dScalar * DYN_BUB_HEIGHT(DYN_BUBBLES[i]);
+        }
     }
 
     if (!doDip)

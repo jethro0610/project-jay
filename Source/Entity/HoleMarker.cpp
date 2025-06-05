@@ -33,7 +33,7 @@ void HoleMarker::Init(Entity::InitArgs args) {
 
     materials_[0].lightVolumeProperties = LightVolumeProperties::Default();
     materials_[0].lightVolumeProperties.color = vec4(1.0f);
-    materials_[0].lightVolumeProperties.stepDistance = 1.0f;
+    materials_[0].lightVolumeProperties.stepDistance = 4.0f;
     materials_[0].lightVolumeProperties.accumulationStrength = 0.001f;
 
     materials_[0].lightVolumeProperties.origin = transform_.position;

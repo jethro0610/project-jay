@@ -58,42 +58,45 @@ void main() {
 
         rayDistance += project2Dto3D(rayDirection2D * distFromVolume, rayDirection);
     }
-    rayDistance += 0.1f; // Step in a little more just to be sure
 
     // Accumulate in light in the holes of the terrain
-    const float stepDistance = PROP_VOLUMETRIC_STEP_DIST;
+    const float minStepDistance = PROP_VOLUMETRIC_STEP_DIST;
     const float lightAccum = PROP_VOLUMETRIC_LIGHT_ACCUM;
     const float falloffHeight = PROP_VOLUMETRIC_FALLOFF_HEIGHT;
     float totalLightAccum = 0.0f;
     for (int i = 0; i < 512; i++) {
-        vec3 pos = origin + rayDirection * rayDistance;
+        vec3 startPos = origin + rayDirection * rayDistance;
 
-        // The depth of the ray MUST be above the depth
-        // of the rendered scene
-        vec4 clipPos = mul(u_viewProj, vec4(pos, 1.0f));
-        float d = clipPos.z / clipPos.w;
-        if (d > depth)
-            break;
+        vec2 terrainSample = getTerrainDistance(startPos.xz, 0, 0, false);
+        float height = abs(startPos.y - terrainSample.y);
+        terrainSample.x += (height / falloffHeight) * 20.0f; // Expand at ends
 
-        // Any rays that exit the volume are complete
-        float dist2FromVolume = distance2(volumetricOrigin.xz, pos.xz);
-        if (dist2FromVolume > volumetricRadius2 + 1.0f)
-            break;
+        // Raymarch step, but enforce a minimum so we don't get
+        // stuck in the marching volume
+        float stepDistance = max(terrainSample.x, minStepDistance);
 
-        // We're in a hole when the distance from the
-        // terrain SDF is greater than 0
-        vec2 terrainSample = SAMPLETERRAINMAP(pos.xz);
-        float height = abs(pos.y - terrainSample.y);
-        terrainSample.x += (height / falloffHeight) * 20.0f;
         if (terrainSample.x > 0.0f) {
             // Rays higher than the terrain need to fade
             // out with a falloff
             float falloff = clamp(1.0f - (height / falloffHeight), 0.0f, 1.0f);
             falloff *= falloff;
-
             totalLightAccum += lightAccum * stepDistance * falloff;
         }
+
         rayDistance += stepDistance;
+        vec3 endPos = origin + rayDirection * rayDistance;
+
+        // The depth of the ray MUST be above the depth
+        // of the rendered scene
+        vec4 clipPos = mul(u_viewProj, vec4(endPos, 1.0f));
+        float d = clipPos.z / clipPos.w;
+        if (d > depth)
+            break;
+
+        // Any rays that exit the volume are complete
+        float dist2FromVolume = distance2(volumetricOrigin.xz, endPos.xz);
+        if (dist2FromVolume > volumetricRadius2 + 1.0f)
+            break;
     }
 
     vec4 volumeColor = PROP_VOLUMETRIC_COLOR;

@@ -18,7 +18,11 @@ uniform vec4 u_mProps[4];
 #define PROP_VARIATION_MAX u_mProps[3].z
 #define PROP_VARIATION_POWER u_mProps[3].w
 
-#define PROP_RAYMARCH_ORIGIN (u_mProps[0].xyz)
-#define PROP_RAYMARCH_RADIUS (u_mProps[0].w)
+#define PROP_VOLUMETRIC_ORIGIN (u_mProps[0].xyz)
+#define PROP_VOLUMETRIC_RADIUS (u_mProps[0].w)
+#define PROP_VOLUMETRIC_STEP_DIST (u_mProps[1].x)
+#define PROP_VOLUMETRIC_LIGHT_ACCUM (u_mProps[1].y)
+#define PROP_VOLUMETRIC_FALLOFF_HEIGHT (u_mProps[1].z)
+#define PROP_VOLUMETRIC_COLOR (u_mProps[2])
 
 #endif

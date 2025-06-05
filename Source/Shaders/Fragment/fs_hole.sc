@@ -10,16 +10,21 @@ uniform vec4 u_cameraUp;
 uniform vec4 u_cameraRight;
 SAMPLER2D(s_sampler0, 0);
 
-vec3 project2Dto3D(vec2 a, vec3 b) {
+float project2Dto3D(vec2 a, vec3 b) {
     vec3 a3 = vec3(a.x, 0.0f, a.y);
-    return (dot(a3, b) / dot(b, b)) * b;
+    return dot(a3, b) / dot(b, b);
+}
+
+float distance2(vec2 a, vec2 b) {
+    float x = a.x - b.x;
+    float y = a.y - b.y;
+    return x * x + y * y;
 }
 
 void main() {
     float aspect = 16.0f / 9.0f;
     float fov = 70.0f;
     float fov2 = radians(fov) / 2.0f;
-
     vec2 rayUv = vec2(
         gl_FragCoord.x / 1920,
         gl_FragCoord.y / 1080
@@ -37,63 +42,65 @@ void main() {
     rayDirection = normalize(rayDirection);
     vec2 rayDirection2D = normalize(rayDirection.xz);
 
+    const vec3 volumetricOrigin = PROP_VOLUMETRIC_ORIGIN;
+    const float volumetricRadius = PROP_VOLUMETRIC_RADIUS;
+    const float volumetricRadius2 = volumetricRadius * volumetricRadius;
 
-    vec3 pos = u_cameraPosition.xyz;
-    bool hit = false;
-    bool inHit = false;
-    if (-SAMPLETERRAINMAP(pos.xz).x < 0.0f && distance(PROP_RAYMARCH_ORIGIN.xz, pos.xz) < PROP_RAYMARCH_RADIUS) {
-        hit = true;
-        inHit = true;
+    vec3 origin = u_cameraPosition.xyz;
+    float rayDistance = 0.0f;
+
+    // Raymarch into mesh volume first
+    for (int i = 0; i < 16; i++) {
+        vec3 pos = origin + rayDirection * rayDistance;
+        float distFromVolume = distance(volumetricOrigin.xz, pos.xz) - volumetricRadius;
+        if (distFromVolume < 0.01f)
+            break;
+
+        rayDistance += project2Dto3D(rayDirection2D * distFromVolume, rayDirection);
     }
+    rayDistance += 0.1f; // Step in a little more just to be sure
 
-    for (int i = 0; i < 32; i++) {
-        if (hit)
-            break;
-        float distFromVolume = distance(PROP_RAYMARCH_ORIGIN.xz, pos.xz) - PROP_RAYMARCH_RADIUS;
-        if (distFromVolume < 0.1f)
-            break;
-        pos += project2Dto3D(rayDirection2D * distFromVolume, rayDirection);
-    }
+    // Accumulate in light in the holes of the terrain
+    const float stepDistance = PROP_VOLUMETRIC_STEP_DIST;
+    const float lightAccum = PROP_VOLUMETRIC_LIGHT_ACCUM;
+    const float falloffHeight = PROP_VOLUMETRIC_FALLOFF_HEIGHT;
+    float totalLightAccum = 0.0f;
+    for (int i = 0; i < 512; i++) {
+        vec3 pos = origin + rayDirection * rayDistance;
 
-    for (int i = 0; i < 32; i++) {
-        float dist = -SAMPLETERRAINMAP(pos.xz).x;
-        if (dist < 0.25f) {
-            hit = true;
+        // The depth of the ray MUST be above the depth
+        // of the rendered scene
+        vec4 clipPos = mul(u_viewProj, vec4(pos, 1.0f));
+        float d = clipPos.z / clipPos.w;
+        if (d > depth)
             break;
+
+        // Any rays that exit the volume are complete
+        float dist2FromVolume = distance2(volumetricOrigin.xz, pos.xz);
+        if (dist2FromVolume > volumetricRadius2 + 1.0f)
+            break;
+
+        // We're in a hole when the distance from the
+        // terrain SDF is greater than 0
+        vec2 terrainSample = SAMPLETERRAINMAP(pos.xz);
+        float height = abs(pos.y - terrainSample.y);
+        terrainSample.x += (height / falloffHeight) * 20.0f;
+        if (terrainSample.x > 0.0f) {
+            // Rays higher than the terrain need to fade
+            // out with a falloff
+            float falloff = clamp(1.0f - (height / falloffHeight), 0.0f, 1.0f);
+            falloff *= falloff;
+
+            totalLightAccum += lightAccum * stepDistance * falloff;
         }
-        pos += project2Dto3D(rayDirection2D * dist, rayDirection);
+        rayDistance += stepDistance;
     }
 
-    float stepsInside = 0;
-    if (hit) {
-        vec3 internalStepPos = pos + rayDirection * 0.25f;
-        int seed = 1337;
-        for (int i = 0; i < 1024; i++) {
-            vec4 clipPos = mul(u_viewProj, vec4(internalStepPos, 1.0f));
-            float d = clipPos.z / clipPos.w;
-            if (d > depth)
-                break;
-            seed = (seed * 69723) + 1;
-
-            float distFromVolume = distance(PROP_RAYMARCH_ORIGIN.xz, internalStepPos.xz) - PROP_RAYMARCH_RADIUS;
-            float dist = -SAMPLETERRAINMAP(internalStepPos.xz).x;
-            if (distFromVolume > 0.0f)
-                break;
-
-            float terrainHeight = SAMPLETERRAINMAP(internalStepPos.xz).y;
-            float heightDist = abs(internalStepPos.y - terrainHeight);
-            float heightFalloff = clamp(1.0f - (heightDist / 300.0f), 0.0f, 1.0f);
-            heightFalloff *= heightFalloff;
-            if (dist < 0.25f)
-                stepsInside += heightFalloff;
-            internalStepPos += rayDirection * 2.0f;
-        }
-    }
-
+    vec4 volumeColor = PROP_VOLUMETRIC_COLOR;
     gl_FragColor = vec4(
-        1.0f,
-        0.95f,
-        0.65f,
-        stepsInside * 0.0015f
+        volumeColor.r,
+        volumeColor.g,
+        volumeColor.b,
+        totalLightAccum * volumeColor.a
     );
 }

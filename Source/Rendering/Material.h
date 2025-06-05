@@ -71,14 +71,24 @@ struct VariationProperties : SpecularFresnelProperties {
     };
 };
 
-struct RaymarchVolume {
+struct LightVolumeProperties {
     glm::vec3 origin;
     float radius;
+    float stepDistance;
+    float accumulationStrength;
+    float falloffHeight;
+    float padding;
+    glm::vec4 color;
 
-    static RaymarchVolume Default() {
+    static LightVolumeProperties Default() {
         return {
             glm::vec3(0.0f),
-            0.0f
+            0.0f,
+            1.0f,
+            0.0f,
+            0.0f,
+            0.0f,
+            glm::vec4(1.0f)
         };
     }
 };
@@ -121,7 +131,7 @@ struct Material {
         BaseMaterialProprties properties;
         SpecularFresnelProperties specularProperties;
         VariationProperties variationProperties;
-        RaymarchVolume raymarchVolume;
+        LightVolumeProperties lightVolumeProperties;
         glm::vec4 padding[4];
     };
 };

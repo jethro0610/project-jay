@@ -75,13 +75,13 @@ void main() {
         // stuck in the marching volume
         float stepDistance = max(terrainSample.x, minStepDistance);
 
-        if (terrainSample.x > 0.0f) {
-            // Rays higher than the terrain need to fade
-            // out with a falloff
-            float falloff = clamp(1.0f - (height / falloffHeight), 0.0f, 1.0f);
-            falloff *= falloff;
+        // Rays higher than the terrain need to fade
+        // out with a falloff
+        float falloff = clamp(1.0f - (height / falloffHeight), 0.0f, 1.0f);
+        falloff *= falloff;
+
+        if (terrainSample.x > 0.0f)
             totalLightAccum += lightAccum * stepDistance * falloff;
-        }
 
         rayDistance += stepDistance;
         vec3 endPos = origin + rayDirection * rayDistance;
@@ -90,8 +90,14 @@ void main() {
         // of the rendered scene
         vec4 clipPos = mul(u_viewProj, vec4(endPos, 1.0f));
         float d = clipPos.z / clipPos.w;
-        if (d > depth)
+        if (d > depth) {
+            // Rays may accumulate past the depth, resulting in
+            // inaccurate lights. So, we need to remove some
+            // light depending on how deep into the depth the
+            // ray is
+            totalLightAccum -= (d - depth) * 0.25f * stepDistance * falloff;
             break;
+        }
 
         // Any rays that exit the volume are complete
         float dist2FromVolume = distance2(volumetricOrigin.xz, endPos.xz);

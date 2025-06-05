@@ -8,6 +8,7 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 uniform vec4 u_cameraForward;
 uniform vec4 u_cameraUp;
 uniform vec4 u_cameraRight;
+SAMPLER2D(s_sampler0, 0);
 
 vec3 project2Dto3D(vec2 a, vec3 b) {
     vec3 a3 = vec3(a.x, 0.0f, a.y);
@@ -15,8 +16,6 @@ vec3 project2Dto3D(vec2 a, vec3 b) {
 }
 
 void main() {
-    gl_FragDepth = 0.0f;
-
     float aspect = 16.0f / 9.0f;
     float fov = 70.0f;
     float fov2 = radians(fov) / 2.0f;
@@ -25,6 +24,7 @@ void main() {
         gl_FragCoord.x / 1920,
         gl_FragCoord.y / 1080
     );
+    float depth = texture2D(s_sampler0, rayUv).r;
     rayUv -= 0.5f;
     rayUv *= 2.0f;
     rayUv.x *= 16.0f / 9.0f;
@@ -66,37 +66,34 @@ void main() {
 
     float stepsInside = 0;
     if (hit) {
-        vec3 internalStepPos = pos + project2Dto3D(rayDirection2D * 0.25f, rayDirection);
+        vec3 internalStepPos = pos + rayDirection * 0.25f;
         int seed = 1337;
         for (int i = 0; i < 1024; i++) {
+            vec4 clipPos = mul(u_viewProj, vec4(internalStepPos, 1.0f));
+            float d = clipPos.z / clipPos.w;
+            if (d > depth)
+                break;
             seed = (seed * 69723) + 1;
 
             float distFromVolume = distance(PROP_RAYMARCH_ORIGIN.xz, internalStepPos.xz) - PROP_RAYMARCH_RADIUS;
             float dist = -SAMPLETERRAINMAP(internalStepPos.xz).x;
             if (distFromVolume > 0.0f)
                 break;
+
+            float terrainHeight = SAMPLETERRAINMAP(internalStepPos.xz).y;
+            float heightDist = abs(internalStepPos.y - terrainHeight);
+            float heightFalloff = clamp(1.0f - (heightDist / 300.0f), 0.0f, 1.0f);
+            heightFalloff *= heightFalloff;
             if (dist < 0.25f)
-                stepsInside += (seed % 255) / 255.0f;
-            internalStepPos += project2Dto3D(rayDirection2D * 1.0f, rayDirection);
+                stepsInside += heightFalloff;
+            internalStepPos += rayDirection * 2.0f;
         }
     }
 
-    float terrainHeight = SAMPLETERRAINMAP(pos.xz).y;
-    float heightDist = abs(pos.y - terrainHeight);
-    float heightFalloff = clamp(1.0f - (heightDist / 300.0f), 0.0f, 1.0f);
-    heightFalloff *= heightFalloff;
-    if (hit && distance(PROP_RAYMARCH_ORIGIN.xz, pos.xz) < PROP_RAYMARCH_RADIUS) {
-        vec4 clipPos = mul(u_viewProj, vec4(pos, 1.0f));
-        float d = clipPos.z / clipPos.w;
-
-        gl_FragDepth = inHit ? 0.0f : d;
-        gl_FragColor = vec4(
-            1.0f,
-            0.95f,
-            0.65f,
-            stepsInside * 0.0025f * heightFalloff
-        );
-    }
-    else
-        discard;
+    gl_FragColor = vec4(
+        1.0f,
+        0.95f,
+        0.65f,
+        stepsInside * 0.0015f
+    );
 }

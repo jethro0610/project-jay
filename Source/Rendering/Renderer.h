@@ -70,9 +70,10 @@ private:
     static constexpr int TERRAIN_VIEW = 1;
     static constexpr int RENDER_VIEW = 2;
     static constexpr int TRANSPARENCY_VIEW = 3;
-    static constexpr int POSTROCESS_VIEW = 4;
-    static constexpr int WORLD_TEXT_VIEW = 5;
-    static constexpr int UI_VIEW = 6;
+    static constexpr int VOLUMETRIC_VIEW = 4;
+    static constexpr int POSTROCESS_VIEW = 5;
+    static constexpr int WORLD_TEXT_VIEW = 6;
+    static constexpr int UI_VIEW = 7;
 
     int width_;
     int height_;
@@ -128,6 +129,7 @@ private:
     FrameBufferHandle backBuffer_;
     FrameBufferHandle shadowBuffer_;
     FrameBufferHandle renderBuffer_;
+    FrameBufferHandle volumetricsBuffer_;
     FrameBufferHandle ignoreKuwaharaBuffer_;
     FrameBufferHandle postProcessBuffer_;
 

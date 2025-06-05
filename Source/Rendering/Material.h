@@ -95,6 +95,7 @@ struct Material {
         castShadows = false;
         transparencyType = TRANSPARENCY_NONE;
         triangleType = TriangleType::ONE_SIDED;
+        volumetric = false;
 
         numTextures = 0;
         for(int i = 0; i < MAX_TEXTURES; i++)
@@ -114,6 +115,7 @@ struct Material {
     bool castShadows;
     TranparencyType transparencyType;
     TriangleType triangleType;
+    bool volumetric;
 
     union {
         BaseMaterialProprties properties;

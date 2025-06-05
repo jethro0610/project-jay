@@ -134,7 +134,7 @@ void ResourceManager::LoadRenderTextures() {
         false,
         1,
         bgfx::TextureFormat::D32,
-        BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY
+        BGFX_TEXTURE_RT
     )};
     ASSIGN_DEBUG_NAME(textures_.Get("t_render_d"), "t_render_d");
     globals_.insert("t_render_d");

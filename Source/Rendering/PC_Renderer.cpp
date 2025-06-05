@@ -146,6 +146,13 @@ void Renderer::InitRenderBuffer(Texture* renderColorTexture, Texture* renderDept
 
     bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
     bgfx::setViewRect(TRANSPARENCY_VIEW, 0, 0, renderWidth_, renderHeight_);
+
+    bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
+    bgfx::setViewRect(TRANSPARENCY_VIEW, 0, 0, renderWidth_, renderHeight_);
+
+    volumetricsBuffer_ = bgfx::createFrameBuffer(1, &renderBufferTextures_[0]->handle);
+    bgfx::setViewFrameBuffer(VOLUMETRIC_VIEW, volumetricsBuffer_);
+    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, renderWidth_, renderHeight_);
 }
 
 void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
@@ -175,6 +182,7 @@ void Renderer::StartFrame() {
     bgfx::setViewTransform(TERRAIN_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(RENDER_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(TRANSPARENCY_VIEW, &viewMatrix_, &projectionMatrix_);
+    bgfx::setViewTransform(VOLUMETRIC_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(POSTROCESS_VIEW, &viewMatrix_, &projectionMatrix_);
     bgfx::setViewTransform(WORLD_TEXT_VIEW, &viewMatrix_, &projectionMatrix_);
 
@@ -261,7 +269,10 @@ void Renderer::RenderMesh(
             default:
                 break;
         }
-
+        if (material->volumetric) {
+            state = state & ~BGFX_STATE_DEPTH_TEST_LESS;
+            view = VOLUMETRIC_VIEW;
+        }
 
         bgfx::setUniform(u_mProps_, &material->properties, 4);
         if (pose != nullptr)

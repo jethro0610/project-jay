@@ -71,9 +71,10 @@ private:
     static constexpr int RENDER_VIEW = 2;
     static constexpr int TRANSPARENCY_VIEW = 3;
     static constexpr int VOLUMETRIC_VIEW = 4;
-    static constexpr int POSTROCESS_VIEW = 5;
-    static constexpr int WORLD_TEXT_VIEW = 6;
-    static constexpr int UI_VIEW = 7;
+    static constexpr int COMPOSITE_VIEW = 5;
+    static constexpr int POSTROCESS_VIEW = 6;
+    static constexpr int WORLD_TEXT_VIEW = 7;
+    static constexpr int UI_VIEW = 8;
 
     int width_;
     int height_;
@@ -83,6 +84,7 @@ private:
     Texture* renderBufferTextures_[2];
     Texture* terrainMapTexture_;
     Texture* shadowBufferTexture_;
+    Texture* volumetricsTexture_;
     Texture* postProcessTexture_;
     #ifdef _DEBUG
     Texture* DBG_terrainMapTextureLow_;
@@ -99,6 +101,7 @@ private:
     Shader* worldTextShader_;
 
     Material blitMaterial_;
+    Material compositeVolumetricsMaterial_;
     Material postProcessMaterial_;
     Material textMaterial_;
     Material terrainCursorMaterial_;
@@ -124,6 +127,7 @@ private:
     void InitRenderBuffer(Texture* renderColorTexture, Texture* renderDepthTexture);
     void InitPostProcessBuffer(Texture* postProcessTexture);
     void InitIgnoreKuwaharaBuffers(Texture* postProcessTexture, Texture* renderDepthTexture);
+    void InitVolumetricsBuffer(Texture* volumetricsTexture);
     void InitUIBuffer();
 
     FrameBufferHandle backBuffer_;
@@ -216,6 +220,7 @@ private:
     void RenderSeed(SeedManager& seedManagerm, Material* material);
     void RenderParticles(ParticleManager& particleManager);
     void RenderPostProcess();
+    void RenderComposite();
     void RenderBlit();
     void RenderUI(EntityList& entities, Clock& clock);
     void RenderUIElement(UIElement& element, Shader* shader);

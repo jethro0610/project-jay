@@ -73,6 +73,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
 
     InitShadowBuffer(resourceManager.GetTexture("t_shadowmap"));
     InitRenderBuffer(resourceManager.GetTexture("t_render_c"), resourceManager.GetTexture("t_render_d"));
+    InitVolumetricsBuffer(resourceManager.GetTexture("t_additive_volumetrics"));
     InitPostProcessBuffer(resourceManager.GetTexture("t_post_c"));
     InitIgnoreKuwaharaBuffers(resourceManager.GetTexture("t_post_c"), resourceManager.GetTexture("t_render_d"));
     InitUIBuffer();
@@ -91,6 +92,10 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     blitMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
     blitMaterial_.numTextures = 1;
     blitMaterial_.textures[0] = resourceManager.GetTexture("t_post_c");
+
+    compositeVolumetricsMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_blit");
+    compositeVolumetricsMaterial_.numTextures = 1;
+    compositeVolumetricsMaterial_.textures[0] = resourceManager.GetTexture("t_additive_volumetrics");
 
     postProcessMaterial_.shader = resourceManager.GetShader("vs_screenquad", "fs_postprocess");
     postProcessMaterial_.numTextures = 1;
@@ -147,12 +152,16 @@ void Renderer::InitRenderBuffer(Texture* renderColorTexture, Texture* renderDept
     bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
     bgfx::setViewRect(TRANSPARENCY_VIEW, 0, 0, renderWidth_, renderHeight_);
 
-    bgfx::setViewFrameBuffer(TRANSPARENCY_VIEW, renderBuffer_);
-    bgfx::setViewRect(TRANSPARENCY_VIEW, 0, 0, renderWidth_, renderHeight_);
+    bgfx::setViewFrameBuffer(COMPOSITE_VIEW, renderBuffer_);
+    bgfx::setViewRect(COMPOSITE_VIEW, 0, 0, renderWidth_, renderHeight_);
+}
 
-    volumetricsBuffer_ = bgfx::createFrameBuffer(1, &renderBufferTextures_[0]->handle);
+void Renderer::InitVolumetricsBuffer(Texture* volumetricsTexture) {
+    volumetricsTexture_ = volumetricsTexture;
+    volumetricsBuffer_ = bgfx::createFrameBuffer(1, &volumetricsTexture_->handle);
     bgfx::setViewFrameBuffer(VOLUMETRIC_VIEW, volumetricsBuffer_);
-    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, renderWidth_, renderHeight_);
+    bgfx::setViewClear(VOLUMETRIC_VIEW, BGFX_CLEAR_COLOR, 0x00000000, 1.0f, 0);
+    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, 800, 450);
 }
 
 void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
@@ -271,6 +280,8 @@ void Renderer::RenderMesh(
         }
         if (material->volumetric) {
             state = state & ~BGFX_STATE_DEPTH_TEST_LESS;
+            // state = state | BGFX_STATE_WRITE_A;
+            state = state | BGFX_STATE_BLEND_ALPHA;
             view = VOLUMETRIC_VIEW;
         }
 
@@ -586,6 +597,19 @@ void Renderer::RenderBlit() {
     bgfx::setVertexBuffer(0, quad_->vertexBuffer);
     bgfx::setIndexBuffer(quad_->indexBuffer);
     bgfx::submit(UI_VIEW, blitMaterial_.shader->handle);
+}
+
+void Renderer::RenderComposite() {
+    uint64_t state = BGFX_STATE_DEFAULT;
+    state = state & ~BGFX_STATE_WRITE_Z;
+    state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
+    state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
+
+    bgfx::setState(state);
+    bgfx::setTexture(0, samplers_[0], compositeVolumetricsMaterial_.textures[0]->handle);
+    bgfx::setVertexBuffer(0, quad_->vertexBuffer);
+    bgfx::setIndexBuffer(quad_->indexBuffer);
+    bgfx::submit(COMPOSITE_VIEW, compositeVolumetricsMaterial_.shader->handle);
 }
 
 void Renderer::RenderUI(EntityList& entities, Clock& clock) {

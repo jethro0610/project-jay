@@ -2,11 +2,13 @@ $input v_wposition, v_sposition, v_normal, v_tangent, v_bitangent, v_tbn, v_colo
 #include <bgfx_shader.sh>
 #include <lighting.sh>
 #include <properties.sh>
+#include <noise.sh>
 #define SHARED_SHADER
 #include <Shared_TerrainFuncs.h>
 
 uniform vec4 u_cameraForward;
 uniform vec4 u_cameraUp;
+uniform vec4 u_time;
 uniform vec4 u_cameraRight;
 SAMPLER2D(s_sampler0, 0);
 
@@ -26,8 +28,8 @@ void main() {
     float fov = 70.0f;
     float fov2 = radians(fov) / 2.0f;
     vec2 rayUv = vec2(
-        gl_FragCoord.x / 1920,
-        gl_FragCoord.y / 1080
+        gl_FragCoord.x / 800,
+        gl_FragCoord.y / 450 
     );
     float depth = texture2D(s_sampler0, rayUv).r;
     rayUv -= 0.5f;
@@ -64,8 +66,16 @@ void main() {
     const float lightAccum = PROP_VOLUMETRIC_LIGHT_ACCUM;
     const float falloffHeight = PROP_VOLUMETRIC_FALLOFF_HEIGHT;
     float totalLightAccum = 0.0f;
+
+    fnl_state noise = fnlCreateState(1337);
+    noise.noise_type = FNL_NOISE_OPENSIMPLEX2;
+
     for (int i = 0; i < 512; i++) {
         vec3 startPos = origin + rayDirection * rayDistance;
+        vec3 noisePos = startPos * 2.0f;
+        float noiseVal = fnlGetNoise3D(noise, noisePos.x, u_time.x * 100.0f, noisePos.z);
+        noiseVal = (noiseVal + 1.0f) * 0.5f;
+        noiseVal = pow(noiseVal, 0.5f);
 
         vec2 terrainSample = getTerrainDistance(startPos.xz, 0, 0, false);
         float height = abs(startPos.y - terrainSample.y);
@@ -73,7 +83,7 @@ void main() {
 
         // Raymarch step, but enforce a minimum so we don't get
         // stuck in the marching volume
-        float stepDistance = max(terrainSample.x, minStepDistance);
+        float stepDistance = max(-terrainSample.x, minStepDistance);
 
         // Rays higher than the terrain need to fade
         // out with a falloff
@@ -81,7 +91,7 @@ void main() {
         falloff *= falloff;
 
         if (terrainSample.x > 0.0f)
-            totalLightAccum += lightAccum * stepDistance * falloff;
+            totalLightAccum += lightAccum * stepDistance * falloff * noiseVal;
 
         rayDistance += stepDistance;
         vec3 endPos = origin + rayDirection * rayDistance;
@@ -95,7 +105,7 @@ void main() {
             // inaccurate lights. So, we need to remove some
             // light depending on how deep into the depth the
             // ray is
-            totalLightAccum -= (d - depth) * 0.25f * stepDistance * falloff;
+            totalLightAccum -= (d - depth) * 0.25f * stepDistance * falloff * noiseVal;
             break;
         }
 
@@ -110,6 +120,6 @@ void main() {
         volumeColor.r,
         volumeColor.g,
         volumeColor.b,
-        totalLightAccum * volumeColor.a
+        totalLightAccum * 4.0
     );
 }

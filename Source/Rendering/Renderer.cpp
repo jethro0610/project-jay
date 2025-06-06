@@ -27,6 +27,7 @@ void Renderer::Render(
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderSeed(seedManager, &levelProperties.seedMaterial);
     RenderParticles(particleManager);
+    RenderComposite();
     RenderPostProcess();
     RenderBlit();
     RenderUI(entities, clock);
@@ -54,6 +55,7 @@ void Renderer::RenderEdit(
     RenderEntities(entities);
     RenderSpread(spreadManager, levelProperties.spreadModel, levelProperties.spreadMaterials);
     RenderTerrainCursor(terrainCursor);
+    RenderComposite();
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);

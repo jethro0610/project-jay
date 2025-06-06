@@ -149,6 +149,18 @@ void ResourceManager::LoadRenderTextures() {
     )};
     ASSIGN_DEBUG_NAME(textures_.Get("t_post_c"), "t_post_c");
     globals_.insert("t_post_c");
+
+    textures_.Add("t_additive_volumetrics") = {
+        bgfx::createTexture2D(
+            800,
+            450,
+            false,
+            1,
+            bgfx::TextureFormat::BGRA8,
+            BGFX_TEXTURE_RT
+    )};
+    ASSIGN_DEBUG_NAME(textures_.Get("t_additive_volumetrics"), "t_additive_volumetrics");
+    globals_.insert("t_additive_volumetrics");
 }
 
 void ResourceManager::LoadGlobalQuad() {

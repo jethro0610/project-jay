@@ -87,10 +87,10 @@ INLINE vec2 getTerrainDistance(
     if (!doDip)
         return pos;
 
-    float t = pos.x / 32.0f;
+    float t = pos.x / 64.0f;
     t = clamp(t, 0.0f, 1.0f);
 
-    pos.y -= (t * t * t * t * t) * 2048.0f;
+    pos.y -= (t * t) * 2048.0f;
     return pos;
 }
 

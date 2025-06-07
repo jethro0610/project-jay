@@ -27,7 +27,7 @@ void main() {
     fade = clamp(fade * fade * fade, 0.0f, 1.0f);
     DITHERDISCARD(fade);
 
-    float clampEdgeDist = clamp(v_edgeDistance * 0.05f, 0.0f, 1.0f);
+    float clampEdgeDist = clamp(v_edgeDistance * 0.05f, 0.0f, 0.0f);
     clampEdgeDist *= clampEdgeDist;
 
     vec3 color = texture2D(s_color, vec2(v_wposition.x, v_wposition.z) * 0.1f).rgb;

@@ -547,6 +547,7 @@
                 "p_cooldown": 120,
                 "p_seeds": 500
             },
+            "label": "segpad",
             "name": "e_timerpod",
             "transform": {
                 "position": {
@@ -580,6 +581,7 @@
                 "p_delay": 60,
                 "p_maxpop": 300
             },
+            "label": "firstpad",
             "name": "e_popper",
             "transform": {
                 "position": {
@@ -612,6 +614,7 @@
                 "p_seg_id": -1,
                 "p_seg_min": 0
             },
+            "label": "nbridge1",
             "name": "e_jumppad",
             "transform": {
                 "position": {
@@ -737,6 +740,7 @@
             "float_properties": null,
             "floor_dist": 0.0,
             "int_properties": null,
+            "label": "nbridge3",
             "name": "e_tpillar",
             "transform": {
                 "position": {
@@ -762,6 +766,7 @@
             "float_properties": null,
             "floor_dist": 0.0,
             "int_properties": null,
+            "label": "nbridge2",
             "name": "e_tpillar",
             "transform": {
                 "position": {

@@ -74,12 +74,11 @@ void main() {
         vec3 startPos = origin + rayDirection * rayDistance;
         vec3 noisePos = startPos;
         float noiseVal = fnlGetNoise3D(noise, noisePos.x, u_time.x * 50.0f, noisePos.z);
-        noiseVal = (noiseVal + 1.0f) * 0.5f;
-        noiseVal = pow(noiseVal, 0.5f);
+        noiseVal = (noiseVal + 1.0f);
 
         vec2 terrainSample = getTerrainDistance(startPos.xz, 0, 0, false);
         float height = abs(startPos.y - terrainSample.y);
-        terrainSample.x += (height / falloffHeight) * 20.0f * noiseVal; // Expand at ends
+        terrainSample.x += (height / falloffHeight) * 30.0f; // Expand at ends
 
         // Raymarch step, but enforce a minimum so we don't get
         // stuck in the marching volume
@@ -87,6 +86,7 @@ void main() {
 
         // Rays higher than the terrain need to fade
         // out with a falloff
+
         float falloff = clamp(1.0f - (height / falloffHeight), 0.0f, 1.0f);
         falloff *= falloff;
 

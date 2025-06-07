@@ -161,7 +161,7 @@ void Renderer::InitVolumetricsBuffer(Texture* volumetricsTexture) {
     volumetricsBuffer_ = bgfx::createFrameBuffer(1, &volumetricsTexture_->handle);
     bgfx::setViewFrameBuffer(VOLUMETRIC_VIEW, volumetricsBuffer_);
     bgfx::setViewClear(VOLUMETRIC_VIEW, BGFX_CLEAR_COLOR, 0x00000000, 1.0f, 0);
-    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, 800, 450);
+    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, 1280, 720);
 }
 
 void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {
@@ -280,8 +280,8 @@ void Renderer::RenderMesh(
         }
         if (material->volumetric) {
             state = state & ~BGFX_STATE_DEPTH_TEST_LESS;
-            // state = state | BGFX_STATE_WRITE_A;
-            state = state | BGFX_STATE_BLEND_ALPHA;
+            state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
+            state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
             view = VOLUMETRIC_VIEW;
         }
 
@@ -330,6 +330,8 @@ void Renderer::RenderMesh(
         }
         else {
             view = SHADOW_VIEW;
+            state = state | BGFX_STATE_CULL_CW;
+            state = state & ~BGFX_STATE_CULL_CCW;
             shaderHandle = material->shadowShader->handle;
             SetTexturesFromMaterial(material, false);
         }
@@ -602,7 +604,7 @@ void Renderer::RenderBlit() {
 void Renderer::RenderComposite() {
     uint64_t state = BGFX_STATE_DEFAULT;
     state = state & ~BGFX_STATE_WRITE_Z;
-    state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_ONE);
+    state = state | BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_ONE, BGFX_STATE_BLEND_ONE);
     state = state | BGFX_STATE_BLEND_EQUATION(BGFX_STATE_BLEND_EQUATION_ADD);
 
     bgfx::setState(state);

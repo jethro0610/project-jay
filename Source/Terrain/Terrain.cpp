@@ -192,6 +192,40 @@ vec3 Terrain::GetDirectionToEdge(const vec3& position, TerrainAccuracy accuracy)
 }
 
 #ifdef _DEBUG
+#define INDEX(xVal, yVal) ((yVal) * RESOLUTION + (xVal))
+void Blur(
+    float* inBuffer,
+    float* outBuffer
+) {
+    const int KERNEL_SIZE = 15;
+    const float KERNEL[KERNEL_SIZE] = { 0.0005f, 0.0024f, 0.0092f, 0.0278f, 0.0656f, 0.1210f, 0.1747f, 0.1974f, 0.1747f, 0.1210f, 0.0650f, 0.0278f, 0.0092f, 0.0024f, 0.0005f};
+    float* sepBuffer = new float[RESOLUTION * RESOLUTION];
+
+    #pragma omp parallel for
+    for (int y = 0; y < RESOLUTION; y++) {
+    for (int x = 0; x < RESOLUTION; x++) {
+        float value = 0.0f;
+        for (int i = 0; i < KERNEL_SIZE; i++) {
+            int sampX = clamp(x + (i - 8), 0, RESOLUTION - 1); 
+            value += inBuffer[INDEX(sampX, y)] * KERNEL[i];
+        }
+        sepBuffer[INDEX(x, y)] = value;
+    }}
+
+    #pragma omp parallel for
+    for (int x = 0; x < RESOLUTION; x++) {
+    for (int y = 0; y < RESOLUTION; y++) {
+        float value = 0.0f;
+        for (int i = 0; i < KERNEL_SIZE; i++) {
+            int sampY = clamp(y + (i - 8), 0, RESOLUTION - 1); 
+            value += sepBuffer[INDEX(x, sampY)] * KERNEL[i];
+        }
+        outBuffer[INDEX(x, y)] = value;
+    }}
+
+    delete[] sepBuffer;
+}
+
 template <const int RES>
 float SampleAdditiveMap(float x, float y, uint8_t additiveMap[RES][RES]) {
     x *= WORLD_TO_TERRAIN_SCALAR;
@@ -282,8 +316,6 @@ void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {
     }
 }
 
-#define INDEX(xVal, yVal) ((yVal) * RESOLUTION + (xVal))
-
 void GenerateUnsignedDistanceField(uint8_t* source, int* yArray, float* outArray, bool inverted) {
     #pragma omp parallel for
     for (int y = 0; y < RESOLUTION; y++) {
@@ -363,6 +395,8 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     int* yArray = new int[RESOLUTION * RESOLUTION];
     float* positive = new float[RESOLUTION * RESOLUTION];
     float* negative = new float[RESOLUTION * RESOLUTION];
+    float* preblurred = new float[RESOLUTION * RESOLUTION];
+    float* blurred = new float[RESOLUTION * RESOLUTION];
 
     // Determine which entities are on the ground before regenerating
     vector_const<int, EntityList::MAX> groundedEntities;
@@ -387,7 +421,12 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
 
     for (int y = 0; y < RESOLUTION; y++) {
     for (int x = 0; x < RESOLUTION; x++) {
-        terrainMap_[y][x].x = negative[INDEX(x, y)] - positive[INDEX(x, y)];
+        preblurred[INDEX(x, y)] = negative[INDEX(x, y)] - positive[INDEX(x, y)];
+    }}
+    Blur(preblurred, blurred);
+    for (int y = 0; y < RESOLUTION; y++) {
+    for (int x = 0; x < RESOLUTION; x++) {
+        terrainMap_[y][x].x = blurred[INDEX(x, y)];
     }}
     resourceManager_.UpdateTerrainMapTexture((glm::vec2*)terrainMap_);
 
@@ -435,6 +474,7 @@ void Terrain::GenerateTerrainDistances(EntityList* entities) {
     delete[] yArray;
     delete[] positive;
     delete[] negative;
+    delete[] blurred;
 }
 
 void Terrain::ReloadTerrainDistances(EntityList* entities) {

@@ -4,7 +4,7 @@
 SAMPLER2D(s_samplerShadow, 14);
 
 #ifndef BIAS_OVERRIDE
-static const float BIAS = 0.0005f;
+static const float BIAS = 0.0025f;
 #else
 static const float BIAS = BIAS_OVERRIDE;
 #endif

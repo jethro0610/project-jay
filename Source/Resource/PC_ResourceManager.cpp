@@ -152,8 +152,8 @@ void ResourceManager::LoadRenderTextures() {
 
     textures_.Add("t_additive_volumetrics") = {
         bgfx::createTexture2D(
-            800,
-            450,
+            1280,
+            720,
             false,
             1,
             bgfx::TextureFormat::BGRA8,

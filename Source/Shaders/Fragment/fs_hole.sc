@@ -28,8 +28,8 @@ void main() {
     float fov = 70.0f;
     float fov2 = radians(fov) / 2.0f;
     vec2 rayUv = vec2(
-        gl_FragCoord.x / 800,
-        gl_FragCoord.y / 450 
+        gl_FragCoord.x / 1280,
+        gl_FragCoord.y / 720
     );
     float depth = texture2D(s_sampler0, rayUv).r;
     rayUv -= 0.5f;
@@ -72,14 +72,14 @@ void main() {
 
     for (int i = 0; i < 512; i++) {
         vec3 startPos = origin + rayDirection * rayDistance;
-        vec3 noisePos = startPos * 2.0f;
-        float noiseVal = fnlGetNoise3D(noise, noisePos.x, u_time.x * 100.0f, noisePos.z);
+        vec3 noisePos = startPos;
+        float noiseVal = fnlGetNoise3D(noise, noisePos.x, u_time.x * 50.0f, noisePos.z);
         noiseVal = (noiseVal + 1.0f) * 0.5f;
         noiseVal = pow(noiseVal, 0.5f);
 
         vec2 terrainSample = getTerrainDistance(startPos.xz, 0, 0, false);
         float height = abs(startPos.y - terrainSample.y);
-        terrainSample.x += (height / falloffHeight) * 20.0f; // Expand at ends
+        terrainSample.x += (height / falloffHeight) * 20.0f * noiseVal; // Expand at ends
 
         // Raymarch step, but enforce a minimum so we don't get
         // stuck in the marching volume
@@ -105,7 +105,7 @@ void main() {
             // inaccurate lights. So, we need to remove some
             // light depending on how deep into the depth the
             // ray is
-            totalLightAccum -= (d - depth) * 0.25f * stepDistance * falloff * noiseVal;
+            // totalLightAccum -= (d - depth) * 0.25f * stepDistance * falloff * noiseVal;
             break;
         }
 
@@ -120,6 +120,6 @@ void main() {
         volumeColor.r,
         volumeColor.g,
         volumeColor.b,
-        totalLightAccum * 4.0
+        totalLightAccum * volumeColor.a
     );
 }

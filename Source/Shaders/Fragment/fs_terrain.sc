@@ -19,14 +19,13 @@ uniform vec4 u_time;
 void main() {
     vec3 lightDirection = u_lightDirection.xyz; 
 
-    // vec2 terrainDistance = getTerrainDistance(vec2(v_wposition.x, v_wposition.z));
+    vec2 terrainDistance = getTerrainDistance(vec2(v_wposition.x, v_wposition.z));
     // OPTIMIZATION: This check is run on every terrain chunk, but we
     // can just do it on a single chunk, likely by writing a different
     // shader without the fade function
-    float fade = v_edgeDistance / 32.0f;
+    float fade = terrainDistance.x / 32.0f;
     fade = clamp(fade * fade * fade, 0.0f, 1.0f);
     DITHERDISCARD(fade);
-
 
     float clampEdgeDist = clamp(v_edgeDistance * 0.05f, 0.0f, 1.0f);
     clampEdgeDist *= clampEdgeDist;

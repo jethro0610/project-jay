@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 
+class HoleMarker;
+
 class Bumper : public Entity {
 public:
     void Init(InitArgs args);
@@ -15,13 +17,13 @@ public:
     float kbMult_;
     float gravity_;
 
-    bool respawnOnFall_;
-    int seedOnFall_;
     glm::vec3 spawnPos_;
 
     Entity* player_;
+    HoleMarker* holeMarker_;
 
     void Start();
     void Update();
     void OnHurt(HurtArgs args);
+    void OnOverlap(Entity* overlappedEntity);
 };

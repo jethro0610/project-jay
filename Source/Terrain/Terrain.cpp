@@ -256,8 +256,8 @@ void TemplateGenerateTerrainHeights(
 ) {
     const int HALF_RES = RES * 0.5f;
     const float WORLD_TO_TERRAIN = RES / RANGE;
-    float* preblurred = new float[RESOLUTION * RESOLUTION];
-    float* blurred = new float[RESOLUTION * RESOLUTION];
+    // float* preblurred = new float[RESOLUTION * RESOLUTION];
+    // float* blurred = new float[RESOLUTION * RESOLUTION];
 
     #pragma omp parallel for
     for (int y = 0; y < RES; y++) {
@@ -275,17 +275,17 @@ void TemplateGenerateTerrainHeights(
             if (modifier->active_ && modifier->InRange(pos))
                 height += modifier->GetHeight(pos);
         }
-        preblurred[INDEX(x, y)] = height;
+        terrainMap[y][x].y = height;
     }}
-    Blur(preblurred, blurred);
+    // Blur(preblurred, blurred);
 
-    for (int y = 0; y < RES; y++) {
-    for (int x = 0; x < RES; x++) {
-        terrainMap[y][x].y = blurred[INDEX(x, y)];
-    }}
+    // for (int y = 0; y < RES; y++) {
+    // for (int x = 0; x < RES; x++) {
+    //     terrainMap[y][x].y = blurred[INDEX(x, y)];
+    // }}
 
-    delete[] preblurred;
-    delete[] blurred;
+    // delete[] preblurred;
+    // delete[] blurred;
 }
 
 void Terrain::GenerateTerrainHeights(bool lowRes, EntityList* entities) {

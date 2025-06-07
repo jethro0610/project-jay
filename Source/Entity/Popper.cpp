@@ -111,6 +111,7 @@ void Popper::OnHurt(HurtArgs args) {
         popDelayTime_ = popDelay_;
 
     popTime_ = maxPopTime_;
+    stun_ = true;
 }
 
 void Popper::OnDestroy() {

@@ -4,6 +4,7 @@
 class HoleMarker : public Entity {
 public:
     void Init(InitArgs args);
+    void Start();
     void EditorUpdate();
     void RenderUpdate();
 
@@ -11,4 +12,9 @@ public:
     static const char* GetStaticName() { return "e_holemark"; }
     static EntityDependendies GetStaticDependencies();
     EntityProperties GetStaticProperties();
+
+    void EntityFellInHole(Entity* entity);
+
+    Entity* player_;
+    float explodeTime_;
 };

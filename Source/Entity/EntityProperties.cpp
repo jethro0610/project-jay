@@ -48,14 +48,26 @@ std::string EntityProperties::GetValueAsString(const std::string& property) {
 
 
 void EntityProperties::AssignProperties(EntityPropertiesAssigner& assigner) {
-    for (int i = 0; i < assigner.numFloats; i++)
-        *GetFloat(assigner.floatStrings[i]) = assigner.floats[i]; 
+    for (int i = 0; i < assigner.numFloats; i++) {
+        float* val = GetFloat(assigner.floatStrings[i]);
+        if (val == nullptr)
+            continue;
+        *val = assigner.floats[i]; 
+    }
 
-    for (int i = 0; i < assigner.numInts; i++)
-        *GetInt(assigner.intStrings[i]) = assigner.ints[i]; 
+    for (int i = 0; i < assigner.numInts; i++) {
+        int* val = GetInt(assigner.intStrings[i]);
+        if (val == nullptr)
+            continue;
+        *val = assigner.ints[i]; 
+    }
 
-    for (int i = 0; i < assigner.numBools; i++)
-        *GetBool(assigner.boolStrings[i]) = assigner.bools[i]; 
+    for (int i = 0; i < assigner.numBools; i++) {
+        bool* val = GetBool(assigner.boolStrings[i]);
+        if (val == nullptr)
+            continue;
+        *val = assigner.bools[i]; 
+    }
 }
 
 void EntityPropertiesAssigner::SetInt(const std::string& property, int value) {

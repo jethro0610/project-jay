@@ -132,7 +132,9 @@ void Game::Update() {
 
         for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
-            rawEntities_[i].entity.DoPreUpdate();
+            if (entities_[i].hitlag_ == 0) {
+                rawEntities_[i].entity.DoPreUpdate();
+            }
         }
 
         vector_const<Overlap, EntityList::MAX> overlapList;

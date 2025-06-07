@@ -69,8 +69,8 @@ private:
     static constexpr int SHADOW_VIEW = 0;
     static constexpr int TERRAIN_VIEW = 1;
     static constexpr int RENDER_VIEW = 2;
-    static constexpr int TRANSPARENCY_VIEW = 3;
-    static constexpr int VOLUMETRIC_VIEW = 4;
+    static constexpr int VOLUMETRIC_VIEW = 3;
+    static constexpr int TRANSPARENCY_VIEW = 4;
     static constexpr int COMPOSITE_VIEW = 5;
     static constexpr int POSTROCESS_VIEW = 6;
     static constexpr int WORLD_TEXT_VIEW = 7;

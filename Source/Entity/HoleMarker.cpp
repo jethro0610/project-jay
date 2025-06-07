@@ -1,6 +1,9 @@
 #include "HoleMarker.h"
 #include "Resource/ResourceManager.h"
 #include "Time/Time.h"
+#include "Seed/SeedManager.h"
+#include "Entity/EntityList.h"
+#include "Player.h"
 using namespace glm;
 
 EntityDependendies HoleMarker::GetStaticDependencies() {
@@ -32,9 +35,9 @@ void HoleMarker::Init(Entity::InitArgs args) {
     // materials_[0].transparencyType = TRANSPARENCY_ADDITIVE;
 
     materials_[0].lightVolumeProperties = LightVolumeProperties::Default();
-    materials_[0].lightVolumeProperties.color = vec4(1.0f);
+    materials_[0].lightVolumeProperties.color = vec4(1.0f, 0.95f, 0.75f, 1.0f);
     materials_[0].lightVolumeProperties.stepDistance = 4.0f;
-    materials_[0].lightVolumeProperties.accumulationStrength = 0.001f;
+    materials_[0].lightVolumeProperties.accumulationStrength = 0.0005f;
 
     materials_[0].lightVolumeProperties.origin = transform_.position;
     materials_[0].lightVolumeProperties.radius = transform_.scale.x;
@@ -47,20 +50,38 @@ void HoleMarker::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    overlapbox_.top = 1.0f;
+    overlapbox_.bottom = 1.0f;
+    overlapbox_.radius = 1.0f;
+
+    player_ = nullptr;
+}
+
+void HoleMarker::Start() {
+    player_ = entities_->FindEntityByType(Player::TYPEID);
 }
 
 void HoleMarker::EditorUpdate() {
     materials_[0].lightVolumeProperties.origin = transform_.position;
     materials_[0].lightVolumeProperties.radius = transform_.scale.x;
     materials_[0].lightVolumeProperties.falloffHeight = transform_.scale.y;
-
-    // materials_[0].lightVolumeProperties.color.r = sin(GlobalTime::GetTime() + 10.0f);
-    // materials_[0].lightVolumeProperties.color.g = sin(GlobalTime::GetTime() + 20.0f);
-    // materials_[0].lightVolumeProperties.color.b = sin(GlobalTime::GetTime() + 30.0f);
 }
 
 void HoleMarker::RenderUpdate() {
-    // materials_[0].lightVolumeProperties.color.r = sin(GlobalTime::GetTime() + 10.0f);
-    // materials_[0].lightVolumeProperties.color.g = sin(GlobalTime::GetTime() + 20.0f);
-    // materials_[0].lightVolumeProperties.color.b = sin(GlobalTime::GetTime() + 30.0f);
+    materials_[0].lightVolumeProperties.origin = transform_.position;
+    materials_[0].lightVolumeProperties.radius = transform_.scale.x;
+    materials_[0].lightVolumeProperties.falloffHeight = transform_.scale.y;
+
+    if (explodeTime_ > 0.0f)
+        explodeTime_ -= GlobalTime::GetDeltaTime();
+    else if (explodeTime_ < 0.0f)
+        explodeTime_ = 0.0f;
+
+    materials_[0].lightVolumeProperties.accumulationStrength = 0.0005f + 0.0005f * (explodeTime_ / 0.35f);
+}
+
+void HoleMarker::EntityFellInHole(Entity* entity) {
+    seedManager_->CreateMultipleSeed(entity->transform_.position, 800, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
+    explodeTime_ = 0.35f;
 }

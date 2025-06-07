@@ -1,8 +1,8 @@
 #include "Bumper.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
-#include "Seed/SeedManager.h"
 #include "Entity/EntityList.h"
+#include "Entity/HoleMarker.h"
 #include "Player.h"
 using namespace glm;
 
@@ -21,12 +21,9 @@ EntityProperties Bumper::GetStaticProperties() {
             {"p_gravity", &gravity_}
         },
         {
-            // Ints
-            {"p_seed", &seedOnFall_}
         },
         {
             // Bools
-            {"p_respawn", &respawnOnFall_}
         }
     };
 }
@@ -45,6 +42,10 @@ void Bumper::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
+    overlapbox_.top = 1.0f;
+    overlapbox_.bottom = 1.0f;
+    overlapbox_.radius = 1.0f;
+
     hurtbox_.top = 1.0f;
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 1.5f;
@@ -54,8 +55,7 @@ void Bumper::Init(Entity::InitArgs args) {
     traceDistance_ = 20.0f;
     kbMult_ = 1.0f;
     gravity_ = 8.0f; 
-    seedOnFall_ = 0;
-    respawnOnFall_ = false;
+    holeMarker_ = nullptr;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -67,6 +67,7 @@ void Bumper::Init(Entity::InitArgs args) {
     SetFlag(EF_CustomKnockback, true);
     SetFlag(EF_Trackable, true);
     SetFlag(EF_RecievePush, true);
+    SetFlag(EF_Overlap, true);
 }
 
 void Bumper::Start() {
@@ -89,19 +90,25 @@ void Bumper::Update() {
     velocity_.z = planarVelocity.z;
 
     if (groundDist < -20.0f) {
-        if (respawnOnFall_) {
+        if (holeMarker_ == nullptr) {
             lastTransform_.position = spawnPos_;
             transform_.position = spawnPos_;
             velocity_ = vec3(0.0f);
         }
         else {
-            seedManager_->CreateMultipleSeed(transform_.position, seedOnFall_, 10.0f, player_);
+            holeMarker_->EntityFellInHole(this);
             destroy_ = true;
         }
     }
+    holeMarker_ = nullptr;
 }
 
 void Bumper::OnHurt(HurtArgs args) {
     velocity_ = args.kbVelocity * kbMult_;
     velocity_.y = 0.0f;
+}
+
+void Bumper::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity->typeId_ == HoleMarker::TYPEID)
+        holeMarker_ = (HoleMarker*)overlappedEntity;
 }

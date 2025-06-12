@@ -1,6 +1,7 @@
 #include "MeteorHole.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
+#include "Game/Clock.h"
 using namespace glm;
 
 EntityDependendies MeteorHole::GetStaticDependencies() {
@@ -13,9 +14,10 @@ EntityProperties MeteorHole::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_radius", &negative_->outerRadius},
+            {"p_radius", &radius_},
+            {"p_bubbleradius", &bubbleRadius_},
             {"p_k", &negative_->sharpness},
-            {"p_height", &bubble_->height}
+            {"p_height", &height_}
         },
         {
             // Ints
@@ -45,6 +47,17 @@ void MeteorHole::Init(Entity::InitArgs args) {
 
     bubble_ = terrain_->CreateBubble();
     bubble_->active = false;
+    fader_ = DynamicFader();
+    fader_.activateLength_ = 60.0f * 0.25f;
+    fader_.deactivateLength_ = 60.0f * 0.25f;
+}
+
+void MeteorHole::Start() {
+    fader_.AddModifier(negative_, &negative_->outerRadius, 0.0f, radius_, false);
+    fader_.AddModifier(bubble_, &bubble_->radius, 0.0f, radius_ + bubbleRadius_, false);
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, height_, false);
+    fader_.DeactivateModifiers(true);
+    initClock_ = clock_->time_;
 }
 
 void MeteorHole::OnDestroy() {
@@ -53,14 +66,24 @@ void MeteorHole::OnDestroy() {
 }
 
 void MeteorHole::PreUpdate() {
+    if (clock_->time_ != initClock_)
+        Boom();
+
+    negative_->position = transform_.position;
+    bubble_->position = transform_.position;
+    fader_.Update();
+}
+
+void MeteorHole::EditorUpdate() {
+    if (DBG_preview_) 
+        fader_.ActivateModifiers();
+    else
+        fader_.DeactivateModifiers();
+
     negative_->position = transform_.position;
     bubble_->position = transform_.position;
 }
 
-void MeteorHole::EditorUpdate() {
-    negative_->active = DBG_preview_;
-    negative_->position = transform_.position;
-
-    bubble_->active = DBG_preview_;
-    bubble_->position = transform_.position;
+void MeteorHole::Boom() {
+    fader_.ActivateModifiers();
 }

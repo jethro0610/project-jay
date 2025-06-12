@@ -20,7 +20,6 @@ HeadSpitter,18
 GroundSpawnProjectile,19
 Mole,20
 RisePillar,21
-MeteorBox,22
 SpeedBoost,23
 Apple,24
 Tree,25
@@ -50,3 +49,4 @@ Water,48
 WaterGun,49
 Popper,50
 HoleMarker,51
+MeteorHole,52

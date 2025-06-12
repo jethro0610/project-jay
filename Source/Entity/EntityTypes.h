@@ -1,56 +1,56 @@
 #pragma once
 #include "Bomb.h"
 #include "BumpRat.h"
-#include "Comet.h"
-#include "CometSpawner.h"
 #include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
-#include "MeteorBox.h"
 #include "Mower.h"
 #include "MultiHitPod.h"
 #include "RabbitPole.h"
 #include "RisePillar.h"
 #include "SinglePod.h"
 #include "Sleeper.h"
-#include "SpeedBoost.h"
+#include "TPillar.h"
 #include "TeleportPod.h"
 #include "TimedHitbox.h"
-#include "TimerPod.h"
 #include "TrailFish.h"
 #include "Mole.h"
 #include "Apple.h"
-#include "Pig.h"
-#include "Tree.h"
-#include "TPillar.h"
-#include "Pinata.h"
 #include "Bird.h"
-#include "SnakeHead.h"
-#include "SnakeSegment.h"
-#include "SnakePod.h"
+#include "Comet.h"
+#include "CometSpawner.h"
 #include "ItemContainer.h"
 #include "JumpPad.h"
+#include "Pig.h"
+#include "Pinata.h"
 #include "Player.h"
-#include "PillarPad.h"
-#include "Peg.h"
-#include "Segment.h"
+#include "SnakeHead.h"
+#include "SnakePod.h"
+#include "SnakeSegment.h"
+#include "SpeedBoost.h"
+#include "TimerPod.h"
+#include "Tree.h"
 #include "AttackSegment.h"
-#include "TriggerCrystal.h"
-#include "Stomper.h"
-#include "ItemToken.h"
-#include "Ramp.h"
-#include "Negator.h"
-#include "HomingBossAttack.h"
-#include "HomingBossPoint.h"
-#include "HomingBoss.h"
-#include "HomingBossProjectile.h"
 #include "Chase.h"
-#include "WaterGun.h"
 #include "Entity.h"
 #include "FlowerRamp.h"
+#include "HomingBoss.h"
+#include "HomingBossAttack.h"
+#include "HomingBossPoint.h"
+#include "HomingBossProjectile.h"
+#include "ItemToken.h"
+#include "Negator.h"
+#include "Peg.h"
+#include "PillarPad.h"
 #include "Popper.h"
+#include "Ramp.h"
+#include "Segment.h"
+#include "Stomper.h"
+#include "TriggerCrystal.h"
 #include "Water.h"
+#include "WaterGun.h"
 #include "Bumper.h"
 #include "HoleMarker.h"
+#include "MeteorHole.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -75,7 +75,6 @@
 	ENTITYEXP(GroundSpawnProjectile, groundspawnprojectile, 19) \
 	ENTITYEXP(Mole, mole, 20) \
 	ENTITYEXP(RisePillar, risepillar, 21) \
-	ENTITYEXP(MeteorBox, meteorbox, 22) \
 	ENTITYEXP(SpeedBoost, speedboost, 23) \
 	ENTITYEXP(Apple, apple, 24) \
 	ENTITYEXP(Tree, tree, 25) \
@@ -104,4 +103,5 @@
 	ENTITYEXP(Water, water, 48) \
 	ENTITYEXP(WaterGun, watergun, 49) \
 	ENTITYEXP(Popper, popper, 50) \
-	ENTITYEXP(HoleMarker, holemarker, 51)
+	ENTITYEXP(HoleMarker, holemarker, 51) \
+	ENTITYEXP(MeteorHole, meteorhole, 52)

@@ -78,6 +78,8 @@ Level::Level(
         navpoints_[i].active_ = false;
     }
     #endif
+
+    controllerId_ = -1;
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain, bool editorLoad) {
@@ -118,6 +120,9 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
         }
     }
     #endif
+
+    if (levelData.contains("controller_id"))
+        controllerId_ = levelData["controller_id"];
 
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
@@ -170,6 +175,12 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             entity.DoStart();    
         }
 
+        switch(controllerId_) {
+            #define LVCONTROLLER(TYPE, VAR, ID) case ID: controller_.VAR.Start(); break;
+            EXPANDCONTROLLERS
+            #undef LVCONTROLLER
+        }
+
         for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = entities_[i];
             if (!entity.alive_) 
@@ -187,6 +198,23 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
     loaded_ = true;
     return true;
+}
+
+void Level::ControllerUpdate() {
+    switch(controllerId_) {
+        #define LVCONTROLLER(TYPE, VAR, ID) case ID: controller_.VAR.Update(); break;
+        EXPANDCONTROLLERS
+        #undef LVCONTROLLER
+    }
+}
+
+bool Level::IsValidControllerId(int controllerId) {
+    switch(controllerId) {
+        #define LVCONTROLLER(TYPE, VAR, ID) case ID: return true;
+        EXPANDCONTROLLERS
+        #undef LVCONTROLLER
+    }
+    return false;
 }
 
 #ifdef _DEBUG
@@ -209,6 +237,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
     nlohmann::json levelData;
     levelData["landmap"] = terrain_.DBG_landMapName_;
+    levelData["controller_id"] = controllerId_;
 
     for (int i = 0; i < EntityList::MAX; i++) {
         Entity& entity = entities_[i];

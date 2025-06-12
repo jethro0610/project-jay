@@ -122,6 +122,8 @@ void Game::Update() {
             continue;
         #endif
 
+        level_.ControllerUpdate();
+
         for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;
             entities_[i].lastTransform_ = entities_[i].transform_;

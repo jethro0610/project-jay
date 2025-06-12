@@ -11,6 +11,7 @@
 #include "SaveMode.h"
 #include "ScaleMode.h"
 #include "SetLandmapMode.h"
+#include "SetLevelControllerIdMode.h"
 #include "SpawnMode.h"
 #include "GrowthMode.h"
 #include "GenericScalarMode.h"

@@ -11,6 +11,7 @@
 - New Level:    Ctrl+N
 - Open Level:   Ctrl+O
 - Save:         Ctrl+S
+- Set Id:       O
 
 # Selected Entity Operations
 - Translate:    T

@@ -11,6 +11,7 @@
     MODEEXPANSION(SaveMode, saveMode_) \
     MODEEXPANSION(ScaleMode, scaleMode_) \
     MODEEXPANSION(SetLandmapMode, setLandmapMode_) \
+    MODEEXPANSION(SetLevelControllerIdMode, setLevelControllerIdMode_) \
     MODEEXPANSION(SpawnMode, spawnMode_) \
     MODEEXPANSION(GrowthMode, growthMode_) \
     MODEEXPANSION(GenericScalarMode, genericScalarMode_) \

@@ -42,20 +42,28 @@ void MeteorHole::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
+    radius_ = 100.0f;
+    bubbleRadius_ = 50.0f;
+    height_ = 100.0f;
+
     negative_ = terrain_->CreateNegative();
     negative_->active = false;
+    negative_->sharpness = 0.5f;
 
     bubble_ = terrain_->CreateBubble();
     bubble_->active = false;
+    bubble_->inpower = 2.0f;
+    bubble_->outpower = 2.0f;
     fader_ = DynamicFader();
     fader_.activateLength_ = 60.0f * 0.25f;
     fader_.deactivateLength_ = 60.0f * 0.25f;
 }
 
 void MeteorHole::Start() {
-    fader_.AddModifier(negative_, &negative_->outerRadius, 0.0f, radius_, false);
-    fader_.AddModifier(bubble_, &bubble_->radius, 0.0f, radius_ + bubbleRadius_, false);
-    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, height_, false);
+    negative_->innerRadius = -radius_;
+    fader_.AddModifier(negative_, &negative_->outerRadius, 0.0f, radius_, false, E_Elastic);
+    fader_.AddModifier(bubble_, &bubble_->radius, 0.0f, radius_ + bubbleRadius_, false, E_Elastic);
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, height_, false, E_Elastic);
     fader_.DeactivateModifiers(true);
     initClock_ = clock_->time_;
 }
@@ -75,15 +83,25 @@ void MeteorHole::PreUpdate() {
 }
 
 void MeteorHole::EditorUpdate() {
-    if (DBG_preview_) 
-        fader_.ActivateModifiers();
-    else
-        fader_.DeactivateModifiers();
+    negative_->outerRadius = radius_;
+    negative_->innerRadius = -radius_;
+    bubble_->height = height_;
+    bubble_->radius = radius_ + bubbleRadius_;
+
+    if (DBG_preview_) {
+        negative_->active = true;
+        bubble_->active = true;
+    }
+    else {
+        negative_->active = false;
+        bubble_->active = false;
+    }
 
     negative_->position = transform_.position;
     bubble_->position = transform_.position;
+    fader_.Update();
 }
 
 void MeteorHole::Boom() {
-    fader_.ActivateModifiers();
+    fader_.StartActivate();
 }

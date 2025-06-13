@@ -61,6 +61,7 @@ void Bumper::Init(Entity::InitArgs args) {
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_AlignToGround, true);
     SetFlag(EF_UseVelocity, true);
+    SetFlag(EF_DownStickOnly, true);
     SetFlag(EF_Interpolate, true);
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_RecieveKnockback, true);

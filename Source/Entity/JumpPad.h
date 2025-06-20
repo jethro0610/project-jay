@@ -19,6 +19,7 @@ public:
     int numSegments_;
     int segmentId_;
     int minSegments_;
+    bool destroySeg_;
 
     void Update(); 
     void OnOverlap(Entity* overlappedEntity);

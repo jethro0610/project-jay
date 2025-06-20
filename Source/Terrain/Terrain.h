@@ -59,7 +59,7 @@ public:
     glm::vec3 RaycastTerrain(const glm::vec3& origin, const glm::vec3& direction);
     bool PointIsInSameIsland(const glm::vec3& origin, const glm::vec3& point, float edgeDistance = 0.0f);
     glm::vec3 GetRandomPointInSameIslandFast(const glm::vec3& origin);
-    glm::vec3 GetRandomPointInSameIsland(const glm::vec3& origin, float minDist, float maxDist);
+    glm::vec3 GetRandomPointInSameIsland(const glm::vec3& origin, float minDist, float maxDist, float edgeDist = 0.0f);
     void Reset();
 
     #ifdef _DEBUG

@@ -159,10 +159,14 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             DEBUGLOG("Error: attempted to spawn non-existant entity with name " << entityData["name"]);
         #endif
 
-        #ifdef _DEBUG
         if (entityData.contains("label") && !entityData["label"].is_null()) {
             std::string label = entityData["label"];
             strcpy(entity->label_, label.c_str());
+        }
+
+        #ifdef _DEBUG
+        if (entityData.contains("preview") && !entityData["preview"].is_null()) {
+            entity->DBG_preview_ = entityData["preview"];
         }
         #endif
     }
@@ -284,6 +288,8 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
         if (strcmp(entity.label_, "") != 0)
             entityData["label"] = entity.label_;
+
+        entityData["preview"] = entity.DBG_preview_;
 
         levelData["entities"].push_back(entityData);
     }

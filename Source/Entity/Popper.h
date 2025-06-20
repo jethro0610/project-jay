@@ -25,6 +25,8 @@ public:
     int popDelay_;
     int popDelayTime_;
 
+    bool alwaysUp_;
+
     void PreUpdate();
     void Start();
     void OnHurt(HurtArgs args);

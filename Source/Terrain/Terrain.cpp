@@ -617,12 +617,12 @@ vec3 Terrain::GetRandomPointInSameIslandFast(const vec3& origin) {
     return point;
 }
 
-vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin, float minDist, float maxDist) {
+vec3 Terrain::GetRandomPointInSameIsland(const vec3& origin, float minDist, float maxDist, float edgeDist) {
     vec3 point;
     do {
         point = origin + RandomVectorPlanar(minDist, maxDist);
     }
-    while (!PointIsInSameIsland(origin, point));
+    while (!PointIsInSameIsland(origin, point, edgeDist));
     point.y = GetHeight(point);
     return point;
 }

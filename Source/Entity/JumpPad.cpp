@@ -26,7 +26,7 @@ EntityProperties JumpPad::GetStaticProperties() {
             {"p_seg_min", &minSegments_},
         },
         {
-
+            {"p_seg_destroy", &destroySeg_},
         }
     };
 }
@@ -60,6 +60,7 @@ void JumpPad::Init(Entity::InitArgs args) {
     segmentId_ = -1;
     numSegments_ = 0;
     minSegments_ = 0;
+    destroySeg_ = false;
 }
 
 void JumpPad::Update() {

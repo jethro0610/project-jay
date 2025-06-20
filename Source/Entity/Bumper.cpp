@@ -78,7 +78,7 @@ void Bumper::Start() {
 
 void Bumper::Update() {
     float speedDecay = 1.0f - friction_;
-    float airDecay = 1.0f - friction_ * 0.25f;
+    float airDecay = 1.0f - friction_ * 0.15f;
     float acceleration = (speed_ / speedDecay) - speed_;
     velocity_.y -= gravity_;
 

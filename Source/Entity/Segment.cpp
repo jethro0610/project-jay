@@ -68,6 +68,8 @@ void Segment::Start() {
         targetSegCount_ = entity.GetProperties().GetInt("p_seg_count");
         int* minSegments = entity.GetProperties().GetInt("p_seg_min");
         (*minSegments )++;
+        destroyOnOverlap_ = *entity.GetProperties().GetBool("p_seg_destroy");
+        break;
     }
 }
 
@@ -85,7 +87,10 @@ void Segment::OnOverlap(Entity* overlappedEntity) {
 }
 
 void Segment::OnHitlagEnd() {
-    destroy_ = true;
+    if (destroyOnOverlap_)
+        destroy_ = true;
+    else
+        Sleep();
 
     if (targetSegId_ != -1)
         (*targetSegCount_)++;

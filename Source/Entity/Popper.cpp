@@ -26,6 +26,7 @@ EntityProperties Popper::GetStaticProperties() {
         },
         {
             // Bools
+            {"p_up", &alwaysUp_}
         }
     };
 }
@@ -63,6 +64,7 @@ void Popper::Init(Entity::InitArgs args) {
 
     popDelay_ = 30;
     popDelayTime_ = 0;
+    alwaysUp_ = false;
 
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_Interpolate, true);
@@ -71,7 +73,12 @@ void Popper::Init(Entity::InitArgs args) {
 }
 
 void Popper::Start() {
-    fader_.DeactivateModifiers(true);
+    if (!alwaysUp_)
+        fader_.DeactivateModifiers(true);
+    else {
+        fader_.ActivateModifiers(true);
+        bubble_->height = fader_.maxs_[0];
+    }
     fader_.activeOverrides_[0] = fader_.maxs_[0];
     targetDistFromEdge_ = -terrain_->GetDistance(transform_.position).x;
 }
@@ -90,7 +97,7 @@ void Popper::PreUpdate() {
     float distScalar = targetDistFromEdge_ - distFromEdge;
     transform_.position += distScalar * 0.15f * directionToEdge * GlobalTime::TIMESTEP; 
 
-    if (fader_.IsActive()) {
+    if (fader_.IsActive() && !alwaysUp_) {
         popTime_--;
         if (popTime_ <= 0) {
             fader_.StartDeactivate(); 
@@ -107,6 +114,9 @@ void Popper::PreUpdate() {
 }
 
 void Popper::OnHurt(HurtArgs args) {
+    if (alwaysUp_)
+        return;
+
     if (!fader_.IsActive())
         popDelayTime_ = popDelay_;
 

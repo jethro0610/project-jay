@@ -20,4 +20,5 @@ public:
 
     int targetSegId_;
     int* targetSegCount_;
+    bool destroyOnOverlap_;
 };

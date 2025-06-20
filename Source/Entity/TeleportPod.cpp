@@ -39,14 +39,7 @@ void TeleportPod::Init(Entity::InitArgs args) {
 
 void TeleportPod::Update() {
     if (hitlag_ == 0 && shouldTeleport_) {
-        vec2 terrainDistance;
-        do {
-            transform_.position = RandomVectorPlanar(100.0f);
-            terrainDistance = terrain_->GetDistance(transform_.position);
-            transform_.position.y = terrainDistance.y;
-        }
-        while(terrainDistance.x > -20.0f || entities_->IsAnyOverlapping(*this));
-
+        transform_.position = terrain_->GetRandomPointInSameIsland(transform_.position, 600.0f, 1200.0f, 30.0f);
         scaleBeforeTeleport_ = transform_.scale;
         transform_.scale = vec3(0.0f);
         shouldTeleport_ = false;

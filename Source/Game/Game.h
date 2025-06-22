@@ -8,11 +8,12 @@
 #include "Rendering/Renderer.h"
 #include "Resource/ResourceManager.h"
 #include "Level/Level.h"
+#include "LevelControllers/ControllerUnion.h"
 #include "Terrain/Terrain.h"
 #include "Entity/EntityUnion.h"
 #include "Entity/EntityList.h"
+#include "ScoreKeeper.h"
 #include "WaterManager.h"
-#include <unordered_set>
 
 #ifdef _PC
 #include "Platform/PC_Platform.h"
@@ -37,9 +38,11 @@ private:
     ParticleManager particleManager_;
     Terrain terrain_;
     Level level_;
+    ControllerUnion levelController_;
     Renderer renderer_;
     Camera camera_;
     Clock clock_;
+    ScoreKeeper scoreKeeper_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     WaterManager waterManager_;

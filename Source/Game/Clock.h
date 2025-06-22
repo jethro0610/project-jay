@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
 #include <string>
-#include "Logging/Logger.h"
 class Clock {
 public:
     enum TimeOfDay {

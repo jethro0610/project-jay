@@ -1,6 +1,7 @@
 #include "SetLevelControllerIdMode.h"
 #include "Terrain/Terrain.h"
 #include "Level/Level.h"
+#include "LevelControllers/LevelController.h"
 #include "EditorNotification.h"
 #include "EditorTextInput.h"
 
@@ -14,7 +15,7 @@ EditorMode(args) {
 
 void SetLevelControllerIdMode::OnStart() {
     textInput_.SetLabel("ID: ");
-    textInput_.SetInput(std::to_string(level_.controllerId_));
+    textInput_.SetInput(std::to_string(levelController_.id_));
     EditorMode::OnStart();
 }
 
@@ -27,12 +28,12 @@ ConfirmBehavior SetLevelControllerIdMode::OnConfirm() {
         return CB_Stay;
     }
 
-    if (!level_.IsValidControllerId(controllerId)) {
+    if (!LevelController::IsValidControllerId(controllerId)) {
         notificaiton_.Set("Invalid controller id");
         return CB_Stay;
     }
 
-    level_.controllerId_ = controllerId;
+    levelController_.id_ = controllerId;
     return CB_Default;
 }
 

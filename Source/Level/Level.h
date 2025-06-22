@@ -2,7 +2,6 @@
 #include "LevelProperties.h"
 #include "Editor/EditorTarget.h"
 #include "NavPoint.h"
-#include "LevelControllers/ControllerUnion.h"
 #include <string>
 #include <nlohmann/json.hpp>
 
@@ -20,6 +19,7 @@ public:
     Level(
         Clock& clock,
         EntityList& entities,
+        LevelController& levelController,
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         SeedManager& seedManager,
@@ -28,11 +28,8 @@ public:
     );
     bool Load(const std::string& name, const std::string& suffix = "", bool loadTerrain = true, bool editorLoad = false);
     void Clear(bool clearTerrain = false);
-    void ControllerUpdate();
-    bool IsValidControllerId(int id);
     LevelProperties properties_;
     bool loaded_;
-    int controllerId_;
 
     #ifdef _DEBUG
     static constexpr int MAX_NAVPOINTS = 128;
@@ -48,10 +45,10 @@ public:
 private:
     Clock& clock_;
     EntityList& entities_;
+    LevelController& controller_;
     ParticleManager& particleManager_;
     ResourceManager& resourceManager_;
     SeedManager& seedManager_;
     SpreadManager& spreadManager_;
     Terrain& terrain_;
-    ControllerUnion controller_;
 };

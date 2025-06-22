@@ -8,6 +8,7 @@ class Camera;
 class EntityList;
 class Inputs;
 class Level;
+class LevelController;
 class Platform;
 class Renderer;
 class ResourceManager;
@@ -26,6 +27,7 @@ struct EditorModeArgs {
     EntityList& entities;
     Inputs& inputs;
     Level& level;
+    LevelController& levelController;
     Platform& platform;
     Renderer& renderer;
     ResourceManager& resourceManager;
@@ -62,6 +64,7 @@ public:
 protected:
     Camera& camera_;
     EntityList& entities_;
+    LevelController& levelController_;
     Inputs& inputs_;
     Platform& platform_;
     Renderer& renderer_;

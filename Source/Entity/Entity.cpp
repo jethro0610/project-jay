@@ -3,9 +3,7 @@
 #include "Terrain/Terrain.h"
 #include "EntityTypes.h"
 #include "Helpers/Assert.h"
-#include "Logging/ScreenText.h"
 #include "Collision/Ray.h"
-#include "Logging/Logger.h"
 #include "EntityList.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
@@ -16,6 +14,7 @@ void Entity::Construct(
     EntityList& entities,
     Inputs& inputs,
     Level& level,
+    ScoreKeeper& scoreKeeper,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     Terrain& terrain,
@@ -26,6 +25,7 @@ void Entity::Construct(
     entities_ = &entities;
     inputs_ = &inputs;
     level_ = &level;
+    scoreKeeper_ = &scoreKeeper;
     seedManager_ = &seedManager;
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;

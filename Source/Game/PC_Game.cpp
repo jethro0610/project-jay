@@ -17,14 +17,23 @@ Game::Game():
     level_(
         clock_,
         entities_,
+        levelController_.base,
         particleManager_, 
         resourceManager_, 
         seedManager_,
         spreadManager_,
         terrain_
     ),
+    levelController_(
+        clock_,
+        entities_,
+        scoreKeeper_,
+        seedManager_,
+        terrain_
+    ),
     renderer_(resourceManager_),
     camera_(terrain_),
+    scoreKeeper_(clock_, seedManager_),
     seedManager_(),
     spreadManager_(seedManager_, terrain_),
     entities_(
@@ -35,6 +44,7 @@ Game::Game():
         clock_,
         inputs_, 
         level_,
+        scoreKeeper_,
         seedManager_, 
         spreadManager_,
         terrain_,
@@ -45,6 +55,7 @@ Game::Game():
         entities_, 
         inputs_, 
         level_, 
+        levelController_.base,
         particleManager_,
         platform_, 
         resourceManager_,

@@ -21,6 +21,7 @@ struct Inputs;
 class Level;
 class ParticleManager;
 class ResourceManager;
+class ScoreKeeper;
 class SeedManager;
 class SpreadManager;
 class Terrain;
@@ -117,6 +118,7 @@ public:
         EntityList& entities,
         Inputs& inputs,
         Level& level,
+        ScoreKeeper& scoreKeeper,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain,
@@ -230,6 +232,7 @@ public:
     EntityList* entities_;
     Inputs* inputs_;
     Level* level_;
+    ScoreKeeper* scoreKeeper_;
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;

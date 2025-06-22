@@ -28,6 +28,7 @@ public:
         EntityList& entities,
         Inputs& inputs,
         Level& level,
+        LevelController& levelController,
         ParticleManager& particleManager,
         Platform& platform, 
         ResourceManager& resourceManager,
@@ -61,6 +62,7 @@ private:
     EntityList& entities_;
     Inputs& inputs_;
     Level& level_;
+    LevelController& levelController_;
     ParticleManager& particleManager_;
     Platform& platform_;
     Renderer& renderer_;

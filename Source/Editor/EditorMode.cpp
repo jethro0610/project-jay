@@ -9,6 +9,7 @@
 EditorMode::EditorMode(EditorModeArgs args):
     camera_(args.camera),
     entities_(args.entities),
+    levelController_(args.levelController),
     inputs_(args.inputs),
     platform_(args.platform),
     renderer_(args.renderer),

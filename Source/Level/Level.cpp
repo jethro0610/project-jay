@@ -11,6 +11,7 @@
 #include "Entity/EntityList.h"
 #include "Particle/ParticleManager.h"
 #include "Resource/ResourceManager.h"
+#include "LevelControllers/LevelController.h"
 #ifdef _DEBUG
 #include <fstream>
 #endif
@@ -18,6 +19,7 @@
 Level::Level(
     Clock& clock,
     EntityList& entities,
+    LevelController& levelController,
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
     SeedManager& seedManager,
@@ -26,6 +28,7 @@ Level::Level(
 ) :
     clock_(clock),
     entities_(entities),
+    controller_(levelController),
     particleManager_(particleManager),
     resourceManager_(resourceManager),
     seedManager_(seedManager),
@@ -78,8 +81,6 @@ Level::Level(
         navpoints_[i].active_ = false;
     }
     #endif
-
-    controllerId_ = -1;
 }
 
 bool Level::Load(const std::string& name, const std::string& suffix, bool loadTerrain, bool editorLoad) {
@@ -122,7 +123,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
     #endif
 
     if (levelData.contains("controller_id"))
-        controllerId_ = levelData["controller_id"];
+        controller_.id_ = levelData["controller_id"];
 
     for (auto& entityData : levelData["entities"]) {
         Entity* entity;
@@ -179,11 +180,7 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
             entity.DoStart();    
         }
 
-        switch(controllerId_) {
-            #define LVCONTROLLER(TYPE, VAR, ID) case ID: controller_.VAR.Start(); break;
-            EXPANDCONTROLLERS
-            #undef LVCONTROLLER
-        }
+        controller_.DoStart();
 
         for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = entities_[i];
@@ -202,23 +199,6 @@ bool Level::Load(const std::string& name, const std::string& suffix, bool loadTe
 
     loaded_ = true;
     return true;
-}
-
-void Level::ControllerUpdate() {
-    switch(controllerId_) {
-        #define LVCONTROLLER(TYPE, VAR, ID) case ID: controller_.VAR.Update(); break;
-        EXPANDCONTROLLERS
-        #undef LVCONTROLLER
-    }
-}
-
-bool Level::IsValidControllerId(int controllerId) {
-    switch(controllerId) {
-        #define LVCONTROLLER(TYPE, VAR, ID) case ID: return true;
-        EXPANDCONTROLLERS
-        #undef LVCONTROLLER
-    }
-    return false;
 }
 
 #ifdef _DEBUG
@@ -241,7 +221,7 @@ void Level::Save(const std::string& name, const std::string& suffix) {
 
     nlohmann::json levelData;
     levelData["landmap"] = terrain_.DBG_landMapName_;
-    levelData["controller_id"] = controllerId_;
+    levelData["controller_id"] = controller_.id_;
 
     for (int i = 0; i < EntityList::MAX; i++) {
         Entity& entity = entities_[i];
@@ -362,6 +342,7 @@ void Level::Clear(bool clearTerrain) {
     spreadManager_.Reset();
     seedManager_.Reset();
     clock_.Reset();
+    controller_.id_ = -1;
 
     if (clearTerrain)
         terrain_.Reset();

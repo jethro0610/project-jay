@@ -278,7 +278,7 @@
                 "p_maxwet": 2
             },
             "name": "e_framp",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": -298.42803955078125,
@@ -1232,6 +1232,32 @@
                 }
             },
             "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_medal",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 478.44342041015625,
+                    "y": -53.18021774291992,
+                    "z": 165.32228088378906
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 7.500001907348633,
+                    "y": 7.500001907348633,
+                    "z": 7.500001907348633
+                }
+            },
+            "type_id": 53
         }
     ],
     "landmap": "lm_chase",

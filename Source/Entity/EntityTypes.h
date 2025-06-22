@@ -42,7 +42,6 @@
 #include "HomingBossProjectile.h"
 #include "Chase.h"
 #include "WaterGun.h"
-#include "Entity.h"
 #include "FlowerRamp.h"
 #include "Water.h"
 #include "Bumper.h"
@@ -52,6 +51,8 @@
 #include "Segment.h"
 #include "JumpPad.h"
 #include "SeedBalloon.h"
+#include "Medal.h"
+#include "Entity.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -106,4 +107,5 @@
 	ENTITYEXP(WaterGun, watergun, 49) \
 	ENTITYEXP(Popper, popper, 50) \
 	ENTITYEXP(HoleMarker, holemarker, 51) \
-	ENTITYEXP(MeteorHole, meteorhole, 52)
+	ENTITYEXP(MeteorHole, meteorhole, 52) \
+	ENTITYEXP(Medal, medal, 53)

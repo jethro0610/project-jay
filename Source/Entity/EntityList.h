@@ -8,6 +8,7 @@ class Clock;
 class Entity;
 struct Inputs;
 class Level;
+class ScoreKeeper;
 class SeedManager;
 class SpreadManager;
 class Terrain;
@@ -28,6 +29,7 @@ public:
         Clock& clock,
         Inputs& inputs,
         Level& level,
+        ScoreKeeper& scoreKeeper,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain,

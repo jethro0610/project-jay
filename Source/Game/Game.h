@@ -12,7 +12,6 @@
 #include "Terrain/Terrain.h"
 #include "Entity/EntityUnion.h"
 #include "Entity/EntityList.h"
-#include "ScoreKeeper.h"
 #include "WaterManager.h"
 
 #ifdef _PC
@@ -42,7 +41,6 @@ private:
     Renderer renderer_;
     Camera camera_;
     Clock clock_;
-    ScoreKeeper scoreKeeper_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     WaterManager waterManager_;

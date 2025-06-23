@@ -19,9 +19,9 @@ class Clock;
 class EntityList;
 struct Inputs;
 class Level;
+class LevelController;
 class ParticleManager;
 class ResourceManager;
-class ScoreKeeper;
 class SeedManager;
 class SpreadManager;
 class Terrain;
@@ -118,7 +118,7 @@ public:
         EntityList& entities,
         Inputs& inputs,
         Level& level,
-        ScoreKeeper& scoreKeeper,
+        LevelController& levelController,
         SeedManager& seedManager,
         SpreadManager& spreadManager,
         Terrain& terrain,
@@ -232,7 +232,7 @@ public:
     EntityList* entities_;
     Inputs* inputs_;
     Level* level_;
-    ScoreKeeper* scoreKeeper_;
+    LevelController* levelController_;
     SeedManager* seedManager_;
     SpreadManager* spreadManager_;
     Terrain* terrain_;

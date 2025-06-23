@@ -35,8 +35,10 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 1000
             },
+            "label": "stchase2",
             "name": "e_chase",
             "preview": true,
             "transform": {
@@ -97,8 +99,10 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 1000
             },
+            "label": "stchase1",
             "name": "e_chase",
             "preview": true,
             "transform": {
@@ -128,8 +132,10 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 1000
             },
+            "label": "stchase0",
             "name": "e_chase",
             "preview": true,
             "transform": {
@@ -917,37 +923,13 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
-            "int_properties": null,
-            "name": "e_tpillar",
-            "preview": true,
-            "transform": {
-                "position": {
-                    "x": 1496.7596435546875,
-                    "y": 625.5534057617188,
-                    "z": 821.3713989257813
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 39.499996185302734,
-                    "y": 39.499996185302734,
-                    "z": 39.499996185302734
-                }
-            },
-            "type_id": 3
-        },
-        {
-            "bool_properties": null,
             "float_properties": {
                 "p_friction": 0.05000000074505806,
                 "p_speed": 150.0
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
             "name": "e_chase",
@@ -979,6 +961,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
             "name": "e_chase",
@@ -1036,6 +1019,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
             "name": "e_chase",
@@ -1067,6 +1051,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
             "name": "e_chase",
@@ -1124,6 +1109,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
             "name": "e_chase",
@@ -1180,8 +1166,10 @@
             },
             "floor_dist": 0.0,
             "int_properties": {
+                "p_hp": 4,
                 "p_seeds": 300
             },
+            "label": "bigchase",
             "name": "e_chase",
             "preview": true,
             "transform": {
@@ -1196,9 +1184,9 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 11.400005340576172,
-                    "y": 11.400005340576172,
-                    "z": 11.400005340576172
+                    "x": 30.400005340576172,
+                    "y": 30.400005340576172,
+                    "z": 30.400005340576172
                 }
             },
             "type_id": 45
@@ -1212,6 +1200,7 @@
             },
             "floor_dist": 0.0,
             "int_properties": null,
+            "label": "bigchase",
             "name": "e_bumper",
             "preview": true,
             "transform": {
@@ -1236,15 +1225,14 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_medal",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": 478.44342041015625,
-                    "y": -53.18021774291992,
-                    "z": 165.32228088378906
+                    "x": 1559.2716064453125,
+                    "y": 593.5957641601563,
+                    "z": 831.200439453125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -1252,9 +1240,86 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 7.500001907348633,
-                    "y": 7.500001907348633,
-                    "z": 7.500001907348633
+                    "x": 24.39999771118164,
+                    "y": 24.39999771118164,
+                    "z": 24.39999771118164
+                }
+            },
+            "type_id": 53
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 116.2700424194336,
+            "int_properties": null,
+            "name": "e_medal",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -299.1833190917969,
+                    "y": 126.01347351074219,
+                    "z": -345.0063171386719
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.399998664855957,
+                    "y": 11.399998664855957,
+                    "z": 11.399998664855957
+                }
+            },
+            "type_id": 53
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 18.5,
+            "int_properties": null,
+            "name": "e_medal",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1406.83349609375,
+                    "y": 370.2083435058594,
+                    "z": -1553.8590087890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 11.399998664855957,
+                    "y": 11.399998664855957,
+                    "z": 11.399998664855957
+                }
+            },
+            "type_id": 53
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_medal",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 586.3948364257813,
+                    "y": -2.5970983505249023,
+                    "z": -1203.81396484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 22.599994659423828,
+                    "y": 22.599994659423828,
+                    "z": 22.599994659423828
                 }
             },
             "type_id": 53

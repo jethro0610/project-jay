@@ -122,7 +122,7 @@ void Game::Update() {
             continue;
         #endif
 
-        // levelController_.base.DoUpdate();
+        levelController_.base.DoUpdate();
 
         for (int i = 0; i < EntityList::MAX; i++) {
             if (!entities_[i].alive_) continue;

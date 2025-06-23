@@ -14,8 +14,6 @@ public:
     void EditorUpdate();
     void Boom();
 
-    int initClock_;
-
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_meteorhole"; }
     static EntityDependendies GetStaticDependencies();

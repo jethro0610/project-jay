@@ -22,6 +22,8 @@ public:
     glm::vec3 spawnPoint_;
     int numSeeds_;
 
+    int hp_;
+
     void Update();
     void Start();
     void OnHurt(HurtArgs args);

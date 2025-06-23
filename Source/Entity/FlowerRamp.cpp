@@ -77,6 +77,10 @@ void FlowerRamp::PreUpdate() {
 
 void FlowerRamp::EditorUpdate() {
     bubble_->position = transform_.position;
+    if (DBG_preview_)
+        bubble_->active = true;
+    else
+        bubble_->active = false;
 }
 
 void FlowerRamp::OnDestroy() {

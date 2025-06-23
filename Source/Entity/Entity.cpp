@@ -5,6 +5,7 @@
 #include "Helpers/Assert.h"
 #include "Collision/Ray.h"
 #include "EntityList.h"
+#include "LevelControllers/LevelController.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -14,7 +15,7 @@ void Entity::Construct(
     EntityList& entities,
     Inputs& inputs,
     Level& level,
-    ScoreKeeper& scoreKeeper,
+    LevelController& levelController,
     SeedManager& seedManager,
     SpreadManager& spreadManager,
     Terrain& terrain,
@@ -25,7 +26,7 @@ void Entity::Construct(
     entities_ = &entities;
     inputs_ = &inputs;
     level_ = &level;
-    scoreKeeper_ = &scoreKeeper;
+    levelController_ = &levelController;
     seedManager_ = &seedManager;
     spreadManager_ = & spreadManager;
     terrain_ = &terrain;
@@ -479,6 +480,7 @@ void Entity::DoHurt(HurtArgs args) {
         EXPANDENTITIES
         #undef ENTITYEXP
     }
+    levelController_->DoEntityHurt(this);
 }
 
 void Entity::DoPush(glm::vec3 pushVec) {
@@ -527,6 +529,8 @@ void Entity::DoDestroy() {
         EXPANDENTITIES
         #undef ENTITYEXP
     }
+
+    levelController_->DoEntityDestroyed(this);
 }
 
 void Entity::DoTrigger() {

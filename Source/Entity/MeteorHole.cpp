@@ -65,7 +65,6 @@ void MeteorHole::Start() {
     fader_.AddModifier(bubble_, &bubble_->radius, 0.0f, radius_ + bubbleRadius_, false, E_Elastic);
     fader_.AddModifier(bubble_, &bubble_->height, 0.0f, height_, false, E_Elastic);
     fader_.DeactivateModifiers(true);
-    initClock_ = clock_->time_;
 }
 
 void MeteorHole::OnDestroy() {
@@ -74,9 +73,6 @@ void MeteorHole::OnDestroy() {
 }
 
 void MeteorHole::PreUpdate() {
-    if (clock_->time_ != initClock_)
-        Boom();
-
     negative_->position = transform_.position;
     bubble_->position = transform_.position;
     fader_.Update();

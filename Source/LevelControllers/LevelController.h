@@ -13,6 +13,7 @@ public:
     void DoUpdate();
 
     int collectedSeeds_;
+    int maxSeeds_;
     int numMedals_;
     int maxNumMedals_;
 

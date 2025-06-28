@@ -13,6 +13,7 @@
 #include "Editor/Editor.h"
 #include "Entity/Player.h"
 #include "Level/Level.h"
+#include "LevelControllers/LevelController.h"
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/mat3x3.hpp>
@@ -65,6 +66,7 @@ Renderer::Renderer(ResourceManager& resourceManager) {
     u_uiElement_ = bgfx::createUniform("u_uiElem", bgfx::UniformType::Vec4, 4);
     u_dynamicTerrainBubbles_ = bgfx::createUniform("u_dynamicTerrainBubbles", bgfx::UniformType::Mat4, DYN_MOD_MAX);
     u_dynamicTerrainNegatives_ = bgfx::createUniform("u_dynamicTerrainNegatives", bgfx::UniformType::Mat4, DYN_MOD_MAX);
+    u_dynamicTerrainAdditives_ = bgfx::createUniform("u_dynamicTerrainAdditives", bgfx::UniformType::Mat4, DYN_MOD_MAX);
 
     SetLightDirection(normalize(vec3(0.75f, -1.0f, -0.75f)));
 
@@ -369,6 +371,10 @@ void Renderer::RenderTerrain(Terrain& terrain, Material* material, float maxRadi
         transposeModifiers[i] = terrain.dynamicTerrainNegatives_.GetRenderMatrix(i);
     bgfx::setUniform(u_dynamicTerrainNegatives_, transposeModifiers, DYN_MOD_MAX);
 
+    for (int i = 0; i < DYN_MOD_MAX; i++)
+        transposeModifiers[i] = terrain.dynamicTerrainAdditives_.GetRenderMatrix(i);
+    bgfx::setUniform(u_dynamicTerrainAdditives_, transposeModifiers, DYN_MOD_MAX);
+
     const float MAX_DIST_TO_CAMERA = 8192.0f;
     int radius = maxRadius / TerrainConsts::MESH_SIZE;
     radius += 1;
@@ -621,8 +627,7 @@ void Renderer::RenderUI(EntityList& entities, LevelController& levelController) 
     timeBar.vAlignment = Alignment::TOP;
     timeBar.hAnchor = Alignment::CENTER;
     timeBar.vAnchor = Alignment::TOP;
-    // timeBar.percent = levelController;
-    timeBar.percent = 0;
+    timeBar.percent = (float)levelController.collectedSeeds_ / levelController.maxSeeds_;
     timeBar.size.y = 30.0f;
     timeBar.size.x = 800.0f;
     timeBar.position.y = 10.0f;

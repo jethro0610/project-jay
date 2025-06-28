@@ -4,6 +4,8 @@
 #include "Entity/Medal.h"
 
 void LevelController::DoStart() {
+    collectedSeeds_ = 0;
+    maxSeeds_ = 1;
     maxNumMedals_ = 0;
     for (int i = 0; i < EntityList::MAX; i++) {
         Entity& entity = (*entities_)[i];

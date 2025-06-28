@@ -63,11 +63,31 @@ void HoleMarker::Init(Entity::InitArgs args) {
     numEntities_ = 1;
     entityCount_ = 0;
 
+    additive_ = terrain_->CreateAdditive();
+    additive_->active = false;
+    additive_->position = transform_.position;
+    additive_->radius = transform_.scale.x;
+    additive_->sharpness = 0.05f;
+
+    fader_ = DynamicFader();
+    fader_.activateLength_ = 60.0f;
+    fader_.deactivateLength_ = 30.0f;
+    fader_.AddModifier(additive_, &additive_->radius, 0.0f, transform_.scale.x, false, EaseType::E_Cubic);
+
     player_ = nullptr;
+}
+
+void HoleMarker::Update() {
+    fader_.Update();
+    if (fader_.active_ && !fader_.doActivate_) {
+        hide_ = true;
+        Sleep();
+    }
 }
 
 void HoleMarker::Start() {
     player_ = entities_->FindEntityByType(Player::TYPEID);
+    fader_.DeactivateModifiers(true);
 }
 
 void HoleMarker::EditorUpdate() {
@@ -95,9 +115,14 @@ void HoleMarker::EntityFellInHole(Entity* entity) {
     entityCount_++;
     if (entityCount_ >= numEntities_) {
         seedManager_->CreateMultipleSeed(entity->transform_.position, seedsEnd_, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
+        fader_.StartActivate();
     }
 }
 
 int HoleMarker::GetSeeds() {
     return seedsPerEntity_ * numEntities_ + seedsEnd_;
+}
+
+void HoleMarker::OnDestroy() {
+    terrain_->FreeAdditive(additive_);
 }

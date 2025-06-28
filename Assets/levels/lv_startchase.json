@@ -641,7 +641,7 @@
             },
             "label": "nbridge1",
             "name": "e_holemark",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": 282.6309509277344,
@@ -670,7 +670,7 @@
                 "p_seedsentity": 250
             },
             "name": "e_holemark",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": -2239.093017578125,
@@ -683,9 +683,9 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 245.40005493164063,
-                    "y": 205.70005798339844,
-                    "z": 245.40005493164063
+                    "x": 285.1000671386719,
+                    "y": 245.4000701904297,
+                    "z": 285.1000671386719
                 }
             },
             "type_id": 51
@@ -1075,8 +1075,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300,
-                "p_seedsdestroy": 250
+                "p_seeds": 500,
+                "p_seedsdestroy": 1000
             },
             "name": "e_chase",
             "preview": true,
@@ -1134,8 +1134,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300,
-                "p_seedsdestroy": 250
+                "p_seeds": 500,
+                "p_seedsdestroy": 1000
             },
             "name": "e_chase",
             "preview": true,
@@ -1192,8 +1192,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300,
-                "p_seedsdestroy": 250
+                "p_seeds": 800,
+                "p_seedsdestroy": 1500
             },
             "label": "bigchase",
             "name": "e_chase",
@@ -1553,7 +1553,7 @@
         },
         {
             "custom_easing": false,
-            "height": 228.0,
+            "height": 0.0573577880859375,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",

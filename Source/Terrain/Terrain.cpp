@@ -671,9 +671,11 @@ bool Terrain::DestroyPendingModifiers() {
 void Terrain::RecordDynamicModifiersLastTick() {
     dynamicTerrainBubbles_.RecordLastTick();
     dynamicTerrainNegatives_.RecordLastTick();
+    dynamicTerrainAdditives_.RecordLastTick();
 }
 
 void Terrain::InterpolateDynamicModifiers(float interpTime) {
     dynamicTerrainBubbles_.Interpolate(interpTime);
     dynamicTerrainNegatives_.Interpolate(interpTime);
+    dynamicTerrainAdditives_.Interpolate(interpTime);
 }

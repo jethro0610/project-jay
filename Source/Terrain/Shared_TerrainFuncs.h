@@ -7,6 +7,7 @@
 #include "Shared_DynamicTerrainModifier.h"
 #include "Shared_DynamicBubble.h"
 #include "Shared_DynamicNegative.h"
+#include "Shared_DynamicAdditive.h"
 
 #define TERRAIN_TYPE const Terrain&
 #define TERRAIN_DEFAULT
@@ -16,6 +17,7 @@
 #define INLINE inline
 #define DYN_BUBBLES terrain.dynamicTerrainBubbles_
 #define DYN_NEGATIVES terrain.dynamicTerrainNegatives_
+#define DYN_ADDITIVES terrain.dynamicTerrainAdditives_
 using namespace glm;
 
 #else
@@ -24,8 +26,10 @@ using namespace glm;
 #include <Shared_DynamicTerrainModifier.h>
 #include <Shared_DynamicBubble.h>
 #include <Shared_DynamicNegative.h>
+#include <Shared_DynamicAdditive.h>
 uniform mat4 u_dynamicTerrainBubbles[DYN_MOD_MAX];
 uniform mat4 u_dynamicTerrainNegatives[DYN_MOD_MAX];
+uniform mat4 u_dynamicTerrainAdditives[DYN_MOD_MAX];
 SAMPLER2D(s_terrainMap, 15);
 
 #define TERRAIN_TYPE int
@@ -36,10 +40,17 @@ SAMPLER2D(s_terrainMap, 15);
 #define INLINE 
 #define DYN_BUBBLES u_dynamicTerrainBubbles
 #define DYN_NEGATIVES u_dynamicTerrainNegatives
+#define DYN_ADDITIVES u_dynamicTerrainAdditives
 #endif
 
 INLINE float smax(float a, float b, float k) {
     return log(exp(k * a) + exp(k * b)) / k;
+}
+
+INLINE float smin(float a, float b, float k) {
+    k *= 4.0f;
+    float h = max(k - abs(a - b), 0.0f) / k;
+    return min(a, b) - h * h * k * (1.0f / 4.0f);
 }
 
 INLINE vec2 getTerrainDistance(
@@ -67,6 +78,18 @@ INLINE vec2 getTerrainDistance(
                 pos.x = smax(pos.x, -negativeVal, sharpness);
             else
                 pos.x = max(pos.x, -negativeVal);
+        }
+
+        #pragma unroll
+        for (int i = 0; i < DYN_MOD_MAX; i++) {
+            if (!DYN_MOD_IS_ACTIVE(DYN_ADDITIVES[i])) continue;
+            vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_ADDITIVES[i]), DYN_MOD_POS_Z(DYN_ADDITIVES[i]));
+            float dist = distance(dynModPos, position) - DYN_ADD_RADIUS(DYN_ADDITIVES[i]);
+            float sharpness = DYN_ADD_SHARPNESS(DYN_NEGATIVES[i]);
+            if (sharpness < 1.0f)
+                pos.x = smin(pos.x, dist, sharpness);
+            else
+                pos.x = min(pos.x, dist);
         }
     }
 

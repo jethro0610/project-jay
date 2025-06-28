@@ -28,6 +28,8 @@ void StartChaseController::Start() {
     }
     destroyedChases = 0;
     destroyedStartChases = 0;
+
+    maxSeeds_ = 25000;
 }
 
 void StartChaseController::Update() {

@@ -12,6 +12,7 @@
 
 #include "Shared_DynamicBubble.h"
 #include "Shared_DynamicNegative.h"
+#include "Shared_DynamicAdditive.h"
 
 #ifdef _DEBUG
 #include "TerrainBubble.h"
@@ -89,6 +90,15 @@ public:
     void FreeNegative(DynamicTerrainModifier* negative) {
         dynamicTerrainNegatives_.FreeModifier(negative);
     }
+
+    DynamicTerrainModifierContainer dynamicTerrainAdditives_;
+    DynamicAdditive* CreateAdditive() {
+        return (DynamicAdditive*)dynamicTerrainAdditives_.RequestAvailableModifier();
+    }
+    void FreeAdditive(DynamicTerrainModifier* additive) {
+        dynamicTerrainAdditives_.FreeModifier(additive);
+    }
+
     void InterpolateDynamicModifiers(float interpTime);
     void RecordDynamicModifiersLastTick();
 

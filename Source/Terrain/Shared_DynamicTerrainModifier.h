@@ -6,7 +6,7 @@
     #define VEC2 vec2
 #endif
 
-#define DYN_MOD_MAX 16
+#define DYN_MOD_MAX 8
 #define DYN_MOD_POS_X(modifier) (modifier)[0][0]
 #define DYN_MOD_POS_Y(modifier) (modifier)[0][1]
 #define DYN_MOD_POS_Z(modifier) (modifier)[0][2]

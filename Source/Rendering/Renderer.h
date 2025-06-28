@@ -163,6 +163,7 @@ private:
 
     UniformHandle u_dynamicTerrainBubbles_;
     UniformHandle u_dynamicTerrainNegatives_;
+    UniformHandle u_dynamicTerrainAdditives_;
 
     glm::mat4 GetModelViewProjection(const glm::mat4& modelMatrix);
     void SetTexturesFromMaterial(Material* material, bool shadowMap = true);

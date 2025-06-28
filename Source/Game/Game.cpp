@@ -105,10 +105,10 @@ void Game::Update() {
             inputs_ = {};
         if (platform_.pressedKeys_['P'] || platform_.gamepad_.pressedButtons_[Gamepad::LTHUMB])
             rawEntities_[0].player.Boost(30.0f, 1.0f);
-        if (platform_.pressedKeys_['-'])
-            clock_.AddTime(-Clock::TIME_IN_DAY_SECTION);
-        if (platform_.pressedKeys_['='])
-            clock_.AddTime(Clock::TIME_IN_DAY_SECTION);
+        // if (platform_.pressedKeys_['-'])
+        //     clock_.AddTime(-Clock::TIME_IN_DAY_SECTION);
+        // if (platform_.pressedKeys_['='])
+        //     clock_.AddTime(Clock::TIME_IN_DAY_SECTION);
         if (platform_.pressedKeys_['I']) {
             entities_[0].transform_.position.y = terrain_.GetHeight(entities_[0].transform_.position);
             entities_[0].velocity_.y = 0.0f;
@@ -336,8 +336,8 @@ void Game::Update() {
     entities_.DestroyFlaggedEntities();
 
     renderer_.Render(
-        clock_,
         entities_, 
+        levelController_.base,
         level_.properties_,
         particleManager_,
         seedManager_,

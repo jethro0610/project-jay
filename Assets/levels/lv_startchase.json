@@ -16,7 +16,7 @@
                 },
                 "rotation": {
                     "x": 0.0,
-                    "y": 0.9700006246566772,
+                    "y": 0.9700005650520325,
                     "z": 0.0
                 },
                 "scale": {
@@ -133,7 +133,7 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 1000
+                "p_seeds": 100
             },
             "label": "stchase0",
             "name": "e_chase",

@@ -1,6 +1,5 @@
 #pragma once
 #include "Camera/Camera.h"
-#include "Clock.h"
 #include "Types/Inputs.h"
 #include "Particle/ParticleManager.h"
 #include "Seed/SeedManager.h"
@@ -40,7 +39,6 @@ private:
     ControllerUnion levelController_;
     Renderer renderer_;
     Camera camera_;
-    Clock clock_;
     SeedManager seedManager_;
     SpreadManager spreadManager_;
     WaterManager waterManager_;

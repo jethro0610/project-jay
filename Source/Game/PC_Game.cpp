@@ -15,7 +15,6 @@ Game::Game():
     particleManager_(terrain_),
     terrain_(level_.properties_, resourceManager_),
     level_(
-        clock_,
         entities_,
         levelController_.base,
         particleManager_, 
@@ -25,7 +24,6 @@ Game::Game():
         terrain_
     ),
     levelController_(
-        clock_,
         entities_,
         seedManager_,
         terrain_
@@ -39,7 +37,6 @@ Game::Game():
         particleManager_, 
         resourceManager_, 
         camera_, 
-        clock_,
         inputs_, 
         level_,
         levelController_.base,

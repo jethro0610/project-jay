@@ -1,7 +1,6 @@
 #include "Ramp.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
-#include "Game/Clock.h"
 #include "Helpers/Shared_Ease.h"
 using namespace glm;
 
@@ -64,8 +63,8 @@ void Ramp::OnTrigger() {
 }
 
 void Ramp::PreUpdate() {
-    if (clock_->GetTimeOfDay() >= Clock::Sunrise && clock_->GetTimeOfDay() <= clock_->Sunset)
-        active_ = true;
+    // if (clock_->GetTimeOfDay() >= Clock::Sunrise && clock_->GetTimeOfDay() <= clock_->Sunset)
+    //     active_ = true;
     static constexpr int RISE_TIME = 30;
     if (active_ && riseTimer_ < RISE_TIME) {
         riseTimer_++;

@@ -1,6 +1,5 @@
 #pragma once
 
-class Clock;
 class Entity;
 class EntityList;
 class SeedManager;
@@ -13,11 +12,11 @@ public:
     void DoStart();
     void DoUpdate();
 
+    int collectedSeeds_;
     int numMedals_;
     int maxNumMedals_;
 
     int id_;
-    Clock* clock_;
     EntityList* entities_;
     SeedManager* seedManager_;
     Terrain* terrain_;
@@ -26,6 +25,8 @@ public:
 
     void DoEntityHurt(Entity* entity);
     void DoEntityDestroyed(Entity* entity);
+
+    void AddSeed(int amount = 1) { collectedSeeds_ += amount; }
 
 protected:
     void Update() {};

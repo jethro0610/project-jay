@@ -5,7 +5,6 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-class Clock;
 class EntityList;
 class ParticleManager;
 class ResourceManager;
@@ -17,7 +16,6 @@ class LevelController;
 class Level {
 public:
     Level(
-        Clock& clock,
         EntityList& entities,
         LevelController& levelController,
         ParticleManager& particleManager,
@@ -43,7 +41,6 @@ public:
     #endif
 
 private:
-    Clock& clock_;
     EntityList& entities_;
     LevelController& controller_;
     ParticleManager& particleManager_;

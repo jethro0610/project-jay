@@ -8,7 +8,6 @@ EntityList::EntityList(
     ParticleManager& particleManager,
     ResourceManager& resourceManager,
     Camera& camera,
-    Clock& clock,
     Inputs& inputs,
     Level& level,
     LevelController& levelController,
@@ -24,7 +23,6 @@ resourceManager_(resourceManager)
     for (int i = 0; i < MAX; i++) {
         rawEntities[i].entity.Construct(
             camera, 
-            clock, 
             *this, 
             inputs, 
             level, 

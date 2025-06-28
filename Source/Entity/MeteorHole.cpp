@@ -1,7 +1,6 @@
 #include "MeteorHole.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
-#include "Game/Clock.h"
 using namespace glm;
 
 EntityDependendies MeteorHole::GetStaticDependencies() {

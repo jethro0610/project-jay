@@ -15,7 +15,6 @@
 #include <cstring>
 
 class Camera;
-class Clock;
 class EntityList;
 struct Inputs;
 class Level;
@@ -114,7 +113,6 @@ public:
 
     void Construct(
         Camera& camera,
-        Clock& clock,
         EntityList& entities,
         Inputs& inputs,
         Level& level,
@@ -228,7 +226,6 @@ public:
     void RecordTrail();
 
     Camera* camera_;
-    Clock* clock_;
     EntityList* entities_;
     Inputs* inputs_;
     Level* level_;

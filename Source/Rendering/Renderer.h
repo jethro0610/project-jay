@@ -15,7 +15,6 @@
 #endif
 
 class Camera;
-class Clock;
 class Editor;
 class LevelProperties;
 class SeedManager;
@@ -36,8 +35,8 @@ public:
     Camera* camera_;
 
     void Render(
-        Clock& clock,
         EntityList& entities,
+        LevelController& levelController,
         LevelProperties& levelProperties,
         ParticleManager& particleManager,
         SeedManager& seedManager,
@@ -222,7 +221,7 @@ private:
     void RenderPostProcess();
     void RenderComposite();
     void RenderBlit();
-    void RenderUI(EntityList& entities, Clock& clock);
+    void RenderUI(EntityList& entities, LevelController& levelController);
     void RenderUIElement(UIElement& element, Shader* shader);
     void RenderWorldText(WorldText& text);
     void RenderText(Text& text);

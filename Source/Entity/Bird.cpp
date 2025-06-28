@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
-#include "Game/Clock.h"
 #include "Game/GlobalNoise.h"
 #include "Time/Time.h"
 #include "Terrain/Terrain.h"
@@ -78,12 +77,12 @@ void Bird::OnOverlap(Entity* overlappedEntity) {
     if (overlappedEntity->typeId_ == Player::TYPEID)
         ((Player*)overlappedEntity)->EndHoming();
 
-    seedManager_->CreateMultipleSeed(
-        transform_.position, 
-        Clock::TIME_IN_DAY_SECTION * DAY_SECTION_PERCENT, 
-        20.0f, 
-        overlappedEntity, 
-        vec3(0.0f, 30.0f, 0.0f)
-    );
+    // seedManager_->CreateMultipleSeed(
+    //     transform_.position, 
+    //     Clock::TIME_IN_DAY_SECTION * DAY_SECTION_PERCENT, 
+    //     20.0f, 
+    //     overlappedEntity, 
+    //     vec3(0.0f, 30.0f, 0.0f)
+    // );
     destroy_ = true;
 }

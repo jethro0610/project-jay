@@ -7,7 +7,6 @@
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
 #include "Camera/Camera.h"
-#include "Game/Clock.h"
 #include "Resource/ResourceManager.h"
 #include "UI/UIElement.h"
 #include "Text/WorldText.h"
@@ -614,7 +613,7 @@ void Renderer::RenderComposite() {
     bgfx::submit(COMPOSITE_VIEW, compositeVolumetricsMaterial_.shader->handle);
 }
 
-void Renderer::RenderUI(EntityList& entities, Clock& clock) {
+void Renderer::RenderUI(EntityList& entities, LevelController& levelController) {
     Player& player = (Player&)entities[0];
 
     UIElement timeBar = {};
@@ -622,7 +621,8 @@ void Renderer::RenderUI(EntityList& entities, Clock& clock) {
     timeBar.vAlignment = Alignment::TOP;
     timeBar.hAnchor = Alignment::CENTER;
     timeBar.vAnchor = Alignment::TOP;
-    timeBar.percent = (float)clock.time_ / clock.TIME_IN_DAY;
+    // timeBar.percent = levelController;
+    timeBar.percent = 0;
     timeBar.size.y = 30.0f;
     timeBar.size.x = 800.0f;
     timeBar.position.y = 10.0f;
@@ -636,7 +636,7 @@ void Renderer::RenderUI(EntityList& entities, Clock& clock) {
     timeOfDay.properties_.hAnchor = Alignment::CENTER;
     timeOfDay.properties_.vAnchor = Alignment::TOP;
     timeOfDay.properties_.kerning = 0.35f;
-    timeOfDay = clock.GetTimeOfDayString();
+    timeOfDay = "NULL";
     RenderText(timeOfDay);
 
     Text item;

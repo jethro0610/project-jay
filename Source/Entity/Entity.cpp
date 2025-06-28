@@ -11,7 +11,6 @@ using namespace glm;
 
 void Entity::Construct(
     Camera& camera,
-    Clock& clock,
     EntityList& entities,
     Inputs& inputs,
     Level& level,
@@ -22,7 +21,6 @@ void Entity::Construct(
     WaterManager& waterManager
 ) {
     camera_ = &camera;
-    clock_ = &clock;
     entities_ = &entities;
     inputs_ = &inputs;
     level_ = &level;

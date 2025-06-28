@@ -10,8 +10,8 @@
 #include "Logging/ScreenText.h"
 #include "Time/Time.h"
 #include "EntityList.h"
-#include "Game/Clock.h"
 #include "Helpers/PhysicsHelpers.h"
+#include "LevelControllers/LevelController.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/string_cast.hpp>
 using namespace glm;
@@ -724,7 +724,7 @@ void Player::OnHurt(HurtArgs args) {
 }
 
 void Player::OnCaptureSeed() {
-    clock_->AddTime();
+    levelController_->AddSeed();
 }
 
 void Player::OnPush(vec3 pushVec) {

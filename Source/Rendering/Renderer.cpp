@@ -12,8 +12,8 @@ mat4 Renderer::GetModelViewProjection(const mat4& modelMatrix) {
 }
 
 void Renderer::Render(
-    Clock& clock,
     EntityList& entities,
+    LevelController& levelController,
     LevelProperties& levelProperties,
     ParticleManager& particleManager, 
     SeedManager& seedManager,
@@ -30,7 +30,7 @@ void Renderer::Render(
     RenderComposite();
     RenderPostProcess();
     RenderBlit();
-    RenderUI(entities, clock);
+    RenderUI(entities, levelController);
     RenderScreenText();
 
     PresentFrame();

@@ -1,5 +1,4 @@
 #include "Level.h"
-#include "Game/Clock.h"
 #include "Helpers/LoadHelpers.h"
 #include "Helpers/MapCheck.h"
 #include "Helpers/Assert.h"
@@ -17,7 +16,6 @@
 #endif
 
 Level::Level(
-    Clock& clock,
     EntityList& entities,
     LevelController& levelController,
     ParticleManager& particleManager,
@@ -26,7 +24,6 @@ Level::Level(
     SpreadManager& spreadManager,
     Terrain& terrain
 ) :
-    clock_(clock),
     entities_(entities),
     controller_(levelController),
     particleManager_(particleManager),
@@ -341,7 +338,6 @@ void Level::Clear(bool clearTerrain) {
     particleManager_.Reset();
     spreadManager_.Reset();
     seedManager_.Reset();
-    clock_.Reset();
     controller_.id_ = -1;
 
     if (clearTerrain)

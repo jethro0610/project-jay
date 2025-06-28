@@ -2,7 +2,6 @@
 #include "SnakeHead.h"
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
-#include "Game/Clock.h"
 using namespace glm;
 
 EntityDependendies SnakePod::GetStaticDependencies() {
@@ -41,7 +40,7 @@ void SnakePod::Update() {
 }
 
 void SnakePod::OnHurt(HurtArgs args) {
-    seedManager_->CreateMultipleSeed(transform_.position, Clock::TIME_IN_DAY_SECTION * 0.1f, 16.0f, args.attacker);
+    // seedManager_->CreateMultipleSeed(transform_.position, Clock::TIME_IN_DAY_SECTION * 0.1f, 16.0f, args.attacker);
     destroy_ = true;
     head_->hitlag_ = args.hitbox->hitlag;
 }

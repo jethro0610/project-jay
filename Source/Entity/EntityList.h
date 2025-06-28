@@ -4,7 +4,6 @@
 #include <vector_holed.h>
 
 class Camera;
-class Clock;
 class Entity;
 struct Inputs;
 class Level;
@@ -27,7 +26,6 @@ public:
         ParticleManager& particleManager,
         ResourceManager& resourceManager,
         Camera& camera,
-        Clock& clock,
         Inputs& inputs,
         Level& level,
         LevelController& levelController,

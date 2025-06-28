@@ -59,3 +59,19 @@ bool LevelController::IsValidControllerId(int id) {
     }
     return false;
 }
+
+int LevelController::GetTotalSeeds() {
+    int totalSeeds = 0;
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = (*entities_)[i];
+        if (!entity.alive_)
+            continue;
+
+        int tot = entity.DoGetSeeds();
+        if (tot != 0)
+            DEBUGLOG(tot);
+        totalSeeds += entity.DoGetSeeds();
+    }
+    DEBUGLOG("");
+    return totalSeeds;
+}

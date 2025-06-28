@@ -224,6 +224,7 @@ public:
     glm::vec3 GetTrailPositionNormalized(float t);
 
     void RecordTrail();
+    int DoGetSeeds();
 
     Camera* camera_;
     EntityList* entities_;
@@ -256,6 +257,7 @@ private:
     void OnTrigger() {};
     bool GetIsTriggered() { return false; };
     void OnWet() {};
+    int GetSeeds() { return 0; }
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

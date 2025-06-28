@@ -27,6 +27,7 @@ public:
     void DoEntityDestroyed(Entity* entity);
 
     void AddSeed(int amount = 1) { collectedSeeds_ += amount; }
+    int GetTotalSeeds();
 
 protected:
     void Update() {};

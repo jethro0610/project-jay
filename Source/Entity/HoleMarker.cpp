@@ -19,6 +19,9 @@ EntityProperties HoleMarker::GetStaticProperties() {
         },
         {
             // Ints
+            {"p_seedsentity", &seedsPerEntity_},
+            {"p_seedsend", &seedsEnd_},
+            {"p_entities", &numEntities_},
         },
         {
             // Bools
@@ -55,6 +58,11 @@ void HoleMarker::Init(Entity::InitArgs args) {
     overlapbox_.bottom = 1.0f;
     overlapbox_.radius = 1.0f;
 
+    seedsPerEntity_ = 250;
+    seedsEnd_ = 250;
+    numEntities_ = 1;
+    entityCount_ = 0;
+
     player_ = nullptr;
 }
 
@@ -82,6 +90,14 @@ void HoleMarker::RenderUpdate() {
 }
 
 void HoleMarker::EntityFellInHole(Entity* entity) {
-    seedManager_->CreateMultipleSeed(entity->transform_.position, 800, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
+    seedManager_->CreateMultipleSeed(entity->transform_.position, seedsPerEntity_, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
     explodeTime_ = 0.35f;
+    entityCount_++;
+    if (entityCount_ >= numEntities_) {
+        seedManager_->CreateMultipleSeed(entity->transform_.position, seedsEnd_, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
+    }
+}
+
+int HoleMarker::GetSeeds() {
+    return seedsPerEntity_ * numEntities_ + seedsEnd_;
 }

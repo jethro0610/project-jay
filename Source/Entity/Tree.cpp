@@ -4,13 +4,28 @@
 #include "Apple.h"
 #include "Helpers/Random.h"
 #include "Terrain/Terrain.h"
-#include "Time/Time.h"
 #include "Helpers/PhysicsHelpers.h"
 using namespace glm;
 
 EntityDependendies Tree::GetStaticDependencies() {
     return {
         "st_tpillar"
+    };
+}
+
+EntityProperties Tree::GetStaticProperties() {
+    return {
+        {
+            // Floats
+        },
+        {
+            // Ints
+            {"p_appleseeds", &seedsPerApple_},
+            {"p_apples", &numApples_},
+        },
+        {
+            // Bools
+        }
     };
 }
 
@@ -27,13 +42,16 @@ void Tree::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
+    seedsPerApple_ = 250;
+    numApples_ = MAX_APPLES;
+
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_SendPush, true);
     hurtbox_.radius = 1.5f;
 }
 
 void Tree::Start() {
-    for (int i = 0; i < MAX_APPLES; i++) {
+    for (int i = 0; i < numApples_; i++) {
         Transform appleTransform;
         appleTransform.position = 
             transform_.position + 
@@ -44,6 +62,7 @@ void Tree::Start() {
         apples_[i] = (Apple*)&entities_->CreateEntity(Apple::TYPEID, appleTransform);
         apples_[i]->active_ = false;
         apples_[i]->growth_ = 0.0f;
+        apples_[i]->numSeeds_ = seedsPerApple_;
     }
 }
 
@@ -92,4 +111,8 @@ void Tree::OnHurt(HurtArgs args) {
             break;
         }
     }
+}
+
+int Tree::GetSeeds() {
+    return numApples_ * seedsPerApple_;
 }

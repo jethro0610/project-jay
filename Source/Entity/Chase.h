@@ -15,16 +15,20 @@ public:
     float friction_;
     float speed_;
     Player* player_;
+    Entity* lastAttacker_;
     bool returning_;
     bool hopping_;
     int stunEndTimer_;
     int walkToCenterTimer_;
     glm::vec3 spawnPoint_;
     int numSeeds_;
+    int numSeedsDestroy_;
 
     int hp_;
 
     void Update();
     void Start();
     void OnHurt(HurtArgs args);
+    int GetSeeds();
+    void OnDestroy();
 };

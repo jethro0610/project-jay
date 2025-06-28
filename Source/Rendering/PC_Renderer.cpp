@@ -719,6 +719,7 @@ void Renderer::RenderEditor(Editor& editor) {
     RenderText(editor.target_.name_);
     RenderText(editor.textInput_.text_);
     RenderText(editor.notification_.text_);
+    RenderText(editor.seedsText_);
 }
 
 void Renderer::RenderEditorNodes(Level& level) {

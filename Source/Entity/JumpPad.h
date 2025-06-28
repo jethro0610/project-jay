@@ -24,4 +24,5 @@ public:
     void Update(); 
     void OnOverlap(Entity* overlappedEntity);
     void OnHitlagEnd();
+    int GetSeeds();
 };

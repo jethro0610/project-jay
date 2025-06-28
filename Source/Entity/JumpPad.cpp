@@ -94,3 +94,7 @@ void JumpPad::OnOverlap(Entity* overlappedEntity) {
 
 void JumpPad::OnHitlagEnd() {
 }
+
+int JumpPad::GetSeeds() {
+    return numSeeds_;
+}

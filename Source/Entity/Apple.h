@@ -14,7 +14,9 @@ public:
     bool active_;
     glm::vec3 initialScale_;
     Entity* overlappedEntity_;
+    int numSeeds_;
     void Update();
     void OnOverlap(Entity* overlappedEntity);
     void OnHitlagEnd();
+    int GetSeeds() { return numSeeds_; }
 };

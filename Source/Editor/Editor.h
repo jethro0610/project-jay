@@ -41,6 +41,7 @@ public:
     EditorNotification notification_;
     EditorTextInput textInput_;
     Text modeText_;
+    Text seedsText_;
     TerrainCursor terrainCursor_;
 
     void StartEditing();

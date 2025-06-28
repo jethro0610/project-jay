@@ -17,4 +17,9 @@ public:
 
     Entity* player_;
     float explodeTime_;
+    int numEntities_;
+    int entityCount_;
+    int seedsPerEntity_;
+    int seedsEnd_;
+    int GetSeeds();
 };

@@ -565,6 +565,15 @@ vec3 Entity::GetTarget() {
     return vec3(transform_.position);
 }
 
+int Entity::DoGetSeeds() {
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->GetSeeds(); break;
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return 0;
+}
+
 #ifdef _DEBUG
 std::string Entity::ETarget::GetName() {
     return std::string(entity_->GetName());

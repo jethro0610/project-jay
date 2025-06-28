@@ -23,6 +23,7 @@ EntityProperties Chase::GetStaticProperties() {
         {
             // Ints
             {"p_seeds", &numSeeds_},
+            {"p_seedsdestroy", &numSeedsDestroy_},
             {"p_hp", &hp_},
         },
         {
@@ -54,8 +55,10 @@ void Chase::Init(Entity::InitArgs args) {
     player_ = nullptr;
     returning_ = false;
     spawnPoint_ = transform_.position;
-    numSeeds_ = 300;
+    numSeeds_ = 250;
+    numSeedsDestroy_ = 250;
     hp_ = 4;
+    lastAttacker_ = nullptr;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -160,9 +163,19 @@ void Chase::Update() {
 }
 
 void Chase::OnHurt(HurtArgs args) {
+    lastAttacker_ = args.attacker;
     stunEndTimer_ = 20;
-    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 25.0f, args.attacker);
-    hp_-= args.hitbox->hitType == Hitbox::Strong ? 2 : 1;
+    int amount = args.hitbox->hitType == Hitbox::Strong ? 2 : 1;
+    hp_-= amount;
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_ * amount, 25.0f, args.attacker);
     if (hp_ <= 0)
         destroy_ = true;
+}
+
+int Chase::GetSeeds() {
+    return hp_ * numSeeds_ + numSeedsDestroy_;
+}
+
+void Chase::OnDestroy() {
+    seedManager_->CreateMultipleSeed(transform_.position, numSeedsDestroy_, 40.0f, lastAttacker_);
 }

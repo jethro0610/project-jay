@@ -36,7 +36,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 1000
+                "p_seeds": 500,
+                "p_seedsdestroy": 1000
             },
             "label": "stchase2",
             "name": "e_chase",
@@ -100,7 +101,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 1000
+                "p_seeds": 500,
+                "p_seedsdestroy": 1000
             },
             "label": "stchase1",
             "name": "e_chase",
@@ -133,7 +135,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 100
+                "p_seeds": 500,
+                "p_seedsdestroy": 1000
             },
             "label": "stchase0",
             "name": "e_chase",
@@ -161,7 +164,10 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_apples": 8,
+                "p_appleseeds": 250
+            },
             "name": "e_tree",
             "preview": true,
             "transform": {
@@ -187,7 +193,10 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_apples": 8,
+                "p_appleseeds": 250
+            },
             "name": "e_tree",
             "preview": true,
             "transform": {
@@ -625,7 +634,11 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
+            "int_properties": {
+                "p_entities": 2,
+                "p_seedsend": 1000,
+                "p_seedsentity": 250
+            },
             "label": "nbridge1",
             "name": "e_holemark",
             "preview": true,
@@ -651,7 +664,11 @@
         {
             "bool_properties": null,
             "float_properties": null,
-            "int_properties": null,
+            "int_properties": {
+                "p_entities": 2,
+                "p_seedsend": 1000,
+                "p_seedsentity": 250
+            },
             "name": "e_holemark",
             "preview": true,
             "transform": {
@@ -930,7 +947,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "name": "e_chase",
             "preview": true,
@@ -962,7 +980,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "name": "e_chase",
             "preview": true,
@@ -989,7 +1008,10 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_apples": 8,
+                "p_appleseeds": 250
+            },
             "name": "e_tree",
             "preview": true,
             "transform": {
@@ -1020,7 +1042,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "name": "e_chase",
             "preview": true,
@@ -1052,7 +1075,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "name": "e_chase",
             "preview": true,
@@ -1110,7 +1134,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "name": "e_chase",
             "preview": true,
@@ -1167,7 +1192,8 @@
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 4,
-                "p_seeds": 300
+                "p_seeds": 300,
+                "p_seedsdestroy": 250
             },
             "label": "bigchase",
             "name": "e_chase",

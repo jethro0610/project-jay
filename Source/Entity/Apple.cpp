@@ -2,6 +2,7 @@
 #include "Resource/ResourceManager.h"
 #include "Tree.h"
 #include "Seed/SeedManager.h"
+#include "Player.h"
 using namespace glm;
 
 EntityDependendies Apple::GetStaticDependencies() {
@@ -36,6 +37,7 @@ void Apple::Init(Entity::InitArgs args) {
     initialScale_ = transform_.scale;
     growth_ = 1.0f;
     overlappedEntity_ = nullptr;
+    numSeeds_ = 0;
 }
 
 static constexpr float GROWTH_RATE = 0.01f;
@@ -59,8 +61,7 @@ static constexpr int HITLAG = 3;
 void Apple::OnOverlap(Entity* overlappedEntity) {
     if (
         overlappedEntity_ != nullptr ||
-        overlappedEntity->typeId_ == Tree::TYPEID ||
-        overlappedEntity->typeId_ == Apple::TYPEID
+        overlappedEntity->typeId_ != Player::TYPEID
     ) 
         return;
 
@@ -70,8 +71,7 @@ void Apple::OnOverlap(Entity* overlappedEntity) {
     overlappedEntity->hitlag_ = HITLAG;
 }
 
-static constexpr int SEEDS = 500;
 void Apple::OnHitlagEnd() {
-    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 24.0f, overlappedEntity_);
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_, 24.0f, overlappedEntity_);
     destroy_ = true;
 }

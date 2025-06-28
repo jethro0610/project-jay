@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "Camera/Camera.h"
 #include "Level/Level.h"
+#include "LevelControllers/LevelController.h"
 #include "Rendering/Renderer.h"
 #include "Terrain/Terrain.h"
 #include "Particle/ParticleManager.h"
@@ -96,6 +97,12 @@ EXPANDMODES
     notification_.text_.properties_.vAlignment = Alignment::BOTTOM;
     notification_.text_.properties_.hAnchor = Alignment::LEFT;
     notification_.text_.properties_.vAnchor = Alignment::BOTTOM;
+
+    seedsText_.properties_.scale = 40.0f;
+    seedsText_.properties_.hAlignment = Alignment::CENTER;
+    seedsText_.properties_.vAlignment = Alignment::TOP;
+    seedsText_.properties_.hAnchor = Alignment::CENTER;
+    seedsText_.properties_.vAnchor = Alignment::TOP;
 
     for (int i = 0; i < EntityList::MAX; i++) {
         targets_.push_back(entities_[i].editorTarget_);
@@ -241,6 +248,7 @@ void Editor::Update() {
         mode_->Update();
     
     if (level_.loaded_) {
+        seedsText_ = std::to_string(levelController_.GetTotalSeeds());
         bool modifiersDestroyed = terrain_.DestroyPendingModifiers();
         bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_ || mode_ == &genericScalarMode_;
         if (target_.Get().UpdateTerrain() && isTransformMode)

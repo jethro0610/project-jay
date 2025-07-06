@@ -2,6 +2,8 @@
 #include "Resource/ResourceManager.h"
 #include "PopInCrystal.h"
 #include "EntityList.h"
+#include "Time/Time.h"
+#include "Helpers/Shared_Ease.h"
 using namespace glm;
 
 EntityDependendies PopInCrystalBreaker::GetStaticDependencies() {
@@ -43,18 +45,49 @@ void PopInCrystalBreaker::Init(Entity::InitArgs args) {
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 1.5f;
 
+    overlapbox_.top = 1.0f;
+    overlapbox_.bottom = 1.0f;
+    overlapbox_.radius = 1.5f;
+
     SetFlag(EF_RecieveHits, true);
     SetFlag(EF_StickToGround, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_Interpolate, true);
+    SetFlag(EF_RecieveKnockback, true);
+    SetFlag(EF_Overlap, true);
     traceDistance_ = 1000.0f;
 }
 
 void PopInCrystalBreaker::Start() {
     target_ = (PopInCrystal*)entities_->FindEntityById(targetId_);
+    launchPos_ = transform_.position;
+}
+
+void PopInCrystalBreaker::Update() {
+    launchPos_ += velocity_ * 4.0f * GlobalTime::TIMESTEP;
+    if (launched_)
+        velocity_.y -= 2.0f;
+
+    const int TRAVEL_TIME = 60;
+    if (launched_) {
+        timer_++;
+        float t = (float)timer_ / TRAVEL_TIME;
+        t = EaseInCubic(t);
+        t = clamp(t, 0.0f, 0.985f);
+        transform_.position = mix(launchPos_, target_->transform_.position, t);
+    }
 }
 
 void PopInCrystalBreaker::OnHurt(HurtArgs args) {
-    target_->Break();
-    destroy_ = true;
+    launched_ = true;
+    SetFlag(EF_StickToGround, false);
+    SetFlag(EF_GroundCheck, false);
+}
+
+void PopInCrystalBreaker::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity == target_) {
+        target_->Break();
+        hitlag_ = 16;
+        destroy_ = true;
+    }
 }

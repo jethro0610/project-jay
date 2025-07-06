@@ -41,6 +41,10 @@ void PopInCrystal::Init(Entity::InitArgs args) {
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
 
+    overlapbox_.top = 1.0f;
+    overlapbox_.bottom = 1.0f;
+    overlapbox_.radius = 1.5f;
+
     negative_ = terrain_->CreateNegative();
     negative_->innerRadius = 0.0f;
     negative_->outerRadius = 100.0f;
@@ -84,4 +88,5 @@ void PopInCrystal::Break() {
 void PopInCrystal::EditorUpdate() {
     negative_->position = transform_.position;
     negative_->active = DBG_preview_;
+    hitlag_ = 16;
 }

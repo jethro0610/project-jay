@@ -1,5 +1,6 @@
 #include "SeedBalloon.h"
 #include "Resource/ResourceManager.h"
+#include "Seed/SeedManager.h"
 using namespace glm;
 
 EntityDependendies SeedBalloon::GetStaticDependencies() {
@@ -15,6 +16,7 @@ EntityProperties SeedBalloon::GetStaticProperties() {
         },
         {
             // Ints
+            {"p_seeds", &seeds_}
         },
         {
             // Bools
@@ -41,8 +43,21 @@ void SeedBalloon::Init(Entity::InitArgs args) {
     overlapbox_.radius = 1.5f;
 
     SetFlag(EF_Overlap, true);
+    seeds_ = 100;
+    lastOverlapped_ = nullptr;
 }
 
 void SeedBalloon::OnOverlap(Entity* overlappedEntity) {
     destroy_ = true;
+    overlappedEntity->hitlag_ = 8;
+    hitlag_ = 8;
+    lastOverlapped_ = overlappedEntity;
+}
+
+void SeedBalloon::OnDestroy() {
+    seedManager_->CreateMultipleSeed(transform_.position, seeds_, 20.0f, lastOverlapped_);
+}
+
+int SeedBalloon::GetSeeds() {
+    return seeds_;
 }

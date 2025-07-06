@@ -14,10 +14,30 @@ EntityDependendies TeleportPod::GetStaticDependencies() {
     };
 }
 
+EntityProperties TeleportPod::GetStaticProperties() {
+    return {
+        {
+            // Floats
+        },
+        {
+            // Ints
+            {"p_hp", &hp_},
+            {"p_seedonhit", &seedOnHit_},
+            {"p_seedondestroy", &seedOnDestroy_}
+        },
+        {
+            // Bools
+        }
+    };
+}
+
 void TeleportPod::Init(Entity::InitArgs args) {
     shouldTeleport_ = false;
     teleportScaleTicks_ = 0.0f;
     scaleBeforeTeleport_ = vec3(0.0f);
+    hp_ = 6;
+    seedOnHit_ = 200;
+    seedOnDestroy_ = 1000;
 
     SetFlag(EF_RecieveHits, true);
 
@@ -35,6 +55,9 @@ void TeleportPod::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    lastAttacker_ = nullptr;
+
 }
 
 void TeleportPod::Update() {
@@ -57,6 +80,22 @@ void TeleportPod::Update() {
 }
 
 void TeleportPod::OnHurt(HurtArgs args) {
-    seedManager_->CreateMultipleSeed(transform_.position, 300, 10.0f);
+    int lastHp = hp_;
+    int amount = args.hitbox->hitType == Hitbox::Strong ? 2 : 1;
+    lastAttacker_ = args.attacker;
     shouldTeleport_ = true;
+    hp_-= amount;
+    hp_ = max(hp_, 0);
+    int newHp = lastHp - hp_;
+    seedManager_->CreateMultipleSeed(transform_.position, seedOnHit_ * newHp, 20.0f, args.attacker);
+    if (hp_ <= 0)
+        destroy_ = true;
+}
+
+void TeleportPod::OnDestroy() {
+    seedManager_->CreateMultipleSeed(transform_.position, seedOnDestroy_, 20.0f, lastAttacker_);
+}
+
+int TeleportPod::GetSeeds() {
+    return seedOnHit_ * hp_ + seedOnDestroy_;
 }

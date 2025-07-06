@@ -78,7 +78,7 @@ void CometSpawner::Update() {
 
         numComets_++;
         totalComets_++;
-        if (numComets_ >= simulComets_)
+        if (numComets_ >= simulComets_ || numComets_ >= maxComets_)
             doTimer_ = false;
     }
 }

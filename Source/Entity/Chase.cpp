@@ -163,11 +163,14 @@ void Chase::Update() {
 }
 
 void Chase::OnHurt(HurtArgs args) {
+    int lastHp = hp_;
     lastAttacker_ = args.attacker;
     stunEndTimer_ = 20;
     int amount = args.hitbox->hitType == Hitbox::Strong ? 2 : 1;
     hp_-= amount;
-    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_ * amount, 25.0f, args.attacker);
+    hp_ = max(hp_, 0);
+    int newHp = lastHp - hp_;
+    seedManager_->CreateMultipleSeed(transform_.position, numSeeds_ * newHp, 25.0f, args.attacker);
     if (hp_ <= 0)
         destroy_ = true;
 }

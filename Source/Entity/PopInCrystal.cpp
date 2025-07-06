@@ -62,7 +62,7 @@ void PopInCrystal::Start() {
         negative_, 
         &negative_->innerRadius, 
         negative_->outerRadius, 
-        0.0f, 
+        -negative_->outerRadius, 
         false, 
         EaseType::E_Cubic,
         -negative_->outerRadius

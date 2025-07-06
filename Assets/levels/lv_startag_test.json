@@ -668,39 +668,6 @@
         },
         {
             "bool_properties": null,
-            "float_properties": {
-                "p_radius": 1000.0
-            },
-            "floor_dist": 734.1773681640625,
-            "int_properties": {
-                "p_comets": 8,
-                "p_interval": 120,
-                "p_seeds": 500,
-                "p_simulcomets": 3
-            },
-            "name": "e_cometspawner",
-            "preview": true,
-            "transform": {
-                "position": {
-                    "x": -1336.56201171875,
-                    "y": 634.1544799804688,
-                    "z": 355.8503723144531
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 128.89999389648438,
-                    "y": 128.89999389648438,
-                    "z": 128.89999389648438
-                }
-            },
-            "type_id": 10
-        },
-        {
-            "bool_properties": null,
             "float_properties": null,
             "int_properties": {
                 "p_seeds": 100

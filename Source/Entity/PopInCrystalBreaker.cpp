@@ -56,6 +56,12 @@ void PopInCrystalBreaker::Init(Entity::InitArgs args) {
     SetFlag(EF_RecieveKnockback, true);
     SetFlag(EF_Overlap, true);
     traceDistance_ = 1000.0f;
+
+    targetId_ = -1;
+    target_ = nullptr;
+    launched_ = false;
+    launchPos_ = transform_.position;
+    timer_ = 0;
 }
 
 void PopInCrystalBreaker::Start() {
@@ -73,8 +79,14 @@ void PopInCrystalBreaker::Update() {
         timer_++;
         float t = (float)timer_ / TRAVEL_TIME;
         t = EaseInCubic(t);
-        t = clamp(t, 0.0f, 0.985f);
+        t = clamp(t, 0.0f, 1.0f);
         transform_.position = mix(launchPos_, target_->transform_.position, t);
+    }
+
+    if (timer_ >= TRAVEL_TIME) {
+        target_->Break();
+        hitlag_ = 16;
+        destroy_ = true;
     }
 }
 

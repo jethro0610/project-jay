@@ -13,9 +13,14 @@ public:
     int timer_;
     float spawnRadius_;
     int interval_;
-    int minInterval_;
-    int maxInterval_;
     int seeds_;
+    int simulComets_;
+    int numComets_;
+    int maxComets_;
+    int totalComets_;
+    bool doTimer_;
 
     void Update(); 
+    void OnCometDestroyed();
+    int GetSeeds();
 };

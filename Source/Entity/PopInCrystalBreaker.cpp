@@ -44,6 +44,10 @@ void PopInCrystalBreaker::Init(Entity::InitArgs args) {
     hurtbox_.radius = 1.5f;
 
     SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_StickToGround, true);
+    SetFlag(EF_GroundCheck, true);
+    SetFlag(EF_Interpolate, true);
+    traceDistance_ = 1000.0f;
 }
 
 void PopInCrystalBreaker::Start() {

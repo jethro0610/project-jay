@@ -1,5 +1,9 @@
 #pragma once
 #include "Entity.h"
+#include "Terrain/DynamicFader.h"
+
+class DynamicBubble;
+class CometSpawner;
 
 class Comet: public Entity {
 public:
@@ -11,8 +15,17 @@ public:
 
     ParticleEmitter* cometTrail_;
     int seeds_;
+    DynamicBubble* bubble_;
+    DynamicFader fader_;
+    bool contact_;
+    CometSpawner* spawner_;
 
+    void PreUpdate();
     void Update(); 
     void RenderUpdate();
     void OnDestroy();
+    void Start();
+    void OnHitlagEnd();
+    void OnHurt(HurtArgs args);
+    int GetSeeds();
 };

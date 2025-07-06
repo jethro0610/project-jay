@@ -10,8 +10,23 @@ EntityDependendies SinglePod::GetStaticDependencies() {
     };
 }
 
+EntityProperties SinglePod::GetStaticProperties() {
+    return {
+        {
+        },
+        {
+            {"p_seeds", &seeds_},
+        },
+        {}
+    };
+}
+
 void SinglePod::Init(Entity::InitArgs args) {
     SetFlag(EF_RecieveHits, true);
+    SetFlag(EF_StickToGround, true);
+    SetFlag(EF_GroundCheck, true);
+    SetFlag(EF_Interpolate, true);
+    traceDistance_ = 1000.0f;
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");
@@ -24,12 +39,19 @@ void SinglePod::Init(Entity::InitArgs args) {
     pushbox_.top = 1.0f;
     pushbox_.bottom = 1.0f;
     pushbox_.radius = 1.0f;
+
+    hurtbox_.top = 1.0f;
+    hurtbox_.bottom = 1.0f;
+    hurtbox_.radius = 2.0f;
+    seeds_ = 100;
 }
 
 void SinglePod::OnHurt(HurtArgs args) {
-    static constexpr int SEEDS = 300;
-
     SetFlag(EF_RecieveHits, false);
-    seedManager_->CreateMultipleSeed(transform_.position, SEEDS, 8.0f);
+    seedManager_->CreateMultipleSeed(transform_.position, seeds_, 20.0f, args.attacker);
     destroy_ = true;
+}
+
+int SinglePod::GetSeeds() {
+    return seeds_;
 }

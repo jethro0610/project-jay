@@ -48,6 +48,7 @@ void EntityList::Reset() {
 
         if (rawEntities_[i].entity.alive_ || rawEntities_[i].entity.sleep_) {
             rawEntities_[i].entity.alive_ = false;
+            rawEntities_[i].entity.sleep_ = false;
             rawEntities_[i].entity.DoDestroy();
         }
     }
@@ -58,6 +59,7 @@ void EntityList::DestroyFlaggedEntities() {
     for (int i = 0; i < MAX; i++) {
         if (!rawEntities_[i].entity.alive_) continue;
         if (!rawEntities_[i].entity.destroy_) continue;
+        if (rawEntities_[i].entity.hitlag_ > 0) continue;
 
         rawEntities_[i].entity.DoDestroy();
         rawEntities_[i].entity.alive_ = false;

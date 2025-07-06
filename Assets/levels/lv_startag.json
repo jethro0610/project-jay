@@ -37,9 +37,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -1912.517333984375,
-                    "y": 24.612987518310547,
-                    "z": -271.81585693359375
+                    "x": -1869.9415283203125,
+                    "y": 20.907333374023438,
+                    "z": -273.2164001464844
                 },
                 "rotation": {
                     "x": 0.0,
@@ -161,7 +161,7 @@
                 "p_radius": 700.0,
                 "p_sharpness": 0.05000000074505806
             },
-            "floor_dist": 149.9952392578125,
+            "floor_dist": 122.51954650878906,
             "int_properties": {
                 "p_breaks": 3
             },
@@ -274,7 +274,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -300,7 +302,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -326,7 +330,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -352,7 +358,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -378,14 +386,16 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -2977.798583984375,
-                    "y": 29.194902420043945,
-                    "z": -530.6827392578125
+                    "x": -2959.3271484375,
+                    "y": 29.819421768188477,
+                    "z": -520.2147216796875
                 },
                 "rotation": {
                     "x": 0.0,
@@ -404,7 +414,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -430,14 +442,16 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -631.8932495117188,
-                    "y": 8.054811477661133,
-                    "z": 1547.9488525390625
+                    "x": -607.2974243164063,
+                    "y": 11.698169708251953,
+                    "z": 1552.5068359375
                 },
                 "rotation": {
                     "x": 0.0,
@@ -456,7 +470,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -482,7 +498,9 @@
             "bool_properties": null,
             "float_properties": null,
             "floor_dist": 0.0,
-            "int_properties": null,
+            "int_properties": {
+                "p_seeds": 100
+            },
             "name": "e_singlepod",
             "preview": true,
             "transform": {
@@ -503,6 +521,179 @@
                 }
             },
             "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 100
+            },
+            "name": "e_singlepod",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -318.0675048828125,
+                    "y": 118.40214538574219,
+                    "z": -846.336669921875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.200002670288086,
+                    "y": 12.200002670288086,
+                    "z": 12.200002670288086
+                }
+            },
+            "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 100
+            },
+            "name": "e_singlepod",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -400.73638916015625,
+                    "y": 124.32854461669922,
+                    "z": -1247.905517578125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.200002670288086,
+                    "y": 12.200002670288086,
+                    "z": 12.200002670288086
+                }
+            },
+            "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 100
+            },
+            "name": "e_singlepod",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -62.42493438720703,
+                    "y": 154.6160125732422,
+                    "z": -1329.6656494140625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.200002670288086,
+                    "y": 12.200002670288086,
+                    "z": 12.200002670288086
+                }
+            },
+            "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 100
+            },
+            "name": "e_singlepod",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -57.16032028198242,
+                    "y": 151.64154052734375,
+                    "z": -889.323486328125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.200002670288086,
+                    "y": 12.200002670288086,
+                    "z": 12.200002670288086
+                }
+            },
+            "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 100
+            },
+            "name": "e_singlepod",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -261.763427734375,
+                    "y": 147.38406372070313,
+                    "z": -1062.689453125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 39.300010681152344,
+                    "y": 39.300010681152344,
+                    "z": 39.300010681152344
+                }
+            },
+            "type_id": 14
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_radius": 1000.0
+            },
+            "floor_dist": 734.1773681640625,
+            "int_properties": {
+                "p_comets": 8,
+                "p_interval": 120,
+                "p_seeds": 500,
+                "p_simulcomets": 3
+            },
+            "name": "e_cometspawner",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1336.56201171875,
+                    "y": 634.1544799804688,
+                    "z": 355.8503723144531
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 128.89999389648438,
+                    "y": 128.89999389648438,
+                    "z": 128.89999389648438
+                }
+            },
+            "type_id": 10
         }
     ],
     "landmap": "lm_startag",
@@ -623,10 +814,10 @@
             "max_height": 55.05743408203125,
             "min_height": 0.0,
             "name": "e_noise",
-            "radius": 731.7003173828125,
+            "radius": 883.9002685546875,
             "seed": 2035114830,
-            "x": -288.8429260253906,
-            "y": -1029.90869140625
+            "x": -298.1667175292969,
+            "y": -1146.6448974609375
         },
         {
             "frequency": 0.22199998795986176,

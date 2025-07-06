@@ -8,7 +8,7 @@
 #include <vector_contig.h>
 
 class Terrain;
-const int MAX_PARTICLES = 2048;
+const int MAX_PARTICLES = 4096;
 
 struct Particle {
     glm::vec4 initialPosition;

@@ -17,9 +17,7 @@
 #include "TimerPod.h"
 #include "TrailFish.h"
 #include "Mole.h"
-#include "Apple.h"
 #include "Pig.h"
-#include "Tree.h"
 #include "TPillar.h"
 #include "Pinata.h"
 #include "Bird.h"
@@ -35,24 +33,28 @@
 #include "Stomper.h"
 #include "ItemToken.h"
 #include "Ramp.h"
-#include "Negator.h"
 #include "HomingBossAttack.h"
 #include "HomingBossPoint.h"
 #include "HomingBoss.h"
 #include "HomingBossProjectile.h"
-#include "Chase.h"
 #include "WaterGun.h"
 #include "FlowerRamp.h"
 #include "Water.h"
 #include "Bumper.h"
-#include "HoleMarker.h"
-#include "MeteorHole.h"
 #include "Popper.h"
 #include "Segment.h"
-#include "JumpPad.h"
 #include "SeedBalloon.h"
+#include "MeteorHole.h"
 #include "Medal.h"
+#include "JumpPad.h"
 #include "Entity.h"
+#include "Apple.h"
+#include "Tree.h"
+#include "Chase.h"
+#include "HoleMarker.h"
+#include "Negator.h"
+#include "PopInCrystalBreaker.h"
+#include "PopInCrystal.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -108,4 +110,6 @@
 	ENTITYEXP(Popper, popper, 50) \
 	ENTITYEXP(HoleMarker, holemarker, 51) \
 	ENTITYEXP(MeteorHole, meteorhole, 52) \
-	ENTITYEXP(Medal, medal, 53)
+	ENTITYEXP(Medal, medal, 53) \
+	ENTITYEXP(PopInCrystalBreaker, popincrystalbreaker, 54) \
+	ENTITYEXP(PopInCrystal, popincrystal, 55)

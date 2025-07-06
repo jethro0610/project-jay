@@ -633,16 +633,16 @@ void Renderer::RenderUI(EntityList& entities, LevelController& levelController) 
     timeBar.position.y = 10.0f;
     RenderUIElement(timeBar, uiBarShader_);
 
-    Text timeOfDay;
-    timeOfDay.properties_.scale = 50.0f;
-    timeOfDay.properties_.position.y = 40.0f;
-    timeOfDay.properties_.hAlignment = Alignment::CENTER;
-    timeOfDay.properties_.vAlignment = Alignment::TOP;
-    timeOfDay.properties_.hAnchor = Alignment::CENTER;
-    timeOfDay.properties_.vAnchor = Alignment::TOP;
-    timeOfDay.properties_.kerning = 0.35f;
-    timeOfDay = "NULL";
-    RenderText(timeOfDay);
+    Text numSeeds;
+    numSeeds.properties_.scale = 50.0f;
+    numSeeds.properties_.position.y = 40.0f;
+    numSeeds.properties_.hAlignment = Alignment::CENTER;
+    numSeeds.properties_.vAlignment = Alignment::TOP;
+    numSeeds.properties_.hAnchor = Alignment::CENTER;
+    numSeeds.properties_.vAnchor = Alignment::TOP;
+    numSeeds.properties_.kerning = 0.35f;
+    numSeeds = std::to_string(levelController.collectedSeeds_);
+    RenderText(numSeeds);
 
     Text item;
     item.properties_.scale = 50.0f;

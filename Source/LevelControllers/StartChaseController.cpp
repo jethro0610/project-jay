@@ -3,6 +3,7 @@
 #include "Entity/Entity.h"
 #include "Entity/Chase.h"
 #include "Entity/Medal.h"
+#include "Entity/MeteorHole.h"
 
 void StartChaseController::Start() {
     allChase_.clear();
@@ -12,6 +13,11 @@ void StartChaseController::Start() {
         Entity& entity = (*entities_)[i];
         if (!entity.alive_)
             continue;
+
+        if (entity.typeId_ == MeteorHole::TYPEID) {
+            meteorHoles_.push_back((MeteorHole*)&entity);
+            continue;
+        }
 
         if (entity.typeId_ != Chase::TYPEID)
             continue;
@@ -30,6 +36,7 @@ void StartChaseController::Start() {
     destroyedStartChases = 0;
 
     maxSeeds_ = 25000;
+    didMeteors_ = false;
 }
 
 void StartChaseController::Update() {
@@ -62,7 +69,7 @@ void StartChaseController::OnEntityDestroyed(Entity* entity) {
             }
         }
     }
-    
+
     if (entity == bigChase_) {
         bigChase_ = nullptr;
         Transform transform;
@@ -81,4 +88,13 @@ int StartChaseController::GetNumHiddenMedals() {
     // Defeat 1st set of bumpers
 
     return 6;
+}
+
+void StartChaseController::OnAddSeed() {
+    if (collectedSeeds_ > 12500 && !didMeteors_) {
+        for (MeteorHole* meteorHole : meteorHoles_) {
+            meteorHole->Boom();
+        }
+        didMeteors_ = true;
+    }
 }

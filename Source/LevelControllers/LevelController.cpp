@@ -24,6 +24,8 @@ void LevelController::DoStart() {
         EXPANDCONTROLLERS
         #undef LVCONTROLLER
     }
+
+    maxSeeds_ = GetTotalSeeds();
 }
 
 void LevelController::DoUpdate() {
@@ -70,10 +72,18 @@ int LevelController::GetTotalSeeds() {
             continue;
 
         int tot = entity.DoGetSeeds();
-        if (tot != 0)
-            DEBUGLOG(tot);
         totalSeeds += entity.DoGetSeeds();
     }
-    DEBUGLOG("");
     return totalSeeds;
+}
+
+void LevelController::OnAddSeed() {
+    if (id_ == -1)
+        return;
+
+    switch(id_) {
+        #define LVCONTROLLER(TYPE, VAR, ID) case ID: ((TYPE*)(this))->OnAddSeed();
+        EXPANDCONTROLLERS
+        #undef LVCONTROLLER
+    }
 }

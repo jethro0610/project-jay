@@ -455,10 +455,10 @@ void Player::Update() {
     if (homingTarget_ == nullptr) {
         if (!onGround_)
             velocity_.y -= 2.0f;
-        else if (hasPivoted_)
-            velocity_.y -= 16.0f;
         else if (moveMode_ == MM_Slope)
-            velocity_.y -= 32.0f;
+            velocity_.y -= 64.0f;
+        else if (hasPivoted_)
+            velocity_.y -= 24.0f;
         else if (moveMode_ == MM_Attack)
             velocity_.y -= 16.0f;
         else if (moveMode_ == MM_Activate)

@@ -27,7 +27,10 @@ public:
     void DoEntityHurt(Entity* entity);
     void DoEntityDestroyed(Entity* entity);
 
-    void AddSeed(int amount = 1) { collectedSeeds_ += amount; }
+    void AddSeed(int amount = 1) { 
+        collectedSeeds_ += amount; 
+        OnAddSeed();
+    }
     int GetTotalSeeds();
 
 protected:
@@ -35,5 +38,6 @@ protected:
     void Start() {};
     void OnEntityHurt(Entity* entity) {};
     void OnEntityDestroyed(Entity* entity) {};
+    void OnAddSeed();
     int GetNumHiddenMedals() { return 0; }
 };

@@ -55,6 +55,9 @@ void PopInCrystal::Init(Entity::InitArgs args) {
     fader_ = DynamicFader();
     fader_.activateLength_ = 40.0f;
     fader_.deactivateLength_ = 120.0f;
+
+    containedEntities_.clear();
+    distances_.clear();
 }
 
 void PopInCrystal::Start() {
@@ -69,10 +72,34 @@ void PopInCrystal::Start() {
     );
     fader_.ActivateModifiers(true);
     negative_->position = transform_.position;
+
+    float outer2 = negative_->outerRadius * negative_->outerRadius;
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = (*entities_)[i];
+        if (&entity == this)
+            continue;
+        if (!entity.alive_)
+            continue;
+
+        float dist2 = distance2(entity.transform_.position, transform_.position);
+        if (dist2 < outer2) {
+            containedEntities_.push_back(&entity);
+            distances_.push_back(dist2);
+            entity.Sleep();
+        }
+    }
 }
 
 void PopInCrystal::PreUpdate() {
     fader_.Update();
+
+    if (negative_->active && negative_->innerRadius > 0.0f) {
+        float inner2 = negative_->innerRadius * negative_->innerRadius;
+        for (int i = 0; i < containedEntities_.size(); i++) {
+            if (distances_[i] < inner2)
+                containedEntities_[i]->Wake();
+        }
+    }
 }
 
 void PopInCrystal::OnDestroy() {

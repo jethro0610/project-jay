@@ -1,0 +1,78 @@
+{
+    "controller_id": -1,
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_player",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -41.22710418701172,
+                    "y": 107.30351257324219,
+                    "z": -255.2111053466797
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        }
+    ],
+    "landmap": "lm_hop2",
+    "terrain_modifiers": [
+        {
+            "custom_easing": true,
+            "height": 92.20001220703125,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 226.3000030517578,
+            "x": -40.819950103759766,
+            "y": -255.16651916503906
+        },
+        {
+            "custom_easing": false,
+            "id": 3,
+            "in_power": 0.0,
+            "name": "e_bezier",
+            "out_power": 0.0,
+            "points": [
+                {
+                    "height": -67.40000915527344,
+                    "radius": 185.2999725341797,
+                    "x": -868.7845458984375,
+                    "y": -524.1133422851563
+                },
+                {
+                    "height": 324.9000549316406,
+                    "radius": 57.89990234375,
+                    "x": -494.7392578125,
+                    "y": 696.002197265625
+                },
+                {
+                    "height": 50.0,
+                    "radius": 361.6999816894531,
+                    "x": -105.81468200683594,
+                    "y": -629.7916870117188
+                },
+                {
+                    "height": 50.0,
+                    "radius": 194.0,
+                    "x": 323.55938720703125,
+                    "y": 234.77854919433594
+                }
+            ]
+        }
+    ]
+}

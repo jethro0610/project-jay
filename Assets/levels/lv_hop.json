@@ -1,0 +1,89 @@
+{
+    "controller_id": -1,
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_player",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 453.6329650878906,
+                    "y": 35.048641204833984,
+                    "z": -382.8017883300781
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        }
+    ],
+    "landmap": "lm_hop",
+    "terrain_modifiers": [
+        {
+            "custom_easing": true,
+            "height": -199.00001525878906,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 7.8300018310546875,
+            "radius": 1288.200439453125,
+            "x": -546.9682006835938,
+            "y": -470.236083984375
+        },
+        {
+            "custom_easing": false,
+            "height": 79.5999984741211,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 229.99996948242188,
+            "x": 362.697265625,
+            "y": -448.0984191894531
+        },
+        {
+            "frequency": 0.07600031048059464,
+            "id": 2,
+            "max_height": 134.30003356933594,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 1140.200439453125,
+            "seed": 1004196421,
+            "x": 96.12362670898438,
+            "y": -332.6019592285156
+        },
+        {
+            "frequency": 0.21000009775161743,
+            "id": 2,
+            "max_height": 77.30000305175781,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 1065.7998046875,
+            "seed": 1099156379,
+            "x": -531.4387817382813,
+            "y": -470.7525329589844
+        },
+        {
+            "frequency": 0.2579996585845947,
+            "id": 2,
+            "max_height": 65.0999984741211,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 1142.7000732421875,
+            "seed": 842014447,
+            "x": 459.4446716308594,
+            "y": -1219.3614501953125
+        }
+    ]
+}

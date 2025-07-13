@@ -17,6 +17,7 @@
 #ifdef _DEBUG
 #include "TerrainBubble.h"
 #include "TerrainNoise.h"
+#include "TerrainBezier.h"
 #endif
 
 class EntityList;
@@ -72,6 +73,7 @@ public:
 
     TerrainBubble DBG_bubbles_[128];
     TerrainNoise DBG_noises_[128];
+    TerrainBezier DBG_beziers_[128];
     vector_const<StaticTerrainModifier*, StaticTerrainModifier::MAX> DBG_modifiers_;
     #endif
 

@@ -1,7 +1,9 @@
 #ifndef SHARED_SHADER
 #pragma once
-#define INLINE inline
 #include <cmath>
+#undef M_PI
+#define M_PI 3.14159265358979323846
+#define INLINE inline
 #define POW powf
 #else
 #define INLINE
@@ -50,7 +52,7 @@ INLINE float EaseOutIn(float t, float inPower, float outPower) {
 
 #ifndef SHARED_SHADER
 INLINE float EaseElastic(float t) {
-    constexpr float C5 = (2 * M_PI) / 4.5;
+    constexpr float C5 = (2.0f * M_PI) / 4.5;
 
     return t == 0.0f
       ? 0.0f

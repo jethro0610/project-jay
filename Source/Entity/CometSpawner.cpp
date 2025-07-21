@@ -62,7 +62,7 @@ void CometSpawner::Update() {
     if (timer_ >= interval_) {
         timer_ = 0;
 
-        Transform cometTransform;
+        Transform cometTransform = Transform();
 
         vec2 pos;
         vec2 terrainDist;

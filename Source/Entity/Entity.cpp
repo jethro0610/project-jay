@@ -37,6 +37,7 @@ void Entity::Construct(
 void Entity::Init(
     Entity::InitArgs args
 ) {
+    memset(label_, 0, sizeof(label_));
     alive_ = true;
     sleep_ = false;
     hide_ = false;

@@ -221,7 +221,7 @@ void Game::Update() {
             hit.hitter->initHitlag_ = true;
 
             vec3 kbVelocity = vec3(0.0f);
-            quat kbRotation;
+            quat kbRotation = quat(vec3(0.0f));
             if (hit.target->GetFlag(Entity::EF_RecieveKnockback)) {
                 vec3 normalizeRes = normalize(hit.collision.resolution);
                 vec3 planarKB = vec3(hit.hitter->hitbox_.knocback.x, 0.0f, hit.hitter->hitbox_.knocback.z);

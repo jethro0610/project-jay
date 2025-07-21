@@ -20,7 +20,7 @@ public:
         glm::vec4 vec;
     };
     static constexpr int ID = 3;
-    static constexpr std::string NAME = "e_bezier";
+    static constexpr const char* NAME = "e_bezier";
     TerrainBezier();
 
     BezierUnion unionPoints_[4];

@@ -79,12 +79,6 @@ EntityDependendies Player::GetStaticDependencies() {
 }
 
 void Player::Init(Entity::InitArgs args) {
-    moveMode_ = MM_Default;
-    bonus_ = 0.0f;
-    speed_ = MIN_SPEED;
-    tilt_ = 0.0f;
-    attackActiveTimer_ = ATTACK_TIME;
-
     SetFlag(EF_SendPush, true);
     SetFlag(EF_RecievePush, true);
     SetFlag(EF_GroundCheck, true);
@@ -211,14 +205,28 @@ void Player::Init(Entity::InitArgs args) {
     overlapbox_.radius = 1.0f;
     overlapbox_.bottom = 1.0f;
 
-    homingTarget_ = nullptr;
+    moveMode_ = MM_Default;
+    speed_ = 0.0f;
+    bonus_ = 0.0f;
+    tilt_ = 0.0f;
 
+    chargingAttack_ = false;
+    attackActiveTimer_ = ATTACK_TIME;
+    attackChargeAmount_ = 0;
+    lastAttackChargeAmount_ = 0;
+    
     chargingActivate_ = false;
-    activateCooldown_ = 0;
     activateChargeAmount_ = 0;
+    activateCooldown_ = 0;
 
     item_ = I_None;
     numItem_ = 0;
+    homingTarget_ = nullptr;
+    planarVelMagPreHoming_ = 0;
+
+    directionWhenHit_ = vec3(0.0f);
+    hasPivoted_ = false;
+    hasHit_ = false;
 }
 
 void Player::OnDestroy() {

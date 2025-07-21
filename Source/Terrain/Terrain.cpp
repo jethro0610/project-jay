@@ -105,11 +105,16 @@ glm::vec2 Terrain::SampleTerrainMap(float x, float y, TerrainAccuracy accuracy) 
             float a = x - sX;
             float b = y - sY;
 
-            return 
+            vec2 val =
                 (1 - b) * (1 - a) * terrainMap_[sY][sX] +
                 b * (1 - a) * terrainMap_[sY1][sX] +
                 (1 - b) * a * terrainMap_[sY][sX1] +
                 b * a * terrainMap_[sY1][sX1];
+
+            if (val.x < -RANGE)
+                val.x = RANGE;
+
+            return val;
         }
 
         case TA_Low: {
@@ -609,10 +614,10 @@ vec3 Terrain::GetRandomPointInSameIslandFast(const vec3& origin) {
 
     vec3 point;
     vec2 dist;
-        float t = RandomFloatRange(0.0f, 0.25f);
-        point = lerp(searcher, planarOrigin, t);
-        dist = GetDistance(point);
-        point.y += dist.y;
+    float t = RandomFloatRange(0.0f, 0.25f);
+    point = lerp(searcher, planarOrigin, t);
+    dist = GetDistance(point);
+    point.y += dist.y;
 
     return point;
 }

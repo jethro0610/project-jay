@@ -54,6 +54,7 @@ void Comet::Init(Entity::InitArgs args) {
     bubble_->inpower = 2.0f;
     bubble_->outpower = 2.0f;
     bubble_->active = false;
+    fader_ = DynamicFader();
     fader_.activateLength_ = 16.0f;
     fader_.deactivateLength_ = 120.0f;
     fader_.AddModifier(

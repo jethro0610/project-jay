@@ -85,6 +85,7 @@ void Entity::Init(
         EXPANDENTITIES
         #undef ENTITYEXP
     }
+    memset(label_, 0, sizeof(char) * 32);
 }
 
 void Entity::DoStart() {

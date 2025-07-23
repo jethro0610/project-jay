@@ -1,18 +1,14 @@
 #pragma once
 #include "Bomb.h"
 #include "BumpRat.h"
-#include "Comet.h"
-#include "CometSpawner.h"
 #include "GroundSpawnProjectile.h"
 #include "HeadSpitter.h"
 #include "Mower.h"
 #include "MultiHitPod.h"
 #include "RabbitPole.h"
 #include "RisePillar.h"
-#include "SinglePod.h"
 #include "Sleeper.h"
 #include "SpeedBoost.h"
-#include "TeleportPod.h"
 #include "TimedHitbox.h"
 #include "TimerPod.h"
 #include "TrailFish.h"
@@ -27,7 +23,6 @@
 #include "ItemContainer.h"
 #include "Player.h"
 #include "PillarPad.h"
-#include "Peg.h"
 #include "AttackSegment.h"
 #include "TriggerCrystal.h"
 #include "Stomper.h"
@@ -43,7 +38,6 @@
 #include "Bumper.h"
 #include "Popper.h"
 #include "Segment.h"
-#include "SeedBalloon.h"
 #include "MeteorHole.h"
 #include "Medal.h"
 #include "JumpPad.h"
@@ -53,8 +47,15 @@
 #include "Chase.h"
 #include "HoleMarker.h"
 #include "Negator.h"
+#include "CometSpawner.h"
+#include "SinglePod.h"
+#include "Comet.h"
 #include "PopInCrystalBreaker.h"
+#include "SeedBalloon.h"
+#include "TeleportPod.h"
 #include "PopInCrystal.h"
+#include "Peg.h"
+#include "HillBurrow.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -112,4 +113,5 @@
 	ENTITYEXP(MeteorHole, meteorhole, 52) \
 	ENTITYEXP(Medal, medal, 53) \
 	ENTITYEXP(PopInCrystalBreaker, popincrystalbreaker, 54) \
-	ENTITYEXP(PopInCrystal, popincrystal, 55)
+	ENTITYEXP(PopInCrystal, popincrystal, 55) \
+	ENTITYEXP(HillBurrow, hillburrow, 56)

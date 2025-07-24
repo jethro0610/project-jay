@@ -15,13 +15,16 @@ public:
     void Start();
     void PreUpdate();
     void Update();
+    void EditorUpdate();
     void OnDestroy();
     void OnOverlap(Entity* overlappedEntity);
+    glm::vec3 GetTargetPoint();
 
     int timer_;
     float maxHeight_;
     int maxHp_;
     int hp_;
+    float boblessHeight_;
 
     DynamicBubble* bubble_;
 };

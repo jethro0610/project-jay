@@ -290,16 +290,16 @@ void Game::Update() {
                 push.a->transform_.position -= push.collision.resolution * 0.5f;
                 push.b->transform_.position += push.collision.resolution * 0.5f;
 
-                push.a->DoPush(-push.collision.resolution * 0.5f);
-                push.b->DoPush(push.collision.resolution * 0.5f);
+                push.a->DoPush({push.b, -push.collision.resolution * 0.5f});
+                push.b->DoPush({push.a, push.collision.resolution * 0.5f});
             }
             else if (push.sendA && push.recieveB) {
                 push.b->transform_.position += push.collision.resolution * 1.0f;
-                push.b->DoPush(push.collision.resolution * 1.0f);
+                push.b->DoPush({push.a, push.collision.resolution * 1.0f});
             }
             else if (push.sendB && push.recieveA) {
                 push.a->transform_.position -= push.collision.resolution * 1.0f;
-                push.a->DoPush(-push.collision.resolution * 1.0f);
+                push.a->DoPush({push.b, -push.collision.resolution * 1.0f});
             }
         }
 

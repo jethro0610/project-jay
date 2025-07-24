@@ -735,8 +735,8 @@ void Player::OnCaptureSeed() {
     levelController_->AddSeed();
 }
 
-void Player::OnPush(vec3 pushVec) {
-    vec3 planarPush = pushVec;
+void Player::OnPush(PushArgs args) {
+    vec3 planarPush = args.pushVec;
     planarPush.y = 0.0f;
     planarPush = normalize(planarPush);
 
@@ -753,7 +753,7 @@ void Player::OnPush(vec3 pushVec) {
             velocity_.y = 30.0f;
         transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
     }
-    else if (speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.75f) {
+    else if (args.pushingEntity->GetFlag(EF_Bonkable) && speed_ >= 50.0f && dot(planarPush, planarVelocity) < -0.75f) {
         velocity_ = -planarVelocity * velocityLen * 0.5f;
         transform_.rotation = quatLookAtRH(-planarVelocity, Transform::worldUp);
         velocity_.y = 20.0f;

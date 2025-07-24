@@ -482,10 +482,10 @@ void Entity::DoHurt(HurtArgs args) {
     levelController_->DoEntityHurt(this);
 }
 
-void Entity::DoPush(glm::vec3 pushVec) {
+void Entity::DoPush(PushArgs args) {
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     switch(typeId_) {
-        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnPush(pushVec); break;
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->OnPush(args); break;
         EXPANDENTITIES
         #undef ENTITYEXP
     }

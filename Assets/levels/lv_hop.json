@@ -200,7 +200,7 @@
             "transform": {
                 "position": {
                     "x": -244.33042907714844,
-                    "y": -171.7000274658203,
+                    "y": -171.62106323242188,
                     "z": -414.8199157714844
                 },
                 "rotation": {
@@ -366,7 +366,7 @@
             "transform": {
                 "position": {
                     "x": -1523.128173828125,
-                    "y": 31.735578536987305,
+                    "y": 437.63543701171875,
                     "z": -730.7175903320313
                 },
                 "rotation": {
@@ -385,15 +385,15 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_height": 150.0,
-                "p_radius": 300.0
+                "p_height": 125.0,
+                "p_radius": 150.0
             },
             "floor_dist": 0.0,
             "int_properties": {
                 "p_hp": 3
             },
             "name": "e_hillburrow",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": -2236.5390625,
@@ -412,16 +412,436 @@
                 }
             },
             "type_id": 56
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -2419.333740234375,
+                    "y": 79.02235412597656,
+                    "z": 490.3448791503906
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.90000057220459,
+                    "y": 12.90000057220459,
+                    "z": 12.90000057220459
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -2586.4140625,
+                    "y": 72.81903076171875,
+                    "z": -68.47915649414063
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.90000057220459,
+                    "y": 12.90000057220459,
+                    "z": 12.90000057220459
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1959.8624267578125,
+                    "y": 36.09522247314453,
+                    "z": 62.6832160949707
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.90000057220459,
+                    "y": 12.90000057220459,
+                    "z": 12.90000057220459
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": {
+                "p_seg_destroy": false
+            },
+            "float_properties": {
+                "p_jump_strength": 200.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1524.897705078125,
+                    "y": 31.735578536987305,
+                    "z": -733.4136962890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 18.100004196166992,
+                    "y": 18.100004196166992,
+                    "z": 18.100004196166992
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": {
+                "p_seg_destroy": false
+            },
+            "float_properties": {
+                "p_jump_strength": 200.0
+            },
+            "floor_dist": 228.96511840820313,
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1737.388916015625,
+                    "y": 285.5354309082031,
+                    "z": -29.18693733215332
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 18.100004196166992,
+                    "y": 18.100004196166992,
+                    "z": 18.100004196166992
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": {
+                "p_seg_destroy": false
+            },
+            "float_properties": {
+                "p_jump_strength": 200.0
+            },
+            "floor_dist": 176.34576416015625,
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -2771.3916015625,
+                    "y": 288.8354797363281,
+                    "z": -124.54865264892578
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 18.100004196166992,
+                    "y": 18.100004196166992,
+                    "z": 18.100004196166992
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": {
+                "p_seg_destroy": false
+            },
+            "float_properties": {
+                "p_jump_strength": 200.0
+            },
+            "floor_dist": 185.66868591308594,
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -2428.9921875,
+                    "y": 304.63543701171875,
+                    "z": 761.6873779296875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 18.100004196166992,
+                    "y": 18.100004196166992,
+                    "z": 18.100004196166992
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1099.4365234375,
+                    "y": 198.99119567871094,
+                    "z": -1232.820068359375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 44.099998474121094,
+                    "y": 363.0998840332031,
+                    "z": 44.099998474121094
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -675.0284423828125,
+                    "y": 260.833740234375,
+                    "z": -1189.224365234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 64.79995727539063,
+                    "y": 383.79986572265625,
+                    "z": 64.79995727539063
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_strength": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_pillarpad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -99.07673645019531,
+                    "y": 211.14309692382813,
+                    "z": -1698.1322021484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 62.4000129699707,
+                    "y": 381.39990234375,
+                    "z": 62.4000129699707
+                }
+            },
+            "type_id": 36
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 1000
+            },
+            "name": "e_peg",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -1046.9930419921875,
+                    "y": 214.36244201660156,
+                    "z": -980.22314453125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.700005531311035,
+                    "y": 31.89997100830078,
+                    "z": 9.700005531311035
+                }
+            },
+            "type_id": 37
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 1000
+            },
+            "name": "e_peg",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -584.8234252929688,
+                    "y": 242.87315368652344,
+                    "z": -1468.260498046875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.700005531311035,
+                    "y": 31.89997100830078,
+                    "z": 9.700005531311035
+                }
+            },
+            "type_id": 37
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_jump": 150.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_seeds": 1000
+            },
+            "name": "e_peg",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 66.56787109375,
+                    "y": 198.54661560058594,
+                    "z": -1453.783447265625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 9.700005531311035,
+                    "y": 31.89997100830078,
+                    "z": 9.700005531311035
+                }
+            },
+            "type_id": 37
         }
     ],
     "landmap": "lm_hop",
     "navpoints": [
         {
-            "label": "add some pads in air for after burrow",
+            "label": "make some entity to target hop on highs n here",
             "position": {
                 "x": -2120.583251953125,
                 "y": 415.9822082519531,
                 "z": 116.85256958007813
+            }
+        },
+        {
+            "label": "big schmoney time",
+            "position": {
+                "x": 1265.6968994140625,
+                "y": 561.3128662109375,
+                "z": -1378.2205810546875
+            }
+        },
+        {
+            "label": "need balloons everywhere",
+            "position": {
+                "x": 197.10646057128906,
+                "y": 116.81470489501953,
+                "z": 459.55145263671875
             }
         }
     ],
@@ -494,25 +914,25 @@
         },
         {
             "custom_easing": true,
-            "height": 310.800048828125,
+            "height": 255.40003967285156,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",
             "out_power": 0.5,
             "radius": 138.0999755859375,
-            "x": -2657.6611328125,
-            "y": 236.95404052734375
+            "x": -2651.564697265625,
+            "y": 242.7499542236328
         },
         {
             "custom_easing": true,
-            "height": 135.60000610351563,
+            "height": 430.5,
             "id": 1,
             "in_power": 2.0,
             "name": "e_bubble",
-            "out_power": 0.5,
-            "radius": 178.49998474121094,
-            "x": -2039.683837890625,
-            "y": 482.4102478027344
+            "out_power": 0.23000046610832214,
+            "radius": 138.89999389648438,
+            "x": -2029.5594482421875,
+            "y": 486.79840087890625
         },
         {
             "custom_easing": true,
@@ -546,6 +966,17 @@
             "seed": 291243942,
             "x": -2272.334228515625,
             "y": -20.376583099365234
+        },
+        {
+            "frequency": 0.1500004678964615,
+            "id": 2,
+            "max_height": 157.30001831054688,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 2000.0,
+            "seed": 1901485911,
+            "x": -1101.512939453125,
+            "y": -2147.8408203125
         }
     ]
 }

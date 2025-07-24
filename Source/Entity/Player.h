@@ -55,7 +55,7 @@ public:
     void OnHurt(HurtArgs args);
     void OnCaptureSeed();
     void OnDestroy();
-    void OnPush(glm::vec3 pushVec);
+    void OnPush(PushArgs args);
 
     void EndHoming();
     void Boost(float boost, float retention = 0.0f);

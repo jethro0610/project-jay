@@ -1,6 +1,7 @@
 #include "HillBurrow.h"
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
+#include "Time/Time.h"
 #include "Player.h"
 using namespace glm;
 
@@ -54,7 +55,7 @@ void HillBurrow::Init(Entity::InitArgs args) {
     bubble_->height = 0.0f;
     bubble_->active = true;
     bubble_->inpower = 2.0f;
-    bubble_->outpower = 1.5f;
+    bubble_->outpower = 4.0f;
     bubble_->position = transform_.position;
     timer_ = 0;
 
@@ -65,11 +66,16 @@ void HillBurrow::Init(Entity::InitArgs args) {
 
 void HillBurrow::Start() {
     hp_ = maxHp_;
+    boblessHeight_ = bubble_->height;
 }
 
 void HillBurrow::PreUpdate() {
     bubble_->position = transform_.position; 
-    bubble_->height = ((float)(maxHp_ - hp_) / maxHp_) * maxHeight_;
+    float heightScalar = ((float)(maxHp_ - hp_) / maxHp_);
+    float targetHeight = heightScalar * maxHeight_;
+    float bobScalar = (sin(GlobalTime::GetTime()) + 1.0f) * 0.5f;
+    boblessHeight_ = lerp(boblessHeight_, targetHeight, 0.05f);
+    bubble_->height = boblessHeight_ + bobScalar * 15.0f; 
 }
 
 void HillBurrow::Update() {
@@ -77,6 +83,14 @@ void HillBurrow::Update() {
         timer_--;
 
     transform_.position.y = terrain_->GetHeight(transform_.position);
+}
+
+void HillBurrow::EditorUpdate() {
+    bubble_->position = transform_.position; 
+    if (DBG_preview_)
+        bubble_->height = maxHeight_;
+    else
+        bubble_->height = 0.0f;
 }
 
 void HillBurrow::OnDestroy() {
@@ -93,7 +107,16 @@ void HillBurrow::OnOverlap(Entity* overlappedEntity) {
     Player* player = (Player*)overlappedEntity;
     player->EndHoming();
     overlappedEntity->skipGroundCheck_ = true;
-    overlappedEntity->velocity_.y = 50.0f;
+    overlappedEntity->velocity_.y = 120.0f;
+    hitlag_ = 8;
+    player->hitlag_ = 8;
+    stun_ = true;
     if (hp_ > 0)
         hp_--;
+
+    timer_ = 20;
+}
+
+vec3 HillBurrow::GetTargetPoint() {
+    return transform_.position + vec3(0.0f, overlapbox_.top, 0.0f) * transform_.scale.y;
 }

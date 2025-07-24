@@ -73,6 +73,10 @@ public:
         glm::vec3 kbVelocity;
         glm::quat kbRotation;
     };
+    struct PushArgs {
+        Entity* pushingEntity;
+        glm::vec3 pushVec;
+    };
     struct TrailPoint {
         float time;
         glm::vec3 position;
@@ -95,6 +99,7 @@ public:
 
         EF_SendPush,
         EF_RecievePush,
+        EF_Bonkable,
 
         EF_SendHits,
         EF_RecieveHits,
@@ -208,7 +213,7 @@ public:
 
     void DoHit(HitArgs args);
     void DoHurt(HurtArgs args);
-    void DoPush(glm::vec3 pushVec);
+    void DoPush(PushArgs args);
     void DoOverlap(Entity* overlappedEntity);
     void DoHitlagEnd();
 
@@ -248,7 +253,7 @@ private:
     #endif
     void OnHit(HitArgs args) {};
     void OnHurt(HurtArgs args) {};
-    void OnPush(glm::vec3 pushVec) {}
+    void OnPush(PushArgs args) {}
     void OnOverlap(Entity* overlappedEntity) {}
     void OnHitlagEnd() {}
     void OnCaptureSeed() {};

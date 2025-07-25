@@ -1,6 +1,7 @@
 #include "SeedBalloon.h"
 #include "Resource/ResourceManager.h"
 #include "Seed/SeedManager.h"
+#include "Player.h"
 using namespace glm;
 
 EntityDependendies SeedBalloon::GetStaticDependencies() {
@@ -48,6 +49,9 @@ void SeedBalloon::Init(Entity::InitArgs args) {
 }
 
 void SeedBalloon::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity->typeId_ != Player::TYPEID)
+        return;
+
     destroy_ = true;
     overlappedEntity->hitlag_ = 8;
     hitlag_ = 8;

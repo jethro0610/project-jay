@@ -19,7 +19,7 @@ int GetItemMax(Item item) {
             return 0;
 
         case I_Homing:
-            return 6;
+            return 16;
 
         default:
             return 0;

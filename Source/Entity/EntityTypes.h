@@ -21,7 +21,6 @@
 #include "SnakeSegment.h"
 #include "SnakePod.h"
 #include "ItemContainer.h"
-#include "Player.h"
 #include "PillarPad.h"
 #include "AttackSegment.h"
 #include "TriggerCrystal.h"
@@ -41,7 +40,6 @@
 #include "MeteorHole.h"
 #include "Medal.h"
 #include "JumpPad.h"
-#include "Entity.h"
 #include "Apple.h"
 #include "Tree.h"
 #include "Chase.h"
@@ -55,7 +53,10 @@
 #include "TeleportPod.h"
 #include "PopInCrystal.h"
 #include "Peg.h"
+#include "Player.h"
+#include "Entity.h"
 #include "HillBurrow.h"
+#include "BigBreaker.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -114,4 +115,5 @@
 	ENTITYEXP(Medal, medal, 53) \
 	ENTITYEXP(PopInCrystalBreaker, popincrystalbreaker, 54) \
 	ENTITYEXP(PopInCrystal, popincrystal, 55) \
-	ENTITYEXP(HillBurrow, hillburrow, 56)
+	ENTITYEXP(HillBurrow, hillburrow, 56) \
+	ENTITYEXP(BigBreaker, bigbreaker, 57)

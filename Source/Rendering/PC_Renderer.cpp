@@ -772,6 +772,29 @@ void Renderer::RenderTerrainCursor(TerrainCursor& terrainCursor) {
     mat4 cursorMatrix = cursorTransform.ToMatrix();
     RenderMesh(RENDER_VIEW, terrainQuad_, &terrainCursorMaterial_, &cursorMatrix);
 }
+
+void Renderer::RenderSeedTexts(EntityList& entities, LevelController& levelController) {
+    int totalSeeds = levelController.GetTotalSeeds();
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+
+        int seeds = entity.DoGetSeeds();
+        if (seeds <= 0)
+            continue;
+
+        float percentSeeds = ((float)seeds / totalSeeds) * 100;
+
+        WorldText seedText;
+        seedText.properties_.position = entity.transform_.position + vec3(0.0f, 64.0f, 0.0f);
+        seedText.properties_.size = 16.0f;
+        seedText.properties_.hAlignment = Alignment::CENTER; 
+        seedText.properties_.vAlignment = Alignment::CENTER; 
+        seedText.SetString(std::to_string(entity.DoGetSeeds()) + ", " + std::to_string(percentSeeds) + "%");
+        RenderWorldText(seedText);
+    }
+}
 #endif
 
 void Renderer::SetTexturesFromMaterial(Material* material, bool shadowMap) {

@@ -17,7 +17,8 @@ EntityProperties BigBreaker::GetStaticProperties() {
         },
         {
             // Ints
-            {"p_seeds", &seeds_},
+            {"p_seeds", &seedsOnDestroy_},
+            {"p_seedshit", &seedsOnHit_},
             {"p_jump", &jumpStrength_}
         },
         {
@@ -45,7 +46,8 @@ void BigBreaker::Init(Entity::InitArgs args) {
     overlapbox_.radius = 1.25f;
 
     hp_ = 2;
-    seeds_ = 1000;
+    seedsOnDestroy_ = 1000;
+    seedsOnHit_ = 500;
     jumpStrength_ = 150;
     timer_ = 0;
 
@@ -77,10 +79,11 @@ void BigBreaker::OnOverlap(Entity* overlappedEntity) {
     
 
     hp_--;
+    seedManager_->CreateMultipleSeed(transform_.position, seedsOnHit_, 20.0f, lastOverlapped_);
     if (hp_ <= 0)
         destroy_ = true;
 }
 
 void BigBreaker::OnDestroy() {
-    seedManager_->CreateMultipleSeed(transform_.position, seeds_, 20.0f, lastOverlapped_);
+    seedManager_->CreateMultipleSeed(transform_.position, seedsOnDestroy_, 20.0f, lastOverlapped_);
 }

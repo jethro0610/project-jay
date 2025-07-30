@@ -7,7 +7,7 @@ public:
     void OnOverlap(Entity* overlappedEntity);
     void OnDestroy();
     void Update();
-    int GetSeeds() { return seeds_; }
+    int GetSeeds() { return seedsOnHit_ * hp_ + seedsOnDestroy_; }
 
     static TypeID TYPEID;
     static const char* GetStaticName() { return "e_bigbreaker"; }
@@ -15,7 +15,8 @@ public:
     EntityProperties GetStaticProperties();
 
     int hp_;
-    int seeds_;
+    int seedsOnDestroy_;
+    int seedsOnHit_;
     int jumpStrength_;
     int timer_;
     Entity* lastOverlapped_;

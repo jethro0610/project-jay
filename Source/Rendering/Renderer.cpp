@@ -41,6 +41,7 @@ void Renderer::RenderEdit(
     EntityList& entities,
     Editor& editor,
     Level& level,
+    LevelController& controller,
     LevelProperties& levelProperties,
     SpreadManager& spreadManager,
     Terrain& terrain,
@@ -59,6 +60,7 @@ void Renderer::RenderEdit(
     RenderPostProcess();
     RenderBlit();
     RenderEditor(editor);
+    RenderSeedTexts(entities, controller);
 
     PresentFrame();
 }

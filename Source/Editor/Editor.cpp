@@ -273,6 +273,7 @@ void Editor::Update() {
             entities_, 
             *this,
             level_,
+            levelController_,
             level_.properties_,
             spreadManager_,
             terrain_,

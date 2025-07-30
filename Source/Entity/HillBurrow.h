@@ -19,12 +19,15 @@ public:
     void OnDestroy();
     void OnOverlap(Entity* overlappedEntity);
     glm::vec3 GetTargetPoint();
+    int GetSeeds();
 
     int timer_;
     float maxHeight_;
     int maxHp_;
     int hp_;
     float boblessHeight_;
+    int seedOnHit_;
+    int seedOnDead_;
 
     DynamicBubble* bubble_;
 };

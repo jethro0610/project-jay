@@ -3,6 +3,7 @@
 #include "Terrain/Terrain.h"
 #include "Time/Time.h"
 #include "Player.h"
+#include "Seed/SeedManager.h"
 using namespace glm;
 
 EntityDependendies HillBurrow::GetStaticDependencies() {
@@ -20,7 +21,9 @@ EntityProperties HillBurrow::GetStaticProperties() {
         },
         {
             // Ints
-            {"p_hp", &maxHp_}
+            {"p_hp", &maxHp_},
+            {"p_seedhit", &seedOnHit_},
+            {"p_seeddead", &seedOnDead_},
         },
         {
             // Bools
@@ -62,6 +65,9 @@ void HillBurrow::Init(Entity::InitArgs args) {
     maxHeight_ = 100.0f;
     maxHp_ = 3;
     hp_ = 3;
+
+    seedOnHit_ = 1000;
+    seedOnDead_ = 3000;
 }
 
 void HillBurrow::Start() {
@@ -111,12 +117,21 @@ void HillBurrow::OnOverlap(Entity* overlappedEntity) {
     hitlag_ = 8;
     player->hitlag_ = 8;
     stun_ = true;
-    if (hp_ > 0)
+    if (hp_ > 0) {
+        seedManager_->CreateMultipleSeed(transform_.position, seedOnHit_, 20.0f, overlappedEntity);
         hp_--;
+
+        if (hp_ == 0)
+            seedManager_->CreateMultipleSeed(transform_.position, seedOnDead_, 20.0f, overlappedEntity);
+    }
 
     timer_ = 20;
 }
 
 vec3 HillBurrow::GetTargetPoint() {
     return transform_.position + vec3(0.0f, overlapbox_.top, 0.0f) * transform_.scale.y;
+}
+
+int HillBurrow::GetSeeds() {
+    return hp_ * seedOnHit_ + seedOnDead_;
 }

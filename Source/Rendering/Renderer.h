@@ -49,6 +49,7 @@ public:
         EntityList& entities,
         Editor& editor,
         Level& level,
+        LevelController& controller,
         LevelProperties& levelProperties,
         SpreadManager& spreadManager,
         Terrain& terrain,
@@ -226,6 +227,7 @@ private:
     void RenderUIElement(UIElement& element, Shader* shader);
     void RenderWorldText(WorldText& text);
     void RenderText(Text& text);
+    void RenderSeedTexts(EntityList& entities, LevelController& levelController);
     void PresentFrame();
 };
 

@@ -4,6 +4,7 @@
 #include "Entity/EntityList.h"
 #include "Entity/HoleMarker.h"
 #include "Player.h"
+#include "Time/Time.h"
 using namespace glm;
 
 EntityDependendies Bumper::GetStaticDependencies() {
@@ -17,7 +18,6 @@ EntityProperties Bumper::GetStaticProperties() {
         {
             // Floats
             {"p_friction", &friction_},
-            {"p_kbmult", &kbMult_},
             {"p_gravity", &gravity_}
         },
         {
@@ -50,11 +50,10 @@ void Bumper::Init(Entity::InitArgs args) {
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 1.5f;
     
-    friction_ = 0.25f;
+    friction_ = 0.05f;
     speed_ = 5.0f;
-    traceDistance_ = 20.0f;
-    kbMult_ = 1.0f;
-    gravity_ = 8.0f; 
+    traceDistance_ = 1.0f;
+    gravity_ = 2.0f; 
     holeMarker_ = nullptr;
 
     SetFlag(EF_GroundCheck, true);
@@ -68,7 +67,6 @@ void Bumper::Init(Entity::InitArgs args) {
     SetFlag(EF_CustomKnockback, true);
     SetFlag(EF_Trackable, true);
     SetFlag(EF_RecievePush, true);
-    SetFlag(EF_Overlap, true);
 }
 
 void Bumper::Start() {
@@ -77,39 +75,42 @@ void Bumper::Start() {
 }
 
 void Bumper::Update() {
-    float speedDecay = 1.0f - friction_;
-    float airDecay = 1.0f - friction_ * 0.15f;
-    float acceleration = (speed_ / speedDecay) - speed_;
-    velocity_.y -= gravity_;
+    if (onGround_)
+        velocity_.y -= 6.0f;
+    else {
+        velocity_.y -= gravity_;
+        timer_ = 0;
+    }
+    traceDistance_ = min(-velocity_.y * GlobalTime::TIMESTEP, 8.0f);
 
-    float rawHeight = terrain_->GetRawHeight(transform_.position);
-    float groundDist = transform_.position.y - rawHeight;
-
-    vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
-    planarVelocity *= groundDist < 1.0f ? speedDecay : airDecay;
-    velocity_.x = planarVelocity.x;
-    velocity_.z = planarVelocity.z;
-
-    if (groundDist < -20.0f) {
-        if (holeMarker_ == nullptr) {
-            lastTransform_.position = spawnPos_;
-            transform_.position = spawnPos_;
-            velocity_ = vec3(0.0f);
-        }
-        else {
-            holeMarker_->EntityFellInHole(this);
-            destroy_ = true;
+    if (timer_ <= 0) {
+        if (onGround_) {
+            float speedDecay = 1.0f - friction_;
+            float acceleration = (speed_ / speedDecay) - speed_; // For when they start moving
+            vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
+            planarVelocity *= speedDecay;
+            velocity_.x = planarVelocity.x;
+            velocity_.z = planarVelocity.z;
         }
     }
-    holeMarker_ = nullptr;
+    else
+        timer_--;
+
+    if (!onGround_) {
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = (*entities_)[i];
+            if (!entity.alive_)
+                continue;
+            if (!entity.GetFlag(EF_ProjectileLockable))
+                continue;
+            if (transform_.position.y < entity.transform_.position.y)
+                continue;
+        }
+    }
 }
 
 void Bumper::OnHurt(HurtArgs args) {
-    velocity_ = args.kbVelocity * kbMult_;
+    velocity_ = args.kbVelocity * 1.15f;
     velocity_.y = 0.0f;
-}
-
-void Bumper::OnOverlap(Entity* overlappedEntity) {
-    if (overlappedEntity->typeId_ == HoleMarker::TYPEID)
-        holeMarker_ = (HoleMarker*)overlappedEntity;
+    timer_ = 30;
 }

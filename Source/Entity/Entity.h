@@ -113,6 +113,7 @@ public:
         EF_CaptureSeed,
         EF_Homeable,
         EF_UseTrail,
+        EF_ProjectileLockable,
         EF_Count
     };
 

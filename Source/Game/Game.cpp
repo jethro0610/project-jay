@@ -213,8 +213,6 @@ void Game::Update() {
         for (Hit& hit : hitList) {
             hit.target->stun_ = true;
             hit.target->hurtCooldown_ = 30;
-            hit.target->skipGroundCheck_ = true;
-            hit.target->onGround_ = false;
             hit.target->initHitlag_ = true;
             hit.target->hitlag_ = hit.hitter->hitbox_.hitlag;
             hit.hitter->hitlag_ = hit.hitter->hitbox_.hitlag;
@@ -233,8 +231,11 @@ void Game::Update() {
                 
                 kbVelocity = finalKBQuat * Transform::worldForward * kbLength;
                 kbVelocity.y = hit.hitter->hitbox_.knocback.y;
-                if (!hit.target->GetFlag(Entity::EF_CustomKnockback))
+                if (!hit.target->GetFlag(Entity::EF_CustomKnockback)) {
+                    hit.target->onGround_ = false;
+                    hit.target->skipGroundCheck_ = true;
                     hit.target->velocity_ = kbVelocity;
+                }
 
                 vec3 planarVelocity = kbVelocity;
                 planarVelocity.y = 0.0f;

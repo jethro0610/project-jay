@@ -14,8 +14,8 @@ public:
 
     float speed_;
     float friction_;
-    float kbMult_;
     float gravity_;
+    float timer_;
 
     glm::vec3 spawnPos_;
 
@@ -25,5 +25,4 @@ public:
     void Start();
     void Update();
     void OnHurt(HurtArgs args);
-    void OnOverlap(Entity* overlappedEntity);
 };

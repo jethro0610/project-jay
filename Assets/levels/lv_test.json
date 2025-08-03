@@ -1,4 +1,5 @@
 {
+    "controller_id": -1,
     "entities": [
         {
             "bool_properties": null,
@@ -6,6 +7,7 @@
             "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_player",
+            "preview": true,
             "transform": {
                 "position": {
                     "x": -3.598306655883789,
@@ -27,17 +29,19 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
-            "floor_dist": 0.0,
-            "int_properties": {
-                "p_segments": 8
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 2.0
             },
-            "name": "e_snake",
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
             "transform": {
                 "position": {
-                    "x": 5.750509738922119,
+                    "x": -98.00880432128906,
                     "y": 0.0,
-                    "z": -21.86338996887207
+                    "z": -74.58041381835938
                 },
                 "rotation": {
                     "x": 0.0,
@@ -45,12 +49,12 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 5.59999942779541,
-                    "y": 5.59999942779541,
-                    "z": 5.59999942779541
+                    "x": 3.8999996185302734,
+                    "y": 3.8999996185302734,
+                    "z": 3.8999996185302734
                 }
             },
-            "type_id": 30
+            "type_id": 46
         },
         {
             "bool_properties": null,
@@ -58,6 +62,7 @@
             "floor_dist": 0.0,
             "int_properties": null,
             "name": "e_tpillar",
+            "preview": true,
             "transform": {
                 "position": {
                     "x": 69.71748352050781,
@@ -78,5 +83,18 @@
             "type_id": 3
         }
     ],
-    "landmap": "lm_default"
+    "landmap": "lm_default",
+    "terrain_modifiers": [
+        {
+            "custom_easing": true,
+            "height": 8.399995803833008,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 8.259998321533203,
+            "radius": 58.60000991821289,
+            "x": 14.671244621276855,
+            "y": -69.85497283935547
+        }
+    ]
 }

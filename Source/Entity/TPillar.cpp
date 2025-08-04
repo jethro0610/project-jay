@@ -12,6 +12,7 @@ EntityDependendies TPillar::GetStaticDependencies() {
 
 void TPillar::Init(Entity::InitArgs args) {
     SetFlag(EF_SendPush, true);
+    SetFlag(EF_ProjectileLockable, true);
 
     ResourceManager& resourceManager = args.resourceManager;
     model_ = resourceManager.GetModel("st_tpillar");

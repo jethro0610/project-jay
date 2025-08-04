@@ -20,7 +20,10 @@ public:
     glm::vec3 spawnPos_;
 
     Entity* player_;
-    HoleMarker* holeMarker_;
+    Entity* target_;
+    glm::vec3 travelPos_;
+    int travelTimer_;
+    bool canTarget_;
 
     void Start();
     void Update();

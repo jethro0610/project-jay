@@ -2,9 +2,9 @@
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
 #include "Entity/EntityList.h"
-#include "Entity/HoleMarker.h"
 #include "Player.h"
 #include "Time/Time.h"
+#include "Helpers/Shared_Ease.h"
 using namespace glm;
 
 EntityDependendies Bumper::GetStaticDependencies() {
@@ -54,7 +54,10 @@ void Bumper::Init(Entity::InitArgs args) {
     speed_ = 5.0f;
     traceDistance_ = 1.0f;
     gravity_ = 2.0f; 
-    holeMarker_ = nullptr;
+    target_ = nullptr;
+    travelPos_ = transform_.position;
+    travelTimer_ = 0;
+    canTarget_ = false;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -75,8 +78,10 @@ void Bumper::Start() {
 }
 
 void Bumper::Update() {
-    if (onGround_)
+    if (onGround_) {
         velocity_.y -= 6.0f;
+        canTarget_ = true;
+    }
     else {
         velocity_.y -= gravity_;
         timer_ = 0;
@@ -96,15 +101,40 @@ void Bumper::Update() {
     else
         timer_--;
 
-    if (!onGround_) {
+    if (!onGround_ && target_ == nullptr && canTarget_ == true) {
         for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = (*entities_)[i];
             if (!entity.alive_)
                 continue;
             if (!entity.GetFlag(EF_ProjectileLockable))
                 continue;
-            if (transform_.position.y < entity.transform_.position.y)
+            if (transform_.position.y < entity.transform_.position.y + 10.0f)
                 continue;
+
+            target_ = &entity;
+            travelPos_ = transform_.position;
+            SetFlag(EF_UseVelocity, false);
+            travelTimer_ = 0;
+        }
+    }
+
+    constexpr int TRAVEL_TIME = 60;
+    if (target_ != nullptr) {
+        travelTimer_++;
+
+        travelPos_ += velocity_ * GlobalTime::TIMESTEP;
+        vec3 lastPos = transform_.position;
+        float t = (float)travelTimer_ / TRAVEL_TIME;
+        t = EaseInQuad(t);
+        transform_.position = mix(travelPos_, target_->GetTarget(), t);
+
+        vec3 deltaPos = transform_.position - lastPos;
+
+        if (travelTimer_ > TRAVEL_TIME) {
+            target_ = nullptr;
+            SetFlag(EF_UseVelocity, true);
+            velocity_ = (deltaPos / GlobalTime::TIMESTEP) * 0.1f;
+            canTarget_ = false;
         }
     }
 }

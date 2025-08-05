@@ -34,7 +34,6 @@
 #include "WaterGun.h"
 #include "FlowerRamp.h"
 #include "Water.h"
-#include "Bumper.h"
 #include "Popper.h"
 #include "Segment.h"
 #include "MeteorHole.h"
@@ -53,10 +52,12 @@
 #include "TeleportPod.h"
 #include "PopInCrystal.h"
 #include "Peg.h"
-#include "Player.h"
-#include "Entity.h"
 #include "HillBurrow.h"
 #include "BigBreaker.h"
+#include "Player.h"
+#include "Entity.h"
+#include "Bumper.h"
+#include "ProjectileBell.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -116,4 +117,5 @@
 	ENTITYEXP(PopInCrystalBreaker, popincrystalbreaker, 54) \
 	ENTITYEXP(PopInCrystal, popincrystal, 55) \
 	ENTITYEXP(HillBurrow, hillburrow, 56) \
-	ENTITYEXP(BigBreaker, bigbreaker, 57)
+	ENTITYEXP(BigBreaker, bigbreaker, 57) \
+	ENTITYEXP(ProjectileBell, projectilebell, 58)

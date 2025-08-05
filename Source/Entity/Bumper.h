@@ -26,6 +26,9 @@ public:
     bool canTarget_;
 
     void Start();
-    void Update();
+    void PreUpdate();
     void OnHurt(HurtArgs args);
+
+    void StartTracking(Entity* target);
+    void StopTracking();
 };

@@ -49,6 +49,10 @@ void Bumper::Init(Entity::InitArgs args) {
     hurtbox_.top = 1.0f;
     hurtbox_.bottom = 1.0f;
     hurtbox_.radius = 1.5f;
+
+    overlapbox_.top = 1.15f;
+    overlapbox_.bottom = 1.15f;
+    overlapbox_.radius = 1.15f;
     
     friction_ = 0.05f;
     speed_ = 5.0f;
@@ -77,7 +81,8 @@ void Bumper::Start() {
     player_ = entities_->FindEntityByType(Player::TYPEID);
 }
 
-void Bumper::Update() {
+// Last transform needs to be available on overlaps. So PreUpdate
+void Bumper::PreUpdate() {
     if (onGround_) {
         velocity_.y -= 6.0f;
         canTarget_ = true;
@@ -111,32 +116,41 @@ void Bumper::Update() {
             if (transform_.position.y < entity.transform_.position.y + 10.0f)
                 continue;
 
-            target_ = &entity;
-            travelPos_ = transform_.position;
-            SetFlag(EF_UseVelocity, false);
-            travelTimer_ = 0;
+            StartTracking(&entity);
+            break;
         }
     }
 
-    constexpr int TRAVEL_TIME = 60;
+    constexpr int TRAVEL_TIME = 30;
     if (target_ != nullptr) {
         travelTimer_++;
 
         travelPos_ += velocity_ * GlobalTime::TIMESTEP;
-        vec3 lastPos = transform_.position;
         float t = (float)travelTimer_ / TRAVEL_TIME;
         t = EaseInQuad(t);
         transform_.position = mix(travelPos_, target_->GetTarget(), t);
 
-        vec3 deltaPos = transform_.position - lastPos;
-
-        if (travelTimer_ > TRAVEL_TIME) {
-            target_ = nullptr;
-            SetFlag(EF_UseVelocity, true);
-            velocity_ = (deltaPos / GlobalTime::TIMESTEP) * 0.1f;
-            canTarget_ = false;
-        }
+        if (travelTimer_ >= TRAVEL_TIME)
+            StopTracking();
     }
+}
+
+void Bumper::StartTracking(Entity* target) {
+    target_ = target;
+    travelPos_ = transform_.position;
+    SetFlag(EF_UseVelocity, false);
+    travelTimer_ = 0;
+}
+
+void Bumper::StopTracking() {
+    if (target_ == nullptr)
+        return;
+    target_ = nullptr;
+    SetFlag(EF_UseVelocity, true);
+    canTarget_ = false;
+
+    vec3 deltaPos = transform_.position - lastTransform_.position;
+    velocity_ = (deltaPos / GlobalTime::TIMESTEP) * 0.1f;
 }
 
 void Bumper::OnHurt(HurtArgs args) {

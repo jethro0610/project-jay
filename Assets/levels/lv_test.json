@@ -81,6 +81,96 @@
                 }
             },
             "type_id": 58
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 0.25,
+                "p_radius": 50.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -137.32623291015625,
+                    "y": 0.0,
+                    "z": 24.268550872802734
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 35
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 0.25,
+                "p_radius": 50.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -304.28851318359375,
+                    "y": 0.0,
+                    "z": -105.13671875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 35
+        },
+        {
+            "bool_properties": {
+                "p_active": true
+            },
+            "float_properties": {
+                "p_k": 0.25,
+                "p_radius": 50.0
+            },
+            "int_properties": null,
+            "name": "e_negator",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -27.628097534179688,
+                    "y": 0.0,
+                    "z": 152.30026245117188
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 35
         }
     ],
     "landmap": "lm_default",

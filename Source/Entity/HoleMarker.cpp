@@ -38,7 +38,7 @@ void HoleMarker::Init(Entity::InitArgs args) {
     // materials_[0].transparencyType = TRANSPARENCY_ADDITIVE;
 
     materials_[0].lightVolumeProperties = LightVolumeProperties::Default();
-    materials_[0].lightVolumeProperties.color = vec4(1.0f, 0.95f, 0.75f, 1.0f);
+    materials_[0].lightVolumeProperties.color = vec4(1.0f, 0.95f, 0.85f, 1.0f);
     materials_[0].lightVolumeProperties.stepDistance = 4.0f;
     materials_[0].lightVolumeProperties.accumulationStrength = 0.0005f;
 
@@ -106,7 +106,7 @@ void HoleMarker::RenderUpdate() {
     else if (explodeTime_ < 0.0f)
         explodeTime_ = 0.0f;
 
-    materials_[0].lightVolumeProperties.accumulationStrength = 0.0005f + 0.0005f * (explodeTime_ / 0.35f);
+    materials_[0].lightVolumeProperties.accumulationStrength = 0.001f + 0.001f * (explodeTime_ / 0.35f);
 }
 
 void HoleMarker::EntityFellInHole(Entity* entity) {

@@ -84,7 +84,7 @@ void Bumper::Start() {
 // Last transform needs to be available on overlaps. So PreUpdate
 void Bumper::PreUpdate() {
     if (onGround_) {
-        velocity_.y -= 6.0f;
+        velocity_.y -= 16.0f;
         canTarget_ = true;
     }
     else {

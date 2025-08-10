@@ -19,11 +19,13 @@ public:
 
     glm::vec3 spawnPos_;
 
-    Entity* player_;
+    Entity* lastAttacker_;
     Entity* target_;
     glm::vec3 travelPos_;
     int travelTimer_;
     bool canTarget_;
+    bool overlappingHole_;
+    bool powered_;
 
     void Start();
     void PreUpdate();
@@ -31,4 +33,6 @@ public:
 
     void StartTracking(Entity* target);
     void StopTracking();
+    void OnOverlap(Entity* overlappedEntity);
+    bool OnFallInHole();
 };

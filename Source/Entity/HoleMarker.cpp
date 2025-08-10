@@ -67,14 +67,24 @@ void HoleMarker::Init(Entity::InitArgs args) {
     additive_->active = false;
     additive_->position = transform_.position;
     additive_->radius = transform_.scale.x;
-    additive_->sharpness = 0.05f;
+    additive_->sharpness = 1.0f;
+
+    bubble_ = terrain_->CreateBubble();
+    bubble_->active = false;
+    bubble_->position = transform_.position;
+    bubble_->radius = transform_.scale.x * 1.5f;
+    bubble_->inpower = 2.0f;
+    bubble_->outpower = 2.0f;
 
     fader_ = DynamicFader();
     fader_.activateLength_ = 60.0f;
     fader_.deactivateLength_ = 30.0f;
     fader_.AddModifier(additive_, &additive_->radius, 0.0f, transform_.scale.x, false, EaseType::E_Cubic);
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, 100.0f, false, EaseType::E_Elastic);
 
     player_ = nullptr;
+    terrainHeight_ = 0.0f;
+    SetFlag(EF_Overlap, true);
 }
 
 void HoleMarker::Update() {
@@ -88,6 +98,7 @@ void HoleMarker::Update() {
 void HoleMarker::Start() {
     player_ = entities_->FindEntityByType(Player::TYPEID);
     fader_.DeactivateModifiers(true);
+    terrainHeight_ = terrain_->GetRawHeight(transform_.position);
 }
 
 void HoleMarker::EditorUpdate() {
@@ -110,11 +121,13 @@ void HoleMarker::RenderUpdate() {
 }
 
 void HoleMarker::EntityFellInHole(Entity* entity) {
-    seedManager_->CreateMultipleSeed(entity->transform_.position, seedsPerEntity_, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
+    bool powered = entity->DoFallInHole();
+    if (!powered)
+        return;
+
     explodeTime_ = 0.35f;
     entityCount_++;
     if (entityCount_ >= numEntities_) {
-        seedManager_->CreateMultipleSeed(entity->transform_.position, seedsEnd_, 20.0f, player_, vec3(0.0f, 50.0f, 0.0f));
         fader_.StartActivate();
     }
 }
@@ -125,4 +138,10 @@ int HoleMarker::GetSeeds() {
 
 void HoleMarker::OnDestroy() {
     terrain_->FreeAdditive(additive_);
+    terrain_->FreeBubble(bubble_);
+}
+
+void HoleMarker::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity->transform_.position.y < terrainHeight_ - 20.0f)
+        EntityFellInHole(overlappedEntity);
 }

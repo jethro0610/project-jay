@@ -2,9 +2,11 @@
 #include "Resource/ResourceManager.h"
 #include "Terrain/Terrain.h"
 #include "Entity/EntityList.h"
+#include "Entity/HoleMarker.h"
 #include "Player.h"
 #include "Time/Time.h"
 #include "Helpers/Shared_Ease.h"
+#include "Seed/SeedManager.h"
 using namespace glm;
 
 EntityDependendies Bumper::GetStaticDependencies() {
@@ -24,6 +26,7 @@ EntityProperties Bumper::GetStaticProperties() {
         },
         {
             // Bools
+            {"p_startpowered", &powered_}
         }
     };
 }
@@ -58,10 +61,12 @@ void Bumper::Init(Entity::InitArgs args) {
     speed_ = 5.0f;
     traceDistance_ = 1.0f;
     gravity_ = 2.0f; 
+    lastAttacker_ = nullptr;
     target_ = nullptr;
     travelPos_ = transform_.position;
     travelTimer_ = 0;
     canTarget_ = false;
+    powered_ = false;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -78,17 +83,21 @@ void Bumper::Init(Entity::InitArgs args) {
 
 void Bumper::Start() {
     spawnPos_ = transform_.position;
-    player_ = entities_->FindEntityByType(Player::TYPEID);
 }
 
 // Last transform needs to be available on overlaps. So PreUpdate
 void Bumper::PreUpdate() {
     if (onGround_) {
-        velocity_.y -= 16.0f;
+        float t = (float)timer_ / 60;
+        t = t * t * t;
+        velocity_.y -= 6.0f + t * 32.0f;
         canTarget_ = true;
     }
     else {
-        velocity_.y -= gravity_;
+        if (overlappingHole_)
+            velocity_.y -= gravity_ * 4.0f;
+        else
+            velocity_.y -= gravity_;
         timer_ = 0;
     }
     traceDistance_ = min(-velocity_.y * GlobalTime::TIMESTEP, 8.0f);
@@ -113,7 +122,9 @@ void Bumper::PreUpdate() {
                 continue;
             if (!entity.GetFlag(EF_ProjectileLockable))
                 continue;
-            if (transform_.position.y < entity.transform_.position.y + 10.0f)
+            vec3 directionToTarget = normalize(entity.transform_.position - transform_.position);
+            float dotDown = dot(directionToTarget, vec3(0.0f, -1.0f, 0.0f)); 
+            if (dotDown < 0.5f)
                 continue;
 
             StartTracking(&entity);
@@ -133,6 +144,7 @@ void Bumper::PreUpdate() {
         if (travelTimer_ >= TRAVEL_TIME)
             StopTracking();
     }
+    overlappingHole_ = false;
 }
 
 void Bumper::StartTracking(Entity* target) {
@@ -154,7 +166,24 @@ void Bumper::StopTracking() {
 }
 
 void Bumper::OnHurt(HurtArgs args) {
-    velocity_ = args.kbVelocity * 1.15f;
-    velocity_.y = 0.0f;
+    vec3 kb = args.kbVelocity * 1.5f;
+    velocity_.x = kb.x;
+    velocity_.z = kb.z;
+    if (onGround_)
+        velocity_.y = -100.0f;
     timer_ = 30;
+    lastAttacker_ = args.attacker;
+}
+
+void Bumper::OnOverlap(Entity* overlappedEntity) {
+    if (overlappedEntity->typeId_ == HoleMarker::TYPEID)
+        overlappingHole_ = true;
+}
+
+bool Bumper::OnFallInHole() {
+    if (powered_)
+        seedManager_->CreateMultipleSeed(transform_.position, 60, 20.0f, lastAttacker_);
+
+    destroy_ = true;
+    return powered_;
 }

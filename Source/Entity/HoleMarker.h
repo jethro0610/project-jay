@@ -3,6 +3,7 @@
 #include "Terrain/DynamicFader.h"
 
 class DynamicAdditive;
+class DynamicBubble;
 
 class HoleMarker : public Entity {
 public:
@@ -21,12 +22,15 @@ public:
 
     DynamicFader fader_;
     DynamicAdditive* additive_;
+    DynamicBubble* bubble_;
     Entity* player_;
     float explodeTime_;
     int numEntities_;
     int entityCount_;
     int seedsPerEntity_;
     int seedsEnd_;
+    float terrainHeight_;
     int GetSeeds();
     void OnDestroy();
+    void OnOverlap(Entity* overlappedEntity);
 };

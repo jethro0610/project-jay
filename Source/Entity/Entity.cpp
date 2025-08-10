@@ -509,6 +509,16 @@ void Entity::DoHitlagEnd() {
     }
 }
 
+bool Entity::DoFallInHole() {
+    ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
+    switch(typeId_) {
+        #define ENTITYEXP(TYPE, VAR, ID) case ID: return ((TYPE*)this)->OnFallInHole();
+        EXPANDENTITIES
+        #undef ENTITYEXP
+    }
+    return false;
+}
+
 void Entity::DoCaptureSeed() {
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     switch(typeId_) {

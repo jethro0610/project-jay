@@ -99,6 +99,7 @@ public:
 
         EF_SendPush,
         EF_RecievePush,
+
         EF_Bonkable,
 
         EF_SendHits,
@@ -217,6 +218,7 @@ public:
     void DoPush(PushArgs args);
     void DoOverlap(Entity* overlappedEntity);
     void DoHitlagEnd();
+    bool DoFallInHole();
 
     void DoCaptureSeed();
     void DoDestroy();
@@ -257,6 +259,7 @@ private:
     void OnPush(PushArgs args) {}
     void OnOverlap(Entity* overlappedEntity) {}
     void OnHitlagEnd() {}
+    bool OnFallInHole() { return false; }
     void OnCaptureSeed() {};
     void OnDestroy() {};
     glm::vec3 GetTargetPoint() { return transform_.position; };

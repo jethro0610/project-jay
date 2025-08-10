@@ -86,10 +86,7 @@ INLINE vec2 getTerrainDistance(
             vec2 dynModPos = vec2(DYN_MOD_POS_X(DYN_ADDITIVES[i]), DYN_MOD_POS_Z(DYN_ADDITIVES[i]));
             float dist = distance(dynModPos, position) - DYN_ADD_RADIUS(DYN_ADDITIVES[i]);
             float sharpness = DYN_ADD_SHARPNESS(DYN_NEGATIVES[i]);
-            if (sharpness < 1.0f)
-                pos.x = smin(pos.x, dist, sharpness);
-            else
-                pos.x = min(pos.x, dist);
+            pos.x = min(pos.x, dist);
         }
     }
 

@@ -1,0 +1,577 @@
+{
+    "controller_id": -1,
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_player",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -377.40716552734375,
+                    "y": 119.98306274414063,
+                    "z": 2639.16259765625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": false
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 4.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -498.190673828125,
+                    "y": 47.3530158996582,
+                    "z": 191.56793212890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799997329711914,
+                    "y": 8.799997329711914,
+                    "z": 8.799997329711914
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": false
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 4.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -561.4871826171875,
+                    "y": 44.779151916503906,
+                    "z": 207.11883544921875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799997329711914,
+                    "y": 8.799997329711914,
+                    "z": 8.799997329711914
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": false
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 4.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -629.6242065429688,
+                    "y": 46.121177673339844,
+                    "z": 194.9864044189453
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 8.799997329711914,
+                    "y": 8.799997329711914,
+                    "z": 8.799997329711914
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -604.9808959960938,
+                    "y": 12.144632339477539,
+                    "z": 2129.228271484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 4.600000381469727,
+                    "y": 4.600000381469727,
+                    "z": 4.600000381469727
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": {
+                "p_count": 2,
+                "p_item": 1
+            },
+            "name": "e_itemcontainer",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -195.28253173828125,
+                    "y": 11.22877311706543,
+                    "z": 2097.690673828125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 4.600000381469727,
+                    "y": 4.600000381469727,
+                    "z": 4.600000381469727
+                }
+            },
+            "type_id": 32
+        },
+        {
+            "bool_properties": {
+                "p_seg_destroy": false
+            },
+            "float_properties": {
+                "p_jump_strength": 100.0
+            },
+            "int_properties": {
+                "p_cooldown": 0,
+                "p_num_seeds": 0,
+                "p_seg_count": 0,
+                "p_seg_id": -1,
+                "p_seg_min": 0
+            },
+            "name": "e_jumppad",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -406.962646484375,
+                    "y": 96.73402404785156,
+                    "z": 1369.4365234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.999996185302734,
+                    "y": 12.999996185302734,
+                    "z": 12.999996185302734
+                }
+            },
+            "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -838.022216796875,
+                    "y": 56.010093688964844,
+                    "z": 55.02132797241211
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 99.0,
+                    "y": 699.89990234375,
+                    "z": 99.0
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 18.19512939453125,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 102.7056884765625,
+                    "y": 56.010093688964844,
+                    "z": 6.191619873046875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 99.0,
+                    "y": 699.89990234375,
+                    "z": 99.0
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 40.78401184082031,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 40.32275390625,
+                    "y": 56.010093688964844,
+                    "z": -919.712890625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 99.0,
+                    "y": 699.89990234375,
+                    "z": 99.0
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 17.446117401123047,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -872.6787719726563,
+                    "y": 56.010093688964844,
+                    "z": -852.2781982421875
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 99.0,
+                    "y": 699.89990234375,
+                    "z": 99.0
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": null,
+            "name": "e_tpillar",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -326.3902282714844,
+                    "y": 135.84425354003906,
+                    "z": -361.5630798339844
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 40.30000686645508,
+                    "y": 40.30000686645508,
+                    "z": 40.30000686645508
+                }
+            },
+            "type_id": 3
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": {
+                "p_entities": 1,
+                "p_seedsend": 250,
+                "p_seedsentity": 250
+            },
+            "name": "e_holemark",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -429.136962890625,
+                    "y": 17.765792846679688,
+                    "z": 1729.551025390625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 124.69998931884766,
+                    "y": 101.39999389648438,
+                    "z": 124.69998931884766
+                }
+            },
+            "type_id": 51
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": true
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 2.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -409.0120849609375,
+                    "y": -34.595909118652344,
+                    "z": 1878.5079345703125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 10.80000114440918,
+                    "y": 10.80000114440918,
+                    "z": 10.80000114440918
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": false
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 2.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -480.276123046875,
+                    "y": -22.049894332885742,
+                    "z": 1875.7203369140625
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 10.80000114440918,
+                    "y": 10.80000114440918,
+                    "z": 10.80000114440918
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": {
+                "p_startpowered": false
+            },
+            "float_properties": {
+                "p_friction": 0.05000000074505806,
+                "p_gravity": 2.0
+            },
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -329.400390625,
+                    "y": -27.680095672607422,
+                    "z": 1819.272705078125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 10.80000114440918,
+                    "y": 10.80000114440918,
+                    "z": 10.80000114440918
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "int_properties": {
+                "p_entities": 1,
+                "p_seedsend": 250,
+                "p_seedsentity": 250
+            },
+            "name": "e_holemark",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -323.3894958496094,
+                    "y": 15.407896041870117,
+                    "z": -364.08099365234375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 182.59999084472656,
+                    "y": 111.10000610351563,
+                    "z": 182.59999084472656
+                }
+            },
+            "type_id": 51
+        }
+    ],
+    "landmap": "lm_moi_reverse",
+    "terrain_modifiers": [
+        {
+            "custom_easing": true,
+            "height": -84.5999984741211,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 1.2000036239624023,
+            "radius": 365.30010986328125,
+            "x": -459.97259521484375,
+            "y": 1754.007080078125
+        },
+        {
+            "custom_easing": true,
+            "height": 113.10002136230469,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 4.220000267028809,
+            "radius": 300.699951171875,
+            "x": -459.24017333984375,
+            "y": 2678.376708984375
+        },
+        {
+            "custom_easing": false,
+            "height": -80.70001220703125,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 550.0,
+            "x": -418.3951416015625,
+            "y": 2194.572509765625
+        },
+        {
+            "custom_easing": false,
+            "height": 72.30000305175781,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 2.4000000953674316,
+            "radius": 180.70001220703125,
+            "x": -378.79248046875,
+            "y": 1063.421142578125
+        },
+        {
+            "custom_easing": true,
+            "height": 57.099998474121094,
+            "id": 1,
+            "in_power": 2.0,
+            "name": "e_bubble",
+            "out_power": 1.2499985694885254,
+            "radius": 140.69998168945313,
+            "x": -570.6713256835938,
+            "y": 89.30537414550781
+        },
+        {
+            "frequency": 0.13700008392333984,
+            "id": 2,
+            "max_height": 78.4000015258789,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 2751.400634765625,
+            "seed": 1977725927,
+            "x": -83.29622650146484,
+            "y": -425.2130432128906
+        },
+        {
+            "frequency": 0.19999998807907104,
+            "id": 2,
+            "max_height": 81.30000305175781,
+            "min_height": 0.0,
+            "name": "e_noise",
+            "radius": 1002.60009765625,
+            "seed": 1301816479,
+            "x": -478.91082763671875,
+            "y": 2225.161865234375
+        }
+    ]
+}

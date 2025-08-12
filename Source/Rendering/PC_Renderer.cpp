@@ -162,7 +162,7 @@ void Renderer::InitVolumetricsBuffer(Texture* volumetricsTexture) {
     volumetricsBuffer_ = bgfx::createFrameBuffer(1, &volumetricsTexture_->handle);
     bgfx::setViewFrameBuffer(VOLUMETRIC_VIEW, volumetricsBuffer_);
     bgfx::setViewClear(VOLUMETRIC_VIEW, BGFX_CLEAR_COLOR, 0x00000000, 1.0f, 0);
-    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, 1280, 720);
+    bgfx::setViewRect(VOLUMETRIC_VIEW, 0, 0, 1024, 576);
 }
 
 void Renderer::InitPostProcessBuffer(Texture* postProcessTexture) {

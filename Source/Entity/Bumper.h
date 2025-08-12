@@ -26,6 +26,7 @@ public:
     bool canTarget_;
     bool overlappingHole_;
     bool powered_;
+    bool fell_;
 
     void Start();
     void PreUpdate();

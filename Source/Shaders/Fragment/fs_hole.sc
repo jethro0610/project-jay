@@ -28,8 +28,8 @@ void main() {
     float fov = 70.0f;
     float fov2 = radians(fov) / 2.0f;
     vec2 rayUv = vec2(
-        gl_FragCoord.x / 1280,
-        gl_FragCoord.y / 720
+        gl_FragCoord.x / 1024,
+        gl_FragCoord.y / 576
     );
     float depth = texture2D(s_sampler0, rayUv).r;
     rayUv -= 0.5f;

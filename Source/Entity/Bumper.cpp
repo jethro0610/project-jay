@@ -67,6 +67,7 @@ void Bumper::Init(Entity::InitArgs args) {
     travelTimer_ = 0;
     canTarget_ = false;
     powered_ = false;
+    fell_ = true;
 
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -88,19 +89,29 @@ void Bumper::Start() {
 // Last transform needs to be available on overlaps. So PreUpdate
 void Bumper::PreUpdate() {
     if (onGround_) {
-        float t = (float)timer_ / 60;
+        float t = (float)timer_ / 45;
         t = t * t * t;
         velocity_.y -= 6.0f + t * 32.0f;
         canTarget_ = true;
+        fell_ = false;
     }
     else {
-        if (overlappingHole_)
+        if (overlappingHole_ && !fell_)
             velocity_.y -= gravity_ * 4.0f;
         else
             velocity_.y -= gravity_;
         timer_ = 0;
     }
     traceDistance_ = min(-velocity_.y * GlobalTime::TIMESTEP, 8.0f);
+
+    if (!onGround_ && !overlappingHole_) {
+        float height = terrain_->GetRawHeight(transform_.position);
+        if (transform_.position.y < height - 10.0f && velocity_.y < 0.0f) {
+            vec3 vecToEdge = terrain_->GetDirectionToEdge(transform_.position) * 150.0f; 
+            velocity_ = vecToEdge;
+            velocity_.y = 150.0f;
+        }
+    }
 
     if (timer_ <= 0) {
         if (onGround_) {
@@ -166,12 +177,12 @@ void Bumper::StopTracking() {
 }
 
 void Bumper::OnHurt(HurtArgs args) {
-    vec3 kb = args.kbVelocity * 1.5f;
+    vec3 kb = args.kbVelocity * 1.25f;
     velocity_.x = kb.x;
     velocity_.z = kb.z;
     if (onGround_)
         velocity_.y = -100.0f;
-    timer_ = 30;
+    timer_ = 45;
     lastAttacker_ = args.attacker;
 }
 
@@ -181,9 +192,16 @@ void Bumper::OnOverlap(Entity* overlappedEntity) {
 }
 
 bool Bumper::OnFallInHole() {
-    if (powered_)
+    if (powered_) {
         seedManager_->CreateMultipleSeed(transform_.position, 60, 20.0f, lastAttacker_);
-
-    destroy_ = true;
+        destroy_ = true;
+    }
+    else {
+        fell_ = true;
+        if (velocity_.y <= 0.0f) {
+            velocity_ *= 0.5f;
+            velocity_.y = 200.0f;
+        }
+    }
     return powered_;
 }

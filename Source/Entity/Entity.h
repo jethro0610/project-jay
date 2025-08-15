@@ -115,6 +115,7 @@ public:
         EF_Homeable,
         EF_UseTrail,
         EF_ProjectileLockable,
+        EF_SeedReleaser,
         EF_Count
     };
 

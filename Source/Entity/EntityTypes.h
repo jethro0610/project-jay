@@ -42,7 +42,6 @@
 #include "Apple.h"
 #include "Tree.h"
 #include "Chase.h"
-#include "HoleMarker.h"
 #include "Negator.h"
 #include "CometSpawner.h"
 #include "SinglePod.h"
@@ -55,9 +54,10 @@
 #include "HillBurrow.h"
 #include "BigBreaker.h"
 #include "Player.h"
+#include "HoleMarker.h"
+#include "BumperBell.h"
 #include "Entity.h"
 #include "Bumper.h"
-#include "ProjectileBell.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -118,4 +118,4 @@
 	ENTITYEXP(PopInCrystal, popincrystal, 55) \
 	ENTITYEXP(HillBurrow, hillburrow, 56) \
 	ENTITYEXP(BigBreaker, bigbreaker, 57) \
-	ENTITYEXP(ProjectileBell, projectilebell, 58)
+	ENTITYEXP(BumperBell, bumperbell, 59)

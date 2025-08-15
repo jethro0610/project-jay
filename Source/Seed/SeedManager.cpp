@@ -35,7 +35,7 @@ void SeedManager::CreateSeed(glm::vec3 position, Entity* capturer, glm::vec3 off
 
     Seed seed {
         vec4(position, 0.0f),
-        RandomFloatRange(0.15, 0.6),
+        RandomFloatRange(0.15, 0.6) * 4.0f,
         offset,
         sqrtf(offset.y / SEED_GRAVITY_SCALE),
         capturer,

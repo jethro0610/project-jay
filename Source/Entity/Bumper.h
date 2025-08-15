@@ -14,7 +14,6 @@ public:
 
     float speed_;
     float friction_;
-    float gravity_;
     float timer_;
 
     glm::vec3 spawnPos_;
@@ -36,4 +35,5 @@ public:
     void StopTracking();
     void OnOverlap(Entity* overlappedEntity);
     bool OnFallInHole();
+    void OnCaptureSeed();
 };

@@ -32,8 +32,7 @@
                 "p_startpowered": true
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -185,8 +184,7 @@
                 "p_startpowered": true
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 2.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -216,8 +214,7 @@
                 "p_startpowered": true
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 2.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -247,8 +244,7 @@
                 "p_startpowered": true
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 2.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -307,8 +303,7 @@
                 "p_startpowered": false
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -338,8 +333,7 @@
                 "p_startpowered": false
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -369,8 +363,7 @@
                 "p_startpowered": false
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -378,9 +371,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -619.3677978515625,
-                    "y": 13.307723999023438,
-                    "z": 222.4793243408203
+                    "x": -571.6033325195313,
+                    "y": 4.973285675048828,
+                    "z": 218.20663452148438
                 },
                 "rotation": {
                     "x": 0.0,
@@ -400,8 +393,7 @@
                 "p_startpowered": false
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -431,8 +423,7 @@
                 "p_startpowered": false
             },
             "float_properties": {
-                "p_friction": 0.05000000074505806,
-                "p_gravity": 4.0
+                "p_friction": 0.05000000074505806
             },
             "floor_dist": 0.0,
             "int_properties": null,
@@ -456,6 +447,110 @@
                 }
             },
             "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumperbell",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -575.1832885742188,
+                    "y": 13.883901596069336,
+                    "z": -237.89125061035156
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.300003051757813,
+                    "y": 82.79997253417969,
+                    "z": 12.300003051757813
+                }
+            },
+            "type_id": 59
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumperbell",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -565.9473876953125,
+                    "y": 6.207909107208252,
+                    "z": 500.40557861328125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.300003051757813,
+                    "y": 82.79997253417969,
+                    "z": 12.300003051757813
+                }
+            },
+            "type_id": 59
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumperbell",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -362.95733642578125,
+                    "y": 31.29603385925293,
+                    "z": 570.8389892578125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.300003051757813,
+                    "y": 82.79997253417969,
+                    "z": 12.300003051757813
+                }
+            },
+            "type_id": 59
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumperbell",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -256.54205322265625,
+                    "y": -24.888957977294922,
+                    "z": 216.564453125
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.300003051757813,
+                    "y": 82.79997253417969,
+                    "z": 12.300003051757813
+                }
+            },
+            "type_id": 59
         }
     ],
     "landmap": "lm_moi_reverse",
@@ -506,12 +601,12 @@
         },
         {
             "custom_easing": true,
-            "height": 103.5999984741211,
+            "height": 48.59999465942383,
             "id": 1,
-            "in_power": 2.0,
+            "in_power": 3.9899988174438477,
             "name": "e_bubble",
-            "out_power": 1.0900002717971802,
-            "radius": 217.79998779296875,
+            "out_power": 7.37999963760376,
+            "radius": 132.70001220703125,
             "x": -538.3540649414063,
             "y": 81.20146942138672
         },

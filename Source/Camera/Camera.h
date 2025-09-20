@@ -21,6 +21,7 @@ public:
     float lookY_;
 
     Entity* target_;
+    Entity* lockOn_;
     float trackDistance_;
 
     void Update(EntityList& entities, Inputs& inputs);

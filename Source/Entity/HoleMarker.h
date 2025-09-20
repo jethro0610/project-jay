@@ -30,6 +30,7 @@ public:
     int seedsPerEntity_;
     int seedsEnd_;
     float terrainHeight_;
+    float bubbleHeight_;
     int GetSeeds();
     void OnDestroy();
     void OnOverlap(Entity* overlappedEntity);

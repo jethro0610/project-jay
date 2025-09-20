@@ -250,7 +250,12 @@ void Editor::Update() {
     if (level_.loaded_) {
         seedsText_ = std::to_string(levelController_.GetTotalSeeds());
         bool modifiersDestroyed = terrain_.DestroyPendingModifiers();
-        bool isTransformMode = mode_ == &translateMode_ || mode_ == &scaleMode_ || mode_ == &rotateMode_ || mode_ == &genericScalarMode_;
+        bool isTransformMode = 
+            mode_ == &translateMode_ || 
+            mode_ == &scaleMode_ || 
+            mode_ == &rotateMode_ || 
+            mode_ == &genericScalarMode_ ||
+            mode_ == &cloneMode_;
         if (target_.Get().UpdateTerrain() && isTransformMode)
             terrain_.GenerateTerrainHeights(true, &entities_);
         else if (terrain_.DBG_lowRes_)

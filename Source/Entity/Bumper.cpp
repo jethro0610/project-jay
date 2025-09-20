@@ -19,7 +19,6 @@ EntityProperties Bumper::GetStaticProperties() {
     return {
         {
             // Floats
-            {"p_friction", &friction_},
         },
         {
         },
@@ -56,7 +55,6 @@ void Bumper::Init(Entity::InitArgs args) {
     overlapbox_.bottom = 1.15f;
     overlapbox_.radius = 1.15f;
     
-    friction_ = 0.05f;
     speed_ = 5.0f;
     traceDistance_ = 1.0f;
     lastAttacker_ = nullptr;
@@ -111,7 +109,8 @@ void Bumper::PreUpdate() {
 
     if (timer_ <= 0) {
         if (onGround_) {
-            float speedDecay = 1.0f - friction_;
+            constexpr float FRICTION = 0.05f;
+            float speedDecay = 1.0f - FRICTION;
             float acceleration = (speed_ / speedDecay) - speed_; // For when they start moving
             vec3 planarVelocity = vec3(velocity_.x, 0.0f, velocity_.z);
             planarVelocity *= speedDecay;
@@ -122,7 +121,7 @@ void Bumper::PreUpdate() {
     else
         timer_--;
 
-    if (!onGround_ && target_ == nullptr && canTarget_ == true) {
+    if (!onGround_ && target_ == nullptr && canTarget_ == true && velocity_.y < 0.0f) {
         for (int i = 0; i < EntityList::MAX; i++) {
             Entity& entity = (*entities_)[i];
             if (!entity.alive_)
@@ -132,8 +131,15 @@ void Bumper::PreUpdate() {
             vec3 targetPos = entity.GetTarget();
             vec3 directionToTarget = normalize(targetPos - transform_.position);
             float dotDown = dot(directionToTarget, vec3(0.0f, -1.0f, 0.0f)); 
-            if (dotDown < 0.5f)
+            if (dotDown < 0.25f)
                 continue;
+
+            float planarDist2 = distance2(
+                vec2(entity.transform_.position.x, entity.transform_.position.z),
+                vec2(transform_.position.x, transform_.position.z)
+            );
+            if (planarDist2 > 300.0f * 300.0f)
+                continue;;
 
             StartTracking(&entity);
             break;
@@ -180,6 +186,10 @@ void Bumper::OnHurt(HurtArgs args) {
     if (onGround_)
         velocity_.y = -100.0f;
     timer_ = 30;
+
+    if (!onGround_ && args.attacker->velocity_.y > 0.0f)
+        velocity_.y = args.attacker->velocity_.y;
+
     lastAttacker_ = args.attacker;
 }
 

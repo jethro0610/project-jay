@@ -5,6 +5,7 @@
 #include <glm/gtx/compatibility.hpp>
 #include "Logging/Logger.h"
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/vector_angle.hpp>
 using namespace glm;
 
 Camera::Camera(Terrain& terrain, vec3 startPosition):
@@ -36,13 +37,34 @@ mat4 Camera::GetViewOnlyMatrix() const {
 }
 
 void Camera::Update(EntityList& entities, Inputs& inputs) {
+    float deltaTime = GlobalTime::GetDeltaTime();
     if (target_ == nullptr) {
         Update(inputs);
         return;
     }
 
-    float deltaTime = GlobalTime::GetDeltaTime();
-    lookX_ += inputs.deltaLookX * 1.5f;
+    if (lockOn_ != nullptr && !lockOn_->alive_)
+        lockOn_ = nullptr;
+
+    if (lockOn_ != nullptr) {
+        vec3 directionToLockOn = lockOn_->transform_.position - target_->transform_.position;
+        directionToLockOn.y = 0.0f;
+        directionToLockOn = normalize(directionToLockOn);
+        lookX_ = orientedAngle(Transform::worldForward, directionToLockOn, Transform::worldUp);
+        if (std::isnan(lookX_))
+            lookX_ = 0.0f;
+    }
+    else {
+        lookX_ += inputs.deltaLookX * 1.5f;
+    }
+
+    // Wrap the smoothLookX around so we don't end up
+    // doing a full 360 lerp
+    while (smoothLookX_ - lookX_ >= pi<float>() * 0.5f)
+        smoothLookX_ -= 2 * pi<float>();
+    while (smoothLookX_ - lookX_ <= -pi<float>() * 0.5f)
+        smoothLookX_ += 2 * pi<float>();
+
     smoothLookX_ = lerp(smoothLookX_, lookX_, 1 - powf(0.0001f, deltaTime));
 
     // TODO: Mouse keyboard implementation
@@ -85,7 +107,6 @@ void Camera::Update(EntityList& entities, Inputs& inputs) {
         alignedForward = lerp(lookForward, Transform::worldUp, normalDot);
     }
     alignedForward = normalize(alignedForward);
-
 
     transform_.position = smoothTrackPosition_ - alignedForward * trackDistance_ + vec3(0.0f, 2.5f, 0.0f);
     transform_.position += vec3(0.0f, 2.0f, 0.0f);

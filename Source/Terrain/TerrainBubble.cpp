@@ -136,3 +136,13 @@ void TerrainBubble::Load(const nlohmann::json &json) {
     if (json.contains("custom_easing"))
         customEasing_ = json["custom_easing"];
 }
+
+EditorTarget* TerrainBubble::ETarget::Clone() {
+    TerrainBubble& bubble = (TerrainBubble&)bubble_->terrain_->CreateStaticModifier(TerrainBubble::ID, bubble_->position_);
+    bubble.height_ = bubble_->height_;
+    bubble.customEasing_ = bubble_->customEasing_;
+    bubble.inPower_ = bubble_->inPower_;
+    bubble.outPower_ = bubble_->outPower_;
+    bubble.radius_ = bubble_->radius_;
+    return &bubble.editorTarget_;
+}

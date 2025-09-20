@@ -55,9 +55,10 @@
 #include "BigBreaker.h"
 #include "Player.h"
 #include "HoleMarker.h"
-#include "BumperBell.h"
 #include "Entity.h"
 #include "Bumper.h"
+#include "BumperBell.h"
+#include "BreakerPillar.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -118,4 +119,5 @@
 	ENTITYEXP(PopInCrystal, popincrystal, 55) \
 	ENTITYEXP(HillBurrow, hillburrow, 56) \
 	ENTITYEXP(BigBreaker, bigbreaker, 57) \
+	ENTITYEXP(BreakerPillar, breakerpillar, 58) \
 	ENTITYEXP(BumperBell, bumperbell, 59)

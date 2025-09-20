@@ -16,6 +16,8 @@ EntityProperties HoleMarker::GetStaticProperties() {
     return {
         {
             // Floats
+            {"p_height", &bubbleHeight_},
+            {"p_outpower", &bubble_->outpower}
         },
         {
             // Ints
@@ -79,11 +81,10 @@ void HoleMarker::Init(Entity::InitArgs args) {
     fader_ = DynamicFader();
     fader_.activateLength_ = 60.0f;
     fader_.deactivateLength_ = 30.0f;
-    fader_.AddModifier(additive_, &additive_->radius, 0.0f, transform_.scale.x, false, EaseType::E_Cubic);
-    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, 100.0f, false, EaseType::E_Elastic);
 
     player_ = nullptr;
     terrainHeight_ = 0.0f;
+    bubbleHeight_ = 0.0f;
     SetFlag(EF_Overlap, true);
 }
 
@@ -99,12 +100,28 @@ void HoleMarker::Start() {
     player_ = entities_->FindEntityByType(Player::TYPEID);
     fader_.DeactivateModifiers(true);
     terrainHeight_ = terrain_->GetRawHeight(transform_.position);
+    fader_.AddModifier(additive_, &additive_->radius, 0.0f, transform_.scale.x, false, EaseType::E_Cubic);
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, bubbleHeight_, false, EaseType::E_Elastic);
 }
 
 void HoleMarker::EditorUpdate() {
     materials_[0].lightVolumeProperties.origin = transform_.position;
     materials_[0].lightVolumeProperties.radius = transform_.scale.x;
     materials_[0].lightVolumeProperties.falloffHeight = transform_.scale.y;
+
+    // bubble_->height = bubbleHeight_;
+    // additive_->radius = transform_.scale.x;
+    //
+    // if (DBG_preview_) {
+    //     bubble_->active = true;
+    //     bubble_->height = bubbleHeight_;
+    //     additive_->active = true;
+    //     additive_->radius = transform_.scale.x;
+    // }
+    // else {
+    //     bubble_->active = false;
+    //     additive_->active = false;
+    // }
 }
 
 void HoleMarker::RenderUpdate() {

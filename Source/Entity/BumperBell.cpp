@@ -44,6 +44,7 @@ void BumperBell::Init(Entity::InitArgs args) {
     SetFlag(EF_Overlap, true);
 
     timer_ = 0;
+    broken_ = false;
 }
 
 void BumperBell::Update() {
@@ -59,9 +60,12 @@ void BumperBell::OnOverlap(Entity* overlappedEntity) {
     overlappedEntity->hitlag_ = 8;
     hitlag_ = 8;
     overlappedEntity->stun_ = true;
+    // destroy_ = true;
 
-    if (overlappedEntity->GetFlag(EF_SeedReleaser))
+    if (!broken_ && overlappedEntity->GetFlag(EF_SeedReleaser))
         seedManager_->CreateMultipleSeed(GetTargetPoint(), 500, 30.0f, overlappedEntity);
+
+    broken_ = true;
 }
 
 vec3 BumperBell::GetTargetPoint() {

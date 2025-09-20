@@ -13,7 +13,6 @@ public:
     EntityProperties GetStaticProperties();
 
     float speed_;
-    float friction_;
     float timer_;
 
     glm::vec3 spawnPos_;

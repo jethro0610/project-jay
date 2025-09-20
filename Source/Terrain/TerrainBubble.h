@@ -83,6 +83,8 @@ public:
         bool RayHit(const Ray &ray) override;
         void Destroy() override { bubble_->destroy_ = true; }
         bool IsModifier() override { return true; }
+        bool Clonable() override { return true; }
+        EditorTarget* Clone() override;
     };
     ETarget editorTarget_;
 };

@@ -66,6 +66,7 @@ public:
 
     #ifdef _DEBUG
     StaticTerrainModifier& CreateStaticModifier(int typeId, const glm::vec3& pos = glm::vec3(0.0f));
+    StaticTerrainModifier& CreateStaticModifier(int typeId, const glm::vec2& pos);
     bool DestroyPendingModifiers();
 
     std::string DBG_landMapName_;

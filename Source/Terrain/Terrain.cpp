@@ -659,6 +659,10 @@ StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec3
     ASSERT(false, "Out of available modifiers");
 }
 
+StaticTerrainModifier& Terrain::CreateStaticModifier(int typeId, const glm::vec2& pos) {
+    return CreateStaticModifier(typeId, vec3(pos.x, 0.0f, pos.y));
+}
+
 bool Terrain::DestroyPendingModifiers() {
     bool destroy = false;
     for (StaticTerrainModifier* modifier : DBG_modifiers_) {

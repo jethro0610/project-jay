@@ -32,15 +32,15 @@
                 "p_startpowered": true
             },
             "float_properties": null,
-            "floor_dist": 0.0,
+            "floor_dist": -0.3574371337890625,
             "int_properties": null,
             "name": "e_bumper",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -244.96075439453125,
-                    "y": 203.080810546875,
-                    "z": -141.5299530029297
+                    "x": -242.77146911621094,
+                    "y": 201.30691528320313,
+                    "z": -161.2227325439453
                 },
                 "rotation": {
                     "x": 0.0,
@@ -151,7 +151,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_height": 100.0
+                "p_height": 100.0,
+                "p_outpower": 2.0
             },
             "int_properties": {
                 "p_entities": 3,
@@ -159,7 +160,7 @@
                 "p_seedsentity": 250
             },
             "name": "e_holemark",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": -429.136962890625,
@@ -266,7 +267,8 @@
         {
             "bool_properties": null,
             "float_properties": {
-                "p_height": 50.0
+                "p_height": 100.0,
+                "p_outpower": 2.0
             },
             "int_properties": {
                 "p_entities": 1,
@@ -274,7 +276,7 @@
                 "p_seedsentity": 250
             },
             "name": "e_holemark",
-            "preview": true,
+            "preview": false,
             "transform": {
                 "position": {
                     "x": -323.3894958496094,
@@ -299,15 +301,15 @@
                 "p_startpowered": false
             },
             "float_properties": null,
-            "floor_dist": 0.0,
+            "floor_dist": -1.557281494140625,
             "int_properties": null,
             "name": "e_bumper",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -360.58221435546875,
-                    "y": 189.68765258789063,
-                    "z": -145.9383544921875
+                    "x": -343.98748779296875,
+                    "y": 190.96697998046875,
+                    "z": -140.215087890625
                 },
                 "rotation": {
                     "x": 0.0,
@@ -334,7 +336,7 @@
             "transform": {
                 "position": {
                     "x": -571.6033325195313,
-                    "y": 194.99069213867188,
+                    "y": 194.97329711914063,
                     "z": 218.20663452148438
                 },
                 "rotation": {
@@ -359,9 +361,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -575.1832885742188,
-                    "y": 203.88389587402344,
-                    "z": -237.89125061035156
+                    "x": -585.7778930664063,
+                    "y": 201.0415802001953,
+                    "z": -681.3810424804688
                 },
                 "rotation": {
                     "x": 0.0,
@@ -401,32 +403,6 @@
                 }
             },
             "type_id": 59
-        },
-        {
-            "bool_properties": null,
-            "float_properties": null,
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_breakerpillar",
-            "preview": true,
-            "transform": {
-                "position": {
-                    "x": 67.99871826171875,
-                    "y": 170.03518676757813,
-                    "z": -752.1663208007813
-                },
-                "rotation": {
-                    "x": 0.0,
-                    "y": -0.0,
-                    "z": 0.0
-                },
-                "scale": {
-                    "x": 34.099937438964844,
-                    "y": 34.39995574951172,
-                    "z": 34.099937438964844
-                }
-            },
-            "type_id": 58
         },
         {
             "bool_properties": null,
@@ -543,9 +519,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": 131.87510681152344,
-                    "y": 171.44058227539063,
-                    "z": -900.0416259765625
+                    "x": 122.45600891113281,
+                    "y": 162.4542999267578,
+                    "z": -832.8282470703125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -569,9 +545,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -203.96279907226563,
-                    "y": 164.2158203125,
-                    "z": 210.22750854492188
+                    "x": -209.73768615722656,
+                    "y": 163.9091796875,
+                    "z": 193.8818359375
                 },
                 "rotation": {
                     "x": 0.0,
@@ -844,9 +820,9 @@
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -13.648263931274414,
-                    "y": 168.08450317382813,
-                    "z": -826.655517578125
+                    "x": 248.4978790283203,
+                    "y": 172.91134643554688,
+                    "z": -796.1075439453125
                 },
                 "rotation": {
                     "x": 0.0,
@@ -921,6 +897,32 @@
                 }
             },
             "type_id": 16
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumperbell",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -170.48497009277344,
+                    "y": 202.98963928222656,
+                    "z": -700.65771484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 12.300003051757813,
+                    "y": 82.79997253417969,
+                    "z": 12.300003051757813
+                }
+            },
+            "type_id": 59
         }
     ],
     "landmap": "lm_moi_reverse",
@@ -968,17 +970,6 @@
             "radius": 180.70001220703125,
             "x": -378.79248046875,
             "y": 1063.421142578125
-        },
-        {
-            "custom_easing": true,
-            "height": 40.19999313354492,
-            "id": 1,
-            "in_power": 3.9899988174438477,
-            "name": "e_bubble",
-            "out_power": 7.37999963760376,
-            "radius": 154.30001831054688,
-            "x": -538.3540649414063,
-            "y": 81.20146942138672
         },
         {
             "custom_easing": false,

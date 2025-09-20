@@ -116,6 +116,7 @@ public:
         EF_UseTrail,
         EF_ProjectileLockable,
         EF_SeedReleaser,
+        EF_CameraTarget,
         EF_Count
     };
 

@@ -77,6 +77,7 @@ void Bumper::Init(Entity::InitArgs args) {
     SetFlag(EF_Trackable, true);
     SetFlag(EF_RecievePush, true);
     SetFlag(EF_SeedReleaser, true);
+    SetFlag(EF_CameraTarget, true);
 }
 
 void Bumper::Start() {

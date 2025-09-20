@@ -10,6 +10,7 @@ struct Inputs {
     bool ski;
     bool flow;
     bool cut;
+    bool lockOn;
 
     bool startAttack;
     bool releaseAttack;
@@ -18,6 +19,7 @@ struct Inputs {
 
     bool shift;
     bool space;
+
 
     Inputs() {
         forwardInput = 0.0f;

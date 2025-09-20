@@ -128,6 +128,10 @@ void Game::UpdateInputs_P() {
     inputs_.lookY -= platform_.deltaMouseY_ * 0.005f;
     inputs_.lookX -= platform_.gamepad_.rightStickX_;
     inputs_.lookY += platform_.gamepad_.rightStickY_;
+
+    inputs_.lockOn = 
+        platform_.gamepad_.pressedButtons_[Gamepad::RTHUMB] |
+        platform_.pressedKeys_[RIGHT_MOUSE_KEY];
 }
 
 void Game::FlushInputs_P() {

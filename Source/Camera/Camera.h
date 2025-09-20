@@ -30,5 +30,7 @@ public:
     glm::mat4 GetViewOnlyMatrix() const;
     glm::vec3 GetLookPosition();
     Terrain& terrain_;
+
+    void ToggleLockOn(EntityList& entities);
 };
 

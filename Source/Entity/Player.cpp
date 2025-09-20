@@ -236,7 +236,9 @@ void Player::OnDestroy() {
 }
 
 void Player::Update() {
-    camera_->lockOn_ = &(*entities_)[6];
+    if (inputs_->lockOn)
+        camera_->ToggleLockOn(*entities_);
+
     quat cameraPlanarRotation = quat(vec3(0.0f, camera_->lookX_, 0.0f));
     vec3 cameraPlanarForward = cameraPlanarRotation * Transform::worldForward;
     vec3 cameraPlanarRight = cameraPlanarRotation * Transform::worldRight;

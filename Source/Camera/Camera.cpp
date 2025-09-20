@@ -6,6 +6,8 @@
 #include "Logging/Logger.h"
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include <vector_const.h>
+#include "Entity/EntityList.h"
 using namespace glm;
 
 Camera::Camera(Terrain& terrain, vec3 startPosition):
@@ -141,4 +143,37 @@ vec3 Camera::GetLookPosition() {
             pos.y = terrainDist.y;
     }
     return pos;
+}
+
+void Camera::ToggleLockOn(EntityList& entities) {
+    if (lockOn_ != nullptr) {
+        lockOn_ = nullptr;
+        return;
+    }
+
+    float closestDistance = INFINITY;
+    lockOn_ = nullptr;
+    for (int i = 0; i < EntityList::MAX; i++) {
+        Entity& entity = entities[i];
+        if (!entity.alive_)
+            continue;
+        if (!entity.GetFlag(Entity::EF_CameraTarget))
+            continue;
+
+        vec3 vecToEntity = entity.transform_.position - transform_.position;
+        float dist = length(vecToEntity);
+        vecToEntity = vecToEntity / dist;
+        float dotToEntity = dot(transform_.GetForwardVector(), vecToEntity);
+        if (dotToEntity < 0.5f)
+            continue;
+
+        // We want entities that are more centered on the camera
+        // to have more weight when being selected for targetting
+        dist /= dotToEntity * dotToEntity;
+
+        if (dist < closestDistance) {
+            lockOn_ = &entity;
+            closestDistance = dist;
+        }
+    }
 }

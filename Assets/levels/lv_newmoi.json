@@ -1,0 +1,88 @@
+{
+    "controller_id": -1,
+    "entities": [
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.313488245010376,
+            "int_properties": null,
+            "name": "e_player",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -3.0816822052001953,
+                    "y": 0.313488245010376,
+                    "z": 0.7486670017242432
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 1.0,
+                    "y": 1.0,
+                    "z": 1.0
+                }
+            },
+            "type_id": 1
+        },
+        {
+            "bool_properties": null,
+            "float_properties": null,
+            "floor_dist": 0.0,
+            "int_properties": null,
+            "name": "e_bumper",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": -2.1641383171081543,
+                    "y": 0.0,
+                    "z": -18.087493896484375
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 2.800001621246338,
+                    "y": 2.800001621246338,
+                    "z": 2.800001621246338
+                }
+            },
+            "type_id": 46
+        },
+        {
+            "bool_properties": null,
+            "float_properties": {
+                "p_eatradius": 8.0,
+                "p_height": 50.0,
+                "p_radius": 100.0
+            },
+            "floor_dist": 0.455791711807251,
+            "int_properties": null,
+            "name": "e_bubbleeater",
+            "preview": true,
+            "transform": {
+                "position": {
+                    "x": 68.08121490478516,
+                    "y": 0.455791711807251,
+                    "z": -38.14484405517578
+                },
+                "rotation": {
+                    "x": 0.0,
+                    "y": -0.0,
+                    "z": 0.0
+                },
+                "scale": {
+                    "x": 5.0999979972839355,
+                    "y": 5.0999979972839355,
+                    "z": 5.0999979972839355
+                }
+            },
+            "type_id": 60
+        }
+    ],
+    "landmap": "lm_default"
+}

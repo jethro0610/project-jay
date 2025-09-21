@@ -6,6 +6,7 @@
 #include "Collision/Ray.h"
 #include "EntityList.h"
 #include "LevelControllers/LevelController.h"
+#include "Helpers/Shared_Ease.h"
 #include <glm/gtx/compatibility.hpp>
 using namespace glm;
 
@@ -263,6 +264,65 @@ void Entity::BaseRenderUpdate(float interpTime) {
     }
 }
 
+void Entity::BasePreUpdate() {
+    constexpr int TRACKING_TRAVEL_TIME = 30;
+    if (trackingTarget_ != nullptr) {
+        trackingTimer_++;
+
+        trackingPosition_ += velocity_ * GlobalTime::TIMESTEP;
+        float t = (float)trackingTimer_ / TRACKING_TRAVEL_TIME;
+        t = EaseInQuad(t);
+        transform_.position = mix(trackingPosition_, trackingTarget_->GetTarget(), t);
+
+        if (trackingTimer_ >= TRACKING_TRAVEL_TIME)
+            StopTracking();
+    }
+}
+
+void Entity::FindTrackingTarget() {
+    if (!onGround_ && trackingTarget_ == nullptr && velocity_.y < 0.0f) {
+        for (int i = 0; i < EntityList::MAX; i++) {
+            Entity& entity = (*entities_)[i];
+            if (!entity.alive_)
+                continue;
+            if (!entity.GetFlag(EF_ProjectileLockable))
+                continue;
+            vec3 targetPos = entity.GetTarget();
+            vec3 directionToTarget = normalize(targetPos - transform_.position);
+            float dotDown = dot(directionToTarget, vec3(0.0f, -1.0f, 0.0f)); 
+            if (dotDown < 0.25f)
+                continue;
+
+            float planarDist2 = distance2(
+                vec2(entity.transform_.position.x, entity.transform_.position.z),
+                vec2(transform_.position.x, transform_.position.z)
+            );
+            if (planarDist2 > 300.0f * 300.0f)
+                continue;;
+
+            StartTracking(&entity);
+            break;
+        }
+    }
+}
+
+void Entity::StartTracking(Entity* trackingEntity) {
+    trackingTarget_ = trackingEntity;
+    trackingPosition_ = transform_.position;
+    SetFlag(EF_UseVelocity, false);
+    trackingTimer_ = 0;
+}
+
+void Entity::StopTracking() {
+    if (trackingTarget_ == nullptr)
+        return;
+    trackingTarget_ = nullptr;
+    SetFlag(EF_UseVelocity, true);
+
+    vec3 deltaPos = transform_.position - lastTransform_.position;
+    velocity_ = (deltaPos / GlobalTime::TIMESTEP) * 0.1f;
+}
+
 void Entity::ChangeAnimation(int index, float transitionLength) {
     prevAnimIndex_ = animIndex_;
     animIndex_ = index; 
@@ -417,6 +477,7 @@ TypeID Entity::GetTypeIDFromName(const std::string& name) {
 }
 
 void Entity::DoPreUpdate() {
+    BasePreUpdate();
     ASSERT((typeId_ != Entity::TYPEID), "Attempted to execute on unassigned entity");
     switch(typeId_) {
         #define ENTITYEXP(TYPE, VAR, ID) case ID: ((TYPE*)this)->PreUpdate(); break;

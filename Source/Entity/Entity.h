@@ -193,6 +193,10 @@ public:
     int DBG_id_;
     #endif
 
+    Entity* trackingTarget_;
+    glm::vec3 trackingPosition_;
+    int trackingTimer_;
+
     void Sleep();
     void Wake();
 
@@ -203,6 +207,10 @@ public:
 
     void BaseUpdate();
     void BaseRenderUpdate(float interpTime);
+    void BasePreUpdate();
+
+    void StartTracking(Entity* trackingEntity);
+    void StopTracking();
 
     void DoPreUpdate();
     void DoUpdate();
@@ -269,6 +277,7 @@ private:
     bool GetIsTriggered() { return false; };
     void OnWet() {};
     int GetSeeds() { return 0; }
+    void FindTrackingTarget();
 
     static EntityDependendies GetStaticDependencies() { return {}; }
     static const char* GetStaticName() { return "e_base"; }

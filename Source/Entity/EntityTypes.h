@@ -60,6 +60,7 @@
 #include "Entity.h"
 #include "Bumper.h"
 #include "BubbleEater.h"
+#include "LimitSpawner.h"
 
 #define EXPANDENTITIES \
 	ENTITYEXP(Entity, entity, 0) \
@@ -122,4 +123,5 @@
 	ENTITYEXP(BigBreaker, bigbreaker, 57) \
 	ENTITYEXP(BreakerPillar, breakerpillar, 58) \
 	ENTITYEXP(BumperBell, bumperbell, 59) \
-	ENTITYEXP(BubbleEater, bubbleeater, 60)
+	ENTITYEXP(BubbleEater, bubbleeater, 60) \
+	ENTITYEXP(LimitSpawner, limitspawner, 61)

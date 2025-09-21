@@ -16,6 +16,8 @@ public:
 
     DynamicBubble* bubble_;
     DynamicFader fader_;
+    int holdTicks_;
+    int holdTimer_;
 
     void PreUpdate();
     void Update();

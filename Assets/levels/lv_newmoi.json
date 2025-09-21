@@ -29,16 +29,20 @@
         },
         {
             "bool_properties": null,
-            "float_properties": null,
-            "floor_dist": 0.0,
-            "int_properties": null,
-            "name": "e_bumper",
+            "float_properties": {
+                "p_spawnscale": 5.0
+            },
+            "floor_dist": 0.4497910439968109,
+            "int_properties": {
+                "p_type": 46
+            },
+            "name": "e_limitspawner",
             "preview": true,
             "transform": {
                 "position": {
-                    "x": -2.1641383171081543,
-                    "y": 0.0,
-                    "z": -18.087493896484375
+                    "x": -10.685171127319336,
+                    "y": 0.4497910439968109,
+                    "z": -16.465723037719727
                 },
                 "rotation": {
                     "x": 0.0,
@@ -46,12 +50,12 @@
                     "z": 0.0
                 },
                 "scale": {
-                    "x": 4.457423686981201,
-                    "y": 4.457423686981201,
-                    "z": 4.457423686981201
+                    "x": 3.999999523162842,
+                    "y": 3.999999523162842,
+                    "z": 3.999999523162842
                 }
             },
-            "type_id": 46
+            "type_id": 61
         },
         {
             "bool_properties": null,
@@ -61,7 +65,9 @@
                 "p_radius": 100.0
             },
             "floor_dist": 0.455791711807251,
-            "int_properties": null,
+            "int_properties": {
+                "p_holdticks": 240
+            },
             "name": "e_bubbleeater",
             "preview": true,
             "transform": {

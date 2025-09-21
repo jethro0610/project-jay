@@ -20,6 +20,7 @@ EntityProperties BubbleEater::GetStaticProperties() {
         },
         {
             // Ints
+            {"p_holdticks", &holdTicks_}
         },
         {
             // Bools
@@ -52,6 +53,10 @@ void BubbleEater::Init(Entity::InitArgs args) {
     bubble_->inpower = 2.0f;
     bubble_->outpower = 1.75f;
 
+    holdTicks_ = 60 * 4;
+    holdTimer_ = 0;
+    traceDistance_ = INFINITY;
+
     SetFlag(EF_Overlap, true);
     SetFlag(EF_GroundCheck, true);
     SetFlag(EF_StickToGround, true);
@@ -59,9 +64,9 @@ void BubbleEater::Init(Entity::InitArgs args) {
 
 void BubbleEater::Start() {
     fader_ = DynamicFader();
-    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, bubble_->height, false); 
+    fader_.AddModifier(bubble_, &bubble_->height, 0.0f, bubble_->height, false, EaseType::E_Elastic); 
     fader_.DeactivateModifiers(true);
-    fader_.activateLength_ = 20.0f;
+    fader_.activateLength_ = 60.0f;
     fader_.deactivateLength_ = 60.0f;
 }
 
@@ -71,11 +76,20 @@ void BubbleEater::PreUpdate() {
 
 void BubbleEater::Update() {
     fader_.Update();
+    if (bubble_->active)
+        holdTimer_++;
+
+    if (holdTimer_ >= holdTicks_)
+        fader_.StartDeactivate();
 }
 
 void BubbleEater::OnOverlap(Entity* overlappedEntity) {
-    if (overlappedEntity->typeId_ == Bumper::TYPEID)
-        fader_.StartActivate();
+    if (overlappedEntity->typeId_ != Bumper::TYPEID)
+        return;
+
+    overlappedEntity->destroy_ = true;
+    holdTimer_ = 0;
+    fader_.StartActivate();
 }
 
 void BubbleEater::OnDestroy() {
